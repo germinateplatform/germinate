@@ -1,0 +1,91 @@
+\begin{thebibliography}{10}
+
+\bibitem{Flapjack}
+I.~Milne, P.~Shaw, G.~Stephen, M.~Bayer, L.~Cardle, W.~T. Thomas, A.~J.
+  Flavell, and D.~Marshall.
+\newblock Flapjack - graphical genotype visualization.
+\newblock {\em Bioinformatics}, 26(24):3133--3134, 2010.
+
+\bibitem{CookieLaw}
+{The EU cookie law (e-Privacy Directive)}.
+\newblock
+  \url{http://ico.org.uk/for_organisations/privacy_and_electronic_communications/the_guide/cookies}.
+\newblock Last accessed on 2014-08-05.
+
+\bibitem{Toastr}
+{Toastr - Simple javascript toast notifications}.
+\newblock \url{http://toastrjs.com}, 2012.
+\newblock Last accessed on 2013-09-24.
+
+\bibitem{HeatmapLayer}
+{HeatmapLayer for Google Maps v3}.
+\newblock
+  \url{https://developers.google.com/maps/documentation/javascript/3.exp/reference#HeatmapLayer}.
+\newblock Last accessed on 2013-09-19.
+
+\bibitem{MarkerClusterer}
+{MarkerClusterer for Google Maps v3}.
+\newblock
+  \url{http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/docs/reference.html},
+  2010.
+\newblock Last accessed on 2013-09-19.
+
+\bibitem{GoogleEarth}
+{Google Earth}.
+\newblock \url{http://www.google.com/earth/}, 2005.
+\newblock Last accessed on 2013-09-25.
+
+\bibitem{JavaLocales}
+{JDK 7 and JRE 7 Supported Locales}.
+\newblock
+  \url{http://www.oracle.com/technetwork/java/javase/javase7locales-334809.html}.
+\newblock Last accessed on 2013-09-20.
+
+\bibitem{GWTPluralForms}
+{I18n Plural Forms}.
+\newblock
+  \url{http://www.gwtproject.org/doc/latest/DevGuideI18nPluralForms.html}.
+\newblock Last accessed on 2013-09-23.
+
+\bibitem{Unicode}
+{List of Unicode characters}.
+\newblock \url{http://en.wikipedia.org/wiki/List_of_Unicode_characters}, 2007.
+\newblock Last accessed on 2013-09-23.
+
+\bibitem{ResourceQualifiers}
+{Android Resource Qualifiers}.
+\newblock
+  \url{http://developer.android.com/guide/topics/resources/providing-resources.html#AlternativeResources}.
+\newblock Last accessed on 2014-09-07.
+
+\bibitem{D3}
+{D3.js - Data-Driven Documents}.
+\newblock \url{http://d3js.org/}, 2011.
+\newblock Last accessed on 2014-09-15.
+
+\bibitem{GWTSecurity}
+{GWT Security Documentation}.
+\newblock \url{http://www.gwtproject.org/doc/latest/DevGuideSecurity.html}.
+\newblock Last accessed on 2014-08-18.
+
+\bibitem{Navicat}
+{Navicat}.
+\newblock \url{http://www.navicat.com/}, 2002.
+\newblock Last accessed on 2014-07-23.
+
+\bibitem{MySQLWorkbench}
+{MySQL Workbench}.
+\newblock \url{http://mysqlworkbench.org/}, 2005.
+\newblock Last accessed on 2014-07-23.
+
+\bibitem{CIMMYT}
+{CIMMYT: International Maize and Wheat Improvement Center}.
+\newblock \url{http://www.cimmyt.org/}.
+\newblock Last accessed on 2014-06-26.
+
+\bibitem{SeeD}
+{Seeds of Discovery: Unlocking the genetic potential of maize and wheat}.
+\newblock \url{http://seedsofdiscovery.org/}, 2012.
+\newblock Last accessed on 2014-06-26.
+
+\end{thebibliography}

@@ -1,0 +1,46 @@
+/.idea/
+
+# Package Files #
+/*.jar
+/*.war
+
+# gwt caches and compiled units #
+gwt-unitCache/
+
+# boilerplate generated classes #
+.apt_generated/
+
+# more caches and things from deploy #
+war/WEB-INF/deploy/
+war/WEB-INF/classes/
+war/germinate/
+
+#compilation logs
+.gwt/
+
+#gwt junit compilation files
+www-test/
+
+#old GWT (1.5) created this dir
+.gwt-tmp/
+
+# Only include the default template instance
+!instance-stuff/
+instance-stuff/*
+!instance-stuff/template
+
+# Local configuration files
+build-dev.properties
+/germinate3-bootstrap.iml
+
+# Files that are created during the compilation process
+/src/jhi/germinate/Germinate.gwt.xml
+/war/img/crop.svg
+/war/img/logo.svg
+/war/WEB-INF/lib-temp/
+/war/css/logo.css
+/war/css/custom.css
+/war/custom.html
+/war/css/images/css-images/
+/war/js/js-external
+/war/favicon.ico

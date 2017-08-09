@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<meta charset="utf-8">
+<style>
+	body {
+		font: 10px sans-serif;
+	}
+	
+	.bar rect {
+		fill: steelblue;
+		shape-rendering: crispEdges;
+	}
+	
+	.bar text {
+		fill: #fff;
+	}
+	
+	.axis path,
+	.axis line {
+		fill: none;
+		stroke: #000;
+		shape-rendering: crispEdges;
+	}
+	
+	.line {
+		fill: none;
+		stroke-width: 1.5px;
+	}
+	
+	.d3-tooltip {
+		line-height: 1;
+		font-weight: bold;
+		padding: 12px;
+		background: rgba(0, 0, 0, 0.8);
+		color: #fff;
+		pointer-events: none !important;
+		text-align: center;
+	}
+	
+	.d3-tooltip:after {
+		box-sizing: border-box;
+		display: inline;
+		font-size: 10px;
+		width: 100%;
+		line-height: 1;
+		color: rgba(0, 0, 0, 0.8);
+		position: absolute;
+		content: "\25BC";
+		text-align: center;
+		margin: -1px 0 0 0;
+		top: 100%;
+		left: 0;
+	}
+</style>
+
+<body>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="../jquery-1.8.2.min.js"></script>
+	<script src="d3-multi-line-chart.js"></script>
+	<script src="d3-tip.js"></script>
+	<script src="d3-legend.js"></script>
+	<script src="d3-save-as-png.js"></script>
+	<script src="../html2canvas.js"></script>
+	<script>
+		var margin = {
+				top: 10,
+				right: 30,
+				bottom: 30,
+				left: 30
+			},
+			width = 960 - margin.left - margin.right,
+			height = 500 - margin.top - margin.bottom;
+
+		var color = d3.scale.ordinal()
+			.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+		var formatDate = d3.time.format("%Y");
+
+		d3.tsv("d3-multi-line-chart.tsv", function (data) {
+			d3.select("body")
+				.datum(data)
+				.call(multiLineChart()
+					.margin(margin)
+					.width(width)
+					.height(height)
+					.xScale(d3.time.scale.utc())
+					.xTickFormat(d3.time.format("%Y"))
+					.xTicks(d3.time.years)
+					.xTicksValue(1)
+					.minimum(0)
+					.x(function (d) {
+						return formatDate.parse(d.date);
+					})
+					.y(function (d) {
+						return parseFloat(d);
+					})
+					.tooltip(function (d) {
+						return d.key + "<br/>" + d.data[d.key].toFixed(2);
+					})
+					.color(color)
+					.xLabel("Year")
+					.yLabel("Nr. of readings")
+					.showLegend(true)
+					.legendWidth(120)
+					.interpolate("cardinal"));
+		});
+
+		setTimeout(function () {
+			saveLegendAsPng($(".gm8-d3js-legend")[0], "test.png");
+		}, 1000);
+	</script>

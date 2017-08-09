@@ -1,0 +1,383 @@
+/*
+ *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+ *  Information and Computational Sciences Group at JHI Dundee
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package jhi.germinate.server.service;
+
+import org.simpleframework.xml.*;
+import org.simpleframework.xml.core.*;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.Map;
+import java.util.stream.*;
+
+import javax.servlet.annotation.*;
+
+import jhi.germinate.client.service.*;
+import jhi.germinate.server.config.*;
+import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.*;
+import jhi.germinate.server.manager.*;
+import jhi.germinate.server.util.*;
+import jhi.germinate.server.util.Session;
+import jhi.germinate.server.util.xml.*;
+import jhi.germinate.shared.*;
+import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.datastructure.database.Group;
+import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.exception.*;
+import jhi.germinate.shared.exception.IOException;
+
+/**
+ * {@link CommonServiceImpl} is the implementation of {@link CommonService}.
+ *
+ * @author Sebastian Raubach
+ */
+@WebServlet(urlPatterns = {"/germinate/common"})
+public class CommonServiceImpl extends BaseRemoteServiceServlet implements CommonService
+{
+	private static final long serialVersionUID = -2599538621272643710L;
+
+	private static final String QUERY_COLUMNS       = "SELECT * FROM %s LIMIT 1";
+	private static final String QUERY_COUNTRY_STATS = "SELECT countries.*, count(1) AS `count` FROM germinatebase LEFT JOIN locations ON germinatebase.location_id = locations.id LEFT JOIN countries ON countries.id = locations.country_id GROUP BY countries.id ORDER BY count(1) DESC";
+
+	@Override
+	public ServerResult<List<Synonym>> getSynonyms(RequestProperties properties, GerminateDatabaseTable table, Long id) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return SynonymManager.getAllForTable(userAuth, table, id);
+	}
+
+	@Override
+	public ServerResult<List<String>> getColumnsOfTable(RequestProperties properties, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException
+	{
+		ValueQuery.ExecutedValueQuery query = new ValueQuery(properties, this, String.format(QUERY_COLUMNS, table.name()))
+				.run(null);
+
+		ServerResult<List<String>> result = query.getColumnNames();
+
+		query.close();
+
+		return result;
+	}
+
+	@Override
+	public ServerResult<GerminateSettings> getAdminSettings(RequestProperties properties) throws DatabaseException, InvalidSessionException, InsufficientPermissionsException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		try
+		{
+			GatekeeperUserWithPassword details = GatekeeperUserManager.getByIdWithPasswordForSystem(userAuth, userAuth.getId());
+
+			if (details == null || !details.isAdmin())
+				throw new InsufficientPermissionsException();
+
+			GerminateSettings baseSettings = getBaseSettings();
+
+			baseSettings.accessionDisplayColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_ACCESSION_DISPLAY_COLUMN, PropertyReader.getAccessionDisplayName());
+			baseSettings.baseSearchColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, PropertyReader.get(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, GerminateDatabaseTable.Column.name.name()));
+			baseSettings.collsiteTreemapColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_COLLECTINGSITE_TREEMAP_COLUMN, PropertyReader.get(ServerProperty.GERMINATE_COLLECTINGSITE_TREEMAP_COLUMN, Country.COUNTRY_NAME));
+			baseSettings.cookieLifespanMinutes = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES, PropertyReader.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES));
+			baseSettings.externalDataFolder = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER, PropertyReader.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER));
+			baseSettings.gatekeeperRegistrationNeedsApproval = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL, PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL));
+			baseSettings.googleAnalyticsTrackingId = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID, PropertyReader.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID));
+			baseSettings.keepTempFilesForHours = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS, PropertyReader.getDouble(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS));
+			baseSettings.serverLoggingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED));
+			baseSettings.templateDatabaseName = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME));
+			baseSettings.templateTwitterUrl = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TWITTER_LINK, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TWITTER_LINK));
+			baseSettings.templateCustomMenu = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_MENU, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_MENU));
+
+			return new ServerResult<>(null, baseSettings);
+		}
+		catch (NullPointerException | NumberFormatException e)
+		{
+			throw new InsufficientPermissionsException();
+		}
+	}
+
+	@Override
+	public void setAdminSettings(RequestProperties properties, GerminateSettings settings) throws DatabaseException, InvalidSessionException, InsufficientPermissionsException, IOException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		try
+		{
+			GatekeeperUserWithPassword details = GatekeeperUserManager.getByIdWithPasswordForSystem(userAuth, userAuth.getId());
+
+			if (details == null || !details.isAdmin())
+				throw new InsufficientPermissionsException();
+
+			PropertyReader.set(settings.gatekeeperUrl.getServerProperty(), settings.gatekeeperUrl.getValue());
+			PropertyReader.setBoolean(settings.gatekeeperRegistrationEnabled.getServerProperty(), settings.gatekeeperRegistrationEnabled.getValue());
+			PropertyReader.setBoolean(settings.gatekeeperRegistrationNeedsApproval.getServerProperty(), settings.gatekeeperRegistrationNeedsApproval.getValue());
+
+			PropertyReader.set(settings.templateTitle.getServerProperty(), settings.templateTitle.getValue());
+			PropertyReader.set(settings.templateDatabaseName.getServerProperty(), settings.templateDatabaseName.getValue());
+			PropertyReader.set(settings.templateTwitterUrl.getServerProperty(), settings.templateTwitterUrl.getValue());
+			PropertyReader.setBoolean(settings.templateShowSearchInMenu.getServerProperty(), settings.templateShowSearchInMenu.getValue());
+			PropertyReader.setBoolean(settings.templateUseToggleSwitches.getServerProperty(), settings.templateUseToggleSwitches.getValue());
+			PropertyReader.set(settings.templateCategoricalColors.getServerProperty(), CollectionUtils.join(settings.templateCategoricalColors.getValue(), ","));
+			PropertyReader.set(settings.templateGradientColors.getServerProperty(), CollectionUtils.join(settings.templateGradientColors.getValue(), ","));
+			PropertyReader.set(settings.templateContactEmail.getServerProperty(), settings.templateContactEmail.getValue());
+			PropertyReader.setBoolean(settings.templateLogoContainsLink.getServerProperty(), settings.templateLogoContainsLink.getValue());
+			PropertyReader.setBoolean(settings.templateShowParallaxBanner.getServerProperty(), settings.templateShowParallaxBanner.getValue());
+			PropertyReader.set(settings.templateCustomMenu.getServerProperty(), settings.templateCustomMenu.getValue());
+
+			PropertyReader.setBoolean(settings.googleAnalyticsEnabled.getServerProperty(), settings.googleAnalyticsEnabled.getValue());
+			PropertyReader.set(settings.googleAnalyticsTrackingId.getServerProperty(), settings.googleAnalyticsTrackingId.getValue());
+
+			PropertyReader.set(settings.googleMapsApiKey.getServerProperty(), settings.googleMapsApiKey.getValue());
+
+			PropertyReader.setBoolean(settings.socialShowFacebook.getServerProperty(), settings.socialShowFacebook.getValue());
+			PropertyReader.setBoolean(settings.socialShowTwitter.getServerProperty(), settings.socialShowTwitter.getValue());
+			PropertyReader.setBoolean(settings.socialShowGooglePlus.getServerProperty(), settings.socialShowGooglePlus.getValue());
+
+			PropertyReader.setBoolean(settings.hideIdColumn.getServerProperty(), settings.hideIdColumn.getValue());
+			PropertyReader.setBoolean(settings.serverLoggingEnabled.getServerProperty(), settings.serverLoggingEnabled.getValue());
+			PropertyReader.setBoolean(settings.debug.getServerProperty(), settings.debug.getValue());
+			PropertyReader.setBoolean(settings.isReadOnlyMode.getServerProperty(), settings.isReadOnlyMode.getValue());
+			PropertyReader.setBoolean(settings.cookieNotifierEnabled.getServerProperty(), settings.cookieNotifierEnabled.getValue());
+
+			PropertyReader.setDouble(settings.keepTempFilesForHours.getServerProperty(), settings.keepTempFilesForHours.getValue());
+			PropertyReader.setDouble(settings.uploadSizeLimitMB.getServerProperty(), settings.uploadSizeLimitMB.getValue());
+			PropertyReader.setInteger(settings.cookieLifespanMinutes.getServerProperty(), settings.cookieLifespanMinutes.getValue());
+			PropertyReader.setInteger(settings.galleryImagesPerPage.getServerProperty(), settings.galleryImagesPerPage.getValue());
+			PropertyReader.set(settings.accessionDisplayColumn.getServerProperty(), settings.accessionDisplayColumn.getValue());
+			PropertyReader.set(settings.baseSearchColumn.getServerProperty(), settings.baseSearchColumn.getValue());
+			PropertyReader.set(settings.collsiteTreemapColumn.getServerProperty(), settings.collsiteTreemapColumn.getValue());
+			PropertyReader.set(settings.externalDataFolder.getServerProperty(), settings.externalDataFolder.getValue());
+			PropertyReader.setSet(settings.availablePages.getServerProperty(), settings.availablePages.getValue(), Page.class);
+
+			try
+			{
+				PropertyReader.store();
+			}
+			catch (java.io.IOException | URISyntaxException e)
+			{
+				throw new IOException(e);
+			}
+		}
+		catch (NullPointerException | NumberFormatException e)
+		{
+			throw new InsufficientPermissionsException();
+		}
+	}
+
+	@Override
+	public GerminateSettings getSettings()
+	{
+		return getBaseSettings();
+	}
+
+	private GerminateSettings getBaseSettings()
+	{
+		GerminateSettings settings = new GerminateSettings();
+
+		settings.debug = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DEBUG, PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG));
+		settings.googleAnalyticsEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_ANALYTICS_ENABLED, PropertyReader.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED));
+		settings.googleMapsApiKey = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_MAPS_API_KEY, PropertyReader.get(ServerProperty.GOOGLE_MAPS_API_KEY));
+		settings.availablePages = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_AVAILABLE_PAGES, PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class));
+		settings.cookieNotifierEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.COOKIE_NOTIFIER_ENABLED, PropertyReader.getBoolean(ServerProperty.COOKIE_NOTIFIER_ENABLED));
+		settings.gatekeeperUrl = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_URL, PropertyReader.get(ServerProperty.GERMINATE_GATEKEEPER_URL));
+		settings.showHomeOnLogin = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_SHOW_HOME_ON_LOGIN, PropertyReader.getBoolean(ServerProperty.GERMINATE_SHOW_HOME_ON_LOGIN));
+		settings.uploadSizeLimitMB = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB, PropertyReader.getDouble(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB));
+		settings.gatekeeperRegistrationEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED));
+		settings.templateUseToggleSwitches = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES));
+		settings.socialShowFacebook = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK));
+		settings.socialShowTwitter = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER));
+		settings.socialShowGooglePlus = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS));
+		settings.templateShowSearchInMenu = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_SEARCH, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_SEARCH));
+		settings.hideIdColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDE_ID_COLUMNS, PropertyReader.getBoolean(ServerProperty.GERMINATE_HIDE_ID_COLUMNS));
+		settings.isReadOnlyMode = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_IS_READ_ONLY, PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY));
+		settings.templateContactEmail = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS));
+		settings.templateLogoContainsLink = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK));
+		settings.galleryImagesPerPage = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE, PropertyReader.getInteger(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE));
+		settings.templateShowParallaxBanner = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER));
+		settings.templateTitle = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TITLE, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TITLE));
+
+		settings.supportsAdvancedGeography = checkDatabaseVersion();
+
+
+		settings.loadPageOnLibraryError = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDDEN_LOAD_PAGE_ON_LIBRARY_ERROR, PropertyReader.getBoolean(ServerProperty.GERMINATE_HIDDEN_LOAD_PAGE_ON_LIBRARY_ERROR));
+
+
+		String menuXml = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_MENU);
+		if (!StringUtils.isEmpty(menuXml))
+		{
+			try
+			{
+				Serializer serializer = new Persister();
+				CustomMenuServer menu = serializer.read(CustomMenuServer.class, menuXml);
+				settings.customMenu = CustomMenuToClientConverter.convertCustomMenu(menu);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		settings.templateCategoricalColors = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS, getColors(PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS)));
+		settings.templateGradientColors = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS, getColors(PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS)));
+
+		return settings;
+	}
+
+	public static List<String> getColors(String colorString)
+	{
+		List<String> parsedColors = new ArrayList<>();
+
+        /* Parse the categorical colors */
+		if (!StringUtils.isEmpty(colorString))
+		{
+			parsedColors.addAll(Arrays.stream(colorString.split(",")) /* Split the string */
+									  .filter(color -> !StringUtils.isEmpty(color)) /* Ignore empty strings */
+									  .map(String::trim) /* Trim white spaces */
+									  .map(s -> s.startsWith("#") ? s : "#" + s) /* Prepend hash if necessary */
+									  .filter(Color::isHexColor) /* Check if it's a valid color */
+									  .collect(Collectors.toList()));
+		}
+
+        /* If there is no color, add at least one default one */
+		if (parsedColors.isEmpty())
+			parsedColors.add("#1f77b4");
+
+		return parsedColors;
+	}
+
+	@Override
+	public ServerResult<List<Link>> getExternalLinks(RequestProperties properties, Long referenceId, GerminateDatabaseTable referenceTable) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		ServerResult<List<Link>> placeholderLinks = LinkManager.getPlaceholderLinksForTable(userAuth, referenceId, referenceTable);
+		ServerResult<List<Link>> staticLinks = LinkManager.getStaticLinksForTable(userAuth, referenceId, referenceTable);
+
+		placeholderLinks.getDebugInfo().addAll(staticLinks.getDebugInfo());
+
+		placeholderLinks.setServerResult(CollectionUtils.combine(placeholderLinks.getServerResult(), staticLinks.getServerResult()));
+
+		return placeholderLinks;
+	}
+
+	@Override
+	public ServerResult<String> getTaxonomyStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+
+		try
+		{
+			return new ServerResult<>(null, StatisticsServlet.getStatistics(getThreadLocalRequest(), ViewInitializer.View.ACCESSIONS_PER_TAXONOMY).getName());
+		}
+		catch (java.io.IOException e)
+		{
+			throw new IOException(e);
+		}
+	}
+
+	@Override
+	public ServerResult<List<Country>> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return new DatabaseObjectQuery<Country>(QUERY_COUNTRY_STATS, userAuth)
+				.run()
+				.getObjects(Country.CountParser.Inst.get());
+	}
+
+	@Override
+	public ServerResult<Map<String, Long>> getOverviewStats(RequestProperties properties) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		ServerResult<Map<String, Long>> result = new ServerResult<>();
+		result.setDebugInfo(DebugInfo.create(userAuth));
+
+		Map<String, Long> count = new TreeMap<>();
+
+		ServerResult<Long> accessions = AccessionManager.getCount(userAuth);
+		result.getDebugInfo().addAll(accessions.getDebugInfo());
+		count.put(Accession.class.getName(), accessions.getServerResult());
+
+		ServerResult<Long> marker = MarkerManager.getCount(userAuth);
+		result.getDebugInfo().addAll(marker.getDebugInfo());
+		count.put(Marker.class.getName(), marker.getServerResult());
+
+		ServerResult<Long> location = LocationManager.getCount(userAuth);
+		result.getDebugInfo().addAll(location.getDebugInfo());
+		count.put(Location.class.getName(), location.getServerResult());
+
+		ServerResult<Long> group = GroupManager.getCount(userAuth);
+		result.getDebugInfo().addAll(group.getDebugInfo());
+		count.put(Group.class.getName(), group.getServerResult());
+
+		result.setServerResult(count);
+
+		return result;
+	}
+
+	private boolean checkDatabaseVersion()
+	{
+		try
+		{
+			new ValueQuery("SELECT ST_CONTAINS (ST_PolygonFromText('POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))'), ST_GeomFromText ('POINT(1 1)'))")
+					.execute();
+
+			return true;
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public static class ExportResult
+	{
+		public File   subsetWithFlapjackLinks;
+		public String flapjackLinks;
+
+		@Override
+		public String toString()
+		{
+			return "ExportResult{" +
+					", subsetWithFlapjackLinks=" + subsetWithFlapjackLinks +
+					", flapjackLinks='" + flapjackLinks + '\'' +
+					'}';
+		}
+	}
+
+	private static class DatasetStats
+	{
+		public String experimentType;
+		public Map<String, String> yearToCount = new HashMap<>();
+
+		public DatasetStats(String experimentType)
+		{
+			this.experimentType = experimentType;
+		}
+	}
+}

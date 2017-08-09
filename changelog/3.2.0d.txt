@@ -1,0 +1,47 @@
+/**************************************************/
+/*              GERMINATE 3                       */
+/*              CHANGELOG v3.2.0d                 */
+/**************************************************/
+
+
+/* CHANGELOG */
+
+  - CHG: Changed SQL script, marked more columns as required.
+  - ADD: Added new check to the registration to prevent duplicates.
+  - ADD: Added option to export whole chromosome for a map.
+  - ADD: Added more links from tables to details pages.
+  - ADD: Support for browser password saving.
+  - CHG: Updated to Font Awesome 4.3.0.
+  - FIX: Fixed issue with file handles not being released on Linux when using NFS mounts.
+  - DEL: Deleted unused libraries.
+  - CHG: Replaced big parts of reusable UI with UiBinder widgets.
+  - ADD: Added changelog information along with migration information.
+  - CHG: Updated documentation.
+  - ADD: Added individual error notifications for invalid cookie/payload/session id.
+  - CHG: Updated Toastr javascript library.
+  - CHG: Use "placeholder" attribute of <input> elements if available. If not, fall back to old solution.
+
+/* MIGRATION */
+
+  - Migrating from 3.2.0 to 3.2.0d:
+
+    - Apache Ant 1.9.1 or above is now required
+
+    - Remove the following line from "Germinate.gwt.xml" in your instance folder:
+
+      <inherits name="com.kiouri.sliderbar.SliderBarMVP" /> <!-- Slider bar -->
+
+    - Run this against the database:
+
+      ALTER TABLE `mapdefinitions` MODIFY `definition_start` double(11,2) NOT NULL,
+                                   MODIFY `definition_end`   double(11,2) NOT NULL;
+
+
+    - New properties required in "Text.properties":
+
+      notificationRegistrationAlreadyRequestedAccess=You have already requested access to this instance of Germinate.
+      notificationInvalidCookie=Please enable cookies to be able to use Germinate.
+      notificationInvalidPayload=Request rejected by the server. Please contact the administrator.
+      markersExportOptionsTabChromosomes=Chromosomes
+      markersExportOptionsChromosomesText=<p>Select all the chromosomes you want to export from the list below.</p><p>Non-contiguous groups can be selected using <kbd>Ctrl</kbd>/<kbd>&#8984;</kbd>. Use <kbd>Shift</kbd> for sequential groupings.</p>
+      markersExportOptionsClosePanel=Don''t use export options

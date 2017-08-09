@@ -1,0 +1,471 @@
+/*
+ *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+ *  Information and Computational Sciences Group at JHI Dundee
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package jhi.germinate.client.page.groups;
+
+import com.google.gwt.core.client.*;
+import com.google.gwt.dom.client.*;
+import com.google.gwt.event.logical.shared.*;
+import com.google.gwt.http.client.*;
+import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.*;
+import org.gwtbootstrap3.extras.toggleswitch.client.ui.*;
+
+import java.util.*;
+
+import jhi.germinate.client.*;
+import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.page.*;
+import jhi.germinate.client.service.*;
+import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
+import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.structure.resource.*;
+import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
+import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.Pagination;
+import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.exception.*;
+import jhi.germinate.shared.search.*;
+
+/**
+ * @author Sebastian Raubach
+ */
+public class GroupsPage extends Composite implements ParallaxBannerPage
+{
+
+	private GroupMemberSearch groupMemberSearch;
+
+	interface GroupsPageUiBinder extends UiBinder<FlowPanel, GroupsPage>
+	{
+	}
+
+	private static GroupsPageUiBinder ourUiBinder = GWT.create(GroupsPageUiBinder.class);
+
+	@UiField
+	SimplePanel  tablePanel;
+	@UiField
+	FlowPanel    groupMembersWrapper;
+	@UiField
+	SimplePanel  groupMembersPanel;
+	@UiField
+	FlowPanel    newGroupMembersPanel;
+	@UiField
+	SimplePanel  newGroupMembersTable;
+	@UiField
+	ToggleSwitch isPublic;
+
+	private final GroupTable                       groupTable;
+	private       Button                           addGroup;
+	private       Button                           deleteGroup;
+	private       Button                           addGroupMember;
+	private       Button                           uploadGroupMember;
+	private       Button                           deleteGroupMember;
+	private       DatabaseObjectPaginationTable<?> table;
+	private       AlertDialog                      uploadAlertDialog;
+
+	private Group           group;
+	private List<GroupType> groupTypes;
+
+	public GroupsPage()
+	{
+		initWidget(ourUiBinder.createAndBindUi(this));
+
+		GroupService.Inst.get().getTypes(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<GroupType>>>()
+		{
+			@Override
+			protected void onSuccessImpl(ServerResult<List<GroupType>> result)
+			{
+				groupTypes = result.getServerResult();
+				updateContent();
+			}
+		});
+
+		groupTable = new GroupTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, true)
+		{
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Group>>> callback)
+			{
+				return GroupService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+			}
+
+			@Override
+			protected boolean supportsFiltering()
+			{
+				return true;
+			}
+
+			@Override
+			protected void onSelectionChanged(NativeEvent event, Group object, int column)
+			{
+				group = object;
+				updateGroupMembers();
+			}
+		};
+		tablePanel.add(groupTable);
+
+		ButtonGroup group = new ButtonGroup();
+		deleteGroup = new Button(Text.LANG.groupsButtonDeleteGroup(), IconType.TRASH_O, e ->
+		{
+			Set<Group> selection = groupTable.getSelection();
+
+			if (selection.size() < 1)
+			{
+				Notification.notify(Notification.Type.INFO, Text.LANG.notificationGroupsSelectAtLeastOne());
+				return;
+			}
+
+			AlertDialog.createYesNoDialog(Text.LANG.groupsDeleteTitle(), Text.LANG.groupsDeleteText(), event ->
+			{
+				List<Long> ids = DatabaseObject.getIds(selection);
+
+				GroupService.Inst.get().delete(Cookie.getRequestProperties(), ids, new DefaultAsyncCallback<DebugInfo>()
+				{
+					@Override
+					protected void onSuccessImpl(DebugInfo result)
+					{
+						Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
+						groupTable.refreshTable();
+					}
+				});
+			}, null);
+		});
+		deleteGroup.setEnabled(false);
+
+		addGroup = new Button(Text.LANG.groupsButtonAddGroup(), IconType.PLUS_SQUARE_O, e ->
+		{
+			ModalBody dialogContent = new ModalBody();
+			AddGroupDialog content = new AddGroupDialog(groupTypes, null);
+
+			dialogContent.add(content);
+
+			final AlertDialog dialog = new AlertDialog(Text.LANG.groupsSubtitleNewGroup())
+					.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev -> addNewGroup(content.getName(), content.getType())))
+					.setContent(dialogContent);
+
+			dialog.open();
+		});
+		addGroup.setEnabled(false);
+
+		group.add(deleteGroup);
+		group.add(addGroup);
+		groupTable.addExtraContent(group);
+
+		GerminateEventBus.BUS.addHandler(GroupMemberChangeEvent.TYPE, e -> updateGroupMembers());
+	}
+
+	private void updateIsPublic()
+	{
+		isPublic.setEnabled(canEdit(group));
+		isPublic.setValue(group.getVisibility());
+	}
+
+	private void updateGroupMembers()
+	{
+		if (uploadAlertDialog != null)
+			uploadAlertDialog.close();
+
+		groupMembersWrapper.setVisible(true);
+
+		DatabaseObjectPaginationTable.SelectionMode mode = DatabaseObjectPaginationTable.SelectionMode.NONE;
+
+		boolean canEdit = canEdit(group);
+		if (canEdit)
+			mode = DatabaseObjectPaginationTable.SelectionMode.MULTI;
+
+		updateIsPublic();
+		groupMembersPanel.clear();
+		newGroupMembersPanel.setVisible(false);
+		newGroupMembersTable.clear();
+
+		switch (group.getType().getTargetTable())
+		{
+			case germinatebase:
+				table = new AccessionTable(mode, true)
+				{
+					@Override
+					protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Accession>>> callback)
+					{
+						return GroupService.Inst.get().getAccessionItems(Cookie.getRequestProperties(), group.getId(), pagination, callback);
+					}
+
+					@Override
+					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+					{
+						GroupService.Inst.get().getAccessionItemIds(Cookie.getRequestProperties(), group.getId(), callback);
+					}
+
+					@Override
+					public boolean supportsFullIdMarking()
+					{
+						return true;
+					}
+
+					@Override
+					protected boolean supportsFiltering()
+					{
+						return false;
+					}
+				};
+				break;
+			case locations:
+				table = new LocationTable(mode, true)
+				{
+					@Override
+					protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Location>>> callback)
+					{
+						return GroupService.Inst.get().getLocationItems(Cookie.getRequestProperties(), group.getId(), pagination, callback);
+					}
+
+					@Override
+					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+					{
+						GroupService.Inst.get().getLocationItemIds(Cookie.getRequestProperties(), group.getId(), callback);
+					}
+
+					@Override
+					public boolean supportsFullIdMarking()
+					{
+						return true;
+					}
+				};
+				break;
+			case markers:
+				table = new MarkerTable(mode, true)
+				{
+					@Override
+					protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Marker>>> callback)
+					{
+						return GroupService.Inst.get().getMarkerItems(Cookie.getRequestProperties(), group.getId(), pagination, callback);
+					}
+
+					@Override
+					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+					{
+						GroupService.Inst.get().getMarkerItemIds(Cookie.getRequestProperties(), group.getId(), callback);
+					}
+
+					@Override
+					public boolean supportsFullIdMarking()
+					{
+						return true;
+					}
+				};
+				break;
+		}
+
+		table.setHideEmptyTable(false);
+		table.getPanel().addAttachHandler(event ->
+		{
+			if (event.isAttached())
+				JavaScript.smoothScrollTo(groupMembersPanel.getElement());
+		});
+		groupMembersPanel.add(table);
+
+		if (canEdit)
+		{
+			ButtonGroup buttonGroup = new ButtonGroup();
+			deleteGroupMember = new Button(Text.LANG.groupsButtonDeleteMembers(), IconType.TRASH_O, e ->
+			{
+				Set<? extends DatabaseObject> selectedItems = table.getSelection();
+
+				if (selectedItems.size() < 1)
+				{
+					Notification.notify(Notification.Type.INFO, Text.LANG.notificationGroupsSelectAtLeastOne());
+					return;
+				}
+
+				List<Long> ids = DatabaseObject.getGroupSpecificIds(selectedItems);
+
+				AlertDialog.createYesNoDialog(Text.LANG.groupMembersDeleteTitle(), Text.LANG.groupMembersDeleteText(), event ->
+				{
+					GroupService.Inst.get().removeItems(Cookie.getRequestProperties(), group.getId(), ids, new DefaultAsyncCallback<DebugInfo>()
+					{
+						@Override
+						public void onFailureImpl(Throwable caught)
+						{
+							/* If the user doesn't have the permissions to delete the group */
+							if (caught instanceof InsufficientPermissionsException)
+							{
+								Notification.notify(Notification.Type.ERROR, Text.LANG.notificationGroupsInsufficientPermissions());
+							}
+							else
+							{
+								super.onFailureImpl(caught);
+							}
+						}
+
+						@Override
+						public void onSuccessImpl(DebugInfo result)
+						{
+							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "deleteItems", Long.toString(group.getId()), ids.size());
+
+							Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupItemsDeleted());
+
+							table.refreshTable();
+						}
+					});
+				}, null);
+			});
+
+			addGroupMember = new Button(Text.LANG.groupsButtonSearchMembers(), IconType.SEARCH_PLUS, e ->
+			{
+				if (groupMemberSearch == null)
+					groupMemberSearch = new GroupMemberSearch(group, new AsyncCallback<DatabaseObjectPaginationTable<?>>()
+					{
+						@Override
+						public void onFailure(Throwable caught)
+						{
+							newGroupMembersPanel.setVisible(true);
+							newGroupMembersTable.clear();
+							newGroupMembersTable.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));
+						}
+
+						@Override
+						public void onSuccess(DatabaseObjectPaginationTable<?> result)
+						{
+							newGroupMembersPanel.setVisible(true);
+							newGroupMembersTable.clear();
+							newGroupMembersTable.add(result);
+
+							Scheduler.get().scheduleDeferred(() -> JavaScript.smoothScrollTo(result.getElement()));
+						}
+					});
+
+				groupMemberSearch.open();
+			});
+
+			uploadGroupMember = new Button(Text.LANG.groupsButtonUploadMembers(), IconType.UPLOAD, e ->
+			{
+				if (uploadAlertDialog == null)
+				{
+					GroupUploadWidget w = new GroupUploadWidget(group);
+					uploadAlertDialog = new AlertDialog(Text.LANG.groupsButtonUploadMembers(), w)
+							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalUpload(), IconType.UPLOAD, ButtonType.PRIMARY, ev -> w.onUploadButtonClicked()))
+							.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, null))
+							.setAutoCloseOnPositive(false)
+							.setRemoveOnHide(false);
+				}
+				uploadAlertDialog.open();
+			});
+
+			buttonGroup.add(deleteGroupMember);
+			buttonGroup.add(addGroupMember);
+			buttonGroup.add(uploadGroupMember);
+			table.addExtraContent(buttonGroup);
+		}
+	}
+
+	@Override
+	protected void onUnload()
+	{
+		super.onUnload();
+
+		if (groupMemberSearch != null)
+			groupMemberSearch.onUnload();
+
+		if (uploadAlertDialog != null)
+			uploadAlertDialog.remove();
+	}
+
+	/**
+	 * Checks if the group editing functionality should be enabled
+	 *
+	 * @param group The group to check
+	 * @return <code>true</code> if the group editing functionality should be enabled
+	 */
+	private boolean canEdit(Group group)
+	{
+		/* If we're in read-only mode or authentication is disabled, don't allow editing */
+		if (GerminateSettingsHolder.get().isReadOnlyMode.getValue() || !ModuleCore.getUseAuthentication())
+			return false;
+
+		UserAuth auth = ModuleCore.getUserAuth();
+
+		/* Admins can change ecerything */
+		if (auth != null && auth.isAdmin())
+			return true;
+
+		/* Check if the user created the group */
+		if (auth != null && group != null && group.getCreatedBy() != null)
+			return Objects.equals(group.getCreatedBy(), ModuleCore.getUserAuth().getId());
+
+		return false;
+	}
+
+	private void updateContent()
+	{
+		addGroup.setEnabled(!CollectionUtils.isEmpty(groupTypes));
+		deleteGroup.setEnabled(true);
+	}
+
+	/**
+	 * Adds a new group to the database
+	 *
+	 * @param newGroup The new group name
+	 */
+	private static void addNewGroup(String newGroup, GroupType type)
+	{
+		if (StringUtils.isEmpty(newGroup))
+		{
+			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationGroupsCannotBeEmpty());
+			return;
+		}
+
+		final String strippedString = HTMLUtils.stripHtmlTags(newGroup);
+
+		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), strippedString, type.getTargetTable(), new DefaultAsyncCallback<ServerResult<Long>>()
+		{
+			@Override
+			public void onSuccessImpl(ServerResult<Long> result)
+			{
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", strippedString);
+			}
+		});
+	}
+
+	@UiHandler("isPublic")
+	void onPublicChanged(ValueChangeEvent<Boolean> event)
+	{
+		if (canEdit(group))
+		{
+			GroupService.Inst.get().setVisibility(Cookie.getRequestProperties(), group.getId(), event.getValue(), new DefaultAsyncCallback<DebugInfo>()
+			{
+				@Override
+				protected void onFailureImpl(Throwable caught)
+				{
+					group.setVisibility(!group.getVisibility());
+
+					super.onFailureImpl(caught);
+				}
+			});
+		}
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxGroup();
+	}
+}

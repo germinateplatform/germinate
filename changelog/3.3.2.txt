@@ -1,0 +1,168 @@
+/**************************************************/
+/*              GERMINATE 3                       */
+/*              CHANGELOG v3.3.2                  */
+/**************************************************/
+
+
+/* CHANGELOG */
+
+ - ADD: Added code that allows to force table filtering programmatically.
+ - FIX: Fixed error on search page when searching for markers.
+ - FIX: Fixed position and width of context-menu for item marking when the right edge of the browser is very close to the click event.
+ - CHG: Synchronized item marking between tables on the same page, i.e. if there is more than one table showing the same type of markable item (e.g. accession), marking an element in one table will now select it in the other tables as well.
+ - FIX: Fixed an issue where the table header checkbox and the table row checkboxes were out of sync.
+ - CHG: Changed styling of RevealPanels.
+ - FIX: Fixed scroll position issue on #news page after clicking on one of the news item in the page's footer.
+ - FIX: Fixed incorrect SQL query when registering for a Germinate instance with an existing account.
+ - ADD: Added option to color phenotype-by-phenotype charts by year.
+ - ADD: Added new reusable legend widget for D3.js charts.
+ - ADD: Added new legend to all multi-line (climate, trials overview, line-performance, phenotype-by-phenotype, phenotype matrix) charts.
+ - ADD: Added explanation to phenotype matrix chart about maximum number of selectable phenotypes.
+ - CHG: Changed `datasetmeta` update thread to no longer delete manual entries for external datasets, i.e. counts for internal datasets will be re-calculated every hour, counts for external datasets will be left as they are (because we can't calculate them anyway).
+ - ADD: Added dataset statistics to #data-stats page. The new chart is a grouped bar chart based on the dataset type (trial, phenotype, genotype, etc.) against the number of data points per year.
+ - ADD: Added selection to institutions GeoChart. When a country with data is selected, it will filter the table for you to only show institutions from this country. Selecting the empty area or a country with no data will reset the filtering.
+ - ADD: Added selection to taxonomy pie-chart (#data-stats). When the user clicks on a pie slice, s/he will be taken to the accession overview page where the table will be filtered to just show accessions with this taxonomy.
+ - ADD: Added selection to collecting site country chart (#data-stats). When the user clicks on a pie slice, s/he will be taken to the accession overview page where the table will be filtered to just show accessions from this country.
+ - ADD: Added accession tables to both the geographic point search as well as the geographic polygon search page.
+ - FIX: Fixed MySQL version checker code. It was classifying newer versions as old.
+ - ADD: Added download option for a specific pedigree data from the passport page.
+ - FIX: Fixed Markerclusterer icons not working anymore due to provider shutdown of resource (https://github.com/googlemaps/js-marker-clusterer/issues/55).
+ - ADD: Added download option for the complete pedigree to browse accessions page.
+ - CHG: Replaced soon to be deprecated MySQL functions with their new versions (e.g. PolygonFromText -> ST_PolygonFromText).
+ - CHG: Changed MySQL version checker to test-run the actual query rather than checking the version number returned from "SELECT VERSION()".
+ - FIX: Fixed issue where suspending a user had no effect.
+ - ADD: Added a completely new search page.
+ - ADD: Added dataset table to search page.
+ - CHG: Increased size of phenotype by phenotype chart.
+ - CHG: Changed phenotype by phenotype raw data format to include the actual phenotype (and unit) names rather than just "x" and "y" as the colum headers.
+ - FIX: Fixed issue where phenotype data download from the phenotypic datasets selection page wasn't working.
+ - CHG: The small download icon in the genotype dataset selection table now downloads the genotypic data in a Flapjack-compatible tab delimited file, rather than the raw .hdf5 file.
+ - FIX: Fixed issue where the raw data file download of the allele frequency binning chart stopped working correctly after the page was resized.
+ - CHG: Added feature that allows selection of all table items across all pages (for deletion, adding, etc.).
+ - ADD: Added option to name the SVG file that gets downloaded from d3.js charts before starting the download.
+ - ADD: Added table to the #marker-details page that shows which maps the marker is on.
+ - ADD: Added property to config.properties that allows the customization of the main Germinate menu. Consult the documentation for an example.
+ - CHG: Changed the download link of the genotypes dataset table to download a tab-delimited txt file (Flapjack format) rather than the raw .hdf5 file.
+ - CHG: Improved code for menu item highlighting and decluttered GerminateMenu class in general.
+ - CHG: Re-added support for the datasets table on the #marker-details page. This now uses the data from the HDF5 file.
+ - CHG: Updated Flapjack .jar file to the latest version.
+ - DEL: Deleted old search pages.
+ - CHG: Slightly changed the way table filtering works. By default we search for exact matches, i.e. no "%" wildcards are used. The user can manually enter the wildcards to get fuzzy search results.
+ - CHG: Changed the way pedigrees are displayed on the passport page to a table. This allows us to show more data about a pedigree in a structured way.
+ - ADD: Added pedigree data table to search page.
+ - ADD: Added tooltip to main search box explaining how wildcard characters work.
+ - ADD: Added download button to all of the paginated tables on the search page.
+ - CHG: Changed exported data in .kml export.
+ - CHG: Changed file format of "parallax-genetic-map.png" to ".jpg".
+ - ADD: Added new automatic database update process. This requires that you're running 3.3.1 before updating to 3.3.2 (or start with 3.3.2). From now on you'll never have to run SQL queries manually ever again to update Germinate.
+ - ADD: Added phenotype matrix chart to trials page as well now (instead of just being on the phenotype page).
+ - ADD: Fixed legend highlighting of data points when user hovers over legend item.
+ - CHG: Changed all queries to be fully SQL99 compliant. This is required to be able to use MySQL 5.7.5 and up.
+ - CHG: Added "#input=PHENOTYPE" to exported phenotype files. This makes them compatible with Helium.
+ - DEL: Remove obsolete GrinGlobal subfolders.
+ - CHG: Renamed `date` to `date_start` and added `date_end` column to `datasets` table.
+ - FIX: Fixed issue with SVG download when the SVG itself contains too many elements. It wouldn't download properly failing with a "Network error" thrown by the browser. This has been fixed by using a different implementation to download the SVG.
+ - FIX: Fixed database connection leaks. Some queries weren't properly closing the database connections in special cases.
+ - FIX: Fixed an issue where Internet Explorer would open files in the browser rather than download them.
+ - FIX: Fixed issue where jumping to a specific news page from the news section at the bottom of the page wouldn't cause the pager to update the text.
+ - NEW: Added pagination to color-coded climate data table. The whole dataset can now be downloaded by clicking on the download button in the bottom left corner.
+ - CHG: Changed the way the DatabaseObjectCache is created and cleared.
+ - FIX: Fixed the display of the map feature type. The marker type was mistakenly displayed in its place.
+ - ADD: Added config.properties option "GoogleMaps.Api.Key" to provide a Google Maps API key. This is required by Google since June 2016.
+ - FIX: Fixed an issue where d3 legends and tooltips weren't properly removed on page resize events.
+ - ADD: Added tables to store chemical compound data. These include `compounds`, `compounddata` and `analysismethod`.
+ - ADD: Added pages to show chemical compound data. These are "#compounds", "#compound-details" and "#compound-data".
+ - ADD: Added synonyms to "#passport" page.
+ - ADD: Added synonyms to "#marker-details" page.
+ - ADD: Added "#compound-datasets" and "#compound-data" pages. The latter contains various visualizations for compound data. This is more or less identical to the functionality that already exists for phenotypic data.
+ - FIX: Fixed issue with d3 selection lasso when the legend only contains one item.
+ - FIX: Fixed issue with d3 selection lasso and item highlighting by the legend.
+ - ADD: Added new compound value charts that show the individual lines with their values in a bar chart that can be sorted either by name or value.
+ - ADD: Added search boxes to phenotype by phenotype and compound by compound scatter plots to allow the user to search for and highlight individual accessions.
+ - ADD: Added compound data table to search results page.
+ - CHG: Improved performance of search results page by removing unnecessary initial data query before filters are applied.
+ - BUG: Fixed search results page table download. It was populating the columns wrongly.
+ - CHG: Standardized the search results page table downloads.
+ - CHG: Updated GWT from 2.7.0 to 2.8.0. Several Tomcat related libraries needed updating as well.
+ - CHG: Changed search to allow selection of search sections. The user can either search for all types of data or restrict the search to just one of them.
+ - CHG: Added search box to search page itself. The user can now decide which categories of data they want to search rather than always searching everything.
+
+
+/* MIGRATION */
+
+  - Migrating from 3.3.1 to 3.3.2:
+
+  	- IMPORTANT: Please do not migrate to 3.3.2 from versions older than 3.3.1 without going through the individual migration steps. With this version, we introduce a new automatic migration process for the database side of things. No manual database updates will be required from this point on, unless otherwise indicated. It'll assume that you're running version 3.3.1. currently.
+
+    - Move your "Text.properties" files from instance-stuff/<your-instance>/modules/code to instance-stuff/<your-instance>/i18n
+
+    - Edit your instance-stuff/<your-instance>/Germinate.gwt.xml file and change the following:
+      - <entry-point class="jhi.germinate.client.core.ModuleCore" /> to <entry-point class="jhi.germinate.client.ModuleCore" />
+      - <source path="client/core" /> to <source path="client" />
+      - <source path="shared/core" /> to <source path="shared" />
+
+    - Edit your instance-stuff/<your-instance>/web.xml file and change the following:
+      - jhi.germinate.server.core.util.ApplicationListener  to  jhi.germinate.server.util.ApplicationListener
+
+    - Obtain a Google Maps API key from Google and add it as the option "GoogleMaps.Api.Key" to config.properties.
+
+    - New translatable text has been added. The following properties can be changed in your "Text.properties" file and the according translation files:
+
+      page.trials.phenotype.by.phenotype.coloring.year=Color by year
+      page.data.statistics.datasets.title=Data points per experiment type
+      page.data.statistics.datasets.text=This bar chart shows the number of data points per year for each of the experiment types. Each individual bar per group represent a year.
+      column.institutions.code=Code
+      page.data.statistics.taxonomy.text=This pie chart visualizes the percentage of accessions for each taxonomy. Each slice represents a taxonomy. Hovering over a slice will show the actual number of accessions. Clicking on a slice will take you to the accession overview page which will then just show the accessions with this taxonomy.
+      page.data.statistics.accessions.per.country.text=This chart shows the distribution of accessions. For each country the number of accessions collected in this country is color-coded. Clicking on a country will take you to the accession overview page which will then just show the accessions from this country.
+      page.geographic.search.accession.title=Accessions ordered by distance
+      page.geographic.search.polygon.collsite.title=Collecting sites in the polygon
+      page.geographic.search.polygon.accession.title=Accessions in the polygon
+      page.search.section.all=All data
+      page.search.section.accession.data=Accession data
+      page.search.section.attribute.data=Attribute data
+      page.search.section.phenotype.data=Phenotype data
+      page.search.section.compound.data=Compound data
+      page.search.section.mapdefinition.data=Map definition data
+      page.search.section.datasets=Datasets
+      page.search.section.pedigree.data=Pedigree data
+      page.search.section.location.data=Location data
+      download.format.helium=Download pedigree for Helium
+      page.marker.details.maps.title=Maps
+      page.marker.details.maps.text=This marker appears on the following maps
+      column.pedigree.child.gid=Child GID
+      column.pedigree.child.name=Child name
+      column.pedigree.parent.gid=Parent GID
+      column.pedigree.parent.name=Parent name
+      column.pedigree.relationship.type=Relationship type
+      column.pedigree.relationship.description=Relationship description
+      column.pedigree.pedigree.description=Pedigree description
+      column.pedigree.pedigree.author=Pedigree author
+      search.box.tooltip=Use ''%'' as the wildcard character, e.g. ''%KINGDOM%''.
+      column.dateset.date.end=End date
+      menu.data.statistics=data statistics
+      column.compound.id=Id
+      column.compound.name=Name
+      column.compound.description=Description
+      column.compound.molecular.formula=Molecular Formula
+      column.compound.unit.name=Unit
+      column.compound.monoisotonic.mass=Monoisotonic Mass
+      column.compound.average.mass=Average Mass
+      column.compound.class=Class
+      column.compound.data.id=Id
+      column.compound.data.analysis.method=Analysis Method
+      column.compound.data.unit.name=Unit
+      column.compound.data.value=Value
+      widget.synonyms.title=Synonyms
+      menu.compounds=compounds
+      menu.compound.data=compound data
+      page.compound.datasets.title=Compound datasets
+      page.compounds.title=Compounds
+      page.phenotypes.title=Phenotypes
+      notification.compound.dataset.no.compound=No compounds found for the selected dataset.
+      page.compounds.compounds.title=Select compounds
+      tooltip.table.header.filter.cell=Type your search term and hit enter. Use ''%'' as the wildcard character.
+      widget.d3.chart.search.field=Search for item by name
+      column.phenotype.short.name=Short name
+
+	- If you're using custom parallax-banner images, please convert your "parallax-genetic-map.png" to "parallax-genetic-map.jpg".
+

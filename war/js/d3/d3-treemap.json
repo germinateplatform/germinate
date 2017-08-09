@@ -1,0 +1,2446 @@
+[{
+    "site": "Kabul",
+    "country": "Afghanistan",
+    "value": 3,
+    "id": "62"
+}, {
+    "site": "Algiers",
+    "country": "Algeria",
+    "value": 6,
+    "id": "104"
+}, {
+    "site": "Wahran",
+    "country": "Algeria",
+    "value": 8,
+    "id": "455"
+}, {
+    "site": "Luanda",
+    "country": "Angola",
+    "value": 5,
+    "id": "68"
+}, {
+    "site": "Cordoba",
+    "country": "Argentina",
+    "value": 4,
+    "id": "156"
+}, {
+    "site": "Rosario",
+    "country": "Argentina",
+    "value": 5,
+    "id": "212"
+}, {
+    "site": "Mendoza",
+    "country": "Argentina",
+    "value": 7,
+    "id": "292"
+}, {
+    "site": "Tucuman",
+    "country": "Argentina",
+    "value": 6,
+    "id": "338"
+}, {
+    "site": "La Plata",
+    "country": "Argentina",
+    "value": 5,
+    "id": "426"
+}, {
+    "site": "Mar del Plata",
+    "country": "Argentina",
+    "value": 4,
+    "id": "456"
+}, {
+    "site": "Yerevan",
+    "country": "Armenia",
+    "value": 4,
+    "id": "249"
+}, {
+    "site": "Sydney",
+    "country": "Australia",
+    "value": 8,
+    "id": "32"
+}, {
+    "site": "Melbourne",
+    "country": "Australia",
+    "value": 3,
+    "id": "42"
+}, {
+    "site": "Brisbane",
+    "country": "Australia",
+    "value": 4,
+    "id": "116"
+}, {
+    "site": "Perth",
+    "country": "Australia",
+    "value": 6,
+    "id": "155"
+}, {
+    "site": "Adelaide",
+    "country": "Australia",
+    "value": 1,
+    "id": "255"
+}, {
+    "site": "Vienna",
+    "country": "Austria",
+    "value": 7,
+    "id": "141"
+}, {
+    "site": "Baku",
+    "country": "Azerbaijan",
+    "value": 5,
+    "id": "242"
+}, {
+    "site": "Dhaka",
+    "country": "Bangladesh",
+    "value": 6,
+    "id": "22"
+}, {
+    "site": "Khulna",
+    "country": "Bangladesh",
+    "value": 4,
+    "id": "186"
+}, {
+    "site": "Rajshahi",
+    "country": "Bangladesh",
+    "value": 4,
+    "id": "416"
+}, {
+    "site": "Minsk",
+    "country": "Belarus",
+    "value": 3,
+    "id": "123"
+}, {
+    "site": "Brussels",
+    "country": "Belgium",
+    "value": 2,
+    "id": "272"
+}, {
+    "site": "Cotonou",
+    "country": "Benin",
+    "value": 5,
+    "id": "421"
+}, {
+    "site": "Cochabamba",
+    "country": "Bolivia (Plurinational State of)",
+    "value": 3,
+    "id": "310"
+}, {
+    "site": "La Paz",
+    "country": "Bolivia (Plurinational State of)",
+    "value": 7,
+    "id": "344"
+}, {
+    "site": "Sarajevo",
+    "country": "Bosnia and Herzegovina",
+    "value": 3,
+    "id": "418"
+}, {
+    "site": "SÃ£o Paulo",
+    "country": "Brazil",
+    "value": 1,
+    "id": "10"
+}, {
+    "site": "Rio de Janeiro",
+    "country": "Brazil",
+    "value": 4,
+    "id": "24"
+}, {
+    "site": "Salvador",
+    "country": "Brazil",
+    "value": 6,
+    "id": "73"
+}, {
+    "site": "Fortaleza",
+    "country": "Brazil",
+    "value": 3,
+    "id": "86"
+}, {
+    "site": "Belo Horizonte",
+    "country": "Brazil",
+    "value": 1,
+    "id": "89"
+}, {
+    "site": "BrasÃ­lia",
+    "country": "Brazil",
+    "value": 2,
+    "id": "93"
+}, {
+    "site": "Curitiba",
+    "country": "Brazil",
+    "value": 3,
+    "id": "125"
+}, {
+    "site": "Manaus",
+    "country": "Brazil",
+    "value": 4,
+    "id": "135"
+}, {
+    "site": "Recife",
+    "country": "Brazil",
+    "value": 5,
+    "id": "150"
+}, {
+    "site": "BelÃ©m",
+    "country": "Brazil",
+    "value": 6,
+    "id": "167"
+}, {
+    "site": "Porto Alegre",
+    "country": "Brazil",
+    "value": 3,
+    "id": "181"
+}, {
+    "site": "GoiÃ¢nia",
+    "country": "Brazil",
+    "value": 3,
+    "id": "227"
+}, {
+    "site": "Guarulhos",
+    "country": "Brazil",
+    "value": 3,
+    "id": "228"
+}, {
+    "site": "Campinas",
+    "country": "Brazil",
+    "value": 4,
+    "id": "265"
+}, {
+    "site": "Nova IguaÃ§u",
+    "country": "Brazil",
+    "value": 4,
+    "id": "277"
+}, {
+    "site": "MaceiÃ³",
+    "country": "Brazil",
+    "value": 4,
+    "id": "296"
+}, {
+    "site": "SÃ£o GonÃ§alo",
+    "country": "Brazil",
+    "value": 4,
+    "id": "301"
+}, {
+    "site": "SÃ£o LuÃ­s",
+    "country": "Brazil",
+    "value": 2,
+    "id": "305"
+}, {
+    "site": "Duque de Caxias",
+    "country": "Brazil",
+    "value": 7,
+    "id": "341"
+}, {
+    "site": "Natal",
+    "country": "Brazil",
+    "value": 7,
+    "id": "371"
+}, {
+    "site": "Teresina",
+    "country": "Brazil",
+    "value": 3,
+    "id": "388"
+}, {
+    "site": "SÃ£o Bernardo do Campo",
+    "country": "Brazil",
+    "value": 5,
+    "id": "390"
+}, {
+    "site": "Campo Grande",
+    "country": "Brazil",
+    "value": 2,
+    "id": "398"
+}, {
+    "site": "JaboatÃ£o",
+    "country": "Brazil",
+    "value": 8,
+    "id": "415"
+}, {
+    "site": "Osasco",
+    "country": "Brazil",
+    "value": 3,
+    "id": "430"
+}, {
+    "site": "Santo AndrÃ©",
+    "country": "Brazil",
+    "value": 2,
+    "id": "439"
+}, {
+    "site": "JoÃ£o Pessoa",
+    "country": "Brazil",
+    "value": 7,
+    "id": "446"
+}, {
+    "site": "Contagem",
+    "country": "Brazil",
+    "value": 2,
+    "id": "471"
+}, {
+    "site": "SÃ£o JosÃ© dos Campos",
+    "country": "Brazil",
+    "value": 5,
+    "id": "478"
+}, {
+    "site": "Sofia",
+    "country": "Bulgaria",
+    "value": 3,
+    "id": "260"
+}, {
+    "site": "Ouagadougou",
+    "country": "Burkina Faso",
+    "value": 1,
+    "id": "266"
+}, {
+    "site": "Phnum PÃ©nh",
+    "country": "Cambodia",
+    "value": 3,
+    "id": "139"
+}, {
+    "site": "Douala",
+    "country": "Cameroon",
+    "value": 5,
+    "id": "187"
+}, {
+    "site": "Toronto",
+    "country": "Canada",
+    "value": 3,
+    "id": "30"
+}, {
+    "site": "Montreal",
+    "country": "Canada",
+    "value": 1,
+    "id": "56"
+}, {
+    "site": "Vancouver",
+    "country": "Canada",
+    "value": 4,
+    "id": "117"
+}, {
+    "site": "Calgary",
+    "country": "Canada",
+    "value": 3,
+    "id": "294"
+}, {
+    "site": "Ottawa",
+    "country": "Canada",
+    "value": 3,
+    "id": "323"
+}, {
+    "site": "Edmonton",
+    "country": "Canada",
+    "value": 4,
+    "id": "340"
+}, {
+    "site": "Hamilton",
+    "country": "Canada",
+    "value": 4,
+    "id": "442"
+}, {
+    "site": "Quebec",
+    "country": "Canada",
+    "value": 5,
+    "id": "457"
+}, {
+    "site": "Winnipeg",
+    "country": "Canada",
+    "value": 1,
+    "id": "465"
+}, {
+    "site": "Bangui",
+    "country": "Central African Republic",
+    "value": 5,
+    "id": "427"
+}, {
+    "site": "Santiago",
+    "country": "Chile",
+    "value": 3,
+    "id": "28"
+}, {
+    "site": "Shanghai",
+    "country": "China",
+    "value": 5,
+    "id": "2"
+}, {
+    "site": "Peking",
+    "country": "China",
+    "value": 3,
+    "id": "19"
+}, {
+    "site": "Wuhan",
+    "country": "China",
+    "value": 6,
+    "id": "34"
+}, {
+    "site": "Chongqing",
+    "country": "China",
+    "value": 2,
+    "id": "36"
+}, {
+    "site": "Xian",
+    "country": "China",
+    "value": 4,
+    "id": "37"
+}, {
+    "site": "Chengdu",
+    "country": "China",
+    "value": 3,
+    "id": "38"
+}, {
+    "site": "Tianjin",
+    "country": "China",
+    "value": 3,
+    "id": "41"
+}, {
+    "site": "Shenyang",
+    "country": "China",
+    "value": 4,
+    "id": "51"
+}, {
+    "site": "Harbin",
+    "country": "China",
+    "value": 5,
+    "id": "57"
+}, {
+    "site": "Guangzhou",
+    "country": "China",
+    "value": 7,
+    "id": "58"
+}, {
+    "site": "Nanjing",
+    "country": "China",
+    "value": 3,
+    "id": "61"
+}, {
+    "site": "Taiyuan",
+    "country": "China",
+    "value": 3,
+    "id": "71"
+}, {
+    "site": "Changchun",
+    "country": "China",
+    "value": 8,
+    "id": "79"
+}, {
+    "site": "Jinan",
+    "country": "China",
+    "value": 7,
+    "id": "98"
+}, {
+    "site": "Tangshan",
+    "country": "China",
+    "value": 2,
+    "id": "99"
+}, {
+    "site": "Dalian",
+    "country": "China",
+    "value": 5,
+    "id": "100"
+}, {
+    "site": "Jilin",
+    "country": "China",
+    "value": 8,
+    "id": "111"
+}, {
+    "site": "Hangzhou",
+    "country": "China",
+    "value": 3,
+    "id": "112"
+}, {
+    "site": "Nanchang",
+    "country": "China",
+    "value": 5,
+    "id": "114"
+}, {
+    "site": "Qingdao",
+    "country": "China",
+    "value": 1,
+    "id": "130"
+}, {
+    "site": "Xinyang",
+    "country": "China",
+    "value": 3,
+    "id": "136"
+}, {
+    "site": "ÃœrÃ¼mqi",
+    "country": "China",
+    "value": 5,
+    "id": "148"
+}, {
+    "site": "Lanzhou",
+    "country": "China",
+    "value": 3,
+    "id": "164"
+}, {
+    "site": "Fushun",
+    "country": "China",
+    "value": 3,
+    "id": "169"
+}, {
+    "site": "Luoyang",
+    "country": "China",
+    "value": 8,
+    "id": "173"
+}, {
+    "site": "Hefei",
+    "country": "China",
+    "value": 6,
+    "id": "174"
+}, {
+    "site": "Handan",
+    "country": "China",
+    "value": 4,
+    "id": "183"
+}, {
+    "site": "Suzhou",
+    "country": "China",
+    "value": 4,
+    "id": "185"
+}, {
+    "site": "Anshan",
+    "country": "China",
+    "value": 5,
+    "id": "219"
+}, {
+    "site": "Xuzhou",
+    "country": "China",
+    "value": 8,
+    "id": "220"
+}, {
+    "site": "Fuzhou",
+    "country": "China",
+    "value": 3,
+    "id": "224"
+}, {
+    "site": "Guiyang",
+    "country": "China",
+    "value": 3,
+    "id": "226"
+}, {
+    "site": "Wuxi",
+    "country": "China",
+    "value": 4,
+    "id": "247"
+}, {
+    "site": "Datong",
+    "country": "China",
+    "value": 4,
+    "id": "261"
+}, {
+    "site": "Xianyang",
+    "country": "China",
+    "value": 3,
+    "id": "263"
+}, {
+    "site": "Huainan",
+    "country": "China",
+    "value": 4,
+    "id": "269"
+}, {
+    "site": "Kunming",
+    "country": "China",
+    "value": 3,
+    "id": "271"
+}, {
+    "site": "Shenzhen",
+    "country": "China",
+    "value": 7,
+    "id": "276"
+}, {
+    "site": "Rongcheng",
+    "country": "China",
+    "value": 1,
+    "id": "278"
+}, {
+    "site": "Baoding",
+    "country": "China",
+    "value": 3,
+    "id": "282"
+}, {
+    "site": "Benxi",
+    "country": "China",
+    "value": 7,
+    "id": "283"
+}, {
+    "site": "Huaibei",
+    "country": "China",
+    "value": 2,
+    "id": "309"
+}, {
+    "site": "Pingdingshan",
+    "country": "China",
+    "value": 3,
+    "id": "315"
+}, {
+    "site": "Qiqihar",
+    "country": "China",
+    "value": 3,
+    "id": "318"
+}, {
+    "site": "Wenzhou",
+    "country": "China",
+    "value": 3,
+    "id": "325"
+}, {
+    "site": "Nanning",
+    "country": "China",
+    "value": 5,
+    "id": "347"
+}, {
+    "site": "Anyang",
+    "country": "China",
+    "value": 5,
+    "id": "358"
+}, {
+    "site": "Hohhot",
+    "country": "China",
+    "value": 3,
+    "id": "361"
+}, {
+    "site": "Xining",
+    "country": "China",
+    "value": 4,
+    "id": "367"
+}, {
+    "site": "Liuzhou",
+    "country": "China",
+    "value": 4,
+    "id": "369"
+}, {
+    "site": "Hengyang",
+    "country": "China",
+    "value": 1,
+    "id": "374"
+}, {
+    "site": "Taian",
+    "country": "China",
+    "value": 2,
+    "id": "381"
+}, {
+    "site": "Xinxiang",
+    "country": "China",
+    "value": 4,
+    "id": "389"
+}, {
+    "site": "Hegang",
+    "country": "China",
+    "value": 3,
+    "id": "391"
+}, {
+    "site": "Langfang",
+    "country": "China",
+    "value": 5,
+    "id": "403"
+}, {
+    "site": "Ningbo",
+    "country": "China",
+    "value": 4,
+    "id": "404"
+}, {
+    "site": "Yantai",
+    "country": "China",
+    "value": 6,
+    "id": "405"
+}, {
+    "site": "Zhuzhou",
+    "country": "China",
+    "value": 2,
+    "id": "412"
+}, {
+    "site": "Zhangjiakou",
+    "country": "China",
+    "value": 6,
+    "id": "420"
+}, {
+    "site": "Zigong",
+    "country": "China",
+    "value": 1,
+    "id": "422"
+}, {
+    "site": "Fuxin",
+    "country": "China",
+    "value": 1,
+    "id": "423"
+}, {
+    "site": "Liaoyang",
+    "country": "China",
+    "value": 2,
+    "id": "424"
+}, {
+    "site": "Zhangdian",
+    "country": "China",
+    "value": 3,
+    "id": "434"
+}, {
+    "site": "Puyang",
+    "country": "China",
+    "value": 4,
+    "id": "436"
+}, {
+    "site": "Nantong",
+    "country": "China",
+    "value": 4,
+    "id": "437"
+}, {
+    "site": "Mudanjiang",
+    "country": "China",
+    "value": 4,
+    "id": "438"
+}, {
+    "site": "Shaoyang",
+    "country": "China",
+    "value": 2,
+    "id": "449"
+}, {
+    "site": "Guilin",
+    "country": "China",
+    "value": 4,
+    "id": "450"
+}, {
+    "site": "Zhanjiang",
+    "country": "China",
+    "value": 2,
+    "id": "460"
+}, {
+    "site": "Dandong",
+    "country": "China",
+    "value": 3,
+    "id": "466"
+}, {
+    "site": "Shaoguan",
+    "country": "China",
+    "value": 4,
+    "id": "468"
+}, {
+    "site": "Yancheng",
+    "country": "China",
+    "value": 2,
+    "id": "469"
+}, {
+    "site": "Foshan",
+    "country": "China",
+    "value": 5,
+    "id": "470"
+}, {
+    "site": "Haikou",
+    "country": "China",
+    "value": 3,
+    "id": "477"
+}, {
+    "site": "Taizhou",
+    "country": "China",
+    "value": 4,
+    "id": "480"
+}, {
+    "site": "Xingtai",
+    "country": "China",
+    "value": 2,
+    "id": "482"
+}, {
+    "site": "Jinzhou",
+    "country": "China",
+    "value": 7,
+    "id": "489"
+}, {
+    "site": "Luancheng",
+    "country": "China",
+    "value": 4,
+    "id": "499"
+}, {
+    "site": "BogotÃ¡",
+    "country": "Colombia",
+    "value": 2,
+    "id": "21"
+}, {
+    "site": "Cali",
+    "country": "Colombia",
+    "value": 8,
+    "id": "87"
+}, {
+    "site": "MedellÃ­n",
+    "country": "Colombia",
+    "value": 4,
+    "id": "103"
+}, {
+    "site": "Barranquilla",
+    "country": "Colombia",
+    "value": 5,
+    "id": "178"
+}, {
+    "site": "Cartagena",
+    "country": "Colombia",
+    "value": 4,
+    "id": "297"
+}, {
+    "site": "CÃºcuta",
+    "country": "Colombia",
+    "value": 6,
+    "id": "401"
+}, {
+    "site": "Brazzaville",
+    "country": "Congo",
+    "value": 3,
+    "id": "243"
+}, {
+    "site": "Kinshasa",
+    "country": "Congo (Democratic Republic of the)",
+    "value": 2,
+    "id": "16"
+}, {
+    "site": "Lubumbashi",
+    "country": "Congo (Democratic Republic of the)",
+    "value": 5,
+    "id": "180"
+}, {
+    "site": "Mbuji-Mayi",
+    "country": "Congo (Democratic Republic of the)",
+    "value": 2,
+    "id": "321"
+}, {
+    "site": "Abidjan",
+    "country": "CÃ´te d'Ivoire",
+    "value": 4,
+    "id": "44"
+}, {
+    "site": "Zagreb",
+    "country": "Croatia",
+    "value": 5,
+    "id": "417"
+}, {
+    "site": "Prague",
+    "country": "Czech Republic",
+    "value": 3,
+    "id": "232"
+}, {
+    "site": "Copenhagen",
+    "country": "Denmark",
+    "value": 4,
+    "id": "251"
+}, {
+    "site": "Jibuti",
+    "country": "Djibouti",
+    "value": 7,
+    "id": "473"
+}, {
+    "site": "Santo Domingo",
+    "country": "Dominican Republic",
+    "value": 5,
+    "id": "94"
+}, {
+    "site": "Guayaquil",
+    "country": "Ecuador",
+    "value": 6,
+    "id": "108"
+}, {
+    "site": "Quito",
+    "country": "Ecuador",
+    "value": 3,
+    "id": "170"
+}, {
+    "site": "Cairo",
+    "country": "Egypt",
+    "value": 5,
+    "id": "17"
+}, {
+    "site": "Alexandria",
+    "country": "Egypt",
+    "value": 3,
+    "id": "40"
+}, {
+    "site": "Gizeh",
+    "country": "Egypt",
+    "value": 2,
+    "id": "85"
+}, {
+    "site": "Addis Abeba",
+    "country": "Ethiopia",
+    "value": 3,
+    "id": "69"
+}, {
+    "site": "Paris",
+    "country": "France",
+    "value": 5,
+    "id": "97"
+}, {
+    "site": "Marseille",
+    "country": "France",
+    "value": 4,
+    "id": "353"
+}, {
+    "site": "Tbilisi",
+    "country": "Georgia",
+    "value": 7,
+    "id": "262"
+}, {
+    "site": "Berlin",
+    "country": "Germany",
+    "value": 2,
+    "id": "55"
+}, {
+    "site": "Hamburg",
+    "country": "Germany",
+    "value": 3,
+    "id": "124"
+}, {
+    "site": "Munich",
+    "country": "Germany",
+    "value": 3,
+    "id": "207"
+}, {
+    "site": "Cologne",
+    "country": "Germany",
+    "value": 2,
+    "id": "293"
+}, {
+    "site": "Frankfurt",
+    "country": "Germany",
+    "value": 4,
+    "id": "453"
+}, {
+    "site": "Accra",
+    "country": "Ghana",
+    "value": 3,
+    "id": "107"
+}, {
+    "site": "Kumasi",
+    "country": "Ghana",
+    "value": 2,
+    "id": "151"
+}, {
+    "site": "Athens",
+    "country": "Greece",
+    "value": 10,
+    "id": "399"
+}, {
+    "site": "Guatemala City",
+    "country": "Guatemala",
+    "value": 4,
+    "id": "290"
+}, {
+    "site": "Guatemala",
+    "country": "Guatemala",
+    "value": 4,
+    "id": "291"
+}, {
+    "site": "Conakry",
+    "country": "Guinea",
+    "value": 10,
+    "id": "115"
+}, {
+    "site": "Port-au-Prince",
+    "country": "Haiti",
+    "value": 2,
+    "id": "209"
+}, {
+    "site": "Tegucigalpa",
+    "country": "Honduras",
+    "value": 4,
+    "id": "329"
+}, {
+    "site": "Budapest",
+    "country": "Hungary",
+    "value": 9,
+    "id": "126"
+}, {
+    "site": "Bombay",
+    "country": "India",
+    "value": 2,
+    "id": "3"
+}, {
+    "site": "Delhi",
+    "country": "India",
+    "value": 5,
+    "id": "5"
+}, {
+    "site": "New Delhi",
+    "country": "India",
+    "value": 4,
+    "id": "6"
+}, {
+    "site": "Bangalore",
+    "country": "India",
+    "value": 7,
+    "id": "27"
+}, {
+    "site": "Calcutta",
+    "country": "India",
+    "value": 4,
+    "id": "29"
+}, {
+    "site": "Madras",
+    "country": "India",
+    "value": 3,
+    "id": "33"
+}, {
+    "site": "Ahmadabad",
+    "country": "India",
+    "value": 2,
+    "id": "43"
+}, {
+    "site": "Hyderabad",
+    "country": "India",
+    "value": 1,
+    "id": "47"
+}, {
+    "site": "Pune",
+    "country": "India",
+    "value": 8,
+    "id": "63"
+}, {
+    "site": "Surat",
+    "country": "India",
+    "value": 8,
+    "id": "64"
+}, {
+    "site": "Kanpur",
+    "country": "India",
+    "value": 4,
+    "id": "66"
+}, {
+    "site": "Jaipur",
+    "country": "India",
+    "value": 3,
+    "id": "72"
+}, {
+    "site": "Lakhnau",
+    "country": "India",
+    "value": 6,
+    "id": "84"
+}, {
+    "site": "Nagpur",
+    "country": "India",
+    "value": 9,
+    "id": "91"
+}, {
+    "site": "Indore",
+    "country": "India",
+    "value": 3,
+    "id": "118"
+}, {
+    "site": "Patna",
+    "country": "India",
+    "value": 2,
+    "id": "133"
+}, {
+    "site": "Bhopal",
+    "country": "India",
+    "value": 5,
+    "id": "134"
+}, {
+    "site": "Ludhiana",
+    "country": "India",
+    "value": 6,
+    "id": "143"
+}, {
+    "site": "Thana",
+    "country": "India",
+    "value": 7,
+    "id": "149"
+}, {
+    "site": "Agra",
+    "country": "India",
+    "value": 3,
+    "id": "160"
+}, {
+    "site": "Vadodara",
+    "country": "India",
+    "value": 1,
+    "id": "166"
+}, {
+    "site": "Pimpri",
+    "country": "India",
+    "value": 4,
+    "id": "196"
+}, {
+    "site": "Faridabad",
+    "country": "India",
+    "value": 5,
+    "id": "198"
+}, {
+    "site": "Kalyan",
+    "country": "India",
+    "value": 3,
+    "id": "200"
+}, {
+    "site": "Ghaziabad",
+    "country": "India",
+    "value": 5,
+    "id": "218"
+}, {
+    "site": "Rajkot",
+    "country": "India",
+    "value": 3,
+    "id": "225"
+}, {
+    "site": "Varanasi",
+    "country": "India",
+    "value": 3,
+    "id": "229"
+}, {
+    "site": "Amritsar",
+    "country": "India",
+    "value": 2,
+    "id": "250"
+}, {
+    "site": "Allahabad",
+    "country": "India",
+    "value": 7,
+    "id": "256"
+}, {
+    "site": "Jabalpur",
+    "country": "India",
+    "value": 10,
+    "id": "267"
+}, {
+    "site": "Haora",
+    "country": "India",
+    "value": 5,
+    "id": "268"
+}, {
+    "site": "Aurangabad",
+    "country": "India",
+    "value": 4,
+    "id": "273"
+}, {
+    "site": "Sholapur",
+    "country": "India",
+    "value": 2,
+    "id": "281"
+}, {
+    "site": "Srinagar",
+    "country": "India",
+    "value": 2,
+    "id": "288"
+}, {
+    "site": "Ranchi",
+    "country": "India",
+    "value": 5,
+    "id": "299"
+}, {
+    "site": "Jodhpur",
+    "country": "India",
+    "value": 6,
+    "id": "304"
+}, {
+    "site": "Chandigarh",
+    "country": "India",
+    "value": 6,
+    "id": "306"
+}, {
+    "site": "Madurai",
+    "country": "India",
+    "value": 12,
+    "id": "307"
+}, {
+    "site": "Guwahati",
+    "country": "India",
+    "value": 3,
+    "id": "311"
+}, {
+    "site": "Gwalior",
+    "country": "India",
+    "value": 7,
+    "id": "317"
+}, {
+    "site": "Vijayawada",
+    "country": "India",
+    "value": 4,
+    "id": "322"
+}, {
+    "site": "Maisuru",
+    "country": "India",
+    "value": 4,
+    "id": "324"
+}, {
+    "site": "Hubli",
+    "country": "India",
+    "value": 7,
+    "id": "336"
+}, {
+    "site": "Jalandhar",
+    "country": "India",
+    "value": 4,
+    "id": "355"
+}, {
+    "site": "Thiruvananthapuram",
+    "country": "India",
+    "value": 3,
+    "id": "356"
+}, {
+    "site": "Selam",
+    "country": "India",
+    "value": 3,
+    "id": "359"
+}, {
+    "site": "Tiruchchirappalli",
+    "country": "India",
+    "value": 5,
+    "id": "360"
+}, {
+    "site": "Kota",
+    "country": "India",
+    "value": 3,
+    "id": "370"
+}, {
+    "site": "Bhubaneswar",
+    "country": "India",
+    "value": 4,
+    "id": "372"
+}, {
+    "site": "Aligarh",
+    "country": "India",
+    "value": 3,
+    "id": "379"
+}, {
+    "site": "Bareli",
+    "country": "India",
+    "value": 6,
+    "id": "387"
+}, {
+    "site": "Moradabad",
+    "country": "India",
+    "value": 1,
+    "id": "402"
+}, {
+    "site": "Bhiwandi",
+    "country": "India",
+    "value": 9,
+    "id": "414"
+}, {
+    "site": "Raipur",
+    "country": "India",
+    "value": 6,
+    "id": "428"
+}, {
+    "site": "Gorakhpur",
+    "country": "India",
+    "value": 6,
+    "id": "432"
+}, {
+    "site": "Bhilai",
+    "country": "India",
+    "value": 3,
+    "id": "472"
+}, {
+    "site": "Jamshedpur",
+    "country": "India",
+    "value": 5,
+    "id": "476"
+}, {
+    "site": "Kochi",
+    "country": "India",
+    "value": 5,
+    "id": "488"
+}, {
+    "site": "Amravati",
+    "country": "India",
+    "value": 5,
+    "id": "490"
+}, {
+    "site": "Jakarta",
+    "country": "Indonesia",
+    "value": 5,
+    "id": "14"
+}, {
+    "site": "Surabaya",
+    "country": "Indonesia",
+    "value": 2,
+    "id": "88"
+}, {
+    "site": "Medan",
+    "country": "Indonesia",
+    "value": 1,
+    "id": "121"
+}, {
+    "site": "Bandung",
+    "country": "Indonesia",
+    "value": 4,
+    "id": "127"
+}, {
+    "site": "Bekasi",
+    "country": "Indonesia",
+    "value": 4,
+    "id": "145"
+}, {
+    "site": "Tangerang",
+    "country": "Indonesia",
+    "value": 5,
+    "id": "182"
+}, {
+    "site": "Makasar",
+    "country": "Indonesia",
+    "value": 8,
+    "id": "188"
+}, {
+    "site": "Semarang",
+    "country": "Indonesia",
+    "value": 2,
+    "id": "193"
+}, {
+    "site": "Palembang",
+    "country": "Indonesia",
+    "value": 1,
+    "id": "208"
+}, {
+    "site": "Depok",
+    "country": "Indonesia",
+    "value": 2,
+    "id": "221"
+}, {
+    "site": "Padang",
+    "country": "Indonesia",
+    "value": 2,
+    "id": "335"
+}, {
+    "site": "Bogor",
+    "country": "Indonesia",
+    "value": 5,
+    "id": "366"
+}, {
+    "site": "Malang",
+    "country": "Indonesia",
+    "value": 5,
+    "id": "383"
+}, {
+    "site": "Yogyakarta",
+    "country": "Indonesia",
+    "value": 1,
+    "id": "461"
+}, {
+    "site": "Mashhad",
+    "country": "Iran (Islamic Republic of)",
+    "value": 3,
+    "id": "90"
+}, {
+    "site": "Esfahan",
+    "country": "Iran (Islamic Republic of)",
+    "value": 2,
+    "id": "142"
+}, {
+    "site": "Karaj",
+    "country": "Iran (Islamic Republic of)",
+    "value": 3,
+    "id": "154"
+}, {
+    "site": "Tabriz",
+    "country": "Iran (Islamic Republic of)",
+    "value": 8,
+    "id": "162"
+}, {
+    "site": "Shiraz",
+    "country": "Iran (Islamic Republic of)",
+    "value": 6,
+    "id": "205"
+}, {
+    "site": "Qom",
+    "country": "Iran (Islamic Republic of)",
+    "value": 5,
+    "id": "274"
+}, {
+    "site": "Ahvaz",
+    "country": "Iran (Islamic Republic of)",
+    "value": 4,
+    "id": "328"
+}, {
+    "site": "Kermanshah",
+    "country": "Iran (Islamic Republic of)",
+    "value": 5,
+    "id": "368"
+}, {
+    "site": "Orumiyeh",
+    "country": "Iran (Islamic Republic of)",
+    "value": 4,
+    "id": "494"
+}, {
+    "site": "Baghdad",
+    "country": "Iraq",
+    "value": 5,
+    "id": "25"
+}, {
+    "site": "Irbil",
+    "country": "Iraq",
+    "value": 1,
+    "id": "303"
+}, {
+    "site": "Kirkuk",
+    "country": "Iraq",
+    "value": 5,
+    "id": "495"
+}, {
+    "site": "Dublin",
+    "country": "Ireland",
+    "value": 4,
+    "id": "270"
+}, {
+    "site": "Jerusalem",
+    "country": "Israel",
+    "value": 6,
+    "id": "409"
+}, {
+    "site": "Rome",
+    "country": "Italy",
+    "value": 4,
+    "id": "76"
+}, {
+    "site": "Milan",
+    "country": "Italy",
+    "value": 3,
+    "id": "231"
+}, {
+    "site": "Naples",
+    "country": "Italy",
+    "value": 1,
+    "id": "287"
+}, {
+    "site": "Turin",
+    "country": "Italy",
+    "value": 4,
+    "id": "330"
+}, {
+    "site": "Tokyo",
+    "country": "Japan",
+    "value": 2,
+    "id": "1"
+}, {
+    "site": "Nagoya",
+    "country": "Japan",
+    "value": 3,
+    "id": "95"
+}, {
+    "site": "Kobe",
+    "country": "Japan",
+    "value": 2,
+    "id": "144"
+}, {
+    "site": "Kawasaki",
+    "country": "Japan",
+    "value": 4,
+    "id": "189"
+}, {
+    "site": "Hiroshima",
+    "country": "Japan",
+    "value": 4,
+    "id": "235"
+}, {
+    "site": "Saitama",
+    "country": "Japan",
+    "value": 3,
+    "id": "253"
+}, {
+    "site": "Kitakyushu",
+    "country": "Japan",
+    "value": 7,
+    "id": "280"
+}, {
+    "site": "Sakai",
+    "country": "Japan",
+    "value": 4,
+    "id": "357"
+}, {
+    "site": "Sagamihara",
+    "country": "Japan",
+    "value": 4,
+    "id": "451"
+}, {
+    "site": "Hamamatsu",
+    "country": "Japan",
+    "value": 3,
+    "id": "487"
+}, {
+    "site": "Almaty",
+    "country": "Kazakhstan",
+    "value": 4,
+    "id": "216"
+}, {
+    "site": "Nairobi",
+    "country": "Kenya",
+    "value": 4,
+    "id": "70"
+}, {
+    "site": "Mombasa",
+    "country": "Kenya",
+    "value": 4,
+    "id": "349"
+}, {
+    "site": "Seoul",
+    "country": "Korea (Republic of)",
+    "value": 2,
+    "id": "9"
+}, {
+    "site": "Riga",
+    "country": "Latvia",
+    "value": 5,
+    "id": "392"
+}, {
+    "site": "Bayrut",
+    "country": "Lebanon",
+    "value": 3,
+    "id": "203"
+}, {
+    "site": "Beirut",
+    "country": "Lebanon",
+    "value": 7,
+    "id": "204"
+}, {
+    "site": "Monrovia",
+    "country": "Liberia",
+    "value": 6,
+    "id": "302"
+}, {
+    "site": "Tripoli",
+    "country": "Libya",
+    "value": 2,
+    "id": "233"
+}, {
+    "site": "Benghazi",
+    "country": "Libya",
+    "value": 1,
+    "id": "447"
+}, {
+    "site": "Antananarivo",
+    "country": "Madagascar",
+    "value": 2,
+    "id": "172"
+}, {
+    "site": "Lilongwe",
+    "country": "Malawi",
+    "value": 8,
+    "id": "454"
+}, {
+    "site": "Kuala Lumpur",
+    "country": "Malaysia",
+    "value": 2,
+    "id": "152"
+}, {
+    "site": "Klang",
+    "country": "Malaysia",
+    "value": 5,
+    "id": "319"
+}, {
+    "site": "Johor Bahru",
+    "country": "Malaysia",
+    "value": 4,
+    "id": "348"
+}, {
+    "site": "Ipoh",
+    "country": "Malaysia",
+    "value": 7,
+    "id": "433"
+}, {
+    "site": "Bamako",
+    "country": "Mali",
+    "value": 4,
+    "id": "192"
+}, {
+    "site": "Nouakchott",
+    "country": "Mauritania",
+    "value": 3,
+    "id": "411"
+}, {
+    "site": "Mexico",
+    "country": "Mexico",
+    "value": 2,
+    "id": "13"
+}, {
+    "site": "Ecatepec",
+    "country": "Mexico",
+    "value": 4,
+    "id": "120"
+}, {
+    "site": "Guadalajara",
+    "country": "Mexico",
+    "value": 4,
+    "id": "131"
+}, {
+    "site": "Juarez",
+    "country": "Mexico",
+    "value": 8,
+    "id": "168"
+}, {
+    "site": "Puebla",
+    "country": "Mexico",
+    "value": 2,
+    "id": "171"
+}, {
+    "site": "Tijuana",
+    "country": "Mexico",
+    "value": 2,
+    "id": "179"
+}, {
+    "site": "NezahualcÃ³yotl",
+    "country": "Mexico",
+    "value": 2,
+    "id": "210"
+}, {
+    "site": "Monterrey",
+    "country": "Mexico",
+    "value": 4,
+    "id": "241"
+}, {
+    "site": "LeÃ³n",
+    "country": "Mexico",
+    "value": 5,
+    "id": "245"
+}, {
+    "site": "Zapopan",
+    "country": "Mexico",
+    "value": 4,
+    "id": "284"
+}, {
+    "site": "Naucalpan",
+    "country": "Mexico",
+    "value": 5,
+    "id": "331"
+}, {
+    "site": "Guadalupe",
+    "country": "Mexico",
+    "value": 4,
+    "id": "400"
+}, {
+    "site": "MÃ©rida",
+    "country": "Mexico",
+    "value": 7,
+    "id": "407"
+}, {
+    "site": "Tlalnepantla",
+    "country": "Mexico",
+    "value": 3,
+    "id": "408"
+}, {
+    "site": "Chihuahua",
+    "country": "Mexico",
+    "value": 7,
+    "id": "413"
+}, {
+    "site": "San Luis PotosÃ­",
+    "country": "Mexico",
+    "value": 6,
+    "id": "431"
+}, {
+    "site": "Aguascalientes",
+    "country": "Mexico",
+    "value": 7,
+    "id": "440"
+}, {
+    "site": "Acapulco",
+    "country": "Mexico",
+    "value": 1,
+    "id": "445"
+}, {
+    "site": "Saltillo",
+    "country": "Mexico",
+    "value": 5,
+    "id": "474"
+}, {
+    "site": "QuerÃ©taro",
+    "country": "Mexico",
+    "value": 5,
+    "id": "481"
+}, {
+    "site": "Mexicali",
+    "country": "Mexico",
+    "value": 6,
+    "id": "500"
+}, {
+    "site": "Chisinau",
+    "country": "Moldova (Republic of)",
+    "value": 4,
+    "id": "410"
+}, {
+    "site": "Ulaanbaatar",
+    "country": "Mongolia",
+    "value": 3,
+    "id": "332"
+}, {
+    "site": "Casablanca",
+    "country": "Morocco",
+    "value": 6,
+    "id": "46"
+}, {
+    "site": "Rabat",
+    "country": "Morocco",
+    "value": 4,
+    "id": "110"
+}, {
+    "site": "Fez",
+    "country": "Morocco",
+    "value": 5,
+    "id": "230"
+}, {
+    "site": "Marrakesh",
+    "country": "Morocco",
+    "value": 4,
+    "id": "300"
+}, {
+    "site": "Tangier",
+    "country": "Morocco",
+    "value": 5,
+    "id": "339"
+}, {
+    "site": "Agadir",
+    "country": "Morocco",
+    "value": 6,
+    "id": "441"
+}, {
+    "site": "Maputo",
+    "country": "Mozambique",
+    "value": 4,
+    "id": "222"
+}, {
+    "site": "Rangoon",
+    "country": "Myanmar",
+    "value": 3,
+    "id": "31"
+}, {
+    "site": "Mandalay",
+    "country": "Myanmar",
+    "value": 6,
+    "id": "215"
+}, {
+    "site": "Kathmandu",
+    "country": "Nepal",
+    "value": 2,
+    "id": "354"
+}, {
+    "site": "Amsterdam",
+    "country": "Netherlands",
+    "value": 1,
+    "id": "385"
+}, {
+    "site": "Rotterdam",
+    "country": "Netherlands",
+    "value": 4,
+    "id": "491"
+}, {
+    "site": "Managua",
+    "country": "Nicaragua",
+    "value": 4,
+    "id": "236"
+}, {
+    "site": "Niamey",
+    "country": "Niger",
+    "value": 4,
+    "id": "362"
+}, {
+    "site": "Niamey",
+    "country": "Niger",
+    "value": 2,
+    "id": "363"
+}, {
+    "site": "Lagos",
+    "country": "Nigeria",
+    "value": 5,
+    "id": "12"
+}, {
+    "site": "Kano",
+    "country": "Nigeria",
+    "value": 5,
+    "id": "45"
+}, {
+    "site": "Ibadan",
+    "country": "Nigeria",
+    "value": 3,
+    "id": "48"
+}, {
+    "site": "Kaduna",
+    "country": "Nigeria",
+    "value": 4,
+    "id": "137"
+}, {
+    "site": "Port Harcourt",
+    "country": "Nigeria",
+    "value": 3,
+    "id": "234"
+}, {
+    "site": "BÃ©nin",
+    "country": "Nigeria",
+    "value": 6,
+    "id": "240"
+}, {
+    "site": "Maiduguri",
+    "country": "Nigeria",
+    "value": 4,
+    "id": "246"
+}, {
+    "site": "Zaria",
+    "country": "Nigeria",
+    "value": 2,
+    "id": "289"
+}, {
+    "site": "Aba",
+    "country": "Nigeria",
+    "value": 6,
+    "id": "312"
+}, {
+    "site": "Ogbomosho",
+    "country": "Nigeria",
+    "value": 3,
+    "id": "327"
+}, {
+    "site": "Jos",
+    "country": "Nigeria",
+    "value": 2,
+    "id": "342"
+}, {
+    "site": "Ilorin",
+    "country": "Nigeria",
+    "value": 3,
+    "id": "343"
+}, {
+    "site": "Oyo",
+    "country": "Nigeria",
+    "value": 5,
+    "id": "394"
+}, {
+    "site": "Enugu",
+    "country": "Nigeria",
+    "value": 4,
+    "id": "443"
+}, {
+    "site": "Oslo",
+    "country": "Norway",
+    "value": 8,
+    "id": "346"
+}, {
+    "site": "Karachi",
+    "country": "Pakistan",
+    "value": 5,
+    "id": "4"
+}, {
+    "site": "Lahore",
+    "country": "Pakistan",
+    "value": 3,
+    "id": "23"
+}, {
+    "site": "Faisalabad",
+    "country": "Pakistan",
+    "value": 5,
+    "id": "82"
+}, {
+    "site": "Rawalpindi",
+    "country": "Pakistan",
+    "value": 4,
+    "id": "122"
+}, {
+    "site": "Hyderabad",
+    "country": "Pakistan",
+    "value": 5,
+    "id": "175"
+}, {
+    "site": "Gujranwala",
+    "country": "Pakistan",
+    "value": 6,
+    "id": "177"
+}, {
+    "site": "Peshawar",
+    "country": "Pakistan",
+    "value": 4,
+    "id": "211"
+}, {
+    "site": "Islamabad",
+    "country": "Pakistan",
+    "value": 6,
+    "id": "377"
+}, {
+    "site": "Quetta",
+    "country": "Pakistan",
+    "value": 6,
+    "id": "396"
+}, {
+    "site": "Lima",
+    "country": "Peru",
+    "value": 6,
+    "id": "18"
+}, {
+    "site": "Arequipa",
+    "country": "Peru",
+    "value": 5,
+    "id": "333"
+}, {
+    "site": "Trujillo",
+    "country": "Peru",
+    "value": 6,
+    "id": "382"
+}, {
+    "site": "Manila",
+    "country": "Philippines",
+    "value": 3,
+    "id": "7"
+}, {
+    "site": "Davao",
+    "country": "Philippines",
+    "value": 4,
+    "id": "213"
+}, {
+    "site": "Cebu",
+    "country": "Philippines",
+    "value": 4,
+    "id": "376"
+}, {
+    "site": "Warsaw",
+    "country": "Poland",
+    "value": 3,
+    "id": "129"
+}, {
+    "site": "Cracow",
+    "country": "Poland",
+    "value": 5,
+    "id": "378"
+}, {
+    "site": "Wroclaw",
+    "country": "Poland",
+    "value": 4,
+    "id": "463"
+}, {
+    "site": "Bucharest",
+    "country": "Romania",
+    "value": 5,
+    "id": "113"
+}, {
+    "site": "Moscow",
+    "country": "Russian Federation",
+    "value": 5,
+    "id": "8"
+}, {
+    "site": "Saint Petersburg",
+    "country": "Russian Federation",
+    "value": 6,
+    "id": "35"
+}, {
+    "site": "Yekaterinburg",
+    "country": "Russian Federation",
+    "value": 5,
+    "id": "194"
+}, {
+    "site": "Nizhniy Novgorod",
+    "country": "Russian Federation",
+    "value": 2,
+    "id": "197"
+}, {
+    "site": "Samara",
+    "country": "Russian Federation",
+    "value": 1,
+    "id": "238"
+}, {
+    "site": "Omsk",
+    "country": "Russian Federation",
+    "value": 4,
+    "id": "239"
+}, {
+    "site": "Kazan",
+    "country": "Russian Federation",
+    "value": 4,
+    "id": "248"
+}, {
+    "site": "Rostov-na-Donu",
+    "country": "Russian Federation",
+    "value": 8,
+    "id": "254"
+}, {
+    "site": "Chelyabinsk",
+    "country": "Russian Federation",
+    "value": 5,
+    "id": "259"
+}, {
+    "site": "Ufa",
+    "country": "Russian Federation",
+    "value": 3,
+    "id": "264"
+}, {
+    "site": "Perm",
+    "country": "Russian Federation",
+    "value": 2,
+    "id": "286"
+}, {
+    "site": "Krasnoyarsk",
+    "country": "Russian Federation",
+    "value": 2,
+    "id": "308"
+}, {
+    "site": "Saratov",
+    "country": "Russian Federation",
+    "value": 5,
+    "id": "326"
+}, {
+    "site": "Voronezh",
+    "country": "Russian Federation",
+    "value": 4,
+    "id": "334"
+}, {
+    "site": "Tolyatti",
+    "country": "Russian Federation",
+    "value": 2,
+    "id": "406"
+}, {
+    "site": "Krasnodar",
+    "country": "Russian Federation",
+    "value": 4,
+    "id": "448"
+}, {
+    "site": "Ulyanovsk",
+    "country": "Russian Federation",
+    "value": 1,
+    "id": "459"
+}, {
+    "site": "Izhevsk",
+    "country": "Russian Federation",
+    "value": 3,
+    "id": "467"
+}, {
+    "site": "Yaroslavl",
+    "country": "Russian Federation",
+    "value": 4,
+    "id": "485"
+}, {
+    "site": "Barnaul",
+    "country": "Russian Federation",
+    "value": 7,
+    "id": "496"
+}, {
+    "site": "Kigali",
+    "country": "Rwanda",
+    "value": 2,
+    "id": "386"
+}, {
+    "site": "Riyadh",
+    "country": "Saudi Arabia",
+    "value": 4,
+    "id": "52"
+}, {
+    "site": "Jiddah",
+    "country": "Saudi Arabia",
+    "value": 4,
+    "id": "78"
+}, {
+    "site": "Mecca",
+    "country": "Saudi Arabia",
+    "value": 1,
+    "id": "217"
+}, {
+    "site": "Dakar",
+    "country": "Senegal",
+    "value": 1,
+    "id": "74"
+}, {
+    "site": "Belgrade",
+    "country": "Serbia",
+    "value": 5,
+    "id": "244"
+}, {
+    "site": "Freetown",
+    "country": "Sierra Leone",
+    "value": 4,
+    "id": "223"
+}, {
+    "site": "Singapore",
+    "country": "Singapore",
+    "value": 6,
+    "id": "49"
+}, {
+    "site": "Mogadishu",
+    "country": "Somalia",
+    "value": 2,
+    "id": "77"
+}, {
+    "site": "Cape Town",
+    "country": "South Africa",
+    "value": 5,
+    "id": "54"
+}, {
+    "site": "Durban",
+    "country": "South Africa",
+    "value": 7,
+    "id": "59"
+}, {
+    "site": "Johannesburg",
+    "country": "South Africa",
+    "value": 3,
+    "id": "102"
+}, {
+    "site": "Soweto",
+    "country": "South Africa",
+    "value": 3,
+    "id": "128"
+}, {
+    "site": "Port Elizabeth",
+    "country": "South Africa",
+    "value": 3,
+    "id": "295"
+}, {
+    "site": "Pietermaritzburg",
+    "country": "South Africa",
+    "value": 4,
+    "id": "380"
+}, {
+    "site": "Benoni",
+    "country": "South Africa",
+    "value": 6,
+    "id": "486"
+}, {
+    "site": "Madrid",
+    "country": "Spain",
+    "value": 5,
+    "id": "60"
+}, {
+    "site": "Barcelona",
+    "country": "Spain",
+    "value": 6,
+    "id": "140"
+}, {
+    "site": "Valencia",
+    "country": "Spain",
+    "value": 4,
+    "id": "365"
+}, {
+    "site": "Sevilla",
+    "country": "Spain",
+    "value": 7,
+    "id": "425"
+}, {
+    "site": "Zaragoza",
+    "country": "Spain",
+    "value": 6,
+    "id": "462"
+}, {
+    "site": "Colombo",
+    "country": "Sri Lanka",
+    "value": 4,
+    "id": "452"
+}, {
+    "site": "Umm Durman",
+    "country": "Sudan",
+    "value": 4,
+    "id": "67"
+}, {
+    "site": "Khartoum",
+    "country": "Sudan",
+    "value": 6,
+    "id": "106"
+}, {
+    "site": "Stockholm",
+    "country": "Sweden",
+    "value": 6,
+    "id": "202"
+}, {
+    "site": "Aleppo",
+    "country": "Syrian Arab Republic",
+    "value": 2,
+    "id": "96"
+}, {
+    "site": "Damascus",
+    "country": "Syrian Arab Republic",
+    "value": 7,
+    "id": "138"
+}, {
+    "site": "Taipei",
+    "country": "Taiwan, Province of China",
+    "value": 1,
+    "id": "80"
+}, {
+    "site": "Kaohsiung",
+    "country": "Taiwan, Province of China",
+    "value": 6,
+    "id": "146"
+}, {
+    "site": "Kaohsiung",
+    "country": "Taiwan, Province of China",
+    "value": 3,
+    "id": "147"
+}, {
+    "site": "Taichung",
+    "country": "Taiwan, Province of China",
+    "value": 1,
+    "id": "252"
+}, {
+    "site": "Tainan",
+    "country": "Taiwan, Province of China",
+    "value": 7,
+    "id": "395"
+}, {
+    "site": "Dar es Salaam",
+    "country": "Tanzania, United Republic of",
+    "value": 1,
+    "id": "75"
+}, {
+    "site": "Bangkok",
+    "country": "Thailand",
+    "value": 4,
+    "id": "26"
+}, {
+    "site": "Tunis",
+    "country": "Tunisia",
+    "value": 4,
+    "id": "419"
+}, {
+    "site": "Istanbul",
+    "country": "Turkey",
+    "value": 3,
+    "id": "11"
+}, {
+    "site": "Ankara",
+    "country": "Turkey",
+    "value": 5,
+    "id": "50"
+}, {
+    "site": "Izmir",
+    "country": "Turkey",
+    "value": 4,
+    "id": "83"
+}, {
+    "site": "Bursa",
+    "country": "Turkey",
+    "value": 3,
+    "id": "165"
+}, {
+    "site": "Adana",
+    "country": "Turkey",
+    "value": 4,
+    "id": "206"
+}, {
+    "site": "Gaziantep",
+    "country": "Turkey",
+    "value": 3,
+    "id": "257"
+}, {
+    "site": "Konya",
+    "country": "Turkey",
+    "value": 3,
+    "id": "320"
+}, {
+    "site": "Antalya",
+    "country": "Turkey",
+    "value": 2,
+    "id": "375"
+}, {
+    "site": "Mersin",
+    "country": "Turkey",
+    "value": 3,
+    "id": "479"
+}, {
+    "site": "Asgabat",
+    "country": "Turkmenistan",
+    "value": 3,
+    "id": "350"
+}, {
+    "site": "Kampala",
+    "country": "Uganda",
+    "value": 2,
+    "id": "184"
+}, {
+    "site": "Kiev",
+    "country": "Ukraine",
+    "value": 7,
+    "id": "81"
+}, {
+    "site": "Odesa",
+    "country": "Ukraine",
+    "value": 5,
+    "id": "279"
+}, {
+    "site": "Lvov",
+    "country": "Ukraine",
+    "value": 3,
+    "id": "337"
+}, {
+    "site": "Zaporizhzhya",
+    "country": "Ukraine",
+    "value": 3,
+    "id": "352"
+}, {
+    "site": "Kryvyy Rih",
+    "country": "Ukraine",
+    "value": 2,
+    "id": "444"
+}, {
+    "site": "Dubai",
+    "country": "United Arab Emirates",
+    "value": 7,
+    "id": "237"
+}, {
+    "site": "Abu Dhabi",
+    "country": "United Arab Emirates",
+    "value": 4,
+    "id": "492"
+}, {
+    "site": "London",
+    "country": "United Kingdom of Great Britain and Northern Ireland",
+    "value": 4,
+    "id": "20"
+}, {
+    "site": "Birmingham",
+    "country": "United Kingdom of Great Britain and Northern Ireland",
+    "value": 5,
+    "id": "285"
+}, {
+    "site": "Glasgow",
+    "country": "United Kingdom of Great Britain and Northern Ireland",
+    "value": 5,
+    "id": "484"
+}, {
+    "site": "New York",
+    "country": "United States of America",
+    "value": 7,
+    "id": "15"
+}, {
+    "site": "Los Angeles",
+    "country": "United States of America",
+    "value": 2,
+    "id": "39"
+}, {
+    "site": "Chicago",
+    "country": "United States of America",
+    "value": 6,
+    "id": "65"
+}, {
+    "site": "Houston",
+    "country": "United States of America",
+    "value": 5,
+    "id": "101"
+}, {
+    "site": "Philadelphia",
+    "country": "United States of America",
+    "value": 3,
+    "id": "153"
+}, {
+    "site": "Phoenix",
+    "country": "United States of America",
+    "value": 1,
+    "id": "161"
+}, {
+    "site": "San Diego",
+    "country": "United States of America",
+    "value": 1,
+    "id": "195"
+}, {
+    "site": "Dallas",
+    "country": "United States of America",
+    "value": 3,
+    "id": "214"
+}, {
+    "site": "San Jose",
+    "country": "United States of America",
+    "value": 2,
+    "id": "313"
+}, {
+    "site": "Detroit",
+    "country": "United States of America",
+    "value": 5,
+    "id": "316"
+}, {
+    "site": "Jacksonville",
+    "country": "United States of America",
+    "value": 4,
+    "id": "351"
+}, {
+    "site": "Indianapolis",
+    "country": "United States of America",
+    "value": 1,
+    "id": "364"
+}, {
+    "site": "Columbus",
+    "country": "United States of America",
+    "value": 3,
+    "id": "393"
+}, {
+    "site": "San Francisco",
+    "country": "United States of America",
+    "value": 2,
+    "id": "397"
+}, {
+    "site": "Austin",
+    "country": "United States of America",
+    "value": 3,
+    "id": "429"
+}, {
+    "site": "Memphis",
+    "country": "United States of America",
+    "value": 3,
+    "id": "458"
+}, {
+    "site": "Fort Worth",
+    "country": "United States of America",
+    "value": 4,
+    "id": "475"
+}, {
+    "site": "Baltimore",
+    "country": "United States of America",
+    "value": 4,
+    "id": "483"
+}, {
+    "site": "Charlotte",
+    "country": "United States of America",
+    "value": 1,
+    "id": "497"
+}, {
+    "site": "El Paso",
+    "country": "United States of America",
+    "value": 5,
+    "id": "498"
+}, {
+    "site": "Montevideo",
+    "country": "Uruguay",
+    "value": 3,
+    "id": "190"
+}, {
+    "site": "Tashkent",
+    "country": "Uzbekistan",
+    "value": 7,
+    "id": "105"
+}, {
+    "site": "Maracaibo",
+    "country": "Venezuela (Bolivarian Republic of)",
+    "value": 3,
+    "id": "109"
+}, {
+    "site": "Caracas",
+    "country": "Venezuela (Bolivarian Republic of)",
+    "value": 2,
+    "id": "119"
+}, {
+    "site": "Valencia",
+    "country": "Venezuela (Bolivarian Republic of)",
+    "value": 1,
+    "id": "176"
+}, {
+    "site": "Barquisimeto",
+    "country": "Venezuela (Bolivarian Republic of)",
+    "value": 4,
+    "id": "345"
+}, {
+    "site": "Ciudad Guayana",
+    "country": "Venezuela (Bolivarian Republic of)",
+    "value": 5,
+    "id": "384"
+}, {
+    "site": "Ho Chi Minh City",
+    "country": "Viet Nam",
+    "value": 7,
+    "id": "53"
+}, {
+    "site": "Hanoi",
+    "country": "Viet Nam",
+    "value": 3,
+    "id": "158"
+}, {
+    "site": "Ha Noi",
+    "country": "Viet Nam",
+    "value": 2,
+    "id": "159"
+}, {
+    "site": "Hai Phong",
+    "country": "Viet Nam",
+    "value": 5,
+    "id": "493"
+}, {
+    "site": "Lusaka",
+    "country": "Zambia",
+    "value": 5,
+    "id": "199"
+}, {
+    "site": "Harare",
+    "country": "Zimbabwe",
+    "value": 2,
+    "id": "92"
+}, {
+    "site": "Bulawayo",
+    "country": "Zimbabwe",
+    "value": 9,
+    "id": "314"
+}]

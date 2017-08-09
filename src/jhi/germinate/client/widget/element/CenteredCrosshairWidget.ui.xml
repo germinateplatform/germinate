@@ -1,0 +1,42 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+	<ui:style>
+		.crosshair {
+			z-index: 9999;
+			text-align: center;
+			position: relative;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+			pointer-events: none;
+			width: 19px;
+			height: 19px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</ui:style>
+
+	<g:SimplePanel addStyleNames="{style.crosshair}">
+		<g:Image
+			url="data:image/gif;base64,R0lGODlhEwATAKEAAAAAAP///wAAAAAAACH5BAEKAAIALAAAAAATABMAAAI3lC+git0QInA0xTDru1kfKHkIiIkfRy3qyioXapCcHMavRJf23fZrCjOROqKhaacTBotLz89RAAA7"/>
+	</g:SimplePanel>
+</ui:UiBinder>

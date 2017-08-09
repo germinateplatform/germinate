@@ -1,0 +1,160 @@
+\documentclass[11pt]{article} % type of the document
+\usepackage[english]{babel} % language of all the auto generated text
+\usepackage{lmodern} % use a high quality font
+\usepackage{listings} % include code snippets
+\usepackage{color} % use colors
+\usepackage{textcomp} % additional symbols
+\usepackage[hyphens]{url} % adds the \url command
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx} % used for graphics stuff
+\usepackage{subcaption} % allows adding subfigures
+\usepackage{fancyhdr} % header and footer
+\usepackage{todonotes} % \todo command
+\usepackage{everypage} % run stuff on every page
+\usepackage{pdfpages} % include pdf files as figures
+\usepackage[noindentafter]{titlesec}
+\usepackage{xspace} % add spaces after macros if necessary
+\usepackage{amstext} % includes the \text command
+\usepackage{booktabs} % table styling
+\usepackage{lipsum} % lorem ipsum
+\usepackage{enumitem}
+\usepackage{float} % absolute positioning of floats
+\usepackage{amsfonts} % additional fonts (used for \textbb
+\usepackage{booktabs} % table styling
+\usepackage{longtable} % repeat table header on each page
+\usepackage{xspace} % used to correct spacing after abbreviations
+\usepackage{amssymb,array}
+\usepackage{enumitem}
+\usepackage{geometry} % define the geometry of the page
+\geometry{a4paper,left=25mm,right=25mm, top=28mm, bottom=28mm} 
+
+\setcounter{tocdepth}{5} % define the depth of the table of contents
+\setcounter{secnumdepth}{5} % define the depth of the section structure
+
+% paragraphs look like subsubsubsections
+\titleformat{\paragraph}[hang]{\bf}{\thetitle\quad}{0pt}{}
+\titlespacing{\paragraph}{0pt}{1em}{0.5em} 
+
+% subparagraphs look like paragraphs used to look
+\titleformat{\subparagraph}[runin]{\bf}{}{0.5em}{}
+\titlespacing{\subparagraph}{0pt}{1em}{1em}
+
+\newcommand{\Ra}{\ensuremath{\Rightarrow}\xspace}
+\newcommand{\ra}{\ensuremath{\rightarrow}\xspace}
+
+\definecolor{dark-gray}{gray}{0.3}
+
+\newcommand{\floatright}[1]{\hfill \textcolor{dark-gray}{#1}}
+
+% adds a foot rule to every page
+\AddEverypageHook
+{
+    \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% define escape characters for latex commands in listings
+\lstset{%
+  escapeinside={(*}{*)},%
+}
+
+% define symbols for optional and non-optional properties
+\newcommand{\nonoptional}{\ensuremath{{}^{\textbf{\circ}}}}
+\newcommand{\nonoptionalif}{\ensuremath{{}^{\textbf{*}}}}
+
+% define minipage in tabular
+\newcommand{\cellwrap}[1]{\begin{minipage}[t]{1.0\columnwidth}#1\end{minipage}}
+
+% define abbreviations properly
+\newcommand*{\eg}{e.g.\@\xspace}
+\newcommand*{\ie}{i.e.\@\xspace}
+
+\newcommand{\pipe}{\ensuremath{|}\xspace}
+
+% define colored text method
+\newcommand{\coloredtext}[1]{\color[HTML]{#1}{\##1}}
+
+%%%%%%%%%% DEFINE VARIABLES HERE %%%%%%%%%%%%%%%
+\newcommand{\instanceStuff}{\texttt{instance-stuff}}
+
+
+%%%%%%%%%% TIKZ DEFINITIONS %%%%%%%%%%%%
+\newcounter{treeline}
+
+\newcommand{\treeroot}[1]{% Title
+	\node[above] at (0,0) {#1};%
+	\setcounter{treeline}{0}
+}
+
+\newcommand{\folder}[2]{% Title, Level
+	\draw[->] (#2-1,-\value{treeline}/2) -- (#2-1,-\value{treeline}/2-0.5) -- (#2+0.5,-\value{treeline}/2-0.5) node[anchor=base,inner sep=0,right] (x) 
+      {\includegraphics[height=.5cm]{img/misc/folder.pdf}} node[anchor=west] at(\tikzlastnode.east) {#1} ;
+
+    \foreach \x in {1,...,#2}
+	{
+		\draw (\x-1,-\value{treeline}/2) -- (\x-1,-\value{treeline}/2-0.5);
+	}
+	\stepcounter{treeline};
+}
+
+\newcommand{\file}[2]{% Title, Level
+	\draw[->] (#2-1,-\value{treeline}/2) -- (#2-1,-\value{treeline}/2-0.5) -- (#2+0.5,-\value{treeline}/2-0.5) node[anchor=base,inner sep=0,right] (x) 
+      {\includegraphics[height=.45cm]{img/misc/file.pdf}} node[anchor=west] at(\tikzlastnode.east) {#1} ;
+	\foreach \x in {1,...,#2}
+	{
+		\draw (\x-1,-\value{treeline}/2) -- (\x-1,-\value{treeline}/2-0.5);
+	}
+	\stepcounter{treeline};
+}
+
+\newcommand*{\vcenteredhbox}[1]{\begingroup\setbox0=\hbox{#1}\parbox{\wd0}{\box0}\endgroup}
+
+% style the header and footer
+\pagestyle{fancy}
+\fancyfoot[R]{\thepage}
+\fancyhead[L]{Germinate 3}
+\fancyhead[R]{\nouppercase{\leftmark}\cfoot{}}
+
+\hypersetup{
+	pdfauthor={Sebastian Raubach},
+	pdftitle={Germinate 3 Documentation},
+	pdfinfo={Copyright={Copyright 2013-2017 The James Hutton Institute. All rights reserved.}}
+}
+
+\makeatletter
+\lst@CCPutMacro\lst@ProcessOther {"2D}{\lst@ttfamily{-{}}{-{}}}
+\@empty\z@\@empty
+\makeatother
+
+% the document starts here
+\begin{document}
+
+% remove page numbers for title and TOC
+\pagenumbering{gobble}
+% title page is compiled by itself
+\includepdf{title.pdf}
+
+% add the table of contents
+\tableofcontents
+
+% Include the styling of the code snippets
+%\include{theme-dark}
+\include{theme-light}
+
+% include all the content files (without file extension)
+\include{introduction}
+\include{setup}
+\include{configuration}
+\include{features}
+\include{structure}
+\include{examples}
+\include{dataimport}
+\include{statistics}
+\include{troubleshooting}
+\include{funding}
+\include{technologies}
+
+% add the bubliography (without file extension) and style it
+\bibliography{cite}
+\bibliographystyle{unsrt}
+
+\end{document}

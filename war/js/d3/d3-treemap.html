@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<meta charset="utf-8">
+<style>
+    body {
+        font: 10px sans-serif;
+    }
+    
+    .text {
+        pointer-events: none;
+    }
+    
+    .grandparent .text {
+        font-weight: bold;
+    }
+    
+    .rect {
+        fill: none;
+        stroke: #fff;
+    }
+    
+    .rect.parent,
+    .grandparent .rect {
+        stroke-width: 2px;
+    }
+    
+    .rect.parent {
+        /*		pointer-events: none;*/
+    }
+    
+    .grandparent .rect {
+        fill: #aaa;
+    }
+    
+    .grandparent:hover .rect {
+        opacity: 0.8;
+    }
+    
+    .children .rect.parent,
+    .grandparent .rect {
+        cursor: pointer;
+    }
+    
+    .children .rect.parent {
+        fill: #bbb;
+        fill-opacity: .75;
+    }
+    
+    .children:hover .rect.child {
+        fill: #bbb;
+        cursor: pointer;
+    }
+
+</style>
+
+<body>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="../jquery-1.8.2.min.js"></script>
+    <script src="d3-treemap.js"></script>
+    <script>
+        var margin = {
+                top: 10,
+                right: 30,
+                bottom: 30,
+                left: 30
+            },
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        var color = d3.scale.ordinal()
+            .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+        d3.json('d3-treemap.json', function(data) {
+            d3.select("body")
+                .datum(data)
+                .call(treemap()
+                    .width(width)
+                    .height(height)
+                    .color(color)
+                    .grandparentStyle('grandparent')
+                    .parentStyle('parent')
+                    .childrenStyle('children')
+                    .childStyle('child')
+                    .rectStyle('rect')
+                    .textStyle('text')
+                    .overallHeaderName("Header"));
+        });
+
+    </script>

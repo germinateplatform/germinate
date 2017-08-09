@@ -1,0 +1,2 @@
+All files within Germinate have to be saved using UTF-8 encoding. If this is not the case, Germinate might not work as expected.
+Even the Java properties files need to be saved using UTF-8.

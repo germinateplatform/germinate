@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<meta charset="utf-8">
+<style>
+    body {
+        font: 10px sans-serif;
+    }
+
+    svg {
+        border: 1px solid black;
+    }
+    
+    .d3-tooltip {
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        pointer-events: none !important;
+        text-align: center;
+    }
+    
+    .d3-tooltip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        content: "\25BC";
+        text-align: center;
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+    
+    .node rect {
+        stroke: #333;
+        fill: #fff;
+        rx: 5px;
+        ry: 5px;
+    }
+    
+    .highlight > rect {
+        fill: #f77
+    }
+    
+    .edgePath path {
+        stroke: #333;
+        fill: #333;
+        stroke-width: 1.5px;
+    }
+</style>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+    <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+    <script src="d3-pedigree-chart.js"></script>
+    <script src="d3-tip.js"></script>
+    <script>
+        var margin = {
+                top: 10,
+                right: 30,
+                bottom: 30,
+                left: 30
+            },
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        var data = [
+            {
+                label: "x14"
+            },
+            {
+                label: "chad"
+            },
+            {
+                label: "optic",
+                class: "highlight"
+            },
+            {
+                label: "x38"
+            },
+            {
+                label: "akita"
+            },
+            {
+                label: "spire"
+            }
+        ];
+
+        var connections = [
+            {
+                from: "x14",
+                to: "optic"
+            },
+            {
+                from: "chad",
+                to: "optic"
+            },
+            {
+                from: "optic",
+                to: "x38"
+            },
+            {
+                from: "optic",
+                to: "akita"
+            },
+            {
+                from: "optic",
+                to: "spire"
+            }
+        ];
+
+        d3.select("body")
+            .datum(data)
+            .call(pedigreeChart()
+                .margin(margin)
+                .width(width)
+                .height(height)
+                .connections(connections)
+                .tooltip(function (d) {
+                    return "";
+                })
+                .interpolate("basis"));
+    </script>

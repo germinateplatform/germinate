@@ -1,0 +1,302 @@
+/*
+ *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+ *  Information and Computational Sciences Group at JHI Dundee
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package jhi.germinate.shared.datastructure.database;
+
+import com.google.gwt.core.shared.*;
+import com.google.gwt.safehtml.shared.*;
+
+import java.util.*;
+import java.util.regex.*;
+
+import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.server.manager.*;
+import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
+import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.exception.*;
+
+/**
+ * @author Sebastian Raubach
+ */
+public class Compound extends DatabaseObject
+{
+	private static final long serialVersionUID = -1373268800192085814L;
+
+	public static final String ID                = "compounds.id";
+	public static final String NAME              = "compounds.name";
+	public static final String DESCRIPTION       = "compounds.description";
+	public static final String MOLECULAR_FORMULA = "compounds.molecular_formula";
+	public static final String MONOISOTOPIC_MASS = "compounds.monoisotopic_mass";
+	public static final String AVERAGE_MASS      = "compounds.average_mass";
+	public static final String CLASS             = "compounds.class";
+	public static final String UNIT_ID           = "compounds.unit_id";
+
+	private String name;
+	private String description;
+	private String molecularFormula;
+	private String molecularFormulaHtml;
+	private Double monoisotopicMass;
+	private Double averageMass;
+	private String theClass;
+	private Unit   unit;
+	private Long   createdOn;
+	private Long   updatedOn;
+
+	public Compound()
+	{
+	}
+
+	public Compound(Long id)
+	{
+		super(id);
+	}
+
+	public Compound(Long id, String name, String description, String molecularFormula, Double monoisotopicMass, Double averageMass, String theClass, Unit unit, Long createdOn, Long updatedOn)
+	{
+		super(id);
+		this.name = name;
+		this.description = description;
+		this.molecularFormula = molecularFormula;
+		this.monoisotopicMass = monoisotopicMass;
+		this.averageMass = averageMass;
+		this.theClass = theClass;
+		this.unit = unit;
+		this.createdOn = createdOn;
+		this.updatedOn = updatedOn;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public Compound setName(String name)
+	{
+		this.name = name;
+		return this;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public Compound setDescription(String description)
+	{
+		this.description = description;
+		return this;
+	}
+
+	public String getMolecularFormula()
+	{
+		return molecularFormula;
+	}
+
+	public Compound setMolecularFormula(String molecularFormula)
+	{
+		this.molecularFormula = molecularFormula;
+		return this;
+	}
+
+	public Double getMonoisotopicMass()
+	{
+		return monoisotopicMass;
+	}
+
+	public Compound setMonoisotopicMass(Double monoisotopicMass)
+	{
+		this.monoisotopicMass = monoisotopicMass;
+		return this;
+	}
+
+	public Double getAverageMass()
+	{
+		return averageMass;
+	}
+
+	public Compound setAverageMass(Double averageMass)
+	{
+		this.averageMass = averageMass;
+		return this;
+	}
+
+	public String getTheClass()
+	{
+		return theClass;
+	}
+
+	public Compound setTheClass(String theClass)
+	{
+		this.theClass = theClass;
+		return this;
+	}
+
+	public Unit getUnit()
+	{
+		return unit;
+	}
+
+	public Compound setUnit(Unit unit)
+	{
+		this.unit = unit;
+		return this;
+	}
+
+	public Long getCreatedOn()
+	{
+		return createdOn;
+	}
+
+	public Compound setCreatedOn(Date createdOn)
+	{
+		if (createdOn == null)
+			this.createdOn = null;
+		else
+			this.createdOn = createdOn.getTime();
+		return this;
+	}
+
+	public Long getUpdatedOn()
+	{
+		return updatedOn;
+	}
+
+	public Compound setUpdatedOn(Date updatedOn)
+	{
+		if (updatedOn == null)
+			this.updatedOn = null;
+		else
+			this.updatedOn = updatedOn.getTime();
+		return this;
+	}
+
+	@GwtIncompatible
+	private Compound setFormattedMolecularFormula()
+	{
+		try
+		{
+			Pattern pattern = Pattern.compile("([A-Z][a-z]*)(\\d+)");
+			Matcher matcher = pattern.matcher(molecularFormula);
+
+			StringBuilder output = new StringBuilder();
+			boolean atLeastOne = false;
+			while (matcher.find())
+			{
+				int start = matcher.start();
+				int end = matcher.end();
+				output.append(matcher.group(1))
+					  .append("<sub>")
+					  .append(molecularFormula.substring(start + 1, end))
+					  .append("</sub>");
+				atLeastOne = true;
+			}
+
+			if (atLeastOne)
+				molecularFormulaHtml = output.toString();
+			else
+				molecularFormulaHtml = molecularFormula;
+		}
+		catch (Exception e)
+		{
+			molecularFormulaHtml = molecularFormula;
+		}
+
+		return this;
+	}
+
+	public SafeHtml getFormattedMolecularFormula()
+	{
+		SafeHtml html;
+
+		if (!StringUtils.isEmpty(molecularFormulaHtml))
+			html = SafeHtmlUtils.fromTrustedString(molecularFormulaHtml);
+		else
+			html = SafeHtmlUtils.fromTrustedString("");
+
+		return html;
+	}
+
+	@Override
+	@GwtIncompatible
+	public DatabaseObjectParser<? extends DatabaseObject> getDefaultParser()
+	{
+		return Parser.Inst.get();
+	}
+
+	@GwtIncompatible
+	public static class Parser extends DatabaseObjectParser<Compound>
+	{
+		public static final class Inst
+		{
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
+			 * InstanceHolder#INSTANCE}, not before.
+			 * <p/>
+			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
+			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final Parser INSTANCE = new Parser();
+			}
+
+			public static Parser get()
+			{
+				return InstanceHolder.INSTANCE;
+			}
+		}
+
+		private static DatabaseObjectCache<Unit> UNIT_CACHE;
+
+		private Parser()
+		{
+			UNIT_CACHE = createCache(Unit.class, UnitManager.class);
+		}
+
+		@Override
+		public Compound parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			try
+			{
+				Long id = row.getLong(ID);
+
+				if (id == null)
+					return null;
+				else
+					return new Compound(id)
+							.setName(row.getString(NAME))
+							.setDescription(row.getString(DESCRIPTION))
+							.setMolecularFormula(row.getString(MOLECULAR_FORMULA))
+							.setFormattedMolecularFormula()
+							.setMonoisotopicMass(row.getDouble(MONOISOTOPIC_MASS))
+							.setAverageMass(row.getDouble(AVERAGE_MASS))
+							.setTheClass(row.getString(CLASS))
+							.setUnit(UNIT_CACHE.get(user, row.getLong(UNIT_ID), row, foreignsFromResultSet))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+			}
+			catch (InsufficientPermissionsException e)
+			{
+				return null;
+			}
+		}
+	}
+}

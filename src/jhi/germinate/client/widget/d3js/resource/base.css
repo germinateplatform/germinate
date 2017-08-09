@@ -1,0 +1,81 @@
+/*
+ *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+ *  Information and Computational Sciences Group at JHI Dundee
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+
+.d3TipRight, .d3TipTop {
+	line-height: 1;
+	font-weight: bold;
+	padding: 12px;
+	background: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	pointer-events: none !important;
+}
+
+.d3TipRight:before, .d3TipTop:after {
+	box-sizing: border-box;
+	display: inline;
+	font-size: 10px;
+	width: 100%;
+	line-height: 1;
+	color: rgba(0, 0, 0, 0.8);
+	position: absolute;
+}
+
+.d3TipRight:before {
+	content: "\25c0";
+	left: -9px;
+}
+
+.d3TipTop:after {
+	content: "\25BC";
+	text-align: center;
+	margin: -1px 0 0 0;
+	top: 100%;
+	left: 0;
+}
+
+.legendItem {
+	margin: 5px 0;
+	width: 15px;
+	height: 15px;
+	white-space: nowrap;
+	line-height: 15px;
+	vertical-align: middle;
+	cursor: default;
+}
+
+.legendItem > i {
+	margin-left: 1px;
+}
+
+.legendItem > span {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left;
+}
+
+.legendItem > * {
+	display: inline-block;
+	vertical-align: middle;
+}

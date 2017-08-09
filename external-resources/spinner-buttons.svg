@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="37.349998"
+   height="37"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   inkscape:export-filename="C:\Users\sr41756\Desktop\spinnerDownDisabled.png"
+   inkscape:export-xdpi="58.37838"
+   inkscape:export-ydpi="58.37838"
+   sodipodi:docname="spinnerButtons.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.2125398"
+     inkscape:cx="113.24698"
+     inkscape:cy="-22.188425"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1858"
+     inkscape:window-height="1058"
+     inkscape:window-x="54"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       originx="-0.325px"
+       originy="0.0026397705px"
+       spacingx="0.5px"
+       spacingy="0.5px" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-144.53538,-157.36482)">
+    <g
+       id="g3837">
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#c8c8c8;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 181.88538,157.36482 0,37 -37,0 0,-37 37,0 z"
+         id="path4265"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <rect
+         transform="scale(-1,1)"
+         style="fill:#fafafa;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect4267"
+         width="34"
+         height="33"
+         x="-179.7854"
+         y="159.36218"
+         ry="7.8159701e-012"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <rect
+         transform="scale(-1,1)"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect4269"
+         width="34"
+         height="1.5"
+         x="-179.7854"
+         y="159.36482"
+         ry="7.8159701e-012"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <rect
+         transform="scale(-1,1)"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect4271"
+         width="1.5"
+         height="31.5"
+         x="-179.7854"
+         y="160.86217"
+         ry="7.8159701e-012"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <path
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:connector-curvature="0"
+         style="fill:#979392;fill-opacity:1;stroke:none"
+         d="m 160.91038,169.36482 12.5,6.5 -12.5,6.5 0,-3.625 -7,3.625 0,-13 7,3.625 0,-3.625 z"
+         id="path4273" />
+      <path
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         id="path3056"
+         d="m 181.53538,157.36482 0,37 -37,0 0,-37 37,0 z"
+         style="fill:#c8c8c8;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         inkscape:connector-curvature="0" />
+      <rect
+         transform="scale(-1,1)"
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         ry="7.8159701e-012"
+         y="159.36218"
+         x="-179.5354"
+         height="33"
+         width="34"
+         id="rect3058"
+         style="fill:#fafafa;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         transform="scale(-1,1)"
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         ry="7.8159701e-012"
+         y="159.36482"
+         x="-179.5354"
+         height="1.5"
+         width="34"
+         id="rect3060"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         transform="scale(-1,1)"
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         ry="7.8159701e-012"
+         y="160.86217"
+         x="-179.5354"
+         height="31.5"
+         width="1.5"
+         id="rect3062"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         ry="0"
+         y="169.36482"
+         x="161.71037"
+         height="12.999997"
+         width="3.0000072"
+         id="rect3789"
+         style="fill:#979392;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         transform="matrix(0,1,-1,0,0,0)"
+         style="fill:#979392;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect3791"
+         width="3.0000072"
+         height="12.999997"
+         x="174.36482"
+         y="-169.71037"
+         ry="0" />
+    </g>
+    <g
+       id="g3877"
+       transform="translate(86.522122,21.678492)">
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#c8c8c8;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         d="m 146.88538,134.86482 0,37 -37,0 0,-37 37,0 z"
+         id="path4265-1"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <rect
+         transform="scale(-1,1)"
+         style="fill:#fafafa;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect4267-7"
+         width="34"
+         height="33"
+         x="-144.7854"
+         y="136.86218"
+         ry="7.8159701e-012"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <rect
+         transform="scale(-1,1)"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect4269-4"
+         width="34"
+         height="1.5"
+         x="-144.7854"
+         y="136.86482"
+         ry="7.8159701e-012"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <rect
+         transform="scale(-1,1)"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect4271-0"
+         width="1.5"
+         height="31.5"
+         x="-144.7854"
+         y="138.36217"
+         ry="7.8159701e-012"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-ydpi="58.37838" />
+      <path
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         inkscape:connector-curvature="0"
+         style="fill:#979392;fill-opacity:1;stroke:none"
+         d="m 125.91038,146.86482 12.5,6.5 -12.5,6.5 0,-3.625 -7,3.625 0,-13 7,3.625 0,-3.625 z"
+         id="path4273-9" />
+      <path
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         id="path3056-4"
+         d="m 146.53538,134.86482 0,37 -37,0 0,-37 37,0 z"
+         style="fill:#c8c8c8;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         inkscape:connector-curvature="0" />
+      <rect
+         transform="scale(-1,1)"
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         ry="7.8159701e-012"
+         y="136.86218"
+         x="-144.5354"
+         height="33"
+         width="34"
+         id="rect3058-8"
+         style="fill:#fafafa;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         transform="scale(-1,1)"
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         ry="7.8159701e-012"
+         y="136.86482"
+         x="-144.5354"
+         height="1.5"
+         width="34"
+         id="rect3060-8"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         transform="scale(-1,1)"
+         inkscape:export-ydpi="58.37838"
+         inkscape:export-xdpi="58.37838"
+         inkscape:export-filename="D:\workspace_web\Germinate3\src\org\jhi\gwt\germinate3\client\composite\table\pagination\resource\firstPage.png"
+         ry="7.8159701e-012"
+         y="138.36217"
+         x="-144.5354"
+         height="31.5"
+         width="1.5"
+         id="rect3062-2"
+         style="fill:#fefefe;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         ry="0"
+         y="146.86482"
+         x="126.71037"
+         height="12.999997"
+         width="3.0000072"
+         id="rect3789-4"
+         style="fill:#d9d9d9;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <rect
+         transform="matrix(0,1,-1,0,0,0)"
+         style="fill:#d9d9d9;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect3791-5"
+         width="3.0000072"
+         height="12.999997"
+         x="151.86482"
+         y="-134.71037"
+         ry="0" />
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
+			 xmlns:bg='urn:import:org.gwtbootstrap3.client.ui.gwt'>
+
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
+
+	<ui:style>
+		.inline {
+			display: inline-block;
+		}
+
+		.seventy {
+			max-width: 70%;
+		}
+
+		.thirty {
+			max-width: 30%;
+		}
+
+		.truncate {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			max-lines: 1;
+		}
+
+		.margin {
+			margin: 0;
+		}
+	</ui:style>
+
+	<g8:Container ui:field="container">
+		<g8:ParagraphPanel addStyleNames="{style.inline} {style.margin} {style.truncate} {style.seventy} {PULL_LEFT}" ui:field="copyright"/>
+
+		<bg:FlowPanel addStyleNames="{style.inline} {style.truncate} {style.thirty} {PULL_RIGHT}" ui:field="linkPanel">
+			<g:Anchor text="{msg.cookieTitle}" ui:field="cookie"/>
+		</bg:FlowPanel>
+	</g8:Container>
+</ui:UiBinder>

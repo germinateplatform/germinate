@@ -1,0 +1,47 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.ColumnSize.*"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+
+	<ui:style>
+
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="{PANEL}" ui:field="panel">
+			<div class="{PANEL_HEADING}" ui:field="heading">
+				<div class="{TEXT_CENTER_ALIGN}">
+					<i class="{FA} {FA_FIXED_WIDTH} {FA_4X}" ui:field="icon"/>
+				</div>
+			</div>
+			<a href="#" ui:field="anchor">
+				<div class="{PANEL_FOOTER}">
+					<span class="{PULL_LEFT}" ui:field="detailsLabel"/>
+					<span class="{PULL_RIGHT}">
+						<i class="{MDI} {MDI_ARROW_RIGHT_BOLD_CIRCLE} {FA_LG}"/>
+					</span>
+					<div class="{CLEARFIX}"/>
+				</div>
+			</a>
+		</div>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

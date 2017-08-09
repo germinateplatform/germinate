@@ -1,0 +1,67 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+			 xmlns:g8="urn:import:jhi.germinate.client.widget.input"
+			 xmlns:c="urn:import:jhi.germinate.client.widget.d3js"
+			 xmlns:p="urn:import:jhi.germinate.client.widget.element"
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<g:FlowPanel>
+		<p:ParagraphPanel text="{msg.allelefreqTextSplit}"/>
+		<b:Row>
+			<b:Column size="SM_12,MD_4">
+				<b:FormGroup>
+					<b:FormLabel for="formLeft" text="{msg.allelefreqSubHeadingNrOfBinsLeft}"/>
+					<b:InputGroup>
+						<g8:RangedIntegerTextBox min="1" max="10" value="5" b:id="formLeft" ui:field="nrOfBinsLeft"/>
+						<b:InputGroupButton>
+							<b:Button icon="REFRESH" ui:field="refreshButtonOne"/>
+						</b:InputGroupButton>
+					</b:InputGroup>
+				</b:FormGroup>
+			</b:Column>
+			<b:Column size="SM_12,MD_4">
+				<b:FormGroup>
+					<b:FormLabel for="formSplit" text="{msg.allelefreqSubHeadingNrOfBinsSplitPoint}"/>
+					<b:InputGroup>
+						<g8:RangedNumberTextBox min="0.02" max="0.98" value="0.5" b:id="formSplit" ui:field="splitPoint"/>
+						<b:InputGroupButton>
+							<b:Button icon="REFRESH" ui:field="refreshButtonTwo"/>
+						</b:InputGroupButton>
+					</b:InputGroup>
+				</b:FormGroup>
+			</b:Column>
+			<b:Column size="SM_12,MD_4">
+				<b:FormGroup>
+					<b:FormLabel for="formRight" text="{msg.allelefreqSubHeadingNrOfBinsRight}"/>
+					<b:InputGroup>
+						<g8:RangedIntegerTextBox min="1" max="10" value="5" b:id="formRight" ui:field="nrOfBinsRight"/>
+						<b:InputGroupButton>
+							<b:Button icon="REFRESH" ui:field="refreshButtonThree"/>
+						</b:InputGroupButton>
+					</b:InputGroup>
+				</b:FormGroup>
+			</b:Column>
+		</b:Row>
+
+		<c:AlleleFreqSplitBinningChart ui:field="chart"/>
+	</g:FlowPanel>
+</ui:UiBinder>

@@ -1,0 +1,43 @@
+\section{Version 3.2.0d}
+\label{sec:3.2.0d}
+
+\subsection{New/Changed features}
+\begin{description}
+	\item[FIX] Fixed issue with file handles not being released on Linux when using NFS mounts.
+	\item[ADD] Added new check to the registration to prevent duplicates.
+	\item[ADD] Added option to export whole chromosome for a map.
+	\item[ADD] Added more links from tables to details pages.
+	\item[ADD] Support for browser password saving.
+	\item[ADD] Added changelog information along with migration information.
+	\item[ADD] Added individual error notifications for invalid cookie/payload/session id.
+	\item[CHG] Changed SQL script, marked more columns as required.
+	\item[CHG] Updated to Font Awesome 4.3.0.
+	\item[CHG] Replaced big parts of reusable UI with UiBinder widgets.
+	\item[CHG] Updated documentation.
+	\item[CHG] Updated Toastr javascript library.
+	\item[CHG] Use "placeholder" attribute of $<$input$>$ elements if available. If not, fall back to old solution.
+	\item[DEL] Deleted unused libraries.
+\end{description}
+
+\subsection{Migration from 3.2.0 to 3.2.0d}
+\begin{itemize}
+	\item Apache Ant 1.9.1 or above is now required
+	\item Remove the following line from \texttt{Germinate.gwt.xml} in your instance folder:
+	\begin{lstlisting}[style=Xml]
+<inherits name="com.kiouri.sliderbar.SliderBarMVP" /> <!-- Slider bar -->
+	\end{lstlisting}
+	\item Run this against the database:
+	\begin{lstlisting}[style=SQL]
+ALTER TABLE `mapdefinitions` MODIFY `definition_start` double(11,2) NOT NULL,
+	MODIFY `definition_end`   double(11,2) NOT NULL;
+	\end{lstlisting}
+	\item New properties required in \texttt{Text.properties}:
+	\begin{lstlisting}[style=Properties]
+notificationRegistrationAlreadyRequestedAccess=You have already requested access to this instance of Germinate.
+notificationInvalidCookie=Please enable cookies to be able to use Germinate.
+notificationInvalidPayload=Request rejected by the server. Please contact the administrator.
+markersExportOptionsTabChromosomes=Chromosomes
+markersExportOptionsChromosomesText=<p>Select all the chromosomes you want to export from the list below.</p><p>Non-contiguous groups can be selected using <kbd>Ctrl</kbd>/<kbd>&#8984;</kbd>. Use <kbd>Shift</kbd> for sequential groupings.</p>
+markersExportOptionsClosePanel=Don''t use export options
+	\end{lstlisting}
+\end{itemize}

@@ -1,0 +1,227 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+			 xmlns:bh='urn:import:org.gwtbootstrap3.client.ui.html'
+			 xmlns:bg='urn:import:org.gwtbootstrap3.client.ui.gwt'
+			 xmlns:t='urn:import:org.gwtbootstrap3.extras.toggleswitch.client.ui'
+			 xmlns:i='urn:import:jhi.germinate.client.widget.input'
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<ui:style>
+		.block {
+			display: block;
+		}
+
+		.header:hover {
+			cursor: pointer;
+		}
+
+		.header {
+			text-transform: capitalize;
+		}
+
+		.height {
+			max-width: 100%;
+			min-height: 300px;
+			max-height: 300px;
+			box-sizing: border-box;
+			overflow-y: auto;
+			resize: none;
+		}
+	</ui:style>
+
+	<g:HTMLPanel ui:field="panel">
+		<b:PageHeader text="{msg.adminConfigMenuItem}"/>
+
+		<b:Row>
+			<b:Column size="XS_12,MD_6">
+				<b:Heading size="H3" text="{msg.adminConfigHeadingGatekeeper}"/>
+				<b:FormGroup>
+					<b:FormLabel for="formGatekeeperUrl" ui:field="gatekeeperUrlLabel"/>
+					<b:TextBox b:id="formGatekeeperUrl" ui:field="gatekeeperUrl"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formGatekeeperRegistration" ui:field="gatekeeperRegistrationLabel"/>
+					<t:ToggleSwitch b:id="formGatekeeperRegistration" onText="{msg.generalYes}" offText="{msg.generalNo}"
+									ui:field="gatekeeperRegistration"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formGatekeeperApproval" ui:field="gatekeeperApprovalLabel"/>
+					<t:ToggleSwitch b:id="formGatekeeperApproval" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="gatekeeperApproval"/>
+				</b:FormGroup>
+
+				<b:Heading size="H3" text="{msg.adminConfigHeadingSocial}"/>
+				<b:FormGroup>
+					<b:FormLabel for="formFacebook" ui:field="facebookLabel"/>
+					<t:ToggleSwitch b:id="formFacebook" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="facebook"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formTwitter" ui:field="twitterLabel"/>
+					<t:ToggleSwitch b:id="formTwitter" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="twitter"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formGoogle" ui:field="googleLabel"/>
+					<t:ToggleSwitch b:id="formGoogle" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="google"/>
+				</b:FormGroup>
+
+				<b:Heading size="H3" text="{msg.adminConfigHeadingUsageTracking}"/>
+				<b:FormGroup>
+					<b:FormLabel for="formAnalytics" ui:field="analyticsLabel"/>
+					<t:ToggleSwitch b:id="formAnalytics" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="analytics"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formAnalyticsId" ui:field="analyticsIdLabel"/>
+					<b:TextBox b:id="formAnalyticsId" ui:field="analyticsId"/>
+				</b:FormGroup>
+			</b:Column>
+
+			<b:Column size="XS_12,MD_6">
+				<b:Heading size="H3" text="{msg.adminConfigHeadingTheme}"/>
+				<b:FormGroup>
+					<b:FormLabel for="formTemplateTitle" ui:field="templateTitleLabel"/>
+					<b:TextBox b:id="formTemplateTitle" ui:field="templateTitle"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formTemplateDatabaseName" ui:field="templateDatabaseNameLabel"/>
+					<b:TextBox b:id="formTemplateDatabaseName" ui:field="templateDatabaseName"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formTemplateEmail" ui:field="templateEmailLabel"/>
+					<b:TextBox b:id="formTemplateEmail" ui:field="templateEmail"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formTemplateTwitter" ui:field="templateTwitterLabel"/>
+					<b:TextBox b:id="formTemplateTwitter" ui:field="templateTwitter"/>
+				</b:FormGroup>
+
+				<b:FormGroup>
+					<b:FormLabel addStyleNames="{style.block}" for="formCategories" ui:field="categoriesLabel"/>
+					<bg:FlowPanel b:id="formCategories" ui:field="categories"/>
+				</b:FormGroup>
+
+				<b:FormGroup>
+					<b:FormLabel addStyleNames="{style.block}" for="formGradient" ui:field="gradientLabel"/>
+					<bg:FlowPanel b:id="formGradient" ui:field="gradients"/>
+				</b:FormGroup>
+
+				<g:SimplePanel ui:field="templateGradientPanel"/>
+
+				<b:FormGroup>
+					<b:FormLabel for="formSearch" ui:field="searchLabel"/>
+					<t:ToggleSwitch b:id="formSearch" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="search"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formLogoLinks" ui:field="logoLinksLabel"/>
+					<t:ToggleSwitch b:id="formLogoLinks" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="logoLinks"/>
+				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formParallax" ui:field="parallaxLabel"/>
+					<t:ToggleSwitch b:id="formParallax" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="parallax"/>
+				</b:FormGroup>
+			</b:Column>
+		</b:Row>
+
+		<b:Panel type="DANGER">
+			<b:PanelHeader dataToggle="COLLAPSE" dataParent="#accordion" addStyleNames="{style.header}" ui:field="panelHeader">
+				<b:Heading size="H4" text="{msg.adminConfigHeadingAdvanced}"/>
+			</b:PanelHeader>
+			<b:PanelCollapse ui:field="target">
+				<b:PanelBody>
+					<b:Alert type="DANGER">
+						<bh:Strong text="{msg.adminConfigWarning}"/>
+					</b:Alert>
+					<b:Row>
+						<b:Column size="XS_12,MD_6">
+							<b:FormGroup>
+								<b:FormLabel for="formIds" ui:field="idsLabel"/>
+								<t:ToggleSwitch b:id="formIds" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="ids"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formLogging" ui:field="loggingLabel"/>
+								<t:ToggleSwitch b:id="formLogging" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="logging"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formDebug" ui:field="debugLabel"/>
+								<t:ToggleSwitch b:id="formDebug" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="debug"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formReadOnly" ui:field="readOnlyLabel"/>
+								<t:ToggleSwitch b:id="formReadOnly" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="readOnly"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formCookies" ui:field="cookiesLabel"/>
+								<t:ToggleSwitch b:id="formCookies" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="cookies"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formTemp" ui:field="tempLabel"/>
+								<i:NumberTextBox b:id="formTemp" ui:field="temp"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formUpLimit" ui:field="upLimitLabel"/>
+								<i:NumberTextBox b:id="formUpLimit" ui:field="upLimit"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formCustomMenu" ui:field="customMenuLabel"/>
+								<b:TextArea b:id="formCustomMenu" ui:field="customMenu" addStyleNames="{style.height}"/>
+							</b:FormGroup>
+						</b:Column>
+						<b:Column size="XS_12,MD_6">
+							<b:FormGroup>
+								<b:FormLabel for="formCookieLifespan" ui:field="cookieLifespanLabel"/>
+								<i:IntegerTextBox b:id="formCookieLifespan" ui:field="cookieLifespan"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formImagesPPage" ui:field="imagesPPageLabel"/>
+								<i:IntegerTextBox b:id="formImagesPPage" ui:field="imagesPPage"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formDisplayColumn" ui:field="displayColumnLabel"/>
+								<b:TextBox b:id="formDisplayColumn" ui:field="displayColumn"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formSearchColumn" ui:field="searchColumnLabel"/>
+								<b:TextBox b:id="formSearchColumn" ui:field="searchColumn"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formTreemapColumn" ui:field="treemapColumnLabel"/>
+								<b:TextBox b:id="formTreemapColumn" ui:field="treemapColumn"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formExternalFolder" ui:field="externalFolderLabel"/>
+								<b:TextBox b:id="formExternalFolder" ui:field="externalFolder"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formGoogleMapsAPI" ui:field="googleMapsApiLabel"/>
+								<b:TextBox b:id="formGoogleMapsAPI" ui:field="googleMapsApi"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formPages" ui:field="pagesLabel"/>
+								<bg:FlowPanel b:id="formPages" ui:field="pagesPanel" addStyleNames="{style.height}"/>
+							</b:FormGroup>
+						</b:Column>
+					</b:Row>
+				</b:PanelBody>
+			</b:PanelCollapse>
+		</b:Panel>
+
+		<b:Button type="SUCCESS" icon="SAVE" text="{msg.adminConfigButtonSave}" ui:field="saveChanges"/>
+	</g:HTMLPanel>
+</ui:UiBinder>

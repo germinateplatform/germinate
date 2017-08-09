@@ -1,0 +1,65 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+>
+
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
+	<ui:import field="com.google.gwt.user.client.ui.FormPanel.*"/>
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<ui:style>
+		.circle {
+			position: relative;
+			width: 50px;
+			height: 50px;
+			border-radius: 25px;
+		}
+
+		.icon {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			color: white;
+		}
+	</ui:style>
+
+	<g:HTMLPanel>
+		<li class="{LEFT} {CLEARFIX}">
+			<span class="{PULL_LEFT} {style.circle} btn-primary">
+				<span class="{style.icon} {MDI} {FA_FIXED_WIDTH} {FA_2X}" ui:field="icon"/>
+			</span>
+			<g:FlowPanel addStyleNames="{LAYOUT_NEWS_LIST_ITEM_BODY} {CLEARFIX}">
+				<g:FlowPanel>
+					<g:HTMLPanel>
+						<a href="#" ui:field="anchor">
+							<strong ui:field="title"/>
+						</a>
+						<small class="{PULL_RIGHT}">
+							<i class="{MDI} {MDI_CLOCK} {FA_FIXED_WIDTH} {FA_LG}"/>
+							<span ui:field="date"/>
+						</small>
+					</g:HTMLPanel>
+				</g:FlowPanel>
+				<g:HTML ui:field="content"/>
+			</g:FlowPanel>
+		</li>
+	</g:HTMLPanel>
+</ui:UiBinder>

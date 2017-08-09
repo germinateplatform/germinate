@@ -1,0 +1,112 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
+
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
+	<ui:import field="com.google.gwt.user.client.ui.FormPanel.*"/>
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<ui:style>
+		.form {
+			max-width: 330px;
+			margin: 0 auto;
+		}
+
+		.form input[type="text"] {
+			margin-bottom: -1px;
+			border-bottom-right-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+
+		.form input[type="password"] {
+			margin-bottom: 10px;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+
+		.margin {
+			margin-bottom: 10px;
+		}
+
+		.pointer {
+			pointer-events: none;
+		}
+
+	</ui:style>
+	<g:FlowPanel addStyleNames="{style.pointer}">
+		<g:HTMLPanel>
+			<header class='{NAVBAR} navbar-default navbar-static-top' role='banner'>
+				<b:Container>
+					<g:HTMLPanel addStyleNames="{NAVBAR_HEADER}">
+						<a href='#' class='{NAVBAR_BRAND}'>
+							<img src='img/germinate.svg' class='logo'/>
+						</a>
+					</g:HTMLPanel>
+					<g:HTMLPanel ui:field="helpAnchorWrapper">
+						<ul class="{NAV} navbar-top-links {NAVBAR_RIGHT}">
+							<li>
+								<a href="#" ui:field="helpAnchor">
+									<i class="{MDI} {FA_FIXED_WIDTH} {FA_LG} {MDI_HELP_CIRCLE_OUTLINE}"/>
+								</a>
+							</li>
+						</ul>
+					</g:HTMLPanel>
+				</b:Container>
+			</header>
+		</g:HTMLPanel>
+
+		<b:Container ui:field="container">
+
+			<b:Well size="SMALL" addStyleNames="{CLEARFIX}">
+				<b:Heading size="H4" addStyleNames="{PULL_LEFT}" ui:field="pageTitle"/>
+				<g:Image addStyleNames="{PULL_RIGHT}" url="img/crop.svg"/>
+			</b:Well>
+
+			<b:Row>
+				<b:Column size="XS_12">
+					<b:Well>
+						<g:FlowPanel styleName="{style.form}">
+							<g:FormPanel addStyleNames="{style.margin}" action="" method="{METHOD_POST}" ui:field="form">
+								<g:FlowPanel>
+									<g:HTMLPanel tag="h2">
+										<ui:text from="{msg.loginTitle}"/>
+									</g:HTMLPanel>
+									<g:FlowPanel ui:field="usernameDiv">
+										<b:FormLabel for="login-form-username" styleName="{SR_ONLY}" text="{msg.loginUsername}"/>
+									</g:FlowPanel>
+									<g:FlowPanel ui:field="passwordDiv">
+										<b:FormLabel for="login-form-password" styleName="{SR_ONLY}" text="{msg.loginPassword}"/>
+									</g:FlowPanel>
+
+									<b:SubmitButton type="PRIMARY" addStyleNames="btn-lg {BTN_BLOCK}" text="{msg.loginTitle}" ui:field="button"/>
+								</g:FlowPanel>
+							</g:FormPanel>
+							<b:Anchor href="#" text="{msg.loginRegistrationLink}" ui:field="registerAnchor" visible="false"/>
+						</g:FlowPanel>
+					</b:Well>
+					<b:Well>
+						<g:HTML ui:field="homeText"/>
+					</b:Well>
+				</b:Column>
+			</b:Row>
+		</b:Container>
+	</g:FlowPanel>
+</ui:UiBinder>

@@ -1,0 +1,60 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:l='urn:import:jhi.germinate.client.widget.listbox'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
+
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<ui:style>
+		.height {
+			max-width: 100%;
+			min-height: 300px;
+			max-height: 300px;
+			box-sizing: border-box;
+			overflow-y: auto;
+			resize: none;
+		}
+	</ui:style>
+
+	<g:HTMLPanel>
+		<b:Heading size="H3" text="{msg.generalAnnotations}"/>
+
+		<g:HTML ui:field="html"/>
+
+		<g:SimplePanel ui:field="commentTablePanel"/>
+
+		<g:FlowPanel ui:field="addPanel">
+			<b:Heading size="H4" text="{msg.generalAddAnnotation}"/>
+
+			<b:FormGroup>
+				<b:FormLabel text="{msg.commentTypeSelect}"/>
+				<l:CommentTypeListBox ui:field="commentTypeBox"/>
+			</b:FormGroup>
+
+			<b:FormGroup>
+				<b:FormLabel for="formComment" text="{msg.commentContent}"/>
+				<b:TextArea b:id="formComment" ui:field="commentBox" addStyleNames="{style.height}"/>
+			</b:FormGroup>
+
+			<b:Button icon="ARROW_CIRCLE_RIGHT" text="{msg.generalSubmitAnnotation}" ui:field="submitButton"/>
+
+		</g:FlowPanel>
+	</g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Germinate 3 is written and developed by Sebastian Raubach and Paul Shaw from the Information and Computational Sciences Group at JHI Dundee. For
+  ~ further information contact us at germinate@hutton.ac.uk or visit our webpages at https://ics.hutton.ac.uk/germinate
+  ~
+  ~ Copyright © 2005-2017, Information & Computational Sciences, The James Hutton Institute. All rights reserved. Use is subject to the accompanying
+  ~ licence terms.
+  -->
+
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 43 43"
+   id="svg2994"
+   version="1.1"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="crop.svg"
+   inkscape:export-xdpi="25.799999"
+   inkscape:export-ydpi="25.799999">
+  <defs
+     id="defs2996" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4"
+     inkscape:cx="29.71182"
+     inkscape:cy="46.353305"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3148"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       originx="-200"
+       originy="-799.98718"
+       spacingx="1"
+       spacingy="1" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata2999">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-200,-209.375)">
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#00acef;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.46666667"
+       d="m 205.26511,213.375 c -0.70052,0 -1.26511,0.56367 -1.26511,1.26419 v 32.47161 c 0,0.70053 0.56459,1.2642 1.26511,1.2642 h 32.4707 c 0.70052,0 1.26419,-0.56367 1.26419,-1.2642 v -32.47161 c 0,-0.70052 -0.56367,-1.26419 -1.26419,-1.26419 z m 31.30768,6.39752 c -0.0898,2.42605 -0.40515,4.80755 -0.94427,7.18868 -0.35944,1.6623 -0.85323,3.27892 -1.61693,4.76145 -0.80868,1.57245 -1.97614,3.00978 -3.50364,3.90834 -1.34783,0.76398 -3.01071,1.07921 -4.53816,0.76471 -0.6231,-0.13546 -1.22782,-0.37127 -1.75911,-0.71276 l -2.73347,3.13815 h -0.003 a 2.7343279,2.1697223 0 0 1 0.29896,0.9862 2.7343279,2.1697223 0 0 1 -2.73437,2.17018 2.7343279,2.1697223 0 0 1 -2.73438,-2.17018 2.7343279,2.1697223 0 0 1 0.4694,-1.21406 l -1.52487,-2.3625 c -0.38873,0.26919 -0.8353,0.45493 -1.31888,0.56875 -1.07823,0.22463 -2.2475,4.6e-4 -3.19101,-0.53868 -1.12313,-0.62896 -1.93159,-1.66225 -2.51563,-2.78541 -0.53914,-1.07825 -0.89894,-2.24714 -1.16848,-3.41524 -0.35943,-1.66231 -0.5832,-3.3696 -0.628,-5.07682 0.58403,0.80869 1.30253,1.52843 2.06628,2.15742 0.9884,0.8536 2.11194,1.48304 3.325,1.9323 0.62892,0.22464 1.3024,0.404 1.93138,0.67356 0.62897,0.22465 1.25853,0.53966 1.75273,0.98894 0.67391,0.6289 1.07779,1.52658 1.16758,2.47005 0.0449,0.89853 -0.22439,1.79706 -0.80847,2.47096 -0.0476,0.0563 -0.0977,0.10917 -0.14856,0.16133 l 2.02526,2.06354 a 2.7343279,2.1697223 0 0 1 1.30065,-0.26341 2.7343279,2.1697223 0 0 1 1.12109,0.19323 l 3.44167,-2.62227 c -0.11478,-0.10766 -0.22576,-0.21914 -0.32721,-0.34088 -0.80869,-0.94347 -1.2128,-2.2466 -1.12292,-3.50456 0.0898,-1.30281 0.67347,-2.60601 1.61693,-3.50456 0.71885,-0.62897 1.57244,-1.07823 2.47096,-1.39271 0.89847,-0.35943 1.84222,-0.58328 2.74075,-0.89778 1.70723,-0.62894 3.27942,-1.57267 4.67214,-2.74076 1.07819,-0.89854 2.06669,-1.93204 2.92031,-3.05521 z"
+       id="path4328" />
+  </g>
+</svg>

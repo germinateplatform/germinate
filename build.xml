@@ -1,0 +1,291 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<project name="ProjectBuild" basedir="." default="deploy">
+
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="war"/>
+	<property file="build-dev.properties"/>
+	<property name="target" value="1.8"/>
+	<property name="source" value="1.8"/>
+
+	<path id="compile.classpath">
+		<fileset dir="${build.dir}/WEB-INF/lib">
+			<include name="**/*.jar"/>
+			<include name="**/*.xml"/>
+		</fileset>
+		<fileset dir="${build.dir}/WEB-INF/lib-devel">
+			<include name="**/*.jar"/>
+			<include name="**/*.xml"/>
+		</fileset>
+	</path>
+
+	<!-- Check if a browser optimization is disabled -->
+	<condition property="noBrowserOpt">
+		<or>
+			<not>
+				<isset property="settings.browseropt"/>
+			</not>
+			<equals arg1="${settings.browseropt}" arg2=""/>
+			<equals arg1="${settings.browseropt}" arg2="false"/>
+			<equals arg1="${settings.browseropt}" arg2="none"/>
+			<equals arg1="${settings.browseropt}" arg2="no"/>
+		</or>
+	</condition>
+
+	<!-- Check if a compile optimization is enabled -->
+	<condition property="compileOpt">
+		<and>
+			<isset property="settings.compileopt"/>
+			<or>
+				<equals arg1="${settings.compileopt}" arg2="true"/>
+				<equals arg1="${settings.compileopt}" arg2="yes"/>
+			</or>
+		</and>
+	</condition>
+
+	<!-- First, make sure there are no leftovers from the previous build -->
+	<target name="delete_old_stuff" description="Deletes all the old files of the previously compiled Germinate instance">
+		<delete failonerror="false" verbose="true" quiet="true">
+			<fileset dir="${src.dir}/jhi/germinate/client/i18n" includes="**/*.properties"/>
+		</delete>
+
+		<!-- Delete old config files -->
+		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/WEB-INF/web.xml"/>
+		<delete failonerror="false" verbose="true" quiet="true" file="./config.properties"/>
+		<!--<delete failonerror="false" verbose="true" quiet="true" file="./${project.name}.war" />-->
+		<delete failonerror="false" verbose="true" quiet="true" file="${src.dir}/jhi/germinate/Germinate.gwt.xml"/>
+
+		<delete failonerror="false" verbose="true" quiet="true">
+			<fileset dir="${src.dir}/jhi/germinate/client/page/login/registration" includes="**/registration-agreement*.html"/>
+		</delete>
+
+		<!-- Delete template styling -->
+		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/logo.svg"/>
+		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/crop.svg"/>
+		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/css/logo.css"/>
+		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/css/custom.css"/>
+		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/custom.html"/>
+		<delete failonerror="false" verbose="true" quiet="true" dir="${build.dir}/css/images/css-images"/>
+		<delete failonerror="false" verbose="true" quiet="true" dir="${build.dir}/js/js-external"/>
+		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/favicon.ico"/>
+
+		<!-- Delete temporary library folder -->
+		<delete failonerror="false" verbose="true" quiet="true" dir="${build.dir}/WEB-INF/lib-temp"/>
+	</target>
+
+	<!-- Prepare the gwt.xml file without browser optimization -->
+	<target name="no_browser_opt_xml" description="Replaces the placeholder for browser optimization with an empty string" if="noBrowserOpt">
+		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.browseropt.placeholder}" value=""/>
+		<echo level="info" message="BROWSER OPTIMIZATION DISABLED"/>
+	</target>
+
+	<!-- Prepare the gwt.xml file with browser optimization -->
+	<target name="browser_opt_xml" description="Replaces the placeholder for browser optimization with the selected optimization"
+			unless="noBrowserOpt">
+		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.browseropt.placeholder}"
+				 value="&lt;set-property name=&quot;user.agent&quot; value=&quot;${settings.browseropt}&quot;/&gt;"/>
+		<echo level="info" message="BROWSER OPTIMIZATION ENABLED"/>
+	</target>
+
+	<!-- Prepare the gwt.xml file without compile optimization -->
+	<target name="no_compile_opt_xml" description="Replaces the placeholder for compile optimization with an empty string" unless="compileOpt">
+		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.compileopt.placeholder}" value=""/>
+		<echo level="info" message="COMPILE OPTIMIZATION DISABLED"/>
+	</target>
+
+	<!-- Prepare the gwt.xml file with compile optimization -->
+	<target name="compile_opt_xml" description="Replaces the placeholder for compile optimization with the selected optimization" if="compileOpt">
+		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.compileopt.placeholder}"
+				 value="&lt;collapse-property name=&quot;locale&quot; values=&quot;*&quot;/&gt;"/>
+		<echo level="info" message="COMPILE OPTIMIZATION ENABLED"/>
+	</target>
+
+	<!-- Prepare the config.properties file without google analytics -->
+	<target name="google_analytics_properties"
+			description="Replaces the placeholder for google analytics with the value specified in the build properties">
+		<replace file="./config.properties" token="${settings.googleanalytics.placeholder}" value="${settings.googleanalytics}"
+				 failOnNoReplacements="false"/>
+		<echo level="info" message="GOOGLE ANALYTICS VALUE SET TO ${settings.googleanalytics}"/>
+	</target>
+
+	<!-- Then copy the instance specific files (downloads, i18n) to the place where the war task needs them to be -->
+	<target name="copy_files" depends="delete_old_stuff"
+			description="Copies the download and language files for this instance of germinate to the i18n folder">
+		<copy todir="${src.dir}/jhi/germinate/client/i18n" overwrite="true" failonerror="true" verbose="true">
+			<fileset dir="${instance.files}/i18n" includes="**/*.properties" excludes="**/config.properties"/>
+		</copy>
+		<copy todir="./" overwrite="true" failonerror="true" verbose="true">
+			<fileset dir="${instance.files}" includes="**/config.properties"/>
+		</copy>
+
+		<copy file="${instance.files}/Germinate.gwt.xml" tofile="${src.dir}/jhi/germinate/Germinate.gwt.xml" overwrite="true" failonerror="true"
+			  verbose="true"/>
+		<copy file="${instance.files}/web.xml" tofile="${build.dir}/WEB-INF/web.xml" overwrite="true" failonerror="true" verbose="true"/>
+
+		<copy todir="${src.dir}/jhi/germinate/client/page/login/registration" overwrite="true" failonerror="true" verbose="true">
+			<fileset dir="${instance.files}/template" includes="**/registration-agreement*.html"/>
+		</copy>
+
+		<!-- Copy template styling -->
+		<copy file="${instance.files}/template/logo.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
+		<copy file="${instance.files}/template/crop.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
+		<copy file="${instance.files}/template/logo.css" todir="${build.dir}/css" overwrite="true" failonerror="true" verbose="true"/>
+		<copy file="${instance.files}/template/custom.css" todir="${build.dir}/css" overwrite="true" failonerror="false" verbose="true"/>
+		<copy file="${instance.files}/template/custom.html" todir="${build.dir}" overwrite="true" failonerror="false" verbose="true"/>
+		<copy file="${instance.files}/template/favicon.ico" todir="${build.dir}/" overwrite="true" failonerror="true" verbose="true"/>
+		<copy todir="${build.dir}/css/images/css-images" overwrite="true" failonerror="true" verbose="true">
+			<fileset dir="${instance.files}/template/css-images"/>
+		</copy>
+		<!-- Copy default parallax images first to have fallback images -->
+		<copy todir="${build.dir}/img/parallax" overwrite="true" failonerror="true" verbose="true">
+			<fileset dir="${build.dir}/img/parallax/defaults"/>
+		</copy>
+		<!-- Then copy the instance images to allow overwriting -->
+		<copy todir="${build.dir}/img/parallax" overwrite="true" failonerror="false" verbose="true">
+			<fileset dir="${instance.files}/template/parallax-images"/>
+		</copy>
+		<copy todir="${build.dir}/js/js-external" overwrite="true" failonerror="false" verbose="true">
+			<fileset dir="${instance.files}/template/js-external"/>
+		</copy>
+		<copy todir="${build.dir}/css/images" overwrite="true" failonerror="true" verbose="true">
+			<fileset dir="${instance.files}/template/images"/>
+		</copy>
+
+		<!-- Create a flattened (no sub-folders) temporary library folder -->
+		<mkdir dir="${build.dir}/WEB-INF/lib-temp"/>
+		<copy todir="${build.dir}/WEB-INF/lib-temp" overwrite="true" failonerror="true" verbose="true" flatten="true">
+			<fileset dir="${build.dir}/WEB-INF" includes="**/mysql-connector-java-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/sqljdbc4.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-fileupload-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-logging-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-io-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/httpclient-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/httpcore-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-io-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/gwt-servlet.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/simple-xml-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/thumbnailator-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/jaxb-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/jak-*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF" includes="**/flyway-core-*.jar"/>
+
+			<fileset dir="${build.dir}/WEB-INF" includes="**/flapjack/*.jar"/>
+		</copy>
+	</target>
+
+	<!-- Compile the Java code -->
+	<target depends="copy_files, browser_opt_xml, no_browser_opt_xml, compile_opt_xml, no_compile_opt_xml, google_analytics_properties"
+			name="build-project">
+
+		<!-- Delete old compiled code -->
+		<delete failonerror="false" verbose="true" quiet="true" dir="${build.dir}/WEB-INF/classes"/>
+
+		<mkdir dir="${build.dir}/WEB-INF/classes"/>
+
+		<javac debug="true" destdir="${build.dir}/WEB-INF/classes" includeantruntime="false" source="${source}" target="${target}">
+			<src path="${src.dir}"/>
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+
+	<!-- Compile the code with gwtc -->
+	<target name="gwtc" depends="build-project" description="GWT compile to JavaScript">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+			<classpath>
+				<pathelement location="${src.dir}"/>
+				<pathelement location="${build.dir}/WEB-INF/classes"/>
+				<path refid="compile.classpath"/>
+			</classpath>
+			<arg line="-logLevel INFO"/>
+			<jvmarg value="-Xmx1024M"/>
+			<arg value="${project.root}"/>
+			<arg line="-localWorkers 2" />
+		</java>
+	</target>
+
+	<!-- Now build the war file and deploy it -->
+	<target name="buildwar" depends="gwtc" description="Creates a WAR file from the compiled source and deploys it to tomcat">
+		<war basedir="war" destfile="${project.name}.war" webxml="war/WEB-INF/web.xml">
+			<exclude name="WEB-INF/**"/>
+			<!-- Include the js and css folders -->
+			<fileset dir="war" includes="css/**"/>
+			<fileset dir="war" includes="js/**"/>
+			<!-- Copy the properties file to a location accessible from the source -->
+			<zipfileset dir="." includes="config.properties" prefix="WEB-INF/classes"/>
+			<zipfileset dir="." includes="logging.properties" prefix="WEB-INF/classes"/>
+			<zipfileset dir="${instance.files}" includes="apps*/**" prefix="WEB-INF/classes"/>
+			<zipfileset dir="." includes="apps*/**" prefix="WEB-INF/classes"/>
+			<zipfileset dir="${instance.files}" includes="res*/**" prefix="WEB-INF/classes"/>
+			<zipfileset dir="${instance.files}" includes="download*/**" prefix="WEB-INF/classes"/>
+			<zipfileset dir="${instance.files}" includes="data*/**" prefix="WEB-INF/classes"/>
+			<!-- Include the SQL update scripts for Flyway -->
+			<zipfileset dir="${src.dir}" includes="**/*.sql" prefix="WEB-INF/classes"/>
+
+			<lib dir="${build.dir}/WEB-INF/lib-temp"/>
+
+			<classes dir="${build.dir}/WEB-INF/classes"/>
+		</war>
+	</target>
+
+	<!-- The test build will make sure everything compiles, but won't actually deploy the application -->
+	<target name="testbuild" depends="buildwar" description="Runs a test build of Germinate without deploying it">
+		<!-- Finally, delete all the files we moved to leave a clean setup behind -->
+		<antcall target="delete_old_stuff"/>
+	</target>
+
+	<target name="deploy" depends="buildwar" description="Deploys Germinate to the target server">
+		<echo level="info" message="Deploying to: ${tomcat.manager.url}"/>
+
+		<taskdef name="undeploy" classpathref="compile.classpath" classname="org.apache.catalina.ant.UndeployTask"/>
+		<taskdef name="deploy" classpathref="compile.classpath" classname="org.apache.catalina.ant.DeployTask"/>
+
+		<undeploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${project.name}"
+				  failOnError="false"/>
+		<deploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${project.name}"
+				war="${basedir}/${project.name}.war"/>
+
+		<!-- Finally, delete all the files we moved to leave a clean setup behind -->
+		<antcall target="delete_old_stuff"/>
+	</target>
+
+	<target name="open" depends="deploy" description="Opens the deployed application in a browser window">
+		<!-- Open the deployed application in the browser -->
+		<script language="javascript"><![CDATA[
+			location = project.getProperty("tomcat.manager.url").toString().replace("manager/text", project.getProperty("project.name").toString());
+			java.awt.Desktop.getDesktop().browse(java.net.URI.create(location));
+		]]></script>
+	</target>
+
+	<target name="jar-importer-lib" depends="build-project">
+		<jar destfile="germinate-importer-lib.jar">
+			<manifest>
+				<attribute name="Class-Path" value="./ ${classpath}" />
+			</manifest>
+
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/manager/**/*.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/database/**/*.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/util/DatabaseObjectCache.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/shared/exception/**/*.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/shared/datastructure/**/*.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/util/importer/**/*.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/shared/*Utils.class"/>
+		</jar>
+
+		<antcall target="delete_old_stuff"/>
+	</target>
+</project>

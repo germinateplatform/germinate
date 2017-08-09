@@ -1,0 +1,160 @@
+/*
+ *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+ *  Information and Computational Sciences Group at JHI Dundee
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/* Container */
+.sp-germinate.sp-container {
+	border: solid 1px #999;
+}
+
+/* Replacer (the little preview div that shows up instead of the <input>) */
+.sp-germinate.sp-replacer {
+	background-color: #fdfdfd;
+}
+
+.sp-replacer:hover, .sp-replacer.sp-active {
+	border-color: #e5e5e5;
+}
+
+.sp-replacer.sp-disabled {
+	border-color: silver;
+	color: silver;
+}
+
+.sp-germinate .sp-preview {
+	border: solid 1px #999;
+}
+
+.sp-germinate .sp-cancel {
+	color: #e84c4c !important;
+}
+
+.sp-germinate, .sp-germinate button, .sp-germinate input, .sp-color, .sp-hue {
+
+}
+
+/* Input */
+.sp-germinate .sp-input-container {
+
+}
+
+.sp-germinate .sp-initial-disabled .sp-input-container {
+
+}
+
+.sp-germinate .sp-input {
+	border-radius: 0;
+}
+
+.sp-germinate .sp-input:focus {
+
+}
+
+.sp-germinate .sp-input.sp-validation-error {
+
+}
+
+.sp-germinate .sp-picker-container, .sp-germinate .sp-palette-container {
+	background-color: #fdfdfd;
+}
+
+.sp-germinate .sp-picker-container {
+
+}
+
+/* Palettes */
+.sp-germinate .sp-palette-container {
+
+}
+
+.sp-germinate .sp-palette .sp-thumb-el {
+
+}
+
+.sp-germinate .sp-palette .sp-thumb-el:hover, .sp-germinate .sp-palette .sp-thumb-el.sp-thumb-active {
+
+}
+
+.sp-germinate .sp-thumb-el {
+}
+
+/* Initial */
+.sp-germinate .sp-initial {
+
+}
+
+.sp-germinate .sp-initial span {
+
+}
+
+/* Buttons */
+.sp-germinate .sp-button-container {
+
+}
+
+/* Replacer (the little preview div that shows up instead of the <input>) */
+.sp-germinate.sp-replacer {
+
+}
+
+.sp-germinate.sp-replacer:hover, .sp-germinate.sp-replacer.sp-active {
+	border-color: #e5e5e5;
+	color: #111;
+}
+
+.sp-germinate.sp-replacer.sp-disabled {
+
+}
+
+.sp-germinate .sp-dd {
+
+}
+
+.sp-germinate .sp-preview {
+
+}
+
+.sp-germinate .sp-palette {
+
+}
+
+.sp-germinate .sp-palette .sp-thumb-el {
+
+}
+
+.sp-germinate button {
+
+}
+
+.sp-germinate button:hover {
+
+}
+
+.sp-germinate button:active {
+
+}
+
+.sp-germinate .sp-cancel {
+
+}
+
+.sp-germinate .sp-cancel:hover {
+
+}
+
+.sp-germinate .sp-palette span:hover, .sp-germinate .sp-palette span.sp-thumb-active {
+
+}
