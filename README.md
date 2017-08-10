@@ -1,4 +1,4 @@
-#Germinate
+# Germinate
 
 Germinate is an open source plant database infrastructure and application programming platform
 on which complex data from genetic resource collections can be stored, queried and visualized
