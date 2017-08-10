@@ -19,5 +19,3 @@ which brings focus and facilitates community building into research communities.
 Want to know more? Browse our homepage ([https://ics.hutton.ac.uk/get-germinate](https://ics.hutton.ac.uk/get-germinate))
 and have a play about with our [demo database](https://ics.hutton.ac.uk/germinate-demo) or drop us
 an email on [germinate@hutton.ac.uk](mailto:germinate@hutton.ac.uk).
-
-[![Germinate logo](war/img/germinate.svg?raw=true "Germinate Project")](https://ics.hutton.ac.uk/get-germinate)
