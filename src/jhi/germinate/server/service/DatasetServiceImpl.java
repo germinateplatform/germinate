@@ -149,6 +149,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		if (isPrivate && !details.isAdmin())
 		{
 			q.setLong(userAuth.getId())
+			 .setLong(userAuth.getId())
 			 .setLong(userAuth.getId());
 		}
 

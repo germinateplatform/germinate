@@ -85,7 +85,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
         /* Get the line names to extract */
 		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, type, sqlDebug, accessionGroups, Collections.singletonList(datasetId)) : new ArrayList<>();
 		/* Get the marker names to extract */
-		List<String> colNames = getColumnNames(type, sqlDebug, markerGroups, mapId);
+		List<String> colNames = getColumnNames(type, sqlDebug, markerGroups, mapId, userAuth);
 
 		/* If we specified accession and marker groups, but one of them is empty, then there is no data */
 		if (!CollectionUtils.isEmpty(accessionGroups, markerGroups) && CollectionUtils.isEmpty(rowNames, colNames))
@@ -127,13 +127,13 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	 * @return The marker names
 	 * @throws DatabaseException Thrown if the database interaction fails
 	 */
-	private static List<String> getColumnNames(DataExporter.Type type, DebugInfo sqlDebug, List<Long> markerGroups, Long mapToUse) throws DatabaseException
+	private static List<String> getColumnNames(DataExporter.Type type, DebugInfo sqlDebug, List<Long> markerGroups, Long mapToUse, UserAuth userAuth) throws DatabaseException
 	{
 		if (CollectionUtils.isEmpty(markerGroups))
 			return null;
 
 		String formatted = String.format(type.getQueryColumns(), Util.generateSqlPlaceholderString(markerGroups.size()));
-		ServerResult<List<String>> temp = new ValueQuery(formatted)
+		ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 				.setLongs(markerGroups)
 				.setLong(mapToUse)
 				.run(Marker.MARKER_NAME)
@@ -170,7 +170,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 				String formatted = String.format(type.getQueryRowsInternal(), Util.generateSqlPlaceholderString(accessionGroups.size()), Util.generateSqlPlaceholderString(datasetIds.size()));
 
         		/* Run the query */
-				ServerResult<List<String>> temp = new ValueQuery(formatted)
+				ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 						.setLongs(accessionGroups)
 						.setLongs(datasetIds)
 						.run(type.getColumnName())
@@ -185,7 +185,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 				String formatted = String.format(type.getQueryRowsExternal(), Util.generateSqlPlaceholderString(accessionGroups.size()), Util.generateSqlPlaceholderString(datasetIds.size()));
 
         		/* Run the query */
-				ValueQuery query = new ValueQuery(formatted)
+				ValueQuery query = new ValueQuery(formatted, userAuth)
 						.setLongs(accessionGroups);
 
 				// TODO: Fix this for allelefreq data

@@ -102,7 +102,7 @@ public class AccessionManager extends AbstractManager<Accession>
 
 	public static ServerResult<Long> getCount(UserAuth user) throws DatabaseException
 	{
-		return new ValueQuery(SELECT_COUNT)
+		return new ValueQuery(SELECT_COUNT, user)
 				.run(COUNT)
 				.getLong(0L);
 	}
@@ -161,7 +161,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	 */
 	public static ServerResult<List<String>> getIdsForFilter(UserAuth user, PartialSearchQuery filter) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException
 	{
-		return getFilteredValueQuery(filter, SELECT_IDS_FOR_FILTER, AccessionService.COLUMNS_SORTABLE)
+		return getFilteredValueQuery(filter, user, SELECT_IDS_FOR_FILTER, AccessionService.COLUMNS_SORTABLE)
 				.run(Accession.ID)
 				.getStrings();
 	}
@@ -250,7 +250,7 @@ public class AccessionManager extends AbstractManager<Accession>
 		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
 			throw new InsufficientPermissionsException();
 
-		return new ValueQuery(SELECT_IDS_FOR_GROUP)
+		return new ValueQuery(SELECT_IDS_FOR_GROUP, userAuth)
 				.setLong(groupId)
 				.run(Accession.ID)
 				.getStrings();
@@ -288,13 +288,13 @@ public class AccessionManager extends AbstractManager<Accession>
 	{
 		if (Objects.equals(megaEnvId, -1L))
 		{
-			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV_UNK)
+			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV_UNK, userAuth)
 					.run(Accession.ID)
 					.getStrings();
 		}
 		else
 		{
-			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV)
+			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV, userAuth)
 					.setLong(megaEnvId)
 					.run(Accession.ID)
 					.getStrings();
@@ -351,7 +351,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	public static ServerResult<List<String>> getIdsInPolygon(UserAuth userAuth, List<LatLngPoint> bounds) throws DatabaseException
 	{
 		String polygon = LocationManager.getPolygon(bounds);
-		return new ValueQuery(SELECT_IDS_IN_POLYGON)
+		return new ValueQuery(SELECT_IDS_IN_POLYGON, userAuth)
 				.setString(jhi.germinate.shared.enums.LocationType.collectingsites.name())
 				.setString(polygon)
 				.run(Accession.ID)

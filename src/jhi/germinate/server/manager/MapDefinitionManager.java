@@ -76,7 +76,7 @@ public class MapDefinitionManager extends AbstractManager<MapDefinition>
 		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
 			throw new InsufficientPermissionsException();
 
-		return new ValueQuery(SELECT_IDS_FOR_GROUP)
+		return new ValueQuery(SELECT_IDS_FOR_GROUP, userAuth)
 				.setLong(groupId)
 				.run(Marker.ID)
 				.getStrings();

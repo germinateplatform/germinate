@@ -21,7 +21,11 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.view.client.*;
+
+import org.gwtbootstrap3.client.ui.gwt.*;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
 
 import java.util.*;
 
@@ -34,7 +38,7 @@ import jhi.germinate.shared.*;
 public class AdvancedTable<T> extends Composite
 {
 	/** The actual table */
-	private GerminateCellTable<T>          table;
+	private CellTable<T>                   table;
 	/** Sort handler for the data */
 	private ColumnSortEvent.ListHandler<T> columnSortHandler;
 
@@ -49,7 +53,7 @@ public class AdvancedTable<T> extends Composite
 			throw new RuntimeException("Table not properly set up. 'data' is not set.");
 		}
 
-		table = new GerminateCellTable<>(data.size());
+		table = new CellTable<>(data.size());
 		table.setWidth("100%");
 
 		table.setAutoFooterRefreshDisabled(false);
@@ -103,7 +107,7 @@ public class AdvancedTable<T> extends Composite
 		this.freezeHeader = freezeHeader;
 	}
 
-	public GerminateCellTable<T> getTable()
+	public CellTable<T> getTable()
 	{
 		return table;
 	}

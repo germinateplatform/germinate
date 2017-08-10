@@ -111,7 +111,7 @@ public class CommentManager extends AbstractManager<Comment>
 			}
 		}
 
-		new ValueQuery(UPDATE_VISIBILITY)
+		new ValueQuery(UPDATE_VISIBILITY, user)
 				.setBoolean(visible)
 				.setLong(comment.getId())
 				.execute();
@@ -138,7 +138,7 @@ public class CommentManager extends AbstractManager<Comment>
 		if (user == null || user.getId() == null)
 			throw new InsufficientPermissionsException();
 
-		return new ValueQuery(INSERT)
+		return new ValueQuery(INSERT, user)
 				.setLong(type.getId())
 				.setLong(user.getId())
 				.setString(description)

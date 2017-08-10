@@ -46,11 +46,11 @@ public class DatasetManager extends AbstractManager<Dataset>
 	private static final String SELECT_ALL_FOR_ACCESSION = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.* FROM " + DATA_POINTS_SUB_QUERY + " WHERE %s %s AND (EXISTS (SELECT 1 FROM phenotypedata WHERE phenotypedata.dataset_id = datasets.id AND phenotypedata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM allelefrequencydata WHERE allelefrequencydata.dataset_id = datasets.id AND allelefrequencydata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM genotypes WHERE genotypes.dataset_id = datasets.id AND genotypes.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM compounddata WHERE compounddata.dataset_id = datasets.id AND compounddata.germinatebase_id = ?)) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 
 	private static final String SELECT_FOR_USER_ADMIN   = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0";
-	private static final String SELECT_FOR_USER_REGULAR = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "' OR (datasetstates.name = '" + DatasetState.PRIVATE + "' AND datasets.created_by = ?) OR (datasetpermissions.user_id = ?))";
+	private static final String SELECT_FOR_USER_REGULAR = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "' OR (datasetstates.name = '" + DatasetState.PRIVATE + "' AND datasets.created_by = ?) EXISTS (SELECT 1 FROM datasetpermissions WHERE datasetpermissions.user_id = ? AND datasetpermissions.dataset_id = datasets.id) OR EXISTS (SELECT 1 FROM datasetpermissions LEFT JOIN usergroups ON usergroups.id = datasetpermissions.group_id LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id WHERE usergroupmembers.user_id = ?))";
 	private static final String SELECT_FOR_USER_PUBLIC  = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "')";
 
 	public static final String BITS_PRIVATE_ADMIN   = " 1=1";
-	public static final String BITS_PRIVATE_REGULAR = " (datasetstates.name = '" + DatasetState.PUBLIC.getName() + "' OR (datasetstates.name = '" + DatasetState.PRIVATE.getName() + "' AND datasets.created_by = ?) OR (datasetpermissions.user_id = ?))";
+	public static final String BITS_PRIVATE_REGULAR = " (datasetstates.name = '" + DatasetState.PUBLIC.getName() + "' OR (datasetstates.name = '" + DatasetState.PRIVATE.getName() + "' AND datasets.created_by = ?) OR EXISTS (SELECT 1 FROM datasetpermissions WHERE datasetpermissions.user_id = ? AND datasetpermissions.dataset_id = datasets.id) OR EXISTS (SELECT 1 FROM datasetpermissions LEFT JOIN usergroups ON usergroups.id = datasetpermissions.group_id LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id WHERE usergroupmembers.user_id = ?))";
 	public static final String BITS_PUBLIC          = " (datasetstates.name = '" + DatasetState.PUBLIC.getName() + "')";
 
 	private static final String[] COLUMNS_DATASET_DATA_EXPORT = {"datasets_id", "experimenttypes_description", "experiments_description", "datasets_description", "datasets_contact", "datasets_date_start", "datasets_date_end", "datasetmeta_nr_of_data_objects", "datasets_nr_of_data_points"};
@@ -244,7 +244,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 
 		String formatted = getFormattedQuery(query, isPrivate, details, type);
 
-		ValueQuery result = getFilteredValueQuery(filter, formatted, COLUMNS_TABLE);
+		ValueQuery result = getFilteredValueQuery(filter, user, formatted, COLUMNS_TABLE);
 
 		setParameters(result, isPrivate, details, user);
 
@@ -313,6 +313,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 		if (isPrivate && !details.isAdmin())
 		{
 			query.setLong(user.getId())
+				 .setLong(user.getId())
 				 .setLong(user.getId());
 		}
 	}
@@ -431,6 +432,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 			else
 			{
 				return new DatabaseObjectQuery<Dataset>(SELECT_FOR_USER_REGULAR, userAuth)
+						.setLong(userAuth.getId())
 						.setLong(userAuth.getId())
 						.setLong(userAuth.getId())
 						.run()

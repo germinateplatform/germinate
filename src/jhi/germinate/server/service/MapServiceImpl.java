@@ -208,9 +208,9 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	 * @return The map description
 	 * @throws DatabaseException Thrown if the communication with the database fails
 	 */
-	private ServerResult<String> getMapDescription(Long mapId) throws DatabaseException
+	private ServerResult<String> getMapDescription(Long mapId, UserAuth userAuth) throws DatabaseException
 	{
-		return new ValueQuery(QUERY_MAP_BY_ID)
+		return new ValueQuery(QUERY_MAP_BY_ID, userAuth)
 				.setLong(mapId)
 				.run(Map.DESCRIPTION)
 				.getString("");
@@ -271,6 +271,9 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	@Override
 	public ServerResult<String> getInFormat(RequestProperties properties, Long mapId, MapFormat format, MapExportOptions options) throws InvalidSessionException, DatabaseException, IOException
 	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
 		HttpServletRequest req = getThreadLocalRequest();
 
 		GerminateTableQuery dataQuery;
@@ -375,7 +378,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 
 		DatabaseResult streamer = dataQuery.getResult();
 
-		ServerResult<String> mapName = getMapDescription(mapId);
+		ServerResult<String> mapName = getMapDescription(mapId, userAuth);
 
 		File filename = createTemporaryFile("map", format.getFileType().name());
 

@@ -113,7 +113,7 @@ public class GroupManager extends AbstractManager<Group>
 			/* Else, regular user. Query for visibility or ownership */
 			else
 			{
-				return new ValueQuery(SELECT_FOR_ID_AND_AUTHOR_OR_PUBLIC)
+				return new ValueQuery(SELECT_FOR_ID_AND_AUTHOR_OR_PUBLIC, userAuth)
 						.setLong(groupId)
 						.setLong(userAuth.getId())
 						.run(COUNT)
@@ -124,7 +124,7 @@ public class GroupManager extends AbstractManager<Group>
 		/* No login required, only show public groups */
 		else
 		{
-			return new ValueQuery(SELECT_FOR_ID_AND_PUBLIC)
+			return new ValueQuery(SELECT_FOR_ID_AND_PUBLIC, userAuth)
 					.setLong(groupId)
 					.run(COUNT)
 					.getBoolean(false)
@@ -212,7 +212,7 @@ public class GroupManager extends AbstractManager<Group>
 
 		for (Long memberId : groupMembers)
 		{
-			ServerResult<List<Long>> temp = new ValueQuery(INSERT_MEMBERS)
+			ServerResult<List<Long>> temp = new ValueQuery(INSERT_MEMBERS, userAuth)
 					.setLong(memberId)
 					.setLong(groupId)
 					.setLong(memberId)
@@ -234,7 +234,7 @@ public class GroupManager extends AbstractManager<Group>
 
 		ServerResult<Long> groupTypeId = GroupTypeManager.getForType(userAuth, table);
 
-		ServerResult<List<Long>> newIds = new ValueQuery(INSERT)
+		ServerResult<List<Long>> newIds = new ValueQuery(INSERT, userAuth)
 				.setLong(groupTypeId.getServerResult())
 				.setString(groupName)
 				.setLong(userAuth.getId())
@@ -263,7 +263,7 @@ public class GroupManager extends AbstractManager<Group>
 			if (!GroupManager.hasAccessToGroup(userAuth, groupId, true))
 				throw new InsufficientPermissionsException();
 
-			sqlDebug.addAll(new ValueQuery(DELETE)
+			sqlDebug.addAll(new ValueQuery(DELETE, userAuth)
 					.setLong(groupId)
 					.execute()
 					.getDebugInfo());
@@ -286,7 +286,7 @@ public class GroupManager extends AbstractManager<Group>
 
 		String formatted = String.format(DELETE_MEMBERS, Util.generateSqlPlaceholderString(memberIds.size()));
 
-		sqlDebug.addAll(new ValueQuery(formatted)
+		sqlDebug.addAll(new ValueQuery(formatted, userAuth)
 				.setLong(groupId)
 				.setLongs(memberIds)
 				.execute()
@@ -307,7 +307,7 @@ public class GroupManager extends AbstractManager<Group>
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 
-		sqlDebug.addAll(new ValueQuery(UPDATE_VISIBILITY)
+		sqlDebug.addAll(new ValueQuery(UPDATE_VISIBILITY, userAuth)
 				.setBoolean(isPublic)
 				.setLong(groupId)
 				.execute()
@@ -325,7 +325,7 @@ public class GroupManager extends AbstractManager<Group>
 		else
 			formatted = String.format(SELECT_COUNT, SELECT_REGULAR_USER);
 
-		ValueQuery query = new ValueQuery(formatted);
+		ValueQuery query = new ValueQuery(formatted, userAuth);
 
 		if (!userAuth.isAdmin())
 			query.setLong(userAuth.getId());

@@ -75,6 +75,11 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 		this(QueryType.DATA, query);
 	}
 
+	public ValueQuery(String query, UserAuth userAuth) throws DatabaseException
+	{
+		super(QueryType.DATA, userAuth, query);
+	}
+
 	/**
 	 * Executes the current query on the database. The returned result contains the generated ids (if any). Use {@link ValueQuery#run(String)} to run
 	 * the query and get the result.

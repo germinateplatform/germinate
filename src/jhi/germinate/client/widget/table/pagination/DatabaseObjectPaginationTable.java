@@ -26,32 +26,33 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.query.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.*;
 
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import org.gwtbootstrap3.extras.toggleswitch.client.ui.*;
-import org.gwtbootstrap3.extras.toggleswitch.client.ui.base.constants.*;
 
 import java.util.*;
 import java.util.Map;
 
-import jhi.germinate.client.i18n.Text;
-import jhi.germinate.client.page.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.CompositeCell;
 import jhi.germinate.client.widget.table.*;
-import jhi.germinate.client.widget.table.basic.*;
 import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.client.widget.table.pagination.cell.*;
 import jhi.germinate.client.widget.table.pagination.resource.*;
@@ -66,70 +67,77 @@ import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
 /**
- * {@link DatabaseObjectPaginationTable} is a basic {@link CellTable} supporting column sorting backed by a list of objects. The data objects that can
- * be displayed by this table extend {@link DatabaseObject}.
- *
  * @author Sebastian Raubach
  */
-public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> extends GerminateComposite implements FilterCell.VisibilityCallback
+public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> extends Composite implements FilterCell.VisibilityCallback
 {
-
-	private CustomFloatPanel topPanel;
-	private CustomFloatPanel bottomPanel;
-
-	public enum SelectionMode
+	interface DatabaseObjectPaginationTableUiBinder extends UiBinder<HTMLPanel, DatabaseObjectPaginationTable>
 	{
-		NONE,
-		SINGLE,
-		MULTI
 	}
+
+	private static DatabaseObjectPaginationTableUiBinder ourUiBinder = GWT.create(DatabaseObjectPaginationTableUiBinder.class);
 
 	public static final int DEFAULT_NR_OF_ITEMS_PER_PAGE = 25;
 
-	protected SelectionMode selectionMode = SelectionMode.NONE;
+	@UiField
+	HTMLPanel panel;
 
-	/** Celltable that is backing this widget */
-	protected GerminateCellTable<T> table;
+	@UiField
+	HTML filterInfo;
 
-	/** Data provider based on a list */
-	protected RefreshableAsyncDataProvider<T> dataProvider;
+	@UiField
+	FlowPanel      topPanel;
+	@UiField
+	FlowPanel      filterPlaceholder;
+	@UiField
+	Button         filterButton;
+	@UiField
+	protected
+	ToggleSwitch   filterOperatorButton;
+	@UiField
+	BootstrapPager topPager;
 
-	private SelectionModel<T> selectionModel;
-	protected ContextMenuHandler<T> contextMenuHandler = null;
+	@UiField(provided = true)
+	CellTable<T> table;
 
-	//	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCell.FilterCallback.Range> searchFilters   = new HashMap<>();
-	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
+	@UiField
+	FlowPanel      bottomPanel;
+	@UiField
+	ButtonGroup    extrasPlaceholder;
+	@UiField
+	Button         downloadButton;
+	@UiField
+	BootstrapPager bottomPager;
 
-	private Callback<List<T>, Exception> visibleItemsCallback;
+	@UiField
+	Heading noDataHeading;
 
-	protected ToggleSwitch filterOperatorButton;
-	private   Button       filterButton;
-
-	private BootstrapPager topPager;
-	private BootstrapPager bottomPager;
-	private Pagination pagination = new Pagination(0, Integer.MAX_VALUE);
-	private MultiPageBooleanHeader selectPageHeader;
-
-	private FlowPanel  extrasPlaceholder;
-	private FlowPanel  filterPlaceholder;
-	private FlowPanel  errorMessages;
-	private PopupPanel tooltipPanel;
-
-	private   boolean isSticky         = false;
-	private   boolean useStickyHeader  = true;
-	protected boolean sortingEnabled   = true;
-	private   boolean filterVisible    = false;
-	private   int     rangeStart       = 0;
-	private   boolean hideEmptyTable   = true;
-	protected Integer nrOfItemsPerPage = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_NR_OF_ITEMS_PER_PAGE);
-	private Request currentRequest;
-
+	// CONFIGURATION
+	private SelectionMode selectionMode = SelectionMode.NONE;
+	boolean sortingEnabled = true;
+	private   boolean hideEmptyTable         = true;
 	protected boolean preventInitialDataLoad = false;
+	private   int     nrOfItemsPerPage       = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_NR_OF_ITEMS_PER_PAGE);
+
+	// CURRENT STATE
+	private boolean                                                      filterVisible   = false;
+	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
+	private RefreshableAsyncDataProvider<T> dataProvider;
+	private ContextMenuHandler<T>           contextMenuHandler;
+	private SelectionModel<T>               selectionModel;
+	private MultiPageBooleanHeader          selectPageHeader;
+	private int rangeStart = 0;
+
+	// SERVER COMMUNICATION
+	private Request currentRequest;
+	private Pagination pagination = new Pagination(0, Integer.MAX_VALUE);
+
+	// OTHER THINGS
+	private PopupPanel tooltipPanel;
 
 	public DatabaseObjectPaginationTable()
 	{
-		selectionMode = SelectionMode.NONE;
-		sortingEnabled = true;
+		this(SelectionMode.NONE, true);
 	}
 
 	/**
@@ -139,103 +147,8 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	{
 		this.selectionMode = selectionMode;
 		this.sortingEnabled = sortingEnabled;
-	}
 
-	/**
-	 * Creates the columns and adds them to the table
-	 */
-	protected abstract void createColumns();
-
-	protected abstract boolean supportsFiltering();
-
-	protected abstract boolean supportsDownload();
-
-	/**
-	 * Queries the database for an actual chunk of data
-	 *
-	 * @param pagination The {@link Pagination}
-	 * @param callback   The callback that will take care of the result
-	 */
-	protected abstract Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<T>>> callback);
-
-	protected abstract void download(PartialSearchQuery filter, AsyncCallback<ServerResult<String>> callback);
-
-	protected abstract void onSelectionChanged(NativeEvent event, T object, int column);
-
-	@Override
-	public void onUnload()
-	{
-		/*
-		 * Make sure the popup is hidden when the table is unloaded (removed
-         * from its parent)
-         */
-		if (tooltipPanel != null)
-			tooltipPanel.hide();
-
-		tooltipPanel = null;
-
-		super.onUnload();
-	}
-
-	public void setPageSize(Integer value)
-	{
-		nrOfItemsPerPage = value;
-		table.setPageSize(value);
-	}
-
-	/**
-	 * Redraws the table
-	 */
-	public void redraw()
-	{
-		table.redraw();
-	}
-
-	public void redrawRow(int relativeIndex)
-	{
-		table.redrawRow(relativeIndex + table.getPageStart());
-	}
-
-	/**
-	 * Returns the id of the table
-	 *
-	 * @return The id of the table
-	 */
-	public String getId()
-	{
-		if (table == null || !isAttached())
-		{
-			Notification.notify(Notification.Type.ERROR, "Table has to be added to a parent before calling getId()");
-			throw new RuntimeException("Table has to be added to a parent before calling getId()");
-		}
-		return table.getElement().getId();
-	}
-
-	@Override
-	public Library[] getLibraryList()
-	{
-		return null;
-	}
-
-	@Override
-	protected void setUpContent()
-	{
-		topPanel = new CustomFloatPanel();
-		bottomPanel = new CustomFloatPanel();
-
-		if (supportsFiltering())
-		{
-			// TODO: i18n
-			panel.add(new HTML("<b>Table filtering searches for exact matches in the specified column. To use fuzzy search, use the wildcard character '%'. As an example, searching for a country name of 'kingdom' will not return a result whereas searching for '%kingdom%' will return 'United Kingdom'.</b>"));
-		}
-
-		extrasPlaceholder = new FlowPanel();
-		filterPlaceholder = new FlowPanel();
-		filterPlaceholder.setVisible(false);
-		filterPlaceholder.getElement().getStyle().setFloat(com.google.gwt.dom.client.Style.Float.LEFT);
-		errorMessages = new FlowPanel();
-
-		table = new GerminateCellTable<T>(nrOfItemsPerPage)
+		table = new CellTable<T>(nrOfItemsPerPage)
 		{
 			@Override
 			protected void onBrowserEvent2(Event event)
@@ -254,112 +167,86 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			}
 		};
 
-		table.setBordered(true);
-		table.setWidth("100%");
+		initWidget(ourUiBinder.createAndBindUi(this));
+	}
 
-		table.setAutoFooterRefreshDisabled(false);
-		table.setAutoHeaderRefreshDisabled(false);
+	@UiHandler("filterButton")
+	void onFilterButtonClicked(ClickEvent event)
+	{
+		toggleFilter();
+	}
+
+	@UiHandler("downloadButton")
+	void onDownloadButtonClicked(ClickEvent event)
+	{
+		PartialSearchQuery filterObject = null;
+
+		if (supportsFiltering())
+		{
+			filterObject = getSearchFilter();
+		}
+
+		download(filterObject, new DefaultAsyncCallback<ServerResult<String>>(true)
+		{
+			@Override
+			protected void onSuccessImpl(ServerResult<String> result)
+			{
+				if (!StringUtils.isEmpty(result.getServerResult()))
+				{
+					String path = new ServletConstants.Builder()
+							.setUrl(GWT.getModuleBaseURL())
+							.setPath(ServletConstants.SERVLET_FILES)
+							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
+
+					JavaScript.invokeDownload(path);
+				}
+			}
+		});
+	}
+
+	@Override
+	protected void onUnload()
+	{
+		// Make sure the popup is hidden when the table is unloaded (removed from its parent)
+		if (tooltipPanel != null)
+			tooltipPanel.hide();
+
+		tooltipPanel = null;
+
+		super.onUnload();
+	}
+
+	@Override
+	protected void onLoad()
+	{
+		super.onLoad();
+
+		if (!supportsFiltering())
+			filterInfo.setVisible(false);
 
 		String id = "table-" + String.valueOf(Math.abs(RandomUtils.RANDOM.nextLong()));
 		table.getElement().setId(id);
 
-		/* Add a custom loading indicator */
-		SimplePanel anim = new SimplePanel();
-		anim.setStyleName(Style.WIDGET_BUSY_INDICATOR);
-		anim.getElement().getStyle().setZIndex(10000);
-		anim.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
-		anim.getElement().getStyle().setLeft(0, com.google.gwt.dom.client.Style.Unit.PX);
-		anim.getElement().getStyle().setTop(0, com.google.gwt.dom.client.Style.Unit.PX);
-		anim.getElement().getStyle().setMargin(0, com.google.gwt.dom.client.Style.Unit.PX);
-		table.setLoadingIndicator(anim);
+		table.setLoadingIndicator(new LoadingSpinner());
 		table.getLoadingIndicator().getParent().getElement().getStyle().setProperty("minHeight", "110px");
 
-		/* Create an internationalized SimplePager */
-		topPager = new BootstrapPager(this);
-		bottomPager = new BootstrapPager(this);
-
-		topPager.addStyleName(Style.TABLE_CONTROL_PANEL_TOP);
-		filterPlaceholder.addStyleName(Style.TABLE_CONTROL_PANEL_TOP);
-
-		topPanel.setRight(topPager);
-		topPanel.setLeft(filterPlaceholder);
-
-		panel.add(topPanel);
-
-		/* Wrap everything in a scrollable composite */
-		FlowPanel scrollPanel = new FlowPanel();
-		scrollPanel.setStyleName(Style.combine(Style.LAYOUT_CLEAR_BOTH, Style.LAYOUT_OVERFLOW_X_AUTO));
-		scrollPanel.add(table);
-		panel.add(scrollPanel);
-
-		bottomPanel.setRight(bottomPager);
-		bottomPanel.setLeft(extrasPlaceholder);
-
-		bottomPager.addStyleName(Style.TABLE_CONTROL_PANEL_BOTTOM);
-		extrasPlaceholder.addStyleName(Style.TABLE_CONTROL_PANEL_BOTTOM);
-
-		panel.add(bottomPanel);
-		panel.add(errorMessages);
-		panel.add(new ClearDiv());
-
-		if (useStickyHeader && JavaScript.isFreezeHeaderLoaded())
-		{
-			Scheduler.get().scheduleDeferred(() ->
-			{
-				JavaScript.makeHeaderSticky(getId());
-				isSticky = true;
-			});
-		}
-
-		/* Set the dataTable as the display */
-		topPager.setVisible(false);
-		bottomPager.setVisible(false);
-		topPager.setDisplay(table);
-		bottomPager.setDisplay(table);
+		topPager.setDisplay(this);
+		bottomPager.setDisplay(this);
 
 		initTable();
 
 		applyHeaderStyles();
 
-		if (supportsDownload())
-		{
-			Button button = new Button();
-			button.setTitle(Text.LANG.generalDownload());
-			button.setIcon(IconType.DOWNLOAD);
-			button.addClickHandler(event ->
-			{
-				PartialSearchQuery filterObject = null;
+		if (!supportsDownload())
+			downloadButton.removeFromParent();
 
-				if (supportsFiltering())
-				{
-					filterObject = getSearchFilter();
-				}
+		onPostLoad();
+	}
 
-				download(filterObject, new DefaultAsyncCallback<ServerResult<String>>(true)
-				{
-					@Override
-					protected void onSuccessImpl(ServerResult<String> result)
-					{
-						if (!StringUtils.isEmpty(result.getServerResult()))
-						{
-							String path = new ServletConstants.Builder()
-									.setUrl(GWT.getModuleBaseURL())
-									.setPath(ServletConstants.SERVLET_FILES)
-									.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-									.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-									.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
-
-							JavaScript.invokeDownload(path);
-						}
-					}
-				});
-			});
-
-			SimplePanel wrapper = new SimplePanel();
-			wrapper.addStyleName(Style.TABLE_CONTROL_PANEL_BOTTOM);
-			wrapper.add(button);
-			bottomPanel.setLeft(wrapper);
-		}
+	protected void onPostLoad()
+	{
 	}
 
 	/**
@@ -413,37 +300,15 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		if (sortingEnabled)
 		{
-			/*
-			 * Add a ColumnSortEvent.AsyncHandler to connect sorting to the
-             * AsyncDataProvider
-             */
+			// Add a ColumnSortEvent.AsyncHandler to connect sorting to the AsyncDataProvider
 			ColumnSortEvent.AsyncHandler columnSortHandler = new ColumnSortEvent.AsyncHandler(table);
 			table.addColumnSortHandler(columnSortHandler);
 		}
 
 		if (supportsFiltering())
 		{
-			/* Add a delete button below the table that starts a server call to delete the selected items from the group */
-			filterButton = new Button();
-			filterButton.setTitle(Text.LANG.filterButtonTitle());
-			filterButton.addStyleName(Style.combine(Style.MDI, Style.FA_2X, Style.MDI_FILTER));
-			filterButton.getElement().getStyle().setMarginRight(10, com.google.gwt.dom.client.Style.Unit.PX);
-
-			filterOperatorButton = new ToggleSwitch();
-			filterOperatorButton.setOnText(Text.LANG.operatorsAnd());
-			filterOperatorButton.setOffText(Text.LANG.operatorsOr());
-			filterOperatorButton.setOnColor(ColorType.PRIMARY);
-			filterOperatorButton.setOffColor(ColorType.PRIMARY);
-			filterOperatorButton.setSize(SizeType.SMALL);
-
-			filterPlaceholder.add(filterButton);
-			filterPlaceholder.add(filterOperatorButton);
 			filterPlaceholder.setVisible(true);
-
 			filterOperatorButton.setVisible(false);
-			filterOperatorButton.setValue(true);
-			filterOperatorButton.getElement().getStyle().setPaddingLeft(4, com.google.gwt.dom.client.Style.Unit.PX);
-			filterOperatorButton.getElement().getStyle().setPaddingRight(4, com.google.gwt.dom.client.Style.Unit.PX);
 			filterOperatorButton.addValueChangeHandler(event ->
 			{
 				for (FilterCellCallback<T> callback : filterCallbacks.values())
@@ -455,8 +320,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 					}
 				}
 			});
-
-			filterButton.addClickHandler(event -> toggleFilter());
 		}
 
 		fetchTableData();
@@ -512,16 +375,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		filterOperatorButton.setVisible(filterVisible);
 		filterOperatorButton.setValue(true);
-
-//		if (filterVisible)
-//		{
-//			filterOperatorButton.setValue(true);
-//			filterOperatorButton.getElement().getStyle().setDisplay(com.google.gwt.dom.client.Style.Display.INLINE_BLOCK);
-//		}
-//		else
-//		{
-//			filterOperatorButton.setVisible(false);
-//		}
 	}
 
 	public boolean forceFilter(Map<String, String> columnToValue, boolean isAnd) throws InvalidArgumentException
@@ -699,7 +552,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		if (pagination.getResultSize() != null)
 		{
 			if (!Objects.equals(pagination.getResultSize(), result.getResultSize()))
-				Notification.notify(Notification.Type.WARNING, Text.LANG.notificationIncinsistancyCountResult());
+				Notification.notify(Notification.Type.WARNING, jhi.germinate.client.i18n.Text.LANG.notificationIncinsistancyCountResult());
 
 			return;
 		}
@@ -737,8 +590,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				topPanel.setVisible(false);
 				bottomPanel.setVisible(false);
 				extrasPlaceholder.setVisible(false);
-				errorMessages.clear();
-				errorMessages.add(new Heading(HeadingSize.H3, Text.LANG.notificationNoDataFound()));
+				noDataHeading.setVisible(true);
 			}
 		}
 		else if (nrOfItems == -1)
@@ -795,13 +647,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 							parent.setHeight(height + "px");
 							parent.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
-
-							loadingIndicator.getElement().getStyle().setTop(0, com.google.gwt.dom.client.Style.Unit.PX);
-							loadingIndicator.getElement().getStyle().setRight(0, com.google.gwt.dom.client.Style.Unit.PX);
-							loadingIndicator.getElement().getStyle().setBottom(0, com.google.gwt.dom.client.Style.Unit.PX);
-							loadingIndicator.getElement().getStyle().setLeft(0, com.google.gwt.dom.client.Style.Unit.PX);
-							loadingIndicator.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.ABSOLUTE);
-							loadingIndicator.getElement().getStyle().setProperty("margin", "auto");
 						}
 					}
 
@@ -830,14 +675,14 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 						{
 							List<T> data = result.getServerResult();
 
-							errorMessages.clear();
+							noDataHeading.setVisible(false);
 
 							if (data == null)
 							{
 								if (filterApplied)
 									table.redrawHeaders();
 
-								errorMessages.add(new Heading(HeadingSize.H3, Text.LANG.notificationNoDataFound()));
+								noDataHeading.setVisible(true);
 								table.setRowCount(0, true);
 								updateRowData(rangeStart, new ArrayList<>());
 								topPager.setVisible(false);
@@ -863,19 +708,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
                         		/* Update table */
 								updateRowData(rangeStart, data);
-
-								int topOfTable = table.getAbsoluteTop();
-								int scrollTop = Window.getScrollTop();
-
-								if (visibleItemsCallback != null)
-								{
-									visibleItemsCallback.onSuccess(data);
-									visibleItemsCallback = null;
-								}
-
-								/* Make sure to scroll to the top of the table to prevent problems with the frozen header */
-								if (useStickyHeader && scrollTop > topOfTable && JavaScript.isFreezeHeaderLoaded())
-									Window.scrollTo(0, topOfTable);
 							}
 						}
 					});
@@ -978,17 +810,21 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	}
 
 	/**
-	 * Checks if the given item is selected
+	 * Adds the column style names based on the database column that is associated with it.
 	 *
-	 * @param item The item to check
-	 * @return <code>true</code> if the item is selected
+	 * @param column The {@link Column} to add the style to
+	 * @param header The {@link Header} to add the style to
 	 */
-	public boolean isSelected(T item)
+	private void setColumnStyleName(Column<T, ?> column, Header<?> header)
 	{
-		if (selectionModel != null)
-			return selectionModel.isSelected(item);
-		else
-			return false;
+		if (!StringUtils.isEmpty(column.getDataStoreName()))
+		{
+			String style = "gm8-col-" + column.getDataStoreName().replace(".", "-");
+			column.setCellStyleNames(style);
+
+			if (header != null)
+				header.setHeaderStyleNames(style);
+		}
 	}
 
 	/**
@@ -1001,18 +837,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	public void addColumn(final Column<T, ?> column, final String headerString, final boolean sortable)
 	{
 		addColumn(column, headerString, sortable, true);
-	}
-
-	private void setColumnStyleName(Column<T, ?> column, Header<?> header)
-	{
-		if (!StringUtils.isEmpty(column.getDataStoreName()))
-		{
-			String style = "gm8-col-" + column.getDataStoreName().replace(".", "-");
-			column.setCellStyleNames(style);
-
-			if (header != null)
-				header.setHeaderStyleNames(style);
-		}
 	}
 
 	/**
@@ -1098,6 +922,39 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		setColumnStyleName(column, table.getHeader(table.getColumnCount() - 1));
 	}
 
+	/**
+	 * Adds the given column to the table
+	 *
+	 * @param column       The column
+	 * @param headerString The column header text
+	 */
+	public void addColumn(Column<T, ?> column, String headerString)
+	{
+		addColumn(column, headerString, false);
+	}
+
+	/**
+	 * Adds the given column to the table
+	 *
+	 * @param column The column
+	 */
+	public void addColumn(Column<T, ?> column)
+	{
+		addColumn(column, "", false);
+	}
+
+	/**
+	 * Adds the given column to the table. The Header parameter is used as the column header.
+	 *
+	 * @param column The column
+	 * @param header The column header
+	 */
+
+	public void addColumn(Column<T, ?> column, Header<?> header)
+	{
+		table.addColumn(column, header);
+	}
+
 	protected PartialSearchQuery getSearchFilter()
 	{
 		PartialSearchQuery q = new PartialSearchQuery();
@@ -1166,39 +1023,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		return q;
 	}
 
-	/**
-	 * Adds the given column to the table
-	 *
-	 * @param column       The column
-	 * @param headerString The column header text
-	 */
-	public void addColumn(Column<T, ?> column, String headerString)
-	{
-		addColumn(column, headerString, false);
-	}
-
-	/**
-	 * Adds the given column to the table
-	 *
-	 * @param column The column
-	 */
-	public void addColumn(Column<T, ?> column)
-	{
-		addColumn(column, "", false);
-	}
-
-	/**
-	 * Adds the given column to the table. The Header parameter is used as the column header.
-	 *
-	 * @param column The column
-	 * @param header The column header
-	 */
-
-	public void addColumn(Column<T, ?> column, Header<?> header)
-	{
-		table.addColumn(column, header);
-	}
-
 	private void addSortBits(Column<T, ?> column)
 	{
 		/* Set up sorting */
@@ -1216,11 +1040,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	public List<T> getVisibleItems()
 	{
 		return Collections.unmodifiableList(table.getVisibleItems());
-	}
-
-	public void getVisibleItems(final Callback<List<T>, Exception> callback)
-	{
-		visibleItemsCallback = callback;
 	}
 
 	protected void setSelectionModel(SelectionModel<T> selectionModel, DefaultSelectionEventManager<T> checkboxManager)
@@ -1248,11 +1067,110 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		this.hideEmptyTable = hideEmptyTable;
 	}
 
+	public CellTable<T> getTable()
+	{
+		return table;
+	}
+
 	@Override
 	public boolean isFilterVisible()
 	{
 		return filterVisible;
 	}
+
+	/**
+	 * Sets the number of items per page to the given value.
+	 *
+	 * @param value The number of items per page
+	 */
+	public void setPageSize(Integer value)
+	{
+		nrOfItemsPerPage = value;
+		table.setPageSize(value);
+	}
+
+	public HTMLPanel getPanel()
+	{
+		return panel;
+	}
+
+	/**
+	 * Redraws the table
+	 */
+	public void redraw()
+	{
+		table.redraw();
+	}
+
+	/**
+	 * Redraws a given row identified by the relative index.
+	 *
+	 * @param relativeIndex The relative index of the row in the table
+	 */
+	public void redrawRow(int relativeIndex)
+	{
+		table.redrawRow(relativeIndex + table.getPageStart());
+	}
+
+	/**
+	 * Returns the id of the table
+	 *
+	 * @return The id of the table
+	 */
+	public String getId()
+	{
+		if (table == null || !isAttached())
+		{
+			Notification.notify(Notification.Type.ERROR, "Table has to be added to a parent before calling getId()");
+			throw new RuntimeException("Table has to be added to a parent before calling getId()");
+		}
+		return table.getElement().getId();
+	}
+
+	/**
+	 * Creates the columns and adds them to the table
+	 */
+	protected abstract void createColumns();
+
+	/**
+	 * Returns <code>true</code> if filtering is supported
+	 *
+	 * @return <code>true</code> if filtering is supported
+	 */
+	protected abstract boolean supportsFiltering();
+
+	/**
+	 * Returns <code>true</code> if downloading is supported
+	 *
+	 * @return <code>true</code> if downloading is supported
+	 */
+	protected abstract boolean supportsDownload();
+
+	/**
+	 * Queries the database for an actual chunk of data
+	 *
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} reflecting the user filters
+	 * @param callback   The {@link AsyncCallback} that is called with the result
+	 */
+	protected abstract Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<T>>> callback);
+
+	/**
+	 * Initiates the data download with the given {@link PartialSearchQuery}
+	 *
+	 * @param filter   The {@link PartialSearchQuery} reflecting the user filters
+	 * @param callback The {@link AsyncCallback} that is called with the result
+	 */
+	protected abstract void download(PartialSearchQuery filter, AsyncCallback<ServerResult<String>> callback);
+
+	/**
+	 * Called when the table selection changes.
+	 *
+	 * @param event  The {@link NativeEvent} of the selection
+	 * @param object The selected object
+	 * @param column The column index of the selection
+	 */
+	protected abstract void onSelectionChanged(NativeEvent event, T object, int column);
 
 	protected class ClickableTableCell extends SafeHtmlCell
 	{
@@ -1427,5 +1345,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		 * @return <code>true</code> to prevent the browser default
 		 */
 		boolean handleContextMenuEvent(T row, int x, int y, boolean anchorClicked);
+	}
+
+	public enum SelectionMode
+	{
+		NONE,
+		SINGLE,
+		MULTI
 	}
 }

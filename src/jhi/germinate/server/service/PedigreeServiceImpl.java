@@ -189,6 +189,9 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 	@Override
 	public ServerResult<Boolean> exists(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
 	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
 		String query;
 
 		if (id != null)
@@ -200,7 +203,7 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 			query = "SELECT COUNT(1) AS count FROM pedigrees";
 		}
 
-		ValueQuery q = new ValueQuery(query);
+		ValueQuery q = new ValueQuery(query, userAuth);
 
 		if (id != null)
 			q.setLong(id)

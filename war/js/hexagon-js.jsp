@@ -125,7 +125,7 @@
 						arcs: [
 							[q, q + 1, q + 2, ~(q + (n + 2 - (j & 1)) * 3), ~(q - 2), ~(q - (n + 2 + (j & 1)) * 3 + 2)]
 						],
-						fill: Math.random() > i / n * 2
+						fill: Math.random() > i / n * 1.2
 					});
 				}
 			}

@@ -2716,4 +2716,8 @@ public interface Text extends Messages
 	@Key("page.groups.search.result")
 	@DefaultMessage("Search result")
 	String groupsNewMembersSearchResult();
+
+	@Key("widget.table.filter.info")
+	@DefaultMessage("<b>Table filtering searches for exact matches in the specified column. To use fuzzy search, use the wildcard character '%'. As an example, searching for a country name of 'kingdom' will not return a result whereas searching for '%kingdom%' will return 'United Kingdom'.</b>")
+	SafeHtml tableFilterInfo();
 }

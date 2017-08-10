@@ -57,7 +57,7 @@ public abstract class AbstractManager<T extends DatabaseObject>
 	{
 		String formatted = String.format(SELECT_TRUSTED_CELL, column, table);
 
-		return new ValueQuery(formatted)
+		return new ValueQuery(formatted, userAuth)
 				.setLong(id)
 				.run(column)
 				.getString();
@@ -184,11 +184,11 @@ public abstract class AbstractManager<T extends DatabaseObject>
 	 *                                     parameter
 	 * @throws InvalidArgumentException    Thrown if any part of the {@link PartialSearchQuery} is invalid
 	 */
-	public static ValueQuery getFilteredValueQuery(PartialSearchQuery filter, String input, String[] allowedColumns) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
+	public static ValueQuery getFilteredValueQuery(PartialSearchQuery filter, UserAuth userAuth, String input, String[] allowedColumns) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
 	{
 		String formatted = getFormattedString(filter, input, allowedColumns);
 
-		ValueQuery query = new ValueQuery(formatted);
+		ValueQuery query = new ValueQuery(formatted, userAuth);
 
 		if (filter != null)
 			setParameters(query, filter);

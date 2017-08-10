@@ -46,12 +46,25 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	protected DebugInfo         sqlDebug;
 	protected int      i        = 1;
 	protected Database database = null;
+	protected UserAuth userAuth;
 
 	protected GerminateQuery(Database database, String query) throws DatabaseException
 	{
 		this.database = database;
 
 		init(null, null, query);
+	}
+
+	protected GerminateQuery(QueryType queryType, UserAuth userAuth, String query) throws DatabaseException
+	{
+		this.userAuth = userAuth;
+		init(null, queryType, query);
+	}
+
+	protected GerminateQuery(DatabaseType databaseType, QueryType queryType, UserAuth userAuth, String query) throws DatabaseException
+	{
+		this.userAuth = userAuth;
+		init(databaseType, queryType, query);
 	}
 
 	/**
@@ -67,6 +80,8 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	protected GerminateQuery(DatabaseType databaseType, QueryType queryType, RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(requestProperties, servlet);
+
+		userAuth = UserAuth.getFromSession(servlet, requestProperties);
 
 		init(databaseType, queryType, query);
 	}
@@ -96,6 +111,12 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	{
 		this.query = query;
 
+		// Set the defaults
+		if (databaseType == null)
+			databaseType = DatabaseType.MYSQL;
+		if (queryType == null)
+			queryType = QueryType.DATA;
+
 		if (database == null)
 		{
 			/* Connect to the database WITHOUT checking the session id */
@@ -116,7 +137,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 		this.stmt = database.prepareStatement(query);
 
         /* Check if debugging is activated */
-		sqlDebug = DebugInfo.create(null);
+		sqlDebug = DebugInfo.create(userAuth);
 	}
 
 	/**

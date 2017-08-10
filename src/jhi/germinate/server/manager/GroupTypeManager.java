@@ -48,7 +48,7 @@ public class GroupTypeManager extends AbstractManager<GroupType>
 
 	public static ServerResult<Long> getForType(UserAuth userAuth, GerminateDatabaseTable table) throws DatabaseException
 	{
-		return new ValueQuery(SELECT_FOR_TYPE)
+		return new ValueQuery(SELECT_FOR_TYPE, userAuth)
 				.setString(table.name())
 				.run(GroupType.ID)
 				.getLong();

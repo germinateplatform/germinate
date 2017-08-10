@@ -22,8 +22,6 @@ package jhi.germinate.shared;
  */
 public class Style
 {
-	public static final String HIGHLIGHT_COLOR_TEXT = "gm8-highlight-color-text";
-
 	public static final String COUNTRY_FLAG = "gm8-country-flag";
 
 	public static final String LAYOUT_NEWS_LIST                  = "gm8-news-list";

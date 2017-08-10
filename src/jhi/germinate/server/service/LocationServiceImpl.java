@@ -253,8 +253,10 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	{
 		/* Get the column from the config file */
 //		String hierarchyBy = PropertyReader.get(ServerProperty.GERMINATE_COLLECTINGSITE_TREEMAP_COLUMN, Country.COUNTRY_NAME);
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		ServerResult<String> json = new ValueQuery(QUERY_JSON_LOCATIONS)
+		ServerResult<String> json = new ValueQuery(QUERY_JSON_LOCATIONS, userAuth)
 				.setString(type.name())
 				.run("json")
 				.getString();

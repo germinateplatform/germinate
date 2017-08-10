@@ -94,6 +94,12 @@ public class SearchPanel extends Composite
 		doSearch();
 	}
 
+	public void clear()
+	{
+		if (searchBox != null && searchBox.isAttached())
+			searchBox.clear();
+	}
+
 	/**
 	 * Initiates the search. Will navigate to the search result page if the search box contains a valid string
 	 */
@@ -104,12 +110,12 @@ public class SearchPanel extends Composite
 		if (searchString.equals(Text.LANG.searchPrompt()))
 			searchString = "";
 
-//		if (searchString.equals("wakka wakka wakka"))
-//		{
-//			new Pacman();
-//			clear();
-//		}
-//		else
+		if (searchString.equals("wakka wakka wakka"))
+		{
+			new Pacman();
+			clear();
+		}
+		else
 		{
 
         	/* Save the parameter in the parameter store */

@@ -33,26 +33,21 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 {
 	private static final String CALC_ROWS = "SELECT SQL_CALC_FOUND_ROWS ";
 
-	private UserAuth auth          = null;
-	private Integer  previousCount = -1;
+	private Integer previousCount = -1;
 
 	public DatabaseObjectQuery(RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException, DatabaseException
 	{
 		super(Database.DatabaseType.MYSQL, Database.QueryType.DATA, requestProperties, servlet, query);
-
-		auth = UserAuth.getFromSession(servlet, requestProperties);
 	}
 
 	public DatabaseObjectQuery(String query, UserAuth userAuth) throws DatabaseException
 	{
-		super(Database.DatabaseType.MYSQL, Database.QueryType.DATA, query);
-		this.auth = userAuth;
+		super(Database.QueryType.DATA, userAuth, query);
 	}
 
 	public DatabaseObjectQuery(Database.QueryType type, String query, UserAuth userAuth) throws DatabaseException
 	{
-		super(Database.DatabaseType.MYSQL, type, query);
-		this.auth = userAuth;
+		super(Database.DatabaseType.MYSQL, type, userAuth, query);
 	}
 
 	/**
@@ -111,7 +106,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 			checkResultSet();
 			if (rs.next())
 			{
-				T obj = parser.parse(rs, auth, foreignsFromResultSet);
+				T obj = parser.parse(rs, userAuth, foreignsFromResultSet);
 				database.close();
 				return new ServerResult<>(sqlDebug, obj);
 			}
@@ -145,7 +140,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 				if (result == null)
 					result = new ArrayList<>();
 
-				T object = parser.parse(rs, auth, foreignsFromResultSet);
+				T object = parser.parse(rs, userAuth, foreignsFromResultSet);
 
 				if (object != null)
 					result.add(object);
@@ -170,7 +165,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 				if (result == null)
 					result = new ArrayList<>();
 
-				T object = parser.parse(rs, auth, foreignsFromResultSet);
+				T object = parser.parse(rs, userAuth, foreignsFromResultSet);
 
 				if (object != null)
 					result.add(object);

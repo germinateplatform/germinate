@@ -61,13 +61,14 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 	@Override
 	public ServerResult<List<Integer>> getTrialYears(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
 	{
+		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
 		String formatted = String.format(QUERY_DISTINCT_YEARS, Util.generateSqlPlaceholderString(datasetIds.size()));
 
-		return new ValueQuery(formatted)
+		return new ValueQuery(formatted, userAuth)
 				.setLongs(datasetIds)
 				.run("recording_date")
 				.getInts();

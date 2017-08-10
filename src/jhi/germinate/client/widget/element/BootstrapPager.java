@@ -17,6 +17,8 @@
 
 package jhi.germinate.client.widget.element;
 
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.shared.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -34,7 +36,6 @@ import jhi.germinate.client.widget.input.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -51,8 +52,11 @@ public class BootstrapPager extends AbstractPager
 	private AnchorListItem currentPage = new AnchorListItem();
 	private AnchorListItem nextPage    = new AnchorListItem();
 	private AnchorListItem lastPage    = new AnchorListItem();
+	private IntegerListBox lb;
 
-	public BootstrapPager(DatabaseObjectPaginationTable<? extends DatabaseObject> table)
+	private HandlerRegistration reg;
+
+	public BootstrapPager()
 	{
 		FlowPanel panel = new FlowPanel();
 		initWidget(panel);
@@ -62,28 +66,15 @@ public class BootstrapPager extends AbstractPager
 		UnorderedList ul = new UnorderedList();
 		panel.add(ul);
 
-		if (table != null)
-		{
-			int currentPageSize = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DatabaseObjectPaginationTable.DEFAULT_NR_OF_ITEMS_PER_PAGE);
-			IntegerListBox lb = new IntegerListBox(false);
-			lb.setSelectAllVisible(false);
-			lb.addStyleName(Style.LAYOUT_DISPLAY_INLINE_BLOCK);
-			lb.setValue(currentPageSize, false);
-			lb.setAcceptableValues(new Integer[]{DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE * 2, DEFAULT_PAGE_SIZE * 3, DEFAULT_PAGE_SIZE * 4});
-			lb.addValueChangeHandler(event ->
-			{
-				List<Integer> values = event.getValue();
-				Integer value = CollectionUtils.isEmpty(values) ? DEFAULT_PAGE_SIZE : values.get(0);
-
-				table.setPageSize(value);
-				table.refreshTable();
-
-				IntegerParameterStore.Inst.get().put(Parameter.paginationPageSize, value);
-			});
-
-			lb.addStyleName(Style.combine(Style.LAYOUT_NO_PADDING, Style.LAYOUT_NO_MARGIN, Style.LAYOUT_V_ALIGN_MIDDLE));
-			panel.insert(lb, 0);
-		}
+		int currentPageSize = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DatabaseObjectPaginationTable.DEFAULT_NR_OF_ITEMS_PER_PAGE);
+		lb = new IntegerListBox(false);
+		lb.setSelectAllVisible(false);
+		lb.addStyleName(Style.LAYOUT_DISPLAY_INLINE_BLOCK);
+		lb.setValue(currentPageSize, false);
+		lb.setAcceptableValues(new Integer[]{DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE * 2, DEFAULT_PAGE_SIZE * 3, DEFAULT_PAGE_SIZE * 4});
+		lb.addStyleName(Style.combine(Style.LAYOUT_NO_PADDING, Style.LAYOUT_NO_MARGIN, Style.LAYOUT_V_ALIGN_MIDDLE));
+		panel.insert(lb, 0);
+		lb.setVisible(false);
 
 		ul.add(firstPage);
 		ul.add(prevPage);
@@ -99,11 +90,29 @@ public class BootstrapPager extends AbstractPager
 		ul.addStyleName(Style.combine(Style.LAYOUT_NO_PADDING, Style.LAYOUT_NO_MARGIN, Style.LAYOUT_V_ALIGN_MIDDLE, Styles.PAGINATION));
 
 		addClickListeners();
-
-		setDisplay(null);
 	}
 
-	protected void addClickListeners()
+	public void setDisplay(DatabaseObjectPaginationTable table)
+	{
+		super.setDisplay(table.getTable());
+
+		if (reg != null)
+			reg.removeHandler();
+
+		lb.setVisible(true);
+		reg = lb.addValueChangeHandler(event ->
+		{
+			List<Integer> values = event.getValue();
+			Integer value = CollectionUtils.isEmpty(values) ? DEFAULT_PAGE_SIZE : values.get(0);
+
+			table.setPageSize(value);
+			table.refreshTable();
+
+			IntegerParameterStore.Inst.get().put(Parameter.paginationPageSize, value);
+		});
+	}
+
+	private void addClickListeners()
 	{
 		firstPage.addClickHandler(event -> firstPage());
 		prevPage.addClickHandler(event -> previousPage());
@@ -140,6 +149,14 @@ public class BootstrapPager extends AbstractPager
 
 			  })
 			  .open();
+
+		box.addKeyPressHandler(event ->
+		{
+			if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+			{
+				dialog.positiveClick();
+			}
+		});
 	}
 
 	@Override
@@ -209,7 +226,7 @@ public class BootstrapPager extends AbstractPager
 	 *
 	 * @param disabled true to disable, false to enable
 	 */
-	protected void setNextPageButtonsDisabled(boolean disabled)
+	private void setNextPageButtonsDisabled(boolean disabled)
 	{
 		nextPage.setEnabled(!disabled);
 		lastPage.setEnabled(!disabled);
@@ -231,7 +248,7 @@ public class BootstrapPager extends AbstractPager
 	 *
 	 * @param disabled true to disable, false to enable
 	 */
-	protected void setPrevPageButtonsDisabled(boolean disabled)
+	private void setPrevPageButtonsDisabled(boolean disabled)
 	{
 		firstPage.setEnabled(!disabled);
 		prevPage.setEnabled(!disabled);

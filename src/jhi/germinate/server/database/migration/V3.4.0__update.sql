@@ -80,3 +80,25 @@ MODIFY COLUMN `relationship_type`  enum('Female','Male','Unknown') NULL DEFAULT 
 
 ALTER TABLE `markers`
 ADD INDEX `marker_name` (`marker_name`) USING BTREE ;
+
+CREATE TABLE IF NOT EXISTS `usergroups` (
+  `id`  int(11) NOT NULL AUTO_INCREMENT ,
+  `name`  varchar(255) NOT NULL COMMENT 'The name of the user group.',
+  `description`  text NULL COMMENT 'A description of the user group.',
+  `created_on`  datetime NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `usergroupmembers` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`user_id`  int(11) NOT NULL ,
+`usergroup_id`  int(11) NOT NULL ,
+PRIMARY KEY (`id`)
+);
+
+ALTER TABLE `datasetpermissions`
+MODIFY COLUMN `user_id`  int(11) NULL COMMENT 'Foreign key to Gatekeeper users (Gatekeeper usersid).' AFTER `dataset_id`,
+ADD COLUMN `group_id`  int(11) NULL COMMENT 'Foreign key to usergroups table.' AFTER `user_id`;
+
+ALTER TABLE `datasetpermissions` ADD FOREIGN KEY (`group_id`) REFERENCES `usergroups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -60,7 +60,7 @@ public class MarkerManager extends AbstractManager<Marker>
 
 	public static ServerResult<List<String>> getIdsForFilter(UserAuth userAuth, PartialSearchQuery filter) throws DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
 	{
-		return getFilteredValueQuery(filter, SELECT_IDS_FOR_FILTER_MAP, MarkerService.COLUMNS_MAPDEFINITION_TABLE)
+		return getFilteredValueQuery(filter, userAuth, SELECT_IDS_FOR_FILTER_MAP, MarkerService.COLUMNS_MAPDEFINITION_TABLE)
 				.setLong(userAuth.getId())
 				.run(Marker.ID)
 				.getStrings();
@@ -109,7 +109,7 @@ public class MarkerManager extends AbstractManager<Marker>
 		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
 			throw new InsufficientPermissionsException();
 
-		return new ValueQuery(SELECT_IDS_FOR_GROUP)
+		return new ValueQuery(SELECT_IDS_FOR_GROUP, userAuth)
 				.setLong(groupId)
 				.run(Marker.ID)
 				.getStrings();
@@ -117,7 +117,7 @@ public class MarkerManager extends AbstractManager<Marker>
 
 	public static ServerResult<Long> getCount(UserAuth user) throws DatabaseException
 	{
-		return new ValueQuery(SELECT_COUNT)
+		return new ValueQuery(SELECT_COUNT, user)
 				.run(COUNT)
 				.getLong(0L);
 	}

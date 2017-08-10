@@ -85,7 +85,7 @@ public class LocationManager extends AbstractManager<Location>
 
 	public static ServerResult<Long> getCount(UserAuth user) throws DatabaseException
 	{
-		return new ValueQuery(SELECT_COUNT)
+		return new ValueQuery(SELECT_COUNT, user)
 				.run(COUNT)
 				.getLong(0L);
 	}
@@ -115,7 +115,7 @@ public class LocationManager extends AbstractManager<Location>
 
 	public static ServerResult<List<String>> getIds(UserAuth userAuth, LocationType type) throws DatabaseException
 	{
-		return new ValueQuery(SELECT_IDS_FOR_TYPE)
+		return new ValueQuery(SELECT_IDS_FOR_TYPE, userAuth)
 				.setString(type.name())
 				.run(Location.ID)
 				.getStrings();
@@ -125,13 +125,13 @@ public class LocationManager extends AbstractManager<Location>
 	{
 		if (megaEnvId == null || Objects.equals(megaEnvId, -1L))
 		{
-			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV_UNK)
+			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV_UNK, userAuth)
 					.run(Location.ID)
 					.getStrings();
 		}
 		else
 		{
-			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV)
+			return new ValueQuery(SELECT_IDS_FOR_MEGA_ENV, userAuth)
 					.setLong(megaEnvId)
 					.run(Location.ID)
 					.getStrings();
@@ -142,7 +142,7 @@ public class LocationManager extends AbstractManager<Location>
 	{
 		String polygon = getPolygon(bounds);
 
-		return new ValueQuery(SELECT_IDS_IN_POLYGON)
+		return new ValueQuery(SELECT_IDS_IN_POLYGON, userAuth)
 				.setString(LocationType.collectingsites.name())
 				.setString(polygon)
 				.run(Location.ID)
@@ -151,7 +151,7 @@ public class LocationManager extends AbstractManager<Location>
 
 	public static ServerResult<List<String>> getIdsForFilter(UserAuth userAuth, PartialSearchQuery filter) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
 	{
-		return AbstractManager.<Location>getFilteredValueQuery(filter, SELECT_IDS_FOR_FILTER, LocationService.COLUMNS_LOCATION_SORTABLE)
+		return AbstractManager.<Location>getFilteredValueQuery(filter, userAuth, SELECT_IDS_FOR_FILTER, LocationService.COLUMNS_LOCATION_SORTABLE)
 				.run(Location.ID)
 				.getStrings();
 	}
@@ -234,7 +234,7 @@ public class LocationManager extends AbstractManager<Location>
 		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
 			throw new InsufficientPermissionsException();
 
-		return new ValueQuery(SELECT_IDS_FOR_GROUP)
+		return new ValueQuery(SELECT_IDS_FOR_GROUP, userAuth)
 				.setLong(groupId)
 				.run(Location.ID)
 				.getStrings();

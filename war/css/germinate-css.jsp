@@ -29,7 +29,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:act
 	-webkit-box-shadow: 0 0 0 1000px white inset;
 }
 
-body, .<%= Style.NO_POINTER_EVENTS %>{
+html, body, .<%= Style.NO_POINTER_EVENTS %>{
 	pointer-events: none;
 }
 
@@ -93,10 +93,6 @@ td p {
 	color: <%= highlightColor %>
 }
 
-.dropdown-menu>li>a {
-	color: <%= highlightColor %>;
-}
-
 #content-wrapper .well h4,
 #<%= Id.STRUCTURE_LOGIN %> .well h4 {
 	line-height: 30px
@@ -121,10 +117,6 @@ td p {
 .<%= Style.LAYOUT_LOGO_SECTION %> img {
 	max-width: 100%;
 	width: 300px;
-}
-
-.<%= Style.HIGHLIGHT_COLOR_TEXT %> {
-	color: <%= highlightColor %>;
 }
 
 .<%= Style.LAYOUT_V_ALIGN_MIDDLE %> {

@@ -1,0 +1,74 @@
+<!--
+  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
+  ~  Information and Computational Sciences Group at JHI Dundee
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
+			 xmlns:t='urn:import:org.gwtbootstrap3.extras.toggleswitch.client.ui'
+			 xmlns:bg='urn:import:org.gwtbootstrap3.client.ui.gwt'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
+
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
+
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<ui:style>
+		.marginTenRight {
+			margin-right: 10px;
+		}
+		.marginZero {
+			margin: 0;
+		}
+	</ui:style>
+
+	<g:HTMLPanel ui:field="panel">
+		<g:HTML ui:field="filterInfo"/>
+
+		<g:FlowPanel ui:field="topPanel">
+			<g:FlowPanel addStyleNames="{PULL_LEFT}">
+				<g:FlowPanel addStyleNames="{TABLE_CONTROL_PANEL_TOP}" visible="false" ui:field="filterPlaceholder">
+					<b:Button title="{msg.filterButtonTitle}" addStyleNames="{MDI} {MDI_FILTER} {style.marginTenRight}" ui:field="filterButton"/>
+					<t:ToggleSwitch onText="{msg.operatorsAnd}" offText="{msg.operatorsOr}" onColor="PRIMARY" offColor="PRIMARY" size="SMALL"
+									ui:field="filterOperatorButton"/>
+				</g:FlowPanel>
+			</g:FlowPanel>
+			<g:FlowPanel addStyleNames="{PULL_RIGHT}">
+				<g8:BootstrapPager addStyleNames="{TABLE_CONTROL_PANEL_TOP}" visible="false" ui:field="topPager"/>
+			</g:FlowPanel>
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="{LAYOUT_CLEAR_BOTH} {LAYOUT_OVERFLOW_X_AUTO}">
+			<bg:CellTable addStyleNames="{style.marginZero}" bordered="true" ui:field="table"/>
+		</g:FlowPanel>
+
+		<g:FlowPanel ui:field="bottomPanel">
+			<g:FlowPanel addStyleNames="{PULL_LEFT}">
+				<b:ButtonGroup addStyleNames="{TABLE_CONTROL_PANEL_BOTTOM}" visible="false" ui:field="extrasPlaceholder">
+					<b:Button icon="DOWNLOAD" title="{msg.generalDownload}" ui:field="downloadButton" />
+				</b:ButtonGroup>
+			</g:FlowPanel>
+			<g:FlowPanel addStyleNames="{PULL_RIGHT}">
+				<g8:BootstrapPager addStyleNames="{TABLE_CONTROL_PANEL_BOTTOM}" visible="false" ui:field="bottomPager"/>
+			</g:FlowPanel>
+		</g:FlowPanel>
+
+		<b:Heading size="H3" text="{msg.notificationNoDataFound}" ui:field="noDataHeading"/>
+
+		<g8:ClearDiv/>
+	</g:HTMLPanel>
+</ui:UiBinder>

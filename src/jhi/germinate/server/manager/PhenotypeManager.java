@@ -109,7 +109,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 
 		String formatted = String.format(SELECT_IDS_FOR_FILTER, Util.generateSqlPlaceholderString(datasetIds.size()));
 
-		return AbstractManager.<CompoundData>getFilteredValueQuery(filter, formatted, PhenotypeService.COLUMNS_SORTABLE)
+		return AbstractManager.<CompoundData>getFilteredValueQuery(filter, user, formatted, PhenotypeService.COLUMNS_SORTABLE)
 				.setLongs(datasetIds)
 				.run(Accession.ID)
 				.getStrings();

@@ -65,7 +65,7 @@ public class AttributeDataManager extends AbstractManager<AttributeData>
 
 	public static ServerResult<List<String>> getIdsForFilter(UserAuth user, PartialSearchQuery filter) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException
 	{
-		return getFilteredValueQuery(filter, SELECT_IDS_FOR_FILTER, AttributeService.COLUMNS_SORTABLE)
+		return getFilteredValueQuery(filter, user, SELECT_IDS_FOR_FILTER, AttributeService.COLUMNS_SORTABLE)
 				.run(Accession.ID)
 				.getStrings();
 	}
