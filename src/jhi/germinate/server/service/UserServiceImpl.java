@@ -219,7 +219,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 		/* Check if we actually allow registration */
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) && PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED))
 		{
-			List<String> usernames = new ValueQuery(QueryType.AUTHENTICATION, QUERY_USERNAME_EXISTS)
+			List<String> usernames = new ValueQuery(QUERY_USERNAME_EXISTS)
+					.setQueryType(QueryType.AUTHENTICATION)
 					.run("username")
 					.getStrings()
 					.getServerResult();
@@ -234,7 +235,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
             /* If the registration needs approval, insert into the
 			 * unapproved_users table */
-			ValueQuery query = new ValueQuery(QueryType.AUTHENTICATION, INSERT_UNAPPROVED_USER)
+			ValueQuery query = new ValueQuery(INSERT_UNAPPROVED_USER)
+					.setQueryType(QueryType.AUTHENTICATION)
 					.setString(user.userUsername)
 					.setString(hashed)
 					.setString(user.userFullName)
@@ -365,7 +367,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	{
 		/* Delete the created entries again */
 		String formatted = String.format(DELETE_UNAPPROVED_USER, Util.generateSqlPlaceholderString(ids.size()));
-		new ValueQuery(QueryType.AUTHENTICATION, formatted)
+		new ValueQuery(formatted)
+				.setQueryType(QueryType.AUTHENTICATION)
 				.setLongs(ids)
 				.execute();
 	}
@@ -380,7 +383,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	{
 		/* Delete the created entries again */
 		String formatted = String.format(DELETE_ACCESS_REQUEST, Util.generateSqlPlaceholderString(ids.size()));
-		new ValueQuery(QueryType.AUTHENTICATION, formatted)
+		new ValueQuery(formatted)
+				.setQueryType(QueryType.AUTHENTICATION)
 				.setLongs(ids)
 				.execute();
 	}
@@ -388,7 +392,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	@Override
 	public List<Institution> getInstitutions() throws DatabaseException
 	{
-		return new DatabaseObjectQuery<Institution>(QueryType.AUTHENTICATION, QUERY_INSTITUTES, null)
+		return new DatabaseObjectQuery<Institution>(QUERY_INSTITUTES, null)
+				.setQueryType(QueryType.AUTHENTICATION)
 				.run()
 				.getObjects(Institution.Parser.Inst.get())
 				.getServerResult();
@@ -397,7 +402,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	@Override
 	public void addInstitution(Institution institution) throws DatabaseException
 	{
-		new ValueQuery(QueryType.AUTHENTICATION, INSERT_INSTITUTE)
+		new ValueQuery(INSERT_INSTITUTE)
+				.setQueryType(QueryType.AUTHENTICATION)
 				.setString(institution.getName())
 				.setString(institution.getAcronym())
 				.setString(institution.getAddress())
@@ -425,7 +431,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			if (!BCrypt.checkpw(user.userPassword, userDetails.getPassword()))
 				throw new LoginRegistrationException(LoginRegistrationException.Reason.USERNAME_PASSWORD_WRONG);
 
-			Boolean hasAccess = new ValueQuery(QueryType.AUTHENTICATION, QUERY_USER_HAS_ACCESS_TO_DATABASE)
+			Boolean hasAccess = new ValueQuery(QUERY_USER_HAS_ACCESS_TO_DATABASE)
+					.setQueryType(QueryType.AUTHENTICATION)
 					.setLong(userDetails.getId())
 					.setString(database)
 					.setString(server)
@@ -436,7 +443,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			if (hasAccess)
 				throw new LoginRegistrationException(LoginRegistrationException.Reason.USER_ALREADY_HAS_ACCESS);
 
-			Boolean hasRequestedAccess = new ValueQuery(QueryType.AUTHENTICATION, QUERY_USER_HAS_REQUESTED_ACCESS)
+			Boolean hasRequestedAccess = new ValueQuery(QUERY_USER_HAS_REQUESTED_ACCESS)
+					.setQueryType(QueryType.AUTHENTICATION)
 					.setLong(userDetails.getId())
 					.setString(database)
 					.setString(server)
@@ -457,7 +465,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
                 /* If the registration needs approval, insert into the
 				 * access_requests table */
-				List<Long> ids = new ValueQuery(QueryType.AUTHENTICATION, INSERT_ACCESS_REQUEST)
+				List<Long> ids = new ValueQuery(INSERT_ACCESS_REQUEST)
+						.setQueryType(QueryType.AUTHENTICATION)
 						.setLong(userDetails.getId())
 						.setString(database)
 						.setString(server)
@@ -518,7 +527,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			else
 			{
 				/* Insert the permissions straight away */
-				new ValueQuery(QueryType.AUTHENTICATION, INSERT_USER_HAS_ACCESS_TO_DATABASE)
+				new ValueQuery(INSERT_USER_HAS_ACCESS_TO_DATABASE)
+						.setQueryType(QueryType.AUTHENTICATION)
 						.setLong(userDetails.getId())
 						.setString(database)
 						.setString(server)

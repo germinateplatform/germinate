@@ -29,55 +29,6 @@ import jhi.germinate.shared.datastructure.database.*;
 public interface TrialServiceAsync
 {
 	/**
-	 * Returns a list of {@link TrialAccessionYears} along with a list of the contained years.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param accessionId The {@link Accession} id
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @param callback    The {@link AsyncCallback}
-	 */
-	void getPhenotypeYearTable(RequestProperties properties, Long accessionId, List<Long> datasetIds, AsyncCallback<ServerResult<Pair<List<TrialAccessionYears>, List<String>>>> callback);
-
-	/**
-	 * Exports the individual data per site and treatment for an {@link Accession}, a list of {@link Dataset}s, a {@link Phenotype} and a year and
-	 * writes it to a file. Returns the name of the file.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param accessionId The {@link Accession} id
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @param phenotypeId The {@link Phenotype} id
-	 * @param trialsYear  The selected year
-	 * @param callback    The {@link AsyncCallback}
-	 */
-	void exportIndividualData(RequestProperties properties, Long accessionId, List<Long> datasetIds, Long phenotypeId, String trialsYear, AsyncCallback<ServerResult<String>> callback);
-
-	/**
-	 * Exports the values for an {@link Accession}, a list of {@link Dataset}s, a {@link Phenotype} and a year and writes it to a file. Returns the
-	 * name of the file.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param accessionId The {@link Accession} id
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @param phenotypeId The {@link Phenotype} id
-	 * @param trialsYear  The selected year
-	 * @param callback    The {@link AsyncCallback}
-	 */
-	void exportHistogram(RequestProperties properties, Long accessionId, List<Long> datasetIds, Long phenotypeId, String trialsYear, AsyncCallback<ServerResult<Map<String, String>>> callback);
-
-	/**
-	 * Exports the so-called line performance data for an {@link Accession}, a list of {@link Dataset}s and a {@link Phenotype} across years and
-	 * returns the name of the result file.
-	 *
-	 * @param properties      The {@link RequestProperties}
-	 * @param accessionId     The {@link Accession} id
-	 * @param datasetIds      The {@link Dataset} ids
-	 * @param phenotypeId     The {@link Phenotype} id
-	 * @param siteAverageText The text to use for the "Average site"
-	 * @param callback        The {@link AsyncCallback}
-	 */
-	void exportLinePerformance(RequestProperties properties, Long accessionId, List<Long> datasetIds, Long phenotypeId, String siteAverageText, AsyncCallback<ServerResult<Map<String, String>>> callback);
-
-	/**
 	 * Exports the data for a list of {@link Dataset}s, two {@link Phenotype}s and a {@link Group}.
 	 *
 	 * @param properties The {@link RequestProperties}

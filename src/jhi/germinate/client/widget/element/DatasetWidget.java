@@ -30,8 +30,10 @@ import java.util.*;
 import java.util.Map;
 import java.util.stream.*;
 
+import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.page.dataset.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -64,7 +66,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp
 
 	private SafeHtml headerText = null;
 
-	private String titleText; // = Text.LANG.datasetsTitle();
+	private String titleText;
 
 	private boolean internal = true;
 
@@ -80,6 +82,8 @@ public class DatasetWidget extends GerminateComposite implements HasHelp
 	private SimpleCallback<Dataset> downloadCallback = null;
 
 	private DatasetTable.SelectionMode selectionMode = null;
+	private Button continueButton;
+	private boolean alreadyAskedUserAboutLicenses = false;
 
 	/**
 	 * Creates a new dataset table. This table will either show the internal or external datasets based on the selection ({@link
@@ -234,54 +238,143 @@ public class DatasetWidget extends GerminateComposite implements HasHelp
 		if (selectionMode != DatasetTable.SelectionMode.NONE && datasetCallback != null && datasetCallback.isContinueButtonAvailable())
 		{
 			/* Handle "continue" click events */
-			Button button = new Button(Text.LANG.generalContinue(), IconType.ARROW_CIRCLE_RIGHT, event ->
+			/* Get the selected items *//* Get their ids *//* Save the ids to the parameter store *//* Notify the callback */
+			continueButton = new Button(Text.LANG.generalContinue(), IconType.ARROW_CIRCLE_RIGHT, event ->
 			{
 				/* Get the selected items */
 				Set<Dataset> selectedItems = table.getSelection();
 
-				/* Get their ids */
-				List<Long> ids = selectedItems.stream()
-											  .map(DatabaseObject::getId)
-											  .collect(Collectors.toList());
+				Set<License> licensesToAgreeTo = selectedItems.stream()
+															  .filter(d -> !d.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+															  .map(Dataset::getLicense)
+															  .collect(Collectors.toCollection(HashSet::new));
 
-				if (ids.size() > 0)
+				if (!CollectionUtils.isEmpty(licensesToAgreeTo) && !alreadyAskedUserAboutLicenses)
 				{
-					/* Save the ids to the parameter store */
-					switch (experimentType)
+					showLicenseAcceptWizard(table, licensesToAgreeTo, new DefaultAsyncCallback<Set<Dataset>>()
 					{
-						case allelefreq:
-							LongListParameterStore.Inst.get().put(Parameter.allelefreqDatasetIds, ids);
-							break;
-						case climate:
-							LongListParameterStore.Inst.get().put(Parameter.climateDatasetIds, ids);
-							break;
-						case compound:
-							LongListParameterStore.Inst.get().put(Parameter.compoundDatasetIds, ids);
-							break;
-						case genotype:
-							LongListParameterStore.Inst.get().put(Parameter.genotypeDatasetIds, ids);
-							break;
-						case phenotype:
-							LongListParameterStore.Inst.get().put(Parameter.phenotypeDatasetIds, ids);
-							break;
-						case trials:
-							LongListParameterStore.Inst.get().put(Parameter.trialsDatasetIds, ids);
-							break;
-					}
-
-					/* Notify the callback */
-					datasetCallback.onContinuePressed();
+						@Override
+						protected void onSuccessImpl(Set<Dataset> result)
+						{
+							// Refresh the table
+							table.refreshTable();
+							// Then "hit" continue
+							continueWithDatasets(result);
+						}
+					});
+					return;
 				}
 				else
 				{
-					Notification.notify(Notification.Type.WARNING, Text.LANG.notificationDatasetsSelectAtLeastOne());
+					continueWithDatasets(selectedItems);
 				}
 			});
-			button.setType(ButtonType.PRIMARY);
-			button.addStyleName(Style.LAYOUT_BUTTON_MARGIN);
+			continueButton.setType(ButtonType.PRIMARY);
+			continueButton.addStyleName(Style.LAYOUT_BUTTON_MARGIN);
 
-			buttonPanel.add(button);
+			buttonPanel.add(continueButton);
 		}
+	}
+
+	private void continueWithDatasets(Set<Dataset> selectedItems)
+	{
+		/* Get their ids */
+		List<Long> ids = selectedItems.stream()
+									  .map(DatabaseObject::getId)
+									  .collect(Collectors.toList());
+
+		if (ids.size() > 0)
+		{
+					/* Save the ids to the parameter store */
+			switch (experimentType)
+			{
+				case allelefreq:
+					LongListParameterStore.Inst.get().put(Parameter.allelefreqDatasetIds, ids);
+					break;
+				case climate:
+					LongListParameterStore.Inst.get().put(Parameter.climateDatasetIds, ids);
+					break;
+				case compound:
+					LongListParameterStore.Inst.get().put(Parameter.compoundDatasetIds, ids);
+					break;
+				case genotype:
+					LongListParameterStore.Inst.get().put(Parameter.genotypeDatasetIds, ids);
+					break;
+				case trials:
+					LongListParameterStore.Inst.get().put(Parameter.trialsDatasetIds, ids);
+					break;
+			}
+
+					/* Notify the callback */
+			datasetCallback.onContinuePressed();
+		}
+		else
+		{
+			Notification.notify(Notification.Type.WARNING, Text.LANG.notificationDatasetsSelectAtLeastOne());
+		}
+	}
+
+	public static void showLicenseAcceptWizard(DatasetTable table, Set<License> licenses, DefaultAsyncCallback<Set<Dataset>> callback)
+	{
+		new LicenseWizard(licenses)
+		{
+			@Override
+			protected boolean onFinished()
+			{
+				List<LicenseLog> logs = getLicenseLogs();
+				List<License> licenses = getAcceptedLicenses();
+
+				// Get all the currently selected datasets
+				Set<Dataset> datasets = table.getSelection();
+				// Which ones should still be selected?
+				Set<Dataset> toSelect = new HashSet<>();
+
+				// For each of them, check if its license has been accepted
+				for (Dataset d : datasets)
+				{
+					// If the dataset has a license
+					if (d.getLicense() != null)
+					{
+						// License was already accepted before (there is a log with a valid id)
+						if (d.getLicense().getLicenseLog() != null && d.getLicense().getLicenseLog().getId() > 0)
+							toSelect.add(d);
+							// The user just accepted this license
+						else if (licenses.contains(d.getLicense()))
+							toSelect.add(d);
+					}
+					else
+					{
+						// Else, just add it. It's a freebie!
+						toSelect.add(d);
+					}
+				}
+
+				// Then set the selection of the table
+				table.setSelection(toSelect);
+				table.redraw();
+
+				// Finally, if there are new log entries (new licenses that the user accepted), then submit them
+				if (!CollectionUtils.isEmpty(logs))
+				{
+					DatasetService.Inst.get().updateLicenseLogs(Cookie.getRequestProperties(), logs, new AsyncCallback<ServerResult<Boolean>>()
+					{
+						@Override
+						public void onFailure(Throwable caught)
+						{
+							callback.onFailure(caught);
+						}
+
+						@Override
+						public void onSuccess(ServerResult<Boolean> result)
+						{
+							callback.onSuccess(toSelect);
+						}
+					});
+				}
+
+				return true;
+			}
+		}.open();
 	}
 
 	/**

@@ -71,9 +71,6 @@ public class PhenotypeGeoChart extends GerminateComposite
 			case trials:
 				datasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
 				break;
-			case phenotype:
-				datasetIds = LongListParameterStore.Inst.get().get(Parameter.phenotypeDatasetIds);
-				break;
 		}
 
 		phenotypeBox = new PhenotypeListBox(false);

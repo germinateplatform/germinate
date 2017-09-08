@@ -17,7 +17,6 @@
 
 package jhi.germinate.client.widget.table.pagination;
 
-import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.query.client.*;
@@ -26,7 +25,7 @@ import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import org.gwtbootstrap3.client.ui.constants.*;
-import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
+import org.gwtbootstrap3.client.ui.gwt.*;
 
 import java.util.*;
 
@@ -37,6 +36,7 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -76,9 +76,15 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return CommentTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<Comment, ?> column;
+		DatabaseObjectFilterColumn<Comment, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -97,7 +103,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, Comment object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -178,7 +184,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				return Date.class;
 			}
 		};
-		column.setDataStoreName(Comment.CREATED_ON);
+		column.setDataStoreName("comments." + Comment.CREATED_ON);
 		addColumn(column, Text.LANG.commentColumnCreatedOn(), true);
 
 		if (ModuleCore.getUseAuthentication())
@@ -262,7 +268,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, Comment object, int column)
+	protected void onItemSelected(NativeEvent event, Comment object, int column)
 	{
 	}
 }

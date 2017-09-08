@@ -60,9 +60,6 @@ public class AccessionDataDownloadWidget extends Composite
 	ToggleSwitch includeAttributes;
 
 	@UiField
-	Button download;
-
-	@UiField
 	Button pedigree;
 
 	public AccessionDataDownloadWidget(List<String> columns, List<Group> groups, Boolean hasPedigree)
@@ -79,11 +76,8 @@ public class AccessionDataDownloadWidget extends Composite
 		Group dummy = new Group(-2L).setDescription(Text.LANG.accessionsDownloadSelectedAccessions());
 		groups.add(0, dummy);
 
-		dummy = new Group(-1L).setDescription(Text.LANG.accessionsDownloadCompleteDataset());
-		groups.add(0, dummy);
-
 		groupBox.setValue(dummy, false);
-		groupBox.setAcceptableValues(groups);
+		groupBox.setAcceptableValues(true, groups);
 
 		includeAttributes.setOnText(Text.LANG.generalYes());
 		includeAttributes.setOffText(Text.LANG.generalNo());
@@ -101,7 +95,7 @@ public class AccessionDataDownloadWidget extends Composite
 
 		if (groupId == -2L)
 		{
-			Set<String> markedIds = ShoppingCart.get(ShoppingCart.ItemType.ACCESSION);
+			Set<String> markedIds = MarkedItemList.get(MarkedItemList.ItemType.ACCESSION);
 
 			if (CollectionUtils.isEmpty(markedIds))
 			{

@@ -57,10 +57,10 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 	 * @return The map information (marker_name, chromosome, definition_start)
 	 * @throws DatabaseException Thrown if the database interaction fails
 	 */
-	private GerminateTable getMap(DebugInfo sqlDebug, Long mapToUse, Set<String> markers) throws DatabaseException
+	private GerminateTable getMap(UserAuth userAuth, DebugInfo sqlDebug, Long mapToUse, Set<String> markers) throws DatabaseException
 	{
 		String formatted = String.format(QUERY_EXPORT_MAP, Util.generateSqlPlaceholderString(markers.size()));
-		ServerResult<GerminateTable> temp = new GerminateTableQuery(formatted, new String[]{Marker.MARKER_NAME, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START})
+		ServerResult<GerminateTable> temp = new GerminateTableQuery(formatted, userAuth, new String[]{Marker.MARKER_NAME, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START})
 				.setLong(mapToUse)
 				.setStrings(markers)
 				.run();
@@ -180,7 +180,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		FlapjackAllelefreqBinningResult result = new FlapjackAllelefreqBinningResult();
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.ALLELEFREQ, properties, accessionGroups, markerGroups, datasetId, mapId, false, missingOn);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.ALLELEFREQ, accessionGroups, markerGroups, datasetId, mapId, false, missingOn);
 		CommonServiceImpl.ExportResult exportResult = getExportResult(DataExporter.Type.ALLELEFREQ, this);
 
         /* Kick off the extraction process, because we need the exported data before we can start with the histogram */
@@ -199,7 +199,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 //			storeInSession(SESSION_PARAM_DELETED_MARKERS, exporter.getDeletedMarkers());
 
             /* Get the map */
-			GerminateTable mapData = getMap(sqlDebug, mapId, exporter.getUsedColumnNames());
+			GerminateTable mapData = getMap(userAuth, sqlDebug, mapId, exporter.getUsedColumnNames());
 
 			if (mapData == null || mapData.size() < 1)
 				throw new InvalidArgumentException("There is no data to export for the current selection.");

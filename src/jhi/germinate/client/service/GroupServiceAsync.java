@@ -71,7 +71,7 @@ public interface GroupServiceAsync
 	 * @param referenceTable The {@link GerminateDatabaseTable}
 	 * @param callback       The {@link AsyncCallback}
 	 */
-	void createNew(RequestProperties properties, String groupName, GerminateDatabaseTable referenceTable, AsyncCallback<ServerResult<Long>> callback);
+	void createNew(RequestProperties properties, String groupName, GerminateDatabaseTable referenceTable, AsyncCallback<ServerResult<Group>> callback);
 
 	/**
 	 * Deletes the {@link Group} with the given id.
@@ -221,4 +221,6 @@ public interface GroupServiceAsync
 	void getMarkerGroups(RequestProperties properties, List<Long> datasetIds, ExperimentType type, AsyncCallback<ServerResult<List<Group>>> callback);
 
 	Request getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Group>>> callback);
+
+	void renameGroup(RequestProperties properties, Group group, AsyncCallback<ServerResult<Void>> callback);
 }

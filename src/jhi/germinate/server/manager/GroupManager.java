@@ -38,19 +38,15 @@ public class GroupManager extends AbstractManager<Group>
 {
 	public static final String[] COLUMNS_TABLE = {Group.ID, Group.DESCRIPTION, GroupType.DESCRIPTION, Group.CREATED_BY, Group.CREATED_ON};
 
-	private static final String SELECT_ALL_FOR_FILTER                          = "SELECT * FROM groups LEFT JOIN grouptypes ON groups.grouptype_id = grouptypes.id {{FILTER}} AND %s %s LIMIT ?, ?";
-	private static final String SELECT_BY_ID                                   = "SELECT * FROM groups WHERE id = ?";
+	private static final String SELECT_ALL_FOR_FILTER                          = "SELECT groups.*, COUNT(groupmembers.id) AS count, grouptypes.id, grouptypes.description, grouptypes.target_table FROM groups LEFT JOIN grouptypes ON groups.grouptype_id = grouptypes.id LEFT JOIN groupmembers ON groupmembers.group_id = groups.id {{FILTER}} AND %s GROUP BY groups.id %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_ACCESSION                       = "SELECT groups.* FROM germinatebase LEFT JOIN groupmembers ON germinatebase.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id WHERE grouptypes.target_table = 'germinatebase' AND %s AND germinatebase.id = ? %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_TYPE                            = "SELECT groups.*, COUNT(%s.id) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN %s ON %s.id = groupmembers.foreign_id WHERE grouptypes.target_table = ? AND %s GROUP BY groups.id ORDER BY groups.id";
 	private static final String SELECT_GENOTYPE_ACCESSION_GROUPS_FOR_DATASET   = "SELECT DISTINCT groups.*, COUNT( DISTINCT (genotypes.germinatebase_id) ) AS count FROM genotypes LEFT JOIN groupmembers ON groupmembers.foreign_id = genotypes.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = genotypes.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'genotype' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
-	private static final String SELECT_PHENOTYPE_ACCESSION_GROUPS_FOR_DATASET  = "SELECT DISTINCT groups.*, COUNT( DISTINCT (phenotypedata.germinatebase_id) ) AS count FROM phenotypedata LEFT JOIN groupmembers ON groupmembers.foreign_id = phenotypedata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'phenotype' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 	private static final String SELECT_TRIALS_ACCESSION_GROUPS_FOR_DATASET     = "SELECT DISTINCT groups.*, COUNT( DISTINCT (phenotypedata.germinatebase_id) ) AS count FROM phenotypedata LEFT JOIN groupmembers ON groupmembers.foreign_id = phenotypedata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'trials' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 	private static final String SELECT_COMPOUND_ACCESSION_GROUPS_FOR_DATASET   = "SELECT DISTINCT groups.*, COUNT( DISTINCT (compounddata.germinatebase_id) ) AS count FROM compounddata LEFT JOIN groupmembers ON groupmembers.foreign_id = compounddata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = compounddata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 	private static final String SELECT_ALLELEFREQ_ACCESSION_GROUPS_FOR_DATASET = "SELECT DISTINCT groups.*, COUNT( DISTINCT (groupmembers.foreign_id) ) AS count FROM grouptypes LEFT JOIN groups ON groups.grouptype_id = grouptypes.id LEFT JOIN groupmembers ON groupmembers.group_id = groups.id LEFT JOIN allelefrequencydata ON allelefrequencydata.germinatebase_id = groupmembers.foreign_id LEFT JOIN datasets ON datasets.id = allelefrequencydata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'allelefreq' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 	private static final String SELECT_GENOTYPE_MARKER_GROUPS_FOR_DATASET      = "SELECT DISTINCT groups.*, COUNT( DISTINCT markers.id ) AS count FROM markers LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN genotypes ON genotypes.germinatebase_id = groupmembers.foreign_id LEFT JOIN datasets ON datasets.id = genotypes.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE grouptypes.target_table = 'markers' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 	private static final String SELECT_ALLELEFREQ_MARKER_GROUPS_FOR_DATASET    = "SELECT DISTINCT groups.*, COUNT( DISTINCT markers.id ) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON groups.grouptype_id = grouptypes.id LEFT JOIN markers ON markers.id = groupmembers.foreign_id LEFT JOIN allelefrequencydata ON allelefrequencydata.marker_id = markers.id LEFT JOIN datasets ON datasets.id = allelefrequencydata.dataset_id WHERE grouptypes.target_table = 'markers' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
-	private static final String SELECT_FOR_ID_AND_AUTHOR_OR_PUBLIC             = "SELECT true AS count FROM groups WHERE id = ? AND (created_by = ? OR visibility = 1)";
-	private static final String SELECT_FOR_ID_AND_PUBLIC                       = "SELECT true AS count FROM groups WHERE id = ? AND visibility = 1";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM groups WHERE %s";
 
@@ -63,7 +59,8 @@ public class GroupManager extends AbstractManager<Group>
 	private static final String DELETE         = "DELETE FROM groups WHERE id = ?";
 	private static final String DELETE_MEMBERS = "DELETE FROM groupmembers WHERE group_id = ? AND foreign_id IN (%s)";
 
-	private static final String UPDATE_VISIBILITY = "UPDATE groups SET visibility = ?, updated_on = NOW() WHERE id = ?";
+	private static final String UPDATE_VISIBILITY  = "UPDATE groups SET visibility = ?, updated_on = NOW() WHERE id = ?";
+	private static final String UPDATE_DESCRIPTION = "UPDATE groups SET description = ?, updated_on = NOW() WHERE id = ?";
 
 	@Override
 	protected String getTable()
@@ -85,7 +82,7 @@ public class GroupManager extends AbstractManager<Group>
 	 * @return <code>true</code> if the user is allowed to view the group, <code>false</code> if not
 	 * @throws DatabaseException Thrown if the interaction with the database fails
 	 */
-	public static boolean hasAccessToGroup(UserAuth userAuth, Long groupId, boolean isEditOperation) throws DatabaseException
+	public static boolean hasAccessToGroup(UserAuth userAuth, Long groupId, boolean isEditOperation) throws DatabaseException, InsufficientPermissionsException
 	{
 		if (groupId == null || groupId < 0)
 			return true;
@@ -93,6 +90,8 @@ public class GroupManager extends AbstractManager<Group>
 		/* We don't allow edit operations if authentication is turned off or if we're operating in readAll-only mode */
 		if (isEditOperation && (!PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) || PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY)))
 			return false;
+
+		Group group = new GroupManager().getById(userAuth, groupId).getServerResult();
 
 		/* Get the user details */
 		GatekeeperUserWithPassword userDetails = GatekeeperUserManager.getByIdWithPasswordForSystem(null, userAuth.getId());
@@ -106,43 +105,37 @@ public class GroupManager extends AbstractManager<Group>
 				return false;
 			}
 			/* If it's an administrator */
-			else if (userDetails.isAdmin())
+			if (userDetails.isAdmin())
 			{
 				return true;
 			}
 			/* Else, regular user. Query for visibility or ownership */
 			else
 			{
-				return new ValueQuery(SELECT_FOR_ID_AND_AUTHOR_OR_PUBLIC, userAuth)
-						.setLong(groupId)
-						.setLong(userAuth.getId())
-						.run(COUNT)
-						.getBoolean(false)
-						.getServerResult();
+				if (isEditOperation)
+					return Objects.equals(group.getCreatedBy(), userAuth.getId());
+				else
+					return Objects.equals(group.getCreatedBy(), userAuth.getId()) || group.getVisibility();
 			}
 		}
 		/* No login required, only show public groups */
 		else
 		{
-			return new ValueQuery(SELECT_FOR_ID_AND_PUBLIC, userAuth)
-					.setLong(groupId)
-					.run(COUNT)
-					.getBoolean(false)
-					.getServerResult();
+			return group.getVisibility();
 		}
 	}
 
-	@Override
-	public ServerResult<Group> getById(UserAuth userAuth, Long id) throws DatabaseException
-	{
-		if (id == null || !hasAccessToGroup(userAuth, id, false))
-			return new ServerResult<>(null, null);
-
-		return new DatabaseObjectQuery<Group>(SELECT_BY_ID, userAuth)
-				.setLong(id)
-				.run()
-				.getObject(Group.Parser.Inst.get());
-	}
+//	@Override
+//	public ServerResult<Group> getById(UserAuth userAuth, Long id) throws DatabaseException
+//	{
+//		if (id == null || !hasAccessToGroup(userAuth, id, false))
+//			return new ServerResult<>(null, null);
+//
+//		return new DatabaseObjectQuery<Group>(SELECT_BY_ID, userAuth)
+//				.setLong(id)
+//				.run()
+//				.getObject(Group.Parser.Inst.get());
+//	}
 
 	/**
 	 * Returns all the paginated {@link Group}s fulfilling the {@link PartialSearchQuery} filter.
@@ -203,7 +196,7 @@ public class GroupManager extends AbstractManager<Group>
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
-		if (!GroupManager.hasAccessToGroup(userAuth, groupId, true))
+		if (!hasAccessToGroup(userAuth, groupId, true))
 			throw new InsufficientPermissionsException();
 
 		Set<Long> newIds = new HashSet<>();
@@ -227,7 +220,7 @@ public class GroupManager extends AbstractManager<Group>
 		return new ServerResult<>(sqlDebug, newIds);
 	}
 
-	public static ServerResult<Long> create(UserAuth userAuth, String groupName, GerminateDatabaseTable table) throws DatabaseException, SystemInReadOnlyModeException
+	public static ServerResult<Group> create(UserAuth userAuth, String groupName, GerminateDatabaseTable table) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
@@ -248,7 +241,7 @@ public class GroupManager extends AbstractManager<Group>
 		if (CollectionUtils.isEmpty(newIds.getServerResult()))
 			return new ServerResult<>(finalInfo, null);
 		else
-			return new ServerResult<>(finalInfo, newIds.getServerResult().get(0));
+			return new GroupManager().getById(userAuth, newIds.getServerResult().get(0));
 	}
 
 	public static DebugInfo delete(UserAuth userAuth, List<Long> groupIds) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
@@ -260,7 +253,7 @@ public class GroupManager extends AbstractManager<Group>
 
 		for (Long groupId : groupIds)
 		{
-			if (!GroupManager.hasAccessToGroup(userAuth, groupId, true))
+			if (!hasAccessToGroup(userAuth, groupId, true))
 				throw new InsufficientPermissionsException();
 
 			sqlDebug.addAll(new ValueQuery(DELETE, userAuth)
@@ -279,7 +272,7 @@ public class GroupManager extends AbstractManager<Group>
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
-		if (!GroupManager.hasAccessToGroup(userAuth, groupId, true))
+		if (!hasAccessToGroup(userAuth, groupId, true))
 			throw new InsufficientPermissionsException();
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
@@ -302,7 +295,7 @@ public class GroupManager extends AbstractManager<Group>
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
-		if (!GroupManager.hasAccessToGroup(userAuth, groupId, true))
+		if (!hasAccessToGroup(userAuth, groupId, true))
 			throw new InsufficientPermissionsException();
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
@@ -384,8 +377,6 @@ public class GroupManager extends AbstractManager<Group>
 		{
 			case compound:
 				return getGroupsForDataset(userAuth, datasetIds, SELECT_COMPOUND_ACCESSION_GROUPS_FOR_DATASET);
-			case phenotype:
-				return getGroupsForDataset(userAuth, datasetIds, SELECT_PHENOTYPE_ACCESSION_GROUPS_FOR_DATASET);
 			case trials:
 				return getGroupsForDataset(userAuth, datasetIds, SELECT_TRIALS_ACCESSION_GROUPS_FOR_DATASET);
 			case genotype:
@@ -408,5 +399,21 @@ public class GroupManager extends AbstractManager<Group>
 			default:
 				return new ServerResult<>(null, new ArrayList<>());
 		}
+	}
+
+	public static ServerResult<Void> rename(UserAuth userAuth, Group group) throws SystemInReadOnlyModeException, InsufficientPermissionsException, DatabaseException
+	{
+		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		if (!hasAccessToGroup(userAuth, group.getId(), true))
+			throw new InsufficientPermissionsException();
+
+		ServerResult<List<Long>> result = new ValueQuery(UPDATE_DESCRIPTION, userAuth)
+				.setString(group.getDescription())
+				.setLong(group.getId())
+				.execute();
+
+		return new ServerResult<>(result.getDebugInfo(), null);
 	}
 }

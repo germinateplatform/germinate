@@ -18,6 +18,7 @@
 package jhi.germinate.client.util.tour;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.query.client.*;
 
 public class TourStep extends JavaScriptObject
 {
@@ -43,7 +44,10 @@ public class TourStep extends JavaScriptObject
 
 	public static TourStep newInstance(String element, String intro, Position position)
 	{
-		return createJson(element, intro, position.position).cast();
+		if (!GQuery.$(element).isEmpty())
+			return createJson(element, intro, position.position).cast();
+		else
+			return createJson(intro, position.position).cast();
 	}
 
 	public static TourStep newInstance(String intro)
@@ -58,5 +62,9 @@ public class TourStep extends JavaScriptObject
 
 	private static native TourStep createJson(String element, String intro, String position)/*-{
 		return {element: element, intro: intro, position: position};
+	}-*/;
+
+	private static native TourStep createJson(String intro, String position)/*-{
+		return {intro: intro, position: position};
 	}-*/;
 }

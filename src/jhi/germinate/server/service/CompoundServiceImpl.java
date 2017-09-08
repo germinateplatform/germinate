@@ -21,7 +21,6 @@ import java.io.*;
 import java.util.*;
 
 import javax.servlet.annotation.*;
-import javax.servlet.http.*;
 
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.*;
@@ -57,6 +56,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	private static final String QUERY_COMPOUND_NAMES_COMPLETE = "SELECT CONCAT(name, IF(ISNULL(compounds.unit_id), '', CONCAT(' [', units.unit_abbreviation, ']'))) AS name FROM compounds LEFT JOIN units ON units.id = compounds.unit_id WHERE EXISTS ( SELECT 1 FROM compounddata LEFT JOIN datasets ON datasets.id = compounddata.dataset_id WHERE compounddata.compound_id = compounds.id AND datasets.id IN (%s))";
 
 	private static final String QUERY_DATA          = "call " + StoredProcedureInitializer.COMPOUND_DATA + "(?, ?, ?)";
+	private static final String QUERY_DATA_COMPOUND = "call " + StoredProcedureInitializer.COMPOUND_DATA_COMPOUND + "(?, ?)";
 	private static final String QUERY_DATA_COMPLETE = "call " + StoredProcedureInitializer.COMPOUND_DATA_COMPLETE + "(?)";
 
 	@Override
@@ -133,6 +133,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	public ServerResult<String> getCompoundByCompoundFile(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId) throws InvalidSessionException, DatabaseException,
 			IOException, InsufficientPermissionsException
 	{
+		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
@@ -141,7 +142,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 		String formatted = String.format(QUERY_COMPOUND_BY_COMPOUND, nameColumn, Util.generateSqlPlaceholderString(datasetIds.size()));
 
-		GerminateTableStreamer streamer = new GerminateTableQuery(properties, this, formatted, null)
+		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
 				.setLongs(datasetIds)
 				.setString((groupId == null || groupId == -1) ? "%" : Long.toString(groupId))
 				.setLong(firstId)
@@ -210,11 +211,10 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	public ServerResult<String> getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> compoundIds, boolean includeId)
 			throws InvalidSessionException, DatabaseException
 	{
+		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
-
-		HttpServletRequest req = this.getThreadLocalRequest();
 
         /* Check if debugging is activated */
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
@@ -226,6 +226,9 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		if (includeId)
 			names.add("dbId");
 		names.add(PhenotypeService.DATASET_NAME);
+
+		if (containsAllItemsGroup(groupIds))
+			groupIds = null;
 
 		DatabaseStatement stmt;
 
@@ -241,7 +244,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		{
 			String formatted = String.format(QUERY_COMPOUND_NAMES_COMPLETE, Util.generateSqlPlaceholderString(datasetIds.size()));
 
-			ServerResult<List<String>> temp = new ValueQuery(properties, this, formatted)
+			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(datasetIds)
 					.run(PhenotypeService.NAME)
 					.getStrings();
@@ -255,7 +258,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 			stmt.setString(i++, datasets);
 		}
 		/* If just one is empty, return nothing */
-		else if (CollectionUtils.isEmpty(datasetIds, groupIds, compoundIds))
+		else if (CollectionUtils.isEmpty(datasetIds, compoundIds))
 		{
 			return new ServerResult<>(sqlDebug, null);
 		}
@@ -266,7 +269,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 			String formatted = String.format(QUERY_COMPOUND_NAMES, Util.generateSqlPlaceholderString(compoundIds.size()));
 
-			ServerResult<List<String>> temp = new ValueQuery(properties, this, formatted)
+			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(compoundIds)
 					.run(PhenotypeService.NAME)
 					.getStrings();
@@ -288,10 +291,14 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 				if (number > 0)
 				{
-					stmt = database.prepareStatement(QUERY_DATA);
+					if (CollectionUtils.isEmpty(groupIds))
+						stmt = database.prepareStatement(QUERY_DATA_COMPOUND);
+					else
+						stmt = database.prepareStatement(QUERY_DATA);
 
 					int i = 1;
-					stmt.setString(i++, groups);
+					if (!CollectionUtils.isEmpty(groupIds))
+						stmt.setString(i++, groups);
 					stmt.setString(i++, datasets);
 					stmt.setString(i++, phenotypes);
 				}
@@ -341,8 +348,9 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	public ServerResult<String> getBarChartData(RequestProperties properties, Long compoundId, Long datasetId) throws InvalidSessionException, DatabaseException, IOException
 	{
 		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = new GerminateTableQuery(QUERY_COMPOUND_DATA, null)
+		GerminateTableStreamer streamer = new GerminateTableQuery(QUERY_COMPOUND_DATA, userAuth, null)
 				.setLong(compoundId)
 				.setLong(datasetId)
 				.getStreamer();

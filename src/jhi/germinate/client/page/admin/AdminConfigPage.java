@@ -205,19 +205,9 @@ public class AdminConfigPage extends Composite implements HasHelp
 	TextBox   searchColumn;
 
 	@UiField
-	FormLabel treemapColumnLabel;
-	@UiField
-	TextBox   treemapColumn;
-
-	@UiField
 	FormLabel externalFolderLabel;
 	@UiField
 	TextBox   externalFolder;
-
-	@UiField
-	FormLabel googleMapsApiLabel;
-	@UiField
-	TextBox   googleMapsApi;
 
 	@UiField
 	FormLabel customMenuLabel;
@@ -315,9 +305,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateString(settings.galleryImagesPerPage, imagesPPage, imagesPPageLabel);
 		updateString(settings.accessionDisplayColumn, displayColumn, displayColumnLabel);
 		updateString(settings.baseSearchColumn, searchColumn, searchColumnLabel);
-		updateString(settings.collsiteTreemapColumn, treemapColumn, treemapColumnLabel);
 		updateString(settings.externalDataFolder, externalFolder, externalFolderLabel);
-		updateString(settings.googleMapsApiKey, googleMapsApi, googleMapsApiLabel);
 
 		updateString(settings.templateCustomMenu, customMenu, customMenuLabel);
 		updateTable(settings.availablePages, pagesPanel, pagesLabel);
@@ -332,7 +320,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 
 		/* Create the table */
 		availablePages = new AdvancedTable<>(new ArrayList<>(Arrays.asList(pages)));
-		availablePages.setFreezeHeader(false);
 
 		/* Take care of selection */
 		final SelectionModel<Page> selectionModel = new MultiSelectionModel<>();
@@ -385,7 +372,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 			{
 				return object.name();
 			}
-		}, Page.class.getName());
+		}, Page.class.getSimpleName());
 
 		availablePages.getTable().setColumnWidth(0, 1, com.google.gwt.dom.client.Style.Unit.PX);
 
@@ -414,7 +401,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 			}
 
 			Button add = new Button();
-			add.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.FA, Style.FA_PLUS_SQUARE, Style.FA_LG));
+			add.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.FA, Style.MDI_PLUS_BOX, Style.FA_LG));
 
 			add.addClickHandler(event ->
 			{
@@ -508,7 +495,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.templateGradientColors.setValue(colors);
 
 			settings.templateShowSearchInMenu.setValue(search.getValue());
-//			settings.templateUseToggleSwitches.setValue(templateUseToggleSwitches.getValue());
 
 			settings.hideIdColumn.setValue(ids.getValue());
 			settings.serverLoggingEnabled.setValue(logging.getValue());
@@ -521,7 +507,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.galleryImagesPerPage.setValue(imagesPPage.getIntegerValue());
 			settings.accessionDisplayColumn.setValue(displayColumn.getValue());
 			settings.baseSearchColumn.setValue(searchColumn.getValue());
-			settings.collsiteTreemapColumn.setValue(treemapColumn.getValue());
 			settings.externalDataFolder.setValue(externalFolder.getValue());
 			settings.templateCustomMenu.setValue(customMenu.getValue());
 			settings.availablePages.setValue(((SetSelectionModel<Page>) availablePages.getTable().getSelectionModel()).getSelectedSet());

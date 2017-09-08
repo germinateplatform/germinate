@@ -93,7 +93,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, Util.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(filter, formatted, PhenotypeService.COLUMNS_SORTABLE, COLUMNS_PHENOTYPE_DATA_EXPORT)
+		return getFilteredGerminateTableQuery(userAuth, filter, formatted, PhenotypeService.COLUMNS_SORTABLE, COLUMNS_PHENOTYPE_DATA_EXPORT)
 				.setLongs(datasetIds)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

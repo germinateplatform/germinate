@@ -26,6 +26,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import jhi.germinate.server.config.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -200,5 +201,13 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 
 		if (!file.exists())
 			file.mkdirs();
+	}
+
+	protected static boolean containsAllItemsGroup(List<Long> ids)
+	{
+		if (CollectionUtils.isEmpty(ids))
+			return false;
+		else
+			return ids.stream().filter(id -> id < 1).count() > 0;
 	}
 }

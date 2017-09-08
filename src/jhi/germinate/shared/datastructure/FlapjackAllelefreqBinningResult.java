@@ -28,9 +28,6 @@ public class FlapjackAllelefreqBinningResult implements Serializable
 	private static final long serialVersionUID = 928555372594183865L;
 
 	private String      debugOutput;
-	//	private String      projectFile;
-//	private String      mapFile;
-//	private String      rawDataFile;
 	private String      histogramFile;
 	private Set<String> deletedMarkers;
 
@@ -50,39 +47,6 @@ public class FlapjackAllelefreqBinningResult implements Serializable
 		return this;
 	}
 
-	//	public String getProjectFile()
-//	{
-//		return projectFile;
-//	}
-//
-//	public FlapjackProjectCreationResult setProjectFile(String projectFile)
-//	{
-//		this.projectFile = projectFile;
-//		return this;
-//	}
-//
-//	public String getMapFile()
-//	{
-//		return mapFile;
-//	}
-//
-//	public FlapjackProjectCreationResult setMapFile(String mapFile)
-//	{
-//		this.mapFile = mapFile;
-//		return this;
-//	}
-//
-//	public String getRawDataFile()
-//	{
-//		return rawDataFile;
-//	}
-//
-//	public FlapjackProjectCreationResult setRawDataFile(String rawDataFile)
-//	{
-//		this.rawDataFile = rawDataFile;
-//		return this;
-//	}
-//
 	public String getHistogramFile()
 	{
 		return histogramFile;

@@ -17,6 +17,9 @@
 
 package jhi.germinate.shared;
 
+import java.util.*;
+import java.util.stream.*;
+
 /**
  * @author Sebastian Raubach
  */
@@ -66,88 +69,23 @@ public class Style
 
 	public static final String CURSOR_DEFAULT = "gm8-cursor-default";
 
-	public static final String NO_POINTER_EVENTS        = "gm8-no-pointer-events";
+	public static final String NO_POINTER_EVENTS = "gm8-no-pointer-events";
 
 	public static final String STATE_ACTIVE = "active";
-
-	public static final String FORMAT_PRETTY_PRINT = "prettyprint";
-	public static final String TEXT_FORMAT_HUGE    = "gm8-text-format-huge";
 
 	public static final String PRETTY_PRINT     = "prettyprint";
 	public static final String PRETTY_PRINT_SQL = "lang-sql";
 
+	public static final String TEXT_FORMAT_HUGE    = "gm8-text-format-huge";
+
 	public static final String FA                                  = "fa";
+	public static final String FA_FIXED_WIDTH                      = "fa-fw";
+	public static final String FA_ICONLIST                         = "fa-iconlist";
+	public static final String FA_LG                               = "fa-lg";
 	public static final String FA_2X                               = "fa-2x";
 	public static final String FA_3X                               = "fa-3x";
 	public static final String FA_4X                               = "fa-4x";
 	public static final String FA_5X                               = "fa-5x";
-	public static final String FA_AREA_CHART                       = "fa-area-chart";
-	public static final String FA_ARROW_CIRCLE_LEFT                = "fa-arrow-circle-left";
-	public static final String FA_ARROW_CIRCLE_RIGHT               = "fa-arrow-circle-right";
-	public static final String FA_BAR_CHART                        = "fa-bar-chart";
-	public static final String FA_BAN                              = "fa-ban";
-	public static final String FA_BUTTON                           = "fa-button";
-	public static final String FA_CARET_RIGHT                      = "fa-caret-right";
-	public static final String FA_CARET_DOWN                       = "fa-caret-down";
-	public static final String FA_CHECH_CIRCLE_O                   = "fa-check-circle-o";
-	public static final String FA_CHECK_SQUARE                     = "fa-check-square";
-	public static final String FA_CHECK_SQUARE_O                   = "fa-check-square-o";
-	public static final String FA_CHEVRON_RIGHT                    = "fa-chevron-right";
-	public static final String FA_COLUMNS                          = "fa-columns";
-	public static final String FA_ANGLE_DOUBLE_LEFT                = "fa-angle-double-left";
-	public static final String FA_ANGLE_DOUBLE_RIGHT               = "fa-angle-double-right";
-	public static final String FA_ANGLE_LEFT                       = "fa-angle-left";
-	public static final String FA_ANGLE_RIGHT                      = "fa-angle-right";
-	public static final String FA_DOWNLOAD                         = "fa-download";
-	public static final String FA_EXTERNAL_LINK_SQUARE             = "fa-external-link-square";
-	public static final String FA_EYE                              = "fa-eye";
-	public static final String FA_EYE_SLASH                        = "fa-eye-slash";
-	public static final String FA_FACEBOOK_SQUARE                  = "fa-facebook-square";
-	public static final String FA_FAST_BACKWARD                    = "fa-fast-backward";
-	public static final String FA_FAST_FORWARD                     = "fa-fast-forward";
-	public static final String FA_FILE_CODE_O                      = "fa-file-code-o";
-	public static final String FA_FILE_EXCEL_O                     = "fa-file-excel-o";
-	public static final String FA_FILE_IMAGE_O                     = "fa-file-image-o";
-	public static final String FA_FILE_O                           = "fa-file-o";
-	public static final String FA_FILE_PDF_O                       = "fa-file-pdf-o";
-	public static final String FA_FILE_TEXT_O                      = "fa-file-text-o";
-	public static final String FA_FILES_O                          = "fa-files-o";
-	public static final String FA_FILTER                           = "fa-filter";
-	public static final String FA_FIXED_WIDTH                      = "fa-fw";
-	public static final String FA_GLOBE                            = "fa-globe";
-	public static final String FA_GOOGLE_PLUS_SQUARE               = "fa-google-plus-square";
-	public static final String FA_GROUP                            = "fa-group";
-	public static final String FA_ICON_BUTTON                      = "icon-button-fa";
-	public static final String FA_ICONLIST                         = "fa-iconlist";
-	public static final String FA_INFO                             = "fa-info";
-	public static final String FA_INFO_CIRCLE                      = "fa-info-circle";
-	public static final String FA_LINE_CHART                       = "fa-line-chart";
-	public static final String FA_LINK                             = "fa-link";
-	public static final String FA_LOCK                             = "fa-lock";
-	public static final String FA_LG                               = "fa-lg";
-	public static final String FA_MINUS                            = "fa-minus";
-	public static final String FA_OBJECT_GROUP                     = "fa-object-group";
-	public static final String FA_PENCIL                           = "fa-pencil";
-	public static final String FA_PLUS                             = "fa-plus";
-	public static final String FA_PLUS_SQUARE                      = "fa-plus-square";
-	public static final String FA_REFRESH                          = "fa-refresh";
-	public static final String FA_SAVE                             = "fa-save";
-	public static final String FA_SEARCH                           = "fa-search";
-	public static final String FA_SHARE                            = "fa-share-square";
-	public static final String FA_SHARE_ALT                        = "fa-share-alt-square";
-	public static final String FA_SHOPPING_CART                    = "fa-shopping-cart";
-	public static final String FA_SIGN_IN                          = "fa-sign-in";
-	public static final String FA_SITEMAP                          = "fa-sitemap";
-	public static final String FA_SQUARE_O                         = "fa-square-o";
-	public static final String FA_STEP_BACKWARD                    = "fa-step-backward";
-	public static final String FA_STEP_FORWARD                     = "fa-step-forward";
-	public static final String FA_TABLE                            = "fa-table";
-	public static final String FA_TH                               = "fa-th";
-	public static final String FA_TRASH_O                          = "fa-trash-o";
-	public static final String FA_TWITTER_SQUARE                   = "fa-twitter-square";
-	public static final String FA_UNLOCK                           = "fa-unlock";
-	public static final String FA_UPLOAD                           = "fa-upload";
-	public static final String FA_WARNING                          = "fa-warning";
 	public static final String MDI                                 = "mdi";
 	public static final String MDI_HOME                            = "mdi-home";
 	public static final String MDI_FLOWER                          = "mdi-flower";
@@ -176,9 +114,7 @@ public class Style
 	public static final String MDI_VIEW_QUILT                      = "mdi-view-quilt";
 	public static final String MDI_CROSSHAIRS_GPS                  = "mdi-crosshairs-gps";
 	public static final String MDI_BULLETIN_BOARD                  = "mdi-bulletin-board";
-	public static final String MDI_ARROW_RIGHT_BOLD_CIRCLE         = "mdi-arrow-right-bold-circle";
 	public static final String MDI_NEWSPAPER                       = "mdi-newspaper";
-	public static final String MDI_CLOCK                           = "mdi-clock";
 	public static final String MDI_REFRESH                         = "mdi-refresh";
 	public static final String MDI_LOGOUT                          = "mdi-logout";
 	public static final String MDI_SETTINGS                        = "mdi-settings";
@@ -186,20 +122,31 @@ public class Style
 	public static final String MDI_LOCK_OPEN                       = "mdi-lock-open";
 	public static final String MDI_LOCK                            = "mdi-lock";
 	public static final String MDI_DOWNLOAD                        = "mdi-download";
-	public static final String MDI_FILTER                          = "mdi-filter";
 	public static final String MDI_CHECKBOX_BLANK_OUTLINE          = "mdi-checkbox-blank-outline";
 	public static final String MDI_CHECKBOX_MULTIPLE_BLANK_OUTLINE = "mdi-checkbox-multiple-blank-outline";
 	public static final String MDI_CHECKBOX_MARKED                 = "mdi-checkbox-marked";
 	public static final String MDI_CHECKBOX_MULTIPLE_MARKED        = "mdi-checkbox-multiple-marked";
 	public static final String MDI_FILE_IMAGE                      = "mdi-file-image";
 	public static final String MDI_FILE_XML                        = "mdi-file-xml";
-	public static final String MDI_FILE_DOCUMENT        = "mdi-file-document";
-	public static final String MDI_SITEMAP              = "mdi-sitemap";
-	public static final String MDI_ACCOUNT_MULTIPLE     = "mdi-account-multiple";
-	public static final String MDI_MAGNIFY              = "mdi-magnify";
-	public static final String MDI_HELP_CIRCLE_OUTLINE  = "mdi-help-circle-outline";
-	public static final String MDI_LINK_VARIANT         = "mdi-link-variant";
-	public static final String BOOTSTRAP_DROPDOWN_ALERT = "dropdown-alerts";
+	public static final String MDI_FILE_DOCUMENT                   = "mdi-file-document";
+	public static final String MDI_SITEMAP                         = "mdi-sitemap";
+	public static final String MDI_ACCOUNT_MULTIPLE                = "mdi-account-multiple";
+	public static final String MDI_MAGNIFY                         = "mdi-magnify";
+	public static final String MDI_LINK_VARIANT                    = "mdi-link-variant";
+	public static final String MDI_NEW_BOX                         = "mdi-new-box";
+	public static final String MDI_CHECK                           = "mdi-check";
+	public static final String MDI_DELETE                          = "mdi-delete";
+	public static final String MDI_FILE_PLUS                       = "mdi-file-plus";
+	public static final String MDI_RENAME_BOX                      = "mdi-rename-box";
+	public static final String MDI_FILE_EXCEL                      = "mdi-file-excel";
+	public static final String MDI_FILE_PDF                        = "mdi-file-pdf";
+	public static final String MDI_GOOGLE_EARTH                    = "mdi-google-earth";
+	public static final String MDI_PLUS_BOX                        = "mdi-plus-box";
+	public static final String MDI_HELP_CIRCLE_OUTLINE             = "mdi-help-circle-outline";
+	public static final String MDI_FILTER                          = "mdi-filter";
+	public static final String MDI_ARROW_RIGHT_BOLD_CIRCLE         = "mdi-arrow-right-bold-circle";
+	public static final String MDI_CLOCK                           = "mdi-clock";
+	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
 
 	/**
 	 * Returns the combined style string
@@ -213,19 +160,9 @@ public class Style
 			return "";
 		else
 		{
-			StringBuilder builder = new StringBuilder();
-			builder.append(styles[0]);
-
-			for (int i = 1; i < styles.length; i++)
-			{
-				if (!StringUtils.isEmpty(styles[i]))
-				{
-					builder.append(" ")
-						   .append(styles[i]);
-				}
-			}
-
-			return builder.toString();
+			return Arrays.stream(styles)
+						 .filter(s -> !StringUtils.isEmpty(s))
+						 .collect(Collectors.joining(" "));
 		}
 	}
 }

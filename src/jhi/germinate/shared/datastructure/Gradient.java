@@ -31,14 +31,6 @@ public class Gradient implements Serializable
 {
 	private static final long serialVersionUID = 1348208804095134273L;
 
-	/* Produces a gradient running from red to green */
-//	public final static Color[] GRADIENT_RED_TO_GREEN = createGradient(Color.RED, Color.GREEN, 200);
-
-	/* Produces a gradient for hot things (black, red, orange, yellow, white) */
-//	public final static Color[] GRADIENT_HOT     = createMultiGradient(new Color[]{Color.BLACK, new Color(87, 0, 0), Color.RED, Color.ORANGE, Color.YELLOW, Color.WHITE}, 150);
-//	public final static Color[] GRADIENT_HEATMAP = createMultiGradient(new Color[]{Color.BLACK, Color.BLUE, new Color(128, 0, 128), Color.RED, new Color(255, 165, 0), new Color(255, 255, 0),
-//			new Color(255, 255, 128), Color.WHITE}, 150);
-
 	private double  maxValue;
 	private double  minValue;
 	private Color[] gradient;

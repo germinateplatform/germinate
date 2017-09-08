@@ -59,7 +59,7 @@ public class NewsPanelItem extends Composite
 	@UiField
 	AnchorElement anchor;
 
-	public NewsPanelItem(News news, boolean trim)
+	NewsPanelItem(News news, boolean trim)
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -68,7 +68,7 @@ public class NewsPanelItem extends Composite
 
 		String text = news.getContent();
 
-		String c = trim ? StringUtils.getWordsUntil(text.replaceAll("\\<.*?>", ""), 100) : text;
+		String c = trim ? StringUtils.getWordsUntil(text.replaceAll("\\<.*?>", " "), 100) : text;
 
 		if (trim)
 			content.setText(c);

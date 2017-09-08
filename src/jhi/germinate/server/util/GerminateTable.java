@@ -105,12 +105,10 @@ public class GerminateTable extends ArrayList<GerminateRow>
 
 	public String[] getColumnNames()
 	{
-		Set<String> columnNames = new HashSet<>();
+		Set<String> columnNames = new LinkedHashSet<>();
 
 		for (GerminateRow row : this)
-		{
 			columnNames.addAll(row.keySet());
-		}
 
 		return columnNames.toArray(new String[columnNames.size()]);
 	}

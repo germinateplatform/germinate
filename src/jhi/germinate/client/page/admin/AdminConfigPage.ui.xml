@@ -201,16 +201,8 @@
 								<b:TextBox b:id="formSearchColumn" ui:field="searchColumn"/>
 							</b:FormGroup>
 							<b:FormGroup>
-								<b:FormLabel for="formTreemapColumn" ui:field="treemapColumnLabel"/>
-								<b:TextBox b:id="formTreemapColumn" ui:field="treemapColumn"/>
-							</b:FormGroup>
-							<b:FormGroup>
 								<b:FormLabel for="formExternalFolder" ui:field="externalFolderLabel"/>
 								<b:TextBox b:id="formExternalFolder" ui:field="externalFolder"/>
-							</b:FormGroup>
-							<b:FormGroup>
-								<b:FormLabel for="formGoogleMapsAPI" ui:field="googleMapsApiLabel"/>
-								<b:TextBox b:id="formGoogleMapsAPI" ui:field="googleMapsApi"/>
 							</b:FormGroup>
 							<b:FormGroup>
 								<b:FormLabel for="formPages" ui:field="pagesLabel"/>

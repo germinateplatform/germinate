@@ -20,8 +20,6 @@ package jhi.germinate.client.util.handler;
 import com.google.gwt.event.logical.shared.*;
 
 import jhi.germinate.client.*;
-import jhi.germinate.client.i18n.*;
-import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
@@ -54,11 +52,10 @@ public class HistoryChangeHandler implements ValueChangeHandler<String>
 			{
 				/* If not, show the login dialog */
 //				ContentHolder.getInstance().setContent(Page.LOGIN, null, new LoginPage());
-				Notification.notify(Notification.Type.INFO, Text.LANG.notificationLoginPrompt());
+//				Notification.notify(Notification.Type.INFO, Text.LANG.notificationLoginPrompt());
 			}
 			else
 			{
-//				GwtTour.endTour(true);
 				/* Redirect to the requested page */
 				GerminateEventBus.BUS.fireEvent(new PageNavigationEvent(page));
 			}

@@ -31,6 +31,7 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.tour.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.structure.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -66,21 +67,39 @@ public class Home extends GerminateComposite
 			protected void onSuccessImpl(ServerResult<Map<String, Long>> result)
 			{
 				int i = 0;
-				Column c = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
-				c.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Accession.class.getName())), Text.LANG.searchAccessions(), Style.MDI_FLOWER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.BROWSE_ACCESSIONS).getElement());
-				row.add(c);
+				Column accessionColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
 
-				c = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
-				c.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Marker.class.getName())), Text.LANG.searchMarkers(), Style.MDI_DNA, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.MAP_DETAILS).getElement());
-				row.add(c);
+				if (GerminateSettingsHolder.isPageAvailable(Page.BROWSE_ACCESSIONS))
+				{
+					accessionColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Accession.class.getName())), Text.LANG.searchAccessions(), Style.MDI_FLOWER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.BROWSE_ACCESSIONS).getElement());
+					row.add(accessionColumn);
+				}
 
-				c = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
-				c.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Location.class.getName())), Text.LANG.searchCollectingsites(), Style.MDI_MAP_MARKER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.GEOGRAPHY).getElement());
-				row.add(c);
+				Column markerColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
 
-				c = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
-				c.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Group.class.getName())), Text.LANG.searchGroup(), Style.MDI_GROUP, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.GROUPS).getElement());
-				row.add(c);
+				if (GerminateSettingsHolder.isPageAvailable(Page.MAP_DETAILS))
+				{
+					markerColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Marker.class.getName())), Text.LANG.searchMarkers(), Style.MDI_DNA, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.MAP_DETAILS).getElement());
+					row.add(markerColumn);
+				}
+
+				Column locationColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+
+				if (GerminateSettingsHolder.isPageAvailable(Page.GEOGRAPHY))
+				{
+					locationColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Location.class.getName())), Text.LANG.searchCollectingsites(), Style.MDI_MAP_MARKER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.GEOGRAPHY).getElement());
+					row.add(locationColumn);
+				}
+
+				Column groupColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+
+				if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
+				{
+					groupColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Group.class.getName())), Text.LANG.searchGroup(), Style.MDI_GROUP, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.GROUPS).getElement());
+					row.add(groupColumn);
+				}
+
+				updateSize(i, accessionColumn, markerColumn, locationColumn, groupColumn);
 			}
 		});
 
@@ -92,10 +111,11 @@ public class Home extends GerminateComposite
 
 			tour.addStep(TourStep.newInstance(Text.LANG.introductionTourMessageWelcome()));
 			tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_MAIN_MENU_UL, Text.LANG.introductionTourMessageNavigation()));
-			tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_LANGUAGE_SELECTOR_UL, Text.LANG.introductionTourMessageLanguage()));
+			if (LanguageSelector.hasLanguages)
+				tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_LANGUAGE_SELECTOR_UL, Text.LANG.introductionTourMessageLanguage()));
 			tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_SHARE_UL, Text.LANG.introductionTourMessageShare()));
-			if (GerminateSettingsHolder.isPageAvailable(Page.SHOPPING_CART))
-				tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_SHOPPING_CART_UL, Text.LANG.introductionTourMessageShoppingCart()));
+			if (GerminateSettingsHolder.isPageAvailable(Page.MARKED_ITEMS))
+				tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_MARKED_ITEM_UL, Text.LANG.introductionTourMessageShoppingCart()));
 
 			tour.addStep(TourStep.newInstance("#" + newsWidget.getNewsColumnId(), Text.LANG.introductionTourMessageNews()));
 			tour.addStep(TourStep.newInstance("#" + newsWidget.getProjectColumnId(), Text.LANG.introductionTourMessageProjects()));
@@ -108,5 +128,27 @@ public class Home extends GerminateComposite
 		panel.add(intro);
 
 		panel.add(newsWidget);
+	}
+
+	private void updateSize(int count, Column... columns)
+	{
+		for (Column column : columns)
+		{
+			switch (count)
+			{
+				case 1:
+					column.setSize(ColumnSize.XS_12);
+					break;
+				case 2:
+					column.setSize(ColumnSize.XS_12, ColumnSize.MD_6);
+					break;
+				case 3:
+					column.setSize(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_4);
+					break;
+				case 4:
+					column.setSize(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+					break;
+			}
+		}
 	}
 }

@@ -17,16 +17,15 @@
 
 package jhi.germinate.client.widget.table.pagination;
 
-import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -40,7 +39,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 {
 	public MarkerTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
-		super(ShoppingCart.ItemType.MARKER, selectionMode, sortingEnabled);
+		super(MarkedItemList.ItemType.MARKER, selectionMode, sortingEnabled);
 	}
 
 	@Override
@@ -68,9 +67,15 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return MarkerTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<Marker, ?> column;
+		DatabaseObjectFilterColumn<Marker, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -92,7 +97,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, Marker object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -145,7 +150,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, Marker object, int column)
+	protected void onItemSelected(NativeEvent event, Marker object, int column)
 	{
 		/* Get the id */
 		LongParameterStore.Inst.get().put(Parameter.markerId, object.getId());

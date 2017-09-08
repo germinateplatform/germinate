@@ -44,8 +44,8 @@ public final class Database
 	 */
 	public enum DatabaseType
 	{
-		MYSQL("com.mysql.jdbc.Driver", "jdbc:mysql://", null),
-		MYSQL_BATCH_ENABLED("com.mysql.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
+		MYSQL("com.mysql.jdbc.Driver", "jdbc:mysql://", null);
+//		MYSQL_BATCH_ENABLED("com.mysql.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
 
 		private final String classForName;
 		private final String connectionString;
@@ -91,30 +91,6 @@ public final class Database
 		try
 		{
 			return connection.getAutoCommit();
-		}
-		catch (SQLException e)
-		{
-			throw new DatabaseException(e);
-		}
-	}
-
-	public void commit() throws DatabaseException
-	{
-		try
-		{
-			connection.commit();
-		}
-		catch (SQLException e)
-		{
-			throw new DatabaseException(e);
-		}
-	}
-
-	public void rollback() throws DatabaseException
-	{
-		try
-		{
-			connection.rollback();
 		}
 		catch (SQLException e)
 		{

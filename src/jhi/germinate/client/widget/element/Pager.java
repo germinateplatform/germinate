@@ -277,8 +277,8 @@ public class Pager extends Composite
 		setEnabled(PagerButton.PREV, position >= pageSize);
 
         /* Set state of next and last button based on number of items */
-		setEnabled(PagerButton.NEXT, nrOfItems > pageSize);
-		setEnabled(PagerButton.LAST, nrOfItems > pageSize);
+		setEnabled(PagerButton.NEXT, position + pageSize < nrOfItems);
+		setEnabled(PagerButton.LAST, position + pageSize < nrOfItems);
 	}
 
 	/**

@@ -17,14 +17,12 @@
 
 package jhi.germinate.client.widget.table.basic;
 
-import com.google.gwt.core.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.view.client.*;
 
-import org.gwtbootstrap3.client.ui.gwt.*;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
 
 import java.util.*;
@@ -42,8 +40,7 @@ public class AdvancedTable<T> extends Composite
 	/** Sort handler for the data */
 	private ColumnSortEvent.ListHandler<T> columnSortHandler;
 
-	private boolean freezeHeader = true;
-	private String  id           = String.valueOf(RandomUtils.RANDOM.nextLong());
+	private String id = String.valueOf(RandomUtils.RANDOM.nextLong());
 
 	public AdvancedTable(List<T> data)
 	{
@@ -77,17 +74,6 @@ public class AdvancedTable<T> extends Composite
 		initWidget(scrollPanel);
 	}
 
-	@Override
-	protected void onLoad()
-	{
-		super.onLoad();
-
-		if (freezeHeader && JavaScript.isFreezeHeaderLoaded())
-		{
-			Scheduler.get().scheduleDeferred(() -> JavaScript.makeHeaderSticky(id));
-		}
-	}
-
 	public void addStringColumn(Column<T, String> column, String headerString)
 	{
 		table.addColumn(column, headerString);
@@ -100,11 +86,6 @@ public class AdvancedTable<T> extends Composite
 		table.addColumn(column, headerString);
 		if (column.isSortable())
 			columnSortHandler.setComparator(column, new BaseSafeHtmlComparator(column));
-	}
-
-	public void setFreezeHeader(boolean freezeHeader)
-	{
-		this.freezeHeader = freezeHeader;
 	}
 
 	public CellTable<T> getTable()

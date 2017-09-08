@@ -58,66 +58,6 @@ public interface TrialService extends RemoteService
 	}
 
 	/**
-	 * Returns a list of {@link TrialAccessionYears} along with a list of the contained years.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param accessionId The {@link Accession} id
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @return A list of {@link TrialAccessionYears} along with a list of the contained years.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the database interaction fails
-	 */
-	ServerResult<Pair<List<TrialAccessionYears>, List<String>>> getPhenotypeYearTable(RequestProperties properties, Long accessionId, List<Long> datasetIds) throws InvalidSessionException, DatabaseException;
-
-	/**
-	 * Exports the individual data per site and treatment for an {@link Accession}, a list of {@link Dataset}s, a {@link Phenotype} and a year and
-	 * writes it to a file. Returns the name of the file.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param accessionId The {@link Accession} id
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @param phenotypeId The {@link Phenotype} id
-	 * @param trialsYear  The selected year
-	 * @return The name of the file.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the database interaction fails
-	 * @throws IOException             Thrown if the file creation fails
-	 */
-	ServerResult<String> exportIndividualData(RequestProperties properties, Long accessionId, List<Long> datasetIds, Long phenotypeId, String trialsYear) throws InvalidSessionException, DatabaseException, IOException;
-
-	/**
-	 * Exports the values for an {@link Accession}, a list of {@link Dataset}s, a {@link Phenotype} and a year and writes it to a file. Returns the
-	 * name of the file.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param accessionId The {@link Accession} id
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @param phenotypeId The {@link Phenotype} id
-	 * @param trialsYear  The selected year
-	 * @return The name of the file.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the database interaction fails
-	 * @throws IOException             Thrown if the file creation fails
-	 */
-	ServerResult<Map<String, String>> exportHistogram(RequestProperties properties, Long accessionId, List<Long> datasetIds, Long phenotypeId, String trialsYear) throws InvalidSessionException, DatabaseException, IOException;
-
-	/**
-	 * Exports the so-called line performance data for an {@link Accession}, a list of {@link Dataset}s and a {@link Phenotype} across years and
-	 * returns the name of the result file.
-	 *
-	 * @param properties      The {@link RequestProperties}
-	 * @param accessionId     The {@link Accession} id
-	 * @param datasetIds      The {@link Dataset} ids
-	 * @param phenotypeId     The {@link Phenotype} id
-	 * @param siteAverageText The text to use for the "Average site"
-	 * @return The name of the result file.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the database interaction fails
-	 * @throws IOException             Thrown if the file creation fails
-	 */
-	ServerResult<Map<String, String>> exportLinePerformance(RequestProperties properties, Long accessionId, List<Long> datasetIds, Long phenotypeId, String siteAverageText) throws InvalidSessionException, DatabaseException, IOException;
-
-	/**
 	 * Exports the data for a list of {@link Dataset}s, two {@link Phenotype}s and a {@link Group}.
 	 *
 	 * @param properties The {@link RequestProperties}

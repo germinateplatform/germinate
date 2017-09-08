@@ -27,7 +27,7 @@ import jhi.germinate.client.service.*;
 public enum GerminateDatabaseTable
 {
 	allelefrequencydata,
-	analysismethod,
+	analysismethods,
 	attributedata,
 	attributes,
 	biologicalstatus,
@@ -35,11 +35,15 @@ public enum GerminateDatabaseTable
 	climateoverlays,
 	climates,
 	collectingsources,
-	compounds,
-	compounddata,
 	comments,
 	commenttypes,
+	compounddata,
+	compounds,
 	countries,
+	databaseversions,
+	datasetmembers,
+	datasetmembertypes,
+	datasetmeta,
 	datasetpermissions,
 	datasets,
 	datasetstates,
@@ -49,14 +53,19 @@ public enum GerminateDatabaseTable
 	experimenttypes,
 	genotypes,
 	germinatebase,
+	groupdatasets,
 	groupmembers,
 	groups,
 	grouptypes,
 	images,
 	imagetypes,
 	institutions,
+	licensedata,
+	licenselogs,
+	licenses,
 	links,
 	linktypes,
+	locales,
 	locations,
 	locationtypes,
 	mapdefinitions,
@@ -67,6 +76,7 @@ public enum GerminateDatabaseTable
 	megaenvironmentdata,
 	megaenvironments,
 	megaenvironmentsource,
+	mlsstatus,
 	news,
 	newstypes,
 	pedigreedefinitions,
@@ -75,25 +85,20 @@ public enum GerminateDatabaseTable
 	pedigrees,
 	phenotypedata,
 	phenotypes,
+	schema_version,
 	soils,
+	storage,
+	storagedata,
 	subtaxa,
 	synonyms,
 	synonymtypes,
 	taxonomies,
+	temp_details,
 	treatments,
 	trialseries,
-	units;
-
-	public boolean hasClimateData()
-	{
-		switch (this)
-		{
-			case locations:
-				return true;
-			default:
-				return false;
-		}
-	}
+	units,
+	usergroupmembers,
+	usergroups;
 
 	public String[] getColumnNames()
 	{
@@ -108,13 +113,5 @@ public enum GerminateDatabaseTable
 			default:
 				return null;
 		}
-	}
-
-	public enum Column
-	{
-		site_name,
-		marker_name,
-		number,
-		name
 	}
 }

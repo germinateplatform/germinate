@@ -17,7 +17,6 @@
 
 package jhi.germinate.server.database.query;
 
-import jhi.germinate.server.database.Database.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
@@ -32,95 +31,10 @@ public class GerminateTableQuery extends GerminateQuery<GerminateTableQuery>
 {
 	private String[] columnNames;
 
-	/**
-	 * Creates a new {@link GerminateTableQuery} with the given query and column names to extract. Checks the session id for validity.
-	 *
-	 * @param databaseType      The {@link DatabaseType}
-	 * @param queryType         The {@link QueryType}
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @param columnNames       The column names to extract
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
-	 */
-	public GerminateTableQuery(DatabaseType databaseType, QueryType queryType, RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query, String[] columnNames) throws InvalidSessionException,
-			DatabaseException
+	public GerminateTableQuery(String query, UserAuth userAuth, String[] columnNames)
 	{
-		super(databaseType, queryType, requestProperties, servlet, query);
+		super(query, userAuth);
 		this.columnNames = columnNames;
-	}
-
-	/**
-	 * Creates a new {@link GerminateTableQuery} with the given query and column names to extract. Checks the session id for validity.
-	 *
-	 * @param databaseType      The {@link DatabaseType}
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @param columnNames       The column names to extract
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
-	 */
-	public GerminateTableQuery(DatabaseType databaseType, RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query, String[] columnNames) throws InvalidSessionException, DatabaseException
-	{
-		this(databaseType, QueryType.DATA, requestProperties, servlet, query, columnNames);
-	}
-
-	/**
-	 * Creates a new {@link GerminateTableQuery} with the given query and column names to extract. Checks the session id for validity.
-	 *
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @param columnNames       The column names to extract
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
-	 */
-	public GerminateTableQuery(RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query, String[] columnNames) throws InvalidSessionException, DatabaseException
-	{
-		this(DatabaseType.MYSQL, requestProperties, servlet, query, columnNames);
-	}
-
-	/**
-	 * Creates a new {@link GerminateTableQuery} with the given query and column names to extract. Does NOT check the session id for validity.
-	 *
-	 * @param databaseType The {@link DatabaseType}
-	 * @param queryType    The {@link QueryType}
-	 * @param query        The sql query
-	 * @param columnNames  The column names to extract
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public GerminateTableQuery(DatabaseType databaseType, QueryType queryType, String query, String[] columnNames) throws DatabaseException
-	{
-		super(databaseType, queryType, query);
-		this.columnNames = columnNames;
-	}
-
-	/**
-	 * Creates a new {@link GerminateTableQuery} with the given query and column names to extract. Does NOT check the session id for validity.
-	 *
-	 * @param databaseType The {@link DatabaseType}
-	 * @param query        The sql query
-	 * @param columnNames  The column names to extract
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public GerminateTableQuery(DatabaseType databaseType, String query, String[] columnNames) throws DatabaseException
-	{
-		this(databaseType, QueryType.DATA, query, columnNames);
-	}
-
-	/**
-	 * Creates a new {@link GerminateTableQuery} with the given query and column names to extract. Does NOT check the session id for validity.
-	 *
-	 * @param queryType   The {@link QueryType}
-	 * @param query       The sql query
-	 * @param columnNames The column names to extract
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public GerminateTableQuery(QueryType queryType, String query, String[] columnNames) throws DatabaseException
-	{
-		this(DatabaseType.MYSQL, queryType, query, columnNames);
 	}
 
 	/**
@@ -130,9 +44,10 @@ public class GerminateTableQuery extends GerminateQuery<GerminateTableQuery>
 	 * @param columnNames The column names to extract
 	 * @throws DatabaseException Thrown if the communication with the database fails
 	 */
-	public GerminateTableQuery(String query, String[] columnNames) throws DatabaseException
+	public GerminateTableQuery(String query, String[] columnNames)
 	{
-		this(DatabaseType.MYSQL, query, columnNames);
+		super(query);
+		this.columnNames = columnNames;
 	}
 
 	/**
@@ -143,6 +58,7 @@ public class GerminateTableQuery extends GerminateQuery<GerminateTableQuery>
 	 */
 	public ServerResult<GerminateTable> run() throws DatabaseException
 	{
+		init();
 		sqlDebug.add(stmt.getStringRepresentation());
 
 		GerminateTable result = stmt.runQuery(columnNames);
@@ -160,11 +76,13 @@ public class GerminateTableQuery extends GerminateQuery<GerminateTableQuery>
 	 */
 	public GerminateTableStreamer getStreamer() throws DatabaseException
 	{
+		init();
 		return new GerminateTableStreamer(database, sqlDebug, stmt, columnNames);
 	}
 
 	public DatabaseResult getResult() throws DatabaseException
 	{
+		init();
 		return stmt.query();
 	}
 }

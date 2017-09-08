@@ -24,15 +24,21 @@ import com.google.gwt.i18n.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 
+import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
@@ -75,9 +81,25 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return DatasetTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<Dataset, ?> column;
+		DatabaseObjectFilterColumn<Dataset, ?> column;
+		SafeHtmlCell clickCell = new SafeHtmlCell()
+		{
+			@Override
+			public Set<String> getConsumedEvents()
+			{
+				Set<String> events = new HashSet<>();
+				events.add(BrowserEvents.CLICK);
+				return events;
+			}
+		};
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -96,7 +118,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, Dataset object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -114,7 +136,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				if (object.getExperiment().getType() != ExperimentType.unknown)
 				{
 					/* Check if we want to link to the export page */
-					if (linkToExportPage)
+					if (linkToExportPage && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 						return getExportPageLink(object, object.getExperiment().getType().name());
 					else
 						return DatasetTable.this.getValue(object, object.getExperiment().getType().name());
@@ -134,7 +156,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(ExperimentType.DESCRIPTION);
 		addColumn(column, Text.LANG.datasetsColumnExperimentType(), true);
 
-
+		/* Experiment name */
 		column = new TextColumn()
 		{
 			@Override
@@ -157,8 +179,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Experiment.EXPERIMENT_NAME);
 		addColumn(column, Text.LANG.datasetsColumnExperimentName(), true);
 
-
-
 		/* Add the dataset description column */
 		column = new ClickableSafeHtmlColumn()
 		{
@@ -166,7 +186,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			public SafeHtml getValue(Dataset object)
 			{
 				/* Check if we want to link to the export page */
-				if (linkToExportPage)
+				if (linkToExportPage && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 					return getExportPageLink(object, object.getDescription());
 				else
 					return DatasetTable.this.getValue(object, object.getDescription());
@@ -181,6 +201,93 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Dataset.DESCRIPTION);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), true);
 
+		/* Add the license description column */
+		column = new ClickableSafeHtmlColumn()
+		{
+			private LicenseData data = null;
+
+			@Override
+			public String getCellStyle()
+			{
+				return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
+			}
+
+			@Override
+			public SafeHtml getValue(Dataset object)
+			{
+				if (object.getLicense() != null)
+				{
+					data = object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName());
+
+					String icon = Style.MDI_NEW_BOX;
+
+					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+						icon = Style.MDI_CHECK;
+
+					if (data != null)
+						return TableUtils.getHyperlinkValueWithIcon(object.getLicense().getName(), null, Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, icon));
+					else
+						return TableUtils.getCellValueWithIcon(object.getLicense().getName(), Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, icon));
+				}
+				else
+					return null;
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+
+			@Override
+			public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
+			{
+				if (BrowserEvents.CLICK.equals(event.getType()) && object.getLicense() != null && data != null)
+				{
+					event.preventDefault();
+
+					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					{
+						new AlertDialog(Text.LANG.licenseWizardTitle(), new HTML(data.getContent()))
+								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
+								.open();
+					}
+					else
+					{
+						HTML html = new HTML(data.getContent());
+						html.getElement().getStyle().setProperty("maxHeight", "70vh");
+						html.getElement().getStyle().setOverflowY(com.google.gwt.dom.client.Style.Overflow.AUTO);
+						new AlertDialog(Text.LANG.licenseWizardTitle(), html)
+								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAccept(), IconType.CHECK, ButtonType.SUCCESS, e ->
+								{
+									LicenseLog log = new LicenseLog(-1L, object.getLicense().getId(), ModuleCore.getUserAuth().getId(), System.currentTimeMillis());
+
+									DatasetService.Inst.get().updateLicenseLogs(Cookie.getRequestProperties(), Collections.singletonList(log), new AsyncCallback<ServerResult<Boolean>>()
+									{
+										@Override
+										public void onFailure(Throwable caught)
+										{
+										}
+
+										@Override
+										public void onSuccess(ServerResult<Boolean> result)
+										{
+											DatasetTable.this.refreshTable();
+										}
+									});
+								}))
+								.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDecline(), IconType.BAN, ButtonType.DANGER, null))
+								.open();
+					}
+				}
+				else
+				{
+					super.onBrowserEvent(context, elem, object, event);
+				}
+			}
+		};
+		column.setDataStoreName(License.DESCRIPTION);
+		addColumn(column, Text.LANG.datasetsColumnLicenseDescription(), true);
 
 		column = new TextColumn()
 		{
@@ -277,8 +384,44 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Dataset.NR_OF_DATA_POINTS);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDataPoints(), true);
 
+		/* Add the attribute data column */
+		addColumn(new Column<Dataset, SafeHtml>(clickCell)
+		{
+			@Override
+			public String getCellStyleNames(Cell.Context context, Dataset row)
+			{
+				return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
+			}
+
+			@Override
+			public SafeHtml getValue(Dataset row)
+			{
+				if (!CollectionUtils.isEmpty(row.getAttributeData()))
+					return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_FILE_PLUS, Text.LANG.datasetAttributesTitle(), UriUtils.fromString(""), "");
+				else
+					return SimpleHtmlTemplate.INSTANCE.empty();
+			}
+
+			@Override
+			public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
+			{
+				if (BrowserEvents.CLICK.equals(event.getType()) && !CollectionUtils.isEmpty(object.getAttributeData()))
+				{
+					event.preventDefault();
+
+					new AlertDialog(Text.LANG.datasetAttributesTitle(), new AttributeDataWidget(object.getAttributeData()))
+							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
+							.open();
+				}
+				else
+				{
+					super.onBrowserEvent(context, elem, object, event);
+				}
+			}
+		}, "", false);
+
 		/* Add the style for the dataset state column and the column itself */
-		column = new Column<Dataset, SafeHtml>(new SafeHtmlCell())
+		addColumn(new Column<Dataset, SafeHtml>(new SafeHtmlCell())
 		{
 			@Override
 			public String getCellStyleNames(Cell.Context context, Dataset row)
@@ -314,8 +457,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 				return SimpleHtmlTemplate.INSTANCE.materialIconFixedWidth(mdi, title);
 			}
-		};
-		addColumn(column, "", false, false);
+		}, "", false);
 
 		if (showDownload)
 		{
@@ -323,18 +465,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			 * Add the style for the dataset download column and the column
              * itself
              */
-			SafeHtmlCell cell = new SafeHtmlCell()
-			{
-				@Override
-				public Set<String> getConsumedEvents()
-				{
-					Set<String> events = new HashSet<>();
-					events.add(BrowserEvents.CLICK);
-					return events;
-				}
-			};
-
-			Column<Dataset, SafeHtml> downloadColumn = new Column<Dataset, SafeHtml>(cell)
+			Column<Dataset, SafeHtml> downloadColumn = new Column<Dataset, SafeHtml>(clickCell)
 			{
 				@Override
 				public String getCellStyleNames(Cell.Context context, Dataset row)
@@ -345,38 +476,51 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				@Override
 				public SafeHtml getValue(Dataset row)
 				{
-					String sourceFile = row.getSourceFile();
-
-					if (downloadCallback != null)
+					if (ModuleCore.getUseAuthentication() && !row.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 					{
-						String fa = Style.FA_DOWNLOAD;
-						String title = Text.LANG.generalDownload();
-						return SimpleHtmlTemplate.INSTANCE.fontAwesomeAnchor(fa, title, UriUtils.fromString(""), "");
-					}
-					else if (!StringUtils.isEmpty(sourceFile) && !sourceFile.equals("NA"))
-					{
-						String href = new ServletConstants.Builder()
-								.setUrl(GWT.getModuleBaseURL())
-								.setPath(ServletConstants.SERVLET_FILES)
-								.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-								.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-								.setParam(ServletConstants.PARAM_FILE_LOCATION, FileLocation.data.name())
-								.setParam(ServletConstants.PARAM_FILE_PATH, (referenceFolder == null ? "" : (referenceFolder.name() + "/")) + sourceFile)
-								.build();
-
-						String fa = Style.MDI_DOWNLOAD;
-						String title = Text.LANG.generalDownload();
-						return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(fa, title, UriUtils.fromString(href), "blank");
+						return SimpleHtmlTemplate.INSTANCE.text("");
 					}
 					else
 					{
-						return SimpleHtmlTemplate.INSTANCE.text("");
+						String sourceFile = row.getSourceFile();
+
+						if (downloadCallback != null)
+						{
+							String fa = Style.MDI_DOWNLOAD;
+							String title = Text.LANG.generalDownload();
+							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(fa, title, UriUtils.fromString(""), "");
+						}
+						else if (!StringUtils.isEmpty(sourceFile) && !sourceFile.equals("NA"))
+						{
+							String href = new ServletConstants.Builder()
+									.setUrl(GWT.getModuleBaseURL())
+									.setPath(ServletConstants.SERVLET_FILES)
+									.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+									.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+									.setParam(ServletConstants.PARAM_FILE_LOCATION, FileLocation.data.name())
+									.setParam(ServletConstants.PARAM_FILE_PATH, (referenceFolder == null ? "" : (referenceFolder.name() + "/")) + sourceFile)
+									.build();
+
+							String fa = Style.MDI_DOWNLOAD;
+							String title = Text.LANG.generalDownload();
+							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(fa, title, UriUtils.fromString(href), "blank");
+						}
+						else
+						{
+							return SimpleHtmlTemplate.INSTANCE.text("");
+						}
 					}
 				}
 
 				@Override
 				public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
 				{
+					if (ModuleCore.getUseAuthentication() && !object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					{
+						event.preventDefault();
+						return;
+					}
+
 					if (BrowserEvents.CLICK.equals(event.getType()) && downloadCallback != null)
 					{
 						event.preventDefault();
@@ -389,7 +533,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				}
 			};
 
-			addColumn(downloadColumn, "", false, false);
+			addColumn(downloadColumn, "", false);
 		}
 	}
 
@@ -405,7 +549,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		this.downloadCallback = downloadCallback;
 	}
 
-	protected void onSelectionChanged(NativeEvent event, Dataset object, int column)
+	protected void onItemSelected(NativeEvent event, Dataset object, int column)
 	{
 		/* Get their ids */
 		List<Long> ids = new ArrayList<>();
@@ -423,9 +567,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				break;
 			case genotype:
 				parameter = Parameter.genotypeDatasetIds;
-				break;
-			case phenotype:
-				parameter = Parameter.phenotypeDatasetIds;
 				break;
 			case trials:
 				parameter = Parameter.trialsDatasetIds;
@@ -467,10 +608,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			case genotype:
 				if (GerminateSettingsHolder.isPageAvailable(Page.GENOTYPE_EXPORT))
 					page = Page.GENOTYPE_EXPORT;
-				break;
-			case phenotype:
-				if (GerminateSettingsHolder.isPageAvailable(Page.CATEGORICAL_EXPORT))
-					page = Page.CATEGORICAL_EXPORT;
 				break;
 			case trials:
 				if (GerminateSettingsHolder.isPageAvailable(Page.TRIALS))

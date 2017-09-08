@@ -29,8 +29,6 @@ import jhi.germinate.shared.exception.*;
  */
 public final class DatabaseResult
 {
-	private static final String ER_BAD_FIELD_ERROR = "S0022";
-
 	private final ResultSet         rs;
 	private       Database          database;
 	private       ResultSetMetaData rsmd;

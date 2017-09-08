@@ -58,8 +58,8 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	@Override
 	public ServerResult<Map> getById(RequestProperties properties, Long mapId) throws InvalidSessionException, DatabaseException
 	{
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		try
 		{
 			return new MapManager().getById(userAuth, mapId);
@@ -287,7 +287,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 				/* Create the query for the actual data */
 				String dataString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_CHROMOSOMES_APPENDIX);
 				dataString = String.format(dataString, Util.generateSqlPlaceholderString(chromosomes.size()));
-				dataQuery = new GerminateTableQuery(properties, this, dataString, COLUMNS_MAP_EXPORT)
+				dataQuery = new GerminateTableQuery(dataString, userAuth, COLUMNS_MAP_EXPORT)
 						.setLong(mapId);
 
 				for (String chromosome : chromosomes)
@@ -301,7 +301,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 				java.util.Map<String, List<Region>> regions = options.getRegions();
 				/* Create the query for the actual data */
 				String dataString = String.format(QUERY_MAP_EXPORT, getMapExportChromosomePlaceholder(regions));
-				dataQuery = new GerminateTableQuery(properties, this, dataString, COLUMNS_MAP_EXPORT)
+				dataQuery = new GerminateTableQuery(dataString, userAuth, COLUMNS_MAP_EXPORT)
 						.setLong(mapId);
 
 				List<String> keys = new ArrayList<>(regions.keySet());
@@ -321,7 +321,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 			{
 				/* Create the query for the actual data */
 				String queryString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_INTERVAL_APPENDIX);
-				dataQuery = new GerminateTableQuery(properties, this, queryString, COLUMNS_MAP_EXPORT)
+				dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
 						.setLong(mapId);
 
 				String f = options.getInterval().getFirst();
@@ -342,7 +342,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 			{
 				/* Create the query for the actual data */
 				String queryString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_RADIUS_APPENDIX);
-				dataQuery = new GerminateTableQuery(properties, this, queryString, COLUMNS_MAP_EXPORT)
+				dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
 						.setLong(mapId);
 
 				String marker = options.getRadius().getFirst();
@@ -363,7 +363,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 			{
 				/* Create the query for the actual data */
 				String queryString = String.format(QUERY_MAP_EXPORT, "");
-				dataQuery = new GerminateTableQuery(properties, this, queryString, COLUMNS_MAP_EXPORT)
+				dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
 						.setLong(mapId);
 			}
 		}
@@ -372,7 +372,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		{
 			/* Create the query for the actual data */
 			String queryString = String.format(QUERY_MAP_EXPORT, "");
-			dataQuery = new GerminateTableQuery(properties, this, queryString, COLUMNS_MAP_EXPORT)
+			dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
 					.setLong(mapId);
 		}
 
@@ -416,7 +416,10 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	@Override
 	public ServerResult<List<String>> getChromosomesForMap(RequestProperties properties, Long mapId) throws InvalidSessionException, DatabaseException
 	{
-		return new ValueQuery(properties, this, QUERY_CHROMOSOMES)
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return new ValueQuery(QUERY_CHROMOSOMES, userAuth)
 				.setLong(mapId)
 				.run(MapDefinition.CHROMOSOME)
 				.getStrings();

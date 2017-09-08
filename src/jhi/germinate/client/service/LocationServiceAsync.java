@@ -132,15 +132,6 @@ public interface LocationServiceAsync
 	void exportForIds(RequestProperties properties, List<String> ids, AsyncCallback<ServerResult<String>> callback);
 
 	/**
-	 * Returns the {@link MegaEnvironment} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param megaEnvId  The {@link MegaEnvironment} id
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getMegaEnv(RequestProperties properties, Long megaEnvId, AsyncCallback<ServerResult<MegaEnvironment>> callback);
-
-	/**
 	 * Returns a paginated list of {@link MegaEnvironment}s.
 	 *
 	 * @param properties The {@link RequestProperties}

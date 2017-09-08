@@ -20,8 +20,6 @@ package jhi.germinate.server.util;
 import java.io.*;
 import java.util.*;
 
-import javax.servlet.http.*;
-
 import jhi.flapjack.io.cmd.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -109,9 +107,6 @@ public class DataExporter
 		/** The source of the data */
 		public File inputFile;
 
-		/** The {@link HttpServletRequest} of the caller */
-		public HttpServletRequest req;
-
 		@Override
 		public String toString()
 		{
@@ -122,7 +117,6 @@ public class DataExporter
 					", rowNames=" + rowNames +
 					", colNames=" + colNames +
 					", inputFile=" + inputFile +
-					", req=" + req +
 					'}';
 		}
 	}

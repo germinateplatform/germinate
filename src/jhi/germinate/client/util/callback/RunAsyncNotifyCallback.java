@@ -30,10 +30,10 @@ import jhi.germinate.client.util.event.*;
  *
  * @author Sebastian Raubach
  */
-public abstract class RunAsyncNotifyCallback implements RunAsyncCallback
+public interface RunAsyncNotifyCallback extends RunAsyncCallback
 {
 	@Override
-	public void onFailure(Throwable reason)
+	default void onFailure(Throwable reason)
 	{
 		Notification.notify(Type.ERROR, Text.LANG.notificationCodeDownloadFailed() + " " + Text.LANG.notificationReloadPage());
 		GerminateEventBus.BUS.fireEvent(new LogoutEvent());

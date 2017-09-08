@@ -20,13 +20,14 @@ package jhi.germinate.client.widget.structure;
 import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.Container;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 
 import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.page.login.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.widget.element.*;
@@ -65,13 +66,12 @@ public class FooterWidget extends Composite
 
 		if (!GerminateSettingsHolder.isPageAvailable(Page.COOKIE))
 			cookie.removeFromParent();
-		else
-			cookie.setHref("#" + Page.COOKIE.name());
 	}
 
 	@UiHandler("cookie")
 	void onCookieClicked(ClickEvent e)
 	{
+		e.preventDefault();
 		CookieModal.show();
 	}
 
@@ -84,14 +84,14 @@ public class FooterWidget extends Composite
 
 			RootPanel p = RootPanel.get(Id.STRUCTURE_FOOTER);
 			p.add(INSTANCE);
-			p.removeFromParent();
+//			p.removeFromParent();
 
-			GerminateEventBus.BUS.addHandler(PageNavigationEvent.TYPE, event ->
+			GerminateEventBus.BUS.addHandler(MainContentChangeEvent.TYPE, event ->
 			{
 				if (INSTANCE != null)
 				{
-					Page page = event.getPage();
-					if (page.equals(Page.LOGIN) || page.equals(Page.LOGOUT))
+					Composite composite = event.getComposite();
+					if (composite instanceof LoginPage)
 						INSTANCE.container.setFluid(false);
 					else
 						INSTANCE.container.setFluid(true);

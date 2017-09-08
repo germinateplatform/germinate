@@ -219,6 +219,26 @@ public interface Text extends Messages
 	@Key("general.link.get.text")
 	String generalGetLinkToPageText();
 
+	@Key("general.decline")
+	@DefaultMessage("Decline")
+	String generalDecline();
+
+	@Key("general.accept")
+	@DefaultMessage("Accept")
+	String generalAccept();
+
+	@Key("general.update")
+	@DefaultMessage("Update")
+	String generalUpdate();
+
+	@Key("general.close")
+	@DefaultMessage("Close")
+	String generalClose();
+
+	@Key("general.rename")
+	@DefaultMessage("Rename")
+	String generalRename();
+
 	@Key("download.heading")
 	String downloadHeading();
 
@@ -682,8 +702,8 @@ public interface Text extends Messages
 	String pagerLastPage();
 
 	@Key("widget.pager.items.per.page")
-	@DefaultMessage("Items per page: {0}")
-	String pagerItemsPerPage(String value);
+	@DefaultMessage("Items per page")
+	String pagerItemsPerPage();
 
 	@Key("page.passport.passport.title")
 	String passportPassportData();
@@ -855,6 +875,10 @@ public interface Text extends Messages
 
 	@Key("column.dataset.description")
 	String datasetsColumnDatasetDescription();
+
+	@Key("column.license.description")
+	@DefaultMessage("License description")
+	String datasetsColumnLicenseDescription();
 
 	@Key("column.dataset.contact")
 	String datasetsColumnContact();
@@ -1161,6 +1185,10 @@ public interface Text extends Messages
 	@Key("column.groups.type")
 	@DefaultMessage("Type")
 	String groupsColumnType();
+
+	@Key("column.groups.size")
+	@DefaultMessage("Size")
+	String groupsColumnSize();
 
 	@Key("column.groups.created.on")
 	String groupsColumnCreatedOn();
@@ -1679,9 +1707,6 @@ public interface Text extends Messages
 	@Key("page.allele.frequency.download.flapjack")
 	String allelefreqResultDownloadFlapjack();
 
-	@Key("page.search.query")
-	String searchSearchFor(String searchString);
-
 	@Key("page.search.settings.title")
 	String searchSettings();
 
@@ -2182,6 +2207,9 @@ public interface Text extends Messages
 	@DefaultMessage("Value")
 	String phenotypeColumnValue();
 
+	@Key("column.phenotype.recording.date")
+	@DefaultMessage("Recording date")
+	String phenotypeColumnRecordingDate();
 
 	@Key("column.unit.name")
 	@DefaultMessage("Unit")
@@ -2244,6 +2272,10 @@ public interface Text extends Messages
 	@DefaultMessage("Toggle filtering")
 	String filterButtonTitle();
 
+	@Key("widget.table.column.selector.title")
+	@DefaultMessage("Select columns")
+	String columnSelectorButtonTitle();
+
 	@Key("page.geographic.search.polygon.text")
 	@DefaultMessage("<p>The map below allows you to select a region by drawing a polygon around it. Once you''re happy with the selection, hit the \"Continue\" button to get the collecting sites within this polygon.</p><p>You can adjust each corner point of the polygon by dragging it. It''s also possible to add new corner points in between two existing points by dragging the semi-transparent circle.</p><p>Right-click a polygon to remove it from the map.</p>")
 	SafeHtml geographicSearchPolygonText();
@@ -2293,9 +2325,13 @@ public interface Text extends Messages
 	@DefaultMessage("Accession data")
 	String searchSectionAccessionData();
 
-	@Key("page.search.section.attribute.data")
-	@DefaultMessage("Attribute data")
-	String searchSectionAttributeData();
+	@Key("page.search.section.accession.attribute.data")
+	@DefaultMessage("Accession attribute data")
+	String searchSectionAccessionAttributeData();
+
+	@Key("page.search.section.dataset.attribute.data")
+	@DefaultMessage("Dataset attribute data")
+	String searchSectionDatasetAttributeData();
 
 	@Key("page.search.section.phenotype.data")
 	@DefaultMessage("Phenotype data")
@@ -2720,4 +2756,48 @@ public interface Text extends Messages
 	@Key("widget.table.filter.info")
 	@DefaultMessage("<b>Table filtering searches for exact matches in the specified column. To use fuzzy search, use the wildcard character '%'. As an example, searching for a country name of 'kingdom' will not return a result whereas searching for '%kingdom%' will return 'United Kingdom'.</b>")
 	SafeHtml tableFilterInfo();
+
+	@Key("wizard.license.title")
+	@DefaultMessage("License")
+	String licenseWizardTitle();
+
+	@Key("wizard.license.agreement.decline.meaning")
+	@DefaultMessage("Declining a license means that you won''t be able to see and export the contained data.")
+	String licenseWizardDeclineMeaning();
+
+	@Key("page.search.additional.datasets.title")
+	@DefaultMessage("Additional data")
+	String searchAdditionalDatasetsTitle();
+
+	@Key("page.search.additional.datasets.text")
+	@DefaultMessage("<p>There is data in additional datasets for which you haven''t accepted the license yet. If you wish to do so, please check the datasets you are interested in and then click the button below the table.</p><p>The licenses of the selected datasets will then be shown and you can decide for each one if you would like to accept it or not. Afterwards, the view will update.</p>")
+	SafeHtml searchAdditionalDatasetsText();
+
+	@Key("page.search.additional.datasets.text.short")
+	@DefaultMessage("<p>There is data in additional datasets for which you haven''t accepted the license yet. If you wish to do so, please check the table at the bottom of the page.</p>")
+	SafeHtml searchAdditionalDatasetsTextShort();
+
+	@Key("page.dataset.attributes.title")
+	@DefaultMessage("Attributes")
+	String datasetAttributesTitle();
+
+	@Key("page.experiment.details.title")
+	@DefaultMessage("Experiment details")
+	String experimentDetailsTitle();
+
+	@Key("page.experiment.details.text")
+	@DefaultMessage("<p>This page shows all the datasets that are part of the selected experiment.</p>")
+	SafeHtml experimentDetailsText();
+
+	@Key("widget.list.groups.all.markers")
+	@DefaultMessage("All markers")
+	String groupsAllMarkers();
+
+	@Key("widget.list.groups.all.accessions")
+	@DefaultMessage("All accessions")
+	String groupsAllAccessions();
+
+	@Key("widget.list.groups.all.locations")
+	@DefaultMessage("All locations")
+	String groupsAllLocations();
 }

@@ -51,10 +51,41 @@
   - CHG: Made Germinate more robust to Google Maps library loading errors.
   - FIX: Fixed an issue with the CurlyWhirly/Germinate interaction. The selections between the two tools weren't synchronized.
   - ADD: Added implementations of Excel data template importers (MCPD + attributes, phenotype data, pedigrees, markers + maps and genotypes).
+  - DEL: Removed skrollr.js as a dependency.
+  - FIX: Fixed an issue where mixing both static and dynamic external links would cause the links widget to not show up at all.
+  - ADD: Added option to define user groups. These user groups can then be given special access permissions to datasets. So far this was only possible on an individual user basis.
+  - ADD: Added dataset specific licenses. A dataset can now have a license that the user has to accept before continuing. If they don't accept the license, they can't use the dataset.
+  - ADD: Added column selector to tables. This allows the user to disable/enable (hide/show) columns in the table.
+  - BUG: Fixed a bug where making changes on the admin page sometimes didn't result in the properties being updated properly.
+  - ADD: Added option to rename an existing group.
+  - ADD: Added a new group to all group selection boxes that represents all the data, e.g. all accessions, all markers, all locations. This makes sure that the interface can be used even if no groups have been defined yet.
+  - CHG: Unified "phenotype" and "trials" experiments.
+  - CHG: Significantly (!!!) reduced the code clutter in database query related classes.
+  - CHG: Changed the export format for Helium to the new format. Closes #6.
+  - ADD: Added the ability to define attributes for datasets. These attributes can be seen from the datasets table. The search page now includes a section to search across dataset attributes as well. Closes #7.
+  - ADD: Added experiment details page. Just now this can be accessed by navigating to ?experimentId=X#experiment-details #Closes #8.
+  - ADD: Added very initial version of a user documentation that showcases all the features and explains what to do.
+  - ADD: Re-added Germinate data template import code.
 
 /* MIGRATION */
 
   - Migrating from 3.3.2 to 3.4.0:
+
+    - Add the following lines to your "Germinate.gwt.xml" file in your "instance-stuff" folder:
+
+      <inherits name="org.gwtbootstrap3.GwtBootstrap3NoTheme"/>
+      <inherits name="org.gwtbootstrap3.extras.toggleswitch.ToggleSwitch"/>
+      <inherits name="org.gwtbootstrap3.extras.select.Select"/>
+      <inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
+      <inherits name="jhi.gwt.leaflet.GWTLeaflet"/>
+
+    - Move the "crop.svg" from the "instance-stuff/<your-instance>/template/images" folder one level up into the "template" folder.
+
+    - The following pages are no longer available as they have been merged with their respective trials version: "categorical-datasets", "categorical-export". To keep functionality working the same, please replace them under "Germinate.AvailablePages" (config.properties) with "trials-datasets", "trials".
+
+    - The shopping cart is now called the marked item list. If you have it enabled in the "config.properties" file under the "Germinate.AvailablePages" item, please replace "cart" with "marked-items".
+
+    - There's not a new page that can be added to "Germinate.AvailablePages": "experiment-details". It shows details about the datasets contained in an experiment.
 
     - New translatable text has been added. The following properties can be changed in your "Text.properties" file and the according translation files:
 
@@ -73,8 +104,94 @@
       notification.no.items.marked=No items are marked.
       menu.data.locations=location data
       menu.data.genetic=genetic data
+      page.search.group=Groups
+      page.shopping.cart.title=Marked items
+      widget.pager.items.per.page=Items per page
+      column.groups.type=Type
+      notification.groups.deleted=Groups successfully deleted.
+      page.accessions.browse.download.accession.data=Download accession data
+      page.accessions.browse.download.pedigree.data=Download pedigree data
+      general.next=Next
+      general.back=Back
+      general.skip=Skip
+      general.done=Done
+      page.search.data.category=Select what data you want to search for
+      page.search.results.title=Results
+      page.locations.select.type=Select location type
+      general.none=None
+      general.results=Results
+      column.maps.id=Maps Id
+      page.genotypes.title=Genotype data
+      page.allelefreq.binning.title=Allele Frequency Binning
+      page.climate.datasets.title=Climate Data Export
+      page.compounds.scatter.first.compound=First compound
+      page.compounds.scatter.second.compound=Second compound
+      page.compounds.scatter.group=Group
+      page.compounds.scatter.color=Color by
+      page.admin.config.menu.item=Admin settings
+      column.comment.id=Id
+      column.comment.description=Description
+      column.comment.type.description=Comment type
+      column.comment.created.on=Created on
+      column.comment.user=User
+      widget.comment.type.select=Select comment type
+      widget.comment.content=Enter comment message
+      notification.action.permissions.insufficient=Insufficient permissions to perform action.
+      page.login.registration.link=Don''t have an account? Register here!
+      widget.wizard.progress.page=Page {0}/{1}
+      page.phenotypes.scatter.first.phenotype=First phenotype
+      page.phenotypes.scatter.second.phenotype=Second phenotype
+      page.compounds.matrix.select.at.most=Please select at most {0,number} compounds.
+      page.compounds.matrix.select.at.most[one]=Please select at most 1 compound.
+      page.trials.overview.select.type=Select chart type
+      page.gallery.select.image.type=Select image type
+      page.gallery.type.all.images=All images
+      template.footer.copyright=© Information & Computational Sciences, JHI 2015-{0}
+      adminConfigHelp=<p>This page let''s you configure Germinate the way you want it to be. Please be aware that changes to this page will majorly affect how Germinate works and looks, so be careful.</p>
+      page.marker.title=Marker details
+      page.groups.members.title=Group members
+      page.groups.delete.group.title=Delete groups
+      page.groups.delete.group.text=Do you really want to delete the selected groups?
+      page.groups.delete.members.title=Delete group members
+      page.groups.delete.members.text=Do you really want to delete the selected group members?
+      page.about.button.search.members=Search members
+      page.about.button.upload.members=Upload members
+      page.about.button.delete.members=Delete members
+      widget.pager.jump.to.page.title=Jump to page
+      widget.pager.jump.to.page.page.number=Page number (1 - {0})
+      page.groups.search.result=Search result
+      widget.table.filter.info=<b>Table filtering searches for exact matches in the specified column. To use fuzzy search, use the wildcard character '%'. As an example, searching for a country name of 'kingdom' will not return a result whereas searching for '%kingdom%' will return 'United Kingdom'.</b>
+      column.license.description=License description
+      general.decline=Decline
+      general.accept=Accept
+      wizard.license.agreement.decline.meaning=Declining a license means that you won''t be able to see and export the contained data.
+      wizard.license.title=License
+      page.search.additional.datasets.title=Additional data
+      general.update=Update
+      page.search.additional.datasets.text=<p>There is data in additional datasets for which you haven''t accepted the license yet. If you wish to do so, please check the datasets you are interested in and then click the button below the table.</p><p>The licenses of the selected datasets will then be shown and you can decide for each one if you would like to accept it or not. Afterwards, the view will update.</p>
+      page.search.additional.datasets.text.short=<p>There is data in additional datasets for which you haven''t accepted the license yet. If you wish to do so, please check the table at the bottom of the page.</p>
+      widget.table.column.selector.title=Select columns
+      column.groups.size=Size
+      page.dataset.attributes.title=Attributes
+      general.close=Close
+      page.search.section.accession.attribute.data=Accession attribute data
+      page.search.section.dataset.attribute.data=Dataset attribute data
+      page.experiment.details.title=Experiment details
+      page.experiment.details.text=<p>This page shows all the datasets that are part of the selected experiment.</p>
+      general.rename=Rename
+      widget.list.groups.all.markers=All markers
+      widget.list.groups.all.accessions=All accessions
+      widget.list.groups.all.locations=Locations
+      column.phenotype.recording.date=Recording date
 
     - Some translatable text has been changed. The following properties should be changed in your "Text.properties" file and the according translation files:
 
       page.location.treemap.text=<p>The treemap shows all locations grouped by region. Select the location type from the drop-down box below. Clicking on a region will zoom in and show the locations. In the case of collecting sites, clicking on the name of a location will show the accessions at this site. To get go back to the previous level, just click on the header.</p>
-      page.about.text=<p><strong>&copy;2006-{1} Information & Computational Sciences, The James Hutton Institute.</strong></p><p><a target="_blank" href="http://ics.hutton.ac.uk/germinate">Germinate 3</a> was written, designed and developed by <strong>Paul Shaw, Sebastian Raubach and David Marshall.</strong></p><p>In addition the following people have been instrumental in the development of Germinate. Iain Milne, Linda Milne, Gordon Stephen, Runxuan Zhang, Bill Thomas, Luke Ramsay, Robbie Waugh, Jordi Comadran, Joanne Russell and Andy Flavell.</p><p>Previous Members of the Germinate Team have included: Jennifer Lee, Jacek Grzebyta, Toby Philp and Nelo Onyiah.</p><p>We take privacy seriously. Your username is available to the Germinate 3 system but passwords are encrypted using the BCrypt algorithm and therefore cannot be viewed by us. If you forget your password please log in to the <a href="{0}" target="_blank">Germinate Gatekeeper website</a> to change it.</p><p>The Germinate system knows who you are based on your username. Groups you create using Germinate are unique to you and are not available to other users of the system. Adding notes to individual plant lines are available to other users and are tagged with your username. While this is important in gaining information please do not enter anything in notes fields on this site that you want to be kept private.</p><p>This particular implementation of Germinate 3 does not actively track your IP address or your operating system but it may detect your web browser. This is done solely for the purpose of tailoring features that may not be compatible with all browsers and is integral to the GWT (GWT Web Toolkit) tools that are used to develop this resource.</p><br/><p>For further information on the tools and databases that we produce visit our website at <a href="http://ics.hutton.ac.uk" target="_blank">http://ics.hutton.ac.uk</a> and follow our updates on Twitter <a href="https://twitter.com/cropgeeks" target="_blank"><span class="fa fa-twitter fa-lg font-awesome"></span> @cropgeeks</a></p><br/><h4>Contact Details:</h4><p>You can contact us by email at <a href="mailto:germinate@hutton.ac.uk">germinate@hutton.ac.uk</a> or you can write to us at:</p>
+      page.about.text=<p><strong>&copy;2006-{1} Information & Computational Sciences, The James Hutton Institute.</strong></p><p><a target="_blank" href="http://ics.hutton.ac.uk/germinate">Germinate 3</a> was written, designed and developed by <strong>Paul Shaw, Sebastian Raubach, Iain Milne, Gordon Stephen and David Marshall.</strong></p><p>In addition the following people have been instrumental in the development of Germinate. Linda Milne, Runxuan Zhang, Bill Thomas, Luke Ramsay, Robbie Waugh, Jordi Comadran, Joanne Russell and Andy Flavell.</p><p>Previous Members of the Germinate Team have included: Jennifer Lee, Jacek Grzebyta, Toby Philp and Nelo Onyiah.</p><p>We take privacy seriously. Your username is available to the Germinate 3 system but passwords are encrypted using the BCrypt algorithm and therefore cannot be viewed by us. If you forget your password please log in to the <a href="{0}" target="_blank">Germinate Gatekeeper website</a> to change it.</p><p>The Germinate system knows who you are based on your username. Groups you create using Germinate are unique to you and are not available to other users of the system. Adding notes to individual plant lines are available to other users and are tagged with your username. While this is important in gaining information please do not enter anything in notes fields on this site that you want to be kept private.</p><p>This particular implementation of Germinate 3 does not actively track your IP address or your operating system but it may detect your web browser. This is done solely for the purpose of tailoring features that may not be compatible with all browsers and is integral to the GWT (GWT Web Toolkit) tools that are used to develop this resource.</p><br/><p>For further information on the tools and databases that we produce visit our website at <a href="http://ics.hutton.ac.uk" target="_blank">http://ics.hutton.ac.uk</a> and follow our updates on Twitter <a href="https://twitter.com/cropgeeks" target="_blank"><span class="fa fa-twitter fa-lg font-awesome"></span> @cropgeeks</a></p><br/><h4>Contact Details:</h4><p>You can contact us by email at <a href="mailto:germinate@hutton.ac.uk">germinate@hutton.ac.uk</a> or you can write to us at:</p>
+      page.cart.button.clear=You haven''t marked any items so far. You can add items to your list of marked items by clicking on checkboxes in the rightmost column of some tables. Note that these checkboxes are only available in tables that deal with accessions, markers or locations.
+      page.passport.text=<p>This page displays information that we have stored for a particular accession.</p><p>Passport data tends to be quite fragmented so it''s perfectly possible that we have limited data for some lines while others have a full complement.</p><p>Where available we use <a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreeMap</a> to plot collection data for this accession.
+      tour.introduction.cart.text=This ''marked item list'' is used to keep track of items you marked as interesting. It''s a way to remember things on the page that you might want to look at again at a later point in time.
+      page.cookies.internal.text=<p>Germinate 3 uses cookies to maintain state across user sessions when using the Germinate 3 web interface. Cookies are simple text files. They are needed to help navigate automatic logins, password authentication, maintaining page state, marked item list functions, personal preference settings and a variety of other functions that are offered by Germinate 3. Cookies make these functions smooth and hassle-free to the user. We do not use cookies to track individual users based on any login details they may provide.</p><p>We do not share any information.</p><p>If you want to talk to us about how we use cookies or have any concerns we want to hear from you. You can contact us on <a href="mailto:germinate@hutton.ac.uk">germinate@hutton.ac.uk</a> and we will be happy to assist as much as we can.</p>
+      page.search.locations=Locations
+      page.search.query=Please enter the search query
+      page.groups.title=Groups

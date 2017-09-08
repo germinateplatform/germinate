@@ -31,7 +31,6 @@ public class FlapjackProjectCreationResult implements Serializable
 	private String      projectFile;
 	private String      mapFile;
 	private String      rawDataFile;
-	//	private String      histogramFile;
 	private Set<String> deletedMarkers;
 
 	public FlapjackProjectCreationResult()
@@ -82,17 +81,6 @@ public class FlapjackProjectCreationResult implements Serializable
 		this.rawDataFile = rawDataFile;
 		return this;
 	}
-
-//	public String getHistogramFile()
-//	{
-//		return histogramFile;
-//	}
-//
-//	public FlapjackProjectCreationResult setHistogramFile(String histogramFile)
-//	{
-//		this.histogramFile = histogramFile;
-//		return this;
-//	}
 
 	public Set<String> getDeletedMarkers()
 	{

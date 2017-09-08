@@ -107,7 +107,7 @@ public class LocationManager extends AbstractManager<Location>
 		pagination.updateSortColumn(LocationService.COLUMNS_LOCATION_SORTABLE, Location.ID);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(filter, formatted, LocationService.COLUMNS_LOCATION_SORTABLE, COLUMNS_LOCATION_DATA_EXPORT)
+		return getFilteredGerminateTableQuery(userAuth, filter, formatted, LocationService.COLUMNS_LOCATION_SORTABLE, COLUMNS_LOCATION_DATA_EXPORT)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
@@ -393,7 +393,7 @@ public class LocationManager extends AbstractManager<Location>
 		else
 			formatted = String.format(SELECT_CLIMATE_DATA, "", Util.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
 
-		GerminateTableQuery query = new GerminateTableQuery(formatted, null)
+		GerminateTableQuery query = new GerminateTableQuery(formatted, userAuth, null)
 				.setLongs(datasetIds)
 				.setLong(climateId);
 

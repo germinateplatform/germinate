@@ -64,7 +64,8 @@ public class GatekeeperUserManager extends AbstractManager<GatekeeperUser>
 			return new ServerResult<>(null, null);
 
 
-		return new DatabaseObjectQuery<GatekeeperUser>(Database.QueryType.AUTHENTICATION, SELECT_BY_ID, user)
+		return new DatabaseObjectQuery<GatekeeperUser>(SELECT_BY_ID, user)
+				.setQueryType(Database.QueryType.AUTHENTICATION)
 				.setLong(id)
 				.setString(database)
 				.setString(server)
@@ -81,7 +82,8 @@ public class GatekeeperUserManager extends AbstractManager<GatekeeperUser>
 			return null;
 
 
-		return new DatabaseObjectQuery<GatekeeperUserWithPassword>(Database.QueryType.AUTHENTICATION, SELECT_BY_ID, user)
+		return new DatabaseObjectQuery<GatekeeperUserWithPassword>(SELECT_BY_ID, user)
+				.setQueryType(Database.QueryType.AUTHENTICATION)
 				.setLong(id)
 				.setString(database)
 				.setString(server)
@@ -95,7 +97,8 @@ public class GatekeeperUserManager extends AbstractManager<GatekeeperUser>
 		if (!PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) || StringUtils.isEmpty(username))
 			return null;
 
-		return new DatabaseObjectQuery<GatekeeperUserWithPassword>(Database.QueryType.AUTHENTICATION, SELECT_BY_NAME_GLOBAL, null)
+		return new DatabaseObjectQuery<GatekeeperUserWithPassword>(SELECT_BY_NAME_GLOBAL, null)
+				.setQueryType(Database.QueryType.AUTHENTICATION)
 				.setString(username)
 				.run()
 				.getObject(GatekeeperUserWithPassword.Parser.Inst.get())
@@ -110,7 +113,8 @@ public class GatekeeperUserManager extends AbstractManager<GatekeeperUser>
 		if (!PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) || StringUtils.isEmpty(username, database, server))
 			return null;
 
-		return new DatabaseObjectQuery<GatekeeperUserWithPassword>(Database.QueryType.AUTHENTICATION, SELECT_BY_NAME_AND_SYSTEM, null)
+		return new DatabaseObjectQuery<GatekeeperUserWithPassword>(SELECT_BY_NAME_AND_SYSTEM, null)
+				.setQueryType(Database.QueryType.AUTHENTICATION)
 				.setString(username)
 				.setString(database)
 				.setString(server)
@@ -130,7 +134,8 @@ public class GatekeeperUserManager extends AbstractManager<GatekeeperUser>
 		Integer rounds = PropertyReader.getInteger(ServerProperty.GERMINATE_GATEKEEPER_BCRYPT_ROUNDS);
 		String hashed = BCrypt.hashpw(password, BCrypt.gensalt(rounds));
 
-		new ValueQuery(Database.QueryType.AUTHENTICATION, UPDATE_PASSWORD_FROM_ID)
+		new ValueQuery(UPDATE_PASSWORD_FROM_ID)
+				.setQueryType(Database.QueryType.AUTHENTICATION)
 				.setString(hashed)
 				.setLong(id)
 				.execute();

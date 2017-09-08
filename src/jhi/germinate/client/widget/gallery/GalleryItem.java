@@ -89,7 +89,9 @@ public class GalleryItem extends Composite
 			image.setVisible(false);
 
 		heading.setText(img.getPath());
+		heading.setTitle(img.getPath());
 		paragraph.setText(img.getDescription());
+		paragraph.setTitle(img.getDescription());
 
 		anchor.getElement().setAttribute("data-fancybox", "gallery-item");
 		anchor.setHref(UriUtils.fromTrustedString(urlLarge).asString());

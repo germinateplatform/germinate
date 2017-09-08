@@ -26,7 +26,6 @@ import java.util.logging.*;
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.Database.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -44,100 +43,57 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	protected String            query;
 	protected DatabaseStatement stmt;
 	protected DebugInfo         sqlDebug;
-	protected int      i        = 1;
-	protected Database database = null;
+	protected QueryType queryType = QueryType.DATA;
+	protected int       i         = 1;
+	protected Database  database  = null;
 	protected UserAuth userAuth;
 
-	protected GerminateQuery(Database database, String query) throws DatabaseException
+	GerminateQuery(Database database, String query)
 	{
 		this.database = database;
-
-		init(null, null, query);
+		this.query = query;
 	}
 
-	protected GerminateQuery(QueryType queryType, UserAuth userAuth, String query) throws DatabaseException
+	GerminateQuery(String query, UserAuth userAuth)
 	{
 		this.userAuth = userAuth;
-		init(null, queryType, query);
+		this.query = query;
 	}
 
-	protected GerminateQuery(DatabaseType databaseType, QueryType queryType, UserAuth userAuth, String query) throws DatabaseException
-	{
-		this.userAuth = userAuth;
-		init(databaseType, queryType, query);
-	}
-
-	/**
-	 * Creates a new {@link GerminateQuery} with the given query. Checks the session id for validity.
-	 *
-	 * @param databaseType      The {@link DatabaseType}
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
-	 */
-	protected GerminateQuery(DatabaseType databaseType, QueryType queryType, RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(requestProperties, servlet);
-
-		userAuth = UserAuth.getFromSession(servlet, requestProperties);
-
-		init(databaseType, queryType, query);
-	}
-
-	/**
-	 * Creates a new {@link GerminateQuery} with the given query. Does NOT check the session id for validity.
-	 *
-	 * @param databaseType The {@link DatabaseType}
-	 * @param queryType    The {@link QueryType}
-	 * @param query        The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	protected GerminateQuery(DatabaseType databaseType, QueryType queryType, String query) throws DatabaseException
-	{
-		init(databaseType, queryType, query);
-	}
-
-	/**
-	 * Initializes the {@link Database} and the {@link DebugInfo}
-	 *
-	 * @param databaseType The {@link DatabaseType}
-	 * @param queryType    The {@link QueryType}
-	 * @param query        The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	protected void init(DatabaseType databaseType, QueryType queryType, String query) throws DatabaseException
+	GerminateQuery(String query)
 	{
 		this.query = query;
+	}
 
-		// Set the defaults
-		if (databaseType == null)
-			databaseType = DatabaseType.MYSQL;
-		if (queryType == null)
-			queryType = QueryType.DATA;
-
+	protected void init() throws DatabaseException
+	{
 		if (database == null)
 		{
 			/* Connect to the database WITHOUT checking the session id */
 			switch (queryType)
 			{
 				case AUTHENTICATION:
-					database = Database.connect(databaseType, PropertyReader.getServerStringForAuthentication(), PropertyReader.get(ServerProperty.DATABASE_USERNAME),
+					database = Database.connect(DatabaseType.MYSQL, PropertyReader.getServerStringForAuthentication(), PropertyReader.get(ServerProperty.DATABASE_USERNAME),
 							PropertyReader.get(ServerProperty.DATABASE_PASSWORD));
 					break;
 
 				case DATA:
 				default:
-					database = Database.connect(databaseType);
+					database = Database.connect(DatabaseType.MYSQL);
 					break;
 			}
+
+			this.stmt = database.prepareStatement(query);
+
+        	/* Check if debugging is activated */
+			sqlDebug = DebugInfo.create(userAuth);
 		}
+	}
 
-		this.stmt = database.prepareStatement(query);
-
-        /* Check if debugging is activated */
-		sqlDebug = DebugInfo.create(userAuth);
+	public T setQueryType(QueryType queryType)
+	{
+		this.queryType = queryType;
+		return (T) this;
 	}
 
 	/**
@@ -149,6 +105,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setInt(Integer value) throws DatabaseException
 	{
+		init();
 		stmt.setInt(i++, value);
 		return (T) this;
 	}
@@ -162,6 +119,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setInts(Collection<Integer> values) throws DatabaseException
 	{
+		init();
 		for (Integer value : values)
 			setInt(value);
 		return (T) this;
@@ -176,6 +134,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setLong(Long value) throws DatabaseException
 	{
+		init();
 		stmt.setLong(i++, value);
 		return (T) this;
 	}
@@ -189,6 +148,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setLongs(Collection<Long> values) throws DatabaseException
 	{
+		init();
 		for (Long value : values)
 			setLong(value);
 		return (T) this;
@@ -203,6 +163,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setString(String value) throws DatabaseException
 	{
+		init();
 		stmt.setString(i++, value);
 		return (T) this;
 	}
@@ -216,6 +177,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setStrings(Collection<String> values) throws DatabaseException
 	{
+		init();
 		for (String value : values)
 			setString(value);
 		return (T) this;
@@ -230,6 +192,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setDouble(Double value) throws DatabaseException
 	{
+		init();
 		stmt.setDouble(i++, value);
 		return (T) this;
 	}
@@ -243,6 +206,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setDate(Date value) throws DatabaseException
 	{
+		init();
 		stmt.setDate(i++, value);
 		return (T) this;
 	}
@@ -256,6 +220,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setTimestamp(Date value) throws DatabaseException
 	{
+		init();
 		stmt.setTimestamp(i++, value);
 		return (T) this;
 	}
@@ -269,6 +234,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setDoubles(Collection<Double> values) throws DatabaseException
 	{
+		init();
 		for (Double value : values)
 			setDouble(value);
 		return (T) this;
@@ -283,6 +249,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setBoolean(boolean value) throws DatabaseException
 	{
+		init();
 		stmt.setBoolean(i++, value);
 		return (T) this;
 	}
@@ -296,6 +263,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setBooleans(Collection<Boolean> values) throws DatabaseException
 	{
+		init();
 		for (Boolean value : values)
 			setBoolean(value);
 		return (T) this;
@@ -310,6 +278,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setNull(int type) throws DatabaseException
 	{
+		init();
 		stmt.setNull(i++, type);
 		return (T) this;
 	}
@@ -323,6 +292,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 */
 	public T setNull(Collection<Integer> types) throws DatabaseException
 	{
+		init();
 		for (Integer type : types)
 			setNull(type);
 		return (T) this;
@@ -361,11 +331,6 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	public String getStringRepresentation()
 	{
 		return stmt.getStringRepresentation();
-	}
-
-	public void addBatch() throws DatabaseException
-	{
-		stmt.addBatch();
 	}
 
 	public boolean isClosed()

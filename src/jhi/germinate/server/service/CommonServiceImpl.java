@@ -69,7 +69,10 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 	@Override
 	public ServerResult<List<String>> getColumnsOfTable(RequestProperties properties, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException
 	{
-		ValueQuery.ExecutedValueQuery query = new ValueQuery(properties, this, String.format(QUERY_COLUMNS, table.name()))
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		ValueQuery.ExecutedValueQuery query = new ValueQuery(String.format(QUERY_COLUMNS, table.name()), userAuth)
 				.run(null);
 
 		ServerResult<List<String>> result = query.getColumnNames();
@@ -95,8 +98,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			GerminateSettings baseSettings = getBaseSettings();
 
 			baseSettings.accessionDisplayColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_ACCESSION_DISPLAY_COLUMN, PropertyReader.getAccessionDisplayName());
-			baseSettings.baseSearchColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, PropertyReader.get(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, GerminateDatabaseTable.Column.name.name()));
-			baseSettings.collsiteTreemapColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_COLLECTINGSITE_TREEMAP_COLUMN, PropertyReader.get(ServerProperty.GERMINATE_COLLECTINGSITE_TREEMAP_COLUMN, Country.COUNTRY_NAME));
+			baseSettings.baseSearchColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, PropertyReader.get(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, Accession.NAME));
 			baseSettings.cookieLifespanMinutes = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES, PropertyReader.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES));
 			baseSettings.externalDataFolder = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER, PropertyReader.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER));
 			baseSettings.gatekeeperRegistrationNeedsApproval = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL, PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL));
@@ -147,8 +149,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			PropertyReader.setBoolean(settings.googleAnalyticsEnabled.getServerProperty(), settings.googleAnalyticsEnabled.getValue());
 			PropertyReader.set(settings.googleAnalyticsTrackingId.getServerProperty(), settings.googleAnalyticsTrackingId.getValue());
 
-			PropertyReader.set(settings.googleMapsApiKey.getServerProperty(), settings.googleMapsApiKey.getValue());
-
 			PropertyReader.setBoolean(settings.socialShowFacebook.getServerProperty(), settings.socialShowFacebook.getValue());
 			PropertyReader.setBoolean(settings.socialShowTwitter.getServerProperty(), settings.socialShowTwitter.getValue());
 			PropertyReader.setBoolean(settings.socialShowGooglePlus.getServerProperty(), settings.socialShowGooglePlus.getValue());
@@ -165,7 +165,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			PropertyReader.setInteger(settings.galleryImagesPerPage.getServerProperty(), settings.galleryImagesPerPage.getValue());
 			PropertyReader.set(settings.accessionDisplayColumn.getServerProperty(), settings.accessionDisplayColumn.getValue());
 			PropertyReader.set(settings.baseSearchColumn.getServerProperty(), settings.baseSearchColumn.getValue());
-			PropertyReader.set(settings.collsiteTreemapColumn.getServerProperty(), settings.collsiteTreemapColumn.getValue());
 			PropertyReader.set(settings.externalDataFolder.getServerProperty(), settings.externalDataFolder.getValue());
 			PropertyReader.setSet(settings.availablePages.getServerProperty(), settings.availablePages.getValue(), Page.class);
 
@@ -173,7 +172,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			{
 				PropertyReader.store();
 			}
-			catch (java.io.IOException | URISyntaxException e)
+			catch (java.io.IOException | URISyntaxException | NullPointerException e)
 			{
 				throw new IOException(e);
 			}
@@ -196,7 +195,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 
 		settings.debug = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DEBUG, PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG));
 		settings.googleAnalyticsEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_ANALYTICS_ENABLED, PropertyReader.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED));
-		settings.googleMapsApiKey = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_MAPS_API_KEY, PropertyReader.get(ServerProperty.GOOGLE_MAPS_API_KEY));
 		settings.availablePages = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_AVAILABLE_PAGES, PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class));
 		settings.cookieNotifierEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.COOKIE_NOTIFIER_ENABLED, PropertyReader.getBoolean(ServerProperty.COOKIE_NOTIFIER_ENABLED));
 		settings.gatekeeperUrl = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_URL, PropertyReader.get(ServerProperty.GERMINATE_GATEKEEPER_URL));
@@ -275,7 +273,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 
 		placeholderLinks.getDebugInfo().addAll(staticLinks.getDebugInfo());
 
-		placeholderLinks.setServerResult(CollectionUtils.combine(placeholderLinks.getServerResult(), staticLinks.getServerResult()));
+		placeholderLinks.setServerResult(CollectionUtils.combineList(placeholderLinks.getServerResult(), staticLinks.getServerResult()));
 
 		return placeholderLinks;
 	}
@@ -367,17 +365,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 					", subsetWithFlapjackLinks=" + subsetWithFlapjackLinks +
 					", flapjackLinks='" + flapjackLinks + '\'' +
 					'}';
-		}
-	}
-
-	private static class DatasetStats
-	{
-		public String experimentType;
-		public Map<String, String> yearToCount = new HashMap<>();
-
-		public DatasetStats(String experimentType)
-		{
-			this.experimentType = experimentType;
 		}
 	}
 }

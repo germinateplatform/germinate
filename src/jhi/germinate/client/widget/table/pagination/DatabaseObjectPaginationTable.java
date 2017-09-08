@@ -22,6 +22,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.shared.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.query.client.*;
@@ -47,8 +48,10 @@ import org.gwtbootstrap3.extras.toggleswitch.client.ui.*;
 import java.util.*;
 import java.util.Map;
 
+import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.CompositeCell;
@@ -86,16 +89,20 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	HTML filterInfo;
 
 	@UiField
-	FlowPanel      topPanel;
+	FlowPanel                topPanel;
 	@UiField
-	FlowPanel      filterPlaceholder;
+	FlowPanel                filterPlaceholder;
 	@UiField
-	Button         filterButton;
+	Button                   filterButton;
 	@UiField
 	protected
-	ToggleSwitch   filterOperatorButton;
+	ToggleSwitch             filterOperatorButton;
 	@UiField
-	BootstrapPager topPager;
+	BootstrapPager           topPager;
+	@UiField
+	ButtonGroup              columnSelectorButton;
+	@UiField
+	NonAutoCloseDropDownMenu columnSelectorMenu;
 
 	@UiField(provided = true)
 	CellTable<T> table;
@@ -123,9 +130,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	private boolean                                                      filterVisible   = false;
 	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
 	private RefreshableAsyncDataProvider<T> dataProvider;
-	private ContextMenuHandler<T>           contextMenuHandler;
-	private SelectionModel<T>               selectionModel;
-	private MultiPageBooleanHeader          selectPageHeader;
+	private Map<String, ClickHandler> columnVisibilityHandlers = new HashMap<>();
+	private ContextMenuHandler<T>  contextMenuHandler;
+	private SelectionModel<T>      selectionModel;
+	private MultiPageBooleanHeader selectPageHeader;
+	private HandlerRegistration    tableColumnVisibilityHandler;
+	private HandlerRegistration    tableRowCountChangeHandler;
 	private int rangeStart = 0;
 
 	// SERVER COMMUNICATION
@@ -215,6 +225,18 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		tooltipPanel = null;
 
+		if (tableColumnVisibilityHandler != null)
+		{
+			tableColumnVisibilityHandler.removeHandler();
+			tableColumnVisibilityHandler = null;
+		}
+
+		if (tableRowCountChangeHandler != null)
+		{
+			tableRowCountChangeHandler.removeHandler();
+			tableRowCountChangeHandler = null;
+		}
+
 		super.onUnload();
 	}
 
@@ -225,15 +247,18 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		if (!supportsFiltering())
 			filterInfo.setVisible(false);
+		else
+			filterInfo.setHTML(Text.LANG.tableFilterInfo());
 
 		String id = "table-" + String.valueOf(Math.abs(RandomUtils.RANDOM.nextLong()));
 		table.getElement().setId(id);
 
 		table.setLoadingIndicator(new LoadingSpinner());
-		table.getLoadingIndicator().getParent().getElement().getStyle().setProperty("minHeight", "110px");
+		table.getLoadingIndicator().getParent().getElement().getStyle().setProperty("minHeight", "300px");
+		table.getLoadingIndicator().getParent().getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
 
-		topPager.setDisplay(this);
-		bottomPager.setDisplay(this);
+		topPager.setDisplay(table);
+		bottomPager.setDisplay(table);
 
 		initTable();
 
@@ -241,6 +266,26 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		if (!supportsDownload())
 			downloadButton.removeFromParent();
+
+		if (columnVisibilityHandlers.size() < 1)
+			columnSelectorButton.setVisible(false);
+
+		tableColumnVisibilityHandler = GerminateEventBus.BUS.addHandler(TableColumnVisibilityChangeEvent.TYPE, e ->
+		{
+			if (!StringUtils.areEqual(e.getSourceId(), getId()))
+			{
+				ClickHandler handler = columnVisibilityHandlers.get(e.getColumnStyle());
+				if (handler != null)
+					handler.onClick(null);
+			}
+		});
+
+		tableRowCountChangeHandler = GerminateEventBus.BUS.addHandler(TableRowCountChangeEvent.TYPE, e ->
+		{
+			int value = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, BootstrapPager.DEFAULT_PAGE_SIZE);
+			setPageSize(value);
+			refreshTable();
+		});
 
 		onPostLoad();
 	}
@@ -281,22 +326,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		}
 
 		createColumns();
-
-		for (int col = 0; col < table.getColumnCount(); col++)
-		{
-			Column<T, ?> column = table.getColumn(col);
-
-			if (column instanceof DatabaseObjectFilterColumn)
-			{
-				Class type = ((DatabaseObjectFilterColumn) column).getType();
-
-				if (ClassUtils.isNumeric(type))
-				{
-					column.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
-					table.getHeader(col).setHeaderStyleNames(Style.TEXT_RIGHT_ALIGN);
-				}
-			}
-		}
 
 		if (sortingEnabled)
 		{
@@ -481,6 +510,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		Column<T, Boolean> checkboxColumn = new Column<T, Boolean>(cell)
 		{
 			@Override
+			public String getCellStyleNames(Cell.Context context, T object)
+			{
+				return Style.combine(Style.TEXT_CENTER_ALIGN, super.getCellStyleNames(context, object));
+			}
+
+			@Override
 			public Boolean getValue(T object)
 			{
 				return selectionModel.isSelected(object);
@@ -488,10 +523,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		};
 
 		if (selectionMode == SelectionMode.SINGLE)
+
 		{
-			addColumn(checkboxColumn, "", false, false);
+			addColumn(checkboxColumn, "", false);
 		}
 		else
+
 		{
 			/* Create a checkbox header to select all items */
 			selectPageHeader = new MultiPageBooleanHeader(cell)
@@ -502,6 +539,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 					int selected = ((MultiSelectionModel<T>) selectionModel).getSelectedSet().size();
 					int size = getSize();
 					return selected != 0 ? size == selected : false;
+				}
+
+				@Override
+				public String getHeaderStyleNames()
+				{
+					return Style.combine(Style.TEXT_CENTER_ALIGN, super.getHeaderStyleNames());
 				}
 			};
 
@@ -547,24 +590,24 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		}
 	}
 
-	private void updatePagersInitial(boolean filterApplied, PaginatedServerResult<List<T>> result)
+	private void updatePanels(boolean filterApplied, Integer resultSize)
 	{
 		if (pagination.getResultSize() != null)
 		{
-			if (!Objects.equals(pagination.getResultSize(), result.getResultSize()))
-				Notification.notify(Notification.Type.WARNING, jhi.germinate.client.i18n.Text.LANG.notificationIncinsistancyCountResult());
+			if (!Objects.equals(pagination.getResultSize(), resultSize))
+				Notification.notify(Notification.Type.WARNING, Text.LANG.notificationIncinsistancyCountResult());
 
 			return;
 		}
 		else
 		{
-			pagination.setResultSize(result.getResultSize());
+			pagination.setResultSize(resultSize);
 		}
 
 		Integer nrOfItems = pagination.getResultSize();
 
 		table.setPageSize(nrOfItemsPerPage);
-		pagination.setResultSize(result.getResultSize());
+		pagination.setResultSize(resultSize);
 
 		topPager.setVisible(nrOfItems > nrOfItemsPerPage);
 		bottomPager.setVisible(nrOfItems > nrOfItemsPerPage);
@@ -646,7 +689,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 							Widget parent = loadingIndicator.getParent();
 
 							parent.setHeight(height + "px");
-							parent.getElement().getStyle().setPosition(com.google.gwt.dom.client.Style.Position.RELATIVE);
 						}
 					}
 
@@ -682,17 +724,21 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 								if (filterApplied)
 									table.redrawHeaders();
 
-								noDataHeading.setVisible(true);
 								table.setRowCount(0, true);
 								updateRowData(rangeStart, new ArrayList<>());
 								topPager.setVisible(false);
 								bottomPager.setVisible(false);
+								topPanel.setVisible(true);
+								bottomPanel.setVisible(true);
 
-								if (!filterApplied)
+								updatePanels(filterApplied, result.getResultSize());
+
+								if (!filterApplied && hideEmptyTable)
 								{
 									table.setVisible(false);
 									topPanel.setVisible(false);
 									bottomPanel.setVisible(false);
+									noDataHeading.setVisible(true);
 								}
 							}
 							else
@@ -701,7 +747,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 								if (selectPageHeader != null)
 									selectPageHeader.setValue(result.getResultSize());
 
-								updatePagersInitial(filterApplied, result);
+								updatePanels(filterApplied, result.getResultSize());
 
 								table.setRowCount(pagination.getResultSize(), true);
 								/* Show debug information */
@@ -815,15 +861,55 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 * @param column The {@link Column} to add the style to
 	 * @param header The {@link Header} to add the style to
 	 */
-	private void setColumnStyleName(Column<T, ?> column, Header<?> header)
+	private void setColumnStyleName(String headerString, DatabaseObjectFilterColumn<T, ?> column, Header<?> header)
 	{
+		Class type = column.getType();
+		String headerStyle = ClassUtils.isNumeric(type) ? Style.TEXT_RIGHT_ALIGN : "";
+
+		if (ClassUtils.isNumeric(type))
+		{
+			header.setHeaderStyleNames(Style.combine(header.getHeaderStyleNames(), headerStyle));
+			column.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		}
+
+		column.setCellStyleNames(column.getCellStyle());
+
 		if (!StringUtils.isEmpty(column.getDataStoreName()))
 		{
-			String style = "gm8-col-" + column.getDataStoreName().replace(".", "-");
-			column.setCellStyleNames(style);
+			String cellStyle = "gm8-col-" + getClassName() + "-" + column.getDataStoreName().replace(".", "-").replace("_", "-");
 
-			if (header != null)
-				header.setHeaderStyleNames(style);
+			boolean hidden = StringListParameterStore.Inst.get().contains(Parameter.invisibleTableColumns, cellStyle);
+			CheckboxListItem item = new CheckboxListItem(true, headerString);
+			columnSelectorMenu.add(item);
+			ClickHandler h = event ->
+			{
+				if (event == null)
+					item.setValue(!item.getValue());
+
+				if (item.getValue())
+				{
+					StringListParameterStore.Inst.get().remove(Parameter.invisibleTableColumns, cellStyle);
+					column.setCellStyleNames(column.getCellStyle());
+					header.setHeaderStyleNames(Style.combine(headerStyle, column.getHeaderStyle()));
+				}
+				else
+				{
+					StringListParameterStore.Inst.get().add(Parameter.invisibleTableColumns, cellStyle);
+					column.setCellStyleNames(Style.combine(Style.LAYOUT_DISPLAY_NONE, column.getCellStyle()));
+					header.setHeaderStyleNames(Style.combine(headerStyle, Style.LAYOUT_DISPLAY_NONE, column.getHeaderStyle()));
+				}
+
+				table.redraw();
+
+				if (event != null)
+					GerminateEventBus.BUS.fireEvent(new TableColumnVisibilityChangeEvent(getId(), cellStyle));
+			};
+			item.addClickHandler(h);
+
+			if (hidden)
+				Scheduler.get().scheduleDeferred(() -> h.onClick(null));
+
+			columnVisibilityHandlers.put(cellStyle, h);
 		}
 	}
 
@@ -834,7 +920,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 * @param headerString The column header text
 	 * @param sortable     Should this column be sortable?
 	 */
-	public void addColumn(final Column<T, ?> column, final String headerString, final boolean sortable)
+	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final String headerString, final boolean sortable)
 	{
 		addColumn(column, headerString, sortable, true);
 	}
@@ -847,14 +933,11 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 * @param sortable     Should this column be sortable?
 	 */
 	@SuppressWarnings("unchecked")
-	public void addColumn(final Column<T, ?> column, final String headerString, final boolean sortable, final boolean filterable)
+	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final String headerString, final boolean sortable, final boolean filterable)
 	{
 		if (supportsFiltering() && filterable)
 		{
-			Class<?> type = String.class;
-
-			if (column instanceof DatabaseObjectFilterColumn)
-				type = ((DatabaseObjectFilterColumn) column).getType();
+			Class<?> type = column.getType();
 
 			List<HasCell<String, ?>> cells = new ArrayList<>();
 
@@ -891,10 +974,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				cells.add(new HasDummyInputCell(this));
 			}
 
-			if (column instanceof DatabaseObjectFilterColumn)
-			{
-				filterCallbacks.put((DatabaseObjectFilterColumn) column, callback);
-			}
+			filterCallbacks.put((DatabaseObjectFilterColumn) column, callback);
 
 			/* Add the colum header (the actual column name) */
 			cells.add(0, new HasTextCell(headerString));
@@ -919,7 +999,20 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				addSortBits(column);
 		}
 
-		setColumnStyleName(column, table.getHeader(table.getColumnCount() - 1));
+		setColumnStyleName(headerString, column, table.getHeader(table.getColumnCount() - 1));
+	}
+
+	protected void addColumn(Column<T, ?> column, String headerString)
+	{
+		table.addColumn(column, headerString);
+	}
+
+	protected void addColumn(Column<T, ?> column, String headerString, boolean sortable)
+	{
+		addColumn(column, headerString);
+
+		if (sortable)
+			addSortBits(column);
 	}
 
 	/**
@@ -928,7 +1021,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 * @param column       The column
 	 * @param headerString The column header text
 	 */
-	public void addColumn(Column<T, ?> column, String headerString)
+	public void addColumn(DatabaseObjectFilterColumn<T, ?> column, String headerString)
 	{
 		addColumn(column, headerString, false);
 	}
@@ -938,7 +1031,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 *
 	 * @param column The column
 	 */
-	public void addColumn(Column<T, ?> column)
+	public void addColumn(DatabaseObjectFilterColumn<T, ?> column)
 	{
 		addColumn(column, "", false);
 	}
@@ -1027,9 +1120,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	{
 		/* Set up sorting */
 		if (sortingEnabled)
-		{
 			column.setSortable(true);
-		}
 	}
 
 	/**
@@ -1055,6 +1146,15 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	public Set<T> getSelection()
 	{
 		return ((SetSelectionModel<T>) selectionModel).getSelectedSet();
+	}
+
+	public void setSelection(Collection<T> items)
+	{
+		SetSelectionModel<T> model = (SetSelectionModel<T>) selectionModel;
+		model.clear();
+
+		for (T item : items)
+			model.setSelected(item, true);
 	}
 
 	public void addExtraContent(Widget widget)
@@ -1127,6 +1227,8 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		return table.getElement().getId();
 	}
 
+	protected abstract String getClassName();
+
 	/**
 	 * Creates the columns and adds them to the table
 	 */
@@ -1170,7 +1272,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 * @param object The selected object
 	 * @param column The column index of the selection
 	 */
-	protected abstract void onSelectionChanged(NativeEvent event, T object, int column);
+	protected abstract void onItemSelected(NativeEvent event, T object, int column);
 
 	protected class ClickableTableCell extends SafeHtmlCell
 	{
@@ -1215,6 +1317,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		}
 
 		@Override
+		public String getCellStyle()
+		{
+			return null;
+		}
+
+		@Override
 		public void onBrowserEvent(Cell.Context context, Element elem, T object, NativeEvent event)
 		{
 			/* Handle context menu events */
@@ -1248,6 +1356,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		@Override
 		public String getHeaderStyle()
+		{
+			return null;
+		}
+
+		@Override
+		public String getCellStyle()
 		{
 			return null;
 		}
@@ -1291,12 +1405,18 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		}
 
 		@Override
+		public String getCellStyle()
+		{
+			return null;
+		}
+
+		@Override
 		public void onBrowserEvent(Cell.Context context, Element elem, T object, NativeEvent event)
 		{
 			/* We want to handle click events */
 			if (BrowserEvents.CLICK.equals(event.getType()))
 			{
-				onSelectionChanged(event, object, context.getColumn());
+				onItemSelected(event, object, context.getColumn());
 
 				if (!event.getCtrlKey() && !event.getShiftKey() && !event.getMetaKey())
 					super.onBrowserEvent(context, elem, object, event);
@@ -1325,7 +1445,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				if (preventDefault)
 					event.preventDefault();
 				else
-					onSelectionChanged(event, object, context.getColumn());
+					onItemSelected(event, object, context.getColumn());
 			}
 
 			super.onBrowserEvent(context, elem, object, event);

@@ -20,6 +20,7 @@ package jhi.germinate.server.util;
 import java.io.*;
 import java.util.*;
 
+import jhi.germinate.server.service.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -29,12 +30,12 @@ public class PedigreeWriter
 {
 	private Set<String> visitedIds = new HashSet<>();
 	private Set<Edge>   edges      = new HashSet<>();
-	private BufferedWriter            bw;
-	private Map<String, List<String>> data;
-	private boolean                   up;
-	private int                       maxLevels;
+	private BufferedWriter                                      bw;
+	private Map<String, List<PedigreeServiceImpl.PedigreePair>> data;
+	private boolean                                             up;
+	private int                                                 maxLevels;
 
-	public PedigreeWriter(BufferedWriter bw, Map<String, List<String>> data, boolean up, int maxLevels)
+	public PedigreeWriter(BufferedWriter bw, Map<String, List<PedigreeServiceImpl.PedigreePair>> data, boolean up, int maxLevels)
 	{
 		this.bw = bw;
 		this.data = data;
@@ -48,11 +49,11 @@ public class PedigreeWriter
 		{
 			visitedIds.add(accessionId);
 
-			List<String> objects = data.get(accessionId);
+			List<PedigreeServiceImpl.PedigreePair> objects = data.get(accessionId);
 
 			if (!CollectionUtils.isEmpty(objects))
 			{
-				for (String object : objects)
+				for (PedigreeServiceImpl.PedigreePair object : objects)
 				{
 					Edge edge;
 					if (up)
@@ -64,10 +65,10 @@ public class PedigreeWriter
 					{
 						edges.add(edge);
 						bw.newLine();
-						bw.write(edge.source + "\t" + edge.target);
+						bw.write(edge.source.name + "\t" + edge.target.name + "\t" + edge.target.type);
 
 						if (currentLevel < maxLevels)
-							run(up ? edge.target : edge.source, currentLevel + 1);
+							run(up ? edge.target.name : edge.source.name, currentLevel + 1);
 					}
 				}
 			}
@@ -76,13 +77,19 @@ public class PedigreeWriter
 
 	private class Edge
 	{
-		String source;
-		String target;
+		PedigreeServiceImpl.PedigreePair source;
+		PedigreeServiceImpl.PedigreePair target;
 
-		public Edge(String source, String target)
+		public Edge(String source, PedigreeServiceImpl.PedigreePair target)
+		{
+			this.source = new PedigreeServiceImpl.PedigreePair(source, target.type);
+			this.target = target;
+		}
+
+		public Edge(PedigreeServiceImpl.PedigreePair source, String target)
 		{
 			this.source = source;
-			this.target = target;
+			this.target = new PedigreeServiceImpl.PedigreePair(target, source.type);
 		}
 
 		@Override
@@ -95,7 +102,6 @@ public class PedigreeWriter
 
 			if (!source.equals(edge.source)) return false;
 			return target.equals(edge.target);
-
 		}
 
 		@Override
@@ -106,4 +112,5 @@ public class PedigreeWriter
 			return result;
 		}
 	}
+
 }

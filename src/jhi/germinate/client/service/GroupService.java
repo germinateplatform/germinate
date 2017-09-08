@@ -36,7 +36,7 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("group")
 public interface GroupService extends RemoteService
 {
-	String[] COLUMNS_SORTABLE = {Group.ID, Group.DESCRIPTION, Group.CREATED_BY, Group.UPDATED_ON, GroupType.ID, GroupType.DESCRIPTION};
+	String[] COLUMNS_SORTABLE = {Group.ID, Group.DESCRIPTION, Group.CREATED_BY, Group.CREATED_ON, Group.UPDATED_ON, GroupType.ID, GroupType.DESCRIPTION, Group.COUNT};
 
 	final class Inst
 	{
@@ -110,7 +110,7 @@ public interface GroupService extends RemoteService
 	 * @throws DatabaseException             Thrown if the query fails on the server
 	 * @throws SystemInReadOnlyModeException Thrown if Germinate is currently operating in "readAll-only" mode
 	 */
-	ServerResult<Long> createNew(RequestProperties properties, String groupName, GerminateDatabaseTable referenceTable) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException;
+	ServerResult<Group> createNew(RequestProperties properties, String groupName, GerminateDatabaseTable referenceTable) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException;
 
 	/**
 	 * Deletes the {@link Group} with the given id.
@@ -313,4 +313,6 @@ public interface GroupService extends RemoteService
 	ServerResult<List<Group>> getMarkerGroups(RequestProperties properties, List<Long> datasetIds, ExperimentType type) throws InvalidSessionException, DatabaseException;
 
 	PaginatedServerResult<List<Group>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
+
+	ServerResult<Void> renameGroup(RequestProperties properties, Group group) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
 }

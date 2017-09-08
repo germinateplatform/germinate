@@ -69,7 +69,7 @@ public abstract class TypedParameterStore<T>
 		{
 			return IntegerParameterStore.Inst.get().getAsString(parameter);
 		}
-//		else if (ShoppingCart.ItemType.class.equals(parameter.getType()))
+//		else if (MarkedItemList.ItemType.class.equals(parameter.getType()))
 //		{
 //			return ItemTypeParameterStore.Inst.get().getAsString(parameter);
 //		}
@@ -121,7 +121,7 @@ public abstract class TypedParameterStore<T>
 		{
 			IntegerParameterStore.Inst.get().putAsString(parameter, value);
 		}
-//		else if (ShoppingCart.ItemType.class.equals(parameter.getType()))
+//		else if (MarkedItemList.ItemType.class.equals(parameter.getType()))
 //		{
 //			ItemTypeParameterStore.Inst.get().putAsString(parameter, value);
 //		}

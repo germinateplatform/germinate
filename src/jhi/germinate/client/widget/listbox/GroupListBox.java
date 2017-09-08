@@ -28,7 +28,7 @@ import java.util.*;
 
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.Text;
-import jhi.germinate.client.page.shoppingcart.*;
+import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
@@ -43,16 +43,13 @@ import jhi.germinate.shared.datastructure.database.*;
  */
 public class GroupListBox extends GerminateValueListBox<Group>
 {
-	private ShoppingCart.ItemType  type;
-	private GroupCreationInterface groupCreationInterface;
-	private HandlerRegistration    groupRegistration;
+	private MarkedItemList.ItemType type;
+	private GroupCreationInterface  groupCreationInterface;
+	private HandlerRegistration     groupRegistration;
+
+	private boolean hasCustomFirstValue = false;
 
 	public GroupListBox()
-	{
-		this(true);
-	}
-
-	public GroupListBox(boolean multiSelect)
 	{
 		super(new GerminateUnitRenderer<Group>()
 		{
@@ -75,7 +72,13 @@ public class GroupListBox extends GerminateValueListBox<Group>
 			}
 		});
 
-		setMultipleSelect(multiSelect);
+		setMultipleSelect(true);
+	}
+
+	public GroupListBox(MarkedItemList.ItemType type)
+	{
+		this();
+		this.type = type;
 	}
 
 	@Override
@@ -84,13 +87,13 @@ public class GroupListBox extends GerminateValueListBox<Group>
 		super.onLoad();
 
 		/* If the type is set, the interface is set and the shopping cart contains elements for this type */
-		if (groupCreationInterface != null && type != null && !CollectionUtils.isEmpty(ShoppingCart.get(type)) && ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
+		if (groupCreationInterface != null && type != null && !CollectionUtils.isEmpty(MarkedItemList.get(type)) && ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
 		{
 			// Create a new button that users can use to create a new group from this page
 			Button createGroup = new Button(Text.LANG.buttonCreateGroupFromCart(), IconType.PLUS_SQUARE, event ->
 			{
 				// Create the group
-				AbstractCartView.askForGroupNameAndCreate(new ArrayList<>(ShoppingCart.get(type)), type, null);
+				AbstractCartView.askForGroupNameAndCreate(new ArrayList<>(MarkedItemList.get(type)), type, null);
 			});
 			createGroup.setType(ButtonType.DEFAULT);
 
@@ -130,6 +133,46 @@ public class GroupListBox extends GerminateValueListBox<Group>
 	}
 
 	@Override
+	public void setAcceptableValues(Collection<Group> newValues)
+	{
+		Group allItems = new Group(-1L);
+		switch (type)
+		{
+			case MARKER:
+				allItems.setDescription(Text.LANG.groupsAllMarkers());
+				break;
+			case ACCESSION:
+				allItems.setDescription(Text.LANG.groupsAllAccessions());
+				break;
+			case LOCATION:
+				allItems.setDescription(Text.LANG.groupsAllLocations());
+				break;
+		}
+
+		List<Group> all = new ArrayList<>();
+		all.add(allItems);
+
+		if (!CollectionUtils.isEmpty(newValues))
+			all.addAll(newValues);
+
+		if (!hasCustomFirstValue)
+			setValue(allItems, false);
+		super.setAcceptableValues(all);
+	}
+
+	public void setAcceptableValues(boolean hasCustomFirstValue, List<Group> groups)
+	{
+		this.hasCustomFirstValue = hasCustomFirstValue;
+		setAcceptableValues(groups);
+	}
+
+	@Override
+	public void setAcceptableValues(Group[] newValues)
+	{
+		setAcceptableValues(Arrays.asList(newValues));
+	}
+
+	@Override
 	protected void onUnload()
 	{
 		super.onUnload();
@@ -138,12 +181,12 @@ public class GroupListBox extends GerminateValueListBox<Group>
 			groupRegistration.removeHandler();
 	}
 
-	public ShoppingCart.ItemType getType()
+	public MarkedItemList.ItemType getType()
 	{
 		return type;
 	}
 
-	public void setType(ShoppingCart.ItemType type)
+	public void setType(MarkedItemList.ItemType type)
 	{
 		this.type = type;
 	}

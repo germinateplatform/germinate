@@ -76,6 +76,22 @@ public class CollectionUtils
 		return result;
 	}
 
+	public static <T> boolean isEmptyOrNull(Collection<T> input)
+	{
+		if (input == null || input.size() < 1)
+			return true;
+		else
+		{
+			for (T i : input)
+			{
+				if (i != null)
+					return false;
+			}
+
+			return true;
+		}
+	}
+
 	/**
 	 * Creates a {@link List} from the given input {@link String} by first splitting it on the given splitter
 	 *
@@ -179,7 +195,19 @@ public class CollectionUtils
 		return join(pairs, outerSeparator);
 	}
 
-	public static <T> List<T> combine(Collection<T> first, Collection<T> second)
+	public static <T> Set<T> combineSet(Collection<T> first, Collection<T> second)
+	{
+		Set<T> result = new HashSet<>();
+
+		if (!isEmpty(first))
+			result.addAll(first);
+		if (!isEmpty(second))
+			result.addAll(second);
+
+		return result;
+	}
+
+	public static <T> List<T> combineList(Collection<T> first, Collection<T> second)
 	{
 		List<T> result = new ArrayList<>();
 

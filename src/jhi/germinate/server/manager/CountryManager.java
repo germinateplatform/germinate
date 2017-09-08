@@ -17,21 +17,14 @@
 
 package jhi.germinate.server.manager;
 
-import java.util.*;
-
-import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.exception.*;
 
 /**
  * @author Sebastian Raubach
  */
 public class CountryManager extends AbstractManager<Country>
 {
-	private static final String SELECT_ALL = "SELECT * FROM countries";
-
 	@Override
 	protected String getTable()
 	{
@@ -42,12 +35,5 @@ public class CountryManager extends AbstractManager<Country>
 	protected DatabaseObjectParser<Country> getParser()
 	{
 		return Country.Parser.Inst.get();
-	}
-
-	public static ServerResult<List<Country>> getAll() throws DatabaseException
-	{
-		return new DatabaseObjectQuery<Country>(SELECT_ALL, null)
-				.run()
-				.getObjects(Country.Parser.Inst.get());
 	}
 }

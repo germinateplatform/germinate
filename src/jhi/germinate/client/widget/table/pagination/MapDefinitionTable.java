@@ -17,10 +17,8 @@
 
 package jhi.germinate.client.widget.table.pagination;
 
-import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import java.util.*;
@@ -29,6 +27,7 @@ import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.Map;
@@ -43,7 +42,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 {
 	public MapDefinitionTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
-		super(ShoppingCart.ItemType.MARKER, selectionMode, sortingEnabled);
+		super(MarkedItemList.ItemType.MARKER, selectionMode, sortingEnabled);
 	}
 
 	@Override
@@ -77,9 +76,15 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return MapDefinitionTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<MapDefinition, ?> column;
+		DatabaseObjectFilterColumn<MapDefinition, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -106,7 +111,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, MapDefinition object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -221,7 +226,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, MapDefinition object, int column)
+	protected void onItemSelected(NativeEvent event, MapDefinition object, int column)
 	{
 		/* Get the id */
 		if (object.getMarker() != null)

@@ -39,8 +39,7 @@ public class Page implements Serializable
 	public static final Page ALLELE_FREQUENCY_RESULT  = new Page("allele-freq-result", false);
 	public static final Page COLLSITE_TREEMAP         = new Page("collsite-treemap", false, Style.MDI_VIEW_QUILT);
 	public static final Page DATASET_OVERVIEW         = new Page("dataset-overview", false, Style.MDI_DATABASE);
-	public static final Page PCO_COORDINATES          = new Page("pco-coordinates", false);
-	public static final Page GBS_EXPORT               = new Page("gbs-export", false);
+	public static final Page EXPERIMENT_DETAILS       = new Page("experiment-details", false);
 	public static final Page GALLERY                  = new Page("gallery", false, Style.MDI_IMAGE_MULTIPLE);
 	public static final Page BROWSE_ACCESSIONS        = new Page("browse-accessions", false, Style.MDI_FLOWER);
 	public static final Page GENOTYPE_DATASETS        = new Page("genotype-datasets", false, Style.MDI_DNA);
@@ -53,25 +52,19 @@ public class Page implements Serializable
 	public static final Page ABOUT_GERMINATE          = new Page("about-germinate", true, Style.MDI_INFORMATION_OUTLINE);
 	public static final Page ABOUT_PROJECT            = new Page("about-project", false, Style.MDI_BULLETIN_BOARD);
 	public static final Page DATA_STATISTICS          = new Page("data-stats", false, Style.MDI_CHART_AREASPLINE);
-	public static final Page LOGIN                    = new Page("login", false);
-	public static final Page LOGOUT                   = new Page("logout", false);
 	public static final Page SEARCH                   = new Page("search", false, Style.MDI_MAGNIFY);
 	public static final Page PASSPORT                 = new Page("passport", false);
-	public static final Page OSTEREI                  = new Page("osterei", false);
 	public static final Page GEOGRAPHY                = new Page("geography", false, Style.MDI_GOOGLE_MAPS);
 	public static final Page CLIMATE                  = new Page("climate", false);
 	public static final Page CLIMATE_DATASETS         = new Page("climate-datasets", false, Style.MDI_WEATHER_SNOWY_RAIN);
 	public static final Page GROUPS                   = new Page("groups", false, Style.MDI_GROUP);
-	public static final Page CATEGORICAL_DATASETS     = new Page("categorical-datasets", false, Style.MDI_TAG_MULTIPLE);
-	public static final Page CATEGORICAL_EXPORT       = new Page("categorical-export", false);
 	public static final Page MARKER_DETAILS           = new Page("marker-details", false);
 	public static final Page MAP_DETAILS              = new Page("map-details", false, Style.MDI_REORDER_VERTICAL);
 	public static final Page TRIALS_DATASETS          = new Page("trials-datasets", false, Style.MDI_SHOVEL);
-	public static final Page TRIALS_INDIVIDUAL        = new Page("trials-individual", false);
 	public static final Page TRIALS                   = new Page("trials", false);
 	public static final Page GEOGRAPHIC_SEARCH        = new Page("geographic-search", false, Style.MDI_CROSSHAIRS_GPS);
 	public static final Page COOKIE                   = new Page("cookie", true);
-	public static final Page SHOPPING_CART            = new Page("cart", false);
+	public static final Page MARKED_ITEMS             = new Page("marked-items", false);
 	public static final Page INSTITUTIONS             = new Page("institutions", false);
 	public static final Page ACKNOWLEDGEMENTS         = new Page("acknowledgements", false, Style.MDI_ACCOUNT_MULTIPLE);
 	public static final Page GROUP_PREVIEW            = new Page("group-preview", false);
@@ -87,7 +80,6 @@ public class Page implements Serializable
 
 	public Page()
 	{
-		this("", false);
 	}
 
 	protected Page(String name, boolean isPublic)

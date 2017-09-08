@@ -27,7 +27,6 @@ import java.util.*;
 public enum ExperimentType
 {
 	genotype(1L),
-	phenotype(2L),
 	trials(3L),
 	allelefreq(4L),
 	climate(5L),

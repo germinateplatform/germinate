@@ -32,7 +32,7 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import java.util.*;
 
 import jhi.germinate.client.i18n.*;
-import jhi.germinate.client.page.shoppingcart.*;
+import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -139,12 +139,12 @@ public class GroupPreviewPage extends Composite
 	@UiHandler("createGroupButton")
 	void onCreateGroupButtonClicked(ClickEvent e)
 	{
-		AbstractCartView.askForGroupNameAndCreate(null, ShoppingCart.ItemType.ACCESSION, new DefaultAsyncCallback<ServerResult<Long>>()
+		AbstractCartView.askForGroupNameAndCreate(null, MarkedItemList.ItemType.ACCESSION, new DefaultAsyncCallback<ServerResult<Group>>()
 		{
 			@Override
-			protected void onSuccessImpl(ServerResult<Long> result)
+			protected void onSuccessImpl(ServerResult<Group> result)
 			{
-				addGroupMembers(result.getServerResult());
+				addGroupMembers(result.getServerResult().getId());
 			}
 		});
 	}

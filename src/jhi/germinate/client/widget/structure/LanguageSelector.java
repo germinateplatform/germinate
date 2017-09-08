@@ -19,8 +19,7 @@ package jhi.germinate.client.widget.structure;
 
 import com.google.gwt.dom.client.*;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.safehtml.client.*;
-import com.google.gwt.safehtml.shared.*;
+import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.constants.*;
@@ -35,13 +34,8 @@ import jhi.germinate.shared.Style;
  */
 public class LanguageSelector
 {
-	public interface Template extends SafeHtmlTemplates
-	{
-		@Template("<a href='{0}'><span class='" + Style.COUNTRY_FLAG + " {1}'></span><span>{2}</span></a>")
-		SafeHtml flag(SafeUri url, String locale, String name);
-	}
-
 	private static boolean isInitialized = false;
+	public static  boolean hasLanguages  = false;
 
 	public static void init()
 	{
@@ -61,16 +55,25 @@ public class LanguageSelector
 			/* Sort the remaining locales */
 			Collections.sort(locales);
 
-			for (final String locale : locales)
+			if (locales.size() > 1)
 			{
-				LanguageSelectorItem item = new LanguageSelectorItem(locale);
+				hasLanguages = true;
 
-				list.appendChild(item.getElement());
+				for (final String locale : locales)
+				{
+					LanguageSelectorItem item = new LanguageSelectorItem(locale);
+
+					list.appendChild(item.getElement());
+				}
+
+				RootPanel p = RootPanel.get(Id.STRUCTURE_LANGUAGE_SELECTOR_UL);
+				p.getElement().appendChild(list);
+				p.removeFromParent();
 			}
-
-			RootPanel p = RootPanel.get(Id.STRUCTURE_LANGUAGE_SELECTOR_UL);
-			p.getElement().appendChild(list);
-			p.removeFromParent();
+			else
+			{
+				GQuery.$("#" + Id.STRUCTURE_LANGUAGE_SELECTOR_UL).remove();
+			}
 		}
 	}
 }

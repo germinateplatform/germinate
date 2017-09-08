@@ -17,55 +17,64 @@
 
 package jhi.germinate.client.widget.element;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 
 import java.util.*;
 
-import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.i18n.Text;
 import jhi.germinate.shared.*;
 
 /**
  * @author Sebastian Raubach
  */
-public abstract class ModalWizard extends Composite
+public abstract class ModalWizard
 {
-	interface ModalWizardUiBinder extends UiBinder<Modal, ModalWizard>
-	{
-	}
-
-	private static ModalWizardUiBinder ourUiBinder = GWT.create(ModalWizardUiBinder.class);
-
-	@UiField
-	Modal modal;
-
-	@UiField
-	ProgressBar progressBar;
-	@UiField
-	Alert       errorMessage;
-	@UiField
-	FlowPanel   content;
-
-	@UiField
-	Button nextButton;
-	@UiField
-	Button backButton;
+	private Modal       modal        = new Modal();
+	private ModalBody   body         = new ModalBody();
+	private Progress    progress     = new Progress();
+	private ProgressBar progressBar  = new ProgressBar();
+	private Alert       errorMessage = new Alert("", AlertType.DANGER);
+	private FlowPanel   content      = new FlowPanel();
+	private ModalFooter footer       = new ModalFooter();
+	private Button      backButton   = new Button(Text.LANG.generalBack(), IconType.ARROW_CIRCLE_LEFT, event -> updateContent(false));
+	private Button      nextButton   = new Button(Text.LANG.generalNext(), IconType.ARROW_CIRCLE_RIGHT, event -> updateContent(true));
 
 	private int          position = 0;
 	private List<Widget> widgets  = new ArrayList<>();
 
 	public ModalWizard()
 	{
-		initWidget(ourUiBinder.createAndBindUi(this));
+		modal.add(body);
+		modal.add(footer);
+		body.add(progress);
+		progress.add(progressBar);
+		body.add(errorMessage);
+		body.add(content);
+		footer.add(backButton);
+		footer.add(nextButton);
 
-		modal.addHiddenHandler(evt -> ModalWizard.this.removeFromParent());
+		backButton.setType(ButtonType.DEFAULT);
+		nextButton.setType(ButtonType.PRIMARY);
+
+		modal.setRemoveOnHide(true);
+		modal.setClosable(true);
+		modal.setFade(true);
+		modal.setDataBackdrop(ModalBackdrop.STATIC);
+		modal.setDataKeyboard(true);
+
+		progressBar.setType(ProgressBarType.INFO);
+		progressBar.setPercent(0);
+
+		errorMessage.setVisible(false);
+
+		content.getElement().getStyle().setProperty("maxHeight", "70vh");
+		content.getElement().getStyle().setOverflowY(Style.Overflow.AUTO);
 	}
 
 	public void add(Widget widget)
@@ -75,29 +84,6 @@ public abstract class ModalWizard extends Composite
 
 	public void open()
 	{
-		if (!this.isAttached())
-		{
-			RootPanel r = RootPanel.get();
-			r.add(this);
-//			r.removeFromParent();
-		}
-	}
-
-	public void close()
-	{
-		modal.hide();
-	}
-
-	public void setTitle(String title)
-	{
-		modal.setTitle(title);
-	}
-
-	@Override
-	protected void onLoad()
-	{
-		super.onLoad();
-
 		if (!CollectionUtils.isEmpty(widgets))
 		{
 			for (Widget widget : widgets)
@@ -114,25 +100,14 @@ public abstract class ModalWizard extends Composite
 		modal.show();
 	}
 
-	@Override
-	protected void onUnload()
+	public void close()
 	{
-		super.onUnload();
-
-		this.removeFromParent();
+		modal.hide();
 	}
 
-	@UiHandler("nextButton")
-	void onNextButtonClicked(ClickEvent e)
+	public void setTitle(String title)
 	{
-		updateContent(true);
-	}
-
-
-	@UiHandler("backButton")
-	void onBackButtonClicked(ClickEvent e)
-	{
-		updateContent(false);
+		modal.setTitle(title);
 	}
 
 	private void updateContent(boolean next)
@@ -189,6 +164,12 @@ public abstract class ModalWizard extends Composite
 
 		// This overrules what we get from the child
 		backButton.setEnabled(position > 0);
+		backButton.setVisible(position > 0);
+	}
+
+	protected int getPageCount()
+	{
+		return widgets.size();
 	}
 
 	protected int getCurrentPage()

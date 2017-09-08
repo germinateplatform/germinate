@@ -35,7 +35,7 @@
 			</b:FormGroup>
 			<b:FormGroup>
 				<b:FormLabel for="formGroup" text="{msg.climateSelectGroup}"/>
-				<g8:GroupListBox b:id="formGroup" ui:field="groupBox"/>
+				<g8:GroupListBox type="LOCATION" b:id="formGroup" ui:field="groupBox"/>
 			</b:FormGroup>
 
 			<g:FlowPanel ui:field="resultPanel" visible="false">

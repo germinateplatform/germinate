@@ -86,7 +86,7 @@ public class PedigreeManager extends AbstractManager<Pedigree>
 
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(filter, formatted, PedigreeService.COLUMNS_PEDIGREE_SORTABLE, COLUMNS_PEDIGREE_DATA_EXPORT)
+		return getFilteredGerminateTableQuery(userAuth, filter, formatted, PedigreeService.COLUMNS_PEDIGREE_SORTABLE, COLUMNS_PEDIGREE_DATA_EXPORT)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();

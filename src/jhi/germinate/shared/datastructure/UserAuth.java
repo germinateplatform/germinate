@@ -119,13 +119,14 @@ public class UserAuth implements Serializable
 		UserAuth userAuth = (UserAuth) servlet.getRequest().getSession().getAttribute(Session.USER);
 
 		if (userAuth == null)
+		{
 			userAuth = new UserAuth();
-
-		if (userAuth != null && userAuth.getId() == null)
+		}
+		else if (userAuth.getId() == null)
 		{
 			try
 			{
-				userAuth.setId(Long.parseLong(properties.getUserId()));
+				userAuth.setId(properties.getUserId());
 			}
 			catch (NullPointerException | NumberFormatException e)
 			{

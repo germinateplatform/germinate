@@ -206,7 +206,7 @@ public class ModuleCore implements EntryPoint
 							Cookie.setUp(auth);
 
 							ContentHolder.getInstance().initContent();
-							ShoppingCart.init();
+							MarkedItemList.init();
 
                     		/* Read the URL parameters and save them in the parameter store */
 							UrlParameterReader.readUrlParameters();
@@ -229,7 +229,7 @@ public class ModuleCore implements EntryPoint
 								if (page.isPublic())
 									GerminateEventBus.BUS.fireEvent(new PageNavigationEvent(page));
 								else
-									ContentHolder.getInstance().setContent(Page.LOGIN, null, new LoginPage());
+									ContentHolder.getInstance().setContent(Page.HOME, null, new LoginPage());
 							}
 							catch (InvalidPageException ex)
 							{
@@ -268,7 +268,8 @@ public class ModuleCore implements EntryPoint
 			if (!isLoggedIn && useAuthentication)
 			{
 				/* Show login page */
-				History.newItem(Page.LOGIN.name());
+				ContentHolder.getInstance().setContent(Page.HOME, null, new LoginPage());
+//				History.newItem(Page.LOGIN.name());
 			}
 			else
 			{

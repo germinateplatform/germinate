@@ -77,7 +77,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		return exportResult;
 	}
 
-	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, DataExporter.Type type, RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException, InvalidArgumentException
+	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, DataExporter.Type type, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException, InvalidArgumentException
 	{
 		/* Get the datasets the user is allowed to use */
 		Boolean isAllowedToUse = DatasetManager.userHasAccessToDataset(userAuth, datasetId).getServerResult();
@@ -88,8 +88,8 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		List<String> colNames = getColumnNames(type, sqlDebug, markerGroups, mapId, userAuth);
 
 		/* If we specified accession and marker groups, but one of them is empty, then there is no data */
-		if (!CollectionUtils.isEmpty(accessionGroups, markerGroups) && CollectionUtils.isEmpty(rowNames, colNames))
-			throw new InvalidArgumentException();
+//		if (!CollectionUtils.isEmpty(accessionGroups, markerGroups) && CollectionUtils.isEmpty(rowNames, colNames))
+//			throw new InvalidArgumentException();
 
 		/* Set the filter values */
 		int qualityHetero = heterozygousFilter ? QUALITY_HETERO : 100;
@@ -129,6 +129,13 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	 */
 	private static List<String> getColumnNames(DataExporter.Type type, DebugInfo sqlDebug, List<Long> markerGroups, Long mapToUse, UserAuth userAuth) throws DatabaseException
 	{
+		// If no groups are selected
+		if (CollectionUtils.isEmpty(markerGroups))
+			return null;
+			// If it contains the "All items group"
+		else if (containsAllItemsGroup(markerGroups))
+			return null;
+
 		if (CollectionUtils.isEmpty(markerGroups))
 			return null;
 
@@ -157,7 +164,11 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	 */
 	private static List<String> getRowNames(UserAuth userAuth, DataExporter.Type type, DebugInfo sqlDebug, List<Long> accessionGroups, List<Long> datasetIds) throws DatabaseException
 	{
+		// If no groups are selected
 		if (CollectionUtils.isEmpty(accessionGroups))
+			return null;
+			// If it contains the "All items group"
+		else if (containsAllItemsGroup(accessionGroups))
 			return null;
 
 		try

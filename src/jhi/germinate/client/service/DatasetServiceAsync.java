@@ -80,4 +80,10 @@ public interface DatasetServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	Request getForMarker(RequestProperties properties, Pagination pagination, Long markerId, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
+
+	void updateLicenseLogs(RequestProperties properties, List<LicenseLog> logs, AsyncCallback<ServerResult<Boolean>> callback);
+
+	Request getWithUnacceptedLicense(RequestProperties properties, List<ExperimentType> types, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
+
+	void getExperiment(RequestProperties properties, Long id, AsyncCallback<ServerResult<Experiment>> callback);
 }

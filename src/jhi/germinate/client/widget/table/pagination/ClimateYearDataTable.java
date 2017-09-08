@@ -31,6 +31,7 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -76,9 +77,15 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return ClimateYearDataTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<ClimateYearData, ?> column;
+		DatabaseObjectFilterColumn<ClimateYearData, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -100,7 +107,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, ClimateYearData object)
+				public String getCellStyle()
 				{
 					return Style.combine(Style.LAYOUT_WHITE_SPACE_NO_WRAP, Style.LAYOUT_NO_PADDING);
 				}
@@ -127,7 +134,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 			}
 
 			@Override
-			public String getCellStyleNames(Cell.Context context, ClimateYearData object)
+			public String getCellStyle()
 			{
 				return Style.combine(Style.LAYOUT_WHITE_SPACE_NO_WRAP, Style.LAYOUT_NO_PADDING);
 			}
@@ -181,7 +188,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, ClimateYearData object, int column)
+	protected void onItemSelected(NativeEvent event, ClimateYearData object, int column)
 	{
 		/* Get the id */
 		if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSIONS_FOR_COLLSITE))

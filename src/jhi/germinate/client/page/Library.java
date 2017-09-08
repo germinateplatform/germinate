@@ -19,7 +19,6 @@ package jhi.germinate.client.page;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.i18n.client.*;
 import com.googlecode.gwt.charts.client.*;
 
 import java.util.*;
@@ -29,7 +28,6 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.Notification.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.*;
 
 /**
  * An {@link Enum} of all the available {@link Library}s that can be loaded
@@ -47,10 +45,6 @@ public enum Library
 	LEAFLET_SYNC("./js/leaflet/leaflet-sync.js"),
 	LEAFLET_GEODESIC("./js/leaflet/leaflet-geodesic.js"),
 
-	GOOGLE_MAPS_COMPLETE(""),
-	GOOGLE_MAPS("https://maps.googleapis.com/maps/api/js?libraries=visualization,drawing&sensor=true&callback=isNaN"),
-	GOOGLE_MAPS_MARKER_CLUSTERER("./js/maps/markerclusterer.js"),
-	GOOGLE_MAPS_MARKER_SPIDERFIER("./js/maps/oms.js"),
 	GOOGLE_CHARTS(ChartPackage.GEOCHART.name()),
 	HTML_2_CANVAS("./js/html2canvas.js"),
 	D3_V3("./js/d3/d3.v3.min.js"),
@@ -165,53 +159,6 @@ public enum Library
 					};
 				}
 
-			case GOOGLE_MAPS:
-				if (isLoaded())
-				{
-					return null;
-				}
-				else
-				{
-					return new ParallelCallback<Void, Exception>()
-					{
-						@Override
-						public void onSuccess(Void result)
-						{
-							Library.this.setLoaded(true);
-							super.onSuccess(result);
-						}
-
-						@Override
-						public void onFailure(Exception caught)
-						{
-							Notification.notify(Type.ERROR, Text.LANG.notificationLibraryError() + " " + Library.this.name());
-
-							super.onFailure(caught);
-						}
-
-						@Override
-						protected void start()
-						{
-							String locale = LocaleInfo.getCurrentLocale().getLocaleName();
-							String googleMapsPath = jsPath;
-							if (locale.length() == 2)
-								googleMapsPath += "&language=" + locale;
-							else if (locale.contains("_"))
-								googleMapsPath += "&language=" + locale.split("_")[0];
-
-							GerminateSettings.ClientProperty<String> key = GerminateSettingsHolder.get().googleMapsApiKey;
-
-							if (key != null && key.getValue() != null)
-								googleMapsPath += "&key=" + key.getValue();
-
-							ScriptInjector.fromUrl(googleMapsPath)
-										  .setWindow(ScriptInjector.TOP_WINDOW)
-										  .setCallback(this)
-										  .inject();
-						}
-					};
-				}
-
 			case D3_DOWNLOAD:
 
 				/* This one is a bit tricky. We load all at once in an iterative
@@ -269,69 +216,6 @@ public enum Library
 						}
 					};
 				}
-
-			case GOOGLE_MAPS_COMPLETE:
-			{
-				/* This one is a bit tricky. We load all at once in an iterative
-				 * fashion. GoogleMaps first, then the others. We need to make
-                 * sure that we mark all sub-items as loaded as well. */
-				if (isLoaded() || (GOOGLE_MAPS.isLoaded() && GOOGLE_MAPS_MARKER_CLUSTERER.isLoaded() && GOOGLE_MAPS_MARKER_SPIDERFIER.isLoaded()))
-				{
-					return null;
-				}
-				else
-				{
-					return new ParallelCallback<Void, Exception>()
-					{
-						@Override
-						public void onSuccess(Void result)
-						{
-							Library.this.setLoaded(true);
-							GOOGLE_MAPS.setLoaded(true);
-							GOOGLE_MAPS_MARKER_CLUSTERER.setLoaded(true);
-							GOOGLE_MAPS_MARKER_SPIDERFIER.setLoaded(true);
-							super.onSuccess(result);
-						}
-
-						@Override
-						public void onFailure(Exception caught)
-						{
-							Notification.notify(Type.ERROR, Text.LANG.notificationLibraryError() + " " + Library.this.name());
-
-							super.onFailure(caught);
-						}
-
-						@Override
-						protected void start()
-						{
-							final ParallelCallback<Void, Exception> that = this;
-
-							List<ParallelCallback<?, ?>> callbacks = new ArrayList<>();
-							if (!GOOGLE_MAPS.loaded)
-								callbacks.add(GOOGLE_MAPS.getCallback());
-							if (!GOOGLE_MAPS_MARKER_CLUSTERER.loaded)
-								callbacks.add(GOOGLE_MAPS_MARKER_CLUSTERER.getCallback());
-							if (!GOOGLE_MAPS_MARKER_SPIDERFIER.loaded)
-								callbacks.add(GOOGLE_MAPS_MARKER_SPIDERFIER.getCallback());
-
-							new IterativeParentCallback(callbacks)
-							{
-								@Override
-								public void handleSuccess()
-								{
-									that.onSuccess(null);
-								}
-
-								@Override
-								public void handleFailure(Exception reason)
-								{
-									that.onFailure(reason);
-								}
-							};
-						}
-					};
-				}
-			}
 
 			case LEAFLET_COMPLETE:
 			{
@@ -570,6 +454,10 @@ public enum Library
 					if (GerminateSettingsHolder.get().loadPageOnLibraryError.getValue())
 					{
 						callback.onSuccess(null);
+					}
+					else
+					{
+						callback.onFailure(reason);
 					}
 				}
 

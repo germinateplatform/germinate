@@ -28,27 +28,53 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
 
 /**
+ * {@link DatabaseObjectParser} is an abstract class defining how {@link DatabaseObject}s should be parsed from the database.
+ *
  * @author Sebastian Raubach
  */
 public abstract class DatabaseObjectParser<T extends DatabaseObject>
 {
-	private Map<Class, DatabaseObjectCache<? extends DatabaseObject>> CACHES = new HashMap<>();
+	/** Keeps track of all the {@link DatabaseObjectCache}s that have been created by the subclass */
+	private Map<Class, DatabaseObjectCache<? extends DatabaseObject>> caches = new HashMap<>();
 
+	/**
+	 * Clears all caches
+	 */
 	public final void clearCache()
 	{
-		CACHES.values().forEach(DatabaseObjectCache::clear);
+		caches.values().forEach(DatabaseObjectCache::clear);
 	}
 
+	/**
+	 * Creates a new {@link DatabaseObjectCache} for the given type
+	 *
+	 * @param clazz        The subclass of {@link DatabaseObject} that is being parsed by this class
+	 * @param managerClazz The class of the {@link AbstractManager} that is used to parse the respective {@link DatabaseObject}
+	 * @param <U>          The subclass of {@link DatabaseObject} that is being parsed by this class
+	 * @param <V>          The class of the {@link AbstractManager} that is used to parse the respective {@link DatabaseObject}
+	 * @return A new {@link DatabaseObjectCache} for the given type
+	 */
 	protected <U extends DatabaseObject, V extends AbstractManager<U>> DatabaseObjectCache<U> createCache(Class<U> clazz, Class<V> managerClazz)
 	{
-		DatabaseObjectCache<U> cache = (DatabaseObjectCache<U>) CACHES.get(clazz);
+		DatabaseObjectCache<U> cache = (DatabaseObjectCache<U>) caches.get(clazz);
 
 		if (cache == null)
 			cache = new DatabaseObjectCache<>(clazz, managerClazz);
 
-		CACHES.put(clazz, cache);
+		caches.put(clazz, cache);
 		return cache;
 	}
 
+	/**
+	 * Returns the {@link DatabaseObject} that was parsed from the {@link DatabaseResult}.
+	 *
+	 * @param databaseRow           The {@link DatabaseResult} containing the data from the database.
+	 * @param user                  The {@link UserAuth} of the current user
+	 * @param foreignsFromResultSet Set to <code>true</code> if objects refered to by foreign keys can be extracted from the same {@link
+	 *                              DatabaseResult}. If set to <code>false</code>, the {@link AbstractManager} is used to parse the object based in
+	 *                              its foreign key id.
+	 * @return The {@link DatabaseObject} that was parsed from the {@link DatabaseResult}.
+	 * @throws DatabaseException Thrown if the interaction with the database fails.
+	 */
 	public abstract T parse(DatabaseResult databaseRow, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException;
 }

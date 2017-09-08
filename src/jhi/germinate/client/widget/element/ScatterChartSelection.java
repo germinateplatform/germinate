@@ -55,9 +55,11 @@ public class ScatterChartSelection<T extends DatabaseObject> extends Composite
 
 	public ScatterChartSelection(ExperimentType type, List<T> objects, List<Group> groups)
 	{
+		if (groups == null)
+			groups = new ArrayList<>();
+
 		switch (type)
 		{
-			case phenotype:
 			case trials:
 				firstObject = new PhenotypeListBox();
 				secondObject = new PhenotypeListBox();
@@ -71,7 +73,6 @@ public class ScatterChartSelection<T extends DatabaseObject> extends Composite
 
 		switch (type)
 		{
-			case phenotype:
 			case trials:
 				firstObjectLabel.setText(Text.LANG.phenotypeFirstPhenotype());
 				secondObjectLabel.setText(Text.LANG.phenotypeSecondPhenotype());
@@ -87,18 +88,12 @@ public class ScatterChartSelection<T extends DatabaseObject> extends Composite
 		secondObject.setValue(objects.get(0), false);
 		secondObject.setAcceptableValues(objects);
 
-		Group dummy = new Group(-1L)
-				.setDescription(Text.LANG.accessionsDownloadCompleteDataset());
-
-		groups.add(0, dummy);
-		group.setValue(dummy, false);
 		group.setAcceptableValues(groups);
 
 		String[] coloringValues;
 
 		switch (type)
 		{
-			case phenotype:
 			case trials:
 				coloringValues = new String[]{Text.LANG.trialsPByPColorByNone(), Text.LANG.trialsPByPColorByDataset(), Text.LANG.trialsPByPColorByYear(), Text.LANG.trialsPByPColorByTreatment()};
 				break;

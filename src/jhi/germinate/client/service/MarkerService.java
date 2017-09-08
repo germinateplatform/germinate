@@ -104,22 +104,6 @@ public interface MarkerService extends RemoteService
 	ServerResult<List<String>> getIdsForFilter(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
-	 * Returns the {@link Marker}s for the given {@link com.google.gwt.user.client.ui.SuggestOracle.Request}. Returns a {@link
-	 * com.google.gwt.user.client.ui.SuggestOracle.Response} object that can be used in combination with a {@link
-	 * com.google.gwt.user.client.ui.SuggestBox}.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param query      The query
-	 * @param limit      The maximal number of results
-	 * @return The {@link Marker}s for the given {@link com.google.gwt.user.client.ui.SuggestOracle.Request}. Returns a {@link
-	 * com.google.gwt.user.client.ui.SuggestOracle.Response} object that can be used in combination with a {@link
-	 * com.google.gwt.user.client.ui.SuggestBox}.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	List<ItemSuggestion> getSuggestions(RequestProperties properties, String query, int limit) throws InvalidSessionException, DatabaseException;
-
-	/**
 	 * Returns the {@link Marker} for the given name.
 	 *
 	 * @param properties The {@link RequestProperties}

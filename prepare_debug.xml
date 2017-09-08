@@ -19,7 +19,7 @@
 
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="war" />
-	<property file="build.properties" />
+	<property file="build-dev.properties" />
 
 	<!-- Check if a browser optimization is disabled -->
 	<condition property="noBrowserOpt">

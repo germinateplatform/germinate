@@ -29,6 +29,5 @@ public enum ReferenceFolder
 	flapjack,
 	passport,
 	images,
-	genotype,
-	pco
+	genotype
 }

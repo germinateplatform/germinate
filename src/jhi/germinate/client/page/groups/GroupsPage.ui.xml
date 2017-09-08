@@ -34,7 +34,7 @@
 		<g:SimplePanel ui:field="tablePanel"/>
 
 		<g:FlowPanel visible="false" ui:field="groupMembersWrapper">
-			<b:Heading size="H3" text="{msg.groupMembersTitle}"/>
+			<b:Heading size="H3" text="{msg.groupMembersTitle}" ui:field="groupName"/>
 
 			<b:FormGroup>
 				<b:FormLabel text="{msg.groupsGroupPublic}"/>

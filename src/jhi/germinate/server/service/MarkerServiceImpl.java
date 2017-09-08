@@ -47,8 +47,6 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 
 	private static final String QUERY_MARKER_DATA_WITH_NAMES = "SELECT mapdefinitions.chromosome, mapdefinitions.definition_start, mapfeaturetypes.description, markers.id, markers.marker_name FROM mapdefinitions, mapfeaturetypes, markers, maps WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND maps.id = mapdefinitions.map_id AND (maps.user_id = ? OR maps.visibility = 1) AND markers.marker_name IN (%s)";
 
-	private static final String QUERY_MARKER_NAME_SUGGESTIONS = "SELECT id, marker_name FROM markers WHERE marker_name LIKE ? ORDER BY marker_name LIMIT ?";
-
 	@Override
 	public ServerResult<Marker> getById(RequestProperties properties, Long markerId) throws InvalidSessionException, DatabaseException
 	{
@@ -104,27 +102,6 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 	}
 
 	@Override
-	public List<ItemSuggestion> getSuggestions(RequestProperties properties, String query, int limit) throws DatabaseException, InvalidSessionException
-	{
-		GerminateTableStreamer streamer = new GerminateTableQuery(properties, this, QUERY_MARKER_NAME_SUGGESTIONS, new String[]{Marker.ID, Marker.MARKER_NAME})
-				.setString(query + "%")
-				.setInt(limit)
-				.getStreamer();
-
-		List<ItemSuggestion> suggestions = new ArrayList<>();
-
-		GerminateRow row;
-		while ((row = streamer.next()) != null)
-		{
-			suggestions.add(new ItemSuggestion(Long.parseLong(row.get(Marker.ID)), row.get(Marker.MARKER_NAME)));
-		}
-
-		streamer.close();
-
-		return suggestions;
-	}
-
-	@Override
 	public ServerResult<Marker> getByName(RequestProperties properties, String name) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
@@ -136,10 +113,13 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 	@Override
 	public ServerResult<String> export(RequestProperties properties, Set<String> markerNames) throws InvalidSessionException, DatabaseException, IOException
 	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
 		String query = String.format(QUERY_MARKER_DATA_WITH_NAMES, Util.generateSqlPlaceholderString(markerNames.size()));
 
-		GerminateTableStreamer data = new GerminateTableQuery(properties, this, query, null)
-				.setString(properties.getUserId())
+		GerminateTableStreamer data = new GerminateTableQuery(query, userAuth, null)
+				.setLong(properties.getUserId())
 				.setStrings(markerNames)
 				.getStreamer();
 
@@ -171,8 +151,11 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 	@Override
 	public ServerResult<String> export(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException
 	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
 		String formatted = String.format(QUERY_MARKERS_DATA_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
-		GerminateTableStreamer streamer = new GerminateTableQuery(properties, this, formatted, null)
+		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
 				.setStrings(ids)
 				.getStreamer();
 

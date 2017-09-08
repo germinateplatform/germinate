@@ -53,6 +53,17 @@ public class JavaScript
 		element.scrollTop = element.scrollHeight;
 	}-*/;
 
+	public static native void toggle(String selector)/*-{
+		$wnd.$(selector).toggle();
+	}-*/;
+
+	public static native void setVisible(String selector, boolean value)/*-{
+		if (value)
+			$wnd.$(selector).show();
+		else
+			$wnd.$(selector).hide();
+	}-*/;
+
 	/**
 	 * {@link D3} is a utility class containing constants and utility methods for D3
 	 *
@@ -218,7 +229,7 @@ public class JavaScript
 		 * @return <code>true</code> if the GoogleAnalytics API was loaded and initialized successfully
 		 */
 		public static native boolean isGoogleAnalyticsLoaded()/*-{
-			return $wnd['ga'] !== 'undefined';
+			return $wnd['ga'] !== undefined;
 		}-*/;
 	}
 

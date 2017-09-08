@@ -21,26 +21,31 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 import java.util.Map;
+import java.util.stream.*;
 
+import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.management.*;
 import jhi.germinate.client.page.accession.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -66,7 +71,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 	@UiField
 	SearchSection     accessionSection;
 	@UiField
-	SearchSection     attributeSection;
+	SearchSection     accessionAttributeSection;
 	@UiField
 	SearchSection     phenotypeSection;
 	@UiField
@@ -76,27 +81,42 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 	@UiField
 	SearchSection     datasetSection;
 	@UiField
+	SearchSection     datasetAttributeSection;
+	@UiField
 	SearchSection     pedigreeSection;
 	@UiField
 	SearchSection     locationSection;
 	@UiField
-	PageHeader        resultHeader;
+	FlowPanel         resultPanel;
 
-	private AccessionTable     accessionDataTable;
-	private AttributeDataTable attributeDataTable;
-	private PhenotypeDataTable phenotypeDataTable;
-	private CompoundDataTable  compoundDataTable;
-	private MapDefinitionTable mapDefinitionTable;
-	private DatasetTable       datasetTable;
-	private PedigreeTable      pedigreeTable;
-	private LocationTable      locationTable;
+	@UiField
+	FlowPanel   additionalDataPanel;
+	@UiField
+	HTML        additionalDataTextShort;
+	@UiField
+	HTML        additionalDataText;
+	@UiField
+	SimplePanel additionalDataTablePanel;
+
+	private AccessionTable              accessionDataTable;
+	private AccessionAttributeDataTable accessionAttributeDataTable;
+	private PhenotypeDataTable          phenotypeDataTable;
+	private CompoundDataTable           compoundDataTable;
+	private MapDefinitionTable          mapDefinitionTable;
+	private DatasetTable                datasetTable;
+	private DatasetAttributeDataTable   datasetAttributeDataTable;
+	private PedigreeTable               pedigreeTable;
+	private LocationTable               locationTable;
+
+	private List<ExperimentType> experimentTypes = new ArrayList<>();
+	private DatasetTable additionalDataTable;
 
 	public SearchPage()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
 		String searchString = StringParameterStore.Inst.get().get(Parameter.searchString);
-		StringParameterStore.Inst.get().remove(Parameter.searchString);
+//		StringParameterStore.Inst.get().remove(Parameter.searchString);
 
 		if (!StringUtils.isEmpty(searchString))
 		{
@@ -115,34 +135,53 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 			LongParameterStore.Inst.get().put(Parameter.accessionId, id);
 			StringParameterStore.Inst.get().remove(Parameter.searchString);
 
-			History.newItem(Page.OSTEREI.name());
+			ContentHolder.getInstance().setContent(Page.PASSPORT, Page.BROWSE_ACCESSIONS, new OsterPassportPage());
 		}
 		catch (IllegalArgumentException e)
 		{
 		}
+
+		if (ModuleCore.getUseAuthentication())
+			addAdditionalDatasetsTable();
+
+		additionalDataText.setHTML(Text.LANG.searchAdditionalDatasetsText());
+		additionalDataTextShort.setHTML(Text.LANG.searchAdditionalDatasetsTextShort());
+		additionalDataTextShort.addStyleName(Emphasis.INFO.getCssName());
 	}
 
 	private void doSearch(String searchString)
 	{
 		final SearchType section = typeBox.getSelection();
 
-		resultHeader.setVisible(true);
+		resultPanel.setVisible(true);
 
 		accessionSection.clear();
-		attributeSection.clear();
+		accessionAttributeSection.clear();
 		phenotypeSection.clear();
 		compoundSection.clear();
 		mapDefinitionSection.clear();
 		datasetSection.clear();
+		datasetAttributeSection.clear();
 		pedigreeSection.clear();
 		locationSection.clear();
 
+		accessionDataTable = null;
+		accessionAttributeDataTable = null;
+		phenotypeDataTable = null;
+		compoundDataTable = null;
+		mapDefinitionTable = null;
+		datasetTable = null;
+		datasetAttributeDataTable = null;
+		pedigreeTable = null;
+		locationTable = null;
+
 		accessionSection.setVisible(false);
-		attributeSection.setVisible(false);
+		accessionAttributeSection.setVisible(false);
 		phenotypeSection.setVisible(false);
 		compoundSection.setVisible(false);
 		mapDefinitionSection.setVisible(false);
 		datasetSection.setVisible(false);
+		datasetAttributeSection.setVisible(false);
 		pedigreeSection.setVisible(false);
 		locationSection.setVisible(false);
 
@@ -185,7 +224,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Accession>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Accession>>> callback)
 				{
 					return AccessionService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(accessionSection, callback));
 				}
@@ -193,9 +232,9 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 			accessionSection.add(accessionDataTable);
 		}
 
-		if (section == SearchType.ATTRIBUTE_DATA || section == SearchType.ALL)
+		if (section == SearchType.ACCESSION_ATTRIBUTE_DATA || section == SearchType.ALL)
 		{
-			attributeDataTable = new AttributeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+			accessionAttributeDataTable = new AccessionAttributeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 			{
 				{
 					preventInitialDataLoad = true;
@@ -210,7 +249,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				@Override
 				protected void download(PartialSearchQuery filter, AsyncCallback<ServerResult<String>> callback)
 				{
-					AttributeService.Inst.get().export(Cookie.getRequestProperties(), filter, callback);
+					AttributeService.Inst.get().export(Cookie.getRequestProperties(), GerminateDatabaseTable.germinatebase, filter, callback);
 				}
 
 				@Override
@@ -228,16 +267,16 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
-					AttributeService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
+					AttributeService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), GerminateDatabaseTable.germinatebase, filter, callback);
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback)
 				{
-					return AttributeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(attributeSection, callback));
+					return AttributeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, GerminateDatabaseTable.germinatebase, filter, new SearchCallback<>(accessionAttributeSection, callback));
 				}
 			};
-			attributeSection.add(attributeDataTable);
+			accessionAttributeSection.add(accessionAttributeDataTable);
 		}
 
 		if (section == SearchType.PHENOTYPE_DATA || section == SearchType.ALL)
@@ -279,7 +318,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback)
 				{
 					return PhenotypeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(phenotypeSection, callback));
 				}
@@ -326,7 +365,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<CompoundData>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<CompoundData>>> callback)
 				{
 					return CompoundService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(compoundSection, callback));
 				}
@@ -373,7 +412,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback)
 				{
 					return MarkerService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(mapDefinitionSection, callback));
 				}
@@ -408,12 +447,47 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
 				{
 					return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, null, true, pagination, new SearchCallback<>(datasetSection, callback));
 				}
 			};
 			datasetSection.add(datasetTable);
+		}
+
+		if (section == SearchType.DATASET_ATTRIBUTE_DATA || section == SearchType.ALL)
+		{
+			datasetAttributeDataTable = new DatasetAttributeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+			{
+				{
+					preventInitialDataLoad = true;
+				}
+
+				@Override
+				protected boolean supportsDownload()
+				{
+					return true;
+				}
+
+				@Override
+				protected void download(PartialSearchQuery filter, AsyncCallback<ServerResult<String>> callback)
+				{
+					AttributeService.Inst.get().export(Cookie.getRequestProperties(), GerminateDatabaseTable.datasets, filter, callback);
+				}
+
+				@Override
+				protected boolean supportsFiltering()
+				{
+					return true;
+				}
+
+				@Override
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback)
+				{
+					return AttributeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, GerminateDatabaseTable.datasets, filter, new SearchCallback<>(datasetAttributeSection, callback));
+				}
+			};
+			datasetAttributeSection.add(datasetAttributeDataTable);
 		}
 
 		if (section == SearchType.PEDIGREE_DATA || section == SearchType.ALL)
@@ -443,7 +517,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Pedigree>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Pedigree>>> callback)
 				{
 					return PedigreeService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, new SearchCallback<>(pedigreeSection, callback));
 				}
@@ -490,7 +564,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 
 				@Override
-				protected Request getData(jhi.germinate.shared.datastructure.Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Location>>> callback)
+				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Location>>> callback)
 				{
 					return LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, new SearchCallback<>(locationSection, callback));
 				}
@@ -502,6 +576,8 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 		{
 			Scheduler.get().scheduleDeferred(() ->
 			{
+				experimentTypes.clear();
+				experimentTypes = new ArrayList<>();
 				if (section == SearchType.ACCESSION_DATA || section == SearchType.ALL)
 				{
 					try
@@ -520,7 +596,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 					{
 					}
 				}
-				if (section == SearchType.ATTRIBUTE_DATA || section == SearchType.ALL)
+				if (section == SearchType.ACCESSION_ATTRIBUTE_DATA || section == SearchType.ALL)
 				{
 					try
 					{
@@ -530,7 +606,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 						mapping.put(Attribute.NAME, searchString);
 						mapping.put(Attribute.DESCRIPTION, searchString);
 						mapping.put(AttributeData.VALUE, searchString);
-						attributeDataTable.forceFilter(mapping, false);
+						accessionAttributeDataTable.forceFilter(mapping, false);
 					}
 					catch (InvalidArgumentException e)
 					{
@@ -538,6 +614,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 				if (section == SearchType.PHENOTYPE_DATA || section == SearchType.ALL)
 				{
+					experimentTypes.add(ExperimentType.trials);
 					try
 					{
 						Map<String, String> mapping = new HashMap<>();
@@ -554,6 +631,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 				}
 				if (section == SearchType.COMPOUND_DATA || section == SearchType.ALL)
 				{
+					experimentTypes.add(ExperimentType.compound);
 					try
 					{
 						Map<String, String> mapping = new HashMap<>();
@@ -596,6 +674,21 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 					{
 					}
 				}
+				if (section == SearchType.DATASET_ATTRIBUTE_DATA || section == SearchType.ALL)
+				{
+					try
+					{
+						Map<String, String> mapping = new HashMap<>();
+						mapping.put(Dataset.DESCRIPTION, searchString);
+						mapping.put(Attribute.NAME, searchString);
+						mapping.put(Attribute.DESCRIPTION, searchString);
+						mapping.put(AttributeData.VALUE, searchString);
+						datasetAttributeDataTable.forceFilter(mapping, false);
+					}
+					catch (InvalidArgumentException e)
+					{
+					}
+				}
 				if (section == SearchType.PEDIGREE_DATA || section == SearchType.ALL)
 				{
 					try
@@ -626,6 +719,93 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 					{
 					}
 				}
+
+				additionalDataTable.refreshTable();
+			});
+		}
+
+//		additionalDataTable.refreshTable();
+	}
+
+	private void updateTables()
+	{
+		if (accessionDataTable != null)
+			accessionDataTable.refreshTable();
+		if (accessionAttributeDataTable != null)
+			accessionAttributeDataTable.refreshTable();
+		if (phenotypeDataTable != null)
+			phenotypeDataTable.refreshTable();
+		if (compoundDataTable != null)
+			compoundDataTable.refreshTable();
+		if (mapDefinitionTable != null)
+			mapDefinitionTable.refreshTable();
+		if (datasetTable != null)
+			datasetTable.refreshTable();
+		if (pedigreeTable != null)
+			pedigreeTable.refreshTable();
+		if (locationTable != null)
+			locationTable.refreshTable();
+	}
+
+	private void addAdditionalDatasetsTable()
+	{
+		additionalDataTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, true, false)
+		{
+			{
+				preventInitialDataLoad = true;
+			}
+
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
+			{
+				return DatasetService.Inst.get().getWithUnacceptedLicense(Cookie.getRequestProperties(), experimentTypes, pagination, new AsyncCallback<PaginatedServerResult<List<Dataset>>>()
+				{
+					@Override
+					public void onFailure(Throwable caught)
+					{
+						additionalDataPanel.setVisible(false);
+						additionalDataTextShort.setVisible(false);
+
+						callback.onFailure(caught);
+					}
+
+					@Override
+					public void onSuccess(PaginatedServerResult<List<Dataset>> result)
+					{
+						additionalDataPanel.setVisible(!CollectionUtils.isEmpty(result.getServerResult()));
+						additionalDataTextShort.setVisible(!CollectionUtils.isEmpty(result.getServerResult()));
+
+						callback.onSuccess(result);
+					}
+				});
+			}
+		};
+
+		additionalDataTablePanel.add(additionalDataTable);
+	}
+
+	@UiHandler("updateButton")
+	void onUpdateButtonClicked(ClickEvent e)
+	{
+		/* Get the selected items */
+		Set<Dataset> selectedItems = additionalDataTable.getSelection();
+
+		Set<License> licensesToAgreeTo = selectedItems.stream()
+													  .filter(d -> d.getLicense() != null)
+													  .map(Dataset::getLicense)
+													  .collect(Collectors.toCollection(HashSet::new));
+
+		if (!CollectionUtils.isEmpty(licensesToAgreeTo))
+		{
+			DatasetWidget.showLicenseAcceptWizard(additionalDataTable, licensesToAgreeTo, new DefaultAsyncCallback<Set<Dataset>>()
+			{
+				@Override
+				protected void onSuccessImpl(Set<Dataset> result)
+				{
+					// Refresh the table
+					updateTables();
+					additionalDataTable.refreshTable();
+				}
 			});
 		}
 	}
@@ -653,11 +833,12 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 	{
 		ALL(Text.LANG.searchSectionAll()),
 		ACCESSION_DATA(Text.LANG.searchSectionAccessionData()),
-		ATTRIBUTE_DATA(Text.LANG.searchSectionAttributeData()),
+		ACCESSION_ATTRIBUTE_DATA(Text.LANG.searchSectionAccessionAttributeData()),
 		PHENOTYPE_DATA(Text.LANG.searchSectionPhenotypeData()),
 		COMPOUND_DATA(Text.LANG.searchSectionCompoundData()),
 		MAPDEFINITION_DATA(Text.LANG.searchSectionMapDefinitionData()),
 		DATASETS(Text.LANG.searchSectionDatasets()),
+		DATASET_ATTRIBUTE_DATA(Text.LANG.searchSectionDatasetAttributeData()),
 		PEDIGREE_DATA(Text.LANG.searchSectionPedigreeData()),
 		LOCATION_DATA(Text.LANG.searchSectionLocationData());
 

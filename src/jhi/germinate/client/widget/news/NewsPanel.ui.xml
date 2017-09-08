@@ -29,12 +29,16 @@
 		.panel {
 			overflow-y: auto;
 		}
+
+		.margin {
+			margin-left: 10px;
+		}
 	</ui:style>
 
 	<b:Panel addStyleNames="{PANEL} {style.panel}">
 		<b:PanelHeader>
 			<g:InlineHTML addStyleNames="{MDI} {MDI_NEWSPAPER}"/>
-			<g:InlineHTML text="{msg.newsTitle}"/>
+			<g:InlineHTML addStyleNames="{style.margin}" text="{msg.newsTitle}"/>
 		</b:PanelHeader>
 		<b:PanelBody>
 			<g:HTMLPanel>

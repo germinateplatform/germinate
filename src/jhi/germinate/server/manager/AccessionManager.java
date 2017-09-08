@@ -34,7 +34,7 @@ import jhi.germinate.shared.search.*;
  */
 public class AccessionManager extends AbstractManager<Accession>
 {
-	public static final String[] COLUMNS_TABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Taxonomy.GENUS, Taxonomy.SPECIES, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, COUNT, LocationService.DISTANCE};
+	public static final String[] COLUMNS_TABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, COUNT, LocationService.DISTANCE};
 
 	private static final String COMMON_TABLES = "germinatebase LEFT JOIN subtaxa ON germinatebase.subtaxa_id = subtaxa.id LEFT JOIN taxonomies ON germinatebase.taxonomy_id = taxonomies.id LEFT JOIN locations ON germinatebase.location_id = locations.id LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN biologicalstatus ON biologicalstatus.id = germinatebase.biologicalstatus_id LEFT JOIN institutions ON institutions.id = germinatebase.institution_id LEFT JOIN collectingsources ON collectingsources.id = germinatebase.collsrc_id";
 
@@ -195,7 +195,7 @@ public class AccessionManager extends AbstractManager<Accession>
 		pagination.updateSortColumn(AccessionService.COLUMNS_SORTABLE, Accession.ID);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(filter, formatted, AccessionService.COLUMNS_SORTABLE, COLUMNS_ACCESSION_DATA_EXPORT)
+		return getFilteredGerminateTableQuery(userAuth, filter, formatted, AccessionService.COLUMNS_SORTABLE, COLUMNS_ACCESSION_DATA_EXPORT)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
@@ -299,20 +299,6 @@ public class AccessionManager extends AbstractManager<Accession>
 					.run(Accession.ID)
 					.getStrings();
 		}
-	}
-
-	public static PaginatedServerResult<List<Accession>> getAllForCollsite(UserAuth userAuth, Long collsiteId, Pagination pagination) throws DatabaseException, InvalidColumnException
-	{
-		pagination.updateSortColumn(COLUMNS_TABLE, Accession.ID);
-		String formatted = String.format(SELECT_ALL_FOR_COLLSITE, pagination.getSortQuery());
-
-		return new DatabaseObjectQuery<Accession>(formatted, userAuth)
-				.setFetchesCount(pagination.getResultSize())
-				.setLong(collsiteId)
-				.setInt(pagination.getStart())
-				.setInt(pagination.getLength())
-				.run()
-				.getObjectsPaginated(Accession.Parser.Inst.get(), true);
 	}
 
 	public static PaginatedServerResult<List<Accession>> getAllSortedByDistance(UserAuth userAuth, Double latitude, Double longitude, Pagination pagination) throws InvalidColumnException, DatabaseException

@@ -18,13 +18,12 @@
 package jhi.germinate.server.database.query;
 
 import jhi.germinate.server.database.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.exception.*;
 
 /**
- * {@link DefaultStreamer} is a utility class allowing to "stream" {@link GerminateRow}s, i.e., this class will return one {@link GerminateRow} at a
- * time.
+ * {@link DefaultStreamer} is a utility class allowing to "stream" {@link DatabaseResult}s, i.e., this class will return one {@link DatabaseResult} at
+ * a time.
  *
  * @author Sebastian Raubach
  */

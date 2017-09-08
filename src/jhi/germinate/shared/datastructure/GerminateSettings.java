@@ -55,13 +55,10 @@ public class GerminateSettings implements Serializable
 	public ClientProperty<Boolean> googleAnalyticsEnabled;
 	public ClientProperty<String>  googleAnalyticsTrackingId;
 
-	public ClientProperty<String> googleMapsApiKey;
-
 	public ClientProperty<Set<Page>> availablePages;
 
 	public ClientProperty<String> accessionDisplayColumn;
 	public ClientProperty<String> baseSearchColumn;
-	public ClientProperty<String> collsiteTreemapColumn;
 	public ClientProperty<String> externalDataFolder;
 
 	public ClientProperty<String>       templateContactEmail;

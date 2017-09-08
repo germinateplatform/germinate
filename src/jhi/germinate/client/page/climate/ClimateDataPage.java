@@ -185,12 +185,6 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 
 				if (groupData.getServerResult().size() > 0)
 				{
-					Group dummy = new Group(-1L)
-							.setDescription(Text.LANG.generalNone());
-
-					groupData.getServerResult().add(0, dummy);
-
-					groupBox.setValue(dummy, false);
 					groupBox.setAcceptableValues(groupData.getServerResult());
 				}
 				else

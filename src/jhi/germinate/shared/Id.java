@@ -23,7 +23,7 @@ package jhi.germinate.shared;
 public class Id
 {
 	public static final String STRUCTURE_LANGUAGE_SELECTOR_UL = "gm8-language-selector";
-	public static final String STRUCTURE_SHOPPING_CART_UL     = "gm8-shopping-cart";
+	public static final String STRUCTURE_MARKED_ITEM_UL       = "gm8-marked-items";
 	public static final String STRUCTURE_HELP_UL              = "gm8-help";
 	public static final String STRUCTURE_ACCOUNT_SETTINGS_UL  = "gm8-account-settings";
 	public static final String STRUCTURE_SHARE_UL             = "gm8-share";

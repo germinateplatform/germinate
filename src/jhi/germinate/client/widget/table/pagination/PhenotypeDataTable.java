@@ -17,10 +17,8 @@
 
 package jhi.germinate.client.widget.table.pagination;
 
-import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import java.util.*;
@@ -29,6 +27,7 @@ import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -42,7 +41,7 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 {
 	public PhenotypeDataTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
-		super(ShoppingCart.ItemType.ACCESSION, selectionMode, sortingEnabled);
+		super(MarkedItemList.ItemType.ACCESSION, selectionMode, sortingEnabled);
 	}
 
 	@Override
@@ -70,9 +69,15 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return PhenotypeDataTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<PhenotypeData, ?> column;
+		DatabaseObjectFilterColumn<PhenotypeData, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -93,7 +98,7 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, PhenotypeData object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -259,6 +264,24 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 		column.setDataStoreName(Unit.NAME);
 		addColumn(column, Text.LANG.unitColumnName(), sortingEnabled);
 
+		/* Add the recording date column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(PhenotypeData object)
+			{
+				return DateUtils.getLocalizedDateTime(object.getRecordingDate());
+			}
+
+			@Override
+			public Class getType()
+			{
+				return Date.class;
+			}
+		};
+		column.setDataStoreName(PhenotypeData.RECORDING_DATE);
+		addColumn(column, Text.LANG.phenotypeColumnRecordingDate(), sortingEnabled);
+
 		/* Add the phenotype value column */
 		column = new TextColumn()
 		{
@@ -279,7 +302,7 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, PhenotypeData object, int column)
+	protected void onItemSelected(NativeEvent event, PhenotypeData object, int column)
 	{
 		/* Get the id */
 		if (object.getAccession() != null)

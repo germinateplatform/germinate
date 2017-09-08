@@ -20,6 +20,7 @@ package jhi.germinate.client.util.parameterstore;
 import java.util.*;
 
 import jhi.germinate.shared.*;
+import jhi.germinate.shared.enums.*;
 
 /**
  * @author Sebastian Raubach
@@ -56,5 +57,34 @@ public class StringListParameterStore extends TypedParameterStore<List<String>>
 	protected String valueToString(List<String> value)
 	{
 		return CollectionUtils.join(value, ",");
+	}
+
+	public boolean contains(Parameter parameter, String value)
+	{
+		List<String> list = get(parameter, new ArrayList<>());
+
+		return list.contains(value);
+	}
+
+	public void add(Parameter parameter, String value)
+	{
+		List<String> list = get(parameter, new ArrayList<>());
+
+		if (!list.contains(value))
+		{
+			list.add(value);
+			put(parameter, list);
+		}
+	}
+
+	public void remove(Parameter parameter, String value)
+	{
+		List<String> list = get(parameter, new ArrayList<>());
+
+		if (list.contains(value))
+		{
+			list.remove(value);
+			put(parameter, list);
+		}
 	}
 }

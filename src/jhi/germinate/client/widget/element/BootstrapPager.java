@@ -18,22 +18,20 @@
 package jhi.germinate.client.widget.element;
 
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.shared.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.*;
 
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.html.*;
 
-import java.util.*;
-
 import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.input.*;
-import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
@@ -43,7 +41,8 @@ import jhi.germinate.shared.enums.*;
  */
 public class BootstrapPager extends AbstractPager
 {
-	private static final int DEFAULT_PAGE_SIZE = 25;
+	public static final  int   DEFAULT_PAGE_SIZE = 25;
+	private static final int[] SIZES             = {10, 25, 50, 100};
 
 	private NumberFormat formatter;
 
@@ -52,9 +51,9 @@ public class BootstrapPager extends AbstractPager
 	private AnchorListItem currentPage = new AnchorListItem();
 	private AnchorListItem nextPage    = new AnchorListItem();
 	private AnchorListItem lastPage    = new AnchorListItem();
-	private IntegerListBox lb;
-
-	private HandlerRegistration reg;
+	private ButtonGroup    group       = new ButtonGroup();
+	private Button         toggle      = new Button();
+	private DropDownMenu   menu        = new DropDownMenu();
 
 	public BootstrapPager()
 	{
@@ -67,14 +66,18 @@ public class BootstrapPager extends AbstractPager
 		panel.add(ul);
 
 		int currentPageSize = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DatabaseObjectPaginationTable.DEFAULT_NR_OF_ITEMS_PER_PAGE);
-		lb = new IntegerListBox(false);
-		lb.setSelectAllVisible(false);
-		lb.addStyleName(Style.LAYOUT_DISPLAY_INLINE_BLOCK);
-		lb.setValue(currentPageSize, false);
-		lb.setAcceptableValues(new Integer[]{DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE * 2, DEFAULT_PAGE_SIZE * 3, DEFAULT_PAGE_SIZE * 4});
-		lb.addStyleName(Style.combine(Style.LAYOUT_NO_PADDING, Style.LAYOUT_NO_MARGIN, Style.LAYOUT_V_ALIGN_MIDDLE));
-		panel.insert(lb, 0);
-		lb.setVisible(false);
+
+		toggle.setText(Integer.toString(currentPageSize));
+		toggle.setTitle(Text.LANG.pagerItemsPerPage());
+		toggle.setDataToggle(Toggle.DROPDOWN);
+		toggle.setToggleCaret(true);
+
+		toggle.getElement().getStyle().setProperty("borderRight", "0");
+
+		group.add(toggle);
+		group.add(menu);
+
+		panel.insert(group, 0);
 
 		ul.add(firstPage);
 		ul.add(prevPage);
@@ -90,25 +93,26 @@ public class BootstrapPager extends AbstractPager
 		ul.addStyleName(Style.combine(Style.LAYOUT_NO_PADDING, Style.LAYOUT_NO_MARGIN, Style.LAYOUT_V_ALIGN_MIDDLE, Styles.PAGINATION));
 
 		addClickListeners();
-	}
 
-	public void setDisplay(DatabaseObjectPaginationTable table)
-	{
-		super.setDisplay(table.getTable());
-
-		if (reg != null)
-			reg.removeHandler();
-
-		lb.setVisible(true);
-		reg = lb.addValueChangeHandler(event ->
+		for (int i : SIZES)
 		{
-			List<Integer> values = event.getValue();
-			Integer value = CollectionUtils.isEmpty(values) ? DEFAULT_PAGE_SIZE : values.get(0);
+			AnchorListItem item = new AnchorListItem(Integer.toString(i));
+			item.addClickHandler(e ->
+			{
+				Integer value = Integer.parseInt(item.getText());
+				toggle.setText(item.getText());
 
-			table.setPageSize(value);
-			table.refreshTable();
+				IntegerParameterStore.Inst.get().put(Parameter.paginationPageSize, value);
 
-			IntegerParameterStore.Inst.get().put(Parameter.paginationPageSize, value);
+				GerminateEventBus.BUS.fireEvent(new TableRowCountChangeEvent());
+			});
+			menu.add(item);
+		}
+
+		GerminateEventBus.BUS.addHandler(TableRowCountChangeEvent.TYPE, e ->
+		{
+			int value = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_PAGE_SIZE);
+			toggle.setText(Integer.toString(value));
 		});
 	}
 

@@ -69,13 +69,15 @@ public class TrialOverviewWidget extends Composite
 
 	private List<Long>                             selectedDatasets;
 	private List<Phenotype>                        phenotypes;
+	private List<Integer>                          years;
 	private Map<TrialsRow.TrialsAttribute, String> attributeToFile;
 	private TrialsCellTable                        table;
 	private TrialsRow.TrialsAttribute trialsAttribute = TrialsRow.TrialsAttribute.COUNT;
 
-	public TrialOverviewWidget(List<Phenotype> p)
+	public TrialOverviewWidget(List<Phenotype> p, List<Integer> y)
 	{
 		this.phenotypes = p;
+		this.years = y;
 
 		addBox();
 
@@ -84,6 +86,7 @@ public class TrialOverviewWidget extends Composite
 		selectedDatasets = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
 
 		ParallelAsyncCallback<ServerResult<List<Phenotype>>> phenotypeCallback = null;
+		ParallelAsyncCallback<ServerResult<List<Integer>>> yearsCallback = null;
 
 		if (phenotypes == null)
 		{
@@ -96,14 +99,17 @@ public class TrialOverviewWidget extends Composite
 				}
 			};
 		}
-		ParallelAsyncCallback<ServerResult<List<Integer>>> yearsCallback = new ParallelAsyncCallback<ServerResult<List<Integer>>>()
+		if (years == null)
 		{
-			@Override
-			protected void start()
+			yearsCallback = new ParallelAsyncCallback<ServerResult<List<Integer>>>()
 			{
-				TrialService.Inst.get().getTrialYears(Cookie.getRequestProperties(), selectedDatasets, this);
-			}
-		};
+				@Override
+				protected void start()
+				{
+					TrialService.Inst.get().getTrialYears(Cookie.getRequestProperties(), selectedDatasets, this);
+				}
+			};
+		}
 
 		new ParallelParentAsyncCallback(phenotypeCallback, yearsCallback)
 		{
@@ -112,16 +118,18 @@ public class TrialOverviewWidget extends Composite
 			public void handleSuccess()
 			{
 				ServerResult<List<Phenotype>> phenotypeData = getCallbackData(0);
-				ServerResult<List<Integer>> years = getCallbackData(1);
+				ServerResult<List<Integer>> yearData = getCallbackData(1);
 
 				if (phenotypes == null)
 					phenotypes = phenotypeData.getServerResult();
+				if (years == null)
+					years = yearData.getServerResult();
 
 				phenotypeBox.setValue(phenotypes.get(0), false);
 				phenotypeBox.setAcceptableValues(phenotypes);
 
-				yearBox.setValue(years.getServerResult().get(0), false);
-				yearBox.setAcceptableValues(years.getServerResult());
+				yearBox.setValue(years.get(0), false);
+				yearBox.setAcceptableValues(years);
 			}
 
 			@Override

@@ -50,7 +50,6 @@ public class LeafletUtils
 	{
 		private   Panel            parent;
 		protected LeafletMap       map;
-		protected LeafletMiniMap   miniMap;
 		private   OnMapLoadHandler handler;
 		protected SimplePanel mapPanel = new SimplePanel();
 
@@ -70,13 +69,13 @@ public class LeafletUtils
 				map.postponeZoomUntilFocus();
 				map.setView(CENTER, 1);
 
-				miniMap = LeafletMiniMap.newInstance(map, LeafletMiniMap.Options.newInstance()
-																				.setToggleDisplay(true)
-																				.setPosition(LeafletControlPosition.BOTTOM_LEFT)
-																				.setZoomLevelFixed(0)
-																				.setCenterFixed(CENTER)
-																				.setWidth(240)
-																				.setHeight(120));
+				LeafletMiniMap.newInstance(map, LeafletMiniMap.Options.newInstance()
+																	  .setToggleDisplay(true)
+																	  .setPosition(LeafletControlPosition.BOTTOM_LEFT)
+																	  .setZoomLevelFixed(0)
+																	  .setCenterFixed(CENTER)
+																	  .setWidth(240)
+																	  .setHeight(120));
 
 				onMapLoad();
 			});
@@ -150,15 +149,16 @@ public class LeafletUtils
 
 				LeafletHeatmap.GradientOptions o = LeafletHeatmap.GradientOptions.newInstance();
 
-				float start = 0f;
+				// TODO: Wait for https://github.com/Leaflet/Leaflet.heat/issues/87 to be fixed
+				float start = 0.3f;
 
 				for (int i = 0; i < colors.size(); i++)
-					o.add(start + (0.6f * i) / (colors.size() - 1), colors.get(i));
+					o.add(start + ((1 - start) * i) / (colors.size() - 1), colors.get(i));
 
 				heatmap = LeafletHeatmap.newInstance(map, LeafletHeatmap.Options.newInstance()
 																				.setGradient(o)
 																				.setMaxZoom(12)
-																				.setMinOpacity(0.3)
+																				.setMinOpacity(0.4)
 																				.setRadius(10)
 																				.setMax(1)
 																				.setBlur(10), points);
@@ -312,9 +312,13 @@ public class LeafletUtils
 
 					LeafletLatLng latLng = LeafletLatLng.newInstance(latitude, longitude);
 
+					StringBuilder title = getLocationInfoWindowContent(location, false);
+
+					title.append("</div>");
+
 					markers.add(LeafletMarker.newInstance(latLng)
 											 .addTo(map)
-											 .bindPopup(location.getName()));
+											 .bindPopup(title.toString()));
 				}
 
 				if (markers.size() == 1)

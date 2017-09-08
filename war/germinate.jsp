@@ -26,6 +26,9 @@
 	boolean debugModeEnabled = PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG);
 	boolean readOnlyModeEnebaled = PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY);
 	String title = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TITLE);
+	boolean logoContainsLink = PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK);
+	boolean useGoogleAnalytics = PropertyReader.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED);
+	String googleAnalyticsTrackingId = "'" + PropertyReader.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID) + "'";
 %>
 
 <!DOCTYPE html>
@@ -35,7 +38,7 @@
 
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
 
@@ -92,10 +95,36 @@
 	<script type="text/javascript" src="germinate/germinate.nocache.js"></script>
 	<link href="css/germinate-css.jsp" rel="stylesheet" type="text/css">
 
-	<link type="text/css" rel="stylesheet" href="css/custom.css"/>
+	<script type="text/javascript" src="js/hexagon-js.jsp"></script>
+	<link href="css/hexagon.css" rel="stylesheet" type="text/css">
 
 	<!-- Custom CSS -->
+	<link type="text/css" rel="stylesheet" href="css/custom.css"/>
+
 	<link href="css/template-css.jsp" rel="stylesheet">
+
+	<% if (useGoogleAnalytics)
+	{ %>
+
+	<!-- Google Analytics -->
+	<script>
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function () {
+					(i[r].q = i[r].q || []).push(arguments)
+				}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+				m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', <%= googleAnalyticsTrackingId %>, 'auto');
+		ga('send', 'pageview');
+	</script>
+
+	<% } %>
 
 	<%
 		String customHtml = request.getServletContext().getRealPath("/") + "custom.html";
@@ -120,8 +149,7 @@
 		}
 	%>
 
-	<script type="text/javascript" src="js/hexagon-js.jsp"></script>
-	<link href="css/hexagon.css" rel="stylesheet" type="text/css">
+
 </head>
 
 <body>
@@ -161,9 +189,9 @@
 			</li>
 			<!-- /GM8 Share Widget -->
 			<!-- GM8 Shopping Cart -->
-			<li class="dropdown" id="<%= Id.STRUCTURE_SHOPPING_CART_UL %>">
+			<li class="dropdown" id="<%= Id.STRUCTURE_MARKED_ITEM_UL %>">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="mdi mdi-cart fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
+					<i class="mdi mdi-bookmark-check fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Shopping Cart -->
@@ -189,7 +217,16 @@
 					<li class="sidebar-search" id="<%= Id.STRUCTURE_SEARCH_PANEL %>" style="display: none"></li>
 				</ul>
 				<ul class="nav <%= Style.LAYOUT_LOGO_SECTION %>">
-					<li><a><img src="img/logo.svg"/></a></li>
+					<li><a>
+						<% if (logoContainsLink)
+						{ %>
+						<object data="img/logo.svg" type="image/svg+xml"></object>
+						<% }
+						else
+						{ %>
+						<img src="img/logo.svg"/>
+						<% } %>
+					</a></li>
 				</ul>
 			</div>
 			<!-- /.sidebar-collapse -->

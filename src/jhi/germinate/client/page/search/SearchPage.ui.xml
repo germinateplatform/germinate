@@ -44,24 +44,41 @@
 		<b:FormGroup>
 			<b:FormLabel for="formSearch" text="{msg.searchPageSearchBox}"/>
 			<b:InputGroup b:id="formSearch">
-				<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
+				<b:Tooltip title="{msg.searchBoxTooltip}" placement="BOTTOM">
+					<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
+				</b:Tooltip>
 				<b:InputGroupButton>
 					<b:Button ui:field="searchButton" icon="SEARCH"/>
 				</b:InputGroupButton>
 			</b:InputGroup>
 		</b:FormGroup>
 
-		<b:PageHeader text="{msg.searchTitleResults}" ui:field="resultHeader" visible="false"/>
+		<g:FlowPanel ui:field="resultPanel" visible="false">
+			<b:Heading size="H3" text="{msg.searchTitleResults}"/>
 
-		<b:PanelGroup b:id="accordion">
-			<s:SearchSection heading="{msg.searchSectionAccessionData}" ui:field="accessionSection"/>
-			<s:SearchSection heading="{msg.searchSectionAttributeData}" ui:field="attributeSection"/>
-			<s:SearchSection heading="{msg.searchSectionPhenotypeData}" ui:field="phenotypeSection"/>
-			<s:SearchSection heading="{msg.searchSectionCompoundData}" ui:field="compoundSection"/>
-			<s:SearchSection heading="{msg.searchSectionMapDefinitionData}" ui:field="mapDefinitionSection"/>
-			<s:SearchSection heading="{msg.searchSectionDatasets}" ui:field="datasetSection"/>
-			<s:SearchSection heading="{msg.searchSectionPedigreeData}" ui:field="pedigreeSection"/>
-			<s:SearchSection heading="{msg.searchSectionLocationData}" ui:field="locationSection"/>
-		</b:PanelGroup>
+			<g:HTML ui:field="additionalDataTextShort" visible="false"/>
+
+			<b:PanelGroup b:id="accordion">
+				<s:SearchSection heading="{msg.searchSectionAccessionData}" preventHideSibling="true" ui:field="accessionSection"/>
+				<s:SearchSection heading="{msg.searchSectionAccessionAttributeData}" preventHideSibling="true" ui:field="accessionAttributeSection"/>
+				<s:SearchSection heading="{msg.searchSectionPhenotypeData}" preventHideSibling="true" ui:field="phenotypeSection"/>
+				<s:SearchSection heading="{msg.searchSectionCompoundData}" preventHideSibling="true" ui:field="compoundSection"/>
+				<s:SearchSection heading="{msg.searchSectionMapDefinitionData}" preventHideSibling="true" ui:field="mapDefinitionSection"/>
+				<s:SearchSection heading="{msg.searchSectionDatasets}" preventHideSibling="true" ui:field="datasetSection"/>
+				<s:SearchSection heading="{msg.searchSectionDatasetAttributeData}" preventHideSibling="true" ui:field="datasetAttributeSection"/>
+				<s:SearchSection heading="{msg.searchSectionPedigreeData}" preventHideSibling="true" ui:field="pedigreeSection"/>
+				<s:SearchSection heading="{msg.searchSectionLocationData}" preventHideSibling="true" ui:field="locationSection"/>
+			</b:PanelGroup>
+		</g:FlowPanel>
+
+		<g:FlowPanel ui:field="additionalDataPanel" visible="false">
+			<b:Heading size="H3" text="{msg.searchAdditionalDatasetsTitle}"/>
+
+			<g:HTML ui:field="additionalDataText"/>
+
+			<g:SimplePanel ui:field="additionalDataTablePanel"/>
+
+			<b:Button icon="REFRESH" text="{msg.generalUpdate}" ui:field="updateButton"/>
+		</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder>

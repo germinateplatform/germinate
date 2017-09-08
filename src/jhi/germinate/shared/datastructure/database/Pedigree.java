@@ -49,7 +49,7 @@ public class Pedigree extends DatabaseObject
 
 	private Accession           accession;
 	private Accession           parent;
-	private Integer             relationshipType;
+	private String              relationshipType;
 	private PedigreeDescription pedigreeDescription;
 	private String              relationShipDescription;
 	private Long                createdOn;
@@ -64,7 +64,7 @@ public class Pedigree extends DatabaseObject
 		super(id);
 	}
 
-	public Pedigree(Long id, Accession accession, Accession parent, Integer relationshipType, PedigreeDescription pedigreeDescription, String relationShipDescription, Long createdOn, Long updatedOn)
+	public Pedigree(Long id, Accession accession, Accession parent, String relationshipType, PedigreeDescription pedigreeDescription, String relationShipDescription, Long createdOn, Long updatedOn)
 	{
 		super(id);
 		this.accession = accession;
@@ -98,12 +98,12 @@ public class Pedigree extends DatabaseObject
 		return this;
 	}
 
-	public Integer getRelationshipType()
+	public String getRelationshipType()
 	{
 		return relationshipType;
 	}
 
-	public Pedigree setRelationshipType(Integer relationshipType)
+	public Pedigree setRelationshipType(String relationshipType)
 	{
 		this.relationshipType = relationshipType;
 		return this;
@@ -213,7 +213,7 @@ public class Pedigree extends DatabaseObject
 					return new Pedigree(id)
 							.setAccession(ACCESSION_CACHE.get(user, row.getLong(GERMINATEBASE_ID), row, foreignsFromResultSet))
 							.setParent(ACCESSION_CACHE.get(user, row.getLong(PARENT_ID), row, foreignsFromResultSet))
-							.setRelationshipType(row.getInt(RELATIONSHIP_TYPE))
+							.setRelationshipType(row.getString(RELATIONSHIP_TYPE))
 							.setPedigreeDescription(PEDIGREEDESCRIPTION_CACHE.get(user, row.getLong(PEDIGREEDESCRIPTION_ID), row, foreignsFromResultSet))
 							.setRelationShipDescription(row.getString(RELATIONSHIP_DESCRIPTION))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
@@ -249,7 +249,7 @@ public class Pedigree extends DatabaseObject
 			ValueQuery query = new ValueQuery(database, "INSERT INTO pedigrees (" + GERMINATEBASE_ID + ", " + PARENT_ID + ", " + RELATIONSHIP_TYPE + ", " + PEDIGREEDESCRIPTION_ID + ", " + RELATIONSHIP_DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getAccession().getId())
 					.setLong(object.getParent().getId())
-					.setInt(object.getRelationshipType())
+					.setString(object.getRelationshipType())
 					.setLong(object.getPedigreeDescription() != null ? object.getPedigreeDescription().getId() : null)
 					.setString(object.getRelationShipDescription());
 

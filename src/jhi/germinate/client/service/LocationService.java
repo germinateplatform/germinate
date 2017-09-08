@@ -197,17 +197,6 @@ public interface LocationService extends RemoteService
 	ServerResult<String> exportForIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException;
 
 	/**
-	 * Returns the {@link MegaEnvironment} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param megaEnvId  The {@link MegaEnvironment} id
-	 * @return The {@link MegaEnvironment} with the given id.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<MegaEnvironment> getMegaEnv(RequestProperties properties, Long megaEnvId) throws InvalidSessionException, DatabaseException;
-
-	/**
 	 * Returns a paginated list of {@link MegaEnvironment}s.
 	 *
 	 * @param properties The {@link RequestProperties}

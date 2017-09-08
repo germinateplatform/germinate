@@ -67,7 +67,13 @@ public class Tour extends JavaScriptObject
 		return tour;
 	}-*/;
 
-	public native final void addStep(TourStep step)/*-{
+	public final void addStep(TourStep step)
+	{
+		if (step != null)
+			addStepJs(step);
+	}
+
+	private native final void addStepJs(TourStep step)/*-{
 		this.addStep(step);
 	}-*/;
 

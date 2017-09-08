@@ -30,6 +30,7 @@ import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
+import java.util.Locale;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
@@ -52,7 +53,11 @@ import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
 /**
+ * The {@link PassportPage} shows all the information about a single {@link Accession}.
+ *
  * @author Sebastian Raubach
+ * @see Parameter#accessionId
+ * @see Parameter#accessionName
  */
 public class PassportPage extends Composite implements HasLibraries, HasHelp, HasHyperlinkButton
 {
@@ -235,7 +240,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	{
 		if (accession != null)
 		{
-//			ContentHolder.getInstance().updateShoppingCartButton(this, ShoppingCart.ItemType.ACCESSION); // TODO
+//			ContentHolder.getInstance().updateShoppingCartButton(this, MarkedItemList.ItemType.ACCESSION); // TODO
 
 			updateHeader();
 			updateMcpd();
@@ -318,7 +323,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 					e.printStackTrace();
 				}
 
-				return AttributeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+				return AttributeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, GerminateDatabaseTable.germinatebase, filter, callback);
 			}
 		});
 	}
@@ -456,7 +461,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 		pedigreeDownloadPanel.add(new OnDemandFileDownloadWidget((index, callback) -> PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), accession.getId(), Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE, callback), true)
 				.setHeading(null)
-				.setIconStyle(FileDownloadWidget.IconStyle.FONT_AWESOME)
+				.setIconStyle(FileDownloadWidget.IconStyle.IMAGE)
 				.addFile(Text.LANG.downloadPedigreeHelium())
 				.addType(FileType.helium));
 	}
@@ -546,7 +551,6 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				if (result.getServerResult() != null)
 				{
 					topWrapper.setVisible(true);
-					new DescriptionWidget(mcpdPanel, Text.LANG.passportColumnGID(), accession.getGeneralIdentifier());
 					new DescriptionWidget(mcpdPanel, Text.LANG.passportColumnGID(), accession.getGeneralIdentifier());
 					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAccename(), accession.getNumber());
 					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdPuid(), accession.getPuid());

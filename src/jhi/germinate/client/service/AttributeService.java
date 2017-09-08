@@ -24,6 +24,7 @@ import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
@@ -35,8 +36,8 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("attribute")
 public interface AttributeService extends RemoteService
 {
-	String[] COLUMNS_SORTABLE            = {Attribute.ID, Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Attribute.NAME, Attribute.DESCRIPTION, Attribute.DATA_TYPE, AttributeData.VALUE};
-	String[] COLUMNS_ATTRIBUTES_SORTABLE = {Attribute.ID, Attribute.NAME, Attribute.DESCRIPTION, Attribute.DATA_TYPE, AttributeData.VALUE};
+	String[] COLUMNS_SORTABLE_ACCESSION = {Attribute.ID, Attribute.TARGET_TABLE, Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Attribute.NAME, Attribute.DESCRIPTION, Attribute.DATA_TYPE, AttributeData.VALUE};
+	String[] COLUMNS_SORTABLE_DATASET   = {Attribute.ID, Attribute.TARGET_TABLE, Dataset.ID, Dataset.DESCRIPTION, Attribute.NAME, Attribute.DESCRIPTION, Attribute.DATA_TYPE, AttributeData.VALUE};
 
 	final class Inst
 	{
@@ -76,7 +77,7 @@ public interface AttributeService extends RemoteService
 	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
-	PaginatedServerResult<List<AttributeData>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
+	PaginatedServerResult<List<AttributeData>> getForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
 	 * Returns the ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.
@@ -90,7 +91,7 @@ public interface AttributeService extends RemoteService
 	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
-	ServerResult<List<String>> getIdsForFilter(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
+	ServerResult<List<String>> getIdsForFilter(RequestProperties properties, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
 	 * Exports all the data associated with {@link AttributeData} objects mathing the given {@link PartialSearchQuery}.
@@ -105,5 +106,5 @@ public interface AttributeService extends RemoteService
 	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
-	ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException;
+	ServerResult<String> export(RequestProperties properties, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException;
 }

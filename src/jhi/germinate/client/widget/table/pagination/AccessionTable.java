@@ -20,15 +20,16 @@ package jhi.germinate.client.widget.table.pagination;
 import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import java.util.*;
+import java.util.Locale;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -42,7 +43,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 {
 	public AccessionTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
-		super(ShoppingCart.ItemType.ACCESSION, selectionMode, sortingEnabled);
+		super(MarkedItemList.ItemType.ACCESSION, selectionMode, sortingEnabled);
 	}
 
 	@Override
@@ -70,9 +71,15 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return AccessionTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<Accession, ?> column;
+		DatabaseObjectFilterColumn<Accession, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -94,9 +101,9 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, Accession object)
+				public String getCellStyle()
 				{
-					return Style.combine(super.getCellStyleNames(context, object), Style.LAYOUT_WHITE_SPACE_NO_WRAP);
+					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
 			};
 			column.setDataStoreName(Accession.ID);
@@ -203,9 +210,9 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 
 			@Override
-			public String getCellStyleNames(Cell.Context context, Accession object)
+			public String getCellStyle()
 			{
-				return Style.combine(super.getCellStyleNames(context, object), Style.TEXT_ITALIC);
+				return Style.TEXT_ITALIC;
 			}
 		};
 		column.setDataStoreName(Taxonomy.GENUS);
@@ -230,9 +237,9 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 
 			@Override
-			public String getCellStyleNames(Cell.Context context, Accession object)
+			public String getCellStyle()
 			{
-				return Style.combine(super.getCellStyleNames(context, object), Style.TEXT_ITALIC);
+				return Style.TEXT_ITALIC;
 			}
 		};
 		column.setDataStoreName(Taxonomy.SPECIES);
@@ -257,9 +264,9 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 
 			@Override
-			public String getCellStyleNames(Cell.Context context, Accession object)
+			public String getCellStyle()
 			{
-				return Style.combine(super.getCellStyleNames(context, object), Style.TEXT_ITALIC);
+				return Style.TEXT_ITALIC;
 			}
 		};
 		column.setDataStoreName(Subtaxa.TAXONOMY_IDENTIFIER);
@@ -347,9 +354,9 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 
 			@Override
-			public String getCellStyleNames(Cell.Context context, Accession object)
+			public String getCellStyle()
 			{
-				return Style.combine(super.getCellStyleNames(context, object), Style.LAYOUT_WHITE_SPACE_NO_WRAP);
+				return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 			}
 
 			@Override
@@ -390,7 +397,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, Accession object, int column)
+	protected void onItemSelected(NativeEvent event, Accession object, int column)
 	{
 		/* Get the id */
 		LongParameterStore.Inst.get().put(Parameter.accessionId, object.getId());

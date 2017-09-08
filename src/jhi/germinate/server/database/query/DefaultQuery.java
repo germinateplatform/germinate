@@ -17,14 +17,13 @@
 
 package jhi.germinate.server.database.query;
 
-import jhi.germinate.server.database.Database.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.exception.*;
 
 /**
- * A {@link DefaultQuery} is a query that will return a {@link GerminateTable} as its result. This class supports "fluent" code style.
+ * A {@link DefaultQuery} is a query that will return a {@link DatabaseResult} as its result.
  *
  * @author Sebastian Raubach
  */
@@ -33,95 +32,12 @@ public class DefaultQuery extends GerminateQuery<DefaultQuery>
 	/**
 	 * Creates a new {@link DefaultQuery} with the given query and column names to extract. Checks the session id for validity.
 	 *
-	 * @param databaseType      The {@link DatabaseType}
-	 * @param queryType         The {@link QueryType}
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
+	 * @param query    The sql query
+	 * @param userAuth The {@link UserAuth} object containing the user information
 	 */
-	public DefaultQuery(DatabaseType databaseType, QueryType queryType, RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException,
-			DatabaseException
+	public DefaultQuery(String query, UserAuth userAuth)
 	{
-		super(databaseType, queryType, requestProperties, servlet, query);
-	}
-
-	/**
-	 * Creates a new {@link DefaultQuery} with the given query and column names to extract. Checks the session id for validity.
-	 *
-	 * @param databaseType      The {@link DatabaseType}
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
-	 */
-	public DefaultQuery(DatabaseType databaseType, RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException, DatabaseException
-	{
-		this(databaseType, QueryType.DATA, requestProperties, servlet, query);
-	}
-
-	/**
-	 * Creates a new {@link DefaultQuery} with the given query and column names to extract. Checks the session id for validity.
-	 *
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
-	 */
-	public DefaultQuery(RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException, DatabaseException
-	{
-		this(DatabaseType.MYSQL, requestProperties, servlet, query);
-	}
-
-	/**
-	 * Creates a new {@link DefaultQuery} with the given query and column names to extract. Does NOT check the session id for validity.
-	 *
-	 * @param databaseType The {@link DatabaseType}
-	 * @param queryType    The {@link QueryType}
-	 * @param query        The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public DefaultQuery(DatabaseType databaseType, QueryType queryType, String query) throws DatabaseException
-	{
-		super(databaseType, queryType, query);
-	}
-
-	/**
-	 * Creates a new {@link DefaultQuery} with the given query and column names to extract. Does NOT check the session id for validity.
-	 *
-	 * @param databaseType The {@link DatabaseType}
-	 * @param query        The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public DefaultQuery(DatabaseType databaseType, String query) throws DatabaseException
-	{
-		this(databaseType, QueryType.DATA, query);
-	}
-
-	/**
-	 * Creates a new {@link DefaultQuery} with the given query and column names to extract. Does NOT check the session id for validity.
-	 *
-	 * @param queryType The {@link QueryType}
-	 * @param query     The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public DefaultQuery(QueryType queryType, String query) throws DatabaseException
-	{
-		this(DatabaseType.MYSQL, queryType, query);
-	}
-
-	/**
-	 * Creates a new {@link DefaultQuery} with the given query and column names to extract. Does NOT check the session id for validity.
-	 *
-	 * @param query The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public DefaultQuery(String query) throws DatabaseException
-	{
-		this(DatabaseType.MYSQL, query);
+		super(query, userAuth);
 	}
 
 	/**
@@ -132,11 +48,13 @@ public class DefaultQuery extends GerminateQuery<DefaultQuery>
 	 */
 	public DefaultStreamer getStreamer() throws DatabaseException
 	{
+		init();
 		return new DefaultStreamer(database, sqlDebug, stmt);
 	}
 
 	public DatabaseResult getResult() throws DatabaseException
 	{
+		init();
 		return stmt.query();
 	}
 }

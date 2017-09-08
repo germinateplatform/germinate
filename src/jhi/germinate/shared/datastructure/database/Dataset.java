@@ -32,6 +32,8 @@ import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.exception.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -51,6 +53,7 @@ public class Dataset extends DatabaseObject
 	public static final String VERSION          = "datasets.version";
 	public static final String CREATED_BY       = "datasets.created_by";
 	public static final String DATASET_STATE_ID = "datasets.dataset_state_id";
+	public static final String LICENSE_ID       = "datasets.license_id";
 	public static final String IS_EXTERNAL      = "datasets.is_external";
 
 	public static final String HYPERLINK = "datasets.hyperlink";
@@ -68,12 +71,14 @@ public class Dataset extends DatabaseObject
 	private String       version;
 	private Long         userId;
 	private DatasetState datasetState;
+	private License      license;
 	private Boolean      isExternal;
 	private String       hyperlink;
 	private Long         createdOn;
 	private Long         updatedOn;
 	private Long size       = 0L;
 	private Long dataPoints = 0L;
+	private List<AttributeData> attributeData;
 
 	public Dataset()
 	{
@@ -84,7 +89,7 @@ public class Dataset extends DatabaseObject
 		super(id);
 	}
 
-	public Dataset(Long id, Experiment experiment, Location location, String description, Date dateStart, Date dateEnd, String sourceFile, String contact, String version, Long userId, DatasetState datasetState, Boolean isExternal, String hyperlink, Long createdOn, Long updatedOn, Long size, Long dataPoints)
+	public Dataset(Long id, Experiment experiment, Location location, String description, Date dateStart, Date dateEnd, String sourceFile, String contact, String version, Long userId, DatasetState datasetState, License license, Boolean isExternal, String hyperlink, Long createdOn, Long updatedOn, Long size, Long dataPoints)
 	{
 		super(id);
 		this.experiment = experiment;
@@ -97,6 +102,7 @@ public class Dataset extends DatabaseObject
 		this.version = version;
 		this.userId = userId;
 		this.datasetState = datasetState;
+		this.license = license;
 		this.isExternal = isExternal;
 		this.hyperlink = hyperlink;
 		this.createdOn = createdOn;
@@ -215,6 +221,17 @@ public class Dataset extends DatabaseObject
 		return this;
 	}
 
+	public License getLicense()
+	{
+		return license;
+	}
+
+	public Dataset setLicense(License license)
+	{
+		this.license = license;
+		return this;
+	}
+
 	public Boolean isExternal()
 	{
 		return isExternal;
@@ -287,6 +304,34 @@ public class Dataset extends DatabaseObject
 		return this;
 	}
 
+	public List<AttributeData> getAttributeData()
+	{
+		return attributeData;
+	}
+
+	public Dataset setAttributeData(List<AttributeData> attributeData)
+	{
+		this.attributeData = attributeData;
+		return this;
+	}
+
+	public boolean hasLicenseBeenAccepted(String userId)
+	{
+		try
+		{
+			return hasLicenseBeenAccepted(Long.parseLong(userId));
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+
+	public boolean hasLicenseBeenAccepted(Long userId)
+	{
+		return license == null || license.getLicenseLog() != null && Objects.equals(license.getLicenseLog().getUser(), userId);
+	}
+
 	@Override
 	public String toString()
 	{
@@ -301,13 +346,14 @@ public class Dataset extends DatabaseObject
 				", version='" + version + '\'' +
 				", userId=" + userId +
 				", datasetState=" + datasetState +
+				", license=" + license +
 				", isExternal=" + isExternal +
 				", hyperlink='" + hyperlink + '\'' +
 				", createdOn=" + createdOn +
 				", updatedOn=" + updatedOn +
 				", size=" + size +
 				", dataPoints=" + dataPoints +
-				'}';
+				"} " + super.toString();
 	}
 
 	@Override
@@ -343,11 +389,13 @@ public class Dataset extends DatabaseObject
 
 		private static DatabaseObjectCache<Experiment> EXPERIMENT_CACHE;
 		private static DatabaseObjectCache<Location>   LOCATION_CACHE;
+		private static DatabaseObjectCache<License>    LICENSE_CACHE;
 
 		private Parser()
 		{
 			EXPERIMENT_CACHE = createCache(Experiment.class, ExperimentManager.class);
 			LOCATION_CACHE = createCache(Location.class, LocationManager.class);
+			LICENSE_CACHE = createCache(License.class, LicenseManager.class);
 		}
 
 		@Override
@@ -364,6 +412,7 @@ public class Dataset extends DatabaseObject
 					Dataset dataset = new Dataset(id)
 							.setExperiment(EXPERIMENT_CACHE.get(user, row.getLong(EXPERIMENT_ID), row, foreignsFromResultSet))
 							.setLocation(LOCATION_CACHE.get(user, row.getLong(LOCATION_ID), row, foreignsFromResultSet))
+							.setLicense(LICENSE_CACHE.get(user, row.getLong(LICENSE_ID), row, foreignsFromResultSet))
 							.setDescription(row.getString(DESCRIPTION))
 							.setDateStart(row.getDate(DATE_START))
 							.setDateEnd(row.getDate(DATE_END))
@@ -389,6 +438,18 @@ public class Dataset extends DatabaseObject
 					try
 					{
 						dataset.setDataPoints(row.getLong(NR_OF_DATA_POINTS));
+					}
+					catch (Exception e)
+					{
+						// Ignore this
+					}
+
+					try
+					{
+						PartialSearchQuery filter = new PartialSearchQuery();
+						filter.add(new SearchCondition(Dataset.ID, new Equal(), Long.toString(dataset.getId()), Long.class.getSimpleName()));
+
+						dataset.setAttributeData(AttributeDataManager.getAllForDatasetFilter(user, filter, Pagination.getDefault(), false).getServerResult());
 					}
 					catch (Exception e)
 					{

@@ -73,8 +73,6 @@ public final class MainMenu
 			MenuItem genetic = new MenuItem(data, Text.LANG.menuGenetic(), Style.MDI_DNA);
 			if (GerminateSettingsHolder.isPageAvailable(Page.MAP_DETAILS))
 				genetic.addChild(new MenuItem(genetic, Text.LANG.menuMaps(), Page.MAP_DETAILS));
-			if (GerminateSettingsHolder.isPageAvailable(Page.GBS_EXPORT))
-				genetic.addChild(new MenuItem(genetic, Text.LANG.menuGenotypicData(), Page.GBS_EXPORT));
 			if (GerminateSettingsHolder.isPageAvailable(Page.GENOTYPE_DATASETS))
 				genetic.addChild(new MenuItem(genetic, Text.LANG.menuGenotypes(), Page.GENOTYPE_DATASETS));
 			if (GerminateSettingsHolder.isPageAvailable(Page.ALLELE_FREQUENCY_DATASET))
@@ -84,16 +82,13 @@ public final class MainMenu
 				data.addChild(genetic);
 
 			MenuItem phenotype = new MenuItem(data, Text.LANG.menuPhenotypes(), Style.MDI_TAG_MULTIPLE);
-			if (GerminateSettingsHolder.isPageAvailable(Page.CATEGORICAL_DATASETS))
-				phenotype.addChild(new MenuItem(phenotype, Text.LANG.menuPhenotypes(), Page.CATEGORICAL_DATASETS));
+//			if (GerminateSettingsHolder.isPageAvailable(Page.CATEGORICAL_DATASETS))
+//				phenotype.addChild(new MenuItem(phenotype, Text.LANG.menuPhenotypes(), Page.CATEGORICAL_DATASETS));
 			if (GerminateSettingsHolder.isPageAvailable(Page.TRIALS_DATASETS))
 				phenotype.addChild(new MenuItem(phenotype, Text.LANG.menuTrials(), Page.TRIALS_DATASETS));
 
 			if (phenotype.hasChildren())
 				data.addChild(phenotype);
-
-			if (GerminateSettingsHolder.isPageAvailable(Page.PCO_COORDINATES))
-				data.addChild(new MenuItem(data, Text.LANG.menuPCOCoordinates(), Page.PCO_COORDINATES));
 
 			MenuItem compounds = new MenuItem(data, Text.LANG.menuCompounds(), Style.MDI_FLASK);
 

@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `usergroups` (
   `id`  int(11) NOT NULL AUTO_INCREMENT ,
   `name`  varchar(255) NOT NULL COMMENT 'The name of the user group.',
   `description`  text NULL COMMENT 'A description of the user group.',
-  `created_on`  datetime NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `created_on`  datetime NULL COMMENT 'When the record was created.',
   `updated_on`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
   PRIMARY KEY (`id`)
 );
@@ -102,3 +102,69 @@ MODIFY COLUMN `user_id`  int(11) NULL COMMENT 'Foreign key to Gatekeeper users (
 ADD COLUMN `group_id`  int(11) NULL COMMENT 'Foreign key to usergroups table.' AFTER `user_id`;
 
 ALTER TABLE `datasetpermissions` ADD FOREIGN KEY (`group_id`) REFERENCES `usergroups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `locales` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`name`  varchar(255) NOT NULL ,
+`description`  text NULL ,
+`created_on`  datetime NULL COMMENT 'When the record was created.',
+`updated_on`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `licenses` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`name`  varchar(255) NOT NULL ,
+`description`  text NULL ,
+`created_on`  datetime NULL COMMENT 'When the record was created.',
+`updated_on`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `licensedata` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`license_id`  int(11) NOT NULL ,
+`locale_id`  int(11) NOT NULL ,
+`content`  text NULL ,
+`created_on`  datetime NULL COMMENT 'When the record was created.',
+`updated_on`  timestamp NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+PRIMARY KEY (`id`),
+FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (`locale_id`) REFERENCES `locales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS `licenselogs` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`license_id`  int(11) NOT NULL ,
+`user_id`  int(11) NOT NULL ,
+`accepted_on`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+PRIMARY KEY (`id`),
+FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+ALTER TABLE `datasets`
+ADD COLUMN `license_id`  int(11) NULL AFTER `dataset_state_id`;
+
+ALTER TABLE `datasets` ADD FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `pedigrees`
+MODIFY COLUMN `relationship_type`  enum('M','F','OTHER') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'OTHER' COMMENT 'Male or Female parent. Should be recorded as \'M\' (male) or \'F\' (female).' AFTER `parent_id`;
+
+UPDATE pedigrees SET relationship_type = 'OTHER' WHERE ISNULL(relationship_type);
+
+ALTER TABLE `pedigrees`
+MODIFY COLUMN `relationship_type`  enum('M','F','OTHER') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'OTHER' COMMENT 'Male or Female parent. Should be recorded as \'M\' (male) or \'F\' (female).' AFTER `parent_id`;
+
+ALTER TABLE `attributes`
+ADD COLUMN `target_table`  varchar(255) NOT NULL DEFAULT "germinatebase" AFTER `datatype`;
+
+ALTER TABLE `attributedata` DROP FOREIGN KEY `attributedata_ibfk_2`;
+
+ALTER TABLE `attributedata`
+CHANGE COLUMN `germinatebase_id` `foreign_id`  int(11) NOT NULL COMMENT 'Foreign key to germinatebase (germinatebase.id).' AFTER `attribute_id`;
+
+ALTER TABLE `attributedata`
+MODIFY COLUMN `value`  text CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'The value of the attribute.' AFTER `foreign_id`;
+
+UPDATE experiments SET experiment_type_id = 3 WHERE experiment_type_id = 2;
+DELETE FROM experimenttypes WHERE id = 2

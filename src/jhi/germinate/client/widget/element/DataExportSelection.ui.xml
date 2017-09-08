@@ -38,7 +38,7 @@
 			<b:Column size="XS_12,MD_6">
 				<b:Heading size="H4" text="{msg.phenotypeExportHeadingAccessionGroups}"/>
 				<g:HTML ui:field="groupHtml"/>
-				<g8:GroupListBox multipleSelect="true" ui:field="groupBox"/>
+				<g8:GroupListBox type="ACCESSION" multipleSelect="true" ui:field="groupBox"/>
 			</b:Column>
 		</b:Row>
 

@@ -17,12 +17,6 @@
 
 package jhi.germinate.shared.enums;
 
-import com.google.gwt.i18n.shared.*;
-
-import java.util.*;
-
-import jhi.germinate.shared.datastructure.database.*;
-
 public enum ServerProperty
 {
 	DATABASE_USERNAME("Germinate.Database.Username", null, true),
@@ -45,12 +39,10 @@ public enum ServerProperty
 	GERMINATE_UPLOAD_SIZE_LIMIT_MB("Germinate.UploadSizeLimitMB", "0.5", false),
 	GOOGLE_ANALYTICS_ENABLED("GoogleAnalytics.Enabled", "false", false),
 	GOOGLE_ANALYTICS_TRACKING_ID("GoogleAnalytics.TrackingId", null, false),
-	GOOGLE_MAPS_API_KEY("GoogleMaps.Api.Key", null, false),
 	COOKIE_NOTIFIER_ENABLED("CookieNotifier.Enabled", "false", false),
 	GERMINATE_AVAILABLE_PAGES("Germinate.AvailablePages", null, true),
 	GERMINATE_ACCESSION_DISPLAY_COLUMN("Germinate.AccessionDisplayColumn", "name", false),
 	GERMINATE_BASE_SEARCH_COLUMN("Germinate.BaseSearchColumn", "name", false),
-	GERMINATE_COLLECTINGSITE_TREEMAP_COLUMN("Germinate.CollectingsiteTreemapColumn", Country.COUNTRY_NAME, false),
 	GERMINATE_SHOW_HOME_ON_LOGIN("Germinate.ShowHomeOnLogin", "false", false),
 	GERMINATE_EXTERNAL_DATA_FOLDER("Germinate.ExternalDataFolder", null, false),
 	GERMINATE_HIDE_ID_COLUMNS("Germinate.HideIdColumns", "false", false),
@@ -103,23 +95,5 @@ public enum ServerProperty
 	public boolean isRequired()
 	{
 		return required;
-	}
-
-	public static ServerProperty getForKey(String key)
-	{
-		for (ServerProperty property : values())
-		{
-			if (Objects.equals(key, property.key))
-				return property;
-		}
-
-		return null;
-	}
-
-	private static String getYear()
-	{
-		return new DateTimeFormat("yyyy", new DefaultDateTimeFormatInfo())
-		{
-		}.format(new Date());
 	}
 }

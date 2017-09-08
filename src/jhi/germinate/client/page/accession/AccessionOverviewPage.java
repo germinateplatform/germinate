@@ -23,7 +23,6 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 import java.util.Map;
@@ -62,7 +61,9 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 	@Override
 	protected void setUpContent()
 	{
-		panel.add(new Heading(HeadingSize.H3, Text.LANG.browseAccessionsTitle()));
+		PageHeader header = new PageHeader();
+		header.setText(Text.LANG.browseAccessionsTitle());
+		panel.add(header);
 		panel.add(new HTML(Text.LANG.browseAccessionsText()));
 
 		/* Add the main accession table */

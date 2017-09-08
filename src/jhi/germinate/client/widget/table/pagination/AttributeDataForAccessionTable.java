@@ -17,13 +17,12 @@
 
 package jhi.germinate.client.widget.table.pagination;
 
-import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -58,9 +57,15 @@ public abstract class AttributeDataForAccessionTable extends DatabaseObjectPagin
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return AttributeDataForAccessionTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<AttributeData, ?> column;
+		DatabaseObjectFilterColumn<AttributeData, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -79,7 +84,7 @@ public abstract class AttributeDataForAccessionTable extends DatabaseObjectPagin
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, AttributeData object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -171,7 +176,7 @@ public abstract class AttributeDataForAccessionTable extends DatabaseObjectPagin
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, AttributeData object, int column)
+	protected void onItemSelected(NativeEvent event, AttributeData object, int column)
 	{
 	}
 }

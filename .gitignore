@@ -44,3 +44,12 @@ build-dev.properties
 /war/css/images/css-images/
 /war/js/js-external
 /war/favicon.ico
+
+# LaTeX files to exclude
+documentation/*/*.aux
+documentation/*/*.log
+documentation/*/*.bbl
+documentation/*/*.blg
+documentation/*/*.out
+documentation/*/*.toc
+documentation/*/*.synctex.gz

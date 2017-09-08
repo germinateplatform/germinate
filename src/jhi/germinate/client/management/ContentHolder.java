@@ -82,12 +82,13 @@ public class ContentHolder
 		/* Initialize various page contents */
 		MainMenu.init();
 		LanguageSelector.init();
-		ShoppingCart.init();
+		MarkedItemList.init();
 		ShareWidget.init();
 		AccountSettings.init();
 		SearchPanel.init();
 		ParallaxBanner.init();
 		DebugInfoPanel.init();
+		HelpWidget.init();
 	}
 
 	private native void closeDropdown()/*-{

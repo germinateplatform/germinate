@@ -62,17 +62,6 @@ public interface MarkerServiceAsync
 	void getIdsForFilter(RequestProperties properties, PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
-	 * Returns the {@link Marker}s for the given {@link Request}. Returns a {@link Response} object that can be used in combination with a {@link
-	 * com.google.gwt.user.client.ui.SuggestBox}.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param query      The query
-	 * @param limit      The maximal number of results
-	 * @param callback   {@link AsyncCallback}
-	 */
-	void getSuggestions(RequestProperties properties, String query, int limit, AsyncCallback<List<ItemSuggestion>> callback);
-
-	/**
 	 * Returns the {@link Marker} for the given name.
 	 *
 	 * @param properties The {@link RequestProperties}

@@ -98,9 +98,9 @@ public class MegaEnvironmentsPage extends Composite implements ParallaxBannerPag
 			}
 
 			@Override
-			protected void onSelectionChanged(NativeEvent event, MegaEnvironment object, int column)
+			protected void onItemSelected(NativeEvent event, MegaEnvironment object, int column)
 			{
-				super.onSelectionChanged(event, object, column);
+				super.onItemSelected(event, object, column);
 
 				megaEnvironment = object;
 				setData();

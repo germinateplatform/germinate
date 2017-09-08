@@ -21,7 +21,6 @@ import java.io.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map;
-import java.util.logging.*;
 import java.util.stream.*;
 
 import jhi.flapjack.io.binning.*;
@@ -294,10 +293,6 @@ public class FlapjackUtils
 	{
 		try
 		{
-			Logger.getLogger("").log(Level.INFO, "PARAMS: " + params.toString());
-			Logger.getLogger("").log(Level.INFO, "OUTPUT: " + outputFile);
-			Logger.getLogger("").log(Level.INFO, "HISTOGRAM: " + histogramFile);
-
 			if (USE_FLAPJACK_API)
 			{
 				CreateImage createImage = new CreateImage(outputFile);

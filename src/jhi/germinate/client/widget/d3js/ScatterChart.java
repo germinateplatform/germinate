@@ -85,8 +85,10 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 		setMessage(message);
 
 		this.experimentType = expertimentType;
-		this.objects = new ArrayList<>(objects);
-		this.groups = new ArrayList<>(groups);
+		if (objects != null)
+			this.objects = new ArrayList<>(objects);
+		if (groups != null)
+			this.groups = new ArrayList<>(groups);
 
 		initComboBoxes();
 	}
@@ -171,7 +173,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 					yAxisTitle += " [" + secondCompound.getUnit().getAbbreviation() + "]";
 				break;
 			case trials:
-			case phenotype:
 			default:
 				Phenotype firstPhenotype = (Phenotype) f;
 				Phenotype secondPhenotype = (Phenotype) s;
@@ -193,7 +194,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	{
 		switch (experimentType)
 		{
-			case phenotype:
 			case trials:
 				TrialService.Inst.get().exportPhenotypeScatter(Cookie.getRequestProperties(), datasetIds, firstId, secondId, groupId, callback);
 				break;
@@ -212,9 +212,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			{
 				case trials:
 					datasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
-					break;
-				case phenotype:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.phenotypeDatasetIds);
 					break;
 				case compound:
 					datasetIds = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
@@ -253,8 +250,8 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	protected MenuItem[] getAdditionalMenuItems()
 	{
 		MenuItem[] menuItems = new MenuItem[2];
-		menuItems[0] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MARKED, Text.LANG.cartAddSelectedToCartButton()), () -> ShoppingCart.add(ShoppingCart.ItemType.ACCESSION, getSelectedDataPoints()));
-		menuItems[1] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_BLANK_OUTLINE, Text.LANG.cartRemoveSelectedFromCartButton()), () -> ShoppingCart.remove(ShoppingCart.ItemType.ACCESSION, getSelectedDataPoints()));
+		menuItems[0] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MARKED, Text.LANG.cartAddSelectedToCartButton()), () -> MarkedItemList.add(MarkedItemList.ItemType.ACCESSION, getSelectedDataPoints()));
+		menuItems[1] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_BLANK_OUTLINE, Text.LANG.cartRemoveSelectedFromCartButton()), () -> MarkedItemList.remove(MarkedItemList.ItemType.ACCESSION, getSelectedDataPoints()));
 
 		return menuItems;
 	}

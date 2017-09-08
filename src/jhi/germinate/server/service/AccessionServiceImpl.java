@@ -51,8 +51,6 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 
 	private static final String QUERY_ACCESSIONS_DATA_IDS_DOWNLOAD = "SELECT germinatebase.*, subtaxa.subtaxa_author AS subtaxa_author, subtaxa.taxonomic_identifier AS subtaxa_taxonomic_identifier, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxonomies_species, taxonomies.species_author AS taxonomies_species_author, taxonomies.cropname AS taxonomies_crop_name, taxonomies.ploidy AS taxonomies_ploidy, locations.state AS locations_state, locations.region AS locations_region, locations.site_name AS locations_site_name, locations.elevation AS locations_elevation, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, countries.country_name AS countries_country_name, institutions.code AS institutions_code, institutions.name AS institutions_name, institutions.acronym AS institutions_acronym, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.address AS institutions_address FROM germinatebase LEFT JOIN subtaxa ON germinatebase.subtaxa_id = subtaxa.id LEFT JOIN taxonomies ON germinatebase.taxonomy_id = taxonomies.id LEFT JOIN locations ON germinatebase.location_id = locations.id LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN institutions ON institutions.id = germinatebase.institution_id WHERE germinatebase.id IN (%s)";
 
-	private static final String QUERY_ACCESSION_SUGGESTIONS = "SELECT id, %s FROM germinatebase WHERE %s LIKE ? ORDER BY %s LIMIT ?";
-
 	static final String GROUP_PREVIEW_LIST     = "group-preview-list";
 	static final String GROUP_PREVIEW_FILENAME = "group-preview-filename";
 
@@ -140,7 +138,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 
 		String idString = Util.joinCollection(accessionIds, ",", true);
 
-		GerminateTableQuery query = new GerminateTableQuery(properties, this, "call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_ACCESSION_DATA + "(?, ?)", null)
+		GerminateTableQuery query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_ACCESSION_DATA + "(?, ?)", userAuth, null)
 				.setBoolean(includeAttributes)
 				.setString(idString);
 
@@ -163,13 +161,13 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 
 		if (groupId != null && groupId != -1)
 		{
-			Group group = new GroupManager().getById(UserAuth.getFromSession(this, properties), groupId).getServerResult();
+			Group group = new GroupManager().getById(userAuth, groupId).getServerResult();
 
-			if (group.getVisibility() || (group.getCreatedBy() != null && Objects.equals(Long.toString(group.getCreatedBy()), properties.getUserId())))
+			if (userAuth.isAdmin() || group.getVisibility() || (group.getCreatedBy() != null && Objects.equals(group.getCreatedBy(), properties.getUserId())))
 			{
 				/* If we get here, the user either has permissions to edit the group
 			 	 * or the group is public */
-				query = new GerminateTableQuery(properties, this, "call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_GROUP_DATA + "(?, ?)", null)
+				query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_GROUP_DATA + "(?, ?)", userAuth, null)
 						.setBoolean(includeAttributes)
 						.setLong(groupId);
 			}
@@ -181,7 +179,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		}
 		else
 		{
-			query = new GerminateTableQuery(properties, this, "call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?)", null)
+			query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?)", userAuth, null)
 					.setBoolean(includeAttributes);
 		}
 
@@ -268,36 +266,13 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public List<ItemSuggestion> getSuggestions(RequestProperties properties, String query, int limit, String column) throws InvalidSessionException, DatabaseException, InvalidColumnException
-	{
-		column = Util.checkSortColumn(column, AccessionManager.COLUMNS_TABLE, Accession.ID);
-
-		String formatted = String.format(QUERY_ACCESSION_SUGGESTIONS, column, column, column);
-
-		try (GerminateTableStreamer streamer = new GerminateTableQuery(properties, this, formatted, new String[]{Accession.ID, column})
-				.setString("%" + query + "%")
-				.setInt(limit)
-				.getStreamer())
-		{
-			List<ItemSuggestion> suggestions = new ArrayList<>();
-
-			GerminateRow row;
-			while ((row = streamer.next()) != null)
-			{
-				suggestions.add(new ItemSuggestion(Long.parseLong(row.get(Accession.ID)), row.get(column)));
-			}
-
-			streamer.close();
-
-			return suggestions;
-		}
-	}
-
-	@Override
 	public ServerResult<String> exportForIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException
 	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
 		String formatted = String.format(QUERY_ACCESSIONS_DATA_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
-		try (GerminateTableStreamer streamer = new GerminateTableQuery(properties, this, formatted, null)
+		try (GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
 				.setStrings(ids)
 				.getStreamer())
 		{

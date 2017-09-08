@@ -48,7 +48,6 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 {
 	private static final long serialVersionUID = -2599538621272643710L;
 
-	private static final String QUERY_DATASET_FILE  = "SELECT source_file FROM datasets WHERE id = ?";
 	private static final String QUERY_DATASET_STATS = "SELECT experimenttypes.description AS experimentType, DATE_FORMAT(datasets.created_on, '%%Y') AS theYear, SUM(datasetmeta.nr_of_data_objects) AS nrOfDataObjects, SUM(datasetmeta.nr_of_data_points) AS nrOfDataPoints FROM datasets LEFT JOIN datasetmeta ON datasets.id = datasetmeta.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id LEFT JOIN datasetpermissions ON datasetpermissions.dataset_id = datasets.id LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id WHERE datasets.is_external = 0 AND DATE_FORMAT(datasets.created_on, '%%Y') IS NOT NULL AND %s GROUP BY experimenttypes.description, theYear ORDER BY experimenttypes.description, theYear";
 
 	@Override
@@ -96,6 +95,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		return DatasetManager.getAllForAccessionId(userAuth, accessionId, pagination);
 	}
 
+	@Override
 	public ServerResult<String> getDatasetStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
 	{
 		Session.checkSession(properties, this);
@@ -143,15 +143,12 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 			formatted = String.format(QUERY_DATASET_STATS, DatasetManager.BITS_PUBLIC);
 		}
 
-		GerminateTableQuery q = new GerminateTableQuery(formatted, null);
+		GerminateTableQuery q = new GerminateTableQuery(formatted, userAuth, null);
 
-		/* If the user isn't an admin, we have to add the user id twice to the query */
+
+		/* If the user isn't an admin, we have to add the user id twice more to the query */
 		if (isPrivate && !details.isAdmin())
-		{
-			q.setLong(userAuth.getId())
-			 .setLong(userAuth.getId())
-			 .setLong(userAuth.getId());
-		}
+			q.setLong(userAuth.getId());
 
 		ServerResult<GerminateTable> table = q.run();
 
@@ -283,6 +280,34 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		/* Get the data based on the dataset ids of the datasets containing the marker */
 		return DatasetManager.getByIdsPaginated(userAuth, ids, pagination);
+	}
+
+	@Override
+	public ServerResult<Boolean> updateLicenseLogs(RequestProperties properties, List<LicenseLog> logs) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+
+		return LicenseLogManager.update(userAuth, logs);
+	}
+
+	@Override
+	public PaginatedServerResult<List<Dataset>> getWithUnacceptedLicense(RequestProperties properties, List<ExperimentType> types, Pagination pagination) throws InvalidSessionException, InsufficientPermissionsException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return DatasetManager.getAllWithUnacceptedLicense(userAuth, types, pagination);
+	}
+
+	@Override
+	public ServerResult<Experiment> getExperiment(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return new ExperimentManager().getById(userAuth, id);
 	}
 
 	private static class DatasetStats

@@ -466,6 +466,6 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.LEAFLET, Library.LEAFLET_MINIMAP, Library.LEAFLET_DRAW, Library.LEAFLET_GEODESIC};
+		return new Library[]{Library.LEAFLET_COMPLETE};
 	}
 }

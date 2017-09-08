@@ -63,6 +63,16 @@ public class SearchSection extends Composite
 		panelHeader.setDataTarget("#" + id);
 	}
 
+	public void setPreventHideSibling(String preventHideSibling)
+	{
+		setPreventHideSibling(Boolean.parseBoolean(preventHideSibling));
+	}
+
+	public void setPreventHideSibling(boolean preventHideSibling)
+	{
+		panelHeader.setDataParent(null);
+	}
+
 	public void setHeading(String title)
 	{
 		header.setText(title);

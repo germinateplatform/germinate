@@ -30,17 +30,17 @@ import jhi.germinate.shared.datastructure.*;
 public enum Parameter
 {
 	paginationPageSize(Integer.class, ParameterLifetime.PERSISTENT),
+	invisibleTableColumns(List.class, ParameterLifetime.PERSISTENT),
 	application(String.class, ParameterLifetime.VOLATILE),
 	accessionId(Long.class, ParameterLifetime.TEMPORARY),
 	generalId(String.class, ParameterLifetime.TEMPORARY),
 	accessionName(String.class, ParameterLifetime.TEMPORARY),
 	searchString(String.class, ParameterLifetime.TEMPORARY),
-	genotypeDatasetIds(List.class, ParameterLifetime.TEMPORARY),
-	phenotypeDatasetIds(List.class, ParameterLifetime.TEMPORARY),
-	allelefreqDatasetIds(List.class, ParameterLifetime.TEMPORARY),
-	compoundDatasetIds(List.class, ParameterLifetime.TEMPORARY),
-	climateDatasetIds(List.class, ParameterLifetime.TEMPORARY),
-	trialsDatasetIds(List.class, ParameterLifetime.TEMPORARY),
+	genotypeDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
+	allelefreqDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
+	compoundDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
+	climateDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
+	trialsDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
 	tableFilterMapping(Map.class, ParameterLifetime.VOLATILE),
 	flapjackExportResult(FlapjackProjectCreationResult.class, ParameterLifetime.VOLATILE),
 	megaEnvironmentId(Long.class, ParameterLifetime.TEMPORARY),
@@ -64,12 +64,13 @@ public enum Parameter
 	markedCollectingsiteIds(List.class, ParameterLifetime.PERSISTENT),
 	institutionId(Long.class, ParameterLifetime.TEMPORARY),
 	debugInfo(DebugInfo.class, ParameterLifetime.VOLATILE),
-	shoppingCartItemType(ShoppingCart.ItemType.class, ParameterLifetime.TEMPORARY),
+	markedItemType(MarkedItemList.ItemType.class, ParameterLifetime.TEMPORARY),
 	groupPreviewFile(String.class, ParameterLifetime.TEMPORARY),
-	compoundId(Long.class, ParameterLifetime.TEMPORARY);
+	compoundId(Long.class, ParameterLifetime.TEMPORARY),
+	experimentId(Long.class, ParameterLifetime.VOLATILE);
 
 	private Class<?> type;
-
+	private boolean acceptFromUrl = true;
 	private ParameterLifetime lifetime;
 
 	Parameter(Class<?> type, ParameterLifetime lifetime)
@@ -78,9 +79,20 @@ public enum Parameter
 		this.lifetime = lifetime;
 	}
 
+	Parameter(Class<?> type, ParameterLifetime lifetime, boolean acceptFromUrl)
+	{
+		this(type, lifetime);
+		this.acceptFromUrl = acceptFromUrl;
+	}
+
 	public Class<?> getType()
 	{
 		return type;
+	}
+
+	public boolean getAcceptFromUrl()
+	{
+		return acceptFromUrl;
 	}
 
 	public ParameterLifetime getLifetime()

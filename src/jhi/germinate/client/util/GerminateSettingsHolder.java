@@ -34,8 +34,6 @@ public class GerminateSettingsHolder
 
 		if (!ModuleCore.getUseAuthentication())
 			settings.availablePages.getValue().remove(Page.GROUP_PREVIEW);
-
-		settings.availablePages.getValue().add(Page.OSTEREI);
 	}
 
 	public static GerminateSettings get()

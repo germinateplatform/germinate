@@ -20,8 +20,6 @@ package jhi.germinate.server.database.query;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
-import jhi.germinate.server.database.Database.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.exception.*;
 
@@ -33,51 +31,37 @@ import jhi.germinate.shared.exception.*;
  */
 public class ValueQuery extends GerminateQuery<ValueQuery>
 {
-	public ValueQuery(Database database, String query) throws DatabaseException
+	/**
+	 * Creates a new {@link ValueQuery} for the given query, but using the given {@link Database} connection
+	 *
+	 * @param database The {@link Database} object
+	 * @param query    The sql query
+	 */
+	public ValueQuery(Database database, String query)
 	{
 		super(database, query);
 	}
 
 	/**
-	 * Creates a new {@link ValueQuery} with the given query and the column to extract
-	 *
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @param query             The sql query
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the communication with the database fails
-	 */
-	public ValueQuery(RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException, DatabaseException
-	{
-		super(DatabaseType.MYSQL, QueryType.DATA, requestProperties, servlet, query);
-	}
-
-	/**
-	 * Creates a new {@link ValueQuery} with the given query and the column to extract
-	 *
-	 * @param queryType The {@link QueryType}
-	 * @param query     The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
-	 */
-	public ValueQuery(QueryType queryType, String query) throws DatabaseException
-	{
-		super(DatabaseType.MYSQL, queryType, query);
-	}
-
-	/**
-	 * Creates a new {@link ValueQuery} with the given query and the column to extract
+	 * Creates a new {@link ValueQuery} for the given query
 	 *
 	 * @param query The sql query
-	 * @throws DatabaseException Thrown if the communication with the database fails
 	 */
-	public ValueQuery(String query) throws DatabaseException
+	public ValueQuery(String query)
 	{
-		this(QueryType.DATA, query);
+		super(query);
 	}
 
-	public ValueQuery(String query, UserAuth userAuth) throws DatabaseException
+	/**
+	 * Creates a new {@link ValueQuery} for the given query
+	 *
+	 * @param query    The sql query
+	 * @param userAuth The {@link UserAuth} object containing the user information
+	 * @throws DatabaseException Thrown if the communication with the database fails
+	 */
+	public ValueQuery(String query, UserAuth userAuth)
 	{
-		super(QueryType.DATA, userAuth, query);
+		super(query, userAuth);
 	}
 
 	/**
@@ -101,6 +85,7 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 	 */
 	public ServerResult<List<Long>> execute(boolean closeConnection) throws DatabaseException
 	{
+		init();
 		sqlDebug.add(stmt.getStringRepresentation());
 		List<Long> ids = stmt.execute();
 
@@ -119,6 +104,7 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 	 */
 	public ExecutedValueQuery run(String column) throws DatabaseException
 	{
+		init();
 		sqlDebug.add(stmt.getStringRepresentation());
 
 		return new ExecutedValueQuery(column, database, stmt.query(), sqlDebug);
@@ -143,6 +129,12 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 			this.database = database;
 			this.rs = rs;
 			this.sqlDebug = sqlDebug;
+		}
+
+		public ExecutedValueQuery setCloseConnection(boolean closeConnection)
+		{
+			this.closeConnection = closeConnection;
+			return this;
 		}
 
 		/**

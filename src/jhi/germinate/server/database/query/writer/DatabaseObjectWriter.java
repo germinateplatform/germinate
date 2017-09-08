@@ -22,6 +22,8 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
 
 /**
+ * {@link DatabaseObjectWriter} is an interface defining how {@link DatabaseObject}s should be written do the database.
+ *
  * @author Sebastian Raubach
  */
 public interface DatabaseObjectWriter<T extends DatabaseObject>

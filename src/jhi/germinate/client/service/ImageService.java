@@ -62,16 +62,6 @@ public interface ImageService extends RemoteService
 	}
 
 	/**
-	 * Returns a paginated list of {@link Image}s.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param pagination The {@link Pagination}
-	 * @return A paginated list of {@link Image}s.
-	 * @throws InvalidSessionException Throw if the current session is invalid
-	 */
-	PaginatedServerResult<List<Image>> get(RequestProperties properties, Pagination pagination) throws InvalidSessionException;
-
-	/**
 	 * Returns a paginated list of {@link Image}s for the given {@link DatabaseObject} id.
 	 *
 	 * @param properties The {@link RequestProperties}

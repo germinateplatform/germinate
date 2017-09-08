@@ -139,18 +139,6 @@ public interface AccessionServiceAsync
 	void getIdsForMegaEnv(RequestProperties properties, Long megaEnvId, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
-	 * Returns the {@link Accession}s for the given {@link Request}. Returns a {@link Response} object that can be used in combination with a {@link
-	 * com.google.gwt.user.client.ui.SuggestBox}.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param query      The query
-	 * @param limit      The maximal number of results
-	 * @param column     The column to search on
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getSuggestions(RequestProperties properties, String query, int limit, String column, AsyncCallback<List<ItemSuggestion>> callback);
-
-	/**
 	 * Retrieves the path to the file containing the accession data for the given ids
 	 *
 	 * @param properties The {@link RequestProperties}

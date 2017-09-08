@@ -20,13 +20,13 @@ package jhi.germinate.client.widget.table.pagination;
 import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
-import java.util.*;
+import java.util.Locale;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
@@ -62,9 +62,15 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return InstitutionTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<Institution, ?> column;
+		DatabaseObjectFilterColumn<Institution, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -83,7 +89,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, Institution object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -147,7 +153,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 
 			@Override
-			public String getCellStyleNames(Cell.Context context, Institution object)
+			public String getCellStyle()
 			{
 				return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 			}
@@ -247,7 +253,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, Institution object, int column)
+	protected void onItemSelected(NativeEvent event, Institution object, int column)
 	{
 	}
 }

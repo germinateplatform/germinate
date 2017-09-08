@@ -21,8 +21,6 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
 
-import java.util.*;
-
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.management.*;
@@ -39,9 +37,8 @@ import jhi.germinate.client.page.geography.*;
 import jhi.germinate.client.page.groups.*;
 import jhi.germinate.client.page.image.*;
 import jhi.germinate.client.page.login.*;
-import jhi.germinate.client.page.phenotype.*;
+import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.page.search.*;
-import jhi.germinate.client.page.shoppingcart.*;
 import jhi.germinate.client.page.statistics.*;
 import jhi.germinate.client.page.trial.*;
 import jhi.germinate.client.service.*;
@@ -76,214 +73,133 @@ public class NavigationHandler
 		// ABOUT GERMINATE
 		if (page.equals(Page.ABOUT_GERMINATE))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new AboutGerminatePage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new AboutGerminatePage()));
 		}
 		// ABOUT PROJECT
 		else if (page.equals(Page.ABOUT_PROJECT))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new HTMLPage(Text.LANG.aboutProjectTitle(), Text.LANG.aboutProjectText())
 			{
 				@Override
-				public void onSuccess()
+				public String getParallaxStyle()
 				{
-					ContentHolder.getInstance().setContent(page, page, new HTMLPage(Text.LANG.aboutProjectTitle(), Text.LANG.aboutProjectText())
-					{
-						@Override
-						public String getParallaxStyle()
-						{
-							return ParallaxResource.INSTANCE.css().parallaxAboutProject();
-						}
-					});
+					return ParallaxResource.INSTANCE.css().parallaxAboutProject();
 				}
-			});
+			}));
 		}
+		// DATA STATISTICS
 		else if (page.equals(Page.DATA_STATISTICS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new StatisticsOverviewPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new StatisticsOverviewPage()));
 		}
+		// ACKNOWLEDGEMENTS
 		else if (page.equals(Page.ACKNOWLEDGEMENTS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.ABOUT_GERMINATE, new HTMLPage(Text.LANG.acknowledgementsTitle(), Text.LANG.acknowledgementsText()));
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ABOUT_GERMINATE, new HTMLPage(Text.LANG.acknowledgementsTitle(), Text.LANG.acknowledgementsText())));
 		}
 		// COOKIE
 		else if (page.equals(Page.COOKIE))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					CookieModal.show();
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) CookieModal::show);
 		}
 		// ACCESSIONS FOR COLLSITE
 		else if (page.equals(Page.ACCESSIONS_FOR_COLLSITE))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new AccessionsAtCollsitePage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new AccessionsAtCollsitePage()));
 		}
 		// BROWSE ACCESSIONS
 		else if (page.equals(Page.BROWSE_ACCESSIONS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new AccessionOverviewPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new AccessionOverviewPage()));
 		}
-		// CATEGORICAL DATASETS
-		else if (page.equals(Page.CATEGORICAL_DATASETS))
-		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					final DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
-					{
-						@Override
-						public boolean isContinueButtonAvailable()
-						{
-							return GerminateSettingsHolder.isPageAvailable(Page.CATEGORICAL_EXPORT);
-						}
-
-						@Override
-						public void onContinuePressed()
-						{
-							History.newItem(Page.CATEGORICAL_EXPORT.name());
-						}
-					}, ExperimentType.phenotype, false);
-					widget.setLinkToExportPage(false);
-					widget.setShowMap(true);
-					widget.setHeaderText(Text.LANG.phenotypeDatasetHeader());
-					widget.setShowDownload(true, new SimpleCallback<Dataset>()
-					{
-						@Override
-						public void onSuccess(Dataset result)
-						{
-							/* Get the id of the selected dataset */
-							List<Long> ids = new ArrayList<>();
-							ids.add(result.getId());
-
-							/* Start the export process */
-							PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
-							{
-								@Override
-								protected void onSuccessImpl(ServerResult<String> result)
-								{
-									clickDownloadLink(result);
-								}
-							});
-						}
-					});
-					ContentHolder.getInstance().setContent(page, page, widget);
-				}
-			});
-
-		}
+//		// CATEGORICAL DATASETS
+//		else if (page.equals(Page.CATEGORICAL_DATASETS))
+//		{
+//			GWT.runAsync((RunAsyncNotifyCallback) () ->
+//			{
+//				final DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
+//				{
+//					@Override
+//					public boolean isContinueButtonAvailable()
+//					{
+//						return GerminateSettingsHolder.isPageAvailable(Page.CATEGORICAL_EXPORT);
+//					}
+//
+//					@Override
+//					public void onContinuePressed()
+//					{
+//						History.newItem(Page.CATEGORICAL_EXPORT.name());
+//					}
+//				}, ExperimentType.phenotype, false);
+//				widget.setLinkToExportPage(false);
+//				widget.setShowMap(true);
+//				widget.setHeaderText(Text.LANG.phenotypeDatasetHeader());
+//				widget.setShowDownload(true, new SimpleCallback<Dataset>()
+//				{
+//					@Override
+//					public void onSuccess(Dataset result)
+//					{
+//						/* Get the id of the selected dataset */
+//						List<Long> ids = new ArrayList<>();
+//						ids.add(result.getId());
+//
+//						/* Start the export process */
+//						PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
+//						{
+//							@Override
+//							protected void onSuccessImpl(ServerResult<String> result)
+//							{
+//								ExperimentDetailsPage.clickDownloadLink(result);
+//							}
+//						});
+//					}
+//				});
+//				ContentHolder.getInstance().setContent(page, page, widget);
+//			});
+//
+//		}
 		// CATEGORICAL EXPORT
-		else if (page.equals(Page.CATEGORICAL_EXPORT))
-		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.CATEGORICAL_DATASETS, new PhenotypePage());
-				}
-			});
-
-		}
-
+//		else if (page.equals(Page.CATEGORICAL_EXPORT))
+//		{
+//			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.CATEGORICAL_DATASETS, new PhenotypePage()));
+//
+//		}
 		// CLIMATE DATASETS
 		else if (page.equals(Page.CLIMATE_DATASETS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
+			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
-				@Override
-				public void onSuccess()
+				DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
 				{
-					DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
+					@Override
+					public boolean isContinueButtonAvailable()
 					{
-						@Override
-						public boolean isContinueButtonAvailable()
-						{
-							return GerminateSettingsHolder.isPageAvailable(Page.CLIMATE);
-						}
+						return GerminateSettingsHolder.isPageAvailable(Page.CLIMATE);
+					}
 
-						@Override
-						public void onContinuePressed()
-						{
-							History.newItem(Page.CLIMATE.name());
-						}
-					}, ExperimentType.climate, true);
-					widget.setShowMap(true);
-					widget.setLinkToExportPage(false);
-					widget.setHeaderText(Text.LANG.climateDatasetHeader());
+					@Override
+					public void onContinuePressed()
+					{
+						History.newItem(Page.CLIMATE.name());
+					}
+				}, ExperimentType.climate, true);
+				widget.setShowMap(true);
+				widget.setLinkToExportPage(false);
+				widget.setHeaderText(Text.LANG.climateDatasetHeader());
 
-					ContentHolder.getInstance().setContent(page, page, widget);
-				}
+				ContentHolder.getInstance().setContent(page, page, widget);
 			});
 		}
-
 		// CLIMATE
 		else if (page.equals(Page.CLIMATE))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.CLIMATE, new ClimateDataPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.CLIMATE, new ClimateDataPage()));
 		}
-
 		// GALLERY
 		else if (page.equals(Page.GALLERY))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new ImagePage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new ImagePage()));
 		}
-
 		// GENOTYPE DATASETS
 		else if (page.equals(Page.GENOTYPE_DATASETS))
 		{
@@ -334,7 +250,7 @@ public class NavigationHandler
 										@Override
 										protected void onSuccessImpl(ServerResult<String> result)
 										{
-											clickDownloadLink(result);
+											ExperimentDetailsPage.clickDownloadLink(result);
 										}
 									});
 								}
@@ -364,541 +280,234 @@ public class NavigationHandler
 			});
 
 		}
-
 		// GENOTYPE EXPORT
 		else if (page.equals(Page.GENOTYPE_EXPORT))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.GENOTYPE_DATASETS, new GenotypeExportPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GENOTYPE_DATASETS, new GenotypeExportPage()));
 		}
-
 		// GEOGRAPHIC SEARCH
 		else if (page.equals(Page.GEOGRAPHIC_SEARCH))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new GeographicSearchPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new GeographicSearchPage()));
 		}
-
 		// GEOGRAPHY
 		else if (page.equals(Page.GEOGRAPHY))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new LocationsPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new LocationsPage()));
 		}
-
 		// GROUPS
 		else if (page.equals(Page.GROUPS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new GroupsPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new GroupsPage()));
 		}
-
 		// HELP
 		else if (page.equals(Page.HELP))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					HelpWidget.show();
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) HelpWidget::show);
 		}
-
 		// HOME
 		else if (page.equals(Page.HOME))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new Home());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new Home()));
 		}
-
 		// NEWS
 		else if (page.equals(Page.NEWS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.HOME, new NewsPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.HOME, new NewsPage()));
 		}
-
-		// LOGOUT
-		else if (page.equals(Page.LOGOUT))
-		{
-			/* If we use user authentication */
-			if (ModuleCore.getUseAuthentication())
-			{
-				/* Track information using Google Analytics */
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGOUT, "logout");
-
-                /* Clear the parameter store and show the login page */
-				GerminateEventBus.BUS.fireEvent(new LogoutEvent());
-			}
-			else
-			{
-				/* Else just show the start page */
-				ContentHolder.getInstance().setContent(page, Page.HOME, new Home());
-			}
-		}
-
+//		// LOGOUT
+//		else if (page.equals(Page.LOGOUT))
+//		{
+//			/* If we use user authentication */
+//			if (ModuleCore.getUseAuthentication())
+//			{
+//				/* Track information using Google Analytics */
+//				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGOUT, "logout");
+//
+//                /* Clear the parameter store and show the login page */
+//				GerminateEventBus.BUS.fireEvent(new LogoutEvent());
+//			}
+//			else
+//			{
+//				/* Else just show the start page */
+//				ContentHolder.getInstance().setContent(page, Page.HOME, new Home());
+//			}
+//		}
 		//MAP DETAILS
 		else if (page.equals(Page.MAP_DETAILS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new MapsPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new MapsPage()));
 		}
-
 		// MARKER DETAILS
 		else if (page.equals(Page.MARKER_DETAILS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.MAP_DETAILS, new MarkerPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.MAP_DETAILS, new MarkerPage()));
 		}
-
 		// MEGA ENVIRONMENTS
 		else if (page.equals(Page.MEGA_ENVIRONMENT))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new MegaEnvironmentsPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new MegaEnvironmentsPage()));
 		}
-
 		// PASSPORT
 		else if (page.equals(Page.PASSPORT))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new PassportPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new PassportPage()));
 		}
-
-		// PASSPORT (OSTEREI)
-		else if (page.equals(Page.OSTEREI))
-		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new OsterPassportPage());
-				}
-			});
-
-		}
-
 		// SEARCH
 		else if (page.equals(Page.SEARCH))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new SearchPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new SearchPage()));
 		}
-
 		// TRIALS
 		else if (page.equals(Page.TRIALS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.TRIALS_DATASETS, new TrialPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.TRIALS_DATASETS, new TrialPage()));
 		}
-//
-//		// TRIALS INDIVIDUAL
-//		else if (page.equals(Page.TRIALS_INDIVIDUAL))
-//		{
-//			GWT.runAsync(new RunAsyncNotifyCallback()
-//			{
-//				@Override
-//				public void onSuccess()
-//				{
-//					ContentHolder.getInstance().setContent(page, Page.TRIALS_DATASETS, new TrialsIndividualPage());
-//				}
-//			});
-//
-//		}
-//
 		// TRIALS DATASETS
 		else if (page.equals(Page.TRIALS_DATASETS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
+			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
-				@Override
-				public void onSuccess()
+				DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
 				{
-					DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
+					@Override
+					public boolean isContinueButtonAvailable()
 					{
-						@Override
-						public boolean isContinueButtonAvailable()
-						{
-							return GerminateSettingsHolder.isPageAvailable(Page.TRIALS);
-						}
+						return GerminateSettingsHolder.isPageAvailable(Page.TRIALS);
+					}
 
-						@Override
-						public void onContinuePressed()
-						{
-							History.newItem(Page.TRIALS.name());
-						}
-					}, ExperimentType.trials, false);
-					widget.setShowMap(true);
-					widget.setLinkToExportPage(false);
-					widget.setHeaderText(Text.LANG.trialsDatasetHeader());
+					@Override
+					public void onContinuePressed()
+					{
+						History.newItem(Page.TRIALS.name());
+					}
+				}, ExperimentType.trials, false);
+				widget.setShowMap(true);
+				widget.setLinkToExportPage(false);
+				widget.setHeaderText(Text.LANG.trialsDatasetHeader());
 
-					ContentHolder.getInstance().setContent(page, page, widget);
-				}
+				ContentHolder.getInstance().setContent(page, page, widget);
 			});
-
 		}
-//
-//		// GBS EXPORT PAGE
-//		else if (page.equals(Page.GBS_EXPORT))
-//		{
-//			GWT.runAsync(new RunAsyncNotifyCallback()
-//			{
-//				@Override
-//				public void onSuccess()
-//				{
-//					ContentHolder.getInstance().setContent(page, page, new GBSExportPage());
-//				}
-//			});
-//
-//		}
-//
-//		// PCO COORDINATES PAGE
-//		else if (page.equals(Page.PCO_COORDINATES))
-//		{
-//			GWT.runAsync(new RunAsyncNotifyCallback()
-//			{
-//				@Override
-//				public void onSuccess()
-//				{
-//					ContentHolder.getInstance().setContent(page, page, new PCOCoordinatesPage());
-//				}
-//			});
-//
-//		}
-//
 		// COLLECTINGSITES TREEMAP
 		else if (page.equals(Page.COLLSITE_TREEMAP))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new LocationTreemapPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new LocationTreemapPage()));
 		}
-
 		// ALLELE FREQ DATASETS
 		else if (page.equals(Page.ALLELE_FREQUENCY_DATASET))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
+			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
-				@Override
-				public void onSuccess()
+				DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
 				{
-					DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
+					@Override
+					public boolean isContinueButtonAvailable()
 					{
-						@Override
-						public boolean isContinueButtonAvailable()
-						{
-							return GerminateSettingsHolder.isPageAvailable(Page.ALLELE_FREQUENCY_EXPORT);
-						}
+						return GerminateSettingsHolder.isPageAvailable(Page.ALLELE_FREQUENCY_EXPORT);
+					}
 
-						@Override
-						public void onContinuePressed()
-						{
-							History.newItem(Page.ALLELE_FREQUENCY_EXPORT.name());
-						}
-					}, ExperimentType.allelefreq, true);
-					widget.setShowMap(true);
-					widget.setLinkToExportPage(false);
-//					widget.setShowDownload(true, ReferenceFolder.allelefreq);
-					widget.setHeaderText(Text.LANG.allelefreqDatasetHeader());
+					@Override
+					public void onContinuePressed()
+					{
+						History.newItem(Page.ALLELE_FREQUENCY_EXPORT.name());
+					}
+				}, ExperimentType.allelefreq, true);
+				widget.setShowMap(true);
+				widget.setLinkToExportPage(false);
+				widget.setHeaderText(Text.LANG.allelefreqDatasetHeader());
 
-					ContentHolder.getInstance().setContent(page, page, widget);
-				}
+				ContentHolder.getInstance().setContent(page, page, widget);
 			});
-
 		}
-
 		// ALLELE FREQ EXPORT
 		else if (page.equals(Page.ALLELE_FREQUENCY_EXPORT))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.ALLELE_FREQUENCY_DATASET, new AlleleFreqExportPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ALLELE_FREQUENCY_DATASET, new AlleleFreqExportPage()));
 		}
-
 		// ALLELE FREQ RESULT
 		else if (page.equals(Page.ALLELE_FREQUENCY_RESULT))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.ALLELE_FREQUENCY_DATASET, new AlleleFreqResultsPage());
-				}
-			});
-
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ALLELE_FREQUENCY_DATASET, new AlleleFreqResultsPage()));
 		}
 		// SHOPPING CART
-		else if (page.equals(Page.SHOPPING_CART))
+		else if (page.equals(Page.MARKED_ITEMS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.GROUPS, new ShoppingCartPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GROUPS, new MarkedItemListPage()));
 		}
 		// DATASET OVERVIEW
 		else if (page.equals(Page.DATASET_OVERVIEW))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new DatasetPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new DatasetPage()));
+		}
+		// EXPERIMENT DETAILS
+		else if (page.equals(Page.EXPERIMENT_DETAILS))
+		{
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new ExperimentDetailsPage()));
 		}
 		// INSTITUTIONS PAGE
 		else if (page.equals(Page.INSTITUTIONS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.GEOGRAPHY, new InstitutionsPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GEOGRAPHY, new InstitutionsPage()));
 		}
-
+		// GROUP PREVIEW PAGE
 		else if (page.equals(Page.GROUP_PREVIEW))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.GROUPS, new GroupPreviewPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GROUPS, new GroupPreviewPage()));
 		}
+		// ADMIN CONFIG PAGE
 		else if (page.equals(Page.ADMIN_CONFIG))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.HOME, new AdminConfigPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.HOME, new AdminConfigPage()));
 		}
+		// COMPOUNDS PAGE
 		else if (page.equals(Page.COMPOUNDS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, page, new CompoundPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new CompoundPage()));
 		}
+		// COMPOUND DETAILS PAGE
 		else if (page.equals(Page.COMPOUND_DETAILS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.COMPOUNDS, new CompoundDetailsPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.COMPOUNDS, new CompoundDetailsPage()));
 		}
 		// TRIALS DATASETS
 		else if (page.equals(Page.COMPOUND_DATASETS))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
+			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
-				@Override
-				public void onSuccess()
+				DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
 				{
-					DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
+					@Override
+					public boolean isContinueButtonAvailable()
 					{
-						@Override
-						public boolean isContinueButtonAvailable()
-						{
-							return GerminateSettingsHolder.isPageAvailable(Page.COMPOUND_DATA);
-						}
+						return GerminateSettingsHolder.isPageAvailable(Page.COMPOUND_DATA);
+					}
 
-						@Override
-						public void onContinuePressed()
-						{
-							History.newItem(Page.COMPOUND_DATA.name());
-						}
-					}, ExperimentType.compound, false);
-					widget.setShowMap(true);
-					widget.setLinkToExportPage(false);
-					widget.setHeaderText(Text.LANG.compoundDatasetHeader());
+					@Override
+					public void onContinuePressed()
+					{
+						History.newItem(Page.COMPOUND_DATA.name());
+					}
+				}, ExperimentType.compound, false);
+				widget.setShowMap(true);
+				widget.setLinkToExportPage(false);
+				widget.setHeaderText(Text.LANG.compoundDatasetHeader());
 
-					ContentHolder.getInstance().setContent(page, page, widget);
-				}
+				ContentHolder.getInstance().setContent(page, page, widget);
 			});
-
 		}
 		// COMPOUND DATA
 		else if (page.equals(Page.COMPOUND_DATA))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
-				{
-					ContentHolder.getInstance().setContent(page, Page.COMPOUND_DATASETS, new CompoundDataPage());
-				}
-			});
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.COMPOUND_DATASETS, new CompoundDataPage()));
 		}
-
 		// FALLBACK
 		else
 		{
 			if (ModuleCore.getUseAuthentication() && !ModuleCore.isLoggedIn())
-				GWT.runAsync(new RunAsyncNotifyCallback()
-				{
-					@Override
-					public void onSuccess()
-					{
-						ContentHolder.getInstance().setContent(page, Page.HOME, new LoginPage());
-					}
-				});
+				GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.HOME, new LoginPage()));
 			else
-				GWT.runAsync(new RunAsyncNotifyCallback()
-				{
-					@Override
-					public void onSuccess()
-					{
-						ContentHolder.getInstance().setContent(page, Page.HOME, new Home());
-					}
-				});
-		}
-	}
-
-	private static void clickDownloadLink(ServerResult<String> result)
-	{
-		/* If there is a result */
-		if (result != null && result.getServerResult() != null)
-		{
-			/* Get the filename from the result */
-			String filename = result.getServerResult();
-
-			/* Create a new invisible dummy link on the page */
-			String path = new ServletConstants.Builder()
-					.setUrl(GWT.getModuleBaseURL())
-					.setPath(ServletConstants.SERVLET_FILES)
-					.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-					.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-					.setParam(ServletConstants.PARAM_FILE_PATH, filename).build();
-
-			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), filename);
-
-            /* Click it */
-			JavaScript.invokeDownload(path);
-		}
-		else
-		{
-			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
+				GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.HOME, new Home()));
 		}
 	}
 }

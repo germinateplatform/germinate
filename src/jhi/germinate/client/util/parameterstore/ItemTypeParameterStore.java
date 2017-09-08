@@ -22,7 +22,7 @@ import jhi.germinate.client.util.*;
 /**
  * @author Sebastian Raubach
  */
-public class ItemTypeParameterStore extends TypedParameterStore<ShoppingCart.ItemType>
+public class ItemTypeParameterStore extends TypedParameterStore<MarkedItemList.ItemType>
 {
 	public final static class Inst
 	{
@@ -45,7 +45,7 @@ public class ItemTypeParameterStore extends TypedParameterStore<ShoppingCart.Ite
 	}
 
 	@Override
-	protected ShoppingCart.ItemType stringToValue(String value)
+	protected MarkedItemList.ItemType stringToValue(String value)
 	{
 		/* Take care of null here, because it would be parsed to false otherwise */
 		if (value == null)
@@ -53,7 +53,7 @@ public class ItemTypeParameterStore extends TypedParameterStore<ShoppingCart.Ite
 
 		try
 		{
-			return ShoppingCart.ItemType.valueOf(value.toUpperCase());
+			return MarkedItemList.ItemType.valueOf(value.toUpperCase());
 		}
 		catch (Exception e)
 		{
@@ -62,7 +62,7 @@ public class ItemTypeParameterStore extends TypedParameterStore<ShoppingCart.Ite
 	}
 
 	@Override
-	protected String valueToString(ShoppingCart.ItemType value)
+	protected String valueToString(MarkedItemList.ItemType value)
 	{
 		try
 		{

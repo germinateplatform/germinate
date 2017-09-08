@@ -133,8 +133,8 @@ public abstract class DatabaseObject implements Serializable
 			else if (o instanceof AttributeData)
 			{
 				AttributeData a = (AttributeData) o;
-				if (a.getAccession() != null)
-					id = a.getAccession().getId();
+				if (a.getForeign() != null)
+					id = a.getForeign().getId();
 			}
 			else if (o instanceof PhenotypeData)
 			{

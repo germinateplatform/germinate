@@ -38,14 +38,14 @@ public class AttributeData extends DatabaseObject
 {
 	private static final long serialVersionUID = -6203605805580843637L;
 
-	public static final String ID               = "attributedata.id";
-	public static final String ATTRIBUTE_ID     = "attributedata.attribute_id";
-	public static final String GERMINATEBASE_ID = "attributedata.germinatebase_id";
-	public static final String VALUE            = "attributedata.value";
+	public static final String ID           = "attributedata.id";
+	public static final String ATTRIBUTE_ID = "attributedata.attribute_id";
+	public static final String FOREIGN_ID   = "attributedata.foreign_id";
+	public static final String VALUE        = "attributedata.value";
 
-	private Attribute attribute;
-	private Accession accession;
-	private String    value;
+	private Attribute      attribute;
+	private DatabaseObject foreign;
+	private String         value;
 
 	public AttributeData()
 	{
@@ -56,11 +56,11 @@ public class AttributeData extends DatabaseObject
 		super(id);
 	}
 
-	public AttributeData(Long id, Attribute attribute, Accession accession, String value)
+	public AttributeData(Long id, Attribute attribute, DatabaseObject foreign, String value)
 	{
 		super(id);
 		this.attribute = attribute;
-		this.accession = accession;
+		this.foreign = foreign;
 		this.value = value;
 	}
 
@@ -75,14 +75,14 @@ public class AttributeData extends DatabaseObject
 		return this;
 	}
 
-	public Accession getAccession()
+	public DatabaseObject getForeign()
 	{
-		return accession;
+		return foreign;
 	}
 
-	public AttributeData setAccession(Accession accession)
+	public AttributeData setForeign(DatabaseObject foreign)
 	{
-		this.accession = accession;
+		this.foreign = foreign;
 		return this;
 	}
 
@@ -98,14 +98,24 @@ public class AttributeData extends DatabaseObject
 	}
 
 	@Override
+	public String toString()
+	{
+		return "AttributeData{" +
+				"attribute=" + attribute +
+				", foreign=" + foreign +
+				", value='" + value + '\'' +
+				"} " + super.toString();
+	}
+
+	@Override
 	@GwtIncompatible
 	public DatabaseObjectParser<? extends DatabaseObject> getDefaultParser()
 	{
-		return Parser.Inst.get();
+		return AccessionParser.Inst.get();
 	}
 
 	@GwtIncompatible
-	public static class Parser extends DatabaseObjectParser<AttributeData>
+	public static class AccessionParser extends DatabaseObjectParser<AttributeData>
 	{
 		public static final class Inst
 		{
@@ -120,10 +130,10 @@ public class AttributeData extends DatabaseObject
 			 */
 			private static final class InstanceHolder
 			{
-				private static final Parser INSTANCE = new Parser();
+				private static final AccessionParser INSTANCE = new AccessionParser();
 			}
 
-			public static Parser get()
+			public static AccessionParser get()
 			{
 				return InstanceHolder.INSTANCE;
 			}
@@ -132,7 +142,7 @@ public class AttributeData extends DatabaseObject
 		private static DatabaseObjectCache<Attribute> ATTRIBUTE_CACHE;
 		private static DatabaseObjectCache<Accession> ACCESSION_CACHE;
 
-		private Parser()
+		private AccessionParser()
 		{
 			ATTRIBUTE_CACHE = createCache(Attribute.class, AttributeManager.class);
 			ACCESSION_CACHE = createCache(Accession.class, AccessionManager.class);
@@ -150,7 +160,110 @@ public class AttributeData extends DatabaseObject
 				else
 					return new AttributeData(id)
 							.setAttribute(ATTRIBUTE_CACHE.get(user, row.getLong(ATTRIBUTE_ID), row, foreignsFromResultSet))
-							.setAccession(ACCESSION_CACHE.get(user, row.getLong(GERMINATEBASE_ID), row, foreignsFromResultSet))
+							.setForeign(ACCESSION_CACHE.get(user, row.getLong(FOREIGN_ID), row, foreignsFromResultSet))
+							.setValue(row.getString(VALUE));
+			}
+			catch (InsufficientPermissionsException e)
+			{
+				return null;
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class DatasetParser extends DatabaseObjectParser<AttributeData>
+	{
+		public static final class Inst
+		{
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
+			 * InstanceHolder#INSTANCE}, not before.
+			 * <p/>
+			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
+			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final DatasetParser INSTANCE = new DatasetParser();
+			}
+
+			public static DatasetParser get()
+			{
+				return InstanceHolder.INSTANCE;
+			}
+		}
+
+		protected static DatabaseObjectCache<Attribute> ATTRIBUTE_CACHE;
+		protected static DatabaseObjectCache<Dataset>   DATASET_CACHE;
+
+		private DatasetParser()
+		{
+			ATTRIBUTE_CACHE = createCache(Attribute.class, AttributeManager.class);
+			DATASET_CACHE = createCache(Dataset.class, DatasetManager.class);
+		}
+
+		@Override
+		public AttributeData parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			try
+			{
+				Long id = row.getLong(ID);
+
+				if (id == null)
+					return null;
+				else
+					return new AttributeData(id)
+							.setAttribute(ATTRIBUTE_CACHE.get(user, row.getLong(ATTRIBUTE_ID), row, foreignsFromResultSet))
+							.setForeign(DATASET_CACHE.get(user, row.getLong(FOREIGN_ID), row, foreignsFromResultSet))
+							.setValue(row.getString(VALUE));
+			}
+			catch (InsufficientPermissionsException e)
+			{
+				return null;
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class NonRecursiveDatasetParser extends DatasetParser
+	{
+		public static final class Inst
+		{
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
+			 * InstanceHolder#INSTANCE}, not before.
+			 * <p/>
+			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
+			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final NonRecursiveDatasetParser INSTANCE = new NonRecursiveDatasetParser();
+			}
+
+			public static NonRecursiveDatasetParser get()
+			{
+				return InstanceHolder.INSTANCE;
+			}
+		}
+
+		@Override
+		public AttributeData parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			try
+			{
+				Long id = row.getLong(ID);
+
+				if (id == null)
+					return null;
+				else
+					return new AttributeData(id)
+							.setAttribute(ATTRIBUTE_CACHE.get(user, row.getLong(ATTRIBUTE_ID), row, foreignsFromResultSet))
+							.setForeign(new Dataset(row.getLong(FOREIGN_ID)))
 							.setValue(row.getString(VALUE));
 			}
 			catch (InsufficientPermissionsException e)
@@ -179,9 +292,9 @@ public class AttributeData extends DatabaseObject
 		@Override
 		public void write(Database database, AttributeData object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO attributedata (" + ATTRIBUTE_ID + ", " + GERMINATEBASE_ID + ", " + VALUE + ") VALUES (?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO attributedata (" + ATTRIBUTE_ID + ", " + FOREIGN_ID + ", " + VALUE + ") VALUES (?, ?, ?)")
 					.setLong(object.getAttribute().getId())
-					.setLong(object.getAccession().getId())
+					.setLong(object.getForeign().getId())
 					.setString(object.getValue());
 
 			ServerResult<List<Long>> ids = query.execute(false);

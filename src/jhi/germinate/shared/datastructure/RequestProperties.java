@@ -34,18 +34,23 @@ public class RequestProperties implements Serializable
 	/** The locale of the client user interface */
 	private String locale;
 	/** The id of the user */
-	private String userId;
+	private Long   userId;
 
 	public RequestProperties()
 	{
 
 	}
 
-	public RequestProperties(String sessionId, String userId, String locale)
+	public RequestProperties(String sessionId, Long userId, String locale)
 	{
 		this.sessionId = sessionId;
 		this.userId = userId;
 		this.locale = locale;
+	}
+
+	public RequestProperties(String sessionId, UserAuth auth, String locale)
+	{
+		this(sessionId, auth != null ? auth.getId() : null, locale);
 	}
 
 	public String getSessionId()
@@ -58,12 +63,12 @@ public class RequestProperties implements Serializable
 		this.sessionId = sessionId;
 	}
 
-	public String getUserId()
+	public Long getUserId()
 	{
 		return userId;
 	}
 
-	public void setUserId(String userId)
+	public void setUserId(Long userId)
 	{
 		this.userId = userId;
 	}

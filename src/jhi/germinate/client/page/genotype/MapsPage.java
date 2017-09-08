@@ -149,9 +149,9 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 			}
 
 			@Override
-			protected void onSelectionChanged(NativeEvent event, Map object, int column)
+			protected void onItemSelected(NativeEvent event, Map object, int column)
 			{
-				super.onSelectionChanged(event, object, column);
+				super.onItemSelected(event, object, column);
 
 				map = object;
 
@@ -355,7 +355,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
-					addToFilter(filter);
+					filter = addToFilter(filter);
 
 					MarkerService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
 				}

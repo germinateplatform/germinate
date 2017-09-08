@@ -19,15 +19,13 @@
   --%>
 
 html {
-<%--html, body {--%>
-  <%--height: 100%--%>
   min-height: 100vh;
   position: relative;
 }
 
 body {
   background-color: #f8f8f8;
-  min-height: 100vh;
+  min-height: calc(100vh - 40px);
   margin-bottom: 40px;
 }
 
@@ -59,8 +57,7 @@ footer > div.container-fluid {
 }
 
 #<%= Id.STRUCTURE_LOGIN %> {
-  min-height: 100vh;
-  <%--background: url(../img/background.png);--%>
+  min-height: calc(100vh - 40px);
 }
 
 #<%= Id.STRUCTURE_READ_ONLY_BANNER %> {

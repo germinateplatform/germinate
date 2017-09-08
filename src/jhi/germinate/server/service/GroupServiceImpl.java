@@ -32,7 +32,6 @@ import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.enums.GerminateDatabaseTable.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
 import jhi.germinate.shared.search.*;
@@ -51,37 +50,6 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	private static final String QUERY_NEW_GROUP_MEMBER_IDS_LOCATION   = "SELECT locations.id     FROM locations LEFT JOIN countries ON countries.id = locations.country_id WHERE %s IN (%s)";
 	private static final String QUERY_NEW_GROUP_MEMBER_IDS_ACCESSIONS = "SELECT germinatebase.id FROM germinatebase LEFT JOIN locations ON locations.id = germinatebase.location_id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN taxonomies ON taxonomies.id = germinatebase.taxonomy_id LEFT JOIN subtaxa ON subtaxa.id = germinatebase.subtaxa_id WHERE %s IN (%s)";
 	private static final String QUERY_NEW_GROUP_MEMBER_IDS_MARKERS    = "SELECT markers.id       FROM markers LEFT JOIN mapdefinitions ON markers.id = mapdefinitions.marker_id WHERE %s IN (%s)";
-
-	/**
-	 * Returns the {@link Column} of the {@link GerminateDatabaseTable}
-	 *
-	 * @param type The {@link GerminateDatabaseTable}
-	 * @return The {@link Column} or <code>null</code>
-	 */
-	public Column getColumnName(GerminateDatabaseTable type)
-	{
-		switch (type)
-		{
-			case locations:
-				return Column.site_name;
-			case markers:
-				return Column.marker_name;
-			case germinatebase:
-				String result = PropertyReader.get(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, Column.name.name());
-				try
-				{
-					return Column.valueOf(result);
-				}
-				catch (Exception e)
-				{
-					return Column.number;
-				}
-			case phenotypes:
-				return Column.name;
-			default:
-				return null;
-		}
-	}
 
 	@Override
 	public PaginatedServerResult<List<Group>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
@@ -111,7 +79,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	}
 
 	@Override
-	public ServerResult<Long> createNew(RequestProperties properties, String groupName, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException
+	public ServerResult<Group> createNew(RequestProperties properties, String groupName, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -253,6 +221,9 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	@Override
 	public ServerResult<Tuple.Pair<Integer, Integer>> addItems(RequestProperties properties, String[] split, GerminateDatabaseTable referenceTable, String column, Long groupId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException, SystemInReadOnlyModeException
 	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
@@ -276,7 +247,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 				return null;
 		}
 		String formatted = String.format(query, column, Util.generateSqlPlaceholderString(split.length));
-		ServerResult<List<Long>> result = new ValueQuery(properties, this, formatted)
+		ServerResult<List<Long>> result = new ValueQuery(formatted, userAuth)
 				.setStrings(Arrays.asList(split))
 				.run("id")
 				.getLongs();
@@ -348,5 +319,14 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		}
 
 		return new ServerResult<>(null, Collections.emptyList());
+	}
+
+	@Override
+	public ServerResult<Void> renameGroup(RequestProperties properties, Group group) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return GroupManager.rename(userAuth, group);
 	}
 }

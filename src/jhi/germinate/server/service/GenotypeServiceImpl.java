@@ -54,7 +54,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.GENOTYPE, properties, accessionGroups, markerGroups, datasetId, mapId, heterozygousFilter, misingDataFilter);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.GENOTYPE, accessionGroups, markerGroups, datasetId, mapId, heterozygousFilter, misingDataFilter);
 		CommonServiceImpl.ExportResult result = getExportResult(DataExporter.Type.GENOTYPE, this);
 
 		Set<String> deletedMarkers = new HashSet<>(); // TODO: Once the HDF5 export supports the CDF (Crap Data Filter), we need to fill this...
@@ -72,7 +72,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 			List<String> keptMarkers = exporter.getKeptMarkers();
 
             /* Get the map */
-			GerminateTableStreamer mapData = getMap(sqlDebug, mapId);
+			GerminateTableStreamer mapData = getMap(userAuth, sqlDebug, mapId);
 
 			/* Write the map file */
 			File filename = createTemporaryFile("map", "map");
@@ -113,7 +113,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.GENOTYPE, properties, null, null, datasetId, null, false, false);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.GENOTYPE, null, null, datasetId, null, false, false);
 		CommonServiceImpl.ExportResult result = getExportResult(DataExporter.Type.GENOTYPE, this);
 
         /* Kick off the extraction process */
@@ -133,9 +133,9 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	 * @return The map information (marker_name, chromosome, definition_start)
 	 * @throws DatabaseException Thrown if the database interaction fails
 	 */
-	private GerminateTableStreamer getMap(DebugInfo sqlDebug, Long mapToUse) throws DatabaseException
+	private GerminateTableStreamer getMap(UserAuth userAuth, DebugInfo sqlDebug, Long mapToUse) throws DatabaseException
 	{
-		GerminateTableStreamer streamer = new GerminateTableQuery(QUERY_EXPORT_MAP, new String[]{Marker.MARKER_NAME, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START})
+		GerminateTableStreamer streamer = new GerminateTableQuery(QUERY_EXPORT_MAP, userAuth, new String[]{Marker.MARKER_NAME, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START})
 				.setLong(mapToUse)
 				.getStreamer();
 

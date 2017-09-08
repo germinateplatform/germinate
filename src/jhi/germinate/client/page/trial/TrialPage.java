@@ -37,6 +37,8 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.table.basic.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -185,7 +187,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 				phenotypes = phenotypeData.getServerResult();
 				groups = groupData.getServerResult();
 
-				getOverviewStats();
+				getYearOverviewStats();
 
 				phenotypeByPhenotypeChart.update(ExperimentType.trials, getNumericalPhenotypes(), groups, Text.LANG.trialsPByPText());
 				matrixChart.update(ExperimentType.trials, getNumericalPhenotypes(), groups);
@@ -207,9 +209,46 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 						 .collect(Collectors.toList());
 	}
 
-	private void getOverviewStats()
+	private void getYearOverviewStats()
 	{
-		overviewPanel.add(new TrialOverviewWidget(phenotypes));
+		TrialService.Inst.get().getTrialYears(Cookie.getRequestProperties(), selectedDatasets, new DefaultAsyncCallback<ServerResult<List<Integer>>>()
+		{
+			@Override
+			protected void onFailureImpl(Throwable caught)
+			{
+				getBasicOverviewStats();
+			}
+
+			@Override
+			protected void onSuccessImpl(ServerResult<List<Integer>> result)
+			{
+				if (CollectionUtils.isEmpty(result.getServerResult()))
+					getBasicOverviewStats();
+				else
+					overviewPanel.add(new TrialOverviewWidget(phenotypes, result.getServerResult()));
+			}
+		});
+	}
+
+	private void getBasicOverviewStats()
+	{
+		PhenotypeService.Inst.get().getOverviewStats(Cookie.getRequestProperties(), selectedDatasets, new DefaultAsyncCallback<ServerResult<List<DataStats>>>()
+		{
+			@Override
+			protected void onFailureImpl(Throwable caught)
+			{
+				super.onFailureImpl(caught);
+			}
+
+			@Override
+			protected void onSuccessImpl(ServerResult<List<DataStats>> result)
+			{
+				if (result.getServerResult() != null && result.getServerResult().size() > 0)
+				{
+					overviewPanel.add(new PhenotypeDataOverviewTable(result.getServerResult()));
+				}
+			}
+		});
 	}
 
 	@Override

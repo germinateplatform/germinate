@@ -21,7 +21,6 @@ import java.util.*;
 
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -35,39 +34,32 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 
 	private Integer previousCount = -1;
 
-	public DatabaseObjectQuery(RequestProperties requestProperties, BaseRemoteServiceServlet servlet, String query) throws InvalidSessionException, DatabaseException
+	public DatabaseObjectQuery(String query, UserAuth userAuth)
 	{
-		super(Database.DatabaseType.MYSQL, Database.QueryType.DATA, requestProperties, servlet, query);
-	}
-
-	public DatabaseObjectQuery(String query, UserAuth userAuth) throws DatabaseException
-	{
-		super(Database.QueryType.DATA, userAuth, query);
-	}
-
-	public DatabaseObjectQuery(Database.QueryType type, String query, UserAuth userAuth) throws DatabaseException
-	{
-		super(Database.DatabaseType.MYSQL, type, userAuth, query);
+		super(query, userAuth);
 	}
 
 	/**
 	 * Runs the current query on the database. The result can be requested by calling any of the <code>getDatatype</code> methods.
 	 *
-	 * @return this
+	 * @return A new {@link ExecutedDatabaseObjectQuery}
 	 * @throws DatabaseException Thrown if the communication with the database fails.
 	 */
 	public ExecutedDatabaseObjectQuery run() throws DatabaseException
 	{
+		init();
 		return new ExecutedDatabaseObjectQuery(database, stmt, previousCount);
 	}
 
 	public DatabaseObjectStreamer getStreamer(DatabaseObjectParser<T> parser, UserAuth user, boolean foreignKeysFromResult) throws DatabaseException
 	{
+		init();
 		return new DatabaseObjectStreamer<>(database, sqlDebug, stmt, parser, user, foreignKeysFromResult);
 	}
 
 	public DatabaseObjectQuery<T> setFetchesCount(Integer previousCount) throws DatabaseException
 	{
+		init();
 		this.previousCount = previousCount;
 
 		if (previousCount == null && !query.contains(CALC_ROWS))

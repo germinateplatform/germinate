@@ -125,7 +125,7 @@ public class Util
 	 */
 	public static <T> String joinCollection(Collection<T> input, String delimiter, boolean checkSql)
 	{
-		if (input.size() < 1)
+		if (CollectionUtils.isEmpty(input))
 			return "";
 
 		StringBuilder builder = new StringBuilder();

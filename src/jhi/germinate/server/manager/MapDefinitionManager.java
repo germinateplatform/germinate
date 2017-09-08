@@ -115,7 +115,7 @@ public class MapDefinitionManager extends AbstractManager<MapDefinition>
 		pagination.updateSortColumn(MarkerService.COLUMNS_MAPDEFINITION_TABLE, MapDefinition.CHROMOSOME + ", " + MapDefinition.DEFINITION_START);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(filter, formatted, MarkerService.COLUMNS_MAPDEFINITION_TABLE, COLUMNS_MARKER_DATA_EXPORT)
+		return getFilteredGerminateTableQuery(userAuth, filter, formatted, MarkerService.COLUMNS_MAPDEFINITION_TABLE, COLUMNS_MARKER_DATA_EXPORT)
 				.setLong(userAuth.getId())
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

@@ -183,9 +183,16 @@ public class DateUtils
 	 * @param input The time
 	 * @return The localized formatted string
 	 */
-	public static String getLocalizedDateTime(long input)
+	public static String getLocalizedDateTime(Long input)
 	{
-		return FORMAT_LOCALIZED_DATE_TIME.format(new Date(input));
+		try
+		{
+			return FORMAT_LOCALIZED_DATE_TIME.format(new Date(input));
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
 	}
 
 	public static String getFilenameForDate(long input)

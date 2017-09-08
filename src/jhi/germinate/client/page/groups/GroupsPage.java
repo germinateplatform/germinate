@@ -17,11 +17,14 @@
 
 package jhi.germinate.client.page.groups;
 
+import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.http.client.*;
+import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -39,22 +42,24 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
+import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class GroupsPage extends Composite implements ParallaxBannerPage
+public class GroupsPage extends Composite implements ParallaxBannerPage, HasHyperlinkButton
 {
-
 	private GroupMemberSearch groupMemberSearch;
 
 	interface GroupsPageUiBinder extends UiBinder<FlowPanel, GroupsPage>
@@ -75,10 +80,11 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 	SimplePanel  newGroupMembersTable;
 	@UiField
 	ToggleSwitch isPublic;
+	@UiField
+	Heading      groupName;
 
 	private final GroupTable                       groupTable;
 	private       Button                           addGroup;
-	private       Button                           deleteGroup;
 	private       Button                           addGroupMember;
 	private       Button                           uploadGroupMember;
 	private       Button                           deleteGroupMember;
@@ -92,6 +98,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
+		Long groupId = LongParameterStore.Inst.get().get(Parameter.groupId);
+
 		GroupService.Inst.get().getTypes(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<GroupType>>>()
 		{
 			@Override
@@ -102,12 +110,108 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 			}
 		});
 
-		groupTable = new GroupTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, true)
+		groupTable = new GroupTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
+			boolean initialLoad = true;
+
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Group>>> callback)
 			{
-				return GroupService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+				return GroupService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, new AsyncCallback<PaginatedServerResult<List<Group>>>()
+				{
+					@Override
+					public void onFailure(Throwable caught)
+					{
+						callback.onFailure(caught);
+					}
+
+					@Override
+					public void onSuccess(PaginatedServerResult<List<Group>> result)
+					{
+						callback.onSuccess(result);
+
+						if (groupId != null && initialLoad && !CollectionUtils.isEmpty(result.getServerResult()))
+						{
+							for (Group g : result.getServerResult())
+							{
+								if (Objects.equals(g.getId(), groupId))
+								{
+									group = g;
+									break;
+								}
+							}
+
+							if (group != null)
+								updateGroupMembers();
+						}
+
+						initialLoad = false;
+					}
+				});
+			}
+
+			@Override
+			protected void createColumns()
+			{
+				super.createColumns();
+
+				SafeHtmlCell clickCell = new SafeHtmlCell()
+				{
+					@Override
+					public Set<String> getConsumedEvents()
+					{
+						Set<String> events = new HashSet<>();
+						events.add(BrowserEvents.CLICK);
+						return events;
+					}
+				};
+
+				/* Add the delete column */
+				addColumn(new Column<Group, SafeHtml>(clickCell)
+				{
+					@Override
+					public String getCellStyleNames(Cell.Context context, Group row)
+					{
+						return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
+					}
+
+					@Override
+					public SafeHtml getValue(Group row)
+					{
+						if (canEdit(row))
+							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_DELETE, Text.LANG.generalDelete(), UriUtils.fromString(""), "");
+						else
+							return SimpleHtmlTemplate.INSTANCE.empty();
+					}
+
+					@Override
+					public void onBrowserEvent(Cell.Context context, Element elem, Group object, NativeEvent event)
+					{
+						if (BrowserEvents.CLICK.equals(event.getType()) && canEdit(object))
+						{
+							event.preventDefault();
+
+							AlertDialog.createYesNoDialog(Text.LANG.groupsDeleteTitle(), Text.LANG.groupsDeleteText(), e ->
+							{
+								List<Long> ids = Collections.singletonList(object.getId());
+
+								GroupService.Inst.get().delete(Cookie.getRequestProperties(), ids, new DefaultAsyncCallback<DebugInfo>()
+								{
+									@Override
+									protected void onSuccessImpl(DebugInfo result)
+									{
+										Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
+										groupTable.refreshTable();
+									}
+								});
+							}, null);
+						}
+						else
+						{
+							super.onBrowserEvent(context, elem, object, event);
+						}
+					}
+				}, "", false);
 			}
 
 			@Override
@@ -117,60 +221,38 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 			}
 
 			@Override
-			protected void onSelectionChanged(NativeEvent event, Group object, int column)
+			protected void onItemSelected(NativeEvent event, Group object, int column)
 			{
+				super.onItemSelected(event, object, column);
 				group = object;
 				updateGroupMembers();
 			}
 		};
+		groupTable.setHideEmptyTable(false);
 		tablePanel.add(groupTable);
 
-		ButtonGroup group = new ButtonGroup();
-		deleteGroup = new Button(Text.LANG.groupsButtonDeleteGroup(), IconType.TRASH_O, e ->
+		if (!GerminateSettingsHolder.get().isReadOnlyMode.getValue() && ModuleCore.getUseAuthentication())
 		{
-			Set<Group> selection = groupTable.getSelection();
+			ButtonGroup group = new ButtonGroup();
 
-			if (selection.size() < 1)
+			addGroup = new Button(Text.LANG.groupsButtonAddGroup(), IconType.PLUS_SQUARE_O, e ->
 			{
-				Notification.notify(Notification.Type.INFO, Text.LANG.notificationGroupsSelectAtLeastOne());
-				return;
-			}
+				ModalBody dialogContent = new ModalBody();
+				AddGroupDialog content = new AddGroupDialog(groupTypes, null);
 
-			AlertDialog.createYesNoDialog(Text.LANG.groupsDeleteTitle(), Text.LANG.groupsDeleteText(), event ->
-			{
-				List<Long> ids = DatabaseObject.getIds(selection);
+				dialogContent.add(content);
 
-				GroupService.Inst.get().delete(Cookie.getRequestProperties(), ids, new DefaultAsyncCallback<DebugInfo>()
-				{
-					@Override
-					protected void onSuccessImpl(DebugInfo result)
-					{
-						Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
-						groupTable.refreshTable();
-					}
-				});
-			}, null);
-		});
-		deleteGroup.setEnabled(false);
+				final AlertDialog dialog = new AlertDialog(Text.LANG.groupsSubtitleNewGroup())
+						.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev -> addNewGroup(content.getName(), content.getType())))
+						.setContent(dialogContent);
 
-		addGroup = new Button(Text.LANG.groupsButtonAddGroup(), IconType.PLUS_SQUARE_O, e ->
-		{
-			ModalBody dialogContent = new ModalBody();
-			AddGroupDialog content = new AddGroupDialog(groupTypes, null);
+				dialog.open();
+			});
+			addGroup.setEnabled(false);
 
-			dialogContent.add(content);
-
-			final AlertDialog dialog = new AlertDialog(Text.LANG.groupsSubtitleNewGroup())
-					.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev -> addNewGroup(content.getName(), content.getType())))
-					.setContent(dialogContent);
-
-			dialog.open();
-		});
-		addGroup.setEnabled(false);
-
-		group.add(deleteGroup);
-		group.add(addGroup);
-		groupTable.addExtraContent(group);
+			group.add(addGroup);
+			groupTable.addExtraContent(group);
+		}
 
 		GerminateEventBus.BUS.addHandler(GroupMemberChangeEvent.TYPE, e -> updateGroupMembers());
 	}
@@ -183,6 +265,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 
 	private void updateGroupMembers()
 	{
+		groupName.setSubText(group.getDescription());
+
 		if (uploadAlertDialog != null)
 			uploadAlertDialog.close();
 
@@ -395,7 +479,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 	 * @param group The group to check
 	 * @return <code>true</code> if the group editing functionality should be enabled
 	 */
-	private boolean canEdit(Group group)
+	public static boolean canEdit(Group group)
 	{
 		/* If we're in read-only mode or authentication is disabled, don't allow editing */
 		if (GerminateSettingsHolder.get().isReadOnlyMode.getValue() || !ModuleCore.getUseAuthentication())
@@ -417,7 +501,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 	private void updateContent()
 	{
 		addGroup.setEnabled(!CollectionUtils.isEmpty(groupTypes));
-		deleteGroup.setEnabled(true);
 	}
 
 	/**
@@ -425,7 +508,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 	 *
 	 * @param newGroup The new group name
 	 */
-	private static void addNewGroup(String newGroup, GroupType type)
+	private void addNewGroup(String newGroup, GroupType type)
 	{
 		if (StringUtils.isEmpty(newGroup))
 		{
@@ -435,12 +518,15 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 
 		final String strippedString = HTMLUtils.stripHtmlTags(newGroup);
 
-		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), strippedString, type.getTargetTable(), new DefaultAsyncCallback<ServerResult<Long>>()
+		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), strippedString, type.getTargetTable(), new DefaultAsyncCallback<ServerResult<Group>>()
 		{
 			@Override
-			public void onSuccessImpl(ServerResult<Long> result)
+			public void onSuccessImpl(ServerResult<Group> result)
 			{
 				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", strippedString);
+				group = result.getServerResult();
+				groupTable.refreshTable();
+				updateGroupMembers();
 			}
 		});
 	}
@@ -467,5 +553,13 @@ public class GroupsPage extends Composite implements ParallaxBannerPage
 	public String getParallaxStyle()
 	{
 		return ParallaxResource.INSTANCE.css().parallaxGroup();
+	}
+
+	@Override
+	public HyperlinkPopupOptions getHyperlinkOptions()
+	{
+		return new HyperlinkPopupOptions()
+				.setPage(Page.GROUPS)
+				.addParam(Parameter.groupId);
 	}
 }

@@ -47,13 +47,6 @@ public class ExceptionEvent extends GwtEvent<ExceptionEventHandler>
 
 	/**
 	 * Creates a new instance of {@link ExceptionEvent}
-	 */
-	public ExceptionEvent()
-	{
-	}
-
-	/**
-	 * Creates a new instance of {@link ExceptionEvent}
 	 *
 	 * @param ex The {@link Throwable} that caused the {@link ExceptionEvent}
 	 */

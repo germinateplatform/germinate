@@ -26,13 +26,13 @@
 
 	</ui:style>
 	<g:HTMLPanel>
-		<div class="{PANEL}" ui:field="panel">
-			<div class="{PANEL_HEADING}" ui:field="heading">
-				<div class="{TEXT_CENTER_ALIGN}">
-					<i class="{FA} {FA_FIXED_WIDTH} {FA_4X}" ui:field="icon"/>
+		<a href="#" ui:field="anchor">
+			<div class="{PANEL}" ui:field="panel">
+				<div class="{PANEL_HEADING}" ui:field="heading">
+					<div class="{TEXT_CENTER_ALIGN}">
+						<i class="{FA} {FA_FIXED_WIDTH} {FA_4X}" ui:field="icon"/>
+					</div>
 				</div>
-			</div>
-			<a href="#" ui:field="anchor">
 				<div class="{PANEL_FOOTER}">
 					<span class="{PULL_LEFT}" ui:field="detailsLabel"/>
 					<span class="{PULL_RIGHT}">
@@ -40,8 +40,8 @@
 					</span>
 					<div class="{CLEARFIX}"/>
 				</div>
-			</a>
-		</div>
+			</div>
+		</a>
 	</g:HTMLPanel>
 
 </ui:UiBinder> 

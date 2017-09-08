@@ -43,19 +43,19 @@ public class GroupCreationEvent extends GwtEvent<GroupCreationEvent.GroupCreatio
 
 	public static final Type<GroupCreationEventHandler> TYPE = new Type<>();
 
-	private ShoppingCart.ItemType type;
-	private Long                  id;
+	private MarkedItemList.ItemType type;
+	private Long                    id;
 
 	/**
 	 * Creates a new instance of {@link LogoutEvent}
 	 */
-	public GroupCreationEvent(ShoppingCart.ItemType type, Long id)
+	public GroupCreationEvent(MarkedItemList.ItemType type, Long id)
 	{
 		this.type = type;
 		this.id = id;
 	}
 
-	public ShoppingCart.ItemType getType()
+	public MarkedItemList.ItemType getType()
 	{
 		return type;
 	}

@@ -50,7 +50,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 
 	private static final String QUERY_COLLSITES_BY_IDS_DOWNLOAD = "SELECT locations.*, locationtypes.name AS locationtypes_name, locationtypes.description AS locationtypes_description, countries.country_name AS countries_country_name FROM locations LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id WHERE locations.id IN (%s)";
 
-	private static final String QUERY_JSON_LOCATIONS = "call " + StoredProcedureInitializer.LOCATION_JSON + "(?)";
+	private static final String SELECT_TREEMAP_DATA = "SELECT countries.*, locations.*, locationtypes.*, COUNT(germinatebase.id) AS count FROM countries LEFT JOIN locations ON locations.country_id = countries.id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id WHERE NOT ISNULL(site_name) AND locationtypes.name = ? GROUP BY countries.id, locations.id HAVING COUNT(germinatebase.id) > 0 ";
 
 	@Override
 	public ServerResult<Location> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
@@ -150,21 +150,6 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	}
 
 	@Override
-	public ServerResult<MegaEnvironment> getMegaEnv(RequestProperties properties, Long megaEnvId) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		try
-		{
-			return new MegaEnvironmentManager().getById(userAuth, megaEnvId);
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			return new ServerResult<>(null, null);
-		}
-	}
-
-	@Override
 	public PaginatedServerResult<List<MegaEnvironment>> getMegaEnvs(RequestProperties properties, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		if (pagination == null)
@@ -229,8 +214,11 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	@Override
 	public ServerResult<String> exportForIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException
 	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
 		String formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
-		GerminateTableStreamer streamer = new GerminateTableQuery(properties, this, formatted, null)
+		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
 				.setStrings(ids)
 				.getStreamer();
 
@@ -252,41 +240,60 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	public ServerResult<String> getJsonForType(RequestProperties properties, LocationType type) throws InvalidSessionException, DatabaseException, IOException
 	{
 		/* Get the column from the config file */
-//		String hierarchyBy = PropertyReader.get(ServerProperty.GERMINATE_COLLECTINGSITE_TREEMAP_COLUMN, Country.COUNTRY_NAME);
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		ServerResult<String> json = new ValueQuery(QUERY_JSON_LOCATIONS, userAuth)
+		DefaultStreamer streamer = new DefaultQuery(SELECT_TREEMAP_DATA, userAuth)
 				.setString(type.name())
-				.run("json")
-				.getString();
+				.getStreamer();
 
-        /* Start writing the file */
-		String filePath;
+		/* Start writing the file */
+		String filePath = null;
 
 		File file = createTemporaryFile("json", "json");
 
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")))
 		{
-			// Replace single quotes with doubles, but make sure to not replace them inside words.
-			String replaced = json.getServerResult()
-								  .replaceAll("\\s'", " \"")
-								  .replaceAll("',", "\",")
-								  .replaceAll("':", "\":")
-								  .replaceAll("\\\\'", "'")
-								  .replaceAll("'}", "\"}");
-			bw.write(replaced);
+			DatabaseResult rs = streamer.next();
 
-			filePath = file.getName();
+			if (rs != null)
+			{
+				bw.write("[ ");
+
+				boolean first = true;
+				do
+				{
+					if (!first)
+						bw.write(",");
+
+					String siteName = rs.getString(Location.SITE_NAME);
+
+					if (siteName != null)
+					{
+						siteName = siteName.replaceAll("\"", "'")
+										   .replaceAll("\\s\"", " '")
+										   .replaceAll("\",", "',")
+										   .replaceAll("\":", "':")
+										   .replaceAll("\\\"", "'")
+										   .replaceAll("\"}", "'}");
+					}
+
+					first = false;
+					bw.write("{\"site\": \"" + siteName + "\", \"country\": \"" + rs.getString(Country.COUNTRY_NAME) + "\", \"value\": " + rs.getString(Location.COUNT) + ", \"id\": \"" + rs.getString(Location.ID) + "\"}");
+				} while ((rs = streamer.next()) != null);
+
+				bw.write(" ]");
+
+				filePath = file.getName();
+			}
 		}
 		catch (java.io.IOException e)
 		{
 			throw new IOException(e);
 		}
 
-		json.setServerResult(filePath);
 		/* Return the debug information and the relative file path */
-		return json;
+		return new ServerResult<>(streamer.getDebugInfo(), filePath);
 	}
 
 	@Override

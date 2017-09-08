@@ -21,7 +21,6 @@ import com.google.gwt.core.shared.*;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
 
 import jhi.germinate.server.config.*;
 import jhi.germinate.shared.enums.*;
@@ -47,7 +46,6 @@ public class DebugInfo implements Serializable
 	@GwtIncompatible
 	public static DebugInfo create(UserAuth auth)
 	{
-		Logger.getLogger("").log(Level.INFO, "AUTH: " + (auth != null ? auth.toString() : "null"));
 		return new DebugInfo(PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG) && auth != null && auth.isAdmin());
 	}
 

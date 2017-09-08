@@ -17,10 +17,8 @@
 
 package jhi.germinate.client.widget.table.pagination;
 
-import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import java.util.*;
@@ -29,6 +27,7 @@ import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -42,7 +41,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 {
 	public CompoundDataTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
-		super(ShoppingCart.ItemType.ACCESSION, selectionMode, sortingEnabled);
+		super(MarkedItemList.ItemType.ACCESSION, selectionMode, sortingEnabled);
 	}
 
 	@Override
@@ -76,9 +75,15 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return CompoundDataTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<CompoundData, ?> column;
+		DatabaseObjectFilterColumn<CompoundData, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -97,7 +102,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, CompoundData object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -263,7 +268,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, CompoundData object, int column)
+	protected void onItemSelected(NativeEvent event, CompoundData object, int column)
 	{
 		if (object.getAccession() != null)
 			LongParameterStore.Inst.get().put(Parameter.accessionId, object.getAccession().getId());

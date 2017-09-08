@@ -41,7 +41,7 @@
 		</b:FormGroup>
 		<b:FormGroup>
 			<b:FormLabel for="formGroup" text="{msg.accessionsDownloadGroups}"/>
-			<g8:GroupListBox b:id="formGroup" multipleSelect="false" ui:field="groupBox"/>
+			<g8:GroupListBox type="ACCESSION" b:id="formGroup" multipleSelect="false" ui:field="groupBox"/>
 		</b:FormGroup>
 		<b:FormGroup>
 			<b:FormLabel for="formAttributes" text="{msg.accessionsDownloadIncludeAttributes}"/>

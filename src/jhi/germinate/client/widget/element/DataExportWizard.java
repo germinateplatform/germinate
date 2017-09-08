@@ -51,8 +51,6 @@ public abstract class DataExportWizard extends Composite
 	{
 	}
 
-	private static final int VISIBLE_ITEM_COUNT = 7;
-
 	@UiField
 	FlowPanel    overallPanel;
 	@UiField

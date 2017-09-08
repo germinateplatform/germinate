@@ -89,23 +89,29 @@ public class LocationTreemapPage extends Composite implements HasLibraries
 			@Override
 			public void onFailureImpl(Throwable caught)
 			{
-				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
-
 				chart.clear();
+				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
 			}
 
 			@Override
 			public void onSuccessImpl(ServerResult<String> result)
 			{
-				/* Construct the path to the json file */
-				chart.setLocationType(type);
-				chart.setFilePath(new ServletConstants.Builder()
-						.setUrl(GWT.getModuleBaseURL())
-						.setPath(ServletConstants.SERVLET_FILES)
-						.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-						.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-						.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult())
-						.build());
+				if (!StringUtils.isEmpty(result.getServerResult()))
+				{
+					/* Construct the path to the json file */
+					chart.setLocationType(type);
+					chart.setFilePath(new ServletConstants.Builder()
+							.setUrl(GWT.getModuleBaseURL())
+							.setPath(ServletConstants.SERVLET_FILES)
+							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult())
+							.build());
+				}
+				else
+				{
+					onFailureImpl(null);
+				}
 			}
 		});
 	}

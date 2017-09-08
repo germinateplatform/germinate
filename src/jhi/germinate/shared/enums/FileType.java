@@ -27,17 +27,17 @@ import jhi.germinate.shared.*;
  */
 public enum FileType
 {
-	kmz("application/vnd.google-earth.kmz", "earth", Style.FA_GLOBE),
-	txt("application/txt", "txt", Style.FA_FILE_TEXT_O),
-	tsv("application/txt", "txt", Style.FA_FILE_TEXT_O),
-	pdf("application/pdf", "pdf", Style.FA_FILE_PDF_O),
-	flapjack("application/flapjack", "flapjack", Style.FA_FILE_O),
-	helium("application/helium", "helium", Style.FA_FILE_O),
-	strudel("application/strudel", "strudel", Style.FA_FILE_O),
-	mct("application/txt", "mct", Style.FA_FILE_O),
-	map("application/flapjack", "flapjack", Style.FA_FILE_O),
-	png("image/png", "png", Style.FA_FILE_IMAGE_O),
-	xlsx("application/ms-excel", "xlsx", Style.FA_FILE_EXCEL_O),
+	kmz("application/vnd.google-earth.kmz", "earth", Style.MDI_GOOGLE_EARTH),
+	txt("application/txt", "txt", Style.MDI_FILE_DOCUMENT),
+	tsv("application/txt", "txt", Style.MDI_FILE_DOCUMENT),
+	pdf("application/pdf", "pdf", Style.MDI_FILE_PDF),
+	flapjack("application/flapjack", "flapjack", Style.MDI_FILE_DOCUMENT),
+	helium("application/helium", "helium", Style.MDI_FILE_DOCUMENT),
+	strudel("application/strudel", "strudel", Style.MDI_FILE_DOCUMENT),
+	mct("application/txt", "mct", Style.MDI_FILE_DOCUMENT),
+	map("application/flapjack", "flapjack", Style.MDI_FILE_DOCUMENT),
+	png("image/png", "png", Style.MDI_FILE_IMAGE),
+	xlsx("application/ms-excel", "xlsx", Style.MDI_FILE_EXCEL),
 	unknown("application/txt", "", "");
 
 	private String contentType;

@@ -38,4 +38,12 @@ public abstract class DatabaseObjectFilterColumn<T, C> extends Column<T, C>
 	public abstract Class getType();
 
 	public abstract String getHeaderStyle();
+
+	public abstract String getCellStyle();
+
+	@Override
+	public final String getCellStyleNames(Cell.Context context, T object)
+	{
+		return super.getCellStyleNames(context, object);
+	}
 }

@@ -106,7 +106,7 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, Util.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(filter, formatted, CompoundService.COLUMNS_DATA_SORTABLE, COLUMNS_COMPOUND_DATA_EXPORT)
+		return getFilteredGerminateTableQuery(userAuth, filter, formatted, CompoundService.COLUMNS_DATA_SORTABLE, COLUMNS_COMPOUND_DATA_EXPORT)
 				.setLongs(datasetIds)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

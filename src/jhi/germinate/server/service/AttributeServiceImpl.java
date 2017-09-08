@@ -43,32 +43,61 @@ import jhi.germinate.shared.search.*;
 public class AttributeServiceImpl extends BaseRemoteServiceServlet implements AttributeService
 {
 	@Override
-	public PaginatedServerResult<List<AttributeData>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
+	public PaginatedServerResult<List<AttributeData>> getForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		if (pagination == null)
 			pagination = Pagination.getDefault();
 
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return AttributeDataManager.getAllForFilter(userAuth, filter, pagination);
+
+		switch (target)
+		{
+			case germinatebase:
+				return AttributeDataManager.getAllForAccessionFilter(userAuth, filter, pagination);
+			case datasets:
+				return AttributeDataManager.getAllForDatasetFilter(userAuth, filter, pagination, true);
+			default:
+				return new PaginatedServerResult<>(null, null, 0);
+		}
 	}
 
 	@Override
-	public ServerResult<List<String>> getIdsForFilter(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException,
+	public ServerResult<List<String>> getIdsForFilter(RequestProperties properties, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException,
 			DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return AttributeDataManager.getIdsForFilter(userAuth, filter);
+
+		switch (target)
+		{
+			case germinatebase:
+				return AttributeDataManager.getIdsForAccessionFilter(userAuth, filter);
+			default:
+				return new PaginatedServerResult<>(null, null, 0);
+		}
 	}
 
 	@Override
-	public ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException
+	public ServerResult<String> export(RequestProperties properties, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		try (GerminateTableStreamer streamer = AttributeDataManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE)))
+		GerminateTableStreamer streamer = null;
+
+		switch (target)
+		{
+			case germinatebase:
+				streamer = AttributeDataManager.getStreamerForAccessionFilter(userAuth, filter, Pagination.getDefault());
+				break;
+			case datasets:
+				streamer = AttributeDataManager.getStreamerForDatasetFilter(userAuth, filter, Pagination.getDefault());
+				break;
+			default:
+		}
+
+		if (streamer != null)
 		{
 			File result = createTemporaryFile("download-attributes", FileType.txt.name());
 
@@ -81,7 +110,11 @@ public class AttributeServiceImpl extends BaseRemoteServiceServlet implements At
 				throw new IOException(e);
 			}
 
+			streamer.close();
+
 			return new ServerResult<>(streamer.getDebugInfo(), result.getName());
 		}
+		else
+			return new ServerResult<>(null, null);
 	}
 }

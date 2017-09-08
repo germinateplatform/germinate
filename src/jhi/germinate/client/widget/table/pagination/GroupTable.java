@@ -20,15 +20,22 @@ package jhi.germinate.client.widget.table.pagination;
 import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
+
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.page.groups.*;
+import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -68,9 +75,15 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return GroupTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<Group, ?> column;
+		DatabaseObjectFilterColumn<Group, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -92,7 +105,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, Group object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -107,16 +120,66 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			@Override
 			public SafeHtml getValue(Group object)
 			{
-				if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
-					return TableUtils.getHyperlinkValue(object.getDescription(), "#" + Page.GROUPS);
+				if (GroupsPage.canEdit(object))
+				{
+					if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
+						return SimpleHtmlTemplate.INSTANCE.materialIconAnchorWithText(Style.MDI_RENAME_BOX, object.getDescription(), Text.LANG.generalRename(), UriUtils.fromString("#" + Page.GROUPS), "");
+					else
+						return SimpleHtmlTemplate.INSTANCE.materialIconWithText(Style.MDI_RENAME_BOX, object.getDescription(), Text.LANG.generalRename());
+				}
 				else
-					return SimpleHtmlTemplate.INSTANCE.text(object.getDescription());
+				{
+					if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
+						return TableUtils.getHyperlinkValue(object.getDescription(), "#" + Page.GROUPS);
+					else
+						return SimpleHtmlTemplate.INSTANCE.text(object.getDescription());
+				}
 			}
 
 			@Override
 			public Class getType()
 			{
 				return String.class;
+			}
+
+			@Override
+			public void onBrowserEvent(Cell.Context context, Element elem, Group object, NativeEvent event)
+			{
+				Element element = Element.as(event.getEventTarget());
+
+				if (BrowserEvents.CLICK.equals(event.getType()) && element.hasClassName(Style.MDI))
+				{
+					event.preventDefault();
+
+					final TextBox name = new TextBox();
+					name.setText(object.getDescription());
+
+					new AlertDialog(Text.LANG.generalRename(), name)
+							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalRename(), IconType.PENCIL_SQUARE_O, ButtonType.PRIMARY, e ->
+							{
+								object.setDescription(name.getText());
+								GroupService.Inst.get().renameGroup(Cookie.getRequestProperties(), object, new DefaultAsyncCallback<ServerResult<Void>>()
+								{
+									@Override
+									protected void onSuccessImpl(ServerResult<Void> result)
+									{
+										refreshTable();
+									}
+								});
+							}))
+							.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, null))
+							.addShownHandler(e ->
+									{
+										name.setFocus(true);
+										name.selectAll();
+									}
+							)
+							.open();
+				}
+				else
+				{
+					super.onBrowserEvent(context, elem, object, event);
+				}
 			}
 		};
 		column.setDataStoreName(Group.DESCRIPTION);
@@ -138,7 +201,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			}
 		};
 		column.setDataStoreName(GroupType.DESCRIPTION);
-		addColumn(column, Text.LANG.groupsColumnDescription(), true);
+		addColumn(column, Text.LANG.groupsColumnType(), true);
 
 		/* Add the user column */
 		column = new TextColumn()
@@ -157,6 +220,24 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 		};
 		column.setDataStoreName(Group.CREATED_BY);
 		addColumn(column, Text.LANG.commentColumnUser(), true);
+
+		/* Add the size column */
+		column = new TextColumn()
+		{
+			@Override
+			public Class getType()
+			{
+				return Long.class;
+			}
+
+			@Override
+			public String getValue(Group object)
+			{
+				return TableUtils.getCellValueAsString(object.getSize());
+			}
+		};
+		column.setDataStoreName(DatabaseObject.COUNT);
+		addColumn(column, Text.LANG.groupsColumnSize(), true);
 
 		/* Add the created on */
 		column = new TextColumn()
@@ -178,7 +259,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, Group object, int column)
+	protected void onItemSelected(NativeEvent event, Group object, int column)
 	{
 		/* Get the id */
 		if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))

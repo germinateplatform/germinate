@@ -65,7 +65,7 @@ public class LoginHandler implements LoginEvent.LoginEventHandler
 		 * navigate to, then do so
 		 * Also do this, if this is a page refresh event
 		 */
-		if ((hasReadParameters && !StringUtils.isEmpty(historyToken) && !Page.LOGOUT.name().equals(historyToken)) || event.isAutomaticLogin())
+		if ((hasReadParameters && !StringUtils.isEmpty(historyToken)) || event.isAutomaticLogin())
 		{
 			History.fireCurrentHistoryState();
 		}

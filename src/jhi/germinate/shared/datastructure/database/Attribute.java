@@ -29,6 +29,7 @@ import jhi.germinate.server.database.query.parser.*;
 import jhi.germinate.server.database.query.writer.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
 /**
@@ -38,14 +39,16 @@ public class Attribute extends DatabaseObject
 {
 	private static final long serialVersionUID = -6786321095022860722L;
 
-	public static final String ID          = "attributes.id";
-	public static final String NAME        = "attributes.name";
-	public static final String DESCRIPTION = "attributes.description";
-	public static final String DATA_TYPE   = "attributes.datatype";
+	public static final String ID           = "attributes.id";
+	public static final String NAME         = "attributes.name";
+	public static final String DESCRIPTION  = "attributes.description";
+	public static final String DATA_TYPE    = "attributes.datatype";
+	public static final String TARGET_TABLE = "attributes.target_table";
 
 	private String name;
 	private String description;
 	private String dataType;
+	private String targetTable;
 	private Long   createdOn;
 	private Long   updatedOn;
 
@@ -58,12 +61,13 @@ public class Attribute extends DatabaseObject
 		super(id);
 	}
 
-	public Attribute(Long id, String name, String description, String dataType, Long createdOn, Long updatedOn)
+	public Attribute(Long id, String name, String description, String dataType, String targetTable, Long createdOn, Long updatedOn)
 	{
 		super(id);
 		this.name = name;
 		this.description = description;
 		this.dataType = dataType;
+		this.targetTable = targetTable;
 		this.createdOn = createdOn;
 		this.updatedOn = updatedOn;
 	}
@@ -98,6 +102,17 @@ public class Attribute extends DatabaseObject
 	public Attribute setDataType(String dataType)
 	{
 		this.dataType = dataType;
+		return this;
+	}
+
+	public String getTargetTable()
+	{
+		return targetTable;
+	}
+
+	public Attribute setTargetTable(String targetTable)
+	{
+		this.targetTable = targetTable;
 		return this;
 	}
 
@@ -168,6 +183,7 @@ public class Attribute extends DatabaseObject
 						.setName(row.getString(NAME))
 						.setDescription(row.getString(DESCRIPTION))
 						.setDataType(row.getString(DATA_TYPE))
+						.setTargetTable(row.getString(TARGET_TABLE))
 						.setCreatedOn(row.getTimestamp(CREATED_ON))
 						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 		}
@@ -192,10 +208,11 @@ public class Attribute extends DatabaseObject
 		@Override
 		public void write(Database database, Attribute object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO attributes (" + NAME + ", " + DESCRIPTION + ", " + DATA_TYPE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO attributes (" + NAME + ", " + DESCRIPTION + ", " + DATA_TYPE + ", " + DATA_TYPE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?)")
 					.setString(object.getName())
 					.setString(object.getDescription())
-					.setString(object.getDataType());
+					.setString(object.getDataType())
+					.setString(GerminateDatabaseTable.germinatebase.name());
 
 			if (object.getCreatedOn() != null)
 				query.setTimestamp(new Date(object.getCreatedOn()));

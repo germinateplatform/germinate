@@ -23,7 +23,7 @@
 			 xmlns:t='urn:import:org.gwtbootstrap3.extras.toggleswitch.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
-	<ui:import field="jhi.germinate.client.util.ShoppingCart.ItemType.*"/>
+	<ui:import field="jhi.germinate.client.util.MarkedItemList.ItemType.*"/>
 
 	<ui:style>
 	</ui:style>

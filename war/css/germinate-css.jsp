@@ -1,8 +1,8 @@
 <%@ page language ="java" contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="jhi.germinate.server.config.*"%>
-<%@ page import="jhi.germinate.shared.enums.*"%>
-<%@ page import="jhi.germinate.shared.*"%>
 <%@ page import="jhi.germinate.server.service.*"%>
+<%@ page import="jhi.germinate.shared.*"%>
+<%@ page import="jhi.germinate.shared.enums.*"%>
 
 <%--
   ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
@@ -34,11 +34,19 @@ html, body, .<%= Style.NO_POINTER_EVENTS %>{
 }
 
 body * {
-	pointer-events: auto;
+	pointer-events: all;
 }
 
 td p {
 	margin: 0;
+}
+
+td span.mdi:nth-child(2) {
+	margin-left: 5px;
+}
+
+.dropdown-menu {
+	z-index: 2000;
 }
 
 #<%= Id.STRUCTURE_LOGIN_BACKGROUND_SVG %> {
@@ -114,7 +122,8 @@ td p {
 	text-align: center;
 }
 
-.<%= Style.LAYOUT_LOGO_SECTION %> img {
+.<%= Style.LAYOUT_LOGO_SECTION %> img,
+.<%= Style.LAYOUT_LOGO_SECTION %> object {
 	max-width: 100%;
 	width: 300px;
 }
@@ -1351,7 +1360,8 @@ th {
 
 /* Responsive layout */
 @media (min-width: 768px) {
-	.<%= Style.LAYOUT_LOGO_SECTION %> img {
+	.<%= Style.LAYOUT_LOGO_SECTION %> img,
+	.<%= Style.LAYOUT_LOGO_SECTION %> object {
 		width: 100%;
 	}
 }

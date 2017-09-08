@@ -48,8 +48,8 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 
 	private static final int PEDIGREE_LEVEL_LIMIT = 5;
 
-	private static final String SELECT_PEDIGREE_PARENTS  = "SELECT A.name AS node, B.name AS parent FROM pedigrees LEFT JOIN germinatebase A ON A.id = pedigrees.germinatebase_id LEFT JOIN germinatebase B ON B.id = pedigrees.parent_id";
-	private static final String SELECT_PEDIGREE_CHILDREN = "SELECT A.name AS node, B.name AS child FROM pedigrees LEFT JOIN germinatebase A ON A.id = pedigrees.parent_id LEFT JOIN germinatebase B ON B.id = pedigrees.germinatebase_id";
+	private static final String SELECT_PEDIGREE_PARENTS  = "SELECT A.name AS node, B.name AS parent, pedigrees.relationship_type AS type FROM pedigrees LEFT JOIN germinatebase A ON A.id = pedigrees.germinatebase_id LEFT JOIN germinatebase B ON B.id = pedigrees.parent_id ORDER BY node, pedigrees.relationship_type";
+	private static final String SELECT_PEDIGREE_CHILDREN = "SELECT A.name AS node, B.name AS child,  pedigrees.relationship_type AS type FROM pedigrees LEFT JOIN germinatebase A ON A.id = pedigrees.parent_id LEFT JOIN germinatebase B ON B.id = pedigrees.germinatebase_id ORDER BY node, pedigrees.relationship_type";
 
 	@Override
 	public ServerResult<List<PedigreeDefinition>> getPedigreeDefinitions(RequestProperties properties, Long accessionId) throws InvalidSessionException, DatabaseException
@@ -80,9 +80,10 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 	public ServerResult<String> exportToHelium(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
 	{
 		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		/* Get the whole data with a streamer */
-		DefaultStreamer streamer = new DefaultQuery(SELECT_PEDIGREE_PARENTS)
+		DefaultStreamer streamer = new DefaultQuery(SELECT_PEDIGREE_PARENTS, userAuth)
 				.getStreamer();
 
 		File resultFile = createTemporaryFile("helium", "helium");
@@ -91,15 +92,20 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 			/* Write the headers */
 			bw.write("# heliumInput = PEDIGREE");
 			bw.newLine();
-			bw.write("LineName\tParent");
+			bw.write("LineName\tParent\tParentType");
+
 
 			DatabaseResult inputRow;
 
 			/* Then write the data one relation at a time */
 			while ((inputRow = streamer.next()) != null)
 			{
+				String node = inputRow.getString("node");
+				String parent = inputRow.getString("parent");
+				String type = inputRow.getString("type");
+
 				bw.newLine();
-				bw.write(inputRow.getString("node") + "\t" + inputRow.getString("parent"));
+				bw.write(node + "\t" + parent + "\t" + type);
 			}
 		}
 		catch (java.io.IOException e)
@@ -118,19 +124,19 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		/* Get the parent data; mapping: node -> [parents] */
-		ServerResult<GerminateTable> parents = new GerminateTableQuery(SELECT_PEDIGREE_PARENTS, null).run();
+		ServerResult<GerminateTable> parents = new GerminateTableQuery(SELECT_PEDIGREE_PARENTS, userAuth, null).run();
 		/* Get the child data; mapping: node -> [children] */
-		ServerResult<GerminateTable> children = new GerminateTableQuery(SELECT_PEDIGREE_CHILDREN, null).run();
+		ServerResult<GerminateTable> children = new GerminateTableQuery(SELECT_PEDIGREE_CHILDREN, userAuth, null).run();
 
 		/* Map the data into a nice data structure */
-		Map<String, List<String>> parentData = parents.getServerResult()
-													  .parallelStream()
-													  .collect(Collectors.groupingByConcurrent(r -> r.get("node"),
-															  Collectors.mapping(r -> r.get("parent"), Collectors.toList())));
-		Map<String, List<String>> childData = children.getServerResult()
-													  .parallelStream()
-													  .collect(Collectors.groupingByConcurrent(r -> r.get("node"),
-															  Collectors.mapping(r -> r.get("child"), Collectors.toList())));
+		Map<String, List<PedigreePair>> parentPairData = parents.getServerResult()
+																.parallelStream()
+																.collect(Collectors.groupingByConcurrent(r -> r.get("node"),
+																		Collectors.mapping(r -> new PedigreePair(r.get("parent"), r.get("type")), Collectors.toList())));
+		Map<String, List<PedigreePair>> childPairData = children.getServerResult()
+																.parallelStream()
+																.collect(Collectors.groupingByConcurrent(r -> r.get("node"),
+																		Collectors.mapping(r -> new PedigreePair(r.get("child"), r.get("type")), Collectors.toList())));
 
 		parents.getDebugInfo().addAll(children.getDebugInfo());
 
@@ -139,17 +145,18 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		{
 			bw.write("# heliumInput = PEDIGREE");
 			bw.newLine();
-			bw.write("LineName\tParent");
+			bw.write("LineName\tParent\tParentType");
 
 			/* Get the accession by its id */
 			Accession accession = new AccessionManager().getById(userAuth, accessionId).getServerResult();
 
 			/* Get the pedigree up the tree (parents, grandparents, ...) */
-			new PedigreeWriter(bw, parentData, true, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
+			new PedigreeWriter(bw, parentPairData, true, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
 					.run(accession.getName(), 1);
 			/* Get the pedigree down the tree (children, grandchildren, ...) */
-			new PedigreeWriter(bw, childData, false, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
+			new PedigreeWriter(bw, childPairData, false, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
 					.run(accession.getName(), 1);
+
 		}
 		catch (InsufficientPermissionsException e)
 		{
@@ -214,5 +221,37 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 				.getInt(0);
 
 		return new ServerResult<>(count.getDebugInfo(), count.getServerResult() > 0);
+	}
+
+	public static class PedigreePair
+	{
+		public String name;
+		public String type;
+
+		public PedigreePair(String name, String type)
+		{
+			this.name = name;
+			this.type = type;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			PedigreePair that = (PedigreePair) o;
+
+			if (!name.equals(that.name)) return false;
+			return type.equals(that.type);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			int result = name.hashCode();
+			result = 31 * result + type.hashCode();
+			return result;
+		}
 	}
 }

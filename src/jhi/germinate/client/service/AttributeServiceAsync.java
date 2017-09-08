@@ -24,6 +24,7 @@ import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
 
 public interface AttributeServiceAsync
@@ -36,7 +37,7 @@ public interface AttributeServiceAsync
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	Request getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback);
+	Request getForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback);
 
 	/**
 	 * Returns the ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.
@@ -45,7 +46,7 @@ public interface AttributeServiceAsync
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void getIdsForFilter(RequestProperties properties, PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);
+	void getIdsForFilter(RequestProperties properties, GerminateDatabaseTable target, PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
 	 * Exports all the data associated with {@link AttributeData} objects mathing the given {@link PartialSearchQuery}.
@@ -54,5 +55,5 @@ public interface AttributeServiceAsync
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void export(RequestProperties properties, PartialSearchQuery filter, AsyncCallback<ServerResult<String>> callback);
+	void export(RequestProperties properties, GerminateDatabaseTable target, PartialSearchQuery filter, AsyncCallback<ServerResult<String>> callback);
 }

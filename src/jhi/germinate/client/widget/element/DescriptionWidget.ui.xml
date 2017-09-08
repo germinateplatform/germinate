@@ -23,10 +23,14 @@
 			text-overflow: initial !important;
 			white-space: normal !important;
 		}
+
+		.breakWord {
+			word-wrap: break-word;
+		}
 	</ui:style>
 
 	<b:Description ui:field="description">
 		<b:DescriptionTitle addStyleNames="{style.wrap}" ui:field="title"/>
-		<b:DescriptionData ui:field="data"/>
+		<b:DescriptionData addStyleNames="{style.breakWord}" ui:field="data"/>
 	</b:Description>
 </ui:UiBinder>

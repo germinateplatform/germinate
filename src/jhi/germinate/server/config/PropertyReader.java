@@ -72,7 +72,7 @@ public class PropertyReader
 
 			loadProperties();
 		}
-		catch (URISyntaxException | IOException e)
+		catch (URISyntaxException | IOException | NullPointerException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -80,21 +80,22 @@ public class PropertyReader
 
 	private static void loadProperties()
 	{
-		try (InputStream stream = PropertyReader.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE))
+		try
 		{
+			URL url = PropertyReader.class.getClassLoader().getResource(PROPERTIES_FILE);
+			FileInputStream stream = new FileInputStream(new File(url.toURI()));
 			properties.load(stream);
+			stream.close();
 		}
-		catch (IOException e)
+		catch (URISyntaxException | IOException | NullPointerException e)
 		{
 			throw new RuntimeException(e);
 		}
 
 		checkRequiredProperties();
 
-		BaseException.printExceptions = PropertyReader.getBoolean(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED);
-		BaseException.isDebugging = PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG);
-
-//		tintImages();
+		BaseException.printExceptions = getBoolean(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED);
+		BaseException.isDebugging = getBoolean(ServerProperty.GERMINATE_DEBUG);
 	}
 
 	public static void stopFileWatcher()
@@ -128,8 +129,6 @@ public class PropertyReader
 						boolean useAuthentication = getBoolean(prop);
 						if (useAuthentication)
 						{
-							String gatekeeperPort = get(ServerProperty.GERMINATE_GATEKEEPER_PORT);
-
 							if (StringUtils.isEmpty(get(ServerProperty.GERMINATE_GATEKEEPER_SERVER)))
 								throwException(ServerProperty.GERMINATE_GATEKEEPER_SERVER);
 							if (StringUtils.isEmpty(get(ServerProperty.GERMINATE_GATEKEEPER_NAME)))
@@ -618,10 +617,11 @@ public class PropertyReader
 	/**
 	 * Stores changes to the properties persistantly in the config.properties file
 	 *
-	 * @throws IOException        Thrown if the file interaction fails
-	 * @throws URISyntaxException Thrown if the config.properties file cannot be resolved
+	 * @throws IOException          Thrown if the file interaction fails
+	 * @throws URISyntaxException   Thrown if the config.properties file cannot be resolved
+	 * @throws NullPointerException Thrown if the config.properties file URL cannot be converted to a URI
 	 */
-	public static synchronized void store() throws IOException, URISyntaxException
+	public static synchronized void store() throws IOException, URISyntaxException, NullPointerException
 	{
 		URL url = PropertyReader.class.getClassLoader().getResource(PROPERTIES_FILE);
 		FileOutputStream stream = new FileOutputStream(new File(url.toURI()));
@@ -635,7 +635,6 @@ public class PropertyReader
 	 */
 	private static class PropertyChangeListenerThread implements Runnable
 	{
-
 		/** the watchService that is passed in from above */
 		private WatchService watcher;
 
@@ -670,10 +669,7 @@ public class PropertyReader
 					return;
 				}
 
-                /*
-				 * We have a polled event, now we traverse it and receive all
-                 * the states from it
-                 */
+                /* We have a polled event, now we traverse it and receive all the states from it */
 				for (WatchEvent<?> event : key.pollEvents())
 				{
 					WatchEvent.Kind<?> kind = event.kind();
@@ -683,9 +679,7 @@ public class PropertyReader
 						continue;
 					}
 
-                    /*
-					 * The filename is the context of the event
-                     */
+                    /* The filename is the context of the event */
 					@SuppressWarnings("unchecked")
 					WatchEvent<Path> ev = (WatchEvent<Path>) event;
 					Path filename = ev.context();

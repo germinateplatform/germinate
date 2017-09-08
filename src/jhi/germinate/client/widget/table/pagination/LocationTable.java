@@ -20,15 +20,16 @@ package jhi.germinate.client.widget.table.pagination;
 import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import java.util.*;
+import java.util.Locale;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -42,7 +43,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 {
 	public LocationTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
-		super(ShoppingCart.ItemType.COLLECTINGSITE, selectionMode, sortingEnabled);
+		super(MarkedItemList.ItemType.LOCATION, selectionMode, sortingEnabled);
 	}
 
 	@Override
@@ -76,9 +77,15 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 	}
 
 	@Override
+	protected String getClassName()
+	{
+		return LocationTable.class.getSimpleName();
+	}
+
+	@Override
 	protected void createColumns()
 	{
-		Column<Location, ?> column;
+		DatabaseObjectFilterColumn<Location, ?> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())
 		{
@@ -100,7 +107,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 				}
 
 				@Override
-				public String getCellStyleNames(Cell.Context context, Location object)
+				public String getCellStyle()
 				{
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
@@ -248,7 +255,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 
 			@Override
-			public String getCellStyleNames(Cell.Context context, Location object)
+			public String getCellStyle()
 			{
 				return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 			}
@@ -273,7 +280,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 	}
 
 	@Override
-	protected void onSelectionChanged(NativeEvent event, Location object, int column)
+	protected void onItemSelected(NativeEvent event, Location object, int column)
 	{
 		/* Get the id */
 		if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSIONS_FOR_COLLSITE))

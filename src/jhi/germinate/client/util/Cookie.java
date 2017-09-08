@@ -77,22 +77,10 @@ public class Cookie
 		if (ModuleCore.getUseAuthentication())
 			lifespan = 1000L * 60 * userAuth.getCookieLifespanMinutes();
 
-//		if (path == null)
-//			return;
-//
-//		setCookie(SID, sessionId, getExpiryDate(), null, path, false); // FIXME: find a solution that determines the path
-//        setCookie(SID, sessionId, getExpiryDate(), null, "/", false);
-//
 		if (userAuth.getId() != null)
-		{
 			userId = userAuth.getId() + "";
-//			setCookie(USER_ID, userId, getExpiryDate(), null, path, false);
-		}
 		else
-		{
 			userId = null;
-//			removeCookie(USER_ID);
-		}
 	}
 
 	private static Date getExpiryDate()
@@ -227,7 +215,7 @@ public class Cookie
 
 	public static RequestProperties getRequestProperties()
 	{
-		return new RequestProperties(getSessionId(), getUserId(), LocaleInfo.getCurrentLocale().getLocaleName());
+		return new RequestProperties(getSessionId(), ModuleCore.getUserAuth(), LocaleInfo.getCurrentLocale().getLocaleName());
 	}
 
 	/**
@@ -244,23 +232,6 @@ public class Cookie
 		else
 		{
 			return sessionId;
-		}
-	}
-
-	/**
-	 * Returns the user id
-	 *
-	 * @return The user id
-	 */
-	public static String getUserId()
-	{
-		if (Cookies.isCookieEnabled())
-		{
-			return Cookies.getCookie(USER_ID);
-		}
-		else
-		{
-			return userId;
 		}
 	}
 

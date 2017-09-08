@@ -34,15 +34,6 @@ import jhi.germinate.shared.enums.*;
 public interface ImageServiceAsync
 {
 	/**
-	 * Returns a paginated list of {@link Image}s.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param pagination The {@link Pagination}
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	Request get(RequestProperties properties, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Image>>> callback);
-
-	/**
 	 * Returns a paginated list of {@link Image}s for the given {@link DatabaseObject} id.
 	 *
 	 * @param properties The {@link RequestProperties}

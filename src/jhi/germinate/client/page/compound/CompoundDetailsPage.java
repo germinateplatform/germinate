@@ -47,6 +47,7 @@ import jhi.germinate.shared.search.*;
 
 /**
  * @author Sebastian Raubach
+ * @see Parameter#compoundId
  */
 public class CompoundDetailsPage extends Composite
 {

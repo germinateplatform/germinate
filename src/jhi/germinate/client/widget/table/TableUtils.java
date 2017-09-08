@@ -69,15 +69,15 @@ public class TableUtils
 		if (value == null)
 			value = "";
 
-            /*
-			 * If the hyperlink is empty, emulate a link and let the
-             * <code>handleSelectionEvent()</code> method handle the navigation
-             */
+		/*
+		 * If the hyperlink is empty, emulate a link and let the
+		 * <code>handleSelectionEvent()</code> method handle the navigation
+		 */
 		if (StringUtils.isEmpty(hyperlink))
 		{
 			return SimpleHtmlTemplate.INSTANCE.dummyAnchor(value);
 		}
-			/* Else add a real anchor */
+		/* Else add a real anchor */
 		else
 		{
 			SafeUri href = UriUtils.fromString(hyperlink);
@@ -85,6 +85,22 @@ public class TableUtils
 				return SimpleHtmlTemplate.INSTANCE.text("");
 			else
 				return SimpleHtmlTemplate.INSTANCE.anchor(href, value);
+		}
+	}
+
+	public static SafeHtml getHyperlinkValueWithIcon(String value, String hyperlink, String style)
+	{
+		if (StringUtils.isEmpty(hyperlink))
+		{
+			return SimpleHtmlTemplate.INSTANCE.dummyAnchorWithIcon(value, style);
+		}
+		else
+		{
+			SafeUri href = UriUtils.fromString(hyperlink);
+			if (StringUtils.isEmpty(value))
+				return SimpleHtmlTemplate.INSTANCE.textWithIcon("", style);
+			else
+				return SimpleHtmlTemplate.INSTANCE.anchorWithIcon(href, value, style);
 		}
 	}
 
@@ -152,6 +168,22 @@ public class TableUtils
 			return SimpleHtmlTemplate.INSTANCE.empty();
 	}
 
+	/**
+	 * Returns the cell content. This method will try to parse the content as a date and as a number and return
+	 *
+	 * @param value The text to wrap
+	 * @return The wrapped content
+	 */
+	public static SafeHtml getCellValueWithIcon(String value, String style)
+	{
+		value = getCellValueAsString(value);
+
+		if (value != null)
+			return SimpleHtmlTemplate.INSTANCE.textWithIcon(value, style);
+		else
+			return SimpleHtmlTemplate.INSTANCE.textWithIcon("", style);
+	}
+
 	public static String getCellValueAsString(String value, Class<?> clazz)
 	{
 		if (value != null)
@@ -169,9 +201,9 @@ public class TableUtils
 					{
 					}
 				}
+				/* Check if it's a date time */
 				else if (value.matches("^\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}$"))
 				{
-				/* Check if it's a date time */
 					try
 					{
 						value = DateUtils.getLocalizedDateTime(DateUtils.getDateTimeFromDatabaseString(value));
@@ -185,8 +217,8 @@ public class TableUtils
 			{
 				try
 				{
-					double doubleValue = Double.parseDouble(value);
-					value = NumberUtils.INTEGER_FORMAT.format(doubleValue);
+					int intValue = Integer.parseInt(value);
+					value = NumberUtils.INTEGER_FORMAT.format(intValue);
 				}
 				catch (NumberFormatException e)
 				{
@@ -271,6 +303,20 @@ public class TableUtils
 
 			return value;
 		}
+		else
+			return null;
+	}
+
+	/**
+	 * Returns the cell content as a string (i.e. without using the {@link SimpleHtmlTemplate#INSTANCE}).
+	 *
+	 * @param value The long to process
+	 * @return The processed content
+	 */
+	public static String getCellValueAsString(Long value)
+	{
+		if (value != null)
+			return getCellValueAsString(Long.toString(value));
 		else
 			return null;
 	}

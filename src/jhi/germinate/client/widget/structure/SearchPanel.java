@@ -113,7 +113,6 @@ public class SearchPanel extends Composite
 		if (searchString.equals("wakka wakka wakka"))
 		{
 			new Pacman();
-			clear();
 		}
 		else
 		{
@@ -130,5 +129,7 @@ public class SearchPanel extends Composite
 			else
 				History.newItem(Page.SEARCH.name());
 		}
+
+		clear();
 	}
 }

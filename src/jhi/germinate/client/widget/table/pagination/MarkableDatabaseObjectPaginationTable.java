@@ -33,7 +33,7 @@ import java.util.*;
 
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.Text;
-import jhi.germinate.client.page.shoppingcart.*;
+import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
@@ -50,11 +50,11 @@ import jhi.germinate.shared.search.*;
  */
 public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseObject> extends DatabaseObjectPaginationTable<T>
 {
-	private final ShoppingCart.ItemType itemType;
-	private       HandlerRegistration   shoppingCartRegistration;
-	private       HandlerRegistration   groupRegistration;
+	private final MarkedItemList.ItemType itemType;
+	private       HandlerRegistration     markedItemListRegistration;
+	private       HandlerRegistration     groupRegistration;
 
-	public MarkableDatabaseObjectPaginationTable(ShoppingCart.ItemType itemType, SelectionMode selectionMode, boolean sortingEnabled)
+	public MarkableDatabaseObjectPaginationTable(MarkedItemList.ItemType itemType, SelectionMode selectionMode, boolean sortingEnabled)
 	{
 		super(selectionMode, sortingEnabled);
 
@@ -78,7 +78,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		makeTableMarkable();
 
 		/* Add a handler that updates the table when the shopping cart changes (these will be changes from other sources than the current table) */
-		shoppingCartRegistration = GerminateEventBus.BUS.addHandler(ShoppingCartEvent.TYPE, event ->
+		markedItemListRegistration = GerminateEventBus.BUS.addHandler(MarkedItemListEvent.TYPE, event ->
 		{
 			if (itemType == event.getType())
 			{
@@ -103,7 +103,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			}
 		});
 
-		groupRegistration = GerminateEventBus.BUS.addHandler(GroupCreationEvent.TYPE, event -> ShoppingCart.clear(itemType));
+		groupRegistration = GerminateEventBus.BUS.addHandler(GroupCreationEvent.TYPE, event -> MarkedItemList.clear(itemType));
 	}
 
 	/**
@@ -112,7 +112,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 	 */
 	public void makeTableMarkable()
 	{
-		if (GerminateSettingsHolder.isPageAvailable(Page.SHOPPING_CART))
+		if (GerminateSettingsHolder.isPageAvailable(Page.MARKED_ITEMS))
 		{
 			DatabaseObjectPaginationTable.ContextMenuHandler<T> handler = (row, x, y, anchorClicked) ->
 			{
@@ -124,7 +124,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				else
 				{
 					/* Otherwise show a popup menu */
-					return showPopupMenu(x, y, row != null, new ShoppingCartCallback()
+					return showPopupMenu(x, y, row != null, new MarkedItemListCallback()
 					{
 						private Long getId(DatabaseObject object)
 						{
@@ -208,10 +208,10 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 	 * @param showIndividual Should the menu items for individual marking be shown?
 	 * @param x              The x position of the {@link PopupPanel}
 	 * @param y              The y position of the {@link PopupPanel}
-	 * @param callback       The {@link ShoppingCartCallback}
+	 * @param callback       The {@link MarkedItemListCallback}
 	 * @return <code>true</code> if the panel will be shown
 	 */
-	private boolean showPopupMenu(final int x, final int y, boolean showIndividual, final ShoppingCartCallback callback)
+	private boolean showPopupMenu(final int x, final int y, boolean showIndividual, final MarkedItemListCallback callback)
 	{
 		if (callback == null)
 			return false;
@@ -226,7 +226,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MARKED, Text.LANG.cartAddToCartButton()), (Command) () ->
 			{
 				String id = callback.getId(true);
-				ShoppingCart.add(itemType, id);
+				MarkedItemList.add(itemType, id);
 				popupPanel.hide();
 				callback.updateTable(id);
 			});
@@ -237,7 +237,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MULTIPLE_MARKED, Text.LANG.cartAddPageToCartButton()), (Command) () ->
 		{
 			List<String> ids = callback.getIds(true);
-			ShoppingCart.add(itemType, ids);
+			MarkedItemList.add(itemType, ids);
 			popupPanel.hide();
 			callback.updateTable(ids);
 		});
@@ -253,7 +253,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				{
 					if (result != null)
 					{
-						ShoppingCart.add(itemType, result.getServerResult());
+						MarkedItemList.add(itemType, result.getServerResult());
 						popupPanel.hide();
 						callback.updateTable(result.getServerResult());
 					}
@@ -268,7 +268,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_BLANK_OUTLINE, Text.LANG.cartRemoveFromCartButton()), (Command) () ->
 			{
 				String id = callback.getId(false);
-				ShoppingCart.remove(itemType, id);
+				MarkedItemList.remove(itemType, id);
 				popupPanel.hide();
 				callback.updateTable(id);
 			});
@@ -279,7 +279,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MULTIPLE_BLANK_OUTLINE, Text.LANG.cartRemovePageToCartButton()), (Command) () ->
 		{
 			List<String> ids = callback.getIds(false);
-			ShoppingCart.remove(itemType, ids);
+			MarkedItemList.remove(itemType, ids);
 			popupPanel.hide();
 			callback.updateTable(ids);
 		});
@@ -293,7 +293,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				@Override
 				protected void onSuccessImpl(ServerResult<List<String>> result)
 				{
-					ShoppingCart.remove(itemType, result.getServerResult());
+					MarkedItemList.remove(itemType, result.getServerResult());
 					popupPanel.hide();
 					callback.updateTable(result.getServerResult());
 				}
@@ -307,7 +307,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		{
 			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_GROUP, Text.LANG.buttonCreateGroupFromSelection()), (Command) () ->
 			{
-				Set<String> ids = ShoppingCart.get(itemType);
+				Set<String> ids = MarkedItemList.get(itemType);
 
 				if (CollectionUtils.isEmpty(ids))
 				{
@@ -382,7 +382,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 					String idString = Long.toString(id);
 
                     /* Change the marked state of the item */
-					ShoppingCart.toggle(itemType, idString);
+					MarkedItemList.toggle(itemType, idString);
 
                     /* Update the row */
 					List<T> rows = getVisibleItems();
@@ -418,7 +418,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 
 				String idString = Long.toString(id);
 
-				boolean isMarked = ShoppingCart.contains(itemType, idString);
+				boolean isMarked = MarkedItemList.contains(itemType, idString);
 
 				String fa;
 				String title;
@@ -446,7 +446,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			{
 				for (T item : getVisibleItems())
 				{
-					if (!ShoppingCart.contains(itemType, Long.toString(DatabaseObject.getGroupSpecificId(item))))
+					if (!MarkedItemList.contains(itemType, Long.toString(DatabaseObject.getGroupSpecificId(item))))
 					{
 						return false;
 					}
@@ -467,7 +467,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			{
 				String id = Long.toString(DatabaseObject.getGroupSpecificId(rows.get(i)));
 
-				ShoppingCart.toggle(itemType, id);
+				MarkedItemList.toggle(itemType, id);
 				redrawRow(i);
 			}
 		});
@@ -479,9 +479,9 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 	public void onUnload()
 	{
 		/* Remember to remove the handler */
-		if (shoppingCartRegistration != null)
+		if (markedItemListRegistration != null)
 		{
-			shoppingCartRegistration.removeHandler();
+			markedItemListRegistration.removeHandler();
 		}
 		if (groupRegistration != null)
 		{
@@ -491,7 +491,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		super.onUnload();
 	}
 
-	private interface ShoppingCartCallback
+	private interface MarkedItemListCallback
 	{
 		String getId(boolean toBeMarked);
 

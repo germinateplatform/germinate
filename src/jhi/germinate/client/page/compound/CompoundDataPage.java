@@ -43,10 +43,10 @@ import jhi.germinate.shared.enums.*;
 
 /**
  * @author Sebastian Raubach
+ * @see Parameter#compoundDatasetIds
  */
 public class CompoundDataPage extends Composite implements HasLibraries
 {
-
 	private List<Compound> compounds;
 	private List<Group>    groups;
 

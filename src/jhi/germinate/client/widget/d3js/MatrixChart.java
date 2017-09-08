@@ -104,9 +104,6 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 				case trials:
 					datasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
 					break;
-				case phenotype:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.phenotypeDatasetIds);
-					break;
 				case compound:
 					datasetIds = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
 					break;
@@ -154,7 +151,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 			});
 			plot.setType(ButtonType.PRIMARY);
 
-			if (CollectionUtils.isEmpty(groups) || CollectionUtils.isEmpty(objects))
+			if (CollectionUtils.isEmpty(objects))
 			{
 				panel.clear();
 				panel.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));
@@ -173,7 +170,6 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 	{
 		switch (experimentType)
 		{
-			case phenotype:
 			case trials:
 				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
 				break;
@@ -195,8 +191,8 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 	protected MenuItem[] getAdditionalMenuItems()
 	{
 		MenuItem[] menuItems = new MenuItem[2];
-		menuItems[0] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MARKED, Text.LANG.cartAddSelectedToCartButton()), () -> ShoppingCart.add(ShoppingCart.ItemType.ACCESSION, getSelectedDataPoints()));
-		menuItems[1] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemFontAwesome(Style.MDI_CHECKBOX_BLANK_OUTLINE, Text.LANG.cartRemoveSelectedFromCartButton()), () -> ShoppingCart.remove(ShoppingCart.ItemType.ACCESSION, getSelectedDataPoints()));
+		menuItems[0] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MARKED, Text.LANG.cartAddSelectedToCartButton()), () -> MarkedItemList.add(MarkedItemList.ItemType.ACCESSION, getSelectedDataPoints()));
+		menuItems[1] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_BLANK_OUTLINE, Text.LANG.cartRemoveSelectedFromCartButton()), () -> MarkedItemList.remove(MarkedItemList.ItemType.ACCESSION, getSelectedDataPoints()));
 
 		return menuItems;
 	}
@@ -267,7 +263,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 					.showLegend(true)
 					.legendWidth(legendWidth)
 					.idColumn("dbId")
-					.ignoreColumns(["general_identifier", "dataset_name", "treatments_description", "name"])
+					.ignoreColumns(["general_identifier", "dataset_name", "license_name", "treatments_description", "name"])
 					.color(color));
 		});
 

@@ -74,7 +74,6 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 			case compound:
 				objectBox = new CompoundListBox();
 				break;
-			case phenotype:
 			case trials:
 			default:
 				objectBox = new PhenotypeListBox();
@@ -93,7 +92,6 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 			case compound:
 				heading.setText(Text.LANG.compoundExportHeadingCompounds());
 				break;
-			case phenotype:
 			case trials:
 			default:
 				heading.setText(Text.LANG.phenotypeExportHeadingPhenotypes());
@@ -101,11 +99,13 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 		}
 
 		phenotypeHtml.setHTML(Text.LANG.phenotypeExportSubtitlePhenotypes());
-		objectBox.setValue(objects.get(0), true);
-		objectBox.setAcceptableValues(objects);
+		if (objects != null)
+		{
+			objectBox.setValue(objects.get(0), true);
+			objectBox.setAcceptableValues(objects);
+		}
 
 		groupHtml.setHTML(Text.LANG.phenotypeExportSubtitleAccessionGroups());
-		groupBox.setValue(groups.get(0), true);
 		groupBox.setAcceptableValues(groups);
 
 		downloadButton.setEnabled(true);
@@ -158,7 +158,6 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 			case compound:
 				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, false, callback);
 				break;
-			case phenotype:
 			case trials:
 				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, false, callback);
 				break;

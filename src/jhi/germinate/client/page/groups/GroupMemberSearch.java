@@ -116,10 +116,13 @@ public class GroupMemberSearch
 			if (!event.isAttached())
 			{
 				int index = rows.indexOf(row);
-				rows.remove(row);
-				ToggleSwitch toggleSwitch = switches.get(index - 1);
-				switches.remove(toggleSwitch);
-				toggleSwitch.removeFromParent();
+				if (index - 1 >= 0)
+				{
+					rows.remove(row);
+					ToggleSwitch toggleSwitch = switches.get(index - 1);
+					switches.remove(toggleSwitch);
+					toggleSwitch.removeFromParent();
+				}
 			}
 		});
 
@@ -268,7 +271,7 @@ public class GroupMemberSearch
 
 			List<Long> ids = DatabaseObject.getGroupSpecificIds(selectedItems);
 
-			GroupService.Inst.get().addItems(Cookie.getRequestProperties(), group.getId(), ids, new DefaultAsyncCallback<ServerResult<Set<Long>>>()
+			GroupService.Inst.get().addItems(Cookie.getRequestProperties(), group.getId(), ids, new DefaultAsyncCallback<ServerResult<Set<Long>>>(true)
 			{
 				@Override
 				protected void onSuccessImpl(ServerResult<Set<Long>> result)

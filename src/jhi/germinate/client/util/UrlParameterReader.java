@@ -49,49 +49,52 @@ public class UrlParameterReader
 				/* Check if it's a valid parameter */
 				Parameter param = Parameter.valueOf(key);
 
-				List<String> values = parameters.get(key);
-
-                /* Add it to the parameter store */
-				if (values.size() > 0)
+				if (param.getAcceptFromUrl())
 				{
-					if (param.getType().equals(List.class))
-					{
-						/* If the Parameter is of type List, store the whole
-						 * List */
+					List<String> values = parameters.get(key);
 
-                        /* Make a copy first, since the type of List that GWT
-						 * returns doesn't behave well when trying to send it to
-                         * the server */
-						List<String> listToStore = new ArrayList<>();
-						listToStore.addAll(values);
-
-						StringListParameterStore.Inst.get().put(param, listToStore);
-					}
-					else
+                	/* Add it to the parameter store */
+					if (values.size() > 0)
 					{
-						/* If not, just store the individual value */
-						try
+						if (param.getType().equals(List.class))
 						{
-							String value = values.get(0);
+							/* If the Parameter is of type List, store the whole
+							 * List */
 
-                            /* Acecssion and marker ids are special cases, since
-							 * they have to work for links from Flapjack
-                             * although they aren't integers, but the id with
-                             * something appended. */
-							if ((param == Parameter.accessionId || param == Parameter.markerId) && value.matches("^\\d+\\|.*$"))
-								LongParameterStore.Inst.get().putAsString(param, value.substring(0, value.indexOf("|")));
-							else
+							/* Make a copy first, since the type of List that GWT
+							 * returns doesn't behave well when trying to send it to
+							 * the server */
+							List<String> listToStore = new ArrayList<>();
+							listToStore.addAll(values);
+
+							StringListParameterStore.Inst.get().put(param, listToStore);
+						}
+						else
+						{
+							/* If not, just store the individual value */
+							try
 							{
-								TypedParameterStore.putUntyped(param, value);
+								String value = values.get(0);
+
+								/* Acecssion and marker ids are special cases, since
+								 * they have to work for links from Flapjack
+								 * although they aren't integers, but the id with
+								 * something appended. */
+								if ((param == Parameter.accessionId || param == Parameter.markerId) && value.matches("^\\d+\\|.*$"))
+									LongParameterStore.Inst.get().putAsString(param, value.substring(0, value.indexOf("|")));
+								else
+								{
+									TypedParameterStore.putUntyped(param, value);
+								}
+							}
+							catch (UnsupportedDataTypeException | NumberFormatException e)
+							{
+								continue;
 							}
 						}
-						catch (UnsupportedDataTypeException | NumberFormatException e)
-						{
-							continue;
-						}
-					}
 
-					atLeastOne = true;
+						atLeastOne = true;
+					}
 				}
 			}
 			catch (IllegalArgumentException e)

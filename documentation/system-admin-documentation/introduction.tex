@@ -1,0 +1,27 @@
+% start page numbering from here
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\section{Introduction}
+Germinate 3 is a generic platform for the storage and dissemination of multiple data types associated with genetic resource collections. Examples of the types of data that Germinate 3 currently supports are passport, phenotypic, field trial, pedigree, genetic and geographic location data. Our aim is to keep Germinate as flexible as possible and we will add support for additional data types over time.
+
+Germinate not only acts as storage for experimental data but offers a user-friendly interface into the data and acts as a backend for analysis tools such as Helium for pedigree visualization, our graphical genotyping application Flapjack \cite{Flapjack} and CurlyWhirly for the simple display of xyz coordinate data such as PCO and PCA. All these tools are available from \url{https://ics.hutton.ac.uk}. We have also prioritised the development of tools to allow users to export data in a variety of formats for analysis in external applications such as R.
+
+Germinate 3 builds on the existing Germinate 2 platform an adds additional tools, functionality and introduces a much more simple installation process over its predecessor. These changes also allow us to deploy Germinate both within server and desktop environments which was difficult with Germinate 2. We have also removed the limitation of requiring Linux, Germinate 3 is now compatible with any environments that have Apache Tomcat. Germinate 3 takes the Germinate platform away from its Perl roots and has been completely rewritten using the Google Web Toolkit (GWT) from Google. The underlying database is as it was and while we recommend using MySQL should be compatible with a number of relational database management systems with minor changes. 
+
+The move from Perl to Java and GWT has allowed us to introduce a number of new features. Examples include full internationalization and localization support which allows us to offer Germinate in multiple languages if suitable translations exit as well as offering a more advanced and
+responsive web-interface and user access control.
+
+We hope that you find Germinate 3 useful and our vision is that Germinate forms platform on to which additional tools can be added over time. The common platform means that any additional functionality can be rolled out to all other Germinate installations which makes it both a flexible and continually evolving platform to help meet the needs of the genetic resources community.
+ 
+If you encounter any problems, have ideas for features that would be useful to include in Germinate or just want to chat about the system then we would love to hear from you and we can be contacted in a number of ways. By email on \href{mailto:germinate@hutton.ac.uk}{\nolinkurl{germinate@hutton.ac.uk}}, or you can write to us at: \\
+\\
+Germinate,\\ 
+Information \& Computational Sciences, \\
+The James Hutton Institute, \\
+Invergowrie, \\
+Dundee, \\
+DD2 5DA, UK. \\
+
+\noindent
+We also have a website (\url{https://ics.hutton.ac.uk/get-germinate}) that we keep up to date with current developments of Germinate and all our other analysis and visualization tools and you can follow us on Twitter \href{https://twitter.com/cropgeeks}{\nolinkurl{@cropgeeks}}.

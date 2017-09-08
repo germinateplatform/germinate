@@ -28,7 +28,9 @@
 	</ui:style>
 
 	<b:InputGroup>
-		<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
+		<b:Tooltip title="{msg.searchBoxTooltip}" placement="BOTTOM">
+			<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
+		</b:Tooltip>
 		<b:InputGroupButton>
 			<b:Button ui:field="searchButton" icon="SEARCH"/>
 		</b:InputGroupButton>

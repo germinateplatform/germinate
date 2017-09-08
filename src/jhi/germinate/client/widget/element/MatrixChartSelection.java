@@ -68,7 +68,6 @@ public class MatrixChartSelection<T extends DatabaseObject> extends Composite
 			case compound:
 				objectBox = new CompoundListBox();
 				break;
-			case phenotype:
 			case trials:
 				objectBox = new PhenotypeListBox();
 				break;
@@ -82,7 +81,6 @@ public class MatrixChartSelection<T extends DatabaseObject> extends Composite
 				heading.setText(Text.LANG.compoundExportHeadingCompounds());
 				text.setText(Text.LANG.compoundMatrixAtMost(MAX_NR_OF_OBJECTS));
 				break;
-			case phenotype:
 			case trials:
 				heading.setText(Text.LANG.phenotypeExportHeadingPhenotypes());
 				text.setText(Text.LANG.phenotypeMatrixAtMost(MAX_NR_OF_OBJECTS));
@@ -91,19 +89,17 @@ public class MatrixChartSelection<T extends DatabaseObject> extends Composite
 
 		html.setHTML(Text.LANG.phenotypeExportSubtitlePhenotypes());
 
-		objectBox.setSelectAllVisible(true);
+		objectBox.setSelectAllVisible(false);
 		objectBox.setValue(objects.get(0), true);
 		objectBox.setAcceptableValues(objects);
 
 		groupHtml.setHTML(Text.LANG.phenotypeExportSubtitleAccessionGroups());
-		groupBox.setValue(groups.get(0), true);
 		groupBox.setAcceptableValues(groups);
 
 		String[] coloringValues;
 
 		switch (type)
 		{
-			case phenotype:
 			case trials:
 				coloringValues = new String[]{Text.LANG.trialsPByPColorByNone(), Text.LANG.trialsPByPColorByDataset(), Text.LANG.trialsPByPColorByYear(), Text.LANG.trialsPByPColorByTreatment()};
 				break;

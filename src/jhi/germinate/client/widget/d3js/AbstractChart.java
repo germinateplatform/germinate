@@ -549,45 +549,4 @@ public abstract class AbstractChart extends GerminateComposite
 		if (typeof $wnd.d3 !== "undefined")
 			$wnd.d3.selectAll("svg").remove();
 	}-*/;
-
-	/**
-	 * Defines additional menu items for the download menu.
-	 */
-	public static class AdditionalMenuItem
-	{
-		private Command  command;
-		private SafeHtml text;
-
-		/**
-		 * Creates a new {@link AdditionalMenuItem}
-		 *
-		 * @param text    The text to show
-		 * @param command The {@link Command} that should be executed when the user clicks on the menu item
-		 */
-		public AdditionalMenuItem(SafeHtml text, Command command)
-		{
-			this.command = command;
-			this.text = text;
-		}
-
-		public Command getCommand()
-		{
-			return command;
-		}
-
-		public void setCommand(Command command)
-		{
-			this.command = command;
-		}
-
-		public SafeHtml getText()
-		{
-			return text;
-		}
-
-		public void setText(SafeHtml text)
-		{
-			this.text = text;
-		}
-	}
 }

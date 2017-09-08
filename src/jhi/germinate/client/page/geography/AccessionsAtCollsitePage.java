@@ -114,7 +114,7 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
-				addToFilter(filter);
+				filter = addToFilter(filter);
 
 				AccessionService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
 			}
