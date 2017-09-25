@@ -201,6 +201,24 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Dataset.DESCRIPTION);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), true);
 
+		/* Add the dataset datatype column */
+		column = new ClickableSafeHtmlColumn()
+		{
+			@Override
+			public SafeHtml getValue(Dataset object)
+			{
+				return DatasetTable.this.getValue(object, object.getDatatype());
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Dataset.DATATYPE);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDatatype(), true);
+
 		/* Add the license description column */
 		column = new ClickableSafeHtmlColumn()
 		{

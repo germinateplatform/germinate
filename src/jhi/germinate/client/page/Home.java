@@ -69,9 +69,9 @@ public class Home extends GerminateComposite
 				int i = 0;
 				Column accessionColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
 
-				if (GerminateSettingsHolder.isPageAvailable(Page.BROWSE_ACCESSIONS))
+				if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSION_OVERVIEW))
 				{
-					accessionColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Accession.class.getName())), Text.LANG.searchAccessions(), Style.MDI_FLOWER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.BROWSE_ACCESSIONS).getElement());
+					accessionColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Accession.class.getName())), Text.LANG.searchAccessions(), Style.MDI_FLOWER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.ACCESSION_OVERVIEW).getElement());
 					row.add(accessionColumn);
 				}
 
@@ -85,9 +85,9 @@ public class Home extends GerminateComposite
 
 				Column locationColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
 
-				if (GerminateSettingsHolder.isPageAvailable(Page.GEOGRAPHY))
+				if (GerminateSettingsHolder.isPageAvailable(Page.LOCATIONS))
 				{
-					locationColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Location.class.getName())), Text.LANG.searchCollectingsites(), Style.MDI_MAP_MARKER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.GEOGRAPHY).getElement());
+					locationColumn.getElement().appendChild(new InfoPanel(Long.toString(result.getServerResult().get(Location.class.getName())), Text.LANG.searchCollectingsites(), Style.MDI_MAP_MARKER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.LOCATIONS).getElement());
 					row.add(locationColumn);
 				}
 
@@ -119,7 +119,7 @@ public class Home extends GerminateComposite
 
 			tour.addStep(TourStep.newInstance("#" + newsWidget.getNewsColumnId(), Text.LANG.introductionTourMessageNews()));
 			tour.addStep(TourStep.newInstance("#" + newsWidget.getProjectColumnId(), Text.LANG.introductionTourMessageProjects()));
-			tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_HELP_UL, Text.LANG.introductionTourMessageHelp()));
+			tour.addStep(TourStep.newInstance("#" + Id.STRUCTURE_HELP_A, Text.LANG.introductionTourMessageHelp()));
 			tour.addStep(TourStep.newInstance(Text.LANG.introductionTourMessageFinal()));
 
 			tour.start();

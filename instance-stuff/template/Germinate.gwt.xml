@@ -31,7 +31,6 @@
 	<!-- Other module inherits -->
 	<inherits name="org.gwtbootstrap3.GwtBootstrap3NoTheme"/> <!-- Bootstrap for GWT -->
 	<inherits name="org.gwtbootstrap3.extras.toggleswitch.ToggleSwitch"/>
-	<inherits name="org.gwtbootstrap3.extras.select.Select"/>
 	<inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
 	<inherits name="jhi.gwt.leaflet.GWTLeaflet"/>
 	<inherits name="com.google.gwt.ajaxloader.AjaxLoader" /> <!-- Ajax Loader for Google utilities -->

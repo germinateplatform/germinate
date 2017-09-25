@@ -67,8 +67,8 @@ public final class MainMenu
 
 			MenuItem data = new MenuItem(root, Text.LANG.menuData(), Style.MDI_HARDDISK);
 
-			if (GerminateSettingsHolder.isPageAvailable(Page.BROWSE_ACCESSIONS))
-				data.addChild(new MenuItem(data, Text.LANG.menuBrowseAccessions(), Page.BROWSE_ACCESSIONS));
+			if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSION_OVERVIEW))
+				data.addChild(new MenuItem(data, Text.LANG.menuBrowseAccessions(), Page.ACCESSION_OVERVIEW));
 
 			MenuItem genetic = new MenuItem(data, Text.LANG.menuGenetic(), Style.MDI_DNA);
 			if (GerminateSettingsHolder.isPageAvailable(Page.MAP_DETAILS))
@@ -113,10 +113,10 @@ public final class MainMenu
 			MenuItem locations = new MenuItem(environment, Text.LANG.menuLocations(), Style.MDI_MAP_MARKER);
 			if (GerminateSettingsHolder.isPageAvailable(Page.GEOGRAPHIC_SEARCH))
 				locations.addChild(new MenuItem(locations, Text.LANG.menuGeographicSearch(), Page.GEOGRAPHIC_SEARCH));
-			if (GerminateSettingsHolder.isPageAvailable(Page.COLLSITE_TREEMAP))
-				locations.addChild(new MenuItem(locations, Text.LANG.menuGeographicTreemap(), Page.COLLSITE_TREEMAP));
-			if (GerminateSettingsHolder.isPageAvailable(Page.GEOGRAPHY))
-				locations.addChild(new MenuItem(locations, Text.LANG.menuGeography(), Page.GEOGRAPHY));
+//			if (GerminateSettingsHolder.isPageAvailable(Page.LOCATION_TREEMAP))
+//				locations.addChild(new MenuItem(locations, Text.LANG.menuGeographicTreemap(), Page.LOCATION_TREEMAP));
+			if (GerminateSettingsHolder.isPageAvailable(Page.LOCATIONS))
+				locations.addChild(new MenuItem(locations, Text.LANG.menuGeography(), Page.LOCATIONS));
 
 			if (locations.hasChildren())
 				environment.addChild(locations);
@@ -131,8 +131,8 @@ public final class MainMenu
 
 			if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
 				root.addChild(new MenuItem(root, Text.LANG.menuGroups(), Page.GROUPS));
-			if (GerminateSettingsHolder.isPageAvailable(Page.GALLERY))
-				root.addChild(new MenuItem(root, Text.LANG.menuGallery(), Page.GALLERY));
+			if (GerminateSettingsHolder.isPageAvailable(Page.IMAGE_GALLERY))
+				root.addChild(new MenuItem(root, Text.LANG.menuGallery(), Page.IMAGE_GALLERY));
 
 			MenuItem aboutParent = new MenuItem(root, Text.LANG.menuAbout(), Style.MDI_INFORMATION);
 
@@ -145,12 +145,6 @@ public final class MainMenu
 
 			if (aboutParent.hasChildren())
 				root.addChild(aboutParent);
-
-//			if (GerminateSettingsHolder.isPageAvailable(Page.SEARCH) && GerminateSettingsHolder.get().templateShowSearchInMenu.getValue())
-//				root.addChild(new MenuItem(root, Text.LANG.menuSearch(), Page.SEARCH));
-//
-//			if (ModuleCore.getUseAuthentication())
-//				root.addChild(new MenuItem(root, Text.LANG.menuLogout(), Page.LOGOUT));
 		}
 		else
 		{
@@ -395,6 +389,7 @@ public final class MainMenu
 				}
 
 				AnchorElement e = Document.get().createAnchorElement();
+				SpanElement span = Document.get().createSpanElement();
 
                 /* Are there any children? */
 				if (!CollectionUtils.isEmpty(children))
@@ -402,7 +397,7 @@ public final class MainMenu
 					if (page == null)
 					{
 						/* This element doesn't represent a link */
-						e.setInnerText(name);
+						span.setInnerText(name);
 						e.setHref("#");
 
 						SpanElement child = Document.get().createSpanElement();
@@ -414,7 +409,7 @@ public final class MainMenu
 					{
 						/* This element represents a link */
 						e.setHref("#" + identifier);
-						e.setInnerText(name);
+						span.setInnerText(name);
 					}
 
 					thisElement.appendChild(e);
@@ -440,11 +435,12 @@ public final class MainMenu
 				{
 					e = Document.get().createAnchorElement();
 					e.setHref("#" + identifier);
-					e.setInnerText(name);
+					span.setInnerText(name);
 					thisElement.appendChild(e);
 				}
 
 				e.setClassName(isActive ? Style.STATE_ACTIVE : "");
+				e.insertFirst(span);
 
 				if (i != null)
 					e.insertFirst(i);

@@ -97,8 +97,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 
 			GerminateSettings baseSettings = getBaseSettings();
 
-			baseSettings.accessionDisplayColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_ACCESSION_DISPLAY_COLUMN, PropertyReader.getAccessionDisplayName());
-			baseSettings.baseSearchColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, PropertyReader.get(ServerProperty.GERMINATE_BASE_SEARCH_COLUMN, Accession.NAME));
 			baseSettings.cookieLifespanMinutes = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES, PropertyReader.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES));
 			baseSettings.externalDataFolder = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER, PropertyReader.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER));
 			baseSettings.gatekeeperRegistrationNeedsApproval = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL, PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL));
@@ -137,7 +135,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			PropertyReader.set(settings.templateTitle.getServerProperty(), settings.templateTitle.getValue());
 			PropertyReader.set(settings.templateDatabaseName.getServerProperty(), settings.templateDatabaseName.getValue());
 			PropertyReader.set(settings.templateTwitterUrl.getServerProperty(), settings.templateTwitterUrl.getValue());
-			PropertyReader.setBoolean(settings.templateShowSearchInMenu.getServerProperty(), settings.templateShowSearchInMenu.getValue());
 			PropertyReader.setBoolean(settings.templateUseToggleSwitches.getServerProperty(), settings.templateUseToggleSwitches.getValue());
 			PropertyReader.set(settings.templateCategoricalColors.getServerProperty(), CollectionUtils.join(settings.templateCategoricalColors.getValue(), ","));
 			PropertyReader.set(settings.templateGradientColors.getServerProperty(), CollectionUtils.join(settings.templateGradientColors.getValue(), ","));
@@ -163,8 +160,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			PropertyReader.setDouble(settings.uploadSizeLimitMB.getServerProperty(), settings.uploadSizeLimitMB.getValue());
 			PropertyReader.setInteger(settings.cookieLifespanMinutes.getServerProperty(), settings.cookieLifespanMinutes.getValue());
 			PropertyReader.setInteger(settings.galleryImagesPerPage.getServerProperty(), settings.galleryImagesPerPage.getValue());
-			PropertyReader.set(settings.accessionDisplayColumn.getServerProperty(), settings.accessionDisplayColumn.getValue());
-			PropertyReader.set(settings.baseSearchColumn.getServerProperty(), settings.baseSearchColumn.getValue());
 			PropertyReader.set(settings.externalDataFolder.getServerProperty(), settings.externalDataFolder.getValue());
 			PropertyReader.setSet(settings.availablePages.getServerProperty(), settings.availablePages.getValue(), Page.class);
 
@@ -205,7 +200,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		settings.socialShowFacebook = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK));
 		settings.socialShowTwitter = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER));
 		settings.socialShowGooglePlus = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS));
-		settings.templateShowSearchInMenu = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_SEARCH, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_SEARCH));
 		settings.hideIdColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDE_ID_COLUMNS, PropertyReader.getBoolean(ServerProperty.GERMINATE_HIDE_ID_COLUMNS));
 		settings.isReadOnlyMode = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_IS_READ_ONLY, PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY));
 		settings.templateContactEmail = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS));

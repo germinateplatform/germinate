@@ -87,6 +87,7 @@ public class BootstrapPager extends AbstractPager
 
 		firstPage.setIcon(IconType.ANGLE_DOUBLE_LEFT);
 		prevPage.setIcon(IconType.ANGLE_LEFT);
+		currentPage.setHiddenOn(DeviceSize.XS);
 		nextPage.setIcon(IconType.ANGLE_RIGHT);
 		lastPage.setIcon(IconType.ANGLE_DOUBLE_RIGHT);
 

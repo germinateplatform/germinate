@@ -76,6 +76,8 @@ public class ShareWidgetItem
 				Composite composite = event.getComposite();
 				if (composite instanceof HasHyperlinkButton)
 					hyperlinkPopupOptions = ((HasHyperlinkButton) composite).getHyperlinkOptions();
+				else
+					hyperlinkPopupOptions = new HasHyperlinkButton.HyperlinkPopupOptions().setPage(event.getPage());
 			});
 		}
 

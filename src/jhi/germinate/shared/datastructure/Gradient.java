@@ -75,6 +75,13 @@ public class Gradient implements Serializable
 		this.gradient = gradient;
 	}
 
+	public static Color[] getPrimaryColorGradient()
+	{
+		Color[] colorArray = {Color.WHITE, Color.fromHex(GerminateSettingsHolder.getCategoricalColor(0))};
+
+		return createMultiGradient(colorArray, 50);
+	}
+
 	public static Color[] getTemplateGradient()
 	{
 		List<String> colors = GerminateSettingsHolder.get().templateGradientColors.getValue();

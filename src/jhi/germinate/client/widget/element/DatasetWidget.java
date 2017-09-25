@@ -52,7 +52,7 @@ import jhi.germinate.shared.search.*;
  *
  * @author Sebastian Raubach
  */
-public class DatasetWidget extends GerminateComposite implements HasHelp
+public class DatasetWidget extends GerminateComposite implements HasHelp, ParallaxBannerPage
 {
 	private DatasetCallback datasetCallback = null;
 	private ExperimentType  experimentType  = null;
@@ -508,5 +508,11 @@ public class DatasetWidget extends GerminateComposite implements HasHelp
 	public Widget getHelpContent()
 	{
 		return new HTML(Text.LANG.datasetsHelp());
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return null;
 	}
 }

@@ -29,6 +29,7 @@
 	boolean logoContainsLink = PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK);
 	boolean useGoogleAnalytics = PropertyReader.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED);
 	String googleAnalyticsTrackingId = "'" + PropertyReader.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID) + "'";
+	String contact = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS);
 %>
 
 <!DOCTYPE html>
@@ -202,9 +203,20 @@
 				</a>
 			</li>
 			<!-- /GM8 Account Settings -->
+
+			<% if (!StringUtils.isEmpty(contact))
+			{ %>
+			<!-- GM8 Contact -->
+			<li>
+				<a href="mailto:<%= contact %>" id="<%= Id.STRUCTURE_CONTACT_A %>">
+					<i class="mdi mdi-email fa-fw fa-lg"></i>
+				</a>
+			</li>
+			<!-- /GM8 Contact -->
+			<% } %>
 			<!-- GM8 Help -->
 			<li>
-				<a href="#" id="<%= Id.STRUCTURE_HELP_UL %>">
+				<a href="#" id="<%= Id.STRUCTURE_HELP_A %>">
 					<i class="mdi mdi-help-circle-outline fa-fw fa-lg"></i>
 				</a>
 			</li>

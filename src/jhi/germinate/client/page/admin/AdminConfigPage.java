@@ -135,11 +135,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 	SimplePanel templateGradientPanel;
 
 	@UiField
-	FormLabel    searchLabel;
-	@UiField
-	ToggleSwitch search;
-
-	@UiField
 	FormLabel    logoLinksLabel;
 	@UiField
 	ToggleSwitch logoLinks;
@@ -193,16 +188,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 	FormLabel      imagesPPageLabel;
 	@UiField
 	IntegerTextBox imagesPPage;
-
-	@UiField
-	FormLabel displayColumnLabel;
-	@UiField
-	TextBox   displayColumn;
-
-	@UiField
-	FormLabel searchColumnLabel;
-	@UiField
-	TextBox   searchColumn;
 
 	@UiField
 	FormLabel externalFolderLabel;
@@ -288,7 +273,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateColorList(settings.templateGradientColors, gradients, gradientLabel, templateGradientColors, gradientChangeCallback, gradientDeleteCallback, gradientAddCallback);
 		updateTemplateGradient();
 
-		updateBoolean(settings.templateShowSearchInMenu, search, searchLabel);
 		updateBoolean(settings.templateLogoContainsLink, logoLinks, logoLinksLabel);
 		updateBoolean(settings.templateShowParallaxBanner, parallax, parallaxLabel);
 
@@ -303,8 +287,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 
 		updateString(settings.cookieLifespanMinutes, cookieLifespan, cookieLifespanLabel);
 		updateString(settings.galleryImagesPerPage, imagesPPage, imagesPPageLabel);
-		updateString(settings.accessionDisplayColumn, displayColumn, displayColumnLabel);
-		updateString(settings.baseSearchColumn, searchColumn, searchColumnLabel);
 		updateString(settings.externalDataFolder, externalFolder, externalFolderLabel);
 
 		updateString(settings.templateCustomMenu, customMenu, customMenuLabel);
@@ -401,7 +383,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 			}
 
 			Button add = new Button();
-			add.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.FA, Style.MDI_PLUS_BOX, Style.FA_LG));
+			add.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.MDI, Style.MDI_PLUS_BOX, Style.FA_LG));
 
 			add.addClickHandler(event ->
 			{
@@ -494,8 +476,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 			}
 			settings.templateGradientColors.setValue(colors);
 
-			settings.templateShowSearchInMenu.setValue(search.getValue());
-
 			settings.hideIdColumn.setValue(ids.getValue());
 			settings.serverLoggingEnabled.setValue(logging.getValue());
 			settings.debug.setValue(debug.getValue());
@@ -505,8 +485,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.uploadSizeLimitMB.setValue(upLimit.getDoubleValue());
 			settings.cookieLifespanMinutes.setValue(cookieLifespan.getIntegerValue());
 			settings.galleryImagesPerPage.setValue(imagesPPage.getIntegerValue());
-			settings.accessionDisplayColumn.setValue(displayColumn.getValue());
-			settings.baseSearchColumn.setValue(searchColumn.getValue());
 			settings.externalDataFolder.setValue(externalFolder.getValue());
 			settings.templateCustomMenu.setValue(customMenu.getValue());
 			settings.availablePages.setValue(((SetSelectionModel<Page>) availablePages.getTable().getSelectionModel()).getSelectedSet());

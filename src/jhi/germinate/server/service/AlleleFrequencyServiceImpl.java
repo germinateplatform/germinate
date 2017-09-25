@@ -196,7 +196,6 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 
 			storeInSession(SESSION_PARAM_HISTOGRAM, histogramFile.getAbsolutePath());
 			storeInSession(SESSION_PARAM_ALLELE_DATA_FILE, exportResult.subsetWithFlapjackLinks.getAbsolutePath());
-//			storeInSession(SESSION_PARAM_DELETED_MARKERS, exporter.getDeletedMarkers());
 
             /* Get the map */
 			GerminateTable mapData = getMap(userAuth, sqlDebug, mapId, exporter.getUsedColumnNames());

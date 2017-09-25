@@ -38,9 +38,13 @@ public interface ParallaxResource extends ClientBundle
 
 		String parallaxAccession();
 
+		String parallaxAcknowledgements();
+
 		String parallaxClimate();
 
 		String parallaxDataset();
+
+		String parallaxDataStats();
 
 		String parallaxEnvironment();
 
@@ -48,11 +52,13 @@ public interface ParallaxResource extends ClientBundle
 
 		String parallaxGeneticMap();
 
+		String parallaxGeographicSearch();
+
 		String parallaxGroup();
 
 		String parallaxGeography();
 
-		String parallaxGeographySearch();
+		String parallaxPassport();
 
 		String parallaxPhenotype();
 

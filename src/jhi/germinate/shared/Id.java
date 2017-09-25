@@ -24,7 +24,8 @@ public class Id
 {
 	public static final String STRUCTURE_LANGUAGE_SELECTOR_UL = "gm8-language-selector";
 	public static final String STRUCTURE_MARKED_ITEM_UL       = "gm8-marked-items";
-	public static final String STRUCTURE_HELP_UL              = "gm8-help";
+	public static final String STRUCTURE_HELP_A               = "gm8-help";
+	public static final String STRUCTURE_CONTACT_A            = "gm8-contact";
 	public static final String STRUCTURE_ACCOUNT_SETTINGS_UL  = "gm8-account-settings";
 	public static final String STRUCTURE_SHARE_UL             = "gm8-share";
 	public static final String STRUCTURE_MAIN_MENU_UL         = "gm8-main-menu";

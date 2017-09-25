@@ -58,7 +58,7 @@ import jhi.germinate.shared.search.*;
 /**
  * @author Sebastian Raubach
  */
-public class GroupsPage extends Composite implements ParallaxBannerPage, HasHyperlinkButton
+public class GroupsPage extends Composite implements ParallaxBannerPage, HasHyperlinkButton, HasHelp
 {
 	private GroupMemberSearch groupMemberSearch;
 
@@ -561,5 +561,11 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		return new HyperlinkPopupOptions()
 				.setPage(Page.GROUPS)
 				.addParam(Parameter.groupId);
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new HTML(Text.LANG.groupsHelp());
 	}
 }

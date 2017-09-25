@@ -125,10 +125,6 @@
 				<g:SimplePanel ui:field="templateGradientPanel"/>
 
 				<b:FormGroup>
-					<b:FormLabel for="formSearch" ui:field="searchLabel"/>
-					<t:ToggleSwitch b:id="formSearch" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="search"/>
-				</b:FormGroup>
-				<b:FormGroup>
 					<b:FormLabel for="formLogoLinks" ui:field="logoLinksLabel"/>
 					<t:ToggleSwitch b:id="formLogoLinks" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="logoLinks"/>
 				</b:FormGroup>
@@ -191,14 +187,6 @@
 							<b:FormGroup>
 								<b:FormLabel for="formImagesPPage" ui:field="imagesPPageLabel"/>
 								<i:IntegerTextBox b:id="formImagesPPage" ui:field="imagesPPage"/>
-							</b:FormGroup>
-							<b:FormGroup>
-								<b:FormLabel for="formDisplayColumn" ui:field="displayColumnLabel"/>
-								<b:TextBox b:id="formDisplayColumn" ui:field="displayColumn"/>
-							</b:FormGroup>
-							<b:FormGroup>
-								<b:FormLabel for="formSearchColumn" ui:field="searchColumnLabel"/>
-								<b:TextBox b:id="formSearchColumn" ui:field="searchColumn"/>
 							</b:FormGroup>
 							<b:FormGroup>
 								<b:FormLabel for="formExternalFolder" ui:field="externalFolderLabel"/>

@@ -42,7 +42,8 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_BY_DEFAULT_DISPLAY_NAME = "SELECT * FROM germinatebase WHERE name = ?";
 	private static final String SELECT_BY_UNKNOWN_IDENTIFIER   = "SELECT * FROM germinatebase WHERE name LIKE ? OR id LIKE ? OR number LIKE ? OR general_identifier LIKE ?";
 
-	private static final String SELECT_IDS_FOR_FILTER = "SELECT DISTINCT germinatebase.id FROM " + COMMON_TABLES + " {{FILTER}}";
+	private static final String SELECT_IDS_FOR_FILTER   = "SELECT DISTINCT germinatebase.id FROM " + COMMON_TABLES + " {{FILTER}}";
+	private static final String SELECT_NAMES_FOR_FILTER = "SELECT DISTINCT germinatebase.name FROM " + COMMON_TABLES + " {{FILTER}}";
 
 	private static final String SELECT_ALL_FOR_FILTER_EXPORT  = "SELECT germinatebase.id AS germinatebase_id, germinatebase.general_identifier AS germinatebase_gid, germinatebase.name AS germinatebase_name, germinatebase.number AS germinatebase_number, germinatebase.collnumb AS germinatebase_collnumb, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxomonies_species, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, locations.elevation AS locations_elevation, countries.country_name AS countries_country_name, germinatebase.colldate AS germinatebase_colldate FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_FILTER         = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
@@ -163,6 +164,24 @@ public class AccessionManager extends AbstractManager<Accession>
 	{
 		return getFilteredValueQuery(filter, user, SELECT_IDS_FOR_FILTER, AccessionService.COLUMNS_SORTABLE)
 				.run(Accession.ID)
+				.getStrings();
+	}
+
+	/**
+	 * Returns the names of all the {@link Accession}s fulfilling the {@link PartialSearchQuery} filter.
+	 *
+	 * @param user   The user requesting the data
+	 * @param filter The user-specified filter
+	 * @return The names of all the {@link Accession}s fulfilling the {@link PartialSearchQuery} filter.
+	 * @throws DatabaseException           Thrown if the interaction with the database failed
+	 * @throws InvalidColumnException      Thrown if the sort column is invalid
+	 * @throws InvalidArgumentException    Thrown if the query assembly fails
+	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
+	 */
+	public static ServerResult<List<String>> getNamesForFilter(UserAuth user, PartialSearchQuery filter) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException
+	{
+		return getFilteredValueQuery(filter, user, SELECT_NAMES_FOR_FILTER, AccessionService.COLUMNS_SORTABLE)
+				.run(Accession.NAME)
 				.getStrings();
 	}
 

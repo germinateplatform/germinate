@@ -37,6 +37,7 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.basic.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
@@ -46,7 +47,7 @@ import jhi.germinate.shared.enums.*;
 /**
  * @author Sebastian Raubach
  */
-public class TrialPage extends Composite implements HasHyperlinkButton, HasLibraries
+public class TrialPage extends Composite implements HasHyperlinkButton, HasLibraries, ParallaxBannerPage
 {
 	interface TrialPageUiBinder extends UiBinder<HTMLPanel, TrialPage>
 	{
@@ -263,5 +264,11 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	public Library[] getLibraries()
 	{
 		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LASSO, Library.D3_LEGEND, Library.D3_MULTI_LINE_CHART, Library.D3_SCATTER_MATRIX, Library.D3_SCATTER_PLOT, Library.D3_DOWNLOAD};
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxTrial();
 	}
 }

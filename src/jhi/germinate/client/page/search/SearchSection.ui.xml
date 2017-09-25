@@ -43,7 +43,7 @@
 	</ui:style>
 
 
-	<b:Panel visible="false" ui:field="panel">
+	<b:Panel ui:field="panel">
 		<b:PanelHeader dataToggle="COLLAPSE" dataParent="#accordion" addStyleNames="{style.header}" ui:field="panelHeader">
 			<b:Heading size="H4" addStyleNames="{LAYOUT_DISPLAY_INLINE_BLOCK}" ui:field="header"/>
 			<b:Progress active="true" type="STRIPED" addStyleNames="{PULL_RIGHT} {style.progressbar}" ui:field="progress" visible="false">

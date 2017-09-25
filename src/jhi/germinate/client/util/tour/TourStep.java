@@ -57,7 +57,10 @@ public class TourStep extends JavaScriptObject
 
 	public static TourStep newInstance(String element, String intro)
 	{
-		return newInstance(element, intro, Position.AUTO);
+		if (element == null || !GQuery.$(element).isEmpty())
+			return newInstance(element, intro, Position.AUTO);
+		else
+			return null;
 	}
 
 	private static native TourStep createJson(String element, String intro, String position)/*-{

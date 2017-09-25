@@ -406,6 +406,10 @@ public interface Text extends Messages
 	@Key("notification.datasets.selection.empty")
 	String notificationDatasetsSelectAtLeastOne();
 
+	@Key("notification.datasets.selection.too.many")
+	@DefaultMessage("At most one dataset can be selected!")
+	String notificationDatasetsSelectAtMostOne();
+
 	@Key("notification.datasets.no.data")
 	String notificationExportNoDataset();
 
@@ -552,10 +556,6 @@ public interface Text extends Messages
 	@Key("notification.internal.io.error.unknown")
 	String notificationIOError();
 
-	@Key("notification.accessions.selection.empty")
-	@DefaultMessage("Please select an accession.")
-	String notificationAccessionNotSelected();
-
 	@Key("notification.system.read.only")
 	@DefaultMessage("Germinate is operating in readAll-only mode. Changes have not been applied.")
 	String notificationSystemReadOnly();
@@ -635,30 +635,20 @@ public interface Text extends Messages
 	@Key("page.about.address")
 	String aboutAddress();
 
-	@Key("page.about.latitude")
-	String aboutLatitude();
-
-	@Key("page.about.longitude")
-	String aboutLongitude();
-
 	@Key("page.about.button.add.group")
 	@DefaultMessage("Add group")
 	String groupsButtonAddGroup();
 
-	@Key("page.about.button.delete.group")
-	@DefaultMessage("Delete group")
-	String groupsButtonDeleteGroup();
-
 	@Key("page.about.button.search.members")
-	@DefaultMessage("Search members")
+	@DefaultMessage("Search")
 	String groupsButtonSearchMembers();
 
 	@Key("page.about.button.upload.members")
-	@DefaultMessage("Upload members")
+	@DefaultMessage("Upload")
 	String groupsButtonUploadMembers();
 
 	@Key("page.about.button.delete.members")
-	@DefaultMessage("Delete members")
+	@DefaultMessage("Delete")
 	String groupsButtonDeleteMembers();
 
 	@Key("page.home.title")
@@ -670,12 +660,6 @@ public interface Text extends Messages
 	@Key("page.help.title")
 	String helpTitle();
 
-	@Key("page.help.text")
-	SafeHtml helpText();
-
-	@Key("page.help.tours.title")
-	String helpTours();
-
 	@Key("widget.pager.number.format")
 	String pagerNumberFormat();
 
@@ -684,22 +668,6 @@ public interface Text extends Messages
 
 	@Key("widget.pager.template.of.over")
 	String pagerOfOver();
-
-	@Key("widget.pager.page.first")
-	@DefaultMessage("Go to first page")
-	String pagerFirstPage();
-
-	@Key("widget.pager.page.previous")
-	@DefaultMessage("Go to previous page")
-	String pagerPreviousPage();
-
-	@Key("widget.pager.page.next")
-	@DefaultMessage("Go to next page")
-	String pagerNextPage();
-
-	@Key("widget.pager.page.last")
-	@DefaultMessage("Go to last page")
-	String pagerLastPage();
 
 	@Key("widget.pager.items.per.page")
 	@DefaultMessage("Items per page")
@@ -743,29 +711,8 @@ public interface Text extends Messages
 	@Key("page.passport.datasets.text")
 	SafeHtml passportDatasetsOverviewText();
 
-	@Key("column.passport.passport.item")
-	String passportColumnPassportItem();
-
-	@Key("column.passport.passport.value")
-	String passportColumnValue();
-
-	@Key("column.passport.id")
-	String passportColumnId();
-
-	@Key("column.passport.name")
-	String passportColumnName();
-
-	@Key("column.passport.breeder.code")
-	String passportColumnBreedersCode();
-
-	@Key("column.passport.collector.number")
-	String passportColumnCollnumb();
-
 	@Key("column.passport.collection.date")
 	String passportColumnColldate();
-
-	@Key("column.passport.collector")
-	String passportColumnCollector();
 
 	@Key("column.passport.country")
 	String passportColumnCountry();
@@ -875,6 +822,10 @@ public interface Text extends Messages
 
 	@Key("column.dataset.description")
 	String datasetsColumnDatasetDescription();
+
+	@Key("column.dataset.datatype")
+	@DefaultMessage("Data type")
+	String datasetsColumnDatasetDatatype();
 
 	@Key("column.license.description")
 	@DefaultMessage("License description")
@@ -1122,23 +1073,11 @@ public interface Text extends Messages
 	@DefaultMessage("Group members")
 	String groupMembersTitle();
 
-	@Key("page.groups.type.text")
-	String groupsSubtitleGroupType();
-
-	@Key("page.groups.groups.text")
-	String groupsSubtitleGroups();
-
 	@Key("page.groups.groups.new.text")
 	String groupsSubtitleNewGroup();
 
-	@Key("page.groups.add")
-	String groupsAddToGroup();
-
 	@Key("page.groups.type.select")
 	String groupsSelectType();
-
-	@Key("page.groups.delete.confirm")
-	String groupsDeleteConfirm();
 
 	@Key("page.groups.public")
 	String groupsGroupPublic();
@@ -1147,22 +1086,11 @@ public interface Text extends Messages
 	String groupsCriteriaTitle();
 
 	@Key("help.groups")
+	@DefaultMessage("<h3>Groups</h3><p>In Germinate we define the concept of a group to be an arbitrary grouping of database items of a certain type. Germinate supports groups of <i>accessions</i>, <i>markers</i> and <i>locations</i>. These groups can be pre-created by an administrator or user-defined, which means that you can create your own groups (assuming user authentication is enabled).</p><p>The purpose of these groups becomes clear once you start exporting data. All types of data can either be exported for the whole dataset or the data can be subset into smaller chunks by selecting a single or a selection of groups. The exported data will then contain information about the selected groups only.</p><h4>Creating a group</h4><p><i>This section is only applicable if the Germinate instance you are using has user authentication enabled.</i></p><p>In addition to using the predefined groups, you can create new groups of your own. This page shows you all the existing groups in a table and upon selection, shows you its group members. New groups can be added and existing ones deleted by pressing the buttons below the groups table. Deleting a group requires you to select the checkbox in the corresponding table row as well as to have sufficient permissions to do so. When creating a new group you will be asked to select the group type and to decide on a name for the group. When you do so, the group will be associated with your user account.</p><p>Once this is done, the group will be created and Germinate will automatically select it and show the group members table (empty at this point) below the groups table. You can now manipulate the group itself by adding and removing members using the buttons below the table.</p><h4>Adding group members</h4><p>Adding members to an existing group can be achieved in two ways. You can upload a list of those items from a text file or your clipboard and Germinate will look these items up based on their identifier. Once found they will be added to the group. The other option is to use a boolean search feature that is similar to the way the table filtering works. You can choose fields from the database tables and specify values that the items in questions should equal, smaller or larger to.</p><p>Groups can be made public so that other users have the option to use them as well. If you decide to make your group public, toggle the switch button below the group members heading.</p>")
 	SafeHtml groupsHelp();
-
-	@Key("page.groups.search.item.title")
-	String groupsSearchByItem();
-
-	@Key("page.groups.search.climate.title")
-	String groupsSearchByClimate();
-
-	@Key("page.groups.search.filter.tooltip")
-	SafeHtml groupsFilterTooltip();
 
 	@Key("page.groups.upload.input")
 	String groupsUserInput();
-
-	@Key("page.groups.upload.input.limit.reached")
-	String groupsSearchLimitReached(int limit);
 
 	@Key("page.groups.upload.file")
 	String groupsUserUpload();
@@ -1192,150 +1120,6 @@ public interface Text extends Messages
 
 	@Key("column.groups.created.on")
 	String groupsColumnCreatedOn();
-
-	@Key("tour.groups.create.title")
-	String groupsTourCreateGroup();
-
-	@Key("tour.groups.create.type.title")
-	String groupsTourCreateGroupGroupTypesTitle();
-
-	@Key("tour.groups.create.type.text")
-	String groupsTourCreateGroupGroupTypesText();
-
-	@Key("tour.groups.create.add.title")
-	String groupsTourCreateGroupAddTitle();
-
-	@Key("tour.groups.create.add.text")
-	String groupsTourCreateGroupAddText();
-
-	@Key("tour.groups.create.name.title")
-	String groupsTourCreateGroupNameTitle();
-
-	@Key("tour.groups.create.name.text")
-	String groupsTourCreateGroupNameText();
-
-	@Key("tour.groups.create.name.value")
-	String groupsTourCreateGroupNameValue();
-
-	@Key("tour.groups.create.new.title")
-	String groupsTourCreateGroupNewTitle();
-
-	@Key("tour.groups.create.new.text")
-	String groupsTourCreateGroupNewText();
-
-	@Key("tour.groups.create.visibility.title")
-	String groupsTourCreateGroupVisibilityTitle();
-
-	@Key("tour.groups.create.visibility.text")
-	String groupsTourCreateGroupVisibilityText();
-
-	@Key("tour.groups.create.reset.title")
-	String groupsTourCreateGroupResetTitle();
-
-	@Key("tour.groups.create.reset.text")
-	String groupsTourCreateGroupResetText();
-
-	@Key("tour.groups.add.members.title")
-	String groupsTourAddMembers();
-
-	@Key("tour.groups.add.members.type.title")
-	String groupsTourAddMembersGroupTypesTitle();
-
-	@Key("tour.groups.add.members.type.text")
-	String groupsTourAddMembersGroupTypesText();
-
-	@Key("tour.groups.add.members.group.title")
-	String groupsTourAddMembersGroupsTitle();
-
-	@Key("tour.groups.add.members.group.text")
-	String groupsTourAddMembersGroupsText();
-
-	@Key("tour.groups.add.members.existing.title")
-	String groupsTourAddMembersExistingTitle();
-
-	@Key("tour.groups.add.members.existing.text")
-	String groupsTourAddMembersExistingText();
-
-	@Key("tour.groups.add.members.add.title")
-	String groupsTourAddMembersAddTitle();
-
-	@Key("tour.groups.add.members.add.text")
-	String groupsTourAddMembersAddText();
-
-	@Key("tour.groups.add.members.filter.title")
-	String groupsTourAddMembersFilterTitle();
-
-	@Key("tour.groups.add.members.filter.text")
-	String groupsTourAddMembersFilterText();
-
-	@Key("tour.groups.add.members.criteria.title")
-	String groupsTourAddMembersCriteriaTitle();
-
-	@Key("tour.groups.add.members.criteria.text")
-	String groupsTourAddMembersCriteriaText();
-
-	@Key("tour.groups.add.members.operator.title")
-	String groupsTourAddMembersOperatorTitle();
-
-	@Key("tour.groups.add.members.operator.text")
-	String groupsTourAddMembersOperatorText();
-
-	@Key("tour.groups.add.members.value.title")
-	String groupsTourAddMembersValueTitle();
-
-	@Key("tour.groups.add.members.value.text")
-	String groupsTourAddMembersValueText();
-
-	@Key("tour.groups.add.members.value.suggestion")
-	String groupsTourAddMembersValueSuggestion();
-
-	@Key("tour.groups.add.members.criteria.add.title")
-	String groupsTourAddMembersCriteriaAddTitle();
-
-	@Key("tour.groups.add.members.criteria.add.text")
-	String groupsTourAddMembersCriteriaAddText();
-
-	@Key("tour.groups.add.members.criteria.combine.title")
-	String groupsTourAddMembersCriteriaCombineTitle();
-
-	@Key("tour.groups.add.members.criteria.combine.text")
-	String groupsTourAddMembersCriteriaCombineText();
-
-	@Key("tour.groups.add.members.criteria.delete.title")
-	String groupsTourAddMembersCriteriaDeleteTitle();
-
-	@Key("tour.groups.add.members.criteria.delete.text")
-	String groupsTourAddMembersCriteriaDeleteText();
-
-	@Key("tour.groups.add.members.run.title")
-	String groupsTourAddMembersRunTitle();
-
-	@Key("tour.groups.add.members.run.text")
-	String groupsTourAddMembersRunText();
-
-	@Key("tour.groups.add.members.result.title")
-	String groupsTourAddMembersResultTitle();
-
-	@Key("tour.groups.add.members.result.text")
-	String groupsTourAddMembersResultText();
-
-	@Key("tour.groups.add.members.mark.title")
-	String groupsTourAddMembersMarkTitle();
-
-	@Key("tour.groups.add.members.mark.text")
-	String groupsTourAddMembersMarkText();
-
-	@Key("tour.groups.add.members.add.button.title")
-	String groupsTourAddMembersAddButtonTitle();
-
-	@Key("tour.groups.add.members.add.button.text")
-	String groupsTourAddMembersAddButtonText();
-
-	@Key("tour.groups.add.members.end.title")
-	String groupsTourAddMembersEndTitle();
-
-	@Key("tour.groups.add.members.end.text")
-	String groupsTourAddMembersEndText();
 
 	@Key("column.locations.id")
 	String collectingsiteColumnId();
@@ -1459,15 +1243,6 @@ public interface Text extends Messages
 	@Key("news.title")
 	String newsTitle();
 
-	@Key("news.no.data")
-	String newsNoNews();
-
-	@Key("projects.title")
-	String projectsTitle();
-
-	@Key("projects.no.data")
-	String projectsNoProjects();
-
 	@Key("page.markers.datasets.title")
 	String markersHeadingDatasets();
 
@@ -1573,9 +1348,6 @@ public interface Text extends Messages
 	@Key("column.maps.name")
 	String mapsColumnsMapName();
 
-	@Key("help.maps")
-	SafeHtml mapsHelp();
-
 	@Key("page.maps.download.format.map.chart")
 	String downloadInMapChartFormat();
 
@@ -1584,9 +1356,6 @@ public interface Text extends Messages
 
 	@Key("page.maps.download.format.strudel")
 	String downloadInStrudelFormat();
-
-	@Key("help.accessions.for.location")
-	SafeHtml accessionsForCollsiteHelp();
 
 	@Key("page.geographic.search.query")
 	String geographicSearchQuery();
@@ -1613,9 +1382,6 @@ public interface Text extends Messages
 	@DefaultMessage("Accessions ordered by distance")
 	String geographicSearchAccessionTitle();
 
-	@Key("page.geographic.search.toolrip")
-	SafeHtml geographicSearchTooltip();
-
 	@Key("page.geographic.search.tab.point")
 	@DefaultMessage("Point search")
 	String geographicSearchTabPoint();
@@ -1624,30 +1390,11 @@ public interface Text extends Messages
 	@DefaultMessage("Polygon search")
 	String geographicSearchTabPolygon();
 
-	@Key("page.gbs.title")
-	String gbsExportTitle();
-
-	@Key("page.gbs.text")
-	SafeHtml gbsExportText();
-
-	@Key("help.gbs")
-	SafeHtml gbsExportHelp();
-
-	@Key("page.pco.title")
-	String pcoCoordinatesTitle();
-
-	@Key("page.pco.text")
-	SafeHtml pcoCoordinatesText();
-
 	@Key("page.location.treemap.title")
 	String collsiteTreemapTitle();
 
 	@Key("page.location.treemap.text")
 	SafeHtml collsiteTreemapText();
-
-	@Key("page.location.treemap.label.items")
-	@DefaultMessage("Items")
-	String collsiteTreemapItems();
 
 	@Key("page.location.treemap.label.location")
 	@DefaultMessage("Locations")
@@ -1707,9 +1454,6 @@ public interface Text extends Messages
 	@Key("page.allele.frequency.download.flapjack")
 	String allelefreqResultDownloadFlapjack();
 
-	@Key("page.search.settings.title")
-	String searchSettings();
-
 	@Key("page.search.accessions")
 	String searchAccessions();
 
@@ -1723,80 +1467,29 @@ public interface Text extends Messages
 	@Key("page.search.markers")
 	String searchMarkers();
 
-	@Key("page.search.settings.text")
-	String searchSettingsText();
-
-	@Key("tour.introduction.title")
-	String introductionTourTitle();
-
-	@Key("tour.introduction.welcome.title")
-	String introductionTourTitleWelcome();
-
 	@Key("tour.introduction.welcome.text")
 	String introductionTourMessageWelcome();
-
-	@Key("tour.introduction.navigation.title")
-	String introductionTourTitleNavigation();
 
 	@Key("tour.introduction.navigation.text")
 	String introductionTourMessageNavigation();
 
-	@Key("tour.introduction.search.title")
-	String introductionTourTitleSearch();
-
-	@Key("tour.introduction.search.text")
-	String introductionTourMessageSearch();
-
-	@Key("tour.introduction.news.title")
-	String introductionTourTitleNews();
-
 	@Key("tour.introduction.news.text")
 	String introductionTourMessageNews();
-
-	@Key("tour.introduction.projects.title")
-	String introductionTourTitleProjects();
 
 	@Key("tour.introduction.projects.text")
 	String introductionTourMessageProjects();
 
-	@Key("tour.introduction.language.title")
-	String introductionTourTitleLanguage();
-
 	@Key("tour.introduction.language.text")
 	String introductionTourMessageLanguage();
-
-	@Key("tour.introduction.share.title")
-	String introductionTourTitleShare();
 
 	@Key("tour.introduction.share.text")
 	String introductionTourMessageShare();
 
-	@Key("tour.introduction.help.title")
-	String introductionTourTitleHelp();
-
 	@Key("tour.introduction.help.text")
 	String introductionTourMessageHelp();
 
-	@Key("tour.introduction.about.title")
-	String introductionTourTitleAbout();
-
-	@Key("tour.introduction.about.text")
-	String introductionTourMessageAbout();
-
-	@Key("tour.introduction.final.title")
-	String introductionTourTitleFinal();
-
 	@Key("tour.introduction.final.text")
 	String introductionTourMessageFinal();
-
-	@Key("tour.introduction.crop.title")
-	String introductionTourTitleCrop();
-
-	@Key("tour.introduction.crop.text")
-	String introductionTourMessageCrop();
-
-	@Key("tour.introduction.cart.title")
-	String introductionTourTitleShoppingCart();
 
 	@Key("tour.introduction.cart.text")
 	String introductionTourMessageShoppingCart();
@@ -1805,11 +1498,8 @@ public interface Text extends Messages
 	String introductionTourButton();
 
 	@Key("page.trials.title")
+	@DefaultMessage("Trials data")
 	String trialsTitle();
-
-	@Key("page.trials.overview")
-	@DefaultMessage("Overview")
-	String trialsOverview();
 
 	@Key("page.trials.overview.select.phenotypes")
 	@DefaultMessage("Select phenotypes")
@@ -1822,9 +1512,6 @@ public interface Text extends Messages
 	@Key("page.trials.overview.select.type")
 	@DefaultMessage("Select chart type")
 	String trialsOverviewSelectType();
-
-	@Key("page.trials.text")
-	SafeHtml trialsText();
 
 	@Key("page.trials.phenotype.by.phenotype.coloring.none")
 	@DefaultMessage("No coloring")
@@ -1851,57 +1538,6 @@ public interface Text extends Messages
 
 	@Key("page.trials.phenotype.by.phenotype.text")
 	SafeHtml trialsPByPText();
-
-	@Key("page.trials.selected.accession")
-	String trialsSelectedAccession();
-
-	@Key("page.trials.chart.individual.bar")
-	String trialsIndividualBarChartYAxis();
-
-	@Key("page.trials.individual.not.available.for.char")
-	@DefaultMessage("Please note that the individual chart page isn''t available for non-numeric phenotypes.")
-	String trialsIndividualNotAvailableForChar();
-
-	@Key("page.trials.treatment")
-	String trialsTreatment();
-
-	@Key("page.trials.chart.individual.title")
-	String trialsHeading(String accession, String phenotype, String year);
-
-	@Key("page.trials.chart.individual.histogram.text")
-	String trialsHistogramText(String treatment);
-
-	@Key("page.trials.chart.individual.histogram.axis.y")
-	String trialsHistogramYAxis();
-
-	@Key("page.trials.chart.individual.histogram.axis.x")
-	String trialsHistogramXAxis();
-
-	@Key("help.trials.individual")
-	SafeHtml trialsIndividualHelp();
-
-	@Key("page.trials.chart.performance.axis.x")
-	String trialsPerformanceXAxis();
-
-	@Key("page.trials.chart.performance.axis.y")
-	String trialsPerformanceYAxis();
-
-	@Key("page.trials.chart.performance.site.average")
-	String trialsPerformanceSiteAverage();
-
-	@Key("page.trials.chart.performance.title")
-	String trialsPerformanceTitle();
-
-	@Key("page.trials.chart.performance.text")
-	String trialsPerformanceText();
-
-	@Key("page.trials.chart.performance.column.title")
-	@DefaultMessage("Individual line performance")
-	String trialsPerformanceColumnTitle();
-
-	@Key("page.trials.chart.performance.column.text")
-	@DefaultMessage("<p>Search for an accession below. Then select a phenotype and click on ''Continue'' to plot the line''s performance against the site average.</p>")
-	SafeHtml trialsPerformanceColumnText();
 
 	@Key("page.trials.button.plot")
 	String trialsPlot();
@@ -1979,9 +1615,6 @@ public interface Text extends Messages
 	@Key("page.registration.title")
 	String registrationTitle();
 
-	@Key("page.registration.button.register")
-	String registrationButtonRegister();
-
 	@Key("page.registration.username")
 	String registrationUsername();
 
@@ -2035,9 +1668,6 @@ public interface Text extends Messages
 
 	@Key("notification.registration.passwords.no.match")
 	String notificationRegistrationPasswordsDontMatch();
-
-	@Key("notification.registration.disclaimer.accept")
-	String notificationRegistrationAcceptDisclaimer();
 
 	@Key("notification.registration.gatekeeper.unavailable")
 	String notificationRegistrationGatekeeperUnavailable();
@@ -2132,10 +1762,7 @@ public interface Text extends Messages
 
 	@Key("page.acknowledgements.text")
 	@DefaultMessage("")
-	String acknowledgementsText();
-
-	@Key("general.data.limited.for.client")
-	String dataLimitedForInterface();
+	SafeHtml acknowledgementsText();
 
 	@Key("widget.map.marker.location")
 	@DefaultMessage("Location")
@@ -2149,38 +1776,18 @@ public interface Text extends Messages
 	@DefaultMessage("Download deleted markers")
 	String downloadDeletedMarkersAsTxt();
 
-	@Key("widget.columns.add.column")
-	@DefaultMessage("Add column")
-	String columnWidgetAddColumn();
-
 	@Key("page.group.preview.title")
 	@DefaultMessage("Group preview")
 	String groupsPreviewTitle();
-
-	@Key("page.group.preview.create.group.title")
-	@DefaultMessage("Create a new group")
-	String groupsPreviewCreateGroupTitle();
 
 	@Key("page.group.preview.text")
 	@DefaultMessage("<p>This page shows the database objects that have been selected based on your selection in an external tool. Please review the selection.</p><p>When you''re happy with the result, select a name for the group in the text box and hit the button to create the group.</p>")
 	SafeHtml groupPreviewText();
 
-	@Key("page.group.placeholder.group.name")
-	@DefaultMessage("Group name")
-	String groupsPlaceholderGroupName();
-
 	@Key("page.group.preview.add.button")
 	@DefaultMessage("Add group")
 	String groupsPreviewAddButton();
 
-
-	@Key("notification.group.preview.name.missing")
-	@DefaultMessage("Name missing.")
-	String notificationGroupPreviewFillFields();
-
-	@Key("notification.group.group.name.exists")
-	@DefaultMessage("A group with this name already exists.")
-	String notificationGroupsGroupNameExists();
 
 	@Key("notification.group.preview.invalid.filename")
 	@DefaultMessage("Session invalidated because expected and found group members differ.")
@@ -2267,6 +1874,10 @@ public interface Text extends Messages
 	@DefaultMessage("Contact us: {0}")
 	String contactUs(String email);
 
+	@Key("widget.contact.title")
+	@DefaultMessage("Contact us")
+	String contact();
+
 
 	@Key("widget.table.filter.title")
 	@DefaultMessage("Toggle filtering")
@@ -2279,14 +1890,6 @@ public interface Text extends Messages
 	@Key("page.geographic.search.polygon.text")
 	@DefaultMessage("<p>The map below allows you to select a region by drawing a polygon around it. Once you''re happy with the selection, hit the \"Continue\" button to get the collecting sites within this polygon.</p><p>You can adjust each corner point of the polygon by dragging it. It''s also possible to add new corner points in between two existing points by dragging the semi-transparent circle.</p><p>Right-click a polygon to remove it from the map.</p>")
 	SafeHtml geographicSearchPolygonText();
-
-	@Key("page.geographic.search.polygon.collsite.title")
-	@DefaultMessage("Collecting sites in the polygon")
-	String geographicSearchPolygonCollsiteTitle();
-
-	@Key("page.geographic.search.polygon.accession.title")
-	@DefaultMessage("Accessions in the polygon")
-	String geographicSearchPolygonAccessionTitle();
 
 	@Key("page.osterei.message")
 	@DefaultMessage("This isn''t the easter egg you''re looking for... Try again.")
@@ -2413,17 +2016,9 @@ public interface Text extends Messages
 	@DefaultMessage("Compounds")
 	String compoundsTitle();
 
-	@Key("page.phenotypes.title")
-	@DefaultMessage("Phenotypes")
-	String phenotypesTitle();
-
 	@Key("tooltip.table.header.filter.cell")
 	@DefaultMessage("Type your search term and hit enter. Use ''%'' as the wildcard character.")
 	String tableHeaderFilterCellTooltip();
-
-	@Key("widget.d3.chart.search.field")
-	@DefaultMessage("Search for item by name")
-	String chartSearchField();
 
 	@Key("notification.polygon.search.no.polygon.selected")
 	@DefaultMessage("No polygon selected.")
@@ -2524,10 +2119,6 @@ public interface Text extends Messages
 	@Key("mcpd.origcty")
 	@DefaultMessage("Country of origin")
 	String mcpdOrigcty();
-
-	@Key("mcpd.collsite")
-	@DefaultMessage("Location of collecting site")
-	String mcpdCOllsite();
 
 	@Key("mcpd.coorduncert")
 	@DefaultMessage("Coorinate uncertainty [m]")
@@ -2714,7 +2305,7 @@ public interface Text extends Messages
 	String galleryAllImageFiles();
 
 	@Key("template.footer.copyright")
-	@DefaultMessage("© Information & Computational Sciences, JHI 2015-{0}")
+	@DefaultMessage("© Information & Computational Sciences, JHI 2005-{0}")
 	String copyright(String currentYear);
 
 	@Key("adminConfigHelp")
@@ -2800,4 +2391,12 @@ public interface Text extends Messages
 	@Key("widget.list.groups.all.locations")
 	@DefaultMessage("All locations")
 	String groupsAllLocations();
+
+	@Key("help.search")
+	@DefaultMessage("Germinate supports full-text search across various data types and columns within this type. You can search by typing a search query into the text box. Upon search, Germinate shows the search results page. This page shows all matching database objects grouped into categories, each category representing a different data type. The number of matching items is shown for each section on the right. Upon expanding of a section, a result table will show the matching database items. You can then either download the data, mark specific items or filter down further by adjusting the search criteria in the table header.")
+	String searchHelp();
+
+	@Key("help.marked.items")
+	@DefaultMessage("<p>Another useful feature of Germinate is the concept of <i>marked item lists</i>. A marked item is either an accession, a marker or a location that is of interest to the user. While you are browsing the page, a lot of the tables will have a checkbox column as the last column which you can use to mark certain items. Germinate will keep track of these items for you.</p><p>To see how many items you currently have marked, you can click on the menu item in the top bar or go directly to the marked item lists page.</p><p>Once you have marked all the items that you are interested in, you can create a group of these items and use them to export data against them. To create a group, you can either go to the marked item lists page or by clicking on the header of the checkbox column and selecting \"Create group from selection\".</p>")
+	SafeHtml markedItemsHelp();
 }

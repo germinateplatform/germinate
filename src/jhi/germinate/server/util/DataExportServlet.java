@@ -25,9 +25,14 @@ import jhi.germinate.server.manager.*;
 import jhi.germinate.server.service.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
+
+import static jhi.germinate.server.util.DataExporter.Type.*;
 
 /**
  * @author Sebastian Raubach
@@ -59,7 +64,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		exportResult.flapjackLinks = "";
 
 		/* For genotypic files, add a link to the accession page */
-		if (type == DataExporter.Type.GENOTYPE)
+		if (type == GENOTYPE)
 		{
 			if (availablePages.contains(Page.PASSPORT))
 				exportResult.flapjackLinks += "# fjDatabaseLineSearch = " + serverBase + "/?" + Parameter.accessionName + "=$LINE#" + Page.PASSPORT + "\n";
@@ -83,7 +88,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		Boolean isAllowedToUse = DatasetManager.userHasAccessToDataset(userAuth, datasetId).getServerResult();
 
         /* Get the line names to extract */
-		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, type, sqlDebug, accessionGroups, Collections.singletonList(datasetId)) : new ArrayList<>();
+		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, type, sqlDebug, accessionGroups, datasetId) : new ArrayList<>();
 		/* Get the marker names to extract */
 		List<String> colNames = getColumnNames(type, sqlDebug, markerGroups, mapId, userAuth);
 
@@ -134,7 +139,28 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 			return null;
 			// If it contains the "All items group"
 		else if (containsAllItemsGroup(markerGroups))
-			return null;
+		{
+			if (type == GENOTYPE)
+				return null;
+			else
+			{
+				try
+				{
+					PartialSearchQuery q = new PartialSearchQuery();
+					SearchCondition c = new SearchCondition();
+					c.setColumnName(Map.ID);
+					c.setComp(new Equal());
+					c.addConditionValue(Long.toString(mapToUse));
+					q.add(c);
+					return MarkerManager.getNamesForFilter(userAuth, q).getServerResult();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					return null;
+				}
+			}
+		}
 
 		if (CollectionUtils.isEmpty(markerGroups))
 			return null;
@@ -162,28 +188,47 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	 * @return The line names (name, afp_number)
 	 * @throws DatabaseException Thrown if the database interaction fails
 	 */
-	private static List<String> getRowNames(UserAuth userAuth, DataExporter.Type type, DebugInfo sqlDebug, List<Long> accessionGroups, List<Long> datasetIds) throws DatabaseException
+	private static List<String> getRowNames(UserAuth userAuth, DataExporter.Type type, DebugInfo sqlDebug, List<Long> accessionGroups, Long datasetId) throws DatabaseException
 	{
 		// If no groups are selected
 		if (CollectionUtils.isEmpty(accessionGroups))
 			return null;
 			// If it contains the "All items group"
 		else if (containsAllItemsGroup(accessionGroups))
-			return null;
+		{
+			if (type == GENOTYPE)
+				return null;
+			else
+			{
+				try
+				{
+					return new ValueQuery("SELECT DISTINCT sample_id FROM allelefrequencydata WHERE dataset_id = ?")
+							.setLong(datasetId)
+							.run("sample_id")
+							.getStrings()
+							.getServerResult();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					return null;
+				}
+			}
+		}
 
 		try
 		{
-			ServerResult<Boolean> hasLocalResourceFile = DatasetManager.hasSourceFile(userAuth, datasetIds);
+			ServerResult<Boolean> hasLocalResourceFile = DatasetManager.hasSourceFile(userAuth, Collections.singletonList(datasetId));
 
 			if (!hasLocalResourceFile.getServerResult())
 			{
 				/* Build up the query */
-				String formatted = String.format(type.getQueryRowsInternal(), Util.generateSqlPlaceholderString(accessionGroups.size()), Util.generateSqlPlaceholderString(datasetIds.size()));
+				String formatted = String.format(type.getQueryRowsInternal(), Util.generateSqlPlaceholderString(accessionGroups.size()));
 
         		/* Run the query */
 				ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 						.setLongs(accessionGroups)
-						.setLongs(datasetIds)
+						.setLong(datasetId)
 						.run(type.getColumnName())
 						.getStrings();
 				sqlDebug.addAll(temp.getDebugInfo());
@@ -193,7 +238,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 			else
 			{
 				/* Build up the query */
-				String formatted = String.format(type.getQueryRowsExternal(), Util.generateSqlPlaceholderString(accessionGroups.size()), Util.generateSqlPlaceholderString(datasetIds.size()));
+				String formatted = String.format(type.getQueryRowsExternal(), Util.generateSqlPlaceholderString(accessionGroups.size()));
 
         		/* Run the query */
 				ValueQuery query = new ValueQuery(formatted, userAuth)
@@ -201,7 +246,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 
 				// TODO: Fix this for allelefreq data
 				if (type == DataExporter.Type.ALLELEFREQ)
-					query.setLongs(datasetIds);
+					query.setLong(datasetId);
 
 				ServerResult<List<String>> temp = query.run(type.getColumnName())
 													   .getStrings();

@@ -41,6 +41,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.map.*;
+import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
@@ -59,7 +60,7 @@ import jhi.germinate.shared.search.operators.*;
  * @see Parameter#accessionId
  * @see Parameter#accessionName
  */
-public class PassportPage extends Composite implements HasLibraries, HasHelp, HasHyperlinkButton
+public class PassportPage extends Composite implements HasLibraries, HasHelp, HasHyperlinkButton, ParallaxBannerPage
 {
 	interface PassportPageUiBinder extends UiBinder<HTMLPanel, PassportPage>
 	{
@@ -651,5 +652,11 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	public Library[] getLibraries()
 	{
 		return new Library[]{Library.LEAFLET_COMPLETE};
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxPassport();
 	}
 }

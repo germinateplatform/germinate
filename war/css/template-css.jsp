@@ -133,7 +133,6 @@ footer > div.container-fluid {
 .navbar-top-links .dropdown-messages,
 .navbar-top-links .dropdown-tasks,
 .navbar-top-links .dropdown-alerts {
-  width: 310px;
   min-width: 0;
 }
 .navbar-top-links .dropdown-messages {
@@ -141,9 +140,6 @@ footer > div.container-fluid {
 }
 .navbar-top-links .dropdown-tasks {
   margin-left: -59px;
-}
-.navbar-top-links .dropdown-alerts {
-  margin-left: -123px;
 }
 .navbar-top-links .dropdown-user {
   right: 0;

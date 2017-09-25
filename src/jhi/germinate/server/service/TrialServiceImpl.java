@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.servlet.annotation.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
@@ -49,7 +48,7 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 	private static final long serialVersionUID = -8532526273822554012L;
 
 	private static final String QUERY_PHENOTYPE_BY_PHENOTYPE    = "SELECT DATE_FORMAT(a.recording_date, '%%Y') AS recording_date, datasets.description AS dataset, licenses.name AS license, treatments.name AS treatment, germinatebase.name AS name, a.germinatebase_id AS id, a.phenotype_value AS x, b.phenotype_value AS y FROM phenotypedata AS a JOIN phenotypedata AS b ON a.germinatebase_id = b.germinatebase_id AND a.location_id <=> b.location_id AND a.trialseries_id <=> b.trialseries_id %s AND a.treatment_id <=> b.treatment_id AND a.dataset_id = b.dataset_id AND a.dataset_id IN (%s) LEFT JOIN germinatebase ON germinatebase.id = a.germinatebase_id LEFT JOIN treatments ON a.treatment_id = treatments.id LEFT JOIN groupmembers ON groupmembers.foreign_id = a.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN datasets ON datasets.id = a.dataset_id LEFT JOIN licenses ON licenses.id = datasets.license_id WHERE %s a.phenotype_id = ? AND b.phenotype_id = ? GROUP BY id, x, y, recording_date, treatment, datasets.id";
-	private static final String QUERY_PHENOTYPES_OVERVIEW       = "SELECT phenotypedata.phenotype_value, %s AS germinatebase_identifier, DATE_FORMAT( phenotypedata.recording_date, '%%Y' ) AS recording_date, germinatebase.id, phenotypes.*, units.* FROM phenotypedata LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON datasets.experiment_id = experiments.id LEFT JOIN experimenttypes ON experiments.experiment_type_id = experimenttypes.id LEFT JOIN germinatebase ON phenotypedata.germinatebase_id = germinatebase.id WHERE datasets.id IN (%s) AND phenotypes.id IN (%s) AND DATE_FORMAT(recording_date, '%%Y') IN (%s) AND phenotypes.datatype IN ('int', 'float') AND experimenttypes.description = 'trials'";
+	private static final String QUERY_PHENOTYPES_OVERVIEW       = "SELECT phenotypedata.phenotype_value, germinatebase.name AS germinatebase_identifier, DATE_FORMAT( phenotypedata.recording_date, '%%Y' ) AS recording_date, germinatebase.id, phenotypes.*, units.* FROM phenotypedata LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON datasets.experiment_id = experiments.id LEFT JOIN experimenttypes ON experiments.experiment_type_id = experimenttypes.id LEFT JOIN germinatebase ON phenotypedata.germinatebase_id = germinatebase.id WHERE datasets.id IN (%s) AND phenotypes.id IN (%s) AND DATE_FORMAT(recording_date, '%%Y') IN (%s) AND phenotypes.datatype IN ('int', 'float') AND experimenttypes.description = 'trials'";
 	private static final String QUERY_DISTINCT_YEARS            = "SELECT DISTINCT DATE_FORMAT(recording_date, '%%Y') AS recording_date FROM phenotypedata WHERE NOT ISNULL(recording_date) AND dataset_id IN (%s) ORDER BY recording_date";
 
 	@Override
@@ -161,7 +160,7 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
-		String formatted = String.format(QUERY_PHENOTYPES_OVERVIEW, "germinatebase." + PropertyReader.getAccessionDisplayName(), Util.generateSqlPlaceholderString(datasetIds.size()), Util.generateSqlPlaceholderString(phenotypes.size()), Util.generateSqlPlaceholderString(selectedYears.size()));
+		String formatted = String.format(QUERY_PHENOTYPES_OVERVIEW, Util.generateSqlPlaceholderString(datasetIds.size()), Util.generateSqlPlaceholderString(phenotypes.size()), Util.generateSqlPlaceholderString(selectedYears.size()));
 
 		List<TrialsRow> result = new ArrayList<>();
 

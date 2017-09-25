@@ -119,7 +119,7 @@ public class TaxonomyPieChart extends AbstractChart
 
 			/* Save it to the parameter store and change to the browse page */
 			StringStringMapParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
-			History.newItem(Page.BROWSE_ACCESSIONS.name());
+			History.newItem(Page.ACCESSION_OVERVIEW.name());
 		}
 		catch (Exception e)
 		{

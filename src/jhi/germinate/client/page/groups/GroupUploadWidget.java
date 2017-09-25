@@ -21,6 +21,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Label;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.TextArea;
@@ -63,6 +64,8 @@ public class GroupUploadWidget extends Composite
 	@UiField
 	TextArea      copyPaste;
 	@UiField
+	Label         label;
+	@UiField
 	FormPanel     form;
 
 	private GerminateDatabaseTable referenceTable;
@@ -92,6 +95,9 @@ public class GroupUploadWidget extends Composite
 				type = ComparisonRow.ComparisonType.accession;
 				break;
 		}
+
+		String limit = NumberUtils.DECIMAL_FORMAT_TWO_PLACES.format(GerminateSettingsHolder.get().uploadSizeLimitMB.getValue());
+		label.setText(Text.LANG.uploadFileSizeLimit(limit));
 
 		column.setValue(type.getItems()[0], false);
 		column.setAcceptableValues(type.getItems());
@@ -177,7 +183,10 @@ public class GroupUploadWidget extends Composite
 	void onSubmitComplete(FormPanel.SubmitCompleteEvent event)
 	{
 		if (UploadProgressService.FILESIZE_LIMIT_EXCEEDED.equals(event.getResults()))
+		{
 			indicator.hide();
+			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationGroupsUploadFileSizeExceeded());
+		}
 
 		GroupService.Inst.get().addItems(Cookie.getRequestProperties(), event.getResults(), referenceTable, column.getSelection(), group.getId(),
 				new DefaultAsyncCallback<ServerResult<Tuple.Pair<Integer, Integer>>>(true)

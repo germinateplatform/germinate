@@ -1,12 +1,13 @@
 \section{Troubleshooting}
 \label{sec:troubleshooting}
+In this section we talk about issues that you may encounter when working with Germinate.
 
-\subsection{Germinate links in download files are not HTTPS}
-Files downloaded from Germinate sometimes contain links back to certain pages back on Germinate. This is used so that external tools can come back to Germinate for additional information.
+\subsection{{\germinate} links in download files are not HTTPS}
+Files downloaded from {\germinate} sometimes contain links back to certain pages back on {\germinate}. This is used so that external tools can come back to {\germinate} for additional information.
 
 In case you're running Germinate over HTTPS (which you should) and are also using a reverse proxy to forward requests to Tomcat, it might happen that these links don't point to \texttt{https://your-server.com/germinate} but rather to \texttt{http://your-server.com/germinate}. In most cases, this will be fine as the user will be redirected to HTTPS and won't even notice that this happens. Some external tools might not be able to handle this redirect though.
 
-The problem here is that Tomcat doesn't know that the request came to an HTTPS resource originally (before it got proxied) and Germinate therefore doesn't have sufficient information to generate the links correctly.
+The problem here is that Tomcat doesn't know that the request came to an HTTPS resource originally (before it got proxied) and {\germinate} therefore doesn't have sufficient information to generate the links correctly.
 
 To fix this, open the \texttt{server.xml} file under Tomcat's \texttt{conf} folder and add the following \texttt{Connector} to the \texttt{Server}:
 \begin{lstlisting}[style=Xml]
@@ -19,7 +20,7 @@ To fix this, open the \texttt{server.xml} file under Tomcat's \texttt{conf} fold
 \end{lstlisting}
 
 \noindent
-In this case, \texttt{proxyName} is the name of the proxy server. In addition, you need to change the "proxy reverse" settings of Apache. Open the file containing your configuration and identify the entries responsible for Germinate. They may look something like this:
+In this case, \texttt{proxyName} is the name of the proxy server. In addition, you need to change the "proxy reverse" settings of Apache. Open the file containing your configuration and identify the entries responsible for {\germinate}. They may look something like this:
 
 \begin{lstlisting}[style=Proxy]
 ProxyPass			/germinate-template http://tomcat-server:8080/germinate-template

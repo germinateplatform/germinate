@@ -36,13 +36,14 @@ import jhi.germinate.shared.search.*;
  */
 public class MarkerManager extends AbstractManager<Marker>
 {
-	private static final String SELECT_BY_IDS             = "SELECT markers.* FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id WHERE markers.id IN (%s) %s LIMIT ?, ?";
-	private static final String COMMON_TABLES             = "mapdefinitions LEFT JOIN mapfeaturetypes ON mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
-	private static final String SELECT_ALL_FOR_GROUP      = "SELECT * FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id %s LIMIT ?, ?";
-	private static final String SELECT_IDS_FOR_GROUP      = "SELECT markers.id FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id";
-	private static final String SELECT_BY_NAME            = "SELECT * FROM " + COMMON_TABLES + " WHERE markers.marker_name = ?";
-	private static final String SELECT_IDS_FOR_FILTER_MAP = "SELECT DISTINCT(markers.id) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
-	private static final String SELECT_COUNT              = "SELECT COUNT(1) AS count FROM markers";
+	private static final String SELECT_BY_IDS               = "SELECT markers.* FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id WHERE markers.id IN (%s) %s LIMIT ?, ?";
+	private static final String COMMON_TABLES               = "mapdefinitions LEFT JOIN mapfeaturetypes ON mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
+	private static final String SELECT_ALL_FOR_GROUP        = "SELECT * FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id %s LIMIT ?, ?";
+	private static final String SELECT_IDS_FOR_GROUP        = "SELECT markers.id FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id";
+	private static final String SELECT_BY_NAME              = "SELECT * FROM " + COMMON_TABLES + " WHERE markers.marker_name = ?";
+	private static final String SELECT_IDS_FOR_FILTER_MAP   = "SELECT DISTINCT(markers.id) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
+	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(markers.marker_name) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
+	private static final String SELECT_COUNT                = "SELECT COUNT(1) AS count FROM markers";
 
 	@Override
 	protected String getTable()
@@ -61,6 +62,14 @@ public class MarkerManager extends AbstractManager<Marker>
 		return getFilteredValueQuery(filter, userAuth, SELECT_IDS_FOR_FILTER_MAP, MarkerService.COLUMNS_MAPDEFINITION_TABLE)
 				.setLong(userAuth.getId())
 				.run(Marker.ID)
+				.getStrings();
+	}
+
+	public static ServerResult<List<String>> getNamesForFilter(UserAuth userAuth, PartialSearchQuery filter) throws DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
+	{
+		return getFilteredValueQuery(filter, userAuth, SELECT_NAMES_FOR_FILTER_MAP, MarkerService.COLUMNS_MAPDEFINITION_TABLE)
+				.setLong(userAuth.getId())
+				.run(Marker.MARKER_NAME)
 				.getStrings();
 	}
 

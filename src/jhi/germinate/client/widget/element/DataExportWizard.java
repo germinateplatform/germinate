@@ -94,6 +94,11 @@ public abstract class DataExportWizard extends Composite
 			showError(Text.LANG.notificationExportNoDataset());
 			return;
 		}
+		else if (selectedDatasets.size() > 1)
+		{
+			showError(Text.LANG.notificationDatasetsSelectAtMostOne());
+			return;
+		}
 
 		accessionText.setHTML(Text.LANG.genotypeExportSubtitleAccessionGroups());
 		markerText.setHTML(Text.LANG.genotypeExportSubtitleMarkerGroups());

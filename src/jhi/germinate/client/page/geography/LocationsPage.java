@@ -19,6 +19,7 @@ package jhi.germinate.client.page.geography;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.event.logical.shared.*;
+import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -33,9 +34,11 @@ import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.map.*;
+import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
@@ -49,7 +52,7 @@ import jhi.gwt.leaflet.client.map.*;
 /**
  * @author Sebastian Raubach
  */
-public class LocationsPage extends Composite implements HasLibraries
+public class LocationsPage extends Composite implements HasLibraries, ParallaxBannerPage
 {
 	interface LocationsPageUiBinder extends UiBinder<HTMLPanel, LocationsPage>
 	{
@@ -78,8 +81,16 @@ public class LocationsPage extends Composite implements HasLibraries
 	@UiField
 	SimplePanel         gradientPanel;
 
+	@UiField
+	HTML        html;
+	@UiField
+	LocationTypeListBox locationTypeBoxTwo;
+	@UiField
+	SimplePanel chartPanel;
+
 	private LeafletUtils.ClusteredMarkerCreator clusteredMap;
 	private LeafletUtils.HeatmapCreator         heatmapMap;
+	private LocationTreemapChart                chart;
 
 	private LeafletUtils.ImageOverlayWrapper climateOverlays = new LeafletUtils.ImageOverlayWrapper();
 
@@ -92,6 +103,8 @@ public class LocationsPage extends Composite implements HasLibraries
 
 		synchonizeToggle.setOnText(Text.LANG.generalYes());
 		synchonizeToggle.setOffText(Text.LANG.generalNo());
+
+		chart = new LocationTreemapChart();
 	}
 
 	@Override
@@ -109,6 +122,16 @@ public class LocationsPage extends Composite implements HasLibraries
 			Widget gradient = GradientUtils.createHorizontalGradientLegend(GRADIENT, GradientUtils.HorizontalLegendPosition.BOTTOM);
 			gradientPanel.add(gradient);
 		});
+
+		html.setHTML(Text.LANG.collsiteTreemapText());
+
+		chartPanel.add(chart);
+
+		List<LocationType> list = new ArrayList<>(Arrays.asList(LocationType.values()));
+		list.remove(LocationType.all);
+
+		locationTypeBoxTwo.setValue(LocationType.collectingsites, true);
+		locationTypeBoxTwo.setAcceptableValues(list);
 	}
 
 	private void getClimates()
@@ -252,9 +275,53 @@ public class LocationsPage extends Composite implements HasLibraries
 		});
 	}
 
+	@UiHandler("locationTypeBoxTwo")
+	void onLocationTypeChanged(ValueChangeEvent<List<LocationType>> event)
+	{
+		LocationType type = locationTypeBoxTwo.getSelection();
+
+		LocationService.Inst.get().getJsonForType(Cookie.getRequestProperties(), type, new DefaultAsyncCallback<ServerResult<String>>(true)
+		{
+			@Override
+			public void onFailureImpl(Throwable caught)
+			{
+				chart.clear();
+				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
+			}
+
+			@Override
+			public void onSuccessImpl(ServerResult<String> result)
+			{
+				if (!StringUtils.isEmpty(result.getServerResult()))
+				{
+					/* Construct the path to the json file */
+					chart.setLocationType(type);
+					chart.setFilePath(new ServletConstants.Builder()
+							.setUrl(GWT.getModuleBaseURL())
+							.setPath(ServletConstants.SERVLET_FILES)
+							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult())
+							.build());
+				}
+				else
+				{
+					onFailureImpl(null);
+				}
+			}
+		});
+	}
+
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.LEAFLET_COMPLETE};
+		Library[] l = chart.getLibraryList();
+		return ArrayUtils.add(l, Library.LEAFLET_COMPLETE, new Library[l.length + 1]);
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxGeography();
 	}
 }

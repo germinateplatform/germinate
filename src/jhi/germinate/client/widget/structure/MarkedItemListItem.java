@@ -83,7 +83,9 @@ public class MarkedItemListItem
 			}
 		});
 
-		countWrapper.addClassName(Styles.PULL_RIGHT);
+//		if (type != MarkedItemList.ItemType.ACCESSION)
+//			countWrapper.addClassName(Styles.PULL_RIGHT);
+		countWrapper.getStyle().setMarginLeft(10, com.google.gwt.dom.client.Style.Unit.PX);
 		countWrapper.getStyle().setLineHeight(28, com.google.gwt.dom.client.Style.Unit.PX);
 		count.addClassName(Styles.BADGE);
 

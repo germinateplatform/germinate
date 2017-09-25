@@ -74,6 +74,10 @@
 			<fileset dir="${src.dir}/jhi/germinate/client/page/login/registration" includes="**/registration-agreement*.html"/>
 		</delete>
 
+		<delete failonerror="false" verbose="true" quiet="true">
+			<fileset dir="${build.dir}/img/parallax" includes="*.jpg"/>
+		</delete>
+
 		<!-- Delete template styling -->
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/logo.svg"/>
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/crop.svg"/>

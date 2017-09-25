@@ -49,6 +49,7 @@ public class Dataset extends DatabaseObject
 	public static final String DATE_START       = "datasets.date_start";
 	public static final String DATE_END         = "datasets.date_end";
 	public static final String SOURCE_FILE      = "datasets.source_file";
+	public static final String DATATYPE         = "datasets.datatype";
 	public static final String CONTACT          = "datasets.contact";
 	public static final String VERSION          = "datasets.version";
 	public static final String CREATED_BY       = "datasets.created_by";
@@ -67,6 +68,7 @@ public class Dataset extends DatabaseObject
 	private Date         dateStart;
 	private Date         dateEnd;
 	private String       sourceFile;
+	private String       datatype;
 	private String       contact;
 	private String       version;
 	private Long         userId;
@@ -89,7 +91,7 @@ public class Dataset extends DatabaseObject
 		super(id);
 	}
 
-	public Dataset(Long id, Experiment experiment, Location location, String description, Date dateStart, Date dateEnd, String sourceFile, String contact, String version, Long userId, DatasetState datasetState, License license, Boolean isExternal, String hyperlink, Long createdOn, Long updatedOn, Long size, Long dataPoints)
+	public Dataset(Long id, Experiment experiment, Location location, String description, Date dateStart, Date dateEnd, String sourceFile, String datatype, String contact, String version, Long userId, DatasetState datasetState, License license, Boolean isExternal, String hyperlink, Long createdOn, Long updatedOn, Long size, Long dataPoints, List<AttributeData> attributeData)
 	{
 		super(id);
 		this.experiment = experiment;
@@ -98,6 +100,7 @@ public class Dataset extends DatabaseObject
 		this.dateStart = dateStart;
 		this.dateEnd = dateEnd;
 		this.sourceFile = sourceFile;
+		this.datatype = datatype;
 		this.contact = contact;
 		this.version = version;
 		this.userId = userId;
@@ -109,6 +112,7 @@ public class Dataset extends DatabaseObject
 		this.updatedOn = updatedOn;
 		this.size = size;
 		this.dataPoints = dataPoints;
+		this.attributeData = attributeData;
 	}
 
 	public Experiment getExperiment()
@@ -174,6 +178,17 @@ public class Dataset extends DatabaseObject
 	public Dataset setSourceFile(String sourceFile)
 	{
 		this.sourceFile = sourceFile;
+		return this;
+	}
+
+	public String getDatatype()
+	{
+		return datatype;
+	}
+
+	public Dataset setDatatype(String datatype)
+	{
+		this.datatype = datatype;
 		return this;
 	}
 
@@ -342,6 +357,7 @@ public class Dataset extends DatabaseObject
 				", dateStart=" + dateStart +
 				", dateEnd=" + dateEnd +
 				", sourceFile='" + sourceFile + '\'' +
+				", datatype='" + datatype + '\'' +
 				", contact='" + contact + '\'' +
 				", version='" + version + '\'' +
 				", userId=" + userId +
@@ -353,6 +369,7 @@ public class Dataset extends DatabaseObject
 				", updatedOn=" + updatedOn +
 				", size=" + size +
 				", dataPoints=" + dataPoints +
+				", attributeData=" + attributeData +
 				"} " + super.toString();
 	}
 
@@ -417,6 +434,7 @@ public class Dataset extends DatabaseObject
 							.setDateStart(row.getDate(DATE_START))
 							.setDateEnd(row.getDate(DATE_END))
 							.setSourceFile(row.getString(SOURCE_FILE))
+							.setDatatype(row.getString(DATATYPE))
 							.setContact(row.getString(CONTACT))
 							.setVersion(row.getString(VERSION))
 							.setUserId(row.getLong(CREATED_BY))
@@ -485,13 +503,14 @@ public class Dataset extends DatabaseObject
 		@Override
 		public void write(Database database, Dataset object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO datasets (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO datasets (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getExperiment().getId())
 					.setLong(object.getLocation() == null ? null : object.getLocation().getId())
 					.setString(object.getDescription())
 					.setDate(object.getDateStart())
 					.setDate(object.getDateEnd())
 					.setString(object.getSourceFile())
+					.setString(object.getDatatype())
 					.setString(object.getVersion())
 					.setLong(object.getUserId())
 					.setLong(object.getDatasetState().getId())

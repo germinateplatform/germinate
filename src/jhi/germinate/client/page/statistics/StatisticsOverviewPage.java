@@ -36,6 +36,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.map.*;
+import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -43,7 +44,7 @@ import jhi.germinate.shared.enums.*;
 /**
  * @author Sebastian Raubach
  */
-public class StatisticsOverviewPage extends GerminateComposite
+public class StatisticsOverviewPage extends GerminateComposite implements ParallaxBannerPage
 {
 	private GeoChart geoChart;
 
@@ -83,7 +84,7 @@ public class StatisticsOverviewPage extends GerminateComposite
 						Map<String, String> mapping = new HashMap<>();
 						mapping.put(Country.COUNTRY_NAME, country.getName());
 						StringStringMapParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
-						History.newItem(Page.BROWSE_ACCESSIONS.name());
+						History.newItem(Page.ACCESSION_OVERVIEW.name());
 					}
 
 					@Override
@@ -100,5 +101,11 @@ public class StatisticsOverviewPage extends GerminateComposite
 		});
 
 		panel.add(new DatasetStatsChart());
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxDataStats();
 	}
 }

@@ -27,6 +27,7 @@ import java.util.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.page.search.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -110,14 +111,15 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
             					/* Show the deleted markers in a list */
 								if (!CollectionUtils.isEmpty(result.getServerResult().getDeletedMarkers()))
 								{
-									resultPanel.add(new Heading(HeadingSize.H3, Text.LANG.genotypeResultDeletedMarkers()));
+									SearchSection section = new SearchSection();
+									section.setHeading(Text.LANG.genotypeResultDeletedMarkers());
 
 									ListBox box = new ListBox();
 									box.setVisibleItemCount(Math.min(20, result.getServerResult().getDeletedMarkers().size()));
 
 									result.getServerResult().getDeletedMarkers().forEach(box::addItem);
 
-									resultPanel.add(box);
+									section.add(box);
 
 									FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) -> MarkerService.Inst.get().export(Cookie.getRequestProperties(), result.getServerResult().getDeletedMarkers(), callback), false)
 											.setIconStyle(FileDownloadWidget.IconStyle.FONT_AWESOME)
@@ -125,13 +127,17 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 											.addFile(Text.LANG.downloadDeletedMarkersAsTxt())
 											.addType(FileType.txt);
 
-									resultPanel.add(widget);
+									section.add(widget);
+
+									resultPanel.add(section);
 								}
 
 								if (!StringUtils.isEmpty(result.getServerResult().getDebugOutput()))
 								{
-									resultPanel.add(new Heading(HeadingSize.H3, Text.LANG.genotypeResultFlapjackTitle()));
-									resultPanel.add(new HTML(Text.LANG.genotypeResultFlapjack().asString() + "<div class=" + Styles.WELL + ">" + result.getServerResult().getDebugOutput() + "</div>"));
+									SearchSection section = new SearchSection();
+									section.setHeading(Text.LANG.genotypeResultFlapjackTitle());
+									section.add(new HTML(Text.LANG.genotypeResultFlapjack().asString() + "<div class=" + Styles.WELL + ">" + result.getServerResult().getDebugOutput() + "</div>"));
+									resultPanel.add(section);
 								}
 							}
 							else

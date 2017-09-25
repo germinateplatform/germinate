@@ -269,7 +269,6 @@ public class ModuleCore implements EntryPoint
 			{
 				/* Show login page */
 				ContentHolder.getInstance().setContent(Page.HOME, null, new LoginPage());
-//				History.newItem(Page.LOGIN.name());
 			}
 			else
 			{

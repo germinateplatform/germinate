@@ -85,7 +85,7 @@ public class ColorPickerWrapper extends Composite
 		Bundle.INSTANCE.css().ensureInjected();
 
 		Button deleteButton = new Button();
-		deleteButton.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.FA, Style.MDI_DELETE, Style.FA_LG));
+		deleteButton.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.MDI, Style.MDI_DELETE, Style.FA_LG));
 		deleteButton.addClickHandler(event ->
 		{
 			/* Notify the caller */

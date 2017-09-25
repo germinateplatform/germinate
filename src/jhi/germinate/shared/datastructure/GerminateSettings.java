@@ -57,13 +57,10 @@ public class GerminateSettings implements Serializable
 
 	public ClientProperty<Set<Page>> availablePages;
 
-	public ClientProperty<String> accessionDisplayColumn;
-	public ClientProperty<String> baseSearchColumn;
 	public ClientProperty<String> externalDataFolder;
 
 	public ClientProperty<String>       templateContactEmail;
 	public ClientProperty<Boolean>      templateUseToggleSwitches;
-	public ClientProperty<Boolean>      templateShowSearchInMenu;
 	public ClientProperty<Boolean>      templateShowParallaxBanner;
 	public ClientProperty<String>       templateTitle;
 	public ClientProperty<String>       templateDatabaseName;

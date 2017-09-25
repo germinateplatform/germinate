@@ -264,18 +264,13 @@ th {
 	margin-right: 6px;
 }
 
-#<%= Id.STRUCTURE_LOGIN %> .navbar-top-links li:last-child {
-   margin-right: 0;
-}
-
-#<%= Id.STRUCTURE_LOGIN %> .navbar-default li a > i:first-child,
-#<%= Id.STRUCTURE_LOGIN %> .navbar-top-links li a > span:first-child,
-#<%= Id.STRUCTURE_LOGIN %> .navbar-top-links li a > i:first-child {
+.navbar-default li a > i:only-child,
+.navbar-top-links li a > span:only-child,
+.navbar-top-links li a > i:only-child {
 	margin-right: 0;
 }
 
 /* Loading indicator */
-
 .<%= Style.WIDGET_BUSY_INDICATOR %> {
 	box-sizing: border-box;
 	display: inline-block;

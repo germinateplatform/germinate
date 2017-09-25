@@ -88,11 +88,11 @@ public class TrialsCellTable extends GerminateComposite
 					maxValue = value;
 			}
 
-			row.setGradient(new Gradient(Gradient.getTemplateGradient(), minValue, maxValue));
+			row.setGradient(new Gradient(Gradient.getPrimaryColorGradient(), minValue, maxValue));
 		}
 	}
 
-	protected SafeHtml formatTrialsCellContent(TrialsRow.TrialsCell cell)
+	protected SafeHtml formatTrialsCellContent(TrialsRow.TrialsCell cell, String textColor)
 	{
 		if (cell == null)
 			return SimpleHtmlTemplate.INSTANCE.empty();
@@ -108,8 +108,8 @@ public class TrialsCellTable extends GerminateComposite
 //			builder.append("<div class='").append(Style.combine(StyleConstants.FONT_80_PERCENT, StyleConstants.TRIALS_CELL)).append("'>");
 			builder.append("<div>");
 
-			String minAnchor = "<a href='javascript:void(0);' onclick=\"javascript:accessionLinkFunction('" + cell.getMinAccessionId() + "');\">" + cell.getMinAccessionName() + "</a>";
-			String maxAnchor = "<a href='javascript:void(0);' onclick=\"javascript:accessionLinkFunction('" + cell.getMaxAccessionId() + "');\">" + cell.getMaxAccessionName() + "</a>";
+			String minAnchor = "<a href='javascript:void(0);' style='color: " + textColor + ";' onclick=\"javascript:accessionLinkFunction('" + cell.getMinAccessionId() + "');\">" + cell.getMinAccessionName() + "</a>";
+			String maxAnchor = "<a href='javascript:void(0);' style='color: " + textColor + ";' onclick=\"javascript:accessionLinkFunction('" + cell.getMaxAccessionId() + "');\">" + cell.getMaxAccessionName() + "</a>";
 
 			builder.append("<p>").append(Text.LANG.generalCount()).append(": ").append(cell.getAttribute(TrialsRow.TrialsAttribute.COUNT)).append("</p>");
 			builder.append("<p>").append(Text.LANG.generalMinimum()).append(": ").append(minAnchor).append(" (").append(min).append(")</p>");
@@ -172,12 +172,13 @@ public class TrialsCellTable extends GerminateComposite
 					if (cell == null)
 						return SimpleHtmlTemplate.INSTANCE.empty();
 
-					SafeHtml value = formatTrialsCellContent(cell);
-
 					String origValue = cell.getAttribute(TrialsCellTable.this.trialsAttribute);
 
-					SafeStyles textColor = SafeStylesUtils.forTrustedColor(row.getGradient().getTextColor(origValue).toRGBValue());
+					String c = row.getGradient().getTextColor(origValue).toRGBValue();
+					SafeStyles textColor = SafeStylesUtils.forTrustedColor(c);
 					SafeStyles backgroundColor = SafeStylesUtils.forTrustedBackgroundColor(row.getGradient().getColor(origValue).toRGBValue());
+
+					SafeHtml value = formatTrialsCellContent(cell, c);
 
 					return SimpleHtmlTemplate.INSTANCE.color(backgroundColor, textColor, value);
 				}

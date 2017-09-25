@@ -27,12 +27,20 @@
 	background-image: url('img/parallax/parallax-accession.jpg');
 }
 
+.parallaxAcknowledgements {
+	background-image: url('img/parallax/parallax-acknowledgements.jpg');
+}
+
 .parallaxClimate {
 	background-image: url('img/parallax/parallax-climate.jpg');
 }
 
 .parallaxDataset {
 	background-image: url('img/parallax/parallax-dataset.jpg');
+}
+
+.parallaxDataStats {
+	background-image: url('img/parallax/parallax-data-stats.jpg');
 }
 
 .parallaxEnvironment {
@@ -47,6 +55,10 @@
 	background-image: url('img/parallax/parallax-genetic-map.jpg');
 }
 
+.parallaxGeographicSearch {
+	background-image: url('img/parallax/parallax-geographic-search.jpg');
+}
+
 .parallaxGroup {
 	background-image: url('img/parallax/parallax-group.jpg');
 }
@@ -55,8 +67,8 @@
 	background-image: url('img/parallax/parallax-geography.jpg');
 }
 
-.parallaxGeographySearch {
-	background-image: url('img/parallax/parallax-geography-search.jpg');
+.parallaxPassport {
+	background-image: url('img/parallax/parallax-passport.jpg');
 }
 
 .parallaxPhenotype {

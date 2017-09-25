@@ -36,7 +36,7 @@ import jhi.germinate.shared.search.*;
  */
 public class DatasetManager extends AbstractManager<Dataset>
 {
-	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", License.NAME, License.DESCRIPTION, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS};
+	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", Dataset.DATATYPE, License.NAME, License.DESCRIPTION, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS};
 
 	private static final String DATA_POINTS_SUB_QUERY = "datasets LEFT JOIN datasetmeta ON datasets.id = datasetmeta.dataset_id LEFT JOIN datasetstates ON datasetstates.id = datasets.dataset_state_id LEFT JOIN datasetpermissions ON datasetpermissions.dataset_id = datasets.id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id LEFT JOIN locations ON locations.id = datasets.location_id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN licenses ON licenses.id = datasets.license_id";
 
@@ -44,7 +44,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 	private static final String SELECT_ALL                 = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 	private static final String SELECT_ALL_WITHOUT_LICENSE = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND !ISNULL(licenses.id) AND NOT EXISTS (SELECT 1 FROM licenselogs WHERE licenselogs.license_id = licenses.id AND licenselogs.user_id = ?) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 	private static final String SELECT_ALL_EXPORT          = "SELECT datasets.id AS datasets_id, experimenttypes.description AS experimenttypes_description, experiments.description AS experiments_description, datasets.description AS datasets_description, licenses.name AS licenses_name, licenses.description AS licenses_description, datasets.contact AS datasets_contact, datasets.date_start AS datasets_date_start, datasets.date_end AS datasets_date_end, datasetmeta.nr_of_data_objects AS datasetmeta_nr_of_data_objects, datasetmeta.nr_of_data_points AS datasets_nr_of_data_points FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_ACCESSION   = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " WHERE %s %s AND (EXISTS (SELECT 1 FROM phenotypedata WHERE phenotypedata.dataset_id = datasets.id AND phenotypedata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM allelefrequencydata WHERE allelefrequencydata.dataset_id = datasets.id AND allelefrequencydata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM genotypes WHERE genotypes.dataset_id = datasets.id AND genotypes.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM compounddata WHERE compounddata.dataset_id = datasets.id AND compounddata.germinatebase_id = ?)) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_ACCESSION   = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " WHERE %s %s AND (EXISTS (SELECT 1 FROM phenotypedata WHERE phenotypedata.dataset_id = datasets.id AND phenotypedata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM allelefrequencydata WHERE allelefrequencydata.dataset_id = datasets.id AND allelefrequencydata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM compounddata WHERE compounddata.dataset_id = datasets.id AND compounddata.germinatebase_id = ?)) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 
 	private static final String SELECT_FOR_USER_ADMIN   = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0";
 	private static final String SELECT_FOR_USER_REGULAR = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "' OR (datasetstates.name = '" + DatasetState.PRIVATE + "' AND datasets.created_by = ?) OR EXISTS (SELECT 1 FROM datasetpermissions WHERE datasetpermissions.user_id = ? AND datasetpermissions.dataset_id = datasets.id) OR EXISTS (SELECT 1 FROM datasetpermissions LEFT JOIN usergroups ON usergroups.id = datasetpermissions.group_id LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id WHERE usergroupmembers.user_id = ?))";
@@ -210,7 +210,6 @@ public class DatasetManager extends AbstractManager<Dataset>
 					.setLong(accessionId)
 					.setLong(accessionId)
 					.setLong(accessionId)
-					.setLong(accessionId)
 					.setBoolean(false)
 					.setInt(pagination.getStart())
 					.setInt(pagination.getLength())
@@ -222,34 +221,6 @@ public class DatasetManager extends AbstractManager<Dataset>
 			e.printStackTrace();
 			return new PaginatedServerResult<>(null, new ArrayList<>(), 0);
 		}
-	}
-
-	/**
-	 * This is a very ugly and clumsy way of getting the datasets for all scenarios while making sure that only the visible datasets are returned
-	 *
-	 * @param query The base query containing a <code>{{FILTER}}</code> placeholder
-	 * @param user  The current user
-	 * @param type  The {@link ExperimentType}; can be <code>null</code>
-	 * @return The query that'll return the available datasets
-	 * @throws DatabaseException                Thrown if the interaction with the database failed
-	 * @throws InsufficientPermissionsException Thrown if the use doesn't have sufficient permissions to access the data
-	 */
-	private static ValueQuery getValueQuery(String query, UserAuth user, PartialSearchQuery filter, ExperimentType type) throws DatabaseException, InvalidArgumentException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidColumnException
-	{
-		boolean isPrivate = PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
-
-		GatekeeperUserWithPassword details = null;
-
-		if (user != null)
-			details = GatekeeperUserManager.getByIdWithPasswordForSystem(null, user.getId());
-
-		String formatted = getFormattedQuery(query, isPrivate, details, Collections.singletonList(type));
-
-		ValueQuery result = getFilteredValueQuery(filter, user, formatted, COLUMNS_TABLE);
-
-		setParameters(result, isPrivate, details, user);
-
-		return result;
 	}
 
 	/**

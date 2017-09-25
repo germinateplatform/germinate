@@ -17,6 +17,8 @@
 
 package jhi.germinate.client.page.markeditemlist;
 
+import com.google.gwt.user.client.ui.*;
+
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
@@ -32,7 +34,7 @@ import jhi.germinate.shared.enums.*;
  *
  * @author Sebastian Raubach
  */
-public class MarkedItemListPage extends GerminateComposite
+public class MarkedItemListPage extends GerminateComposite implements HasHelp
 {
 	@Override
 	public Library[] getLibraryList()
@@ -73,5 +75,11 @@ public class MarkedItemListPage extends GerminateComposite
 		panel.add(header);
 		panel.add(tabs);
 		panel.add(content);
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new HTML(Text.LANG.markedItemsHelp());
 	}
 }

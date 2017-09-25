@@ -76,7 +76,7 @@ public class Style
 	public static final String PRETTY_PRINT     = "prettyprint";
 	public static final String PRETTY_PRINT_SQL = "lang-sql";
 
-	public static final String TEXT_FORMAT_HUGE    = "gm8-text-format-huge";
+	public static final String TEXT_FORMAT_HUGE = "gm8-text-format-huge";
 
 	public static final String FA                                  = "fa";
 	public static final String FA_FIXED_WIDTH                      = "fa-fw";
@@ -146,6 +146,8 @@ public class Style
 	public static final String MDI_FILTER                          = "mdi-filter";
 	public static final String MDI_ARROW_RIGHT_BOLD_CIRCLE         = "mdi-arrow-right-bold-circle";
 	public static final String MDI_CLOCK                           = "mdi-clock";
+	public static final String MDI_TRANSLATE                       = "mdi-translate";
+	public static final String MDI_EMAIL                           = "mdi-email";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
 
 	/**

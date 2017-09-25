@@ -56,8 +56,7 @@ public class SearchCallback<T> implements AsyncCallback<PaginatedServerResult<T>
 		section.setLoading(false);
 		section.setLabel(FORMAT.format(result.getResultSize()));
 
-//			if(result.getResultSize() < 1)
-//				section.setVisible(false);
+		section.setVisible(true);
 
 		callback.onSuccess(result);
 	}

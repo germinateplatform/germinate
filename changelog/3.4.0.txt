@@ -66,6 +66,8 @@
   - ADD: Added experiment details page. Just now this can be accessed by navigating to ?experimentId=X#experiment-details #Closes #8.
   - ADD: Added very initial version of a user documentation that showcases all the features and explains what to do.
   - ADD: Re-added Germinate data template import code.
+  - CHG: Moved location treemap to the geography/locations page.
+  - ADD: Added contact us button to top navigation bar.
 
 /* MIGRATION */
 
@@ -75,7 +77,6 @@
 
       <inherits name="org.gwtbootstrap3.GwtBootstrap3NoTheme"/>
       <inherits name="org.gwtbootstrap3.extras.toggleswitch.ToggleSwitch"/>
-      <inherits name="org.gwtbootstrap3.extras.select.Select"/>
       <inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
       <inherits name="jhi.gwt.leaflet.GWTLeaflet"/>
 
@@ -146,7 +147,7 @@
       page.trials.overview.select.type=Select chart type
       page.gallery.select.image.type=Select image type
       page.gallery.type.all.images=All images
-      template.footer.copyright=© Information & Computational Sciences, JHI 2015-{0}
+      template.footer.copyright=© Information & Computational Sciences, JHI 2005-{0}
       adminConfigHelp=<p>This page let''s you configure Germinate the way you want it to be. Please be aware that changes to this page will majorly affect how Germinate works and looks, so be careful.</p>
       page.marker.title=Marker details
       page.groups.members.title=Group members
@@ -154,9 +155,9 @@
       page.groups.delete.group.text=Do you really want to delete the selected groups?
       page.groups.delete.members.title=Delete group members
       page.groups.delete.members.text=Do you really want to delete the selected group members?
-      page.about.button.search.members=Search members
-      page.about.button.upload.members=Upload members
-      page.about.button.delete.members=Delete members
+      page.about.button.search.members=Search
+      page.about.button.upload.members=Upload
+      page.about.button.delete.members=Delete
       widget.pager.jump.to.page.title=Jump to page
       widget.pager.jump.to.page.page.number=Page number (1 - {0})
       page.groups.search.result=Search result
@@ -183,6 +184,11 @@
       widget.list.groups.all.accessions=All accessions
       widget.list.groups.all.locations=Locations
       column.phenotype.recording.date=Recording date
+      help.search=Germinate supports full-text search across various data types and columns within this type. You can search by typing a search query into the text box. Upon search, Germinate shows the search results page. This page shows all matching database objects grouped into categories, each category representing a different data type. The number of matching items is shown for each section on the right. Upon expanding of a section, a result table will show the matching database items. You can then either download the data, mark specific items or filter down further by adjusting the search criteria in the table header.
+      help.marked.items=<p>Another useful feature of Germinate is the concept of <i>marked item lists</i>. A marked item is either an accession, a marker or a location that is of interest to the user. While you are browsing the page, a lot of the tables will have a checkbox column as the last column which you can use to mark certain items. Germinate will keep track of these items for you.</p><p>To see how many items you currently have marked, you can click on the menu item in the top bar or go directly to the marked item lists page.</p><p>Once you have marked all the items that you are interested in, you can create a group of these items and use them to export data against them. To create a group, you can either go to the marked item lists page or by clicking on the header of the checkbox column and selecting "Create group from selection".</p>
+      column.dataset.datatype=Data type
+      notification.datasets.selection.too.many=At most one dataset can be selected!
+      widget.contact.title=Contact us
 
     - Some translatable text has been changed. The following properties should be changed in your "Text.properties" file and the according translation files:
 
@@ -195,3 +201,5 @@
       page.search.locations=Locations
       page.search.query=Please enter the search query
       page.groups.title=Groups
+      help.groups=<h3>Groups</h3><p>In Germinate we define the concept of a group to be an arbitrary grouping of database items of a certain type. Germinate supports groups of <i>accessions</i>, <i>markers</i> and <i>locations</i>. These groups can be pre-created by an administrator or user-defined, which means that you can create your own groups (assuming user authentication is enabled).</p><p>The purpose of these groups becomes clear once you start exporting data. All types of data can either be exported for the whole dataset or the data can be subset into smaller chunks by selecting a single or a selection of groups. The exported data will then contain information about the selected groups only.</p><h4>Creating a group</h4><p><i>This section is only applicable if the Germinate instance you are using has user authentication enabled.</i></p><p>In addition to using the predefined groups, you can create new groups of your own. This page shows you all the existing groups in a table and upon selection, shows you its group members. New groups can be added and existing ones deleted by pressing the buttons below the groups table. Deleting a group requires you to select the checkbox in the corresponding table row as well as to have sufficient permissions to do so. When creating a new group you will be asked to select the group type and to decide on a name for the group. When you do so, the group will be associated with your user account.</p><p>Once this is done, the group will be created and Germinate will automatically select it and show the group members table (empty at this point) below the groups table. You can now manipulate the group itself by adding and removing members using the buttons below the table.</p><h4>Adding group members</h4><p>Adding members to an existing group can be achieved in two ways. You can upload a list of those items from a text file or your clipboard and Germinate will look these items up based on their identifier. Once found they will be added to the group. The other option is to use a boolean search feature that is similar to the way the table filtering works. You can choose fields from the database tables and specify values that the items in questions should equal, smaller or larger to.</p><p>Groups can be made public so that other users have the option to use them as well. If you decide to make your group public, toggle the switch button below the group members heading.</p>
+      page.trials.title=Trials data

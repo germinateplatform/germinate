@@ -51,7 +51,6 @@ public enum GerminateDatabaseTable
 	droughtfreqseverity,
 	experiments,
 	experimenttypes,
-	genotypes,
 	germinatebase,
 	groupdatasets,
 	groupmembers,

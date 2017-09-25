@@ -168,3 +168,6 @@ MODIFY COLUMN `value`  text CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT N
 
 UPDATE experiments SET experiment_type_id = 3 WHERE experiment_type_id = 2;
 DELETE FROM experimenttypes WHERE id = 2
+
+ALTER TABLE `datasets`
+ADD COLUMN `datatype`  varchar(255) NULL COMMENT 'A description of the data type of the contained data. Examples might be: \"raw data\", \"BLUPs\", etc.' AFTER `source_file`;;

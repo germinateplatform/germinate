@@ -54,7 +54,7 @@
 		</b:FormGroup>
 
 		<g:FlowPanel ui:field="resultPanel" visible="false">
-			<b:Heading size="H3" text="{msg.searchTitleResults}"/>
+			<b:Heading size="H3" text="{msg.searchTitleResults}" ui:field="resultHeading"/>
 
 			<g:HTML ui:field="additionalDataTextShort" visible="false"/>
 

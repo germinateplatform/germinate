@@ -60,10 +60,21 @@
 							<img src='img/germinate.svg' class='logo'/>
 						</a>
 					</g:HTMLPanel>
-					<g:HTMLPanel ui:field="helpAnchorWrapper">
+					<g:HTMLPanel>
 						<ul class="{NAV} navbar-top-links {NAVBAR_RIGHT}">
+							<li class="dropdown" ui:field="languageSelector">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+									<i class="{MDI} {FA_FIXED_WIDTH} {FA_LG} {MDI_TRANSLATE}"/>
+									<i class="fa fa-caret-down"></i>
+								</a>
+							</li>
+							<li ui:field="emailAnchorParent">
+								<a href="#" ui:field="emailAnchor" title="{msg.contact}">
+									<i class="{MDI} {FA_FIXED_WIDTH} {FA_LG} {MDI_EMAIL}"/>
+								</a>
+							</li>
 							<li>
-								<a href="#" ui:field="helpAnchor">
+								<a href="#" ui:field="helpAnchor" title="{msg.helpTitle}">
 									<i class="{MDI} {FA_FIXED_WIDTH} {FA_LG} {MDI_HELP_CIRCLE_OUTLINE}"/>
 								</a>
 							</li>

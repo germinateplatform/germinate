@@ -36,7 +36,6 @@ import jhi.germinate.client.page.login.registration.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.structure.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.*;
 
 /**
  * @author Sebastian Raubach
@@ -74,7 +73,13 @@ public class LoginForm extends Composite
 	Anchor registerAnchor;
 
 	@UiField
-	HTMLPanel helpAnchorWrapper;
+	LIElement languageSelector;
+
+	@UiField
+	LIElement     emailAnchorParent;
+
+	@UiField
+	AnchorElement emailAnchor;
 
 	@UiField
 	AnchorElement helpAnchor;
@@ -150,22 +155,23 @@ public class LoginForm extends Composite
 			});
 		}
 
-		if (GerminateSettingsHolder.isPageAvailable(Page.HELP))
-		{
-			GQuery.$(helpAnchor).click(new Function()
-			{
-				@Override
-				public boolean f(Event e)
-				{
-					HelpWidget.show(page);
-					return false;
-				}
-			});
-		}
+		String email = GerminateSettingsHolder.get().templateContactEmail.getValue();
+		if (!StringUtils.isEmpty(email))
+			emailAnchor.setHref("mailto:" + email);
 		else
+			emailAnchorParent.removeFromParent();
+
+		GQuery.$(helpAnchor).click(new Function()
 		{
-			helpAnchorWrapper.removeFromParent();
-		}
+			@Override
+			public boolean f(Event e)
+			{
+				HelpWidget.show(page);
+				return false;
+			}
+		});
+
+		LanguageSelector.addTo(languageSelector);
 	}
 
 	public void forceFocus()

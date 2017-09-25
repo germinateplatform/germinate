@@ -25,6 +25,9 @@
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
 	<ui:style>
+		.chart {
+			margin-top: 15px;
+		}
 	</ui:style>
 
 	<g:HTMLPanel>
@@ -51,5 +54,14 @@
 		<g:HTML ui:field="heatmapText"/>
 		<g:SimplePanel ui:field="heatmapPanel"/>
 		<g:SimplePanel ui:field="gradientPanel"/>
+
+		<b:PageHeader text="{msg.collsiteTreemapTitle}"/>
+		<g:HTML ui:field="html"/>
+		<b:FormGroup>
+			<b:FormLabel for="formLocationType" text="{msg.locationTypesSelect}"/>
+			<g8:LocationTypeListBox b:id="formLocationType" ui:field="locationTypeBoxTwo"/>
+		</b:FormGroup>
+
+		<g:SimplePanel addStyleNames="{style.chart}" ui:field="chartPanel"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

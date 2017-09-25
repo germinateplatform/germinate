@@ -23,8 +23,10 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Label;
 
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.*;
 
@@ -54,7 +56,7 @@ import jhi.germinate.shared.search.*;
 /**
  * @author Sebastian Raubach
  */
-public class SearchPage extends Composite implements HasHyperlinkButton
+public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 {
 	interface SearchPageUiBinder extends UiBinder<FlowPanel, SearchPage>
 	{
@@ -86,6 +88,8 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 	SearchSection     pedigreeSection;
 	@UiField
 	SearchSection     locationSection;
+	@UiField
+	Heading           resultHeading;
 	@UiField
 	FlowPanel         resultPanel;
 
@@ -135,7 +139,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 			LongParameterStore.Inst.get().put(Parameter.accessionId, id);
 			StringParameterStore.Inst.get().remove(Parameter.searchString);
 
-			ContentHolder.getInstance().setContent(Page.PASSPORT, Page.BROWSE_ACCESSIONS, new OsterPassportPage());
+			ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new OsterPassportPage());
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -151,6 +155,8 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 
 	private void doSearch(String searchString)
 	{
+		resultHeading.setSubText("\"" + searchString + "\"");
+
 		final SearchType section = typeBox.getSelection();
 
 		resultPanel.setVisible(true);
@@ -861,5 +867,11 @@ public class SearchPage extends Composite implements HasHyperlinkButton
 		return new HyperlinkPopupOptions()
 				.setPage(Page.SEARCH)
 				.addParam(Parameter.searchString);
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new Label(Text.LANG.searchHelp());
 	}
 }

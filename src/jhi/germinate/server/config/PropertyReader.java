@@ -30,7 +30,6 @@ import jhi.germinate.server.database.Database.*;
 import jhi.germinate.server.service.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -534,21 +533,6 @@ public class PropertyReader
 		{
 			return get(ServerProperty.GERMINATE_GATEKEEPER_SERVER) + "/" + get(ServerProperty.GERMINATE_GATEKEEPER_NAME);
 		}
-	}
-
-	/**
-	 * Returns the "display" column of the germinatebase table
-	 *
-	 * @return The "display" column of the germinatebase table
-	 */
-	public static String getAccessionDisplayName()
-	{
-		String value = get(ServerProperty.GERMINATE_ACCESSION_DISPLAY_COLUMN);
-
-		if (StringUtils.isEmpty(value))
-			value = Accession.NAME;
-
-		return value;
 	}
 
 	/**

@@ -39,7 +39,6 @@ public class HelpWidget
 	private static boolean isInitialized = false;
 
 	private static Widget helpContent = null;
-	private static Anchor anchor;
 
 	public static void init()
 	{
@@ -47,14 +46,24 @@ public class HelpWidget
 		{
 			isInitialized = true;
 
-			anchor = Anchor.wrap(Document.get().getElementById(Id.STRUCTURE_HELP_UL));
+			Anchor helpAnchor = Anchor.wrap(Document.get().getElementById(Id.STRUCTURE_HELP_A));
+			helpAnchor.setTitle(Text.LANG.helpTitle());
 
-			GQuery.$(anchor).click(new Function()
+			try
+			{
+				Anchor contactAnchor = Anchor.wrap(Document.get().getElementById(Id.STRUCTURE_CONTACT_A));
+				contactAnchor.setTitle(Text.LANG.contact());
+			}
+			catch (Exception e)
+			{
+			}
+
+			GQuery.$(helpAnchor).click(new Function()
 			{
 				@Override
 				public boolean f(Event e)
 				{
-					if (!anchor.getElement().getParentElement().hasClassName(Styles.DISABLED))
+					if (!helpAnchor.getElement().getParentElement().hasClassName(Styles.DISABLED))
 						show();
 					return false;
 				}
@@ -70,9 +79,9 @@ public class HelpWidget
 					helpContent = null;
 
 				if (helpContent == null)
-					anchor.getElement().getParentElement().addClassName(Styles.DISABLED);
+					helpAnchor.getElement().getParentElement().addClassName(Styles.DISABLED);
 				else
-					anchor.getElement().getParentElement().removeClassName(Styles.DISABLED);
+					helpAnchor.getElement().getParentElement().removeClassName(Styles.DISABLED);
 			});
 		}
 	}

@@ -40,6 +40,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.client.widget.map.*;
+import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.datastructure.*;
@@ -57,7 +58,7 @@ import jhi.gwt.leaflet.client.layer.other.*;
 /**
  * @author Sebastian Raubach
  */
-public class GeographicSearchPage extends Composite implements HasHyperlinkButton, HasLibraries
+public class GeographicSearchPage extends Composite implements HasHyperlinkButton, HasLibraries, ParallaxBannerPage
 {
 	interface GeographicSearchPageUiBinder extends UiBinder<HTMLPanel, GeographicSearchPage>
 	{
@@ -450,6 +451,10 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 						}
 					});
 				}
+				else
+				{
+					Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoPolygonSelected());
+				}
 			}
 		}
 	}
@@ -467,5 +472,11 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 	public Library[] getLibraries()
 	{
 		return new Library[]{Library.LEAFLET_COMPLETE};
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxGeographicSearch();
 	}
 }

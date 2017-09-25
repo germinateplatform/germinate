@@ -19,7 +19,6 @@ package jhi.germinate.client.widget.structure;
 
 import com.google.gwt.dom.client.*;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.constants.*;
@@ -43,37 +42,42 @@ public class LanguageSelector
 		{
 			isInitialized = true;
 
-			UListElement list = Document.get().createULElement();
+			RootPanel p = RootPanel.get(Id.STRUCTURE_LANGUAGE_SELECTOR_UL);
+			addTo(p.getElement());
+			p.removeFromParent();
+		}
+	}
 
-			list.addClassName(Style.combine(Styles.DROPDOWN_MENU, Style.BOOTSTRAP_DROPDOWN_ALERT));
-			/* Get all the supported locales */
-			final List<String> locales = new ArrayList<>(Arrays.asList(LocaleInfo.getAvailableLocaleNames()));
+	public static void addTo(Element element)
+	{
+		UListElement list = Document.get().createULElement();
 
-        	/* Remove the default locale, since it's equal to en_GB */
-			locales.remove("default");
+		list.addClassName(Style.combine(Styles.DROPDOWN_MENU, Style.BOOTSTRAP_DROPDOWN_ALERT));
+		/* Get all the supported locales */
+		final List<String> locales = new ArrayList<>(Arrays.asList(LocaleInfo.getAvailableLocaleNames()));
 
-			/* Sort the remaining locales */
-			Collections.sort(locales);
+		/* Remove the default locale, since it's equal to en_GB */
+		locales.remove("default");
 
-			if (locales.size() > 1)
+		/* Sort the remaining locales */
+		Collections.sort(locales);
+
+		if (locales.size() > 1)
+		{
+			hasLanguages = true;
+
+			for (final String locale : locales)
 			{
-				hasLanguages = true;
+				LanguageSelectorItem item = new LanguageSelectorItem(locale);
 
-				for (final String locale : locales)
-				{
-					LanguageSelectorItem item = new LanguageSelectorItem(locale);
-
-					list.appendChild(item.getElement());
-				}
-
-				RootPanel p = RootPanel.get(Id.STRUCTURE_LANGUAGE_SELECTOR_UL);
-				p.getElement().appendChild(list);
-				p.removeFromParent();
+				list.appendChild(item.getElement());
 			}
-			else
-			{
-				GQuery.$("#" + Id.STRUCTURE_LANGUAGE_SELECTOR_UL).remove();
-			}
+
+			element.appendChild(list);
+		}
+		else
+		{
+			element.removeFromParent();
 		}
 	}
 }

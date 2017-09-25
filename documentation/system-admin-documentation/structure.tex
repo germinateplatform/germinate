@@ -1,8 +1,8 @@
 \section{Structure}
 \label{sec:structure}
-In Section \ref{sec:structure-project}, we will explain the structure of the Germinate project. This includes the folder structure of the subversion project as well as the structure of the deployed product. Section \ref{sec:structure-database} contains information about the structure of the database itself.
+In Section \ref{sec:structure-project}, we will explain the structure of the {\germinate} project. This includes the folder structure of the subversion project as well as the structure of the deployed product. Section \ref{sec:structure-database} contains information about the structure of the database itself.
 
-\subsection{Subversion project}
+\subsection{GitHub project}
 \label{sec:structure-project}
 \begin{figure}[h]
     \centering
@@ -77,22 +77,22 @@ In Section \ref{sec:structure-project}, we will explain the structure of the Ger
     \label{fig:project-structure}
 \end{figure}
 \noindent
-The actual subversion project of Germinate is structured as shown in Figure \ref{fig:project-structure}. Figure \ref{fig:project-structure-project} shows the overall structure of the whole project whereas Figure \ref{fig:project-structure-web} shows the structure of the files and folders related to the web side of things.
+The actual subversion project of {\germinate} is structured as shown in Figure \ref{fig:project-structure}. Figure \ref{fig:project-structure-project} shows the overall structure of the whole project whereas Figure \ref{fig:project-structure-web} shows the structure of the files and folders related to the web side of things.
 
 \subsubsection{Project structure}
-Germinate is designed to allow custom look and feel for different projects. This means you are able to have multiple configurations of Germinate, each tailored specifically for the special needs of the individual projects. As an example we show the structure of the project "your-project" which in reality would be named after your project.
+{\germinate} is designed to allow custom look and feel for different projects. This means you are able to have multiple configurations of {\germinate}, each tailored specifically for the special needs of the individual projects. As an example we show the structure of the project "your-project" which in reality would be named after your project.
 
-There are several sub-directories. The "apps" directory includes external applications that ship with Germinate. In this example, we include an application called "some-app". The "data" directory contains raw data files that are used during the export processes. The "download" directory contains all the data files that you want to provide as downloads on Germinate. Those can include images for the gallery, pdfs, etc. The "download-de\textunderscore DE" directory contains internationalized versions of the files found in "download". See Section \ref{sec:localized-files} for further details. The "modules" directory contains the internationalization property files for each module. In this example, there is only one module, namely the "core" module which is the basic Germinate module. Internationalized text goes here. The "res" folder can be used to host several files that are used as resources. The content of this folder is copied to the server and accessible from the server side code. In this example we have an R file that is used on the server to generate a dendrogram.
+There are several sub-directories. The "apps" directory includes external applications that ship with {\germinate}. In this example, we include an application called "some-app". The "data" directory contains raw data files that are used during the export processes. The "download" directory contains all the data files that you want to provide as downloads on {\germinate}. Those can include images for the gallery, pdfs, etc. The "download-de\textunderscore DE" directory contains internationalized versions of the files found in "download". See Section \ref{sec:localized-files} for further details. The "modules" directory contains the internationalization property files for each module. In this example, there is only one module, namely the "core" module which is the basic {\germinate} module. Internationalized text goes here. The "res" folder can be used to host several files that are used as resources. The content of this folder is copied to the server and accessible from the server side code. In this example we have an R file that is used on the server to generate a dendrogram.
 
-Finally, the "template" folder contains custom styling files for your individual instance of Germinate. Those include custom logos, custom css, custom html, custom JavaScript libraries, custom parallax images, fonts, a favicon, etc.
+Finally, the "template" folder contains custom styling files for your individual instance of {\germinate}. Those include custom logos, custom css, custom html, custom JavaScript libraries, custom parallax images, fonts, a favicon, etc.
 
-The other files in your project folder are the most important ones. They define how Germinate works. We'll give a detailed description of each file below.
+The other files in your project folder are the most important ones. They define how {\germinate} works. We'll give a detailed description of each file below.
 
 \paragraph{Config properties}
-\texttt{config.properties} is the file you have already read about in Section \ref{sec:config}. It is used to define how to connect to the database, where to find Flapjack and R, which title to use for Germinate and so on.
+\texttt{config.properties} is the file you have already read about in Section \ref{sec:config}. It is used to define how to connect to the database, where to find Flapjack and R, which title to use for {\germinate} and so on.
 
-\paragraph{Germinate xml}
-\texttt{Germinate.gwt.xml} is a very technical file. It should be left alone unless you have a good working knowledge of the Google Web Toolkit. There is, however, one thing in here that is easily to configure which are the supported languages.
+\paragraph{{\germinate} xml}
+\texttt{{\germinate}.gwt.xml} is a very technical file. It should be left alone unless you have a good working knowledge of the Google Web Toolkit. There is, however, one thing in here that is easily to configure which are the supported languages.
 
 An example of the internationalization properties can be found below:
 \begin{lstlisting}[style=Xml]
@@ -109,7 +109,7 @@ The \texttt{set-property-fallback} entry defines the default locale as well as t
 \paragraph{Web xml}
 Every Java web developer will be familiar with this file. We will give a short explanation of the content here.
 \begin{lstlisting}[style=Xml]
-<display-name>Germinate 3 Template Database</display-name>
+<display-name>{\germinate} Template Database</display-name>
 
 <!-- LISTENERS -->
 <listener>
@@ -128,24 +128,24 @@ Every Java web developer will be familiar with this file. We will give a short e
 </error-page>
 \end{lstlisting}
 \noindent
-The code above shows part of the template file. \texttt{welcome-file} is the default file that is served to the browser on the first visit. The \texttt{error-page} entries define the error pages that Germinate will take care of. All other error pages are handled by Tomcat instead.
+The code above shows part of the template file. \texttt{welcome-file} is the default file that is served to the browser on the first visit. The \texttt{error-page} entries define the error pages that {\germinate} will take care of. All other error pages are handled by Tomcat instead.
 
 
 \subsubsection{Web structure}
-The most important file in this structure is \texttt{germinate.jsp}. This file contains the basic web skeleton of the website, \ie the overall structure. In this file, you should define external JavaScript files and external css files you want to load in addition to the already contained ones. \texttt{germinate-css.jsp} contains the custom Germinate style sheet. Most of what you find in this file takes care of how the content of the page looks. To change the styling of the overall template (not the content), use this file: \texttt{css/style-css.jsp}.
+The most important file in this structure is \texttt{germinate.jsp}. This file contains the basic web skeleton of the website, \ie the overall structure. In this file, you should define external JavaScript files and external css files you want to load in addition to the already contained ones. \texttt{germinate-css.jsp} contains the custom {\germinate} style sheet. Most of what you find in this file takes care of how the content of the page looks. To change the styling of the overall template (not the content), use this file: \texttt{css/style-css.jsp}.
 
 As you might already have notices, both files are not typical \texttt{.css} files, but rather \texttt{.jsp} files. However, the first line in all of these files lets the browser know, that in fact they are css stylesheets. The reason for using jsp instead is based on the fact, that we have access to the \texttt{PropertyReader} in the jsp files. This allows us to get properties from the server and change the stylesheets before they are sent to the browser.
 
 We use this feature to get the so called "highlight color" from the properties file. This color is used for most of the header elements on the web site as well as several other things including links. If we change this color in the properties file, the stylesheets will pick it up and use this color from now on. This centralized mechanism reduces errors and makes it easier to change things quickly.
 
-As mentioned earlier, you can simply add external css and js files to Germinate. There are predestined folders for these here as well. The \texttt{germinate} folder is created by Eclipse when you compile the project. It contains all the JavaScript source files that are generated and served to the browser. You don't need to worry about this folder at all. The \texttt{error} folder contains resources for the error pages. At the moment Germinate provides humorous error pages for the most common errors: 404, 403 and 401. Feel free to add further error pages.
+As mentioned earlier, you can simply add external css and js files to {\germinate}. There are predestined folders for these here as well. The \texttt{germinate} folder is created by Eclipse when you compile the project. It contains all the JavaScript source files that are generated and served to the browser. You don't need to worry about this folder at all. The \texttt{error} folder contains resources for the error pages. At the moment {\germinate} provides humorous error pages for the most common errors: 404, 403 and 401. Feel free to add further error pages.
 
-Finally, the \texttt{WEB-INF} folder should look familiar to every web developer. It contains the libraries (in form of \texttt{.jar} files that are necessary to run Germinate on the server as well as the compiled Java source. 
+Finally, the \texttt{WEB-INF} folder should look familiar to every web developer. It contains the libraries (in form of \texttt{.jar} files that are necessary to run {\germinate} on the server as well as the compiled Java source. 
 
 \subsection{Database}
 \label{sec:structure-database}
 
 We moved the documentation of the database to an online resource. You can find an overview of all the tables with detailed descriptions at the following location:
 \begin{center}
-	\url{https://ics.hutton.ac.uk/resources/germinate/model/germinate_3_4_0/}
+	\url{https://ics.hutton.ac.uk/resources/germinate/model/germinate_\versionUnderscore/}
 \end{center}

@@ -111,34 +111,12 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	/**
 	 * Creates a <code>&lt;span&gt;</code> element with the given FontAwesome style and the given title attribute
 	 *
-	 * @param fa    The FontAwesome style
-	 * @param title The title attribute
-	 * @return A <code>&lt;span&gt;</code> element with the given FontAwesome style and the given title attribute
-	 */
-	@Template("<span class='" + Style.FA + " " + Style.FA_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
-	SafeHtml fontAwesomeFixedWidth(String fa, String title);
-
-	/**
-	 * Creates a <code>&lt;span&gt;</code> element with the given FontAwesome style and the given title attribute
-	 *
 	 * @param mdi   The MaterialDesignIcon style
 	 * @param title The title attribute
 	 * @return A <code>&lt;span&gt;</code> element with the given FontAwesome style and the given title attribute
 	 */
 	@Template("<span class='" + Style.MDI + " " + Style.FA_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
 	SafeHtml materialIconFixedWidth(String mdi, String title);
-
-	/**
-	 * Creates an anchor with the given link, target, title and FontAwesome style
-	 *
-	 * @param fa     The FontAwesome style
-	 * @param title  The title attribuge
-	 * @param href   The link url
-	 * @param target The target
-	 * @return An anchor with the given link, target, title and FontAwesome style
-	 */
-	@Template("<a href='{2}' target ='{3}' style='word-break: break-word;'><span class='" + Style.FA + " " + Style.FA_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
-	SafeHtml fontAwesomeAnchor(String fa, String title, SafeUri href, String target);
 
 	/**
 	 * Creates an anchor with the given link, target, title and FontAwesome style
@@ -233,17 +211,6 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 */
 	@Template("<span><span class='" + Style.TAG_DUMMY_ANCHOR + " text-primary'>{0}</span><span class='{1}'></span></span>")
 	SafeHtml dummyAnchorWithIcon(String name, String iconStyle);
-
-	/**
-	 * Creates a span element with the given text and FontAwesome styling
-	 *
-	 * @param fontAwesome The FontAwesome style
-	 * @param text        The text
-	 * @return A span element with the given text and FontAwesome styling
-	 */
-	@Template("<span class='text-primary " + Style.FA + " " + Style.FA_FIXED_WIDTH + " " + Style.FA_LG + " " + Style.LAYOUT_V_ALIGN_MIDDLE
-			+ " {0}'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "' style='margin-left: 5px;'>{1}</span>")
-	SafeHtml contextMenuItemFontAwesome(String fontAwesome, String text);
 
 	/**
 	 * Creates a span element with the given text and FontAwesome styling

@@ -24,6 +24,8 @@
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
 	<g:HTMLPanel ui:field="panel">
+		<b:PageHeader text="{msg.trialsTitle}"/>
+
 		<b:Row ui:field="content" visible="false">
 			<b:Column size="XS_12,SM_6,LG_3">
 				<g8:CategoryPanel icon="EYE" text="{msg.phenotypeOverview}" ui:field="overviewTab"/>

@@ -46,7 +46,6 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.news.*;
-import jhi.germinate.client.widget.structure.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
@@ -71,12 +70,12 @@ public class NavigationHandler
 		JavaScript.GoogleAnalytics.trackPageview(page.name());
 
 		// ABOUT GERMINATE
-		if (page.equals(Page.ABOUT_GERMINATE))
+		if (Page.ABOUT_GERMINATE.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new AboutGerminatePage()));
 		}
 		// ABOUT PROJECT
-		else if (page.equals(Page.ABOUT_PROJECT))
+		else if (Page.ABOUT_PROJECT.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new HTMLPage(Text.LANG.aboutProjectTitle(), Text.LANG.aboutProjectText())
 			{
@@ -88,84 +87,39 @@ public class NavigationHandler
 			}));
 		}
 		// DATA STATISTICS
-		else if (page.equals(Page.DATA_STATISTICS))
+		else if (Page.DATA_STATISTICS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new StatisticsOverviewPage()));
 		}
 		// ACKNOWLEDGEMENTS
-		else if (page.equals(Page.ACKNOWLEDGEMENTS))
+		else if (Page.ACKNOWLEDGEMENTS.is(page))
 		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ABOUT_GERMINATE, new HTMLPage(Text.LANG.acknowledgementsTitle(), Text.LANG.acknowledgementsText())));
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ABOUT_GERMINATE, new HTMLPage(Text.LANG.acknowledgementsTitle(), Text.LANG.acknowledgementsText())
+			{
+				@Override
+				public String getParallaxStyle()
+				{
+					return ParallaxResource.INSTANCE.css().parallaxAcknowledgements();
+				}
+			}));
 		}
 		// COOKIE
-		else if (page.equals(Page.COOKIE))
+		else if (Page.COOKIE.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) CookieModal::show);
 		}
 		// ACCESSIONS FOR COLLSITE
-		else if (page.equals(Page.ACCESSIONS_FOR_COLLSITE))
+		else if (Page.ACCESSIONS_FOR_COLLSITE.is(page))
 		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new AccessionsAtCollsitePage()));
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ACCESSION_OVERVIEW, new AccessionsAtCollsitePage()));
 		}
 		// BROWSE ACCESSIONS
-		else if (page.equals(Page.BROWSE_ACCESSIONS))
+		else if (Page.ACCESSION_OVERVIEW.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new AccessionOverviewPage()));
 		}
-//		// CATEGORICAL DATASETS
-//		else if (page.equals(Page.CATEGORICAL_DATASETS))
-//		{
-//			GWT.runAsync((RunAsyncNotifyCallback) () ->
-//			{
-//				final DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
-//				{
-//					@Override
-//					public boolean isContinueButtonAvailable()
-//					{
-//						return GerminateSettingsHolder.isPageAvailable(Page.CATEGORICAL_EXPORT);
-//					}
-//
-//					@Override
-//					public void onContinuePressed()
-//					{
-//						History.newItem(Page.CATEGORICAL_EXPORT.name());
-//					}
-//				}, ExperimentType.phenotype, false);
-//				widget.setLinkToExportPage(false);
-//				widget.setShowMap(true);
-//				widget.setHeaderText(Text.LANG.phenotypeDatasetHeader());
-//				widget.setShowDownload(true, new SimpleCallback<Dataset>()
-//				{
-//					@Override
-//					public void onSuccess(Dataset result)
-//					{
-//						/* Get the id of the selected dataset */
-//						List<Long> ids = new ArrayList<>();
-//						ids.add(result.getId());
-//
-//						/* Start the export process */
-//						PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
-//						{
-//							@Override
-//							protected void onSuccessImpl(ServerResult<String> result)
-//							{
-//								ExperimentDetailsPage.clickDownloadLink(result);
-//							}
-//						});
-//					}
-//				});
-//				ContentHolder.getInstance().setContent(page, page, widget);
-//			});
-//
-//		}
-		// CATEGORICAL EXPORT
-//		else if (page.equals(Page.CATEGORICAL_EXPORT))
-//		{
-//			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.CATEGORICAL_DATASETS, new PhenotypePage()));
-//
-//		}
 		// CLIMATE DATASETS
-		else if (page.equals(Page.CLIMATE_DATASETS))
+		else if (Page.CLIMATE_DATASETS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
@@ -182,7 +136,14 @@ public class NavigationHandler
 					{
 						History.newItem(Page.CLIMATE.name());
 					}
-				}, ExperimentType.climate, true);
+				}, ExperimentType.climate, true)
+				{
+					@Override
+					public String getParallaxStyle()
+					{
+						return ParallaxResource.INSTANCE.css().parallaxClimate();
+					}
+				};
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
 				widget.setHeaderText(Text.LANG.climateDatasetHeader());
@@ -191,17 +152,17 @@ public class NavigationHandler
 			});
 		}
 		// CLIMATE
-		else if (page.equals(Page.CLIMATE))
+		else if (Page.CLIMATE.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.CLIMATE, new ClimateDataPage()));
 		}
-		// GALLERY
-		else if (page.equals(Page.GALLERY))
+		// IMAGE_GALLERY
+		else if (Page.IMAGE_GALLERY.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new ImagePage()));
 		}
 		// GENOTYPE DATASETS
-		else if (page.equals(Page.GENOTYPE_DATASETS))
+		else if (Page.GENOTYPE_DATASETS.is(page))
 		{
 			GWT.runAsync(new RunAsyncNotifyCallback()
 			{
@@ -281,90 +242,67 @@ public class NavigationHandler
 
 		}
 		// GENOTYPE EXPORT
-		else if (page.equals(Page.GENOTYPE_EXPORT))
+		else if (Page.GENOTYPE_EXPORT.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GENOTYPE_DATASETS, new GenotypeExportPage()));
 		}
 		// GEOGRAPHIC SEARCH
-		else if (page.equals(Page.GEOGRAPHIC_SEARCH))
+		else if (Page.GEOGRAPHIC_SEARCH.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new GeographicSearchPage()));
 		}
-		// GEOGRAPHY
-		else if (page.equals(Page.GEOGRAPHY))
+		// LOCATIONS
+		else if (Page.LOCATIONS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new LocationsPage()));
 		}
 		// GROUPS
-		else if (page.equals(Page.GROUPS))
+		else if (Page.GROUPS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new GroupsPage()));
 		}
-		// HELP
-		else if (page.equals(Page.HELP))
-		{
-			GWT.runAsync((RunAsyncNotifyCallback) HelpWidget::show);
-		}
 		// HOME
-		else if (page.equals(Page.HOME))
+		else if (Page.HOME.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new Home()));
 		}
 		// NEWS
-		else if (page.equals(Page.NEWS))
+		else if (Page.NEWS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.HOME, new NewsPage()));
 		}
-//		// LOGOUT
-//		else if (page.equals(Page.LOGOUT))
-//		{
-//			/* If we use user authentication */
-//			if (ModuleCore.getUseAuthentication())
-//			{
-//				/* Track information using Google Analytics */
-//				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGOUT, "logout");
-//
-//                /* Clear the parameter store and show the login page */
-//				GerminateEventBus.BUS.fireEvent(new LogoutEvent());
-//			}
-//			else
-//			{
-//				/* Else just show the start page */
-//				ContentHolder.getInstance().setContent(page, Page.HOME, new Home());
-//			}
-//		}
 		//MAP DETAILS
-		else if (page.equals(Page.MAP_DETAILS))
+		else if (Page.MAP_DETAILS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new MapsPage()));
 		}
 		// MARKER DETAILS
-		else if (page.equals(Page.MARKER_DETAILS))
+		else if (Page.MARKER_DETAILS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.MAP_DETAILS, new MarkerPage()));
 		}
 		// MEGA ENVIRONMENTS
-		else if (page.equals(Page.MEGA_ENVIRONMENT))
+		else if (Page.MEGA_ENVIRONMENT.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new MegaEnvironmentsPage()));
 		}
 		// PASSPORT
-		else if (page.equals(Page.PASSPORT))
+		else if (Page.PASSPORT.is(page))
 		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new PassportPage()));
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ACCESSION_OVERVIEW, new PassportPage()));
 		}
 		// SEARCH
-		else if (page.equals(Page.SEARCH))
+		else if (Page.SEARCH.is(page))
 		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.BROWSE_ACCESSIONS, new SearchPage()));
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ACCESSION_OVERVIEW, new SearchPage()));
 		}
 		// TRIALS
-		else if (page.equals(Page.TRIALS))
+		else if (Page.TRIALS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.TRIALS_DATASETS, new TrialPage()));
 		}
 		// TRIALS DATASETS
-		else if (page.equals(Page.TRIALS_DATASETS))
+		else if (Page.TRIALS_DATASETS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
@@ -381,7 +319,14 @@ public class NavigationHandler
 					{
 						History.newItem(Page.TRIALS.name());
 					}
-				}, ExperimentType.trials, false);
+				}, ExperimentType.trials, false)
+				{
+					@Override
+					public String getParallaxStyle()
+					{
+						return ParallaxResource.INSTANCE.css().parallaxTrial();
+					}
+				};
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
 				widget.setHeaderText(Text.LANG.trialsDatasetHeader());
@@ -389,13 +334,13 @@ public class NavigationHandler
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});
 		}
-		// COLLECTINGSITES TREEMAP
-		else if (page.equals(Page.COLLSITE_TREEMAP))
-		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new LocationTreemapPage()));
-		}
+//		// COLLECTINGSITES TREEMAP
+//		else if (Page.LOCATION_TREEMAP.is(page))
+//		{
+//			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new LocationTreemapPage()));
+//		}
 		// ALLELE FREQ DATASETS
-		else if (page.equals(Page.ALLELE_FREQUENCY_DATASET))
+		else if (Page.ALLELE_FREQUENCY_DATASET.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
@@ -421,57 +366,57 @@ public class NavigationHandler
 			});
 		}
 		// ALLELE FREQ EXPORT
-		else if (page.equals(Page.ALLELE_FREQUENCY_EXPORT))
+		else if (Page.ALLELE_FREQUENCY_EXPORT.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ALLELE_FREQUENCY_DATASET, new AlleleFreqExportPage()));
 		}
 		// ALLELE FREQ RESULT
-		else if (page.equals(Page.ALLELE_FREQUENCY_RESULT))
+		else if (Page.ALLELE_FREQUENCY_RESULT.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ALLELE_FREQUENCY_DATASET, new AlleleFreqResultsPage()));
 		}
 		// SHOPPING CART
-		else if (page.equals(Page.MARKED_ITEMS))
+		else if (Page.MARKED_ITEMS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GROUPS, new MarkedItemListPage()));
 		}
 		// DATASET OVERVIEW
-		else if (page.equals(Page.DATASET_OVERVIEW))
+		else if (Page.DATASET_OVERVIEW.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new DatasetPage()));
 		}
 		// EXPERIMENT DETAILS
-		else if (page.equals(Page.EXPERIMENT_DETAILS))
+		else if (Page.EXPERIMENT_DETAILS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new ExperimentDetailsPage()));
 		}
 		// INSTITUTIONS PAGE
-		else if (page.equals(Page.INSTITUTIONS))
+		else if (Page.INSTITUTIONS.is(page))
 		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GEOGRAPHY, new InstitutionsPage()));
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.LOCATIONS, new InstitutionsPage()));
 		}
 		// GROUP PREVIEW PAGE
-		else if (page.equals(Page.GROUP_PREVIEW))
+		else if (Page.GROUP_PREVIEW.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.GROUPS, new GroupPreviewPage()));
 		}
 		// ADMIN CONFIG PAGE
-		else if (page.equals(Page.ADMIN_CONFIG))
+		else if (Page.ADMIN_CONFIG.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.HOME, new AdminConfigPage()));
 		}
 		// COMPOUNDS PAGE
-		else if (page.equals(Page.COMPOUNDS))
+		else if (Page.COMPOUNDS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new CompoundPage()));
 		}
 		// COMPOUND DETAILS PAGE
-		else if (page.equals(Page.COMPOUND_DETAILS))
+		else if (Page.COMPOUND_DETAILS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.COMPOUNDS, new CompoundDetailsPage()));
 		}
 		// TRIALS DATASETS
-		else if (page.equals(Page.COMPOUND_DATASETS))
+		else if (Page.COMPOUND_DATASETS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () ->
 			{
@@ -497,7 +442,7 @@ public class NavigationHandler
 			});
 		}
 		// COMPOUND DATA
-		else if (page.equals(Page.COMPOUND_DATA))
+		else if (Page.COMPOUND_DATA.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.COMPOUND_DATASETS, new CompoundDataPage()));
 		}
