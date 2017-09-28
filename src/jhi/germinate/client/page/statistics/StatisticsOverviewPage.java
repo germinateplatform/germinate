@@ -67,6 +67,9 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 	@Override
 	protected void setUpContent()
 	{
+		PageHeader header = new PageHeader();
+		header.setText(Text.LANG.dataStatisticsTitle());
+
 		panel.add(new TaxonomyPieChart());
 
 		final FlowPanel geoChartPanel = new FlowPanel();

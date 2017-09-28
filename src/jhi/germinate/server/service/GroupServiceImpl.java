@@ -152,7 +152,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return AccessionManager.getIdsForGroup(userAuth, groupId);
+		return AccessionManager.getIdsForGroupAsStrings(userAuth, groupId);
 	}
 
 	@Override

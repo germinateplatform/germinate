@@ -18,6 +18,7 @@
 package jhi.germinate.client.page.login.registration;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.safehtml.shared.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.widget.element.*;
@@ -36,10 +37,10 @@ public class RegistrationWizard extends ModalWizard
 	{
 		setTitle(Text.LANG.registrationTitle());
 
-		String disclaimerShort = RegistrationLicense.RegistrationPageResources.INSTANCE.getShortAgreement().getText();
+		SafeHtml disclaimerShort = Text.LANG.registrationDisclaimerShortHtml();
 
 		// If there is no registration text
-		if (!StringUtils.isEmpty(disclaimerShort))
+		if (disclaimerShort != null && !StringUtils.isEmpty(disclaimerShort.asString()))
 		{
 			license = new RegistrationLicense();
 			license.addValueChangeHandler(event -> updateControls());

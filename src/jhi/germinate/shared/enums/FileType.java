@@ -42,13 +42,13 @@ public enum FileType
 
 	private String contentType;
 	private String iconStyle;
-	private String faStyle;
+	private String mdiStyle;
 
-	FileType(String contentType, String iconStyle, String faStyle)
+	FileType(String contentType, String iconStyle, String mdiStyle)
 	{
 		this.contentType = contentType;
 		this.iconStyle = iconStyle;
-		this.faStyle = faStyle;
+		this.mdiStyle = mdiStyle;
 	}
 
 	public String getContentType()
@@ -61,8 +61,8 @@ public enum FileType
 		return iconStyle;
 	}
 
-	public String getFaStyle()
+	public String getMdiStyle()
 	{
-		return faStyle;
+		return mdiStyle;
 	}
 }

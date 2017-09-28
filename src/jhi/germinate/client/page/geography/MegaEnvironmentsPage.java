@@ -205,7 +205,7 @@ public class MegaEnvironmentsPage extends Composite implements ParallaxBannerPag
 			/* Request the file creation on the server */
 			LocationService.Inst.get().exportToKml(Cookie.getRequestProperties(), KmlType.megaEnvironment, megaEnvironment.getId(), callback);
 		}, true)
-				.setIconStyle(FileDownloadWidget.IconStyle.FONT_AWESOME)
+				.setIconStyle(FileDownloadWidget.IconStyle.MDI)
 				.addFile(Text.LANG.downloadGoogleEarth())
 				.addType(FileType.kmz));
 	}

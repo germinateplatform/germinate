@@ -55,7 +55,7 @@
 		<g:SimplePanel ui:field="heatmapPanel"/>
 		<g:SimplePanel ui:field="gradientPanel"/>
 
-		<b:PageHeader text="{msg.collsiteTreemapTitle}"/>
+		<b:Heading size="H2" text="{msg.collsiteTreemapTitle}"/>
 		<g:HTML ui:field="html"/>
 		<b:FormGroup>
 			<b:FormLabel for="formLocationType" text="{msg.locationTypesSelect}"/>

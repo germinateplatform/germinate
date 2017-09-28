@@ -49,7 +49,7 @@ public class FileDownloadWidget extends GerminateComposite
 	public enum IconStyle
 	{
 		IMAGE,
-		FONT_AWESOME
+		MDI
 	}
 
 	protected IconStyle iconStyle = IconStyle.IMAGE;

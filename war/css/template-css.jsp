@@ -109,7 +109,7 @@ footer > div.container-fluid {
 .navbar-top-links li {
   display: inline-block;
 }
-.navbar-top-links li:last-child {
+#<%= Id.STRUCTURE_PAGE %> .navbar-top-links li:last-child {
   margin-right: 15px;
 }
 .navbar-top-links li a {

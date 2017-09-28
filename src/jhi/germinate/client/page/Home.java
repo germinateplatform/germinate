@@ -39,7 +39,7 @@ import jhi.germinate.shared.datastructure.database.*;
 /**
  * @author Sebastian Raubach
  */
-public class Home extends GerminateComposite
+public class Home extends GerminateComposite implements HasHelp
 {
 
 	private NewsWidget newsWidget = new NewsWidget();
@@ -150,5 +150,11 @@ public class Home extends GerminateComposite
 					break;
 			}
 		}
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new HTML(Text.LANG.homeHelp());
 	}
 }

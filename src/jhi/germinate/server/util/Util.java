@@ -192,6 +192,8 @@ public class Util
 				for (String c : columns)
 					checkSortColumn(c, availableColumns, fallbackColumn);
 			}
+
+			return searchColumn;
 		}
 
 		if (searchColumn.contains("."))

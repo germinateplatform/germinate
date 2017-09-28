@@ -91,8 +91,9 @@ public class ContentHolder
 		HelpWidget.init();
 	}
 
-	private native void closeDropdown()/*-{
+	private native void closeDropdownAndMenu()/*-{
 		$wnd.$('.dropdown.open .dropdown-toggle').dropdown('toggle');
+		$wnd.$('.navbar-collapse').collapse('hide');
 	}-*/;
 
 	/**
@@ -113,7 +114,7 @@ public class ContentHolder
 		DebugInfoPanel.clear();
 //		removeGoogleMapsLeftovers();
 
-		closeDropdown();
+		closeDropdownAndMenu();
 
 		/* Make sure username and password field are cleared all the time */
 		((InputElement) Document.get().getElementById(Id.LOGIN_USERNAME_INPUT)).setValue(null);

@@ -2,6 +2,15 @@
 \label{sec:examples}
 Possible changes to {\germinate} may range from basic formatting changes to the modification of existing content. The following sections contain detailed examples for the most common scenarios of extension. Each example consists of the necessary code and accompanying explanations.
 
+\subsection{Customizing the Germinate theme}
+{\germinate} uses Bootstrap \cite{Bootstrap} for its web interface. Bootstrap is one of the most popular open-source web front-end frameworks. It allows us to design {\germinate} in a consistent and user friendly way without a lot of customization.
+
+Another advantage of Bootstrap is that you can use custom themes. The theme {\germinate} uses includes some minor changes from the default Bootstrap theme. If you would like to make changes to the way {\germinate} looks, you can easily customize the existing theme by uploading our custom \texttt{config.json} (located in the root directory of the source code) file to:
+\begin{center}
+	\url{https://getbootstrap.com/docs/3.3/customize/}
+\end{center}
+\noindent You can customize things like colors, fonts, font sizes and many more settings. Once you are happy with your changes, download the resulting files and include the content of \texttt{bootstrap.css} into the \texttt{custom.css} file that is part of your instance configuration files.
+
 \subsection{Internationalizing your pages}
 \label{sec:example_i18n}
 As already mentioned in Section \ref{sec:features_i18n}, {\germinate} supports internationalization for as many languages as you want.

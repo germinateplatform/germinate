@@ -257,16 +257,18 @@ This section gives an overview of all the pages that are available for {\germina
 
 {\germinate} can be used with and without authentication. This means that you can decide if you want to restrict access to your {\germinate} instance to registered users. If you decide to do so, you'll need people to be able to register. The registration form of {\germinate} (Figure \ref{fig:user_registration_registration}) provides a concise and easy way to register. If you choose to use a disclaimer that potential new users have to accept, this will appear before the form is visible. Once the user completes the form, they will either get access right away or you need to approve the new users manually. This is based on the setting of the property \texttt{Gatekeeper.Registration.Needs.Approval} (see Section \ref{sec:config-properties} for help). If you choose to use the approval approach, you'll see the screen shown in Figure \ref{fig:user_registration_approval} after selecting "Approve users" in Gatekeeper. The user will be notified with your decision.
 
+The registration agreement text the user has to agree to before signing up for your instance of {\germinate} is stored in the properties \texttt{page.\allowbreak registration.\allowbreak disclaimer.\allowbreak short.\allowbreak html} and \texttt{page.\allowbreak registration.\allowbreak disclaimer.\allowbreak long.\allowbreak html} in the \texttt{Text.properties} file. Translations of this text need to be placed in the appropriate internationalized version of this file.
+
 \begin{figure}
     \centering
-    \begin{subfigure}[b]{0.475\textwidth}
+    \begin{subfigure}[b]{0.375\textwidth}
         \centering
         \includegraphics[width=1.0\textwidth]{img/features/registration.png}
         \caption{Registration form on the {\germinate} site}
         \label{fig:user_registration_registration}
     \end{subfigure}
     \hspace*{0.5cm}
-    \begin{subfigure}[b]{0.475\textwidth}
+    \begin{subfigure}[b]{0.575\textwidth}
         \centering
         \includegraphics[width=1.0\textwidth]{img/features/registration-approve.png}
         \caption{Approval page on the Gatekeeper page}
@@ -276,12 +278,10 @@ This section gives an overview of all the pages that are available for {\germina
     \label{fig:user_registration}
 \end{figure}
 
-\subsection{Groups}
-{\germinate} allows you to define groupings of various items which makes exporting or visualizing data more comfortable. An intuitive example of groups are accession groups. A group of accessions can contain accessions that are similar to each other or a list of accessions that you want to export against a map for visualization in Flapjack.
+\subsection{Dataset licenses}
+Sometimes it is required for individual datasets to be protected behind a license the user has to agree to before using the data. To accommodate this, we have introduced dataset licenses. Licenses are stored in the \texttt{licenses} table. The actual license content is stored in \texttt{licensedata} and linked to a \texttt{locale} so that you can have translations of your license content.
 
-A new group can be created with a couple of clicks: First, select the type of group that you want to create, \eg accession group, collecting site group, marker group etc. Afterwards, create a new group by just entering the name of the new group.
-
-To delete group members, just select the group that you want to modify and check the items to remove in the table. Afterwards click on the delete button below the table. To delete a complete group, click on the delete icon next to the group selection box.
+We keep track of which user accepted which license so that they are only prompted to accept new licenses. Make sure to remove associated \texttt{licenselogs} entries if you change the actual content of a license, because the user may originally have agreed to a different wording.
 
 \subsection{Security}
 \label{sec:example_security}

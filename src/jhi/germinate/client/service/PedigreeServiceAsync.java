@@ -53,14 +53,6 @@ public interface PedigreeServiceAsync
 	Request getForFilter(RequestProperties properties, PartialSearchQuery filter, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Pedigree>>> callback);
 
 	/**
-	 * Exports the whole pedigree information to a file and returns the result file name.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void exportToHelium(RequestProperties properties, AsyncCallback<ServerResult<String>> callback);
-
-	/**
 	 * Exports the pedigree information of a single {@link Accession} id with the given {@link Pedigree.PedigreeQuery} to a file and returns the
 	 * result file name.
 	 *
@@ -69,7 +61,16 @@ public interface PedigreeServiceAsync
 	 * @param queryType   The {@link Pedigree.PedigreeQuery}
 	 * @param callback    The {@link AsyncCallback}
 	 */
-	void exportToHelium(RequestProperties properties, Long accessionId, Pedigree.PedigreeQuery queryType, AsyncCallback<ServerResult<String>> callback);
+	void exportToHelium(RequestProperties properties, Collection<Long> accessionId, Pedigree.PedigreeQuery queryType, AsyncCallback<ServerResult<String>> callback);
+
+	/**
+	 * Exports the pedigree information of all the accessions in a {@link Group} id and returns the result file name.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The {@link Group} id
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void exportToHelium(RequestProperties properties, Long groupId, AsyncCallback<ServerResult<String>> callback);
 
 	/**
 	 * Exports all the data associated with {@link Pedigree}s mathing the given {@link PartialSearchQuery}.

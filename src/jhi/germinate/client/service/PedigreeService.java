@@ -96,17 +96,6 @@ public interface PedigreeService extends RemoteService
 	PaginatedServerResult<List<Pedigree>> getForFilter(RequestProperties properties, PartialSearchQuery filter, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
-	 * Exports the whole pedigree information to a file and returns the result file name.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @return The result file name.
-	 * @throws InvalidSessionException Thrown if the session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 * @throws IOException             Thrown if writing the file fails
-	 */
-	ServerResult<String> exportToHelium(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException;
-
-	/**
 	 * Exports the pedigree information of a single {@link Accession} id with the given {@link Pedigree.PedigreeQuery} to a file and returns the
 	 * result file name.
 	 *
@@ -118,7 +107,19 @@ public interface PedigreeService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 * @throws IOException             Thrown if writing the file fails
 	 */
-	ServerResult<String> exportToHelium(RequestProperties properties, Long accessionId, Pedigree.PedigreeQuery queryType) throws InvalidSessionException, DatabaseException, IOException;
+	ServerResult<String> exportToHelium(RequestProperties properties, Collection<Long> accessionId, Pedigree.PedigreeQuery queryType) throws InvalidSessionException, DatabaseException, IOException;
+
+	/**
+	 * Exports the pedigree information of all the accessions in a {@link Group} id and returns the result file name.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The {@link Group} id
+	 * @return The result file name.
+	 * @throws InvalidSessionException Thrown if the session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 * @throws IOException             Thrown if writing the file fails
+	 */
+	ServerResult<String> exportToHelium(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, IOException;
 
 	/**
 	 * Exports all the data associated with {@link Pedigree}s mathing the given {@link PartialSearchQuery}.

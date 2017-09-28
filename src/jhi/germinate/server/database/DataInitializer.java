@@ -83,7 +83,6 @@ public class DataInitializer
 		catch (Exception e)
 		{
 			/* Do nothing here */
-			e.printStackTrace();
 		}
 
 		/* Automatically update the database if this is enabled */

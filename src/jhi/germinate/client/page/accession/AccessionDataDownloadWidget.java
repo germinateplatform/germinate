@@ -116,6 +116,27 @@ public class AccessionDataDownloadWidget extends Composite
 	@UiHandler("pedigree")
 	void onPedigreeDownload(ClickEvent e)
 	{
-		PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), new FileDownloadCallback(true));
+		long groupId = groupBox.getSelection().getId();
+
+		FileDownloadCallback callback = new FileDownloadCallback(true);
+
+		if (groupId == -2L)
+		{
+			Set<Long> markedIds = MarkedItemList.getAsLong(MarkedItemList.ItemType.ACCESSION);
+
+			if (CollectionUtils.isEmpty(markedIds))
+			{
+				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationAccessionExportMarkAtLeastOne());
+				callback.forceClose();
+			}
+			else
+			{
+				PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), markedIds, Pedigree.PedigreeQuery.UP_DOWN, callback);
+			}
+		}
+		else
+		{
+			PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), groupId, callback);
+		}
 	}
 }

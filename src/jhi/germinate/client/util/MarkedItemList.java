@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.markeditemlist.*;
@@ -240,6 +241,31 @@ public final class MarkedItemList
 	public static Set<String> get(ItemType type)
 	{
 		return IDS.get(type);
+	}
+
+	/**
+	 * Gets the marked accession ids
+	 *
+	 * @param type The {@link MarkedItemList.ItemType}
+	 * @return The marked ids
+	 */
+	public static Set<Long> getAsLong(ItemType type)
+	{
+		return IDS.get(type)
+				  .stream()
+				  .map(s ->
+				  {
+					  try
+					  {
+						  return Long.parseLong(s);
+					  }
+					  catch (Exception e)
+					  {
+						  return null;
+					  }
+				  })
+				  .filter(l -> l != null)
+				  .collect(Collectors.toSet());
 	}
 
 	/**

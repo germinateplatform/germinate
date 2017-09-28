@@ -18,13 +18,16 @@
 package jhi.germinate.client.page.search;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.Panel;
+import org.gwtbootstrap3.client.ui.constants.*;
 
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -32,6 +35,8 @@ import jhi.germinate.shared.*;
  */
 public class SearchSection extends Composite
 {
+	private static final NumberFormat FORMAT = NumberFormat.getFormat(Text.LANG.pagerNumberFormat());
+
 	interface SearchSectionUiBinder extends UiBinder<Panel, SearchSection>
 	{
 	}
@@ -81,8 +86,7 @@ public class SearchSection extends Composite
 	public void clear()
 	{
 		body.clear();
-		label.setVisible(true);
-		label.setText("0");
+		setLabel(0);
 		progress.setVisible(false);
 	}
 
@@ -97,16 +101,17 @@ public class SearchSection extends Composite
 		label.setVisible(!loading);
 	}
 
-	public void setLabel(String value)
+	public void setLabel(Integer value)
 	{
-		if (StringUtils.isEmpty(value))
+		if (value == null)
 		{
 			label.setVisible(false);
 		}
 		else
 		{
 			label.setVisible(true);
-			label.setText(value);
+			label.setText(FORMAT.format(value));
+			label.setType(value > 0 ? LabelType.PRIMARY : LabelType.DEFAULT);
 		}
 	}
 }

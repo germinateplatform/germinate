@@ -270,7 +270,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				{
 					downloadWrapper.setVisible(true);
 					downloadPanel.add(new FileDownloadWidget()
-							.setIconStyle(FileDownloadWidget.IconStyle.FONT_AWESOME)
+							.setIconStyle(FileDownloadWidget.IconStyle.MDI)
 							.setLocation(FileLocation.download)
 							.setHeading(null)
 							.setPrefix(ReferenceFolder.passport.name())
@@ -460,7 +460,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			}
 		});
 
-		pedigreeDownloadPanel.add(new OnDemandFileDownloadWidget((index, callback) -> PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), accession.getId(), Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE, callback), true)
+		pedigreeDownloadPanel.add(new OnDemandFileDownloadWidget((index, callback) -> PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), Collections.singletonList(accession.getId()), Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE, callback), true)
 				.setHeading(null)
 				.setIconStyle(FileDownloadWidget.IconStyle.IMAGE)
 				.addFile(Text.LANG.downloadPedigreeHelium())

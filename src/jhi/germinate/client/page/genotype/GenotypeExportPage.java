@@ -122,7 +122,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 									section.add(box);
 
 									FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) -> MarkerService.Inst.get().export(Cookie.getRequestProperties(), result.getServerResult().getDeletedMarkers(), callback), false)
-											.setIconStyle(FileDownloadWidget.IconStyle.FONT_AWESOME)
+											.setIconStyle(FileDownloadWidget.IconStyle.MDI)
 											.setHeading(null)
 											.addFile(Text.LANG.downloadDeletedMarkersAsTxt())
 											.addType(FileType.txt);

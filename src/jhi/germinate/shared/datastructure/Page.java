@@ -69,12 +69,13 @@ public class Page implements Serializable
 	public static final Page NEWS                     = new Page("news", true);
 	public static final Page PASSPORT                 = new Page("passport", false);
 	public static final Page SEARCH                   = new Page("search", false, Style.MDI_MAGNIFY);
-	public static final Page TRIALS                   = new Page("trials", false);
-	public static final Page TRIALS_DATASETS          = new Page("trials-datasets", false, Style.MDI_SHOVEL);
+	public static final Page TRIALS                   = new Page("trials", false).addLegacyNames("categorical-export");
+	public static final Page TRIALS_DATASETS          = new Page("trials-datasets", false, Style.MDI_SHOVEL).addLegacyNames("categorical-datasets");
 
 	private String  name;
 	private boolean isPublic;
 	private String  icon;
+	/** Names this page used to have in the past. This can either be caused by a simple renaming or by merging pages. */
 	private Set<String> legacyNames = new HashSet<>();
 
 	public Page()
@@ -95,11 +96,6 @@ public class Page implements Serializable
 		pages.put(name, this);
 	}
 
-	/**
-	 * Returns the name of the {@link Page}
-	 *
-	 * @return The name of this page
-	 */
 	public String name()
 	{
 		return name;
@@ -115,11 +111,36 @@ public class Page implements Serializable
 		return icon;
 	}
 
-	public Page addLegacyNames(String... names)
+	/**
+	 * Tries to create an instance from the constants
+	 *
+	 * @param name The possible name of one of the constants
+	 * @return The {@link Page} instance
+	 * @throws IllegalArgumentException If none of the existing pages match the given name
+	 */
+	public static Page valueOf(String name)
 	{
-		for(String name : names)
-			legacyNames.add(name);
-		return this;
+		// Check the collection
+		Page page = pages.get(name);
+
+		if (page != null)
+		{
+			return page;
+		}
+		else
+		{
+			// Check the legacy names of each page
+			for (Page p : pages.values())
+			{
+				if (p.legacyNames.contains(name))
+					page = p;
+			}
+		}
+
+		if (page != null)
+			return page;
+		else
+			throw new IllegalArgumentException("Invalid Page value: " + name);
 	}
 
 	public boolean is(Page page)
@@ -143,29 +164,11 @@ public class Page implements Serializable
 		return pages.values().toArray(new Page[pages.size()]);
 	}
 
-	/**
-	 * Tries to create an instance from the constants
-	 *
-	 * @param name The possible name of one of the constants
-	 * @return The {@link Page} instance
-	 * @throws IllegalArgumentException If none of the existing pages match the given name
-	 */
-	public static Page valueOf(String name)
+	public Page addLegacyNames(String... names)
 	{
-		Page page = pages.get(name);
-
-		if (page != null)
-			return page;
-		else
-		{
-			for (Page p : pages.values())
-			{
-				if (p.legacyNames.contains(name))
-					return p;
-			}
-
-			throw new IllegalArgumentException("Invalid Page value: " + name);
-		}
+		for (String name : names)
+			legacyNames.add(name);
+		return this;
 	}
 
 	@Override

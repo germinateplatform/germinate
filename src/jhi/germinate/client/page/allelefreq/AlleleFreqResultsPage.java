@@ -236,7 +236,7 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 					markerPanel.add(box);
 
 					markerPanel.add(new OnDemandFileDownloadWidget((index, callback) -> MarkerService.Inst.get().export(Cookie.getRequestProperties(), result.getSecond().getDeletedMarkers(), callback), false)
-							.setIconStyle(FileDownloadWidget.IconStyle.FONT_AWESOME)
+							.setIconStyle(FileDownloadWidget.IconStyle.MDI)
 							.setHeading(null)
 							.addFile(Text.LANG.downloadDeletedMarkersAsTxt())
 							.addType(FileType.txt));

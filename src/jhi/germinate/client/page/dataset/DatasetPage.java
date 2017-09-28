@@ -23,19 +23,14 @@ import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.structure.resource.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class DatasetPage extends Composite implements ParallaxBannerPage
+public class DatasetPage extends Composite implements ParallaxBannerPage, HasHelp
 {
-	@Override
-	public String getParallaxStyle()
-	{
-		return ParallaxResource.INSTANCE.css().parallaxDataset();
-	}
-
 	interface DatasetPageUiBinder extends UiBinder<HTMLPanel, DatasetPage>
 	{
 	}
@@ -53,5 +48,17 @@ public class DatasetPage extends Composite implements ParallaxBannerPage
 
 		internalText.setHTML(Text.LANG.datasetsTextInternal());
 		externalText.setHTML(Text.LANG.datasetsTextExternal());
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxDataset();
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new HTML(Text.LANG.datasetOverviewHelp());
 	}
 }

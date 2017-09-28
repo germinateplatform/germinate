@@ -71,10 +71,6 @@
 		<delete failonerror="false" verbose="true" quiet="true" file="${src.dir}/jhi/germinate/Germinate.gwt.xml"/>
 
 		<delete failonerror="false" verbose="true" quiet="true">
-			<fileset dir="${src.dir}/jhi/germinate/client/page/login/registration" includes="**/registration-agreement*.html"/>
-		</delete>
-
-		<delete failonerror="false" verbose="true" quiet="true">
 			<fileset dir="${build.dir}/img/parallax" includes="*.jpg"/>
 		</delete>
 
@@ -141,10 +137,6 @@
 			  verbose="true"/>
 		<copy file="${instance.files}/web.xml" tofile="${build.dir}/WEB-INF/web.xml" overwrite="true" failonerror="true" verbose="true"/>
 
-		<copy todir="${src.dir}/jhi/germinate/client/page/login/registration" overwrite="true" failonerror="true" verbose="true">
-			<fileset dir="${instance.files}/template" includes="**/registration-agreement*.html"/>
-		</copy>
-
 		<!-- Copy template styling -->
 		<copy file="${instance.files}/template/logo.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
 		<copy file="${instance.files}/template/crop.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
@@ -165,9 +157,6 @@
 		</copy>
 		<copy todir="${build.dir}/js/js-external" overwrite="true" failonerror="false" verbose="true">
 			<fileset dir="${instance.files}/template/js-external"/>
-		</copy>
-		<copy todir="${build.dir}/css/images" overwrite="true" failonerror="true" verbose="true">
-			<fileset dir="${instance.files}/template/images"/>
 		</copy>
 
 		<!-- Create a flattened (no sub-folders) temporary library folder -->

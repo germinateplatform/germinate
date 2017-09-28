@@ -264,7 +264,7 @@ public class AccessionManager extends AbstractManager<Accession>
 				.getObjectsPaginated(Accession.Parser.Inst.get(), true);
 	}
 
-	public static ServerResult<List<String>> getIdsForGroup(UserAuth userAuth, Long groupId) throws DatabaseException, InsufficientPermissionsException
+	public static ServerResult<List<String>> getIdsForGroupAsStrings(UserAuth userAuth, Long groupId) throws DatabaseException, InsufficientPermissionsException
 	{
 		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
 			throw new InsufficientPermissionsException();
@@ -273,6 +273,17 @@ public class AccessionManager extends AbstractManager<Accession>
 				.setLong(groupId)
 				.run(Accession.ID)
 				.getStrings();
+	}
+
+	public static ServerResult<List<Long>> getIdsForGroup(UserAuth userAuth, Long groupId) throws DatabaseException, InsufficientPermissionsException
+	{
+		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
+			throw new InsufficientPermissionsException();
+
+		return new ValueQuery(SELECT_IDS_FOR_GROUP, userAuth)
+				.setLong(groupId)
+				.run(Accession.ID)
+				.getLongs();
 	}
 
 	public static PaginatedServerResult<List<Accession>> getAllForMegaEnv(UserAuth userAuth, Long megaEnvId, Pagination pagination) throws DatabaseException, InvalidColumnException

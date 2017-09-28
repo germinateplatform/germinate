@@ -657,6 +657,10 @@ public interface Text extends Messages
 	@Key("page.home.text")
 	SafeHtml homeText();
 
+	@Key("help.home")
+	@DefaultMessage("<p>This is the main page of Germinate. It shows general information about this instance as well as an overview of the number of database items for certain types at the top of the page. Recent news about both the Germinate interface and the contained data are available in the news section shown in the bottom left. Finally, a section about other projects that are related to the project you are currently looking at are available in the bottom right.</p>")
+	SafeHtml homeHelp();
+
 	@Key("page.help.title")
 	String helpTitle();
 
@@ -898,6 +902,10 @@ public interface Text extends Messages
 
 	@Key("help.dataset")
 	SafeHtml datasetsHelp();
+
+	@Key("help.dataset.overview")
+	@DefaultMessage("<p>This page shows all the datasets that are visible to you within this instance of Germinate. They are split into internal and external datasets. Internal datasets can be visualized and exported from Germinate whereas we only link external datasets. Each table supports sorting and filtering. Selecting a dataset will take you to the specific page for this dataset.</p>")
+	SafeHtml datasetOverviewHelp();
 
 	@Key("page.dataset.title")
 	String datasetsTitle();
@@ -1888,13 +1896,17 @@ public interface Text extends Messages
 	String columnSelectorButtonTitle();
 
 	@Key("page.geographic.search.polygon.text")
-	@DefaultMessage("<p>The map below allows you to select a region by drawing a polygon around it. Once you''re happy with the selection, hit the \"Continue\" button to get the collecting sites within this polygon.</p><p>You can adjust each corner point of the polygon by dragging it. It''s also possible to add new corner points in between two existing points by dragging the semi-transparent circle.</p><p>Right-click a polygon to remove it from the map.</p>")
+	@DefaultMessage("<p>The map below allows you to select a region by drawing a polygon around it. Once you''re happy with the selection, hit the \"Continue\" button to get the collecting sites within this polygon.</p><p>The polygon can later be edited by using the controls in the top right corner of the map. You can adjust each corner point of the polygon by dragging it. It''s also possible to add new corner points in between two existing points by dragging the semi-transparent squares.</p><p>Select the delete tool from the top right and then click on the polygon to remove it from the map.</p>")
 	SafeHtml geographicSearchPolygonText();
 
 	@Key("page.osterei.message")
 	@DefaultMessage("This isn''t the easter egg you''re looking for... Try again.")
 	String ostereiMessage();
 
+
+	@Key("page.data.statistics.title")
+	@DefaultMessage("Data Statistics")
+	String dataStatisticsTitle();
 
 	@Key("page.data.statistics.taxonomy.title")
 	@DefaultMessage("Accessions grouped by taxonomy")
@@ -2399,4 +2411,12 @@ public interface Text extends Messages
 	@Key("help.marked.items")
 	@DefaultMessage("<p>Another useful feature of Germinate is the concept of <i>marked item lists</i>. A marked item is either an accession, a marker or a location that is of interest to the user. While you are browsing the page, a lot of the tables will have a checkbox column as the last column which you can use to mark certain items. Germinate will keep track of these items for you.</p><p>To see how many items you currently have marked, you can click on the menu item in the top bar or go directly to the marked item lists page.</p><p>Once you have marked all the items that you are interested in, you can create a group of these items and use them to export data against them. To create a group, you can either go to the marked item lists page or by clicking on the header of the checkbox column and selecting \"Create group from selection\".</p>")
 	SafeHtml markedItemsHelp();
+
+	@Key("page.registration.disclaimer.short.html")
+	@DefaultMessage("")
+	SafeHtml registrationDisclaimerShortHtml();
+
+	@Key("page.registration.disclaimer.long.html")
+	@DefaultMessage("")
+	SafeHtml registrationDisclaimerLongHtml();
 }

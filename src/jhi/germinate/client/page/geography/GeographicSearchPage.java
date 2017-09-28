@@ -125,7 +125,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 
 			map.on("move", () ->
 			{
-				LeafletLatLng latLng = map.getCenter();
+				LeafletLatLng latLng = map.getCenter().wrap();
 				latitudeBox.setValue(latLng.getLatitude());
 				longitudeBox.setValue(latLng.getLongitude());
 

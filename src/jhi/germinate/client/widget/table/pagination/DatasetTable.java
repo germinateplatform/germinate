@@ -243,9 +243,9 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 						icon = Style.MDI_CHECK;
 
 					if (data != null)
-						return TableUtils.getHyperlinkValueWithIcon(object.getLicense().getName(), null, Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, icon));
+						return TableUtils.getHyperlinkValueWithIcon(object.getLicense().getName(), null, Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
 					else
-						return TableUtils.getCellValueWithIcon(object.getLicense().getName(), Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, icon));
+						return TableUtils.getCellValueWithIcon(object.getLicense().getName(), Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
 				}
 				else
 					return null;

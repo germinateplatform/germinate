@@ -101,15 +101,15 @@ public class NewsPanelItem extends Composite
 				{
 					try
 					{
-						Page page1 = Page.valueOf(link.substring(1));
+						Page p = Page.valueOf(link.substring(1));
 						preventDefault = true;
 
 						LongParameterStore.Inst.get().put(Parameter.newsId, news.getId());
 
-						if (page1.name().equals(History.getToken()))
+						if (p.name().equals(History.getToken()))
 							History.fireCurrentHistoryState();
 						else
-							History.newItem(page1.name());
+							History.newItem(p.name());
 					}
 					catch (Exception ex)
 					{

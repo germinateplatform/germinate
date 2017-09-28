@@ -76,12 +76,8 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		return PedigreeManager.getAllForFilter(userAuth, filter, pagination);
 	}
 
-	@Override
-	public ServerResult<String> exportToHelium(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
+	private ServerResult<String> exportToHelium(UserAuth userAuth) throws DatabaseException, IOException
 	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
 		/* Get the whole data with a streamer */
 		DefaultStreamer streamer = new DefaultQuery(SELECT_PEDIGREE_PARENTS, userAuth)
 				.getStreamer();
@@ -118,7 +114,30 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 	}
 
 	@Override
-	public ServerResult<String> exportToHelium(RequestProperties properties, Long accessionId, Pedigree.PedigreeQuery queryType) throws InvalidSessionException, DatabaseException, IOException
+	public ServerResult<String> exportToHelium(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		if (groupId == null)
+		{
+			return exportToHelium(userAuth);
+		}
+		else
+		{
+			try
+			{
+				return exportToHelium(properties, AccessionManager.getIdsForGroup(userAuth, groupId).getServerResult(), Pedigree.PedigreeQuery.UP_DOWN);
+			}
+			catch (InsufficientPermissionsException e)
+			{
+				return new ServerResult<>(null, null);
+			}
+		}
+	}
+
+	@Override
+	public ServerResult<String> exportToHelium(RequestProperties properties, Collection<Long> ids, Pedigree.PedigreeQuery queryType) throws InvalidSessionException, DatabaseException, IOException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -138,8 +157,6 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 																.collect(Collectors.groupingByConcurrent(r -> r.get("node"),
 																		Collectors.mapping(r -> new PedigreePair(r.get("child"), r.get("type")), Collectors.toList())));
 
-		parents.getDebugInfo().addAll(children.getDebugInfo());
-
 		File resultFile = createTemporaryFile("helium", "helium");
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(resultFile)))
 		{
@@ -147,15 +164,18 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 			bw.newLine();
 			bw.write("LineName\tParent\tParentType");
 
-			/* Get the accession by its id */
-			Accession accession = new AccessionManager().getById(userAuth, accessionId).getServerResult();
+			for (Long accessionId : ids)
+			{
+				/* Get the accession by its id */
+				Accession accession = new AccessionManager().getById(userAuth, accessionId).getServerResult();
 
-			/* Get the pedigree up the tree (parents, grandparents, ...) */
-			new PedigreeWriter(bw, parentPairData, true, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
-					.run(accession.getName(), 1);
-			/* Get the pedigree down the tree (children, grandchildren, ...) */
-			new PedigreeWriter(bw, childPairData, false, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
-					.run(accession.getName(), 1);
+				/* Get the pedigree up the tree (parents, grandparents, ...) */
+				new PedigreeWriter(bw, parentPairData, true, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
+						.run(accession.getName(), 1);
+				/* Get the pedigree down the tree (children, grandchildren, ...) */
+				new PedigreeWriter(bw, childPairData, false, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
+						.run(accession.getName(), 1);
+			}
 
 		}
 		catch (InsufficientPermissionsException e)
@@ -168,7 +188,7 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		}
 
 		/* Return the filename */
-		return new ServerResult<>(parents.getDebugInfo(), resultFile.getName());
+		return new ServerResult<>(parents.getDebugInfo().addAll(children.getDebugInfo()), resultFile.getName());
 	}
 
 	@Override

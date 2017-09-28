@@ -95,7 +95,7 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 	private void addDownloadWidget()
 	{
 		downloadPanel.add(new OnDemandFileDownloadWidget((index, callback) -> LocationService.Inst.get().exportToKml(Cookie.getRequestProperties(), KmlType.collectingsite, collsiteId, callback), true)
-				.setIconStyle(FileDownloadWidget.IconStyle.FONT_AWESOME)
+				.setIconStyle(FileDownloadWidget.IconStyle.MDI)
 				.addFile(Text.LANG.downloadGoogleEarth())
 				.addType(FileType.kmz));
 	}

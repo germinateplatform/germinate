@@ -20,7 +20,7 @@ package jhi.germinate.client.page.login.registration;
 import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.*;
-import com.google.gwt.resources.client.*;
+import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -28,6 +28,7 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.extras.toggleswitch.client.ui.*;
 
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
 
@@ -49,22 +50,17 @@ public class RegistrationLicense extends Composite
 	@UiField
 	ToggleSwitch acceptToggle;
 
-	private final String disclaimerShort;
-	private final String disclaimerLong;
+	private final SafeHtml disclaimerShort = Text.LANG.registrationDisclaimerShortHtml();
+	private final SafeHtml disclaimerLong  = Text.LANG.registrationDisclaimerLongHtml();
 
 	public RegistrationLicense()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
-		disclaimerShort = RegistrationPageResources.INSTANCE.getShortAgreement().getText();
-		disclaimerLong = RegistrationPageResources.INSTANCE.getLongAgreement().getText();
-
 		license.setHTML(disclaimerShort);
 
-		if (!StringUtils.isEmpty(disclaimerLong))
-		{
+		if (disclaimerLong != null && !StringUtils.isEmpty(disclaimerLong.asString()))
 			fullLicenseButton.setVisible(true);
-		}
 	}
 
 	@UiHandler("fullLicenseButton")
@@ -90,16 +86,5 @@ public class RegistrationLicense extends Composite
 	public void addValueChangeHandler(ValueChangeHandler<Boolean> handler)
 	{
 		acceptToggle.addValueChangeHandler(handler);
-	}
-
-	public interface RegistrationPageResources extends ClientBundle
-	{
-		RegistrationPageResources INSTANCE = GWT.create(RegistrationPageResources.class);
-
-		@Source("registration-agreement-long.html")
-		TextResource getLongAgreement();
-
-		@Source("registration-agreement-short.html")
-		TextResource getShortAgreement();
 	}
 }

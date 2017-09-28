@@ -17,16 +17,12 @@
 
 package jhi.germinate.client.page.search;
 
-import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.rpc.*;
 
-import jhi.germinate.client.i18n.*;
 import jhi.germinate.shared.datastructure.*;
 
 public class SearchCallback<T> implements AsyncCallback<PaginatedServerResult<T>>
 {
-	private static final NumberFormat FORMAT = NumberFormat.getFormat(Text.LANG.pagerNumberFormat());
-
 	private SearchSection                           section;
 	private AsyncCallback<PaginatedServerResult<T>> callback;
 
@@ -54,7 +50,7 @@ public class SearchCallback<T> implements AsyncCallback<PaginatedServerResult<T>
 	public void onSuccess(PaginatedServerResult<T> result)
 	{
 		section.setLoading(false);
-		section.setLabel(FORMAT.format(result.getResultSize()));
+		section.setLabel(result.getResultSize());
 
 		section.setVisible(true);
 
