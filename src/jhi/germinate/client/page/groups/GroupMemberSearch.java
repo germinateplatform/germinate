@@ -216,7 +216,7 @@ public class GroupMemberSearch
 					@Override
 					protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback)
 					{
-						return MarkerService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, query, callback);
+						return MarkerService.Inst.get().getMapDefinitionForFilter(Cookie.getRequestProperties(), pagination, query, callback);
 					}
 
 					@Override

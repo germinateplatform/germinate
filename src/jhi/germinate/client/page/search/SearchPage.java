@@ -326,7 +326,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				@Override
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback)
 				{
-					return PhenotypeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(phenotypeSection, callback));
+					return PhenotypeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), null, pagination, filter, new SearchCallback<>(phenotypeSection, callback));
 				}
 			};
 			phenotypeSection.add(phenotypeDataTable);
@@ -420,7 +420,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				@Override
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback)
 				{
-					return MarkerService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(mapDefinitionSection, callback));
+					return MarkerService.Inst.get().getMapDefinitionForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(mapDefinitionSection, callback));
 				}
 			};
 			mapDefinitionSection.add(mapDefinitionTable);

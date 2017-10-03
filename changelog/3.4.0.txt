@@ -71,6 +71,10 @@
   - CHG: Aligned the functionality of the pedigree download on the accessions overview page with the accession data download, i.e. it'll now download data for either the whole dataset, a group of accessions or the marked accessions.
   - ADD: Added more help content to the page.
   - DEL: Removed the "registration-agreement-long.html" and "registration-agreement-short.html" files form the template folder of the instance and moved their content to Text.properties entries.
+  - ADD: Added support for Dublin Core attributes. These are stored in the "dublin_core" column in the "datasets" table. The column type is JSON, please consult the documentation for the format of the JSON that is used here.
+  - ADD: Added collaborator tables to the database. This means that you can now define multiple collaborators for each dataset. A collaborator can be associated with multiple datasets. The collaborators are shown by clicking on the people icon in the datasets table.
+  - ADD: Added "location_name" column to phenotype data export.
+  - ADD: Added location information as a new column to the trials data export.
 
 /* MIGRATION */
 
@@ -82,6 +86,7 @@
       <inherits name="org.gwtbootstrap3.extras.toggleswitch.ToggleSwitch"/>
       <inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
       <inherits name="jhi.gwt.leaflet.GWTLeaflet"/>
+      <inherits name="com.google.web.bindery.autobean.AutoBean"/>
 
     - Move the "crop.svg" from the "instance-stuff/<your-instance>/template/images" folder one level up into the "template" folder.
 
@@ -199,6 +204,28 @@
       page.data.statistics.title=Data Statistics
       page.registration.disclaimer.short.html=
       page.registration.disclaimer.long.html=
+      widget.dublin.core.page.header=Dublin Core
+      widget.dublin.core.title=Title
+      widget.dublin.core.subject=Subject
+      widget.dublin.core.description=Description
+      widget.dublin.core.type=Type
+      widget.dublin.core.source=Source
+      widget.dublin.core.relation=Relation
+      widget.dublin.core.coverage=Coverage
+      widget.dublin.core.creator=Creator
+      widget.dublin.core.publisher=Publisher
+      widget.dublin.core.contributor=Contributor
+      widget.dublin.core.rights=Rights
+      widget.dublin.core.date=Date
+      widget.dublin.core.format=Format
+      widget.dublin.core.identifier=Identifier
+      widget.dublin.core.language=Language
+      page.datasets.collaborators.title=Collaborators
+      column.collaborator.id=Id
+      column.collaborator.first.name=First name
+      column.collaborator.last.name=Last name
+      column.collaborator.email=Email
+      column.collaborator.phone=Phone number
 
     - Some translatable text has been changed. The following properties should be changed in your "Text.properties" file and the according translation files:
 

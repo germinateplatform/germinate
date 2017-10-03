@@ -99,21 +99,6 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public ServerResult<Accession> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		try
-		{
-			return new AccessionManager().getById(userAuth, id);
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			return new ServerResult<>(null, null);
-		}
-	}
-
-	@Override
 	public ServerResult<List<Accession>> getByIds(RequestProperties properties, Pagination pagination, List<String> ids) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		if (pagination == null)
@@ -438,25 +423,5 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		return AccessionManager.getMcpd(userAuth, id);
-	}
-
-	@Override
-	public ServerResult<Accession> getByGid(RequestProperties properties, String gid) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		ServerResult<Accession> accession = AccessionManager.getByGid(userAuth, gid);
-
-		return new ServerResult<>(accession.getDebugInfo(), accession.getServerResult());
-	}
-
-	@Override
-	public ServerResult<Accession> getByName(RequestProperties properties, String accessionName) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		ServerResult<Accession> accession = AccessionManager.getByDefaultDisplayName(userAuth, accessionName);
-
-		return new ServerResult<>(accession.getDebugInfo(), accession.getServerResult());
 	}
 }

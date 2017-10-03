@@ -45,12 +45,47 @@ public class OsterPassportPage extends PassportPage
 	private static final String URL   = "URL";
 	private static final String IMAGE = "IMAGE";
 
-	private static final Taxonomy    HOMO_SAPIENS = new Taxonomy(-1L, "Homo", "Sapiens", null, null, 1, null, null);
-	private static final Country     GERMANY      = new Country(-1L, "DE", "DEU", "Germany", null, null);
-	private static final Country     UK           = new Country(-2L, "GB", "GBR", "United Kingdom of Great Britain and Northern Ireland", null, null);
-	private static final Location    COLOGNE      = new Location(-1L, GERMANY, null, null, null, "Cologne", "Cologne", 57d, 50.8919, 7.0511, null, null, null, null, null, 1L);
-	private static final Location    PERTH        = new Location(-2L, UK, null, null, null, "Perth", "Perth", 107d, 56.3927, -3.4495, null, null, null, null, null, 1L);
-	private static final Institution JHI          = new Institution(-1L, "GBR048", "The James Hutton Institute", "JHI", UK, null, "+44 (0) 844 928 5428", "germinate@hutton.ac.uk", "The James Hutton Institute, Invergowrie, Dundee, DD2 5DA, Scotland, UK", null, null);
+	private static final Taxonomy HOMO_SAPIENS = new Taxonomy(-1L)
+			.setGenus("Homo")
+			.setSpecies("Sapiens")
+			.setPloidy(1);
+
+	private static final Country GERMANY = new Country(-1L)
+			.setCountryCode2("DE")
+			.setCountryCode3("DEU")
+			.setName("Germany");
+
+	private static final Country UK = new Country(-2L)
+			.setCountryCode2("GB")
+			.setCountryCode3("GBR")
+			.setName("United Kingdom of Great Britain and Northern Ireland");
+
+	private static final Location COLOGNE = new Location(-1L)
+			.setCountry(GERMANY)
+			.setName("Cologne")
+			.setShortName("Cologne")
+			.setLatitude(57d)
+			.setLongitude(50.8919)
+			.setElevation(7.0511)
+			.setSize(1L);
+
+	private static final Location PERTH = new Location(-2L)
+			.setCountry(UK)
+			.setName("Perth")
+			.setShortName("Perth")
+			.setLatitude(107d)
+			.setLongitude(56.3927)
+			.setElevation(-3.4495)
+			.setSize(1L);
+
+	private static final Institution JHI = new Institution(-1L)
+			.setCode("GBR048")
+			.setName("The James Hutton Institute")
+			.setAcronym("JHI")
+			.setCountry(UK)
+			.setPhone("+44 (0) 844 928 5428")
+			.setContact("germinate@hutton.ac.uk")
+			.setAddress("The James Hutton Institute, Invergowrie, Dundee, DD2 5DA, Scotland, UK");
 
 	private static final Accession SEBASTIAN_RAUBACH = new Accession(-7L)
 			.setName("Sebastian Raubach")

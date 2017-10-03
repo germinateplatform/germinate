@@ -70,21 +70,6 @@ public class Institution extends DatabaseObject
 		super(id);
 	}
 
-	public Institution(Long id, String code, String name, String acronym, Country country, String contact, String phone, String email, String address, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.code = code;
-		this.name = name;
-		this.acronym = acronym;
-		this.country = country;
-		this.contact = contact;
-		this.phone = phone;
-		this.email = email;
-		this.address = address;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getCode()
 	{
 		return code;

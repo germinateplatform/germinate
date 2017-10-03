@@ -54,17 +54,6 @@ public class License extends DatabaseObject
 		super(id);
 	}
 
-	public License(Long id, String name, String description, LicenseLog licenseLog, Long createdOn, Long updatedOn, Map<Locale, LicenseData> licenseDataMap)
-	{
-		super(id);
-		this.name = name;
-		this.description = description;
-		this.licenseLog = licenseLog;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-		this.licenseDataMap = licenseDataMap;
-	}
-
 	public String getName()
 	{
 		return name;

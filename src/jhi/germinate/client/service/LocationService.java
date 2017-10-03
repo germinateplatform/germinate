@@ -94,17 +94,6 @@ public interface LocationService extends RemoteService
 	ServerResult<List<String>> getIdsForFilter(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
-	 * Returns the {@link Location} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param id         The {@link Location} id
-	 * @return The {@link Location} with the given id.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<Location> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException;
-
-	/**
 	 * Returns a paginated list of {@link Location}s that are located in the given {@link MegaEnvironment} id.
 	 *
 	 * @param properties The {@link RequestProperties}

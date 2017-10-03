@@ -49,6 +49,10 @@ td span.mdi:nth-child(2) {
 	z-index: 2000;
 }
 
+.modal-body dl {
+	margin-bottom: 10px;
+}
+
 #<%= Id.STRUCTURE_LOGIN_BACKGROUND_SVG %> {
 	position: fixed;
 	top: 0;

@@ -36,3 +36,28 @@ Over the years we have learned that people really like Microsoft Excel and that 
 The "datatemplates" folder in the {\germinate} source code contains templates for genotypic data, genetic maps, germplasm passport data, pedigree information and trials data. Each of the files contains detailed information about how we require the data to be formatted.
 
 \todo{Explain command line tools}
+
+\subsection{Data Standards}
+\todo{fill}
+\subsubsection{Dublin Core}
+{\germinate} supports the Dublin Core Metadata Element Set \cite{DublinCore} of 15 core terms. These can be associated with a dataset by using the json column \texttt{datasets.dublin\textunderscore core}. Each element of the set is optional, so can either be set to \texttt{null} or left out of it is not required. All elements are arrays, so that multiple values are possible for each key. An example can be seen below:
+
+\begin{lstlisting}[style=JavaScript]
+{
+	"title": ["An amateur's guide to roasting Unicorns."],
+	"subject": ["Unicorns", "Roasting", "Guide"],
+	"description": ["Illustrated guide to roasting unicorns. Includes detailed information about the habitat of unicorns and the best way to roast them."],
+	"type": ["Text", "Images"],
+	"source": ["Deepest depths of a weird mind"],
+	"relation": null,
+	"coverage": ["2000-2017"],
+	"creator": ["Raubach, Sebastian"],
+	"publisher": ["The James Hutton Institute"],
+	"contributor": null,
+	"rights": ["Access limited to everyone except the creator."],
+	"date": ["2017-09-28"],
+	"format": ["text/plain"],
+	"identifier": ["1223-45567-8998"],
+	"language": ["English", "German"]
+}
+\end{lstlisting}

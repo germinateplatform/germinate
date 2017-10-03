@@ -66,22 +66,6 @@ public class ClimateOverlay extends DatabaseObject
 		super(id);
 	}
 
-	public ClimateOverlay(Long id, String name, Climate climate, String path, Double bottomLeftLongitude, Double bottomLeftLatitude, Double topRightLongitude, Double topRightLatitude, Boolean isLegend, String description, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.climate = climate;
-		this.path = path;
-		this.bottomLeftLongitude = bottomLeftLongitude;
-		this.bottomLeftLatitude = bottomLeftLatitude;
-		this.topRightLongitude = topRightLongitude;
-		this.topRightLatitude = topRightLatitude;
-		this.isLegend = isLegend;
-		this.description = description;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

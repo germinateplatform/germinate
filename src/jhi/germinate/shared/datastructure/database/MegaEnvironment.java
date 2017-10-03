@@ -47,12 +47,6 @@ public class MegaEnvironment extends DatabaseObject
 		super(id);
 	}
 
-	public MegaEnvironment(Long id, String name)
-	{
-		super(id);
-		this.name = name;
-	}
-
 	public String getName()
 	{
 		return name;

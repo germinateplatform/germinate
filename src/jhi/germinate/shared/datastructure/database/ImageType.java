@@ -52,15 +52,6 @@ public class ImageType extends DatabaseObject
 		super(id);
 	}
 
-	public ImageType(Long id, String description, GerminateDatabaseTable referenceTable, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.description = description;
-		this.referenceTable = referenceTable;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getDescription()
 	{
 		return description;

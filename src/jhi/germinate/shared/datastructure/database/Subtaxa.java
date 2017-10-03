@@ -60,16 +60,6 @@ public class Subtaxa extends DatabaseObject
 		super(id);
 	}
 
-	public Subtaxa(Long id, Taxonomy taxonomy, String author, String taxonomyIdentifier, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.taxonomy = taxonomy;
-		this.author = author;
-		this.taxonomyIdentifier = taxonomyIdentifier;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public Taxonomy getTaxonomy()
 	{
 		return taxonomy;

@@ -41,17 +41,6 @@ public class CommentServiceImpl extends BaseRemoteServiceServlet implements Comm
 	private static final long serialVersionUID = -8616536189132171506L;
 
 	@Override
-	public PaginatedServerResult<List<Comment>> get(RequestProperties properties, GerminateDatabaseTable referenceTable, Long referenceId, Pagination pagination) throws InvalidSessionException, DatabaseException
-	{
-		if (pagination == null)
-			pagination = Pagination.getDefault();
-
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return CommentManager.getAll(userAuth, referenceTable, referenceId, pagination);
-	}
-
-	@Override
 	public DebugInfo add(RequestProperties properties, CommentType type, Long referenceId, String description) throws InvalidSessionException, DatabaseException,
 			InsufficientPermissionsException, SystemInReadOnlyModeException
 	{

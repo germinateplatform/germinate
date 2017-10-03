@@ -49,14 +49,6 @@ public class Trialseries extends DatabaseObject
 		super(id);
 	}
 
-	public Trialseries(Long id, String name, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

@@ -70,21 +70,6 @@ public class PhenotypeData extends DatabaseObject
 		super(id);
 	}
 
-	public PhenotypeData(Long id, Phenotype phenotype, Accession accession, String value, Dataset dataset, Long recordingDate, Location location, Treatment treatment, Trialseries trialseries, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.phenotype = phenotype;
-		this.accession = accession;
-		this.value = value;
-		this.dataset = dataset;
-		this.recordingDate = recordingDate;
-		this.location = location;
-		this.treatment = treatment;
-		this.trialseries = trialseries;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public Phenotype getPhenotype()
 	{
 		return phenotype;

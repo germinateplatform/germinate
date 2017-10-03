@@ -19,8 +19,12 @@ package jhi.germinate.client.widget.element;
 
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.*;
+
 import java.util.*;
 
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.shared.datastructure.database.*;
 
 /**
@@ -31,6 +35,7 @@ public class AttributeDataWidget extends Composite
 	public AttributeDataWidget(List<AttributeData> data)
 	{
 		FlowPanel panel = new FlowPanel();
+		panel.add(new Heading(HeadingSize.H3, Text.LANG.datasetAttributesTitle()));
 
 		for (AttributeData d : data)
 			new DescriptionWidget(panel, d.getAttribute().getName(), d.getValue());

@@ -49,15 +49,6 @@ public class Locale extends DatabaseObject
 		super(id);
 	}
 
-	public Locale(Long id, String name, String description, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.description = description;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

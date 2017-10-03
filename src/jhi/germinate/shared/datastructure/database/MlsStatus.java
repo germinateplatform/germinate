@@ -45,12 +45,6 @@ public class MlsStatus extends DatabaseObject
 		super(id);
 	}
 
-	public MlsStatus(Long id, String description)
-	{
-		super(id);
-		this.description = description;
-	}
-
 	public String getDescription()
 	{
 		return description;

@@ -64,18 +64,6 @@ public class Phenotype extends DatabaseObject
 		super(id);
 	}
 
-	public Phenotype(Long id, String name, String shortName, String description, String dataType, Unit unit, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.shortName = shortName;
-		this.description = description;
-		this.dataType = dataType;
-		this.unit = unit;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

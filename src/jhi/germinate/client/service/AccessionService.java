@@ -88,17 +88,6 @@ public interface AccessionService extends RemoteService
 	ServerResult<List<String>> getIdsForFilter(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
-	 * Returns the {@link Accession} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param id         The id of the accession
-	 * @return The {@link Accession} for the given id
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<Accession> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException;
-
-	/**
 	 * Returns the {@link Accession}s with the given ids.
 	 *
 	 * @param properties The {@link RequestProperties}
@@ -110,28 +99,6 @@ public interface AccessionService extends RemoteService
 	 * @throws InvalidColumnException  Thrown if the specified sort column isn't valid
 	 */
 	ServerResult<List<Accession>> getByIds(RequestProperties properties, Pagination pagination, List<String> ids) throws InvalidSessionException, DatabaseException, InvalidColumnException;
-
-	/**
-	 * Returns the {@link Accession} based on the general identifier.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param gid        The {@link Accession#GENERAL_IDENTIFIER}
-	 * @return The {@link Accession} based on the general identifier.
-	 * @throws InvalidSessionException Thrown if the session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<Accession> getByGid(RequestProperties properties, String gid) throws InvalidSessionException, DatabaseException;
-
-	/**
-	 * Returns the {@link Accession} based on the name.
-	 *
-	 * @param properties    The {@link RequestProperties}
-	 * @param accessionName The {@link Accession#NAME}
-	 * @return The {@link Accession} based on the name.
-	 * @throws InvalidSessionException Thrown if the session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<Accession> getByName(RequestProperties properties, String accessionName) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Exports all the data associated with {@link Accession}s to a flat file. Returns the name of the result file.

@@ -62,17 +62,6 @@ public class PedigreeDefinition extends DatabaseObject
 		super(id);
 	}
 
-	public PedigreeDefinition(Long id, Accession accession, PedigreeNotation notation, PedigreeDescription description, String definition, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.accession = accession;
-		this.notation = notation;
-		this.description = description;
-		this.definition = definition;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public Accession getAccession()
 	{
 		return accession;

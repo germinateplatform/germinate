@@ -35,17 +35,6 @@ import jhi.germinate.shared.search.*;
 public interface CommentServiceAsync
 {
 	/**
-	 * Returns a paginated list of {@link Comment}s for the given {@link GerminateDatabaseTable} and reference id.
-	 *
-	 * @param properties     The {@link RequestProperties}
-	 * @param referenceTable The {@link GerminateDatabaseTable} specifying the reference table
-	 * @param referenceId    The reference id (the id within the reference table)
-	 * @param pagination     The {@link Pagination}
-	 * @param callback       The {@link AsyncCallback}
-	 */
-	void get(RequestProperties properties, GerminateDatabaseTable referenceTable, Long referenceId, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Comment>>> callback);
-
-	/**
 	 * Adds a new {@link Comment} to the database.
 	 *
 	 * @param properties  The {@link RequestProperties}

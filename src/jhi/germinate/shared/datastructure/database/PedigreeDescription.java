@@ -58,16 +58,6 @@ public class PedigreeDescription extends DatabaseObject
 		super(id);
 	}
 
-	public PedigreeDescription(Long id, String name, String description, String author, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.description = description;
-		this.author = author;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

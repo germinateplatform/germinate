@@ -54,14 +54,6 @@ public class MarkerType extends DatabaseObject
 		super(id);
 	}
 
-	public MarkerType(Long id, String description, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.description = description;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getDescription()
 	{
 		return description;

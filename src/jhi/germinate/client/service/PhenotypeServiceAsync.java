@@ -80,7 +80,7 @@ public interface PhenotypeServiceAsync
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	Request getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback);
+	Request getDataForFilter(RequestProperties properties, List<Long> datasetIds, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback);
 
 	/**
 	 * Exports all the data associated with {@link PhenotypeData}s mathing the given {@link PartialSearchQuery}.

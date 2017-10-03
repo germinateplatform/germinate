@@ -55,16 +55,6 @@ public class Country extends DatabaseObject
 		super(id);
 	}
 
-	public Country(Long id, String countryCode2, String countryCode3, String name, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.countryCode2 = countryCode2;
-		this.countryCode3 = countryCode3;
-		this.name = name;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getCountryCode2()
 	{
 		return countryCode2;

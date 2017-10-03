@@ -54,13 +54,6 @@ public class StorageData extends DatabaseObject
 		super(id);
 	}
 
-	public StorageData(Long id, Accession accession, Storage storage)
-	{
-		super(id);
-		this.accession = accession;
-		this.storage = storage;
-	}
-
 	public Accession getAccession()
 	{
 		return accession;

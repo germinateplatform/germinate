@@ -58,16 +58,6 @@ public class PedigreeNotation extends DatabaseObject
 		super(id);
 	}
 
-	public PedigreeNotation(Long id, String name, String description, String referenceUrl, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.description = description;
-		this.referenceUrl = referenceUrl;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

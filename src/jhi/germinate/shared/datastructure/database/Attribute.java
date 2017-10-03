@@ -61,17 +61,6 @@ public class Attribute extends DatabaseObject
 		super(id);
 	}
 
-	public Attribute(Long id, String name, String description, String dataType, String targetTable, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.description = description;
-		this.dataType = dataType;
-		this.targetTable = targetTable;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

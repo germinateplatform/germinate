@@ -55,15 +55,6 @@ public interface LocationServiceAsync
 	void getIdsForFilter(RequestProperties properties, PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
-	 * Returns the {@link Location} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param id         The {@link Location} id
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getById(RequestProperties properties, Long id, AsyncCallback<ServerResult<Location>> callback);
-
-	/**
 	 * Returns a paginated list of {@link Location}s that are located in the given {@link MegaEnvironment} id.
 	 *
 	 * @param properties The {@link RequestProperties}

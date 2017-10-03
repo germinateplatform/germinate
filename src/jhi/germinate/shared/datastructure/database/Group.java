@@ -59,18 +59,6 @@ public class Group extends DatabaseObject
 		super(id);
 	}
 
-	public Group(Long id, GroupType type, String description, boolean visibility, long createdBy, Long createdOn, Long updatedOn, Long size)
-	{
-		super(id);
-		this.type = type;
-		this.description = description;
-		this.visibility = visibility;
-		this.createdBy = createdBy;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-		this.size = size;
-	}
-
 	public GroupType getType()
 	{
 		return type;

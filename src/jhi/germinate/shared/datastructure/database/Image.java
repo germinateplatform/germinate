@@ -60,19 +60,6 @@ public class Image extends DatabaseObject
 		super(id);
 	}
 
-	public Image(Long id, ImageType type, String description, Long foreignId, String path, int width, int height, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.type = type;
-		this.description = description;
-		this.foreignId = foreignId;
-		this.path = path;
-		this.width = width;
-		this.height = height;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public ImageType getType()
 	{
 		return type;

@@ -55,17 +55,6 @@ public class LinkType extends DatabaseObject
 		super(id);
 	}
 
-	public LinkType(Long id, String description, String targetTable, String targetColumn, String placeholder, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.description = description;
-		this.targetTable = targetTable;
-		this.targetColumn = targetColumn;
-		this.placeholder = placeholder;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getDescription()
 	{
 		return description;

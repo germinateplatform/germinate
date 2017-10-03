@@ -64,18 +64,6 @@ public class MapDefinition extends DatabaseObject
 		super(id);
 	}
 
-	public MapDefinition(Long id, MapFeatureType type, Marker marker, Map map, Double definitionStart, Double definitionEnd, String chromosome, String armImpute)
-	{
-		super(id);
-		this.type = type;
-		this.marker = marker;
-		this.map = map;
-		this.definitionStart = definitionStart;
-		this.definitionEnd = definitionEnd;
-		this.chromosome = chromosome;
-		this.armImpute = armImpute;
-	}
-
 	public MapFeatureType getType()
 	{
 		return type;

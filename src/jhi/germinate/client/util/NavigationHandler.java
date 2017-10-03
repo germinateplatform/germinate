@@ -21,6 +21,8 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
 
+import java.util.*;
+
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.management.*;
@@ -52,6 +54,8 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
+
+import static jhi.germinate.client.page.dataset.ExperimentDetailsPage.*;
 
 /**
  * @author Sebastian Raubach
@@ -211,7 +215,7 @@ public class NavigationHandler
 										@Override
 										protected void onSuccessImpl(ServerResult<String> result)
 										{
-											ExperimentDetailsPage.clickDownloadLink(result);
+											clickDownloadLink(result);
 										}
 									});
 								}
@@ -330,15 +334,30 @@ public class NavigationHandler
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
 				widget.setHeaderText(Text.LANG.trialsDatasetHeader());
+				widget.setShowDownload(true, new SimpleCallback<Dataset>()
+				{
+					@Override
+					public void onSuccess(Dataset result)
+					{
+							/* Get the id of the selected dataset */
+						List<Long> ids = new ArrayList<>();
+						ids.add(result.getId());
+
+							/* Start the export process */
+						PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
+						{
+							@Override
+							protected void onSuccessImpl(ServerResult<String> result)
+							{
+								clickDownloadLink(result);
+							}
+						});
+					}
+				});
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});
 		}
-//		// COLLECTINGSITES TREEMAP
-//		else if (Page.LOCATION_TREEMAP.is(page))
-//		{
-//			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new LocationTreemapPage()));
-//		}
 		// ALLELE FREQ DATASETS
 		else if (Page.ALLELE_FREQUENCY_DATASET.is(page))
 		{

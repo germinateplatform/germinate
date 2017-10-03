@@ -68,7 +68,10 @@ public class LicenseWizardPage extends Composite
 		accept.setType(ButtonType.SUCCESS);
 		decline.setType(ButtonType.DEFAULT);
 
-		license.setLicenseLog(new LicenseLog(-1L, license.getId(), ModuleCore.getUserAuth().getId(), System.currentTimeMillis()));
+		license.setLicenseLog(new LicenseLog(-1L)
+				.setLicense(license.getId())
+				.setUser(ModuleCore.getUserAuth().getId())
+				.setAcceptedOn(System.currentTimeMillis()));
 
 		if (handler != null)
 			handler.onDecisionChanged(decision);

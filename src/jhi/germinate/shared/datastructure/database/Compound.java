@@ -67,20 +67,6 @@ public class Compound extends DatabaseObject
 		super(id);
 	}
 
-	public Compound(Long id, String name, String description, String molecularFormula, Double monoisotopicMass, Double averageMass, String theClass, Unit unit, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.description = description;
-		this.molecularFormula = molecularFormula;
-		this.monoisotopicMass = monoisotopicMass;
-		this.averageMass = averageMass;
-		this.theClass = theClass;
-		this.unit = unit;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

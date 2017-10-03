@@ -310,6 +310,12 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		return new ExperimentManager().getById(userAuth, id);
 	}
 
+	@Override
+	public String getJson()
+	{
+		return "{  \"creator\": [\"Creator1\", \"Creator2\"],  \"subject\": [\"Subject1\", \"Subject2\"],  \"description\": [\"Description1\", \"Description2\"],  \"publisher\": [\"Publisher1\", \"Publisher2\"],  \"contributor\": [\"Contributor1\", \"Contributor2\"],  \"date\": [\"2017-01-01\", \"2017-01-02\"],  \"type\": [\"Type1\", \"Type2\"],  \"format\": [\"Format1\", \"Format2\"],  \"identifier\": [\"identifier1\", \"identifier2\"],  \"source\": [\"source1\", \"source2\"],  \"language\": [\"English\", \"German\"],  \"relation\": [\"relation1\", \"relation2\"],  \"coverage\": [\"coverage1\", \"coverage2\"],  \"rights\": [\"rights1\", \"rights2\"] }";
+	}
+
 	private static class DatasetStats
 	{
 		public String experimentType;

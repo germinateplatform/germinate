@@ -61,18 +61,6 @@ public class Comment extends DatabaseObject
 		super(id);
 	}
 
-	public Comment(Long id, CommentType type, String user, boolean visibility, String description, Long referenceId, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.type = type;
-		this.user = user;
-		this.visibility = visibility;
-		this.description = description;
-		this.referenceId = referenceId;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public CommentType getType()
 	{
 		return type;

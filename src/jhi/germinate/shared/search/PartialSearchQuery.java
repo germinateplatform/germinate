@@ -32,6 +32,17 @@ public class PartialSearchQuery extends OverallSearchQuery<SearchCondition>
 {
 	private static final long serialVersionUID = 6352959904324552644L;
 
+	public PartialSearchQuery()
+	{
+		super();
+	}
+
+	public PartialSearchQuery(SearchCondition condition)
+	{
+		super();
+		add(condition);
+	}
+
 	/**
 	 * Creates a set of the column names used in this search query that may be required for table display.
 	 *

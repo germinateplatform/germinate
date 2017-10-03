@@ -120,7 +120,7 @@ footer > div.container-fluid {
 .navbar-top-links .dropdown-menu li {
   display: block;
 }
-.navbar-top-links .dropdown-menu li:last-child {
+#<%= Id.STRUCTURE_PAGE %> .navbar-top-links .dropdown-menu li:last-child {
   margin-right: 0;
 }
 .navbar-top-links .dropdown-menu li a {

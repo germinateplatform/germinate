@@ -40,10 +40,11 @@ public class MarkerManager extends AbstractManager<Marker>
 	private static final String COMMON_TABLES               = "mapdefinitions LEFT JOIN mapfeaturetypes ON mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
 	private static final String SELECT_ALL_FOR_GROUP        = "SELECT * FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_GROUP        = "SELECT markers.id FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id";
-	private static final String SELECT_BY_NAME              = "SELECT * FROM " + COMMON_TABLES + " WHERE markers.marker_name = ?";
+	private static final String SELECT_FOR_FILTER           = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_FILTER_MAP   = "SELECT DISTINCT(markers.id) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
 	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(markers.marker_name) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
 	private static final String SELECT_COUNT                = "SELECT COUNT(1) AS count FROM markers";
+	private static final String SELECT_GROUP_AS_QTL         = "SELECT groups.description AS \"Name\", mapdefinitions.chromosome AS \"Chromosome\", FLOOR(AVG( mapdefinitions.definition_start )) AS \"Position\", FLOOR(MIN( mapdefinitions.definition_start )) AS \"Pos-Min\", FLOOR(MAX( mapdefinitions.definition_start )) AS \"Pos-Max\", null AS \"Trait\", null AS \"Experiment\" FROM mapdefinitions LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN groupmembers ON groupmembers.foreign_id = markers.id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY groups.id, mapdefinitions.chromosome";
 
 	@Override
 	protected String getTable()
@@ -65,6 +66,18 @@ public class MarkerManager extends AbstractManager<Marker>
 				.getStrings();
 	}
 
+	public static PaginatedServerResult<List<Marker>> getForFilter(UserAuth userAuth, Pagination pagination, PartialSearchQuery filter) throws DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
+	{
+		pagination.updateSortColumn(AccessionService.COLUMNS_SORTABLE, Marker.ID);
+		String formatted = String.format(SELECT_FOR_FILTER, pagination.getSortQuery());
+
+		return AbstractManager.<Marker>getFilteredDatabaseObjectQuery(userAuth, filter, formatted, MarkerService.COLUMNS_MARKER_TABLE, pagination.getResultSize())
+				.setInt(pagination.getStart())
+				.setInt(pagination.getLength())
+				.run()
+				.getObjectsPaginated(Marker.Parser.Inst.get(), true);
+	}
+
 	public static ServerResult<List<String>> getNamesForFilter(UserAuth userAuth, PartialSearchQuery filter) throws DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
 	{
 		return getFilteredValueQuery(filter, userAuth, SELECT_NAMES_FOR_FILTER_MAP, MarkerService.COLUMNS_MAPDEFINITION_TABLE)
@@ -84,14 +97,6 @@ public class MarkerManager extends AbstractManager<Marker>
 				.setInt(pagination.getLength())
 				.run()
 				.getObjects(Marker.Parser.Inst.get());
-	}
-
-	public static ServerResult<Marker> getByName(UserAuth userAuth, String name) throws DatabaseException
-	{
-		return new DatabaseObjectQuery<Marker>(SELECT_BY_NAME, userAuth)
-				.setString(name)
-				.run()
-				.getObject(Marker.Parser.Inst.get());
 	}
 
 	public static PaginatedServerResult<List<Marker>> getAllForGroup(UserAuth userAuth, Long groupId, Pagination pagination) throws DatabaseException, InvalidColumnException, InsufficientPermissionsException
@@ -127,5 +132,12 @@ public class MarkerManager extends AbstractManager<Marker>
 		return new ValueQuery(SELECT_COUNT, user)
 				.run(COUNT)
 				.getLong(0L);
+	}
+
+	public static GerminateTableStreamer getMarkerGroupAsQtl(UserAuth user, Long groupId) throws DatabaseException
+	{
+		return new GerminateTableQuery(SELECT_GROUP_AS_QTL, user, null)
+				.setLong(groupId)
+				.getStreamer();
 	}
 }

@@ -61,19 +61,6 @@ public interface CommentService extends RemoteService
 	}
 
 	/**
-	 * Returns a paginated list of {@link Comment}s for the given {@link GerminateDatabaseTable} and reference id.
-	 *
-	 * @param properties     The {@link RequestProperties}
-	 * @param referenceTable The {@link GerminateDatabaseTable} specifying the reference table
-	 * @param referenceId    The reference id (the id within the reference table)
-	 * @param pagination     The {@link Pagination}
-	 * @return A paginated list of {@link Comment}s for the given {@link GerminateDatabaseTable} and reference id.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	PaginatedServerResult<List<Comment>> get(RequestProperties properties, GerminateDatabaseTable referenceTable, Long referenceId, Pagination pagination) throws InvalidSessionException, DatabaseException;
-
-	/**
 	 * Adds a new {@link Comment} to the database.
 	 *
 	 * @param properties  The {@link RequestProperties}

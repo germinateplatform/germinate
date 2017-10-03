@@ -35,11 +35,13 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -72,18 +74,35 @@ public class MarkerPage extends Composite implements HasHyperlinkButton
 		Long markerId = LongParameterStore.Inst.get().get(Parameter.markerId);
 		String markerName = StringParameterStore.Inst.get().get(Parameter.markerName);
 
-		if (markerId == null)
+		PartialSearchQuery filter = null;
+
+		if (markerId != null)
+			filter = new PartialSearchQuery(new SearchCondition(Marker.ID, new Equal(), Long.toString(markerId), Long.class.getSimpleName()));
+		else if (!StringUtils.isEmpty(markerName))
+			filter = new PartialSearchQuery(new SearchCondition(Marker.MARKER_NAME, new Equal(), markerName, String.class.getSimpleName()));
+
+		if (filter != null)
 		{
-			// If we don't have an ID, but we've got the name, then use it to get the marker
-			if (markerName != null)
-				requestMarkerDetailsFromName(markerName);
-			else
-				clearContent();
+			MarkerService.Inst.get().getMarkerForFilter(Cookie.getRequestProperties(), Pagination.getDefault(), filter, new DefaultAsyncCallback<PaginatedServerResult<List<Marker>>>()
+			{
+				@Override
+				protected void onSuccessImpl(PaginatedServerResult<List<Marker>> result)
+				{
+					if (!CollectionUtils.isEmpty(result.getServerResult()))
+					{
+						marker = result.getServerResult().get(0);
+						setUpDetails();
+					}
+					else
+					{
+						clearContent();
+					}
+				}
+			});
 		}
 		else
 		{
-			// If we have an id, then use it to get the details
-			requestMarkerDetailsFromId(markerId);
+			clearContent();
 		}
 	}
 
@@ -91,52 +110,6 @@ public class MarkerPage extends Composite implements HasHyperlinkButton
 	{
 		content.clear();
 		content.add(new Heading(HeadingSize.H3, Text.LANG.notificationNoMapOrMarker()));
-	}
-
-	/**
-	 * Request the complete marker details for the selected marker. On success, the rest of the page will be created.
-	 */
-	private void requestMarkerDetailsFromId(Long markerId)
-	{
-		MarkerService.Inst.get().getById(Cookie.getRequestProperties(), markerId, new DefaultAsyncCallback<ServerResult<Marker>>()
-		{
-			@Override
-			public void onSuccessImpl(ServerResult<Marker> result)
-			{
-				if (result != null)
-				{
-					marker = result.getServerResult();
-					setUpDetails();
-				}
-				else
-				{
-					clearContent();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Request the complete marker details for the selected marker. On success, the rest of the page will be created.
-	 */
-	private void requestMarkerDetailsFromName(String markerName)
-	{
-		MarkerService.Inst.get().getByName(Cookie.getRequestProperties(), markerName, new DefaultAsyncCallback<ServerResult<Marker>>()
-		{
-			@Override
-			public void onSuccessImpl(ServerResult<Marker> result)
-			{
-				if (result != null)
-				{
-					marker = result.getServerResult();
-					setUpDetails();
-				}
-				else
-				{
-					clearContent();
-				}
-			}
-		});
 	}
 
 	private void setUpDetails()

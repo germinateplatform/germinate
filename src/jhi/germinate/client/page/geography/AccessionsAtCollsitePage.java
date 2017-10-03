@@ -34,6 +34,7 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -76,13 +77,17 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 		}
 		else
 		{
-			LocationService.Inst.get().getById(Cookie.getRequestProperties(), collsiteId, new DefaultAsyncCallback<ServerResult<Location>>()
+			PartialSearchQuery filter = new PartialSearchQuery(new SearchCondition(Location.ID, new Equal(), Long.toString(collsiteId), Long.class.getSimpleName()));
+			LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Location>>>()
 			{
 				@Override
-				protected void onSuccessImpl(ServerResult<Location> result)
+				protected void onSuccessImpl(PaginatedServerResult<List<Location>> result)
 				{
-					String collsiteName = result.getServerResult().getName();
-					header.setText(Text.LANG.geographyTitle(HTMLUtils.stripHtmlTags(collsiteName)));
+					if (!CollectionUtils.isEmpty(result.getServerResult()))
+					{
+						String collsiteName = result.getServerResult().get(0).getName();
+						header.setText(Text.LANG.geographyTitle(HTMLUtils.stripHtmlTags(collsiteName)));
+					}
 				}
 			});
 

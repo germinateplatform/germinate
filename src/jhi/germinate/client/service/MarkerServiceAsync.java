@@ -33,14 +33,7 @@ import jhi.germinate.shared.search.*;
  */
 public interface MarkerServiceAsync
 {
-	/**
-	 * Returns the {@link Marker} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param markerId   The {@link Marker} id
-	 * @param callback   {@link AsyncCallback}
-	 */
-	void getById(RequestProperties properties, Long markerId, AsyncCallback<ServerResult<Marker>> callback);
+	Request getMarkerForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Marker>>> callback);
 
 	/**
 	 * Returns a paginated list of {@link Marker}s that match the given {@link PartialSearchQuery}.
@@ -50,7 +43,7 @@ public interface MarkerServiceAsync
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @param callback   {@link AsyncCallback}
 	 */
-	Request getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback);
+	Request getMapDefinitionForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback);
 
 	/**
 	 * Returns the ids of the {@link Marker}s that match the given {@link PartialSearchQuery}.
@@ -60,15 +53,6 @@ public interface MarkerServiceAsync
 	 * @param callback   {@link AsyncCallback}
 	 */
 	void getIdsForFilter(RequestProperties properties, PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);
-
-	/**
-	 * Returns the {@link Marker} for the given name.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param name       The {@link Marker} name
-	 * @param callback   {@link AsyncCallback}
-	 */
-	void getByName(RequestProperties properties, String name, AsyncCallback<ServerResult<Marker>> callback);
 
 	/**
 	 * Returns the {@link Marker}s with the given ids.

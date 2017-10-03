@@ -110,40 +110,6 @@ public class Accession extends DatabaseObject
 		super(id);
 	}
 
-	public Accession(Long id, String generalIdentifier, String number, String name, String bankNumber, String breedersCode, String breedersName, Subtaxa subtaxa, Taxonomy taxonomy, Institution institution, String plantPassport, String donorCode, String donorName, String donorNumber, String acqDate, String collNumb, Long collDate, String collName, String collCode, String collMissId, String otherNumb, String duplSite, String duplInstName, String puid, BiologicalStatus biologicalStatus, CollectingSource collSrc, Location location, MlsStatus mlsStatus, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.generalIdentifier = generalIdentifier;
-		this.number = number;
-		this.name = name;
-		this.bankNumber = bankNumber;
-		this.breedersCode = breedersCode;
-		this.breedersName = breedersName;
-		this.subtaxa = subtaxa;
-		this.taxonomy = taxonomy;
-		this.institution = institution;
-		this.plantPassport = plantPassport;
-		this.donorCode = donorCode;
-		this.donorName = donorName;
-		this.donorNumber = donorNumber;
-		this.acqDate = acqDate;
-		this.collNumb = collNumb;
-		this.collDate = collDate;
-		this.collName = collName;
-		this.collCode = collCode;
-		this.collMissId = collMissId;
-		this.otherNumb = otherNumb;
-		this.duplSite = duplSite;
-		this.duplInstName = duplInstName;
-		this.puid = puid;
-		this.biologicalStatus = biologicalStatus;
-		this.collSrc = collSrc;
-		this.location = location;
-		this.mlsStatus = mlsStatus;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getGeneralIdentifier()
 	{
 		return generalIdentifier;

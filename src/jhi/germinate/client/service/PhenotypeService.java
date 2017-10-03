@@ -38,30 +38,26 @@ public interface PhenotypeService extends RemoteService
 	String NAME                  = "name";
 	String DATASET_NAME          = "dataset_name";
 	String LICENSE_NAME          = "license_name";
+	String LOCATION_NAME		 = "location_name";
 	String TREATMENT_DESCRIPTION = "treatments_description";
 
-	String[] COLUMNS_SORTABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Dataset.DESCRIPTION, ExperimentType.DESCRIPTION, Phenotype.NAME, Phenotype.SHORT_NAME, Unit.NAME, PhenotypeData.PHENOTYPE_VALUE, PhenotypeData.RECORDING_DATE};
+	String[] COLUMNS_DATA_SORTABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Dataset.DESCRIPTION, ExperimentType.DESCRIPTION, Phenotype.NAME, Phenotype.SHORT_NAME, Unit.NAME, PhenotypeData.PHENOTYPE_VALUE, PhenotypeData.RECORDING_DATE};
+	String[] COLUMNS_SORTABLE      = {Phenotype.ID, Phenotype.NAME, Phenotype.DESCRIPTION, Phenotype.SHORT_NAME, Unit.ID, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION};
 
-	final class Inst
-	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
-		 * InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"
-		 * >Initialization-on-demand holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
-		 * <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
-		private static final class InstanceHolder
-		{
-			private static final PhenotypeServiceAsync INSTANCE = GWT.create(PhenotypeService.class);
-		}
-
-		public static PhenotypeServiceAsync get()
-		{
-			return InstanceHolder.INSTANCE;
-		}
-	}
+	/**
+	 * Returns a paginated list of {@link PhenotypeData}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @return A paginated list of {@link PhenotypeData}s that match the given {@link PartialSearchQuery}.
+	 * @throws InvalidSessionException     Thrown if the current session is invalid
+	 * @throws DatabaseException           Thrown if the query fails on the server
+	 * @throws InvalidColumnException      Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
+	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
+	 */
+	PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, List<Long> datasetIds, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
 	 * Returns the {@link Phenotype} with the given id.
@@ -110,20 +106,25 @@ public interface PhenotypeService extends RemoteService
 	 */
 	ServerResult<List<DataStats>> getOverviewStats(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException;
 
-	/**
-	 * Returns a paginated list of {@link PhenotypeData}s that match the given {@link PartialSearchQuery}.
-	 *
-	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
-	 * @param pagination The {@link Pagination} The {@link Pagination}
-	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
-	 * @return A paginated list of {@link PhenotypeData}s that match the given {@link PartialSearchQuery}.
-	 * @throws InvalidSessionException     Thrown if the current session is invalid
-	 * @throws DatabaseException           Thrown if the query fails on the server
-	 * @throws InvalidColumnException      Thrown if the filtering is trying to access a column that isn't available for filtering
-	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
-	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
-	 */
-	PaginatedServerResult<List<PhenotypeData>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
+	final class Inst
+	{
+		/**
+		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
+		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
+		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+		 *
+		 * @author Sebastian Raubach
+		 */
+		private static final class InstanceHolder
+		{
+			private static final PhenotypeServiceAsync INSTANCE = GWT.create(PhenotypeService.class);
+		}
+
+		public static PhenotypeServiceAsync get()
+		{
+			return InstanceHolder.INSTANCE;
+		}
+	}
 
 	/**
 	 * Exports all the data associated with {@link PhenotypeData}s mathing the given {@link PartialSearchQuery}.

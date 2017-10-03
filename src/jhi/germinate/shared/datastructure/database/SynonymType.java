@@ -54,16 +54,6 @@ public class SynonymType extends DatabaseObject
 		super(id);
 	}
 
-	public SynonymType(Long id, GerminateDatabaseTable targetTable, String name, String description, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.targetTable = targetTable;
-		this.name = name;
-		this.description = description;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public GerminateDatabaseTable getTargetTable()
 	{
 		return targetTable;

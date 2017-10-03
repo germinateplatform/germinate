@@ -169,9 +169,18 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
          * Germinate. In this case we don't want to use internally stored
          * accession ids, but rather use the external one
          */
+		PartialSearchQuery filter = null;
 		if (stateGeneralId != null)
+			filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Equal(), stateGeneralId, Long.class.getSimpleName()));
+		/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
+		else if (!StringUtils.isEmpty(accessionName))
+			filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Equal(), accessionName, String.class.getSimpleName()));
+		else if (stateAccessionId != null)
+			filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Equal(), Long.toString(stateAccessionId), Long.class.getSimpleName()));
+
+		if(filter != null)
 		{
-			AccessionService.Inst.get().getByGid(Cookie.getRequestProperties(), stateGeneralId, new DefaultAsyncCallback<ServerResult<Accession>>()
+			AccessionService.Inst.get().getForFilter(Cookie.getRequestProperties(), Pagination.getDefault(), filter, new DefaultAsyncCallback<PaginatedServerResult<List<Accession>>>()
 			{
 				@Override
 				public void onFailureImpl(Throwable caught)
@@ -187,45 +196,11 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				}
 
 				@Override
-				public void onSuccessImpl(ServerResult<Accession> result)
+				public void onSuccessImpl(PaginatedServerResult<List<Accession>> result)
 				{
-					if (result.getServerResult() != null)
+					if (!CollectionUtils.isEmpty(result.getServerResult()))
 					{
-						accession = result.getServerResult();
-						updateContent();
-					}
-				}
-			});
-
-			StringParameterStore.Inst.get().remove(Parameter.generalId);
-		}
-		/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
-		else if (!StringUtils.isEmpty(accessionName))
-		{
-			AccessionService.Inst.get().getByName(Cookie.getRequestProperties(), accessionName, new DefaultAsyncCallback<ServerResult<Accession>>()
-			{
-				@Override
-				protected void onSuccessImpl(ServerResult<Accession> result)
-				{
-
-					if (result.getServerResult() != null)
-					{
-						accession = result.getServerResult();
-						updateContent();
-					}
-				}
-			});
-		}
-		else if (stateAccessionId != null)
-		{
-			AccessionService.Inst.get().getById(Cookie.getRequestProperties(), stateAccessionId, new DefaultAsyncCallback<ServerResult<Accession>>()
-			{
-				@Override
-				protected void onSuccessImpl(ServerResult<Accession> result)
-				{
-					if (result.getServerResult() != null)
-					{
-						accession = result.getServerResult();
+						accession = result.getServerResult().get(0);
 						updateContent();
 					}
 				}

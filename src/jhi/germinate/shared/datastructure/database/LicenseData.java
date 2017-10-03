@@ -53,15 +53,6 @@ public class LicenseData extends DatabaseObject
 		super(id);
 	}
 
-	public LicenseData(Long id, Long license, Locale locale, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.license = license;
-		this.locale = locale;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public Long getLicense()
 	{
 		return license;

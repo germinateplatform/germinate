@@ -240,6 +240,12 @@ public final class AlertDialog
 		dialog.show();
 	}
 
+	public AlertDialog setSize(ModalSize size)
+	{
+		dialog.setSize(size);
+		return this;
+	}
+
 	public void negativeClick()
 	{
 		if (negativeButton != null)

@@ -62,19 +62,6 @@ public class News extends DatabaseObject
 		super(id);
 	}
 
-	public News(Long id, NewsType type, String title, String content, String image, String hyperlink, String user, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.type = type;
-		this.title = title;
-		this.content = content;
-		this.image = image;
-		this.hyperlink = hyperlink;
-		this.user = user;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public NewsType getType()
 	{
 		return type;

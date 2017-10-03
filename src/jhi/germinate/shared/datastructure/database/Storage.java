@@ -45,12 +45,6 @@ public class Storage extends DatabaseObject
 		super(id);
 	}
 
-	public Storage(Long id, String description)
-	{
-		super(id);
-		this.description = description;
-	}
-
 	public String getDescription()
 	{
 		return description;

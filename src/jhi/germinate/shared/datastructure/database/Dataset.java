@@ -50,6 +50,7 @@ public class Dataset extends DatabaseObject
 	public static final String DATE_END         = "datasets.date_end";
 	public static final String SOURCE_FILE      = "datasets.source_file";
 	public static final String DATATYPE         = "datasets.datatype";
+	public static final String DUBLIN_CORE      = "datasets.dublin_core";
 	public static final String CONTACT          = "datasets.contact";
 	public static final String VERSION          = "datasets.version";
 	public static final String CREATED_BY       = "datasets.created_by";
@@ -69,6 +70,7 @@ public class Dataset extends DatabaseObject
 	private Date         dateEnd;
 	private String       sourceFile;
 	private String       datatype;
+	private String       dublinCore;
 	private String       contact;
 	private String       version;
 	private Long         userId;
@@ -80,6 +82,7 @@ public class Dataset extends DatabaseObject
 	private Long         updatedOn;
 	private Long size       = 0L;
 	private Long dataPoints = 0L;
+	private List<Collaborator>  collaborators;
 	private List<AttributeData> attributeData;
 
 	public Dataset()
@@ -89,30 +92,6 @@ public class Dataset extends DatabaseObject
 	public Dataset(Long id)
 	{
 		super(id);
-	}
-
-	public Dataset(Long id, Experiment experiment, Location location, String description, Date dateStart, Date dateEnd, String sourceFile, String datatype, String contact, String version, Long userId, DatasetState datasetState, License license, Boolean isExternal, String hyperlink, Long createdOn, Long updatedOn, Long size, Long dataPoints, List<AttributeData> attributeData)
-	{
-		super(id);
-		this.experiment = experiment;
-		this.location = location;
-		this.description = description;
-		this.dateStart = dateStart;
-		this.dateEnd = dateEnd;
-		this.sourceFile = sourceFile;
-		this.datatype = datatype;
-		this.contact = contact;
-		this.version = version;
-		this.userId = userId;
-		this.datasetState = datasetState;
-		this.license = license;
-		this.isExternal = isExternal;
-		this.hyperlink = hyperlink;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-		this.size = size;
-		this.dataPoints = dataPoints;
-		this.attributeData = attributeData;
 	}
 
 	public Experiment getExperiment()
@@ -189,6 +168,17 @@ public class Dataset extends DatabaseObject
 	public Dataset setDatatype(String datatype)
 	{
 		this.datatype = datatype;
+		return this;
+	}
+
+	public String getDublinCore()
+	{
+		return dublinCore;
+	}
+
+	public Dataset setDublinCore(String dublinCore)
+	{
+		this.dublinCore = dublinCore;
 		return this;
 	}
 
@@ -330,6 +320,17 @@ public class Dataset extends DatabaseObject
 		return this;
 	}
 
+	public List<Collaborator> getCollaborators()
+	{
+		return collaborators;
+	}
+
+	public Dataset setCollaborators(List<Collaborator> collaborators)
+	{
+		this.collaborators = collaborators;
+		return this;
+	}
+
 	public boolean hasLicenseBeenAccepted(String userId)
 	{
 		try
@@ -358,6 +359,7 @@ public class Dataset extends DatabaseObject
 				", dateEnd=" + dateEnd +
 				", sourceFile='" + sourceFile + '\'' +
 				", datatype='" + datatype + '\'' +
+				", dublinCore='" + dublinCore + '\'' +
 				", contact='" + contact + '\'' +
 				", version='" + version + '\'' +
 				", userId=" + userId +
@@ -383,38 +385,6 @@ public class Dataset extends DatabaseObject
 	@GwtIncompatible
 	public static class Parser extends DatabaseObjectParser<Dataset>
 	{
-		public static final class Inst
-		{
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
-			 * InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"
-			 * >Initialization-on-demand holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
-			 * <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
-			private static final class InstanceHolder
-			{
-				private static final Parser INSTANCE = new Parser();
-			}
-
-			public static Parser get()
-			{
-				return InstanceHolder.INSTANCE;
-			}
-		}
-
-		private static DatabaseObjectCache<Experiment> EXPERIMENT_CACHE;
-		private static DatabaseObjectCache<Location>   LOCATION_CACHE;
-		private static DatabaseObjectCache<License>    LICENSE_CACHE;
-
-		private Parser()
-		{
-			EXPERIMENT_CACHE = createCache(Experiment.class, ExperimentManager.class);
-			LOCATION_CACHE = createCache(Location.class, LocationManager.class);
-			LICENSE_CACHE = createCache(License.class, LicenseManager.class);
-		}
-
 		@Override
 		public Dataset parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
 		{
@@ -435,6 +405,7 @@ public class Dataset extends DatabaseObject
 							.setDateEnd(row.getDate(DATE_END))
 							.setSourceFile(row.getString(SOURCE_FILE))
 							.setDatatype(row.getString(DATATYPE))
+							.setDublinCore(row.getString(DUBLIN_CORE))
 							.setContact(row.getString(CONTACT))
 							.setVersion(row.getString(VERSION))
 							.setUserId(row.getLong(CREATED_BY))
@@ -474,12 +445,53 @@ public class Dataset extends DatabaseObject
 						// Ignore this
 					}
 
+					try
+					{
+						dataset.setCollaborators(CollaboratorManager.getForDatasetId(user, dataset.id).getServerResult());
+					}
+					catch (Exception e)
+					{
+						// Ignore this
+					}
+
 					return dataset;
 				}
 			}
 			catch (InsufficientPermissionsException e)
 			{
 				return null;
+			}
+		}
+
+		private static DatabaseObjectCache<Experiment> EXPERIMENT_CACHE;
+		private static DatabaseObjectCache<Location>   LOCATION_CACHE;
+		private static DatabaseObjectCache<License>    LICENSE_CACHE;
+
+		private Parser()
+		{
+			EXPERIMENT_CACHE = createCache(Experiment.class, ExperimentManager.class);
+			LOCATION_CACHE = createCache(Location.class, LocationManager.class);
+			LICENSE_CACHE = createCache(License.class, LicenseManager.class);
+		}
+
+		public static final class Inst
+		{
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
+			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
+			 * holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
+			 * <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final Parser INSTANCE = new Parser();
+			}
+
+			public static Parser get()
+			{
+				return InstanceHolder.INSTANCE;
 			}
 		}
 	}
@@ -503,7 +515,7 @@ public class Dataset extends DatabaseObject
 		@Override
 		public void write(Database database, Dataset object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO datasets (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO datasets (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getExperiment().getId())
 					.setLong(object.getLocation() == null ? null : object.getLocation().getId())
 					.setString(object.getDescription())
@@ -511,6 +523,7 @@ public class Dataset extends DatabaseObject
 					.setDate(object.getDateEnd())
 					.setString(object.getSourceFile())
 					.setString(object.getDatatype())
+					.setString(object.getDublinCore())
 					.setString(object.getVersion())
 					.setLong(object.getUserId())
 					.setLong(object.getDatasetState().getId())

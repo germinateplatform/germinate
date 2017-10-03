@@ -49,14 +49,6 @@ public class BiologicalStatus extends DatabaseObject
 		super(id);
 	}
 
-	public BiologicalStatus(Long id, String sampStat, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.sampStat = sampStat;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getSampStat()
 	{
 		return sampStat;

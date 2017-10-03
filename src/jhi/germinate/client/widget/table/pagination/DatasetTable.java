@@ -20,12 +20,14 @@ package jhi.germinate.client.widget.table.pagination;
 import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.http.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.safehtml.shared.*;
-import com.google.gwt.user.cellview.client.*;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
@@ -42,6 +44,7 @@ import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
@@ -278,7 +281,10 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 						new AlertDialog(Text.LANG.licenseWizardTitle(), html)
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAccept(), IconType.CHECK, ButtonType.SUCCESS, e ->
 								{
-									LicenseLog log = new LicenseLog(-1L, object.getLicense().getId(), ModuleCore.getUserAuth().getId(), System.currentTimeMillis());
+									LicenseLog log = new LicenseLog(-1L)
+											.setLicense(object.getLicense().getId())
+											.setUser(ModuleCore.getUserAuth().getId())
+											.setAcceptedOn(System.currentTimeMillis());
 
 									DatasetService.Inst.get().updateLicenseLogs(Cookie.getRequestProperties(), Collections.singletonList(log), new AsyncCallback<ServerResult<Boolean>>()
 									{
@@ -402,6 +408,52 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Dataset.NR_OF_DATA_POINTS);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDataPoints(), true);
 
+		/* Add the collaborator column */
+		addColumn(new Column<Dataset, SafeHtml>(clickCell)
+		{
+			@Override
+			public String getCellStyleNames(Cell.Context context, Dataset row)
+			{
+				return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
+			}
+
+			@Override
+			public SafeHtml getValue(Dataset row)
+			{
+				if (!CollectionUtils.isEmpty(row.getCollaborators()))
+					return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_ACCOUNT_MULTIPLE, Text.LANG.datasetCollaboratorsTitle(), UriUtils.fromString(""), "");
+				else
+					return SimpleHtmlTemplate.INSTANCE.empty();
+			}
+
+			@Override
+			public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
+			{
+				if (BrowserEvents.CLICK.equals(event.getType()) && !CollectionUtils.isEmpty(object.getCollaborators()))
+				{
+					event.preventDefault();
+
+					new AlertDialog(Text.LANG.datasetCollaboratorsTitle(), new CollaboratorTable(SelectionMode.NONE, false)
+					{
+						@Override
+						protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Collaborator>>> callback)
+						{
+							List<Collaborator> page = object.getCollaborators().subList(pagination.getStart(), Math.min(object.getCollaborators().size(), pagination.getStart() + pagination.getLength()));
+							callback.onSuccess(new PaginatedServerResult<>(null, page, object.getCollaborators().size()));
+							return null;
+						}
+					})
+							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
+							.setSize(ModalSize.LARGE)
+							.open();
+				}
+				else
+				{
+					super.onBrowserEvent(context, elem, object, event);
+				}
+			}
+		}, "", false);
+
 		/* Add the attribute data column */
 		addColumn(new Column<Dataset, SafeHtml>(clickCell)
 		{
@@ -414,7 +466,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			@Override
 			public SafeHtml getValue(Dataset row)
 			{
-				if (!CollectionUtils.isEmpty(row.getAttributeData()))
+				if (!CollectionUtils.isEmpty(row.getAttributeData()) || !StringUtils.isEmpty(row.getDublinCore()))
 					return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_FILE_PLUS, Text.LANG.datasetAttributesTitle(), UriUtils.fromString(""), "");
 				else
 					return SimpleHtmlTemplate.INSTANCE.empty();
@@ -423,13 +475,23 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			@Override
 			public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
 			{
-				if (BrowserEvents.CLICK.equals(event.getType()) && !CollectionUtils.isEmpty(object.getAttributeData()))
+				if (BrowserEvents.CLICK.equals(event.getType()) && (!CollectionUtils.isEmpty(object.getAttributeData()) || !StringUtils.isEmpty(object.getDublinCore())))
 				{
 					event.preventDefault();
 
-					new AlertDialog(Text.LANG.datasetAttributesTitle(), new AttributeDataWidget(object.getAttributeData()))
-							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
-							.open();
+					FlowPanel content = new FlowPanel();
+
+					if (!StringUtils.isEmpty(object.getDublinCore()))
+						content.add(new DublinCoreWidget(object.getDublinCore()));
+					if (!CollectionUtils.isEmpty(object.getAttributeData()))
+						content.add(new AttributeDataWidget(object.getAttributeData()));
+
+					if (content.getWidgetCount() > 0)
+					{
+						new AlertDialog(Text.LANG.datasetAttributesTitle(), content)
+								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
+								.open();
+					}
 				}
 				else
 				{

@@ -52,15 +52,6 @@ public class GroupType extends DatabaseObject
 		super(id);
 	}
 
-	public GroupType(long id, String description, GerminateDatabaseTable targetTable, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.description = description;
-		this.targetTable = targetTable;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getDescription()
 	{
 		return description;

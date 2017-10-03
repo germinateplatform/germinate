@@ -53,21 +53,6 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	private static final String SELECT_TREEMAP_DATA = "SELECT countries.*, locations.*, locationtypes.*, COUNT(germinatebase.id) AS count FROM countries LEFT JOIN locations ON locations.country_id = countries.id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id WHERE NOT ISNULL(site_name) AND locationtypes.name = ? GROUP BY countries.id, locations.id HAVING COUNT(germinatebase.id) > 0 ";
 
 	@Override
-	public ServerResult<Location> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		try
-		{
-			return new LocationManager().getById(userAuth, id);
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			return new ServerResult<>(null, null);
-		}
-	}
-
-	@Override
 	public PaginatedServerResult<List<Location>> getByDistance(RequestProperties properties, double latitude, double longitude, Pagination pagination)
 			throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{

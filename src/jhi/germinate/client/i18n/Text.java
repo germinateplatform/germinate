@@ -2384,6 +2384,10 @@ public interface Text extends Messages
 	@DefaultMessage("Attributes")
 	String datasetAttributesTitle();
 
+	@Key("page.datasets.collaborators.title")
+	@DefaultMessage("Collaborators")
+	String datasetCollaboratorsTitle();
+
 	@Key("page.experiment.details.title")
 	@DefaultMessage("Experiment details")
 	String experimentDetailsTitle();
@@ -2419,4 +2423,88 @@ public interface Text extends Messages
 	@Key("page.registration.disclaimer.long.html")
 	@DefaultMessage("")
 	SafeHtml registrationDisclaimerLongHtml();
+
+	@Key("widget.dublin.core.page.header")
+	@DefaultMessage("Dublin Core")
+	String dublinCoreHeader();
+
+	@Key("widget.dublin.core.title")
+	@DefaultMessage("Title")
+	String dublinCoreTitle();
+
+	@Key("widget.dublin.core.subject")
+	@DefaultMessage("Subject")
+	String dublinCoreSubject();
+
+	@Key("widget.dublin.core.description")
+	@DefaultMessage("Description")
+	String dublinCoreDescription();
+
+	@Key("widget.dublin.core.type")
+	@DefaultMessage("Type")
+	String dublinCoreType();
+
+	@Key("widget.dublin.core.source")
+	@DefaultMessage("Source")
+	String dublinCoreSource();
+
+	@Key("widget.dublin.core.relation")
+	@DefaultMessage("Relation")
+	String dublinCoreRelation();
+
+	@Key("widget.dublin.core.coverage")
+	@DefaultMessage("Coverage")
+	String dublinCoreCoverage();
+
+	@Key("widget.dublin.core.creator")
+	@DefaultMessage("Creator")
+	String dublinCoreCreator();
+
+	@Key("widget.dublin.core.publisher")
+	@DefaultMessage("Publisher")
+	String dublinCorePublisher();
+
+	@Key("widget.dublin.core.contributor")
+	@DefaultMessage("Contributor")
+	String dublinCoreContributor();
+
+	@Key("widget.dublin.core.rights")
+	@DefaultMessage("Rights")
+	String dublinCoreRights();
+
+	@Key("widget.dublin.core.date")
+	@DefaultMessage("Date")
+	String dublinCoreDate();
+
+	@Key("widget.dublin.core.format")
+	@DefaultMessage("Format")
+	String dublinCoreFormat();
+
+	@Key("widget.dublin.core.identifier")
+	@DefaultMessage("Identifier")
+	String dublinCoreIdentifier();
+
+	@Key("widget.dublin.core.language")
+	@DefaultMessage("Language")
+	String dublinCoreLanguage();
+
+	@Key("column.collaborator.id")
+	@DefaultMessage("Id")
+	String collaboratorColumnId();
+
+	@Key("column.collaborator.first.name")
+	@DefaultMessage("First name")
+	String collaboratorColumnFirstName();
+
+	@Key("column.collaborator.last.name")
+	@DefaultMessage("Last name")
+	String collaboratorColumnLastName();
+
+	@Key("column.collaborator.email")
+	@DefaultMessage("Email")
+	String collaboratorColumnEmail();
+
+	@Key("column.collaborator.phone")
+	@DefaultMessage("Phone number")
+	String collaboratorColumnPhone();
 }

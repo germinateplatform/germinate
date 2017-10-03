@@ -38,8 +38,6 @@ public class AccessionManager extends AbstractManager<Accession>
 
 	private static final String COMMON_TABLES = "germinatebase LEFT JOIN subtaxa ON germinatebase.subtaxa_id = subtaxa.id LEFT JOIN taxonomies ON germinatebase.taxonomy_id = taxonomies.id LEFT JOIN locations ON germinatebase.location_id = locations.id LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN biologicalstatus ON biologicalstatus.id = germinatebase.biologicalstatus_id LEFT JOIN institutions ON institutions.id = germinatebase.institution_id LEFT JOIN collectingsources ON collectingsources.id = germinatebase.collsrc_id";
 
-	private static final String SELECT_BY_GID                  = "SELECT * FROM germinatebase WHERE general_identifier = ?";
-	private static final String SELECT_BY_DEFAULT_DISPLAY_NAME = "SELECT * FROM germinatebase WHERE name = ?";
 	private static final String SELECT_BY_UNKNOWN_IDENTIFIER   = "SELECT * FROM germinatebase WHERE name LIKE ? OR id LIKE ? OR number LIKE ? OR general_identifier LIKE ?";
 
 	private static final String SELECT_IDS_FOR_FILTER   = "SELECT DISTINCT germinatebase.id FROM " + COMMON_TABLES + " {{FILTER}}";
@@ -48,7 +46,6 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_ALL_FOR_FILTER_EXPORT  = "SELECT germinatebase.id AS germinatebase_id, germinatebase.general_identifier AS germinatebase_gid, germinatebase.name AS germinatebase_name, germinatebase.number AS germinatebase_number, germinatebase.collnumb AS germinatebase_collnumb, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxomonies_species, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, locations.elevation AS locations_elevation, countries.country_name AS countries_country_name, germinatebase.colldate AS germinatebase_colldate FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_FILTER         = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
 	private static final String SELECT_BY_IDS                 = "SELECT * FROM " + COMMON_TABLES + " WHERE germinatebase.id IN (%s) %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_COLLSITE       = "SELECT * FROM " + COMMON_TABLES + " WHERE locations.id = ? %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_MEGA_ENV       = "SELECT DISTINCT(germinatebase.id) FROM " + COMMON_TABLES + " LEFT JOIN megaenvironmentdata ON megaenvironmentdata.location_id = locations.id LEFT JOIN megaenvironments ON megaenvironments.id = megaenvironmentdata.megaenvironment_id WHERE megaenvironments.id = ?";
 	private static final String SELECT_IDS_FOR_MEGA_ENV_UNK   = "SELECT DISTINCT(germinatebase.id) FROM " + COMMON_TABLES + " WHERE location_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM megaenvironmentdata WHERE megaenvironmentdata.location_id = locations.id)";
 	private static final String SELECT_ALL_FOR_MEGA_ENV       = "SELECT * FROM " + COMMON_TABLES + " LEFT JOIN megaenvironmentdata ON megaenvironmentdata.location_id = locations.id LEFT JOIN megaenvironments ON megaenvironments.id = megaenvironmentdata.megaenvironment_id WHERE megaenvironments.id = ? %s LIMIT ?, ?";
@@ -61,8 +58,6 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM germinatebase";
 
 	private static final String SELECT_IDS_FOR_GROUP = "SELECT germinatebase.id FROM " + COMMON_TABLES + " LEFT JOIN groupmembers ON germinatebase.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ?";
-
-	private static final String EXPORT_MCPD = "SELECT puid AS PUID, institutions. CODE AS INSTCODE, germinatebase.name AS ACCENUMB, collnumb AS COLLNUMB, collcode AS COLLCODE, collname AS COLLNAME, institutions.address AS COLLINSTADDRESS, collmissid AS COLLMISSID, taxonomies.genus AS GENUS, taxonomies.species AS SPECIES, taxonomies.species_author AS SPAUTHOR, subtaxa.taxonomic_identifier AS SUBTAXA, subtaxa.subtaxa_author AS SUBTAUTHOR, taxonomies.cropname AS CROPNAME, number AS ACCENAME, acqdate AS acqdate, countries.country_code3 AS ORIGCTY, locations.site_name AS COLLSITE, locations.latitude AS DECLATITUDE, NULL AS LATITUDE, locations.longitude AS DECLONGITUDE, NULL AS LONGITUDE, locations.coordinate_uncertainty AS COORDUNCERT, locations.coordinate_datum AS COORDDATUM, locations.georeferencing_method AS GEOREFMETH, locations.elevation AS ELEVATION, DATE_FORMAT(colldate, \"%Y%m%d\") AS COLLDATE, breeders_code AS BREDCODE, breeders_name AS BREDNAME, biologicalstatus_id AS SAMPSTAT, pedigreedefinitions.definition AS ANCEST, collsrc_id AS COLLSRC, donor_code AS DONORCODE, donor_name AS DONORNAME, donor_number AS DONORNUMB, othernumb AS OTHERNUMB, duplsite AS DUPLSITE, duplinstname AS DUPLINSTNAME, GROUP_CONCAT(storage_id SEPARATOR \";\") AS STORAGE, mlsstatus_id AS MLSSTAT, GROUP_CONCAT( B.attributevalue SEPARATOR \";\") AS REMARKS FROM germinatebase LEFT JOIN institutions ON institutions.id = germinatebase.institution_id LEFT JOIN taxonomies ON taxonomies.id = germinatebase.taxonomy_id LEFT JOIN subtaxa ON subtaxa.id = germinatebase.subtaxa_id LEFT JOIN locations ON locations.id = germinatebase.location_id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN storagedata ON storagedata.germinatebase_id = germinatebase.id LEFT JOIN STORAGE ON STORAGE .id = storagedata.storage_id LEFT JOIN pedigreedefinitions ON pedigreedefinitions.germinatebase_id = germinatebase.id LEFT JOIN ( SELECT germinatebase_id AS id, attributedata.value AS attributevalue FROM attributes LEFT JOIN attributedata ON attributes.id = attributedata.attribute_id AND attributes.description = \"Remarks\" ) B ON B.id = germinatebase.id GROUP BY germinatebase.id, pedigreedefinitions.id";
 
 	private static final String[] COLUMNS_ACCESSION_DATA_EXPORT = {"germinatebase_id", "germinatebase_gid", "germinatebase_name", "germinatebase_number", "germinatebase_collnumb", "taxonomies_genus", "taxomonies_species", "locations_latitude", "locations_longitude", "locations_elevation", "countries_country_name", "germinatebase_colldate"};
 
@@ -106,25 +101,6 @@ public class AccessionManager extends AbstractManager<Accession>
 		return new ValueQuery(SELECT_COUNT, user)
 				.run(COUNT)
 				.getLong(0L);
-	}
-
-	/**
-	 * Returns the {@link Accession} with the given {@link Accession#NAME}.
-	 *
-	 * @param user The current user
-	 * @param name The id of the accession
-	 * @return The {@link Accession} with the given {@link Accession#NAME}.
-	 * @throws DatabaseException Thrown if the interaction with the database failed
-	 */
-	public static ServerResult<Accession> getByDefaultDisplayName(UserAuth user, String name) throws DatabaseException
-	{
-		if (StringUtils.isEmpty(name))
-			return new ServerResult<>(null, null);
-
-		return new DatabaseObjectQuery<Accession>(SELECT_BY_DEFAULT_DISPLAY_NAME, user)
-				.setString(name)
-				.run()
-				.getObject(Accession.Parser.Inst.get());
 	}
 
 	/**
@@ -218,22 +194,6 @@ public class AccessionManager extends AbstractManager<Accession>
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
-	}
-
-	/**
-	 * Returns the accession based on the given {@link Accession#GENERAL_IDENTIFIER}.
-	 *
-	 * @param user The user requesting the data
-	 * @param gid  The {@link Accession#GENERAL_IDENTIFIER} of the accession.
-	 * @return The accession based on the given {@link Accession#GENERAL_IDENTIFIER}
-	 * @throws DatabaseException Thrown if the interaction with the database failed
-	 */
-	public static ServerResult<Accession> getByGid(UserAuth user, String gid) throws DatabaseException
-	{
-		return new DatabaseObjectQuery<Accession>(SELECT_BY_GID, user)
-				.setString(gid)
-				.run()
-				.getObject(Accession.Parser.Inst.get());
 	}
 
 	/**

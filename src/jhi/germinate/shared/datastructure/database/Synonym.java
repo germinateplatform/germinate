@@ -56,16 +56,6 @@ public class Synonym extends DatabaseObject
 		super(id);
 	}
 
-	public Synonym(Long id, Long foreignId, SynonymType type, String synonym, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.foreignId = foreignId;
-		this.type = type;
-		this.synonym = synonym;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public Long getForeignId()
 	{
 		return foreignId;

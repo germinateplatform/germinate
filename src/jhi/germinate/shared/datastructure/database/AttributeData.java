@@ -56,14 +56,6 @@ public class AttributeData extends DatabaseObject
 		super(id);
 	}
 
-	public AttributeData(Long id, Attribute attribute, DatabaseObject foreign, String value)
-	{
-		super(id);
-		this.attribute = attribute;
-		this.foreign = foreign;
-		this.value = value;
-	}
-
 	public Attribute getAttribute()
 	{
 		return attribute;

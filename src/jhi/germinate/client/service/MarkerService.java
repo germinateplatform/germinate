@@ -63,16 +63,7 @@ public interface MarkerService extends RemoteService
 		}
 	}
 
-	/**
-	 * Returns the {@link Marker} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param markerId   The {@link Marker} id
-	 * @return The {@link Marker} with the given id.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<Marker> getById(RequestProperties properties, Long markerId) throws InvalidSessionException, DatabaseException;
+	PaginatedServerResult<List<Marker>> getMarkerForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
 
 	/**
 	 * Returns a paginated list of {@link Marker}s that match the given {@link PartialSearchQuery}.
@@ -87,7 +78,7 @@ public interface MarkerService extends RemoteService
 	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
-	PaginatedServerResult<List<MapDefinition>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
+	PaginatedServerResult<List<MapDefinition>> getMapDefinitionForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
 
 	/**
 	 * Returns the ids of the {@link Marker}s that match the given {@link PartialSearchQuery}.
@@ -102,17 +93,6 @@ public interface MarkerService extends RemoteService
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
 	ServerResult<List<String>> getIdsForFilter(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
-
-	/**
-	 * Returns the {@link Marker} for the given name.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param name       The {@link Marker} name
-	 * @return The {@link Marker} for the given name.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<Marker> getByName(RequestProperties properties, String name) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Returns the {@link Marker}s with the given ids.

@@ -53,15 +53,6 @@ public interface AccessionServiceAsync
 	void getIdsForFilter(RequestProperties properties, PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
-	 * Returns the {@link Accession} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param id         The id of the accession
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getById(RequestProperties properties, Long id, AsyncCallback<ServerResult<Accession>> callback);
-
-	/**
 	 * Returns the {@link Accession}s with the given ids.
 	 *
 	 * @param properties The {@link RequestProperties}
@@ -69,24 +60,6 @@ public interface AccessionServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	Request getByIds(RequestProperties properties, Pagination pagination, List<String> ids, AsyncCallback<ServerResult<List<Accession>>> callback);
-
-	/**
-	 * Returns the {@link Accession} based on the general identifier.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param gid        The {@link Accession#GENERAL_IDENTIFIER}
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getByGid(RequestProperties properties, String gid, AsyncCallback<ServerResult<Accession>> callback);
-
-	/**
-	 * Returns the {@link Accession} based on the name.
-	 *
-	 * @param properties    The {@link RequestProperties}
-	 * @param accessionName The {@link Accession#NAME}
-	 * @param callback      The {@link AsyncCallback}
-	 */
-	void getByName(RequestProperties properties, String accessionName, AsyncCallback<ServerResult<Accession>> callback);
 
 	/**
 	 * Exports all the data associated with {@link Accession}s to a flat file. Returns the name of the result file.

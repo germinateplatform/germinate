@@ -46,18 +46,6 @@ public class DataStats extends DatabaseObject
 		super(id);
 	}
 
-	public DataStats(Long id, String name, String description, double min, double max, double avg, double std, String dataset)
-	{
-		super(id);
-		this.name = name;
-		this.description = description;
-		this.min = min;
-		this.max = max;
-		this.avg = avg;
-		this.std = std;
-		this.dataset = dataset;
-	}
-
 	public String getName()
 	{
 		return name;

@@ -49,15 +49,6 @@ public class CollectingSource extends DatabaseObject
 		super(id);
 	}
 
-	public CollectingSource(Long id, String collSrc, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.collSrc = collSrc;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
-
 	public String getCollSrc()
 	{
 		return collSrc;

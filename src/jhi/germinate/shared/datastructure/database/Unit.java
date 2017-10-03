@@ -58,16 +58,6 @@ public class Unit extends DatabaseObject
 		super(id);
 	}
 
-	public Unit(Long id, String name, String abbreviation, String description, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.abbreviation = abbreviation;
-		this.description = description;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

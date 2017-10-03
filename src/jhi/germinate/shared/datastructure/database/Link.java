@@ -59,18 +59,6 @@ public class Link extends DatabaseObject
 		super(id);
 	}
 
-	public Link(Long id, LinkType type, Long foreignId, String hyperlink, String description, boolean isVisible, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.type = type;
-		this.foreignId = foreignId;
-		this.hyperlink = hyperlink;
-		this.description = description;
-		this.isVisible = isVisible;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public LinkType getType()
 	{
 		return type;

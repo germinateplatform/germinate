@@ -86,4 +86,6 @@ public interface DatasetServiceAsync
 	Request getWithUnacceptedLicense(RequestProperties properties, List<ExperimentType> types, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
 
 	void getExperiment(RequestProperties properties, Long id, AsyncCallback<ServerResult<Experiment>> callback);
+
+	void getJson(AsyncCallback<String> callback);
 }

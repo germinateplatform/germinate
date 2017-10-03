@@ -62,18 +62,6 @@ public class Experiment extends DatabaseObject
 		super(id);
 	}
 
-	public Experiment(Long id, String name, long userId, String description, Date date, ExperimentType type, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.name = name;
-		this.userId = userId;
-		this.description = description;
-		this.date = date;
-		this.type = type;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getName()
 	{
 		return name;

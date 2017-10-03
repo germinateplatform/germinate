@@ -60,17 +60,6 @@ public class Map extends DatabaseObject
 		super(id);
 	}
 
-	public Map(Long id, String description, Boolean visibility, Long userId, Long createdOn, Long updatedOn, Long size)
-	{
-		super(id);
-		this.description = description;
-		this.visibility = visibility;
-		this.userId = userId;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-		this.size = size;
-	}
-
 	public String getDescription()
 	{
 		return description;

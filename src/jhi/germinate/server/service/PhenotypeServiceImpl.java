@@ -87,6 +87,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 			names.add("dbId");
 		names.add(DATASET_NAME);
 		names.add(LICENSE_NAME);
+		names.add(LOCATION_NAME);
 		names.add(TREATMENT_DESCRIPTION);
 
 		// If the all items group is selected, export everything
@@ -223,14 +224,11 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	}
 
 	@Override
-	public PaginatedServerResult<List<PhenotypeData>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
+	public PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, List<Long> datasetIds, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
 	{
-		if (pagination == null)
-			pagination = Pagination.getDefault();
-
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return PhenotypeManager.getAllForFilter(userAuth, filter, pagination);
+		return PhenotypeManager.getDataForFilter(userAuth, datasetIds, filter, pagination);
 	}
 
 	@Override

@@ -370,7 +370,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback)
 				{
 					filter = addToFilter(filter);
-					return MarkerService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+					return MarkerService.Inst.get().getMapDefinitionForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
 				}
 
 				private PartialSearchQuery addToFilter(PartialSearchQuery filter)

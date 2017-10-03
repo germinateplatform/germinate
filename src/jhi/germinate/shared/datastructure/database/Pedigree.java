@@ -64,18 +64,6 @@ public class Pedigree extends DatabaseObject
 		super(id);
 	}
 
-	public Pedigree(Long id, Accession accession, Accession parent, String relationshipType, PedigreeDescription pedigreeDescription, String relationShipDescription, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.accession = accession;
-		this.parent = parent;
-		this.relationshipType = relationshipType;
-		this.pedigreeDescription = pedigreeDescription;
-		this.relationShipDescription = relationShipDescription;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public Accession getAccession()
 	{
 		return accession;

@@ -61,19 +61,6 @@ public class CompoundData extends DatabaseObject
 		super(id);
 	}
 
-	public CompoundData(Long id, Compound compound, Accession accession, Dataset dataset, AnalysisMethod analysisMethod, Double value, Long recordingDate, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.compound = compound;
-		this.accession = accession;
-		this.dataset = dataset;
-		this.analysisMethod = analysisMethod;
-		this.value = value;
-		this.recordingDate = recordingDate;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public Compound getCompound()
 	{
 		return compound;

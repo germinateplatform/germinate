@@ -62,18 +62,6 @@ public class Taxonomy extends DatabaseObject
 		super(id);
 	}
 
-	public Taxonomy(Long id, String genus, String species, String author, String cropName, int ploidy, Long createdOn, Long updatedOn)
-	{
-		super(id);
-		this.genus = genus;
-		this.species = species;
-		this.author = author;
-		this.cropName = cropName;
-		this.ploidy = ploidy;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-	}
-
 	public String getGenus()
 	{
 		return genus;

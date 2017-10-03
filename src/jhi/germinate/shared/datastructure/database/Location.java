@@ -80,26 +80,6 @@ public class Location extends DatabaseObject
 		super(id);
 	}
 
-	public Location(Long id, Country country, LocationType type, String region, String state, String name, String shortName, Double elevation, Double latitude, Double longitude, Integer coordinateUncertainty, String coordinateDatum, String georeferencingMethod, Long createdOn, Long updatedOn, Long size)
-	{
-		super(id);
-		this.country = country;
-		this.type = type;
-		this.region = region;
-		this.state = state;
-		this.name = name;
-		this.shortName = shortName;
-		this.elevation = elevation;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.coordinateUncertainty = coordinateUncertainty;
-		this.coordinateDatum = coordinateDatum;
-		this.georeferencingMethod = georeferencingMethod;
-		this.createdOn = createdOn;
-		this.updatedOn = updatedOn;
-		this.size = size;
-	}
-
 	public Location setId(String id)
 	{
 		try

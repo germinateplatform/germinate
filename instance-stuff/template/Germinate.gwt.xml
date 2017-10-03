@@ -33,6 +33,7 @@
 	<inherits name="org.gwtbootstrap3.extras.toggleswitch.ToggleSwitch"/>
 	<inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
 	<inherits name="jhi.gwt.leaflet.GWTLeaflet"/>
+	<inherits name="com.google.web.bindery.autobean.AutoBean"/>
 	<inherits name="com.google.gwt.ajaxloader.AjaxLoader" /> <!-- Ajax Loader for Google utilities -->
 	<inherits name="com.googlecode.gwt.charts.Charts" /> <!-- Google Charts -->
 	<inherits name='com.google.gwt.maps.Maps'/> <!-- Google Maps -->
