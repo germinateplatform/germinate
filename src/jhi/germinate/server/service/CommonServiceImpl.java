@@ -104,7 +104,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			baseSettings.keepTempFilesForHours = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS, PropertyReader.getDouble(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS));
 			baseSettings.serverLoggingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED));
 			baseSettings.templateDatabaseName = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME));
-			baseSettings.templateTwitterUrl = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TWITTER_LINK, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TWITTER_LINK));
 			baseSettings.templateCustomMenu = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_MENU, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_MENU));
 
 			return new ServerResult<>(null, baseSettings);
@@ -134,7 +133,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 
 			PropertyReader.set(settings.templateTitle.getServerProperty(), settings.templateTitle.getValue());
 			PropertyReader.set(settings.templateDatabaseName.getServerProperty(), settings.templateDatabaseName.getValue());
-			PropertyReader.set(settings.templateTwitterUrl.getServerProperty(), settings.templateTwitterUrl.getValue());
 			PropertyReader.setBoolean(settings.templateUseToggleSwitches.getServerProperty(), settings.templateUseToggleSwitches.getValue());
 			PropertyReader.set(settings.templateCategoricalColors.getServerProperty(), CollectionUtils.join(settings.templateCategoricalColors.getValue(), ","));
 			PropertyReader.set(settings.templateGradientColors.getServerProperty(), CollectionUtils.join(settings.templateGradientColors.getValue(), ","));

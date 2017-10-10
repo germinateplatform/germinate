@@ -113,7 +113,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 				}
 			};
 			column.setDataStoreName(Location.ID);
-			addColumn(column, Text.LANG.collectingsiteColumnId(), true);
+			addColumn(column, Text.LANG.collectingsiteColumnId(), sortingEnabled);
 		}
 
 		/* Add the site name column */
@@ -135,7 +135,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Location.SITE_NAME);
-		addColumn(column, Text.LANG.collectingsiteCollsite(), true);
+		addColumn(column, Text.LANG.collectingsiteCollsite(), sortingEnabled);
 
 		/* Add the region column */
 		column = new TextColumn()
@@ -153,7 +153,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Location.REGION);
-		addColumn(column, Text.LANG.collectingsiteRegion(), true);
+		addColumn(column, Text.LANG.collectingsiteRegion(), sortingEnabled);
 
 		/* Add the state column */
 		column = new TextColumn()
@@ -171,7 +171,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Location.STATE);
-		addColumn(column, Text.LANG.collectingsiteState(), true);
+		addColumn(column, Text.LANG.collectingsiteState(), sortingEnabled);
 
 		/* Add the latitude column */
 		column = new TextColumn()
@@ -192,7 +192,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Location.LATITUDE);
-		addColumn(column, Text.LANG.collectingsiteLatitude(), true);
+		addColumn(column, Text.LANG.collectingsiteLatitude(), sortingEnabled);
 
 		/* Add the longitude column */
 		column = new TextColumn()
@@ -213,7 +213,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Location.LONGITUDE);
-		addColumn(column, Text.LANG.collectingsiteLongitude(), true);
+		addColumn(column, Text.LANG.collectingsiteLongitude(), sortingEnabled);
 
 		/* Add the elevation column */
 		column = new TextColumn()
@@ -234,7 +234,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Location.ELEVATION);
-		addColumn(column, Text.LANG.collectingsiteElevation(), true);
+		addColumn(column, Text.LANG.collectingsiteElevation(), sortingEnabled);
 
 		/* Add the country column */
 		column = new TextColumn()
@@ -276,7 +276,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Country.COUNTRY_NAME);
-		addColumn(column, Text.LANG.passportColumnCountry(), true);
+		addColumn(column, Text.LANG.passportColumnCountry(), sortingEnabled);
 	}
 
 	@Override

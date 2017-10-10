@@ -91,6 +91,10 @@ public interface Text extends Messages
 	@DefaultMessage("Add")
 	String generalAdd();
 
+	@Key("general.filter")
+	@DefaultMessage("Filter")
+	String generalFilter();
+
 	@Key("general.copy")
 	@DefaultMessage("Copy")
 	String generalCopy();
@@ -1178,8 +1182,20 @@ public interface Text extends Messages
 	@Key("operators.greater.than")
 	String operatorsGreaterThan();
 
+	@Key("operators.greater.than.equals")
+	@DefaultMessage("Greater than or equals")
+	String operatorsGreaterThanEquals();
+
 	@Key("operators.less.than")
 	String operatorsLessThan();
+
+	@Key("operators.less.than.equals")
+	@DefaultMessage("Less than or equals")
+	String operatorsLessThanEquals();
+
+	@Key("operators.between")
+	@DefaultMessage("Between")
+	String operatorsBetween();
 
 	@Key("operators.and")
 	String operatorsAnd();
@@ -2353,8 +2369,12 @@ public interface Text extends Messages
 	String pagerPageNumberInput(int maxPage);
 
 	@Key("page.groups.search.result")
-	@DefaultMessage("Search result")
-	String groupsNewMembersSearchResult();
+	@DefaultMessage("Search for items")
+	String groupsNewMembersTitle();
+
+	@Key("page.groups.search.result.subtitle")
+	@DefaultMessage("Use the table filter or just browse the table")
+	String groupsNewMembersSubtitle();
 
 	@Key("widget.table.filter.info")
 	@DefaultMessage("<b>Table filtering searches for exact matches in the specified column. To use fuzzy search, use the wildcard character '%'. As an example, searching for a country name of 'kingdom' will not return a result whereas searching for '%kingdom%' will return 'United Kingdom'.</b>")
@@ -2507,4 +2527,8 @@ public interface Text extends Messages
 	@Key("column.collaborator.phone")
 	@DefaultMessage("Phone number")
 	String collaboratorColumnPhone();
+
+	@Key("widget.group.member.upload.select.column")
+	@DefaultMessage("Select database column")
+	String groupMemberUploadSelectColumn();
 }

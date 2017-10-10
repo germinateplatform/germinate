@@ -65,7 +65,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 
 	public final void getIds(AsyncCallback<ServerResult<List<String>>> callback)
 	{
-		getIds(getSearchFilter(), callback);
+		getIds(getSearchFilter(false), callback);
 	}
 
 	public abstract void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);

@@ -95,16 +95,16 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 				}
 			};
 			column.setDataStoreName(Pedigree.ID);
-			addColumn(column, Text.LANG.accessionsColumnId(), true);
+			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the general identifier column */
-		column = new TextColumn()
+		column = new ClickableSafeHtmlColumn()
 		{
 			@Override
-			public String getValue(Pedigree object)
+			public SafeHtml getValue(Pedigree object)
 			{
-				return object.getAccession().getGeneralIdentifier();
+				return SimpleHtmlTemplate.INSTANCE.dummyAnchor(object.getAccession().getGeneralIdentifier());
 			}
 
 			@Override
@@ -114,15 +114,15 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(PedigreeService.CHILD_GID);
-		addColumn(column, Text.LANG.pedigreeColumnsChildGID(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsChildGID(), sortingEnabled);
 
 		/* Add the name column */
-		column = new TextColumn()
+		column = new ClickableSafeHtmlColumn()
 		{
 			@Override
-			public String getValue(Pedigree object)
+			public SafeHtml getValue(Pedigree object)
 			{
-				return object.getAccession().getName();
+				return SimpleHtmlTemplate.INSTANCE.dummyAnchor(object.getAccession().getName());
 			}
 
 			@Override
@@ -132,7 +132,7 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(PedigreeService.CHILD_NAME);
-		addColumn(column, Text.LANG.pedigreeColumnsChildName(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsChildName(), sortingEnabled);
 
 		/* Add the general identifier column */
 		column = new ClickableSafeHtmlColumn()
@@ -150,7 +150,7 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(PedigreeService.PARENT_GID);
-		addColumn(column, Text.LANG.pedigreeColumnsParentGID(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsParentGID(), sortingEnabled);
 
 		/* Add the name column */
 		column = new ClickableSafeHtmlColumn()
@@ -168,7 +168,7 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(PedigreeService.PARENT_NAME);
-		addColumn(column, Text.LANG.pedigreeColumnsParentName(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsParentName(), sortingEnabled);
 
 		/* Add the relationship type column */
 		column = new TextColumn()
@@ -189,7 +189,7 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(Pedigree.RELATIONSHIP_TYPE);
-		addColumn(column, Text.LANG.pedigreeColumnsRelationshipType(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsRelationshipType(), sortingEnabled);
 
 		/* Add the relationship description column */
 		column = new TextColumn()
@@ -207,7 +207,7 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(Pedigree.RELATIONSHIP_DESCRIPTION);
-		addColumn(column, Text.LANG.pedigreeColumnsRelationshipDescription(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsRelationshipDescription(), sortingEnabled);
 
 		/* Add the pedigree description column */
 		column = new TextColumn()
@@ -228,7 +228,7 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(PedigreeDescription.NAME);
-		addColumn(column, Text.LANG.pedigreeColumnsPedigreeDescription(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsPedigreeDescription(), sortingEnabled);
 
 		/* Add the pedigree author column */
 		column = new TextColumn()
@@ -249,14 +249,25 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(PedigreeDescription.AUTHOR);
-		addColumn(column, Text.LANG.pedigreeColumnsPedigreeAuthor(), true);
+		addColumn(column, Text.LANG.pedigreeColumnsPedigreeAuthor(), sortingEnabled);
 	}
 
 	@Override
 	protected void onItemSelected(NativeEvent event, Pedigree object, int column)
 	{
-		/* Get the id */
-		LongParameterStore.Inst.get().put(Parameter.accessionId, object.getParent().getId());
+		String storeName = getTable().getColumn(column).getDataStoreName();
+
+		switch (storeName)
+		{
+			case PedigreeService.CHILD_GID:
+			case PedigreeService.CHILD_NAME:
+				LongParameterStore.Inst.get().put(Parameter.accessionId, object.getAccession().getId());
+				break;
+			case PedigreeService.PARENT_GID:
+			case PedigreeService.PARENT_NAME:
+				LongParameterStore.Inst.get().put(Parameter.accessionId, object.getParent().getId());
+				break;
+		}
 
 		if (History.getToken().equals(Page.PASSPORT.name()))
 			History.fireCurrentHistoryState();

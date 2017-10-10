@@ -97,7 +97,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 				}
 			};
 			column.setDataStoreName(Compound.ID);
-			addColumn(column, Text.LANG.compoundColumnId(), true);
+			addColumn(column, Text.LANG.compoundColumnId(), sortingEnabled);
 		}
 
 		/* Add the name column */
@@ -119,7 +119,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			}
 		};
 		column.setDataStoreName(Compound.NAME);
-		addColumn(column, Text.LANG.compoundColumnName(), true);
+		addColumn(column, Text.LANG.compoundColumnName(), sortingEnabled);
 
 		/* Add the description column */
 		column = new TextColumn()
@@ -137,7 +137,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			}
 		};
 		column.setDataStoreName(Compound.DESCRIPTION);
-		addColumn(column, Text.LANG.compoundColumnDescription(), true);
+		addColumn(column, Text.LANG.compoundColumnDescription(), sortingEnabled);
 
 		/* Add the molecular formula column */
 		column = new SafeHtmlColumn()
@@ -155,7 +155,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			}
 		};
 		column.setDataStoreName(Compound.MOLECULAR_FORMULA);
-		addColumn(column, Text.LANG.compoundColumnMolecularFormula(), true);
+		addColumn(column, Text.LANG.compoundColumnMolecularFormula(), sortingEnabled);
 
 		/* Add the monoisotopic mass column */
 		column = new TextColumn()
@@ -176,7 +176,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			}
 		};
 		column.setDataStoreName(Compound.MONOISOTOPIC_MASS);
-		addColumn(column, Text.LANG.compoundColumnMonoisotonicMass(), true);
+		addColumn(column, Text.LANG.compoundColumnMonoisotonicMass(), sortingEnabled);
 
 		/* Add the average mass column */
 		column = new TextColumn()
@@ -197,7 +197,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			}
 		};
 		column.setDataStoreName(Compound.AVERAGE_MASS);
-		addColumn(column, Text.LANG.compoundColumnAverageMass(), true);
+		addColumn(column, Text.LANG.compoundColumnAverageMass(), sortingEnabled);
 
 		/* Add the class column */
 		column = new TextColumn()
@@ -215,7 +215,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			}
 		};
 		column.setDataStoreName(Compound.CLASS);
-		addColumn(column, Text.LANG.compoundColumnClass(), true);
+		addColumn(column, Text.LANG.compoundColumnClass(), sortingEnabled);
 
 		/* Add the unit column */
 		column = new TextColumn()
@@ -236,7 +236,7 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			}
 		};
 		column.setDataStoreName(Unit.NAME);
-		addColumn(column, Text.LANG.compoundColumnUnitName(), true);
+		addColumn(column, Text.LANG.compoundColumnUnitName(), sortingEnabled);
 	}
 
 	@Override

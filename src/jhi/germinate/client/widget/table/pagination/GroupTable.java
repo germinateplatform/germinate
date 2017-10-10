@@ -111,7 +111,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 				}
 			};
 			column.setDataStoreName(Group.ID);
-			addColumn(column, Text.LANG.groupsColumnId(), true);
+			addColumn(column, Text.LANG.groupsColumnId(), sortingEnabled);
 		}
 
 		/* Add the group description column */
@@ -183,7 +183,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			}
 		};
 		column.setDataStoreName(Group.DESCRIPTION);
-		addColumn(column, Text.LANG.groupsColumnDescription(), true);
+		addColumn(column, Text.LANG.groupsColumnDescription(), sortingEnabled);
 
 		/* Add the group type column */
 		column = new TextColumn()
@@ -201,7 +201,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			}
 		};
 		column.setDataStoreName(GroupType.DESCRIPTION);
-		addColumn(column, Text.LANG.groupsColumnType(), true);
+		addColumn(column, Text.LANG.groupsColumnType(), sortingEnabled);
 
 		/* Add the user column */
 		column = new TextColumn()
@@ -219,7 +219,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			}
 		};
 		column.setDataStoreName(Group.CREATED_BY);
-		addColumn(column, Text.LANG.commentColumnUser(), true);
+		addColumn(column, Text.LANG.commentColumnUser(), sortingEnabled);
 
 		/* Add the size column */
 		column = new TextColumn()
@@ -237,7 +237,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			}
 		};
 		column.setDataStoreName(DatabaseObject.COUNT);
-		addColumn(column, Text.LANG.groupsColumnSize(), true);
+		addColumn(column, Text.LANG.groupsColumnSize(), sortingEnabled);
 
 		/* Add the created on */
 		column = new TextColumn()
@@ -255,7 +255,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			}
 		};
 		column.setDataStoreName(Group.CREATED_ON);
-		addColumn(column, Text.LANG.groupsColumnCreatedOn(), true);
+		addColumn(column, Text.LANG.groupsColumnCreatedOn(), sortingEnabled);
 	}
 
 	@Override

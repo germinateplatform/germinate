@@ -22,6 +22,7 @@ import com.google.gwt.i18n.shared.*;
 import java.io.*;
 import java.util.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 
 /**
@@ -178,6 +179,10 @@ public class SearchCondition implements Serializable, HasToSqlString
 		{
 			throw new InvalidSearchQueryException("Comparison operator must be specified before values can be handled.");
 		}
+		else if(StringUtils.isEmpty(value))
+		{
+			throw new InvalidSearchQueryException("Comparison conditional value cannot be empty.");
+		}
 
 		validateConditionValue(value);
 		conditionValues.add(value);
@@ -297,7 +302,7 @@ public class SearchCondition implements Serializable, HasToSqlString
 		}
 
 		if (!valid)
-			throw new InvalidArgumentException("The value " + value + " is not valid for this type of comparison.");
+			throw new InvalidArgumentException("The value '" + value + "' is not valid for this type of comparison.");
 	}
 
 	public static boolean checkSqlString(String value, boolean allowWildcards)

@@ -104,7 +104,7 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 				}
 			};
 			column.setDataStoreName(Accession.ID);
-			addColumn(column, Text.LANG.accessionsColumnId(), true);
+			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the general identifier column */
@@ -131,7 +131,7 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 			}
 		};
 		column.setDataStoreName(Accession.GENERAL_IDENTIFIER);
-		addColumn(column, Text.LANG.accessionsColumnGeneralIdentifier(), true);
+		addColumn(column, Text.LANG.accessionsColumnGeneralIdentifier(), sortingEnabled);
 
 		/* Add the accession name column */
 		column = new ClickableSafeHtmlColumn()
@@ -157,7 +157,7 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 			}
 		};
 		column.setDataStoreName(Accession.NAME);
-		addColumn(column, Text.LANG.accessionsColumnName(), true);
+		addColumn(column, Text.LANG.accessionsColumnName(), sortingEnabled);
 
 		/* Add the attribute name column */
 		column = new TextColumn()
@@ -178,7 +178,7 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 			}
 		};
 		column.setDataStoreName(Attribute.NAME);
-		addColumn(column, Text.LANG.passportColumnAttributeName(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeName(), sortingEnabled);
 
 		/* Add the attribute description column */
 		column = new TextColumn()
@@ -199,7 +199,7 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 			}
 		};
 		column.setDataStoreName(Attribute.DESCRIPTION);
-		addColumn(column, Text.LANG.passportColumnAttributeDescription(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeDescription(), sortingEnabled);
 
 		/* Add the data type column */
 		column = new TextColumn()
@@ -220,7 +220,7 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 			}
 		};
 		column.setDataStoreName(Attribute.DATA_TYPE);
-		addColumn(column, Text.LANG.passportColumnAttributeType(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeType(), sortingEnabled);
 
 		/* Add the actual value column */
 		column = new TextColumn()
@@ -238,7 +238,7 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 			}
 		};
 		column.setDataStoreName(AttributeData.VALUE);
-		addColumn(column, Text.LANG.passportColumnAttributeValue(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeValue(), sortingEnabled);
 	}
 
 	@Override

@@ -222,7 +222,7 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 		column.setDataStoreName(Phenotype.NAME);
 		addColumn(column, Text.LANG.phenotypeColumnName(), sortingEnabled);
 
-		/* Add the phenotype name column */
+		/* Add the phenotype short name column */
 		column = new TextColumn()
 		{
 			@Override
@@ -240,7 +240,7 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 				return String.class;
 			}
 		};
-		column.setDataStoreName(Phenotype.NAME);
+		column.setDataStoreName(Phenotype.SHORT_NAME);
 		addColumn(column, Text.LANG.phenotypeColumnShortName(), sortingEnabled);
 
 		/* Add the unit name column */

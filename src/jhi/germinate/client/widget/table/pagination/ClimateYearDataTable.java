@@ -113,7 +113,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 				}
 			};
 			column.setDataStoreName(Location.ID);
-			addColumn(column, Text.LANG.collectingsiteColumnId(), true);
+			addColumn(column, Text.LANG.collectingsiteColumnId(), sortingEnabled);
 		}
 
 		column = new ClickableSafeHtmlColumn()
@@ -140,7 +140,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 			}
 		};
 		column.setDataStoreName(Location.SITE_NAME);
-		addColumn(column, Text.LANG.collectingsiteCollsite(), true);
+		addColumn(column, Text.LANG.collectingsiteCollsite(), sortingEnabled);
 
 		SafeHtmlCell cell = new SafeHtmlCell();
 
@@ -183,7 +183,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 				}
 			};
 			c.setDataStoreName("m" + i);
-			addColumn(c, DateUtils.getLocalizedMonthAbbr(theYear), true);
+			addColumn(c, DateUtils.getLocalizedMonthAbbr(theYear), sortingEnabled);
 		}
 	}
 

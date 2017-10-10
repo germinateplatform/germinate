@@ -36,6 +36,7 @@ import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.datastructure.database.LocationType;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -52,6 +53,10 @@ public class GroupUploadWidget extends Composite
 	}
 
 	private static GroupUploadWidgetUiBinder ourUiBinder = GWT.create(GroupUploadWidgetUiBinder.class);
+
+	private static final String[] COLUMNS_ACCESSION = {Accession.ID, Accession.NAME, Accession.GENERAL_IDENTIFIER, Location.SITE_NAME, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER};
+	private static final String[] COLUMNS_MARKER    = {Marker.ID, Marker.MARKER_NAME, Map.ID, Map.DESCRIPTION, MapFeatureType.DESCRIPTION, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START};
+	private static final String[] COLUMNS_LOCATION  = {Location.ID, Location.SITE_NAME, Location.STATE, Location.REGION, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Country.COUNTRY_NAME, LocationType.NAME};
 
 	@UiField
 	TabListItem   uploadTab;
@@ -81,26 +86,42 @@ public class GroupUploadWidget extends Composite
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
 		form.setMethod(FormPanel.METHOD_POST);
 
-		ComparisonRow.ComparisonType type;
+		GerminateDatabaseTable type;
 		switch (referenceTable)
 		{
 			case markers:
-				type = ComparisonRow.ComparisonType.marker;
+				type = GerminateDatabaseTable.markers;
 				break;
 			case locations:
-				type = ComparisonRow.ComparisonType.location;
+				type = GerminateDatabaseTable.locations;
 				break;
 			case germinatebase:
 			default:
-				type = ComparisonRow.ComparisonType.accession;
+				type = GerminateDatabaseTable.germinatebase;
 				break;
 		}
 
 		String limit = NumberUtils.DECIMAL_FORMAT_TWO_PLACES.format(GerminateSettingsHolder.get().uploadSizeLimitMB.getValue());
 		label.setText(Text.LANG.uploadFileSizeLimit(limit));
 
-		column.setValue(type.getItems()[0], false);
-		column.setAcceptableValues(type.getItems());
+		String[] items = getItems(type);
+
+		column.setValue(items[0], false);
+		column.setAcceptableValues(items);
+	}
+
+	private String[] getItems(GerminateDatabaseTable type)
+	{
+		switch (type)
+		{
+			case markers:
+				return COLUMNS_MARKER;
+			case locations:
+				return COLUMNS_LOCATION;
+			case germinatebase:
+			default:
+				return COLUMNS_ACCESSION;
+		}
 	}
 
 	public void onUploadButtonClicked()

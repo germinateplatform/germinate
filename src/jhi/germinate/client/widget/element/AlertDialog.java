@@ -30,8 +30,8 @@ import jhi.germinate.client.i18n.*;
 import jhi.germinate.shared.*;
 
 /**
- * {@link AlertDialog} is a class used to easily create {@link Modal}s that are used similarly to the Android AlertDialog. They basically
- * contain a title, a message and two buttons. One of the buttons is a positive button and one a negative button.
+ * {@link AlertDialog} is a class used to easily create {@link Modal}s that are used similarly to the Android AlertDialog. They basically contain a
+ * title, a message and two buttons. One of the buttons is a positive button and one a negative button.
  *
  * @author Sebastian Raubach
  */
@@ -82,6 +82,11 @@ public final class AlertDialog
 
 		this.content = new ModalBody();
 		this.content.add(new Label(content));
+	}
+
+	public boolean isVisible()
+	{
+		return dialog.isVisible();
 	}
 
 	/**

@@ -95,7 +95,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 				}
 			};
 			column.setDataStoreName(Institution.ID);
-			addColumn(column, Text.LANG.institutionsColumnId(), true);
+			addColumn(column, Text.LANG.institutionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the institution name column */
@@ -114,7 +114,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 		};
 		column.setDataStoreName(Institution.NAME);
-		addColumn(column, Text.LANG.institutionsColumnName(), true);
+		addColumn(column, Text.LANG.institutionsColumnName(), sortingEnabled);
 
 		/* Add the institution acronym column */
 		column = new TextColumn()
@@ -132,7 +132,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 		};
 		column.setDataStoreName(Institution.ACRONYM);
-		addColumn(column, Text.LANG.institutionsColumnAcronym(), true);
+		addColumn(column, Text.LANG.institutionsColumnAcronym(), sortingEnabled);
 
 		/* Add the country column */
 		column = new TextColumn()
@@ -174,7 +174,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 		};
 		column.setDataStoreName(Country.COUNTRY_NAME);
-		addColumn(column, Text.LANG.institutionsColumnCountry(), true);
+		addColumn(column, Text.LANG.institutionsColumnCountry(), sortingEnabled);
 
 		/* Add the institution contact column */
 		column = new TextColumn()
@@ -192,7 +192,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 		};
 		column.setDataStoreName(Institution.CONTACT);
-		addColumn(column, Text.LANG.institutionsColumnContact(), true);
+		addColumn(column, Text.LANG.institutionsColumnContact(), sortingEnabled);
 
 		/* Add the institution phone column */
 		column = new TextColumn()
@@ -210,7 +210,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 		};
 		column.setDataStoreName(Institution.PHONE);
-		addColumn(column, Text.LANG.institutionsColumnPhone(), true);
+		addColumn(column, Text.LANG.institutionsColumnPhone(), sortingEnabled);
 
 		/* Add the institution email column */
 		column = new SafeHtmlColumn()
@@ -231,7 +231,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 		};
 		column.setDataStoreName(Institution.EMAIL);
-		addColumn(column, Text.LANG.institutionsColumnEmail(), true);
+		addColumn(column, Text.LANG.institutionsColumnEmail(), sortingEnabled);
 
 		/* Add the institution address column */
 		column = new TextColumn()
@@ -249,7 +249,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 			}
 		};
 		column.setDataStoreName(Institution.ADDRESS);
-		addColumn(column, Text.LANG.institutionsColumnAddress(), true);
+		addColumn(column, Text.LANG.institutionsColumnAddress(), sortingEnabled);
 	}
 
 	@Override

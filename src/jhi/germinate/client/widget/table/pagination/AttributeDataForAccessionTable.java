@@ -90,7 +90,7 @@ public abstract class AttributeDataForAccessionTable extends DatabaseObjectPagin
 				}
 			};
 			column.setDataStoreName(Attribute.ID);
-			addColumn(column, Text.LANG.institutionsColumnId(), true);
+			addColumn(column, Text.LANG.institutionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the attribute name column */
@@ -112,7 +112,7 @@ public abstract class AttributeDataForAccessionTable extends DatabaseObjectPagin
 			}
 		};
 		column.setDataStoreName(Attribute.NAME);
-		addColumn(column, Text.LANG.passportColumnAttributeName(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeName(), sortingEnabled);
 
 		/* Add the attribute description column */
 		column = new TextColumn()
@@ -133,7 +133,7 @@ public abstract class AttributeDataForAccessionTable extends DatabaseObjectPagin
 			}
 		};
 		column.setDataStoreName(Attribute.DESCRIPTION);
-		addColumn(column, Text.LANG.passportColumnAttributeDescription(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeDescription(), sortingEnabled);
 
 		/* Add the data type column */
 		column = new TextColumn()
@@ -154,7 +154,7 @@ public abstract class AttributeDataForAccessionTable extends DatabaseObjectPagin
 			}
 		};
 		column.setDataStoreName(Attribute.DATA_TYPE);
-		addColumn(column, Text.LANG.passportColumnAttributeType(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeType(), sortingEnabled);
 
 		/* Add the actual value column */
 		column = new TextColumn()

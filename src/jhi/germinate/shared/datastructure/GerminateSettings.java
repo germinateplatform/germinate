@@ -64,7 +64,6 @@ public class GerminateSettings implements Serializable
 	public ClientProperty<Boolean>      templateShowParallaxBanner;
 	public ClientProperty<String>       templateTitle;
 	public ClientProperty<String>       templateDatabaseName;
-	public ClientProperty<String>       templateTwitterUrl;
 	public ClientProperty<List<String>> templateCategoricalColors;
 	public ClientProperty<List<String>> templateGradientColors;
 	public ClientProperty<Boolean>      templateLogoContainsLink;

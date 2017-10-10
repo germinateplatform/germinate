@@ -178,7 +178,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 		else if (stateAccessionId != null)
 			filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Equal(), Long.toString(stateAccessionId), Long.class.getSimpleName()));
 
-		if(filter != null)
+		if (filter != null)
 		{
 			AccessionService.Inst.get().getForFilter(Cookie.getRequestProperties(), Pagination.getDefault(), filter, new DefaultAsyncCallback<PaginatedServerResult<List<Accession>>>()
 			{
@@ -287,12 +287,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 					filter.add(condition);
 
 					if (filter.getAll().size() > 1)
-					{
-						if (filterOperatorButton.getValue())
-							filter.addLogicalOperator(new And());
-						else
-							filter.addLogicalOperator(new Or());
-					}
+						filter.addLogicalOperator(new And());
 				}
 				catch (InvalidArgumentException | InvalidSearchQueryException e)
 				{
@@ -386,12 +381,18 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 		pedigreeTablePanel.add(new PedigreeTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
+			protected boolean supportsFiltering()
+			{
+				return false;
+			}
+
+			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Pedigree>>> callback)
 			{
 				try
 				{
-					if (filter == null)
-						filter = new PartialSearchQuery();
+					filter = new PartialSearchQuery();
+
 					SearchCondition condition = new SearchCondition();
 					condition.setColumnName("Child.id");
 					condition.setComp(new Equal());
@@ -399,13 +400,14 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 					condition.setType(Long.class.getSimpleName());
 					filter.add(condition);
 
-					if (filter.getAll().size() > 1)
-					{
-						if (filterOperatorButton.getValue())
-							filter.addLogicalOperator(new And());
-						else
-							filter.addLogicalOperator(new Or());
-					}
+					filter.addLogicalOperator(new Or());
+
+					condition = new SearchCondition();
+					condition.setColumnName("Parent.id");
+					condition.setComp(new Equal());
+					condition.addConditionValue(Long.toString(accession.getId()));
+					condition.setType(Long.class.getSimpleName());
+					filter.add(condition);
 				}
 				catch (InvalidArgumentException | InvalidSearchQueryException e)
 				{
@@ -432,6 +434,8 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 						callback.onSuccess(result);
 					}
 				});
+
+
 			}
 		});
 

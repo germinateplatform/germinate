@@ -60,8 +60,6 @@ import jhi.germinate.shared.search.*;
  */
 public class GroupsPage extends Composite implements ParallaxBannerPage, HasHyperlinkButton, HasHelp
 {
-	private GroupMemberSearch groupMemberSearch;
-
 	interface GroupsPageUiBinder extends UiBinder<FlowPanel, GroupsPage>
 	{
 	}
@@ -85,7 +83,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 	private final GroupTable                       groupTable;
 	private       Button                           addGroup;
-	private       Button                           addGroupMember;
 	private       Button                           uploadGroupMember;
 	private       Button                           deleteGroupMember;
 	private       DatabaseObjectPaginationTable<?> table;
@@ -413,32 +410,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				}, null);
 			});
 
-			addGroupMember = new Button(Text.LANG.groupsButtonSearchMembers(), IconType.SEARCH_PLUS, e ->
-			{
-				if (groupMemberSearch == null)
-					groupMemberSearch = new GroupMemberSearch(group, new AsyncCallback<DatabaseObjectPaginationTable<?>>()
-					{
-						@Override
-						public void onFailure(Throwable caught)
-						{
-							newGroupMembersPanel.setVisible(true);
-							newGroupMembersTable.clear();
-							newGroupMembersTable.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));
-						}
-
-						@Override
-						public void onSuccess(DatabaseObjectPaginationTable<?> result)
-						{
-							newGroupMembersPanel.setVisible(true);
-							newGroupMembersTable.clear();
-							newGroupMembersTable.add(result);
-
-							Scheduler.get().scheduleDeferred(() -> JavaScript.smoothScrollTo(result.getElement()));
-						}
-					});
-
-				groupMemberSearch.open();
-			});
+			updateNewGroupMembersPanel();
 
 			uploadGroupMember = new Button(Text.LANG.groupsButtonUploadMembers(), IconType.UPLOAD, e ->
 			{
@@ -455,19 +427,141 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			});
 
 			buttonGroup.add(deleteGroupMember);
-			buttonGroup.add(addGroupMember);
 			buttonGroup.add(uploadGroupMember);
 			table.addExtraContent(buttonGroup);
 		}
+	}
+
+	private void updateNewGroupMembersPanel()
+	{
+		newGroupMembersPanel.setVisible(true);
+		newGroupMembersTable.clear();
+
+		DatabaseObjectPaginationTable<? extends DatabaseObject> result = null;
+
+		switch (group.getType().getTargetTable())
+		{
+			case germinatebase:
+				result = new AccessionTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, false)
+				{
+					@Override
+					protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Accession>>> callback)
+					{
+						return AccessionService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+					}
+
+					@Override
+					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+					{
+						AccessionService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
+					}
+
+					@Override
+					public boolean supportsFullIdMarking()
+					{
+						return true;
+					}
+
+					@Override
+					protected boolean supportsFiltering()
+					{
+						return true;
+					}
+				};
+				break;
+			case markers:
+				result = new MapDefinitionTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, false)
+				{
+					@Override
+					protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback)
+					{
+						return MarkerService.Inst.get().getMapDefinitionForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+					}
+
+					@Override
+					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+					{
+						MarkerService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
+					}
+
+					@Override
+					public boolean supportsFullIdMarking()
+					{
+						return true;
+					}
+
+					@Override
+					protected boolean supportsFiltering()
+					{
+						return true;
+					}
+				};
+				break;
+			case locations:
+				result = new LocationTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, false)
+				{
+					@Override
+					protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Location>>> callback)
+					{
+						return LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, callback);
+					}
+
+					@Override
+					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+					{
+						LocationService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
+					}
+
+					@Override
+					public boolean supportsFullIdMarking()
+					{
+						return true;
+					}
+
+					@Override
+					protected boolean supportsFiltering()
+					{
+						return true;
+					}
+				};
+				break;
+		}
+
+		final DatabaseObjectPaginationTable<? extends DatabaseObject> t = result;
+
+		ButtonGroup buttonGroup = new ButtonGroup();
+		Button addGroupMember = new Button(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, e ->
+		{
+			Set<? extends DatabaseObject> selectedItems = t.getSelection();
+
+			if (selectedItems.size() < 1)
+			{
+				Notification.notify(Notification.Type.INFO, Text.LANG.notificationGroupsSelectAtLeastOne());
+				return;
+			}
+
+			List<Long> ids = DatabaseObject.getGroupSpecificIds(selectedItems);
+
+			GroupService.Inst.get().addItems(Cookie.getRequestProperties(), group.getId(), ids, new DefaultAsyncCallback<ServerResult<Set<Long>>>(true)
+			{
+				@Override
+				protected void onSuccessImpl(ServerResult<Set<Long>> result)
+				{
+					GerminateEventBus.BUS.fireEvent(new GroupMemberChangeEvent());
+				}
+			});
+		});
+
+		buttonGroup.add(addGroupMember);
+		result.addExtraContent(buttonGroup);
+
+		newGroupMembersTable.add(result);
 	}
 
 	@Override
 	protected void onUnload()
 	{
 		super.onUnload();
-
-		if (groupMemberSearch != null)
-			groupMemberSearch.onUnload();
 
 		if (uploadAlertDialog != null)
 			uploadAlertDialog.remove();

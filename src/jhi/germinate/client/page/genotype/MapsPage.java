@@ -387,12 +387,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 						filter.add(condition);
 
 						if (filter.getAll().size() > 1)
-						{
-							if (filterOperatorButton.getValue())
 								filter.addLogicalOperator(new And());
-							else
-								filter.addLogicalOperator(new Or());
-						}
 					}
 					catch (InvalidArgumentException | InvalidSearchQueryException e)
 					{

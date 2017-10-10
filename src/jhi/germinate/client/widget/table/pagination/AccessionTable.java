@@ -107,7 +107,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 				}
 			};
 			column.setDataStoreName(Accession.ID);
-			addColumn(column, Text.LANG.accessionsColumnId(), true);
+			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the general identifier column */
@@ -129,7 +129,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Accession.GENERAL_IDENTIFIER);
-		addColumn(column, Text.LANG.accessionsColumnGeneralIdentifier(), true);
+		addColumn(column, Text.LANG.accessionsColumnGeneralIdentifier(), sortingEnabled);
 
 		/* Add the name column */
 		column = new ClickableSafeHtmlColumn()
@@ -150,7 +150,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Accession.NAME);
-		addColumn(column, Text.LANG.accessionsColumnName(), true);
+		addColumn(column, Text.LANG.accessionsColumnName(), sortingEnabled);
 
 		/* Add the number column */
 		column = new ClickableSafeHtmlColumn()
@@ -171,7 +171,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Accession.NUMBER);
-		addColumn(column, Text.LANG.accessionsColumnNumber(), true);
+		addColumn(column, Text.LANG.accessionsColumnNumber(), sortingEnabled);
 
 		/* Add the collector column */
 		column = new TextColumn()
@@ -189,7 +189,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Accession.COLLNUMB);
-		addColumn(column, Text.LANG.accessionsColumnCollNumber(), true);
+		addColumn(column, Text.LANG.accessionsColumnCollNumber(), sortingEnabled);
 
 		/* Add the genus column */
 		column = new TextColumn()
@@ -216,7 +216,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Taxonomy.GENUS);
-		addColumn(column, Text.LANG.passportColumnGenus(), true);
+		addColumn(column, Text.LANG.passportColumnGenus(), sortingEnabled);
 
 		/* Add the species column */
 		column = new TextColumn()
@@ -243,7 +243,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Taxonomy.SPECIES);
-		addColumn(column, Text.LANG.passportColumnSpecies(), true);
+		addColumn(column, Text.LANG.passportColumnSpecies(), sortingEnabled);
 
 		/* Add the subtaxa column */
 		column = new TextColumn()
@@ -270,7 +270,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Subtaxa.TAXONOMY_IDENTIFIER);
-		addColumn(column, Text.LANG.passportColumnSubtaxa(), true);
+		addColumn(column, Text.LANG.passportColumnSubtaxa(), sortingEnabled);
 
 		/* Add the latitude column */
 		column = new TextColumn()
@@ -291,7 +291,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Location.LATITUDE);
-		addColumn(column, Text.LANG.collectingsiteLatitude(), true);
+		addColumn(column, Text.LANG.collectingsiteLatitude(), sortingEnabled);
 
 		/* Add the longitude column */
 		column = new TextColumn()
@@ -312,7 +312,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Location.LONGITUDE);
-		addColumn(column, Text.LANG.collectingsiteLongitude(), true);
+		addColumn(column, Text.LANG.collectingsiteLongitude(), sortingEnabled);
 
 		/* Add the elevation column */
 		column = new TextColumn()
@@ -333,7 +333,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Location.ELEVATION);
-		addColumn(column, Text.LANG.collectingsiteElevation(), true);
+		addColumn(column, Text.LANG.collectingsiteElevation(), sortingEnabled);
 
 		/* Add the country column */
 		column = new TextColumn()
@@ -375,7 +375,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Country.COUNTRY_NAME);
-		addColumn(column, Text.LANG.passportColumnCountry(), true);
+		addColumn(column, Text.LANG.passportColumnCountry(), sortingEnabled);
 
 		/* Add the collection date column */
 		column = new TextColumn()
@@ -393,7 +393,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Accession.COLLDATE);
-		addColumn(column, Text.LANG.passportColumnColldate(), true);
+		addColumn(column, Text.LANG.passportColumnColldate(), sortingEnabled);
 	}
 
 	@Override

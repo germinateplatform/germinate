@@ -117,7 +117,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 				}
 			};
 			column.setDataStoreName(Marker.ID);
-			addColumn(column, Text.LANG.accessionsColumnId(), true);
+			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the marker column */
@@ -141,7 +141,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 			}
 		};
 		column.setDataStoreName(Marker.MARKER_NAME);
-		addColumn(column, Text.LANG.markersColumnName(), true);
+		addColumn(column, Text.LANG.markersColumnName(), sortingEnabled);
 
 		/* Add the map feature type column */
 		column = new TextColumn()
@@ -162,7 +162,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 			}
 		};
 		column.setDataStoreName(MapFeatureType.DESCRIPTION);
-		addColumn(column, Text.LANG.markersColumnFeatureDescription(), true);
+		addColumn(column, Text.LANG.markersColumnFeatureDescription(), sortingEnabled);
 
 		/* Add the map description column */
 		column = new TextColumn()
@@ -183,7 +183,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 			}
 		};
 		column.setDataStoreName(Map.DESCRIPTION);
-		addColumn(column, Text.LANG.mapsColumnsMapName(), true);
+		addColumn(column, Text.LANG.mapsColumnsMapName(), sortingEnabled);
 
 		/* Add the chromosome column */
 		column = new TextColumn()
@@ -201,7 +201,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 			}
 		};
 		column.setDataStoreName(MapDefinition.CHROMOSOME);
-		addColumn(column, Text.LANG.markersColumnChromosome(), true);
+		addColumn(column, Text.LANG.markersColumnChromosome(), sortingEnabled);
 
 		/* Add the definition start column */
 		column = new TextColumn()
@@ -222,7 +222,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 			}
 		};
 		column.setDataStoreName(MapDefinition.DEFINITION_START);
-		addColumn(column, Text.LANG.markersColumnDefinitionStart(), true);
+		addColumn(column, Text.LANG.markersColumnDefinitionStart(), sortingEnabled);
 	}
 
 	@Override

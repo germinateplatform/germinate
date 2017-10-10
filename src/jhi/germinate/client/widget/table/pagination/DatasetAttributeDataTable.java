@@ -87,7 +87,7 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 				}
 			};
 			column.setDataStoreName(Accession.ID);
-			addColumn(column, Text.LANG.accessionsColumnId(), true);
+			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the dataset description column */
@@ -111,7 +111,7 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Dataset.DESCRIPTION);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), sortingEnabled);
 
 		/* Add the attribute name column */
 		column = new TextColumn()
@@ -132,7 +132,7 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Attribute.NAME);
-		addColumn(column, Text.LANG.passportColumnAttributeName(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeName(), sortingEnabled);
 
 		/* Add the attribute description column */
 		column = new TextColumn()
@@ -153,7 +153,7 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Attribute.DESCRIPTION);
-		addColumn(column, Text.LANG.passportColumnAttributeDescription(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeDescription(), sortingEnabled);
 
 		/* Add the data type column */
 		column = new TextColumn()
@@ -174,7 +174,7 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Attribute.DATA_TYPE);
-		addColumn(column, Text.LANG.passportColumnAttributeType(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeType(), sortingEnabled);
 
 		/* Add the actual value column */
 		column = new TextColumn()
@@ -192,7 +192,7 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(AttributeData.VALUE);
-		addColumn(column, Text.LANG.passportColumnAttributeValue(), true);
+		addColumn(column, Text.LANG.passportColumnAttributeValue(), sortingEnabled);
 	}
 
 	@Override

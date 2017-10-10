@@ -117,11 +117,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 	TextBox   templateEmail;
 
 	@UiField
-	FormLabel templateTwitterLabel;
-	@UiField
-	TextBox   templateTwitter;
-
-	@UiField
 	FormLabel categoriesLabel;
 	@UiField
 	FlowPanel categories;
@@ -267,7 +262,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateString(settings.templateTitle, templateTitle, templateTitleLabel);
 		updateString(settings.templateDatabaseName, templateDatabaseName, templateDatabaseNameLabel);
 		updateString(settings.templateContactEmail, templateEmail, templateEmailLabel);
-		updateString(settings.templateTwitterUrl, templateTwitter, templateTwitterLabel);
 
 		updateColorList(settings.templateCategoricalColors, categories, categoriesLabel, templateCategoricalColors, null, categoryDeleteCallback, null);
 		updateColorList(settings.templateGradientColors, gradients, gradientLabel, templateGradientColors, gradientChangeCallback, gradientDeleteCallback, gradientAddCallback);
@@ -458,7 +452,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.templateTitle.setValue(templateTitle.getValue());
 			settings.templateDatabaseName.setValue(templateDatabaseName.getValue());
 			settings.templateContactEmail.setValue(templateEmail.getValue());
-			settings.templateTwitterUrl.setValue(templateTwitter.getValue());
 			settings.templateLogoContainsLink.setValue(logoLinks.getValue());
 			settings.templateShowParallaxBanner.setValue(parallax.getValue());
 

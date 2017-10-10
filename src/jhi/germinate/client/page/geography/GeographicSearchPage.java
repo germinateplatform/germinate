@@ -242,12 +242,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 						filter.add(condition);
 
 						if (filter.getAll().size() > 1)
-						{
-							if (filterOperatorButton.getValue())
-								filter.addLogicalOperator(new And());
-							else
-								filter.addLogicalOperator(new Or());
-						}
+							filter.addLogicalOperator(new And());
 					}
 					catch (InvalidArgumentException | InvalidSearchQueryException e)
 					{
@@ -327,12 +322,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 						filter.add(condition);
 
 						if (filter.getAll().size() > 1)
-						{
-							if (filterOperatorButton.getValue())
-								filter.addLogicalOperator(new And());
-							else
-								filter.addLogicalOperator(new Or());
-						}
+							filter.addLogicalOperator(new And());
 					}
 					catch (InvalidArgumentException | InvalidSearchQueryException e)
 					{

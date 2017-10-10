@@ -13,13 +13,22 @@ Please note, that depending on the configuration of the {\germinate} instance yo
 
 \subsection{Data filtering}
 \label{sec:features:filtering}
-A lot of tables you encounter in {\germinate} support filtering based on columns. These tables will have a filter icon in the top-left corner which, when clicked on, opens the table column header filters. These are text boxes that, depending on the data type of the column, allow you to specify a single value/date or an interval of values/dates. Once this filter is applied, the table will only show items that match the given filter query. By default the individual filters are combined with a boolean "And", meaning that all of them have to be true at the same time. You can switch this to a boolean "Or" to get results where at least one of the individual filters is fulfilled.
+A lot of tables you encounter in {\germinate} support filtering based on columns. These tables will have a filter icon in the top-left corner which, when clicked on, opens the table column filters.
+
+The filter interface can be seen in Figure \ref{fig:features:filtering}. Each row represents a restriction. It consists of a table column, a comparison operator and, depending on this operator, either one or two values. Multiple rows are combined with boolean combinations. By default the individual filters are combined with a boolean "And", meaning that all of them have to be true at the same time. You can switch this to a boolean "Or" to get results where at least one of the individual filters is fulfilled. Once this filter is applied, the table will only show items that match the given overall filter query.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{img/features/table-filtering.png}
+	\caption{The table filter interface allows you to define boolean combinations of restrictions for the columns. These support wildcards as well as a variety of different comparison types.}
+	\label{fig:features:filtering}
+\end{figure}
 
 This is a particularly useful feature if you want to find items that, e.g., are from a specific country, or that have a phenotype value within a certain range. The resulting items can then be marked or put into a group.
 
 \subsection{Search}
 \label{sec:features:search}
-{\germinate} supports full-text search across various data types and columns within this type. You can search by typing a search query into the text box shown in Figure \ref{fig:overview:home}B. Upon search, {\germinate} shows the search results page. This page shows all matching database objects grouped into categories, each category representing a different data type. Figure \ref{fig:features:search} shows an example of the search results that {\germinate} provides. The number of matching items is shown for each section on the right. Upon expanding of a section, a result table will show the matching database items. You can then either download the data, mark specific items (\cf Section \ref{sec:features:marked-items}) or filter down further by adjusting the search criteria in the table header (\cf Section \ref{sec:features:filtering}).
+{\germinate} supports full-text search across various data types and columns within this type. You can search by typing a search query into the text box shown in Figure \ref{fig:overview:home}B. Upon search, {\germinate} shows the search results page. This page shows all matching database objects grouped into categories, each category representing a different data type. Figure \ref{fig:features:search} shows an example of the search results that {\germinate} provides. The number of matching items is shown for each section on the right. Upon expanding of a section, a result table will show the matching database items. You can then either download the data, mark specific items (\cf Section \ref{sec:features:marked-items}) or filter down further by adjusting the search criteria in the table filter (\cf Section \ref{sec:features:filtering}).
 
 \begin{figure}
 	\centering

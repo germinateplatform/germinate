@@ -107,10 +107,6 @@
 					<b:FormLabel for="formTemplateEmail" ui:field="templateEmailLabel"/>
 					<b:TextBox b:id="formTemplateEmail" ui:field="templateEmail"/>
 				</b:FormGroup>
-				<b:FormGroup>
-					<b:FormLabel for="formTemplateTwitter" ui:field="templateTwitterLabel"/>
-					<b:TextBox b:id="formTemplateTwitter" ui:field="templateTwitter"/>
-				</b:FormGroup>
 
 				<b:FormGroup>
 					<b:FormLabel addStyleNames="{style.block}" for="formCategories" ui:field="categoriesLabel"/>

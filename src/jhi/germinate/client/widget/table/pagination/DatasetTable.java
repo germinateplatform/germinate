@@ -127,7 +127,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				}
 			};
 			column.setDataStoreName(Dataset.ID);
-			addColumn(column, Text.LANG.datasetsColumnDatasetId(), true);
+			addColumn(column, Text.LANG.datasetsColumnDatasetId(), sortingEnabled);
 		}
 
 		/* Add the experiment type column */
@@ -157,7 +157,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(ExperimentType.DESCRIPTION);
-		addColumn(column, Text.LANG.datasetsColumnExperimentType(), true);
+		addColumn(column, Text.LANG.datasetsColumnExperimentType(), sortingEnabled);
 
 		/* Experiment name */
 		column = new TextColumn()
@@ -180,7 +180,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Experiment.EXPERIMENT_NAME);
-		addColumn(column, Text.LANG.datasetsColumnExperimentName(), true);
+		addColumn(column, Text.LANG.datasetsColumnExperimentName(), sortingEnabled);
 
 		/* Add the dataset description column */
 		column = new ClickableSafeHtmlColumn()
@@ -202,7 +202,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.DESCRIPTION);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), sortingEnabled);
 
 		/* Add the dataset datatype column */
 		column = new ClickableSafeHtmlColumn()
@@ -220,7 +220,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.DATATYPE);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDatatype(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDatatype(), sortingEnabled);
 
 		/* Add the license description column */
 		column = new ClickableSafeHtmlColumn()
@@ -311,7 +311,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(License.DESCRIPTION);
-		addColumn(column, Text.LANG.datasetsColumnLicenseDescription(), true);
+		addColumn(column, Text.LANG.datasetsColumnLicenseDescription(), sortingEnabled);
 
 		column = new TextColumn()
 		{
@@ -328,7 +328,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.CONTACT);
-		addColumn(column, Text.LANG.datasetsColumnContact(), true);
+		addColumn(column, Text.LANG.datasetsColumnContact(), sortingEnabled);
 
 		column = new TextColumn()
 		{
@@ -345,7 +345,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.DATE_START);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDate(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDate(), sortingEnabled);
 
 		column = new TextColumn()
 		{
@@ -362,7 +362,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.DATE_END);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDateEnd(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDateEnd(), sortingEnabled);
 
 		column = new TextColumn()
 		{
@@ -384,7 +384,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.NR_OF_DATA_OBJECTS);
-		addColumn(column, Text.LANG.datasetsColumnDatasetSize(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetSize(), sortingEnabled);
 
 		column = new TextColumn()
 		{
@@ -406,7 +406,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.NR_OF_DATA_POINTS);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDataPoints(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDataPoints(), sortingEnabled);
 
 		/* Add the collaborator column */
 		addColumn(new Column<Dataset, SafeHtml>(clickCell)
@@ -644,6 +644,9 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				break;
 			case climate:
 				parameter = Parameter.climateDatasetIds;
+				break;
+			case compound:
+				parameter = Parameter.compoundDatasetIds;
 				break;
 			case genotype:
 				parameter = Parameter.genotypeDatasetIds;

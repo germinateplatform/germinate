@@ -94,7 +94,7 @@ public abstract class MegaEnvironmentTable extends DatabaseObjectPaginationTable
 				}
 			};
 			column.setDataStoreName("id");
-			addColumn(column, Text.LANG.megaEnvColumnId(), true);
+			addColumn(column, Text.LANG.megaEnvColumnId(), sortingEnabled);
 		}
 
 		/* Add the megaenvironment name column */
@@ -114,7 +114,7 @@ public abstract class MegaEnvironmentTable extends DatabaseObjectPaginationTable
 			}
 		};
 		column.setDataStoreName("name");
-		addColumn(column, Text.LANG.megaEnvColumnName(), true);
+		addColumn(column, Text.LANG.megaEnvColumnName(), sortingEnabled);
 
 		/* Add the megaenvironment size column */
 		column = new TextColumn()
@@ -137,7 +137,7 @@ public abstract class MegaEnvironmentTable extends DatabaseObjectPaginationTable
 			}
 		};
 		column.setDataStoreName("count");
-		addColumn(column, Text.LANG.megaEnvColumnSize(), true);
+		addColumn(column, Text.LANG.megaEnvColumnSize(), sortingEnabled);
 	}
 
 	@Override

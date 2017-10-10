@@ -63,6 +63,7 @@ public abstract class DropdownInputButton<T> extends Composite
 			anchor.addClickHandler(e ->
 			{
 				selection = data.get(index);
+				onValueChange(selection);
 				button.setText(((Anchor) e.getSource()).getText());
 			});
 			menu.add(anchor);
@@ -75,10 +76,21 @@ public abstract class DropdownInputButton<T> extends Composite
 		}
 	}
 
+	public void setSelection(T selection)
+	{
+		this.selection = selection;
+		button.setText(getLabel(selection));
+	}
+
 	public T getSelection()
 	{
 		return selection;
 	}
 
 	protected abstract String getLabel(T item);
+
+	protected void onValueChange(T value)
+	{
+
+	}
 }

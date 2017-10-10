@@ -95,7 +95,7 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 				}
 			};
 			column.setDataStoreName(Map.ID);
-			addColumn(column, Text.LANG.accessionsColumnId(), true);
+			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the description column */
@@ -114,7 +114,7 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 			}
 		};
 		column.setDataStoreName(Map.DESCRIPTION);
-		addColumn(column, Text.LANG.mapsColumnsMapName(), true);
+		addColumn(column, Text.LANG.mapsColumnsMapName(), sortingEnabled);
 
 		/* Add the created on column */
 		column = new TextColumn()
@@ -132,7 +132,7 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 			}
 		};
 		column.setDataStoreName(Map.CREATED_ON);
-		addColumn(column, Text.LANG.passportColumnCreatedOn(), true);
+		addColumn(column, Text.LANG.passportColumnCreatedOn(), sortingEnabled);
 
 		/* Add the updated on column */
 		column = new TextColumn()
@@ -150,7 +150,7 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 			}
 		};
 		column.setDataStoreName(Map.UPDATED_ON);
-		addColumn(column, Text.LANG.passportColumnUpdatedOn(), true);
+		addColumn(column, Text.LANG.passportColumnUpdatedOn(), sortingEnabled);
 
 		/* Add the size column */
 		column = new TextColumn()

@@ -103,7 +103,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 				}
 			};
 			column.setDataStoreName(Marker.ID);
-			addColumn(column, Text.LANG.accessionsColumnId(), true);
+			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
 		/* Add the marker name column */
@@ -125,7 +125,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 			}
 		};
 		column.setDataStoreName(Marker.MARKER_NAME);
-		addColumn(column, Text.LANG.markersColumnName(), true);
+		addColumn(column, Text.LANG.markersColumnName(), sortingEnabled);
 
 		/* Add the marker name column */
 		column = new TextColumn()
@@ -146,7 +146,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 			}
 		};
 		column.setDataStoreName(MarkerType.DESCRIPTION);
-		addColumn(column, Text.LANG.markersColumnFeatureDescription(), true);
+		addColumn(column, Text.LANG.markersColumnFeatureDescription(), sortingEnabled);
 	}
 
 	@Override

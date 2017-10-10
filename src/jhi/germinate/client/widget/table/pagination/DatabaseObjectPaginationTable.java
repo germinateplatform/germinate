@@ -25,7 +25,6 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.cellview.client.Column;
@@ -43,7 +42,6 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
-import org.gwtbootstrap3.extras.toggleswitch.client.ui.*;
 
 import java.util.*;
 import java.util.Map;
@@ -54,10 +52,10 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
-import jhi.germinate.client.widget.table.CompositeCell;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.client.widget.table.pagination.cell.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.client.widget.table.pagination.resource.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
@@ -86,7 +84,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	HTMLPanel panel;
 
 	@UiField
-	HTML filterInfo;
+	FlowPanel filterDisplay;
 
 	@UiField
 	FlowPanel                topPanel;
@@ -94,9 +92,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	FlowPanel                filterPlaceholder;
 	@UiField
 	Button                   filterButton;
-	@UiField
-	protected
-	ToggleSwitch             filterOperatorButton;
 	@UiField
 	BootstrapPager           topPager;
 	@UiField
@@ -127,8 +122,9 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	private   int     nrOfItemsPerPage       = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_NR_OF_ITEMS_PER_PAGE);
 
 	// CURRENT STATE
-	private boolean                                                      filterVisible   = false;
-	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
+	private boolean                filterVisible = false;
+	//	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
+	private List<FilterRow.Column> columns       = new ArrayList<>();
 	private RefreshableAsyncDataProvider<T> dataProvider;
 	private Map<String, ClickHandler> columnVisibilityHandlers = new HashMap<>();
 	private ContextMenuHandler<T>  contextMenuHandler;
@@ -143,6 +139,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	private Pagination pagination = new Pagination(0, Integer.MAX_VALUE);
 
 	// OTHER THINGS
+	private FilterPanel filterPanel = new FilterPanel();
 	private PopupPanel tooltipPanel;
 
 	public DatabaseObjectPaginationTable()
@@ -193,7 +190,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		if (supportsFiltering())
 		{
-			filterObject = getSearchFilter();
+			filterObject = getSearchFilter(false);
 		}
 
 		download(filterObject, new DefaultAsyncCallback<ServerResult<String>>(true)
@@ -237,6 +234,9 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			tableRowCountChangeHandler = null;
 		}
 
+		if (filterPanel != null)
+			filterPanel.onUnload();
+
 		super.onUnload();
 	}
 
@@ -244,11 +244,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	protected void onLoad()
 	{
 		super.onLoad();
-
-		if (!supportsFiltering())
-			filterInfo.setVisible(false);
-		else
-			filterInfo.setHTML(Text.LANG.tableFilterInfo());
 
 		String id = "table-" + String.valueOf(Math.abs(RandomUtils.RANDOM.nextLong()));
 		table.getElement().setId(id);
@@ -326,6 +321,36 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		}
 
 		createColumns();
+		filterPanel.update(columns);
+		filterPanel.addFilterPanelHandler(new FilterPanel.FilterPanelHandler()
+		{
+			@Override
+			public void onRowAdded()
+			{
+
+			}
+
+			@Override
+			public void onRowDeleted()
+			{
+				if (filterPanel.getSize() < 1)
+					filterButton.click();
+			}
+
+			@Override
+			public void onSearchClicked()
+			{
+				filterButton.setType(ButtonType.SUCCESS);
+				refreshTable();
+			}
+
+			@Override
+			public void onClearClicked()
+			{
+				filterButton.setType(ButtonType.DEFAULT);
+				refreshTable();
+			}
+		});
 
 		if (sortingEnabled)
 		{
@@ -335,138 +360,33 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		}
 
 		if (supportsFiltering())
-		{
 			filterPlaceholder.setVisible(true);
-			filterOperatorButton.setVisible(false);
-			filterOperatorButton.addValueChangeHandler(event ->
-			{
-				for (FilterCellCallback<T> callback : filterCallbacks.values())
-				{
-					if (callback.getRange() != null)
-					{
-						refreshTable();
-						break;
-					}
-				}
-			});
-		}
 
 		fetchTableData();
 	}
 
 	public void toggleFilter()
 	{
-		GQuery inputBoxes = GQuery.$("#" + getId() + " th").find("input[type='text']");
+//		filterVisible = !filterVisible;
 
-		for (DatabaseObjectFilterColumn<T, ?> column : filterCallbacks.keySet())
-		{
-			Header header = table.getHeader(table.getColumnIndex(column));
-			Cell parent = header.getCell();
+		filterPanel.setVisible(true);
 
-			if (parent instanceof ClearableCell)
-			{
-				((ClearableCell) parent).clear();
-			}
-			else if (parent instanceof CompositeCell)
-			{
-				List<Cell<?>> cells = ((CompositeCell<?>) parent).getCells();
-				for (Cell<?> cell : cells)
-				{
-					if (cell instanceof ClearableCell)
-						((ClearableCell) cell).clear();
-				}
-			}
-		}
-
-		for (FilterCellCallback<T> callback : filterCallbacks.values())
-			callback.setRange(null);
-
-		/* Get the content of all boxes */
-		boolean allEmpty = true;
-		for (int i = 0; i < inputBoxes.size(); i++)
-		{
-			InputElement e = inputBoxes.get(i).cast();
-			if (!StringUtils.isEmpty(e.getValue()))
-			{
-				allEmpty = false;
-				break;
-			}
-		}
-
-		/* Toggle the visibility state of all inputs */
-		inputBoxes.removeAttr("value")
-				  .toggle();
-
-		filterVisible = !filterVisible;
-
-		if (!allEmpty)
-			refreshTable();
-
-		filterOperatorButton.setVisible(filterVisible);
-		filterOperatorButton.setValue(true);
+//		if (!filterVisible)
+//			refreshTable();
 	}
 
 	public boolean forceFilter(Map<String, String> columnToValue, boolean isAnd) throws InvalidArgumentException
 	{
-		FilterCellCallback<T> theCallbackToCallInTheEnd = null;
+		/* Cancel any currently running request */
+		if (currentRequest != null && currentRequest.isPending())
+			currentRequest.cancel();
 
-		for (int i = 0; i < table.getColumnCount(); i++)
-		{
-			Column<T, ?> c = table.getColumn(i);
-			if (supportsFiltering() && c instanceof DatabaseObjectFilterColumn && columnToValue.containsKey(c.getDataStoreName()))
-			{
-				DatabaseObjectFilterColumn col = (DatabaseObjectFilterColumn) c;
+		filterPanel.setVisible(false);
+		filterPanel.add(columnToValue, isAnd, new Equal());
+		filterButton.setType(ButtonType.SUCCESS);
+		refreshTable();
 
-				FilterCellCallback<T> callback = filterCallbacks.get(col);
-
-				if (callback != null)
-				{
-					/* Make sure the filter is opened */
-					if (!filterVisible)
-					{
-						filterButton.click();
-					}
-
-					/* Set the text to the cell */
-					Header header = table.getHeader(table.getColumnIndex(c));
-					Cell parent = header.getCell();
-
-					if (parent instanceof FilterCell)
-					{
-						((FilterCell) parent).setValue(columnToValue.get(c.getDataStoreName()));
-					}
-					else if (parent instanceof CompositeCell)
-					{
-						List<Cell<?>> cells = ((CompositeCell<?>) parent).getCells();
-						for (Cell<?> cell : cells)
-						{
-							if (cell instanceof FilterCell)
-							{
-								((FilterCell) cell).setValue(columnToValue.get(c.getDataStoreName()));
-								break;
-							}
-						}
-					}
-
-					/* Cancel any currently running request */
-					if (currentRequest != null && currentRequest.isPending())
-						currentRequest.cancel();
-
-					/* Initiate the filtering */
-					callback.onFilterEvent(false, true, columnToValue.get(c.getDataStoreName()));
-					theCallbackToCallInTheEnd = callback;
-				}
-			}
-		}
-
-		if (theCallbackToCallInTheEnd != null)
-		{
-			filterOperatorButton.setValue(isAnd);
-
-			theCallbackToCallInTheEnd.onEnterPressed();
-		}
-
-		return theCallbackToCallInTheEnd != null;
+		return true;
 	}
 
 	public void refreshTable()
@@ -566,7 +486,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 				if (supportsFiltering())
 				{
-					filterObject = getSearchFilter();
+					filterObject = getSearchFilter(false);
 				}
 
 				/* Now, we need to get ALL the database items that are in this table, no matter on which page to be able to select them. */
@@ -695,7 +615,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 					PartialSearchQuery filterObject = null;
 
 					if (supportsFiltering())
-						filterObject = getSearchFilter();
+						filterObject = getSearchFilter(true);
 
 					final boolean filterApplied = filterObject != null;
 
@@ -768,6 +688,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		{
 			dataProvider.refresh(table);
 		}
+	}
+
+	private void displayFilter(FlowPanel filterObject)
+	{
+		filterDisplay.clear();
+		filterDisplay.add(filterObject);
 	}
 
 	/**
@@ -936,68 +862,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final String headerString, final boolean sortable, final boolean filterable)
 	{
 		if (supportsFiltering() && filterable)
-		{
-			Class<?> type = column.getType();
+			columns.add(new FilterRow.Column(column.getDataStoreName(), headerString, column.getType()));
 
-			List<HasCell<String, ?>> cells = new ArrayList<>();
+		table.addColumn(column, headerString);
 
-			boolean supportsRange = ClassUtils.isNumeric(type) || ClassUtils.isAnyType(type) || Objects.equals(Date.class, type);
-
-			FilterCellCallback<T> callback;
-
-			/* Add the first input */
-			if (Objects.equals(type, Date.class))
-			{
-				callback = new FilterCellCallback<>(this, column);
-				cells.add(new HasDatePickerCell(supportsRange ? FilterCell.FilterCellState.TOP : FilterCell.FilterCellState.SINGLE, this, callback));
-			}
-			else
-			{
-				callback = new FilterCellCallback<>(this, column);
-				cells.add(new HasFilterCell(table, supportsRange ? FilterCell.FilterCellState.TOP : FilterCell.FilterCellState.SINGLE, this, callback));
-			}
-
-			/* Add the second input if this column supports range queries */
-			if (supportsRange)
-			{
-				if (Objects.equals(type, Date.class))
-				{
-					cells.add(new HasDatePickerCell(FilterCell.FilterCellState.BOTTOM, this, callback));
-				}
-				else
-				{
-					cells.add(new HasFilterCell(table, FilterCell.FilterCellState.BOTTOM, this, callback));
-				}
-			}
-			else
-			{
-				cells.add(new HasDummyInputCell(this));
-			}
-
-			filterCallbacks.put((DatabaseObjectFilterColumn) column, callback);
-
-			/* Add the colum header (the actual column name) */
-			cells.add(0, new HasTextCell(headerString));
-
-			table.addColumn(column, new Header<String>(new CompositeCell<>(cells))
-			{
-				@Override
-				public String getValue()
-				{
-					return headerString;
-				}
-			});
-
-			if (sortable)
-				addSortBits(column);
-		}
-		else
-		{
-			table.addColumn(column, headerString);
-
-			if (sortable)
-				addSortBits(column);
-		}
+		if (sortable)
+			addSortBits(column);
 
 		setColumnStyleName(headerString, column, table.getHeader(table.getColumnCount() - 1));
 	}
@@ -1048,72 +918,81 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		table.addColumn(column, header);
 	}
 
-	protected PartialSearchQuery getSearchFilter()
+	protected PartialSearchQuery getSearchFilter(boolean forDisplay)
 	{
-		PartialSearchQuery q = new PartialSearchQuery();
+		if (!supportsFiltering())
+			return null;
 
-		boolean atLeastOne = false;
-		for (DatabaseObjectFilterColumn<T, ?> column : filterCallbacks.keySet())
-		{
-			String databaseColumnName = column.getDataStoreName();
-			FilterCell.FilterCallback.Range range = filterCallbacks.get(column).getRange();
+		if (forDisplay)
+			displayFilter(filterPanel.getQueryString());
 
-			if (StringUtils.isEmpty(databaseColumnName) || range == null)
-				continue;
 
-			try
-			{
-				List<String> rangeValues = range.getValues();
+		return filterPanel.getQuery();
 
-				if (rangeValues.size() == 2)
-				{
-					String first = rangeValues.get(0);
-					String second = rangeValues.get(1);
-
-					SearchCondition condition = new SearchCondition();
-					condition.setColumnName(databaseColumnName);
-					condition.setType(column.getType().getSimpleName());
-					condition.setComp(new Between());
-					condition.addConditionValue(first);
-					condition.addConditionValue(second);
-					q.add(condition);
-					if (filterOperatorButton.getValue())
-						q.addLogicalOperator(new And());
-					else
-						q.addLogicalOperator(new Or());
-				}
-				else if (rangeValues.size() == 1)
-				{
-					SearchCondition condition = new SearchCondition();
-					condition.setColumnName(databaseColumnName);
-					condition.setType(column.getType().getSimpleName());
-					condition.setComp(new Equal());
-					condition.addConditionValue(rangeValues.get(0));
-
-					q.add(condition);
-					if (filterOperatorButton.getValue())
-						q.addLogicalOperator(new And());
-					else
-						q.addLogicalOperator(new Or());
-				}
-				else
-				{
-					continue;
-				}
-
-				atLeastOne = true;
-			}
-			catch (InvalidSearchQueryException | InvalidArgumentException e)
-			{
-			}
-		}
-
-		if (atLeastOne)
-			q.removeLogicalOperator(q.getLogicalOperators().size() - 1);
-		else
-			q = null;
-
-		return q;
+//		PartialSearchQuery q = new PartialSearchQuery();
+//
+//		boolean atLeastOne = false;
+//		for (DatabaseObjectFilterColumn<T, ?> column : filterCallbacks.keySet())
+//		{
+//			String databaseColumnName = column.getDataStoreName();
+//			FilterCell.FilterCallback.Range range = filterCallbacks.get(column).getRange();
+//
+//			if (StringUtils.isEmpty(databaseColumnName) || range == null)
+//				continue;
+//
+//			try
+//			{
+//				List<String> rangeValues = range.getValues();
+//
+//				if (rangeValues.size() == 2)
+//				{
+//					String first = rangeValues.get(0);
+//					String second = rangeValues.get(1);
+//
+//					SearchCondition condition = new SearchCondition();
+//					condition.setColumnName(databaseColumnName);
+//					condition.setType(column.getType().getSimpleName());
+//					condition.setComp(new Between());
+//					condition.addConditionValue(first);
+//					condition.addConditionValue(second);
+//					q.add(condition);
+//					if (filterOperatorButton.getValue())
+//						q.addLogicalOperator(new And());
+//					else
+//						q.addLogicalOperator(new Or());
+//				}
+//				else if (rangeValues.size() == 1)
+//				{
+//					SearchCondition condition = new SearchCondition();
+//					condition.setColumnName(databaseColumnName);
+//					condition.setType(column.getType().getSimpleName());
+//					condition.setComp(new Equal());
+//					condition.addConditionValue(rangeValues.get(0));
+//
+//					q.add(condition);
+//					if (filterOperatorButton.getValue())
+//						q.addLogicalOperator(new And());
+//					else
+//						q.addLogicalOperator(new Or());
+//				}
+//				else
+//				{
+//					continue;
+//				}
+//
+//				atLeastOne = true;
+//			}
+//			catch (InvalidSearchQueryException | InvalidArgumentException e)
+//			{
+//			}
+//		}
+//
+//		if (atLeastOne)
+//			q.removeLogicalOperator(q.getLogicalOperators().size() - 1);
+//		else
+//			q = null;
+//
+//		return q;
 	}
 
 	private void addSortBits(Column<T, ?> column)

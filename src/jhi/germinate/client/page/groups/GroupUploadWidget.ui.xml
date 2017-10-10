@@ -46,8 +46,10 @@
 		<b:TabContent>
 			<b:TabPane addStyleNames="{style.margin}" active="true" b:id="upload">
 				<g:FormPanel ui:field="form">
-					<g:FileUpload ui:field="upload" name="upload"/>
-					<g:Label ui:field="label"/>
+					<g:FlowPanel>
+						<g:FileUpload name="upload" ui:field="upload"/>
+						<g:Label ui:field="label"/>
+					</g:FlowPanel>
 				</g:FormPanel>
 			</b:TabPane>
 			<b:TabPane addStyleNames="{style.margin}" b:id="input">
@@ -55,6 +57,10 @@
 			</b:TabPane>
 		</b:TabContent>
 
-		<i:StringListBox ui:field="column"/>
+		<b:FormGroup>
+			<b:FormLabel for="formColumn" text="{msg.groupMemberUploadSelectColumn}"/>
+			<i:StringListBox b:id="formColumn" ui:field="column"/>
+		</b:FormGroup>
+
 	</g:HTMLPanel>
 </ui:UiBinder>

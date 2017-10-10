@@ -109,7 +109,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				}
 			};
 			column.setDataStoreName(Comment.ID);
-			addColumn(column, Text.LANG.commentColumnId(), true);
+			addColumn(column, Text.LANG.commentColumnId(), sortingEnabled);
 		}
 
 		/* Add the group description column */
@@ -128,7 +128,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 			}
 		};
 		column.setDataStoreName(Comment.DESCRIPTION);
-		addColumn(column, Text.LANG.commentColumnDescription(), true);
+		addColumn(column, Text.LANG.commentColumnDescription(), sortingEnabled);
 
 		/* Add the comment type column */
 		column = new TextColumn()
@@ -146,7 +146,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 			}
 		};
 		column.setDataStoreName(CommentType.DESCRIPTION);
-		addColumn(column, Text.LANG.commentColumnType(), true);
+		addColumn(column, Text.LANG.commentColumnType(), sortingEnabled);
 
 		/* Add the user column */
 		column = new TextColumn()
@@ -185,7 +185,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 			}
 		};
 		column.setDataStoreName("comments." + Comment.CREATED_ON);
-		addColumn(column, Text.LANG.commentColumnCreatedOn(), true);
+		addColumn(column, Text.LANG.commentColumnCreatedOn(), sortingEnabled);
 
 		if (ModuleCore.getUseAuthentication())
 		{

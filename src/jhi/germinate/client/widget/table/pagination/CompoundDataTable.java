@@ -108,7 +108,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 				}
 			};
 			column.setDataStoreName(CompoundData.ID);
-			addColumn(column, Text.LANG.compoundDataColumnId(), true);
+			addColumn(column, Text.LANG.compoundDataColumnId(), sortingEnabled);
 		}
 
 		/* Add the accession gid column */
@@ -137,7 +137,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Accession.GENERAL_IDENTIFIER);
-		addColumn(column, Text.LANG.accessionsColumnGeneralIdentifier(), true);
+		addColumn(column, Text.LANG.accessionsColumnGeneralIdentifier(), sortingEnabled);
 
 		/* Add the accession name column */
 		column = new ClickableSafeHtmlColumn()
@@ -165,7 +165,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Accession.NAME);
-		addColumn(column, Text.LANG.accessionsColumnName(), true);
+		addColumn(column, Text.LANG.accessionsColumnName(), sortingEnabled);
 
 		/* Add the compound name column */
 		column = new TextColumn()
@@ -183,7 +183,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Compound.NAME);
-		addColumn(column, Text.LANG.compoundColumnName(), true);
+		addColumn(column, Text.LANG.compoundColumnName(), sortingEnabled);
 
 		/* Add the dataset description column */
 		column = new TextColumn()
@@ -201,7 +201,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Dataset.DESCRIPTION);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), true);
+		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), sortingEnabled);
 
 		/* Add the analysismethod name column */
 		column = new TextColumn()
@@ -222,7 +222,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(AnalysisMethod.NAME);
-		addColumn(column, Text.LANG.compoundDataAnalysisMethod(), true);
+		addColumn(column, Text.LANG.compoundDataAnalysisMethod(), sortingEnabled);
 
 		/* Add the unit name column */
 		column = new TextColumn()
@@ -243,7 +243,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(Unit.NAME);
-		addColumn(column, Text.LANG.compoundDataUnitName(), true);
+		addColumn(column, Text.LANG.compoundDataUnitName(), sortingEnabled);
 
 		/* Add the compound value column */
 		column = new TextColumn()
@@ -264,7 +264,7 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 			}
 		};
 		column.setDataStoreName(CompoundData.COMPOUND_VALUE);
-		addColumn(column, Text.LANG.compoundDataColumnValue(), true);
+		addColumn(column, Text.LANG.compoundDataColumnValue(), sortingEnabled);
 	}
 
 	@Override

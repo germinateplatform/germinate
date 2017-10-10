@@ -44,7 +44,7 @@
 			<g:SimplePanel ui:field="groupMembersPanel"/>
 
 			<g:FlowPanel ui:field="newGroupMembersPanel">
-				<b:Heading size="H3" text="{msg.groupsNewMembersSearchResult}"/>
+				<b:Heading size="H3" subText="{msg.groupsNewMembersSubtitle}" text="{msg.groupsNewMembersTitle}"/>
 
 				<g:SimplePanel ui:field="newGroupMembersTable"/>
 			</g:FlowPanel>

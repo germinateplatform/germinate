@@ -70,11 +70,11 @@
   - ADD: Added contact us button to top navigation bar.
   - CHG: Aligned the functionality of the pedigree download on the accessions overview page with the accession data download, i.e. it'll now download data for either the whole dataset, a group of accessions or the marked accessions.
   - ADD: Added more help content to the page.
-  - DEL: Removed the "registration-agreement-long.html" and "registration-agreement-short.html" files form the template folder of the instance and moved their content to Text.properties entries.
+  - DEL: Removed the "registration-agreement-long.html" and "registration-agreement-short.html" files form the template folder of the instance and moved their content to Text.properties entries. See the migration section for more details.
   - ADD: Added support for Dublin Core attributes. These are stored in the "dublin_core" column in the "datasets" table. The column type is JSON, please consult the documentation for the format of the JSON that is used here.
   - ADD: Added collaborator tables to the database. This means that you can now define multiple collaborators for each dataset. A collaborator can be associated with multiple datasets. The collaborators are shown by clicking on the people icon in the datasets table.
   - ADD: Added "location_name" column to phenotype data export.
-  - ADD: Added location information as a new column to the trials data export.
+  - CHG: Replaced old table filtering interface with a new version that allows more types of filtering while still maintaining the ones the old one had.
 
 /* MIGRATION */
 
@@ -85,10 +85,13 @@
       <inherits name="org.gwtbootstrap3.GwtBootstrap3NoTheme"/>
       <inherits name="org.gwtbootstrap3.extras.toggleswitch.ToggleSwitch"/>
       <inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
+      <inherits name="org.gwtbootstrap3.extras.datepicker.DatePicker"/>
       <inherits name="jhi.gwt.leaflet.GWTLeaflet"/>
       <inherits name="com.google.web.bindery.autobean.AutoBean"/>
 
     - Move the "crop.svg" from the "instance-stuff/<your-instance>/template/images" folder one level up into the "template" folder.
+
+    - Make sure the property "Germinate.Template.EmailAddress" in "config.properties" is a valid email address and nothing else, no other text, just the email address.
 
     - The following pages are no longer available as they have been merged with their respective trials version: "categorical-datasets", "categorical-export". To keep functionality working the same, please replace them under "Germinate.AvailablePages" (config.properties) with "trials-datasets", "trials".
 
@@ -170,7 +173,7 @@
       page.about.button.delete.members=Delete
       widget.pager.jump.to.page.title=Jump to page
       widget.pager.jump.to.page.page.number=Page number (1 - {0})
-      page.groups.search.result=Search result
+      page.groups.search.result=Search for items
       widget.table.filter.info=<b>Table filtering searches for exact matches in the specified column. To use fuzzy search, use the wildcard character '%'. As an example, searching for a country name of 'kingdom' will not return a result whereas searching for '%kingdom%' will return 'United Kingdom'.</b>
       column.license.description=License description
       general.decline=Decline
@@ -226,6 +229,11 @@
       column.collaborator.last.name=Last name
       column.collaborator.email=Email
       column.collaborator.phone=Phone number
+      operators.between=Between
+      general.filter=Filter
+      operators.greater.than.equals=Greater than or equals
+      operators.less.than.equals=Less than or equals
+      widget.group.member.upload.select.column=Select database column
 
     - Some translatable text has been changed. The following properties should be changed in your "Text.properties" file and the according translation files:
 

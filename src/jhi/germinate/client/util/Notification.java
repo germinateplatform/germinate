@@ -144,6 +144,7 @@ public class Notification
 		NotifySettings settings = NotifySettings.newSettings();
 //		settings.setShowProgressbar(true);
 		settings.setPauseOnMouseOver(true);
+		settings.setOffset(0, 60);
 		settings.setAllowDismiss(false);
 		settings.setZIndex(9999);
 

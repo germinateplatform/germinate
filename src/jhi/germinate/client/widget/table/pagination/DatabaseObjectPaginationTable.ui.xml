@@ -28,6 +28,8 @@
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
 	<ui:style>
+		@external label-default;
+
 		.marginTenRight {
 			margin-right: 10px;
 		}
@@ -43,11 +45,18 @@
 		.noBorderLeft {
 			border-left: 0;
 		}
+
+		.filter {
+			margin-bottom: 15px;
+		}
+
+		.filter span.label-default{
+			margin: 0 10px;
+		}
 	</ui:style>
 
 	<g:HTMLPanel ui:field="panel">
-
-		<g:HTML ui:field="filterInfo"/>
+		<g:FlowPanel addStyleNames="{style.filter}" ui:field="filterDisplay" />
 
 		<g:FlowPanel ui:field="topPanel">
 			<g:FlowPanel addStyleNames="{PULL_LEFT}">
@@ -59,8 +68,6 @@
 					<g:FlowPanel addStyleNames="{style.inlineBlock}" ui:field="filterPlaceholder" visible="false">
 						<b:Button title="{msg.filterButtonTitle}" addStyleNames="{MDI} {MDI_FILTER} {style.marginTenRight} {style.noBorderLeft}"
 								  ui:field="filterButton"/>
-						<t:ToggleSwitch onText="{msg.operatorsAnd}" offText="{msg.operatorsOr}" onColor="PRIMARY" offColor="PRIMARY" size="SMALL"
-										ui:field="filterOperatorButton"/>
 					</g:FlowPanel>
 				</g:FlowPanel>
 			</g:FlowPanel>
