@@ -28,6 +28,8 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.html.*;
 
+import java.util.*;
+
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
@@ -39,7 +41,7 @@ import jhi.germinate.shared.enums.*;
 /**
  * @author Sebastian Raubach
  */
-public class BootstrapPager extends AbstractPager
+public class BootstrapPager extends AbstractPager implements HasWidgets
 {
 	public static final  int   DEFAULT_PAGE_SIZE = 25;
 	private static final int[] SIZES             = {10, 25, 50, 100};
@@ -54,15 +56,17 @@ public class BootstrapPager extends AbstractPager
 	private ButtonGroup    group       = new ButtonGroup();
 	private Button         toggle      = new Button();
 	private DropDownMenu   menu        = new DropDownMenu();
+	private final FlowPanel panel;
+	private final UnorderedList ul;
 
 	public BootstrapPager()
 	{
-		FlowPanel panel = new FlowPanel();
+		panel = new FlowPanel();
 		initWidget(panel);
 
 		formatter = NumberFormat.getFormat(Text.LANG.pagerNumberFormat());
 
-		UnorderedList ul = new UnorderedList();
+		ul = new UnorderedList();
 		panel.add(ul);
 
 		int currentPageSize = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DatabaseObjectPaginationTable.DEFAULT_NR_OF_ITEMS_PER_PAGE);
@@ -115,6 +119,37 @@ public class BootstrapPager extends AbstractPager
 			int value = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_PAGE_SIZE);
 			toggle.setText(Integer.toString(value));
 		});
+	}
+
+	@Override
+	public void setVisible(boolean visible)
+	{
+		ul.setVisible(visible);
+		group.setVisible(visible);
+	}
+
+	@Override
+	public void add(Widget w)
+	{
+		panel.add(w);
+	}
+
+	@Override
+	public boolean remove(Widget w)
+	{
+		return panel.remove(w);
+	}
+
+	@Override
+	public Iterator<Widget> iterator()
+	{
+		return panel.iterator();
+	}
+
+	@Override
+	public void clear()
+	{
+		panel.clear();
 	}
 
 	private void addClickListeners()

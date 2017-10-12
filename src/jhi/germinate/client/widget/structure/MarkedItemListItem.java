@@ -83,8 +83,6 @@ public class MarkedItemListItem
 			}
 		});
 
-//		if (type != MarkedItemList.ItemType.ACCESSION)
-//			countWrapper.addClassName(Styles.PULL_RIGHT);
 		countWrapper.getStyle().setMarginLeft(10, com.google.gwt.dom.client.Style.Unit.PX);
 		countWrapper.getStyle().setLineHeight(28, com.google.gwt.dom.client.Style.Unit.PX);
 		count.addClassName(Styles.BADGE);
@@ -111,6 +109,6 @@ public class MarkedItemListItem
 
 	private void updateCount()
 	{
-		count.setInnerText(Integer.toString(MarkedItemList.get(type).size()));
+		count.setInnerText(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(type).size()));
 	}
 }

@@ -1,0 +1,3 @@
+[submodule "instance-stuff/shared"]
+	path = instance-stuff/shared
+	url = https://github.com/germinateplatform/germinate-instance-data.git

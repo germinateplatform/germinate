@@ -70,8 +70,8 @@
 			<b:Heading size="H3" text="{msg.generalResults}"/>
 
 			<b:PanelGroup b:id="accordion">
-				<s:SearchSection heading="{msg.geographicSearchAccessionTitle}" ui:field="accessionSection"/>
-				<s:SearchSection heading="{msg.geographicSearchResultTitle}" ui:field="locationSection"/>
+				<s:SearchSection heading="{msg.geographicSearchAccessionTitle}" preventHideSibling="true" ui:field="accessionSection"/>
+				<s:SearchSection heading="{msg.geographicSearchResultTitle}" preventHideSibling="true" ui:field="locationSection"/>
 			</b:PanelGroup>
 		</g:FlowPanel>
 	</g:HTMLPanel>

@@ -218,6 +218,10 @@
 			<!-- Include the js and css folders -->
 			<fileset dir="war" includes="css/**"/>
 			<fileset dir="war" includes="js/**"/>
+
+			<!-- Include the license -->
+			<fileset dir="." includes="LICENSE" />
+
 			<!-- Copy the properties file to a location accessible from the source -->
 			<zipfileset dir="." includes="config.properties" prefix="WEB-INF/classes"/>
 			<zipfileset dir="." includes="logging.properties" prefix="WEB-INF/classes"/>
@@ -226,6 +230,7 @@
 			<zipfileset dir="${instance.files}" includes="res*/**" prefix="WEB-INF/classes"/>
 			<zipfileset dir="${instance.files}" includes="download*/**" prefix="WEB-INF/classes"/>
 			<zipfileset dir="${instance.files}" includes="data*/**" prefix="WEB-INF/classes"/>
+
 			<!-- Include the SQL update scripts for Flyway -->
 			<zipfileset dir="${src.dir}" includes="**/*.sql" prefix="WEB-INF/classes"/>
 

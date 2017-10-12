@@ -22,11 +22,14 @@ import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.safehtml.shared.*;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
@@ -37,6 +40,7 @@ import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.cell.*;
 import jhi.germinate.client.widget.table.pagination.resource.*;
 import jhi.germinate.shared.*;
@@ -76,6 +80,8 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		super.onPostLoad();
 
 		makeTableMarkable();
+
+		addMarkedItemListButton();
 
 		/* Add a handler that updates the table when the shopping cart changes (these will be changes from other sources than the current table) */
 		markedItemListRegistration = GerminateEventBus.BUS.addHandler(MarkedItemListEvent.TYPE, event ->
@@ -489,6 +495,31 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		}
 
 		super.onUnload();
+	}
+
+	/**
+	 * Adds the marked item indicator the the top right of the table
+	 */
+	private void addMarkedItemListButton()
+	{
+		// Add the button
+		Button button = new Button("", IconType.TRASH, e -> {
+			AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), ev -> MarkedItemList.clear(itemType), null);
+		});
+		button.setTitle(Text.LANG.generalClear());
+		button.setMarginLeft(0);
+		button.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
+
+		// Add the actual badge that shows the number
+		Badge badge = new Badge(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(itemType).size()));
+		badge.setMarginLeft(10);
+		button.add(badge);
+
+		// Listen to shopping cart changes
+		GerminateEventBus.BUS.addHandler(MarkedItemListEvent.TYPE, event -> badge.setText(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(itemType).size())));
+
+		// Add it to the top pager
+		topPager.add(button);
 	}
 
 	private interface MarkedItemListCallback

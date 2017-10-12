@@ -43,6 +43,8 @@ public class Style
 	public static final String LAYOUT_BUTTON_MARGIN              = "gm8-button-margin";
 	public static final String LAYOUT_TABLE_CELL_PADDING_PADDING = "gm8-table-cell-padding";
 	public static final String LAYOUT_SELECT_BUTTON_COMBO        = "gm8-select-button-combo";
+	public static final String LAYOUT_FLOAT_INITIAL				 = "gm8-float-initial";
+	public static final String LAYOUT_NO_BORDER_LEFT			 = "gm8-no-border-left";
 
 	public static final String TAG_DUMMY_ANCHOR = "gm8-tag-dummy-anchor";
 
