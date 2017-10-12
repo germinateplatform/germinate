@@ -2531,4 +2531,8 @@ public interface Text extends Messages
 	@Key("widget.group.member.upload.select.column")
 	@DefaultMessage("Select database column")
 	String groupMemberUploadSelectColumn();
+
+	@Key("widget.marked.item.list.clear.confirm")
+	@DefaultMessage("Are you sure you want to clear the marked item list?")
+	String markedItemListClearConfirm();
 }

@@ -184,6 +184,14 @@ td span.mdi:nth-child(2) {
 	margin-top: 0;
 }
 
+.<%= Style.LAYOUT_FLOAT_INITIAL %> {
+	float: initial !important;
+}
+
+.<%= Style.LAYOUT_NO_BORDER_LEFT %> {
+	border-left: 0;
+}
+
 .<%= Style.COUNTRY_FLAG %> {
 	background: url(../img/flags24.png) no-repeat 50% 50%;
 	height: 24px;
@@ -191,6 +199,10 @@ td span.mdi:nth-child(2) {
 	display: inline-block;
 	vertical-align: middle;
 	margin: 0 5px;
+}
+
+.<%= Style.TABLE_CONTROL_PANEL %> .badge {
+	background-color: #777;
 }
 
 .<%= Style.TABLE_CONTROL_PANEL %>.top .pagination a,
