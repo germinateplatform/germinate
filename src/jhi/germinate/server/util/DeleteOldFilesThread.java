@@ -20,6 +20,8 @@ package jhi.germinate.server.util;
 import java.io.*;
 import java.util.*;
 
+import jhi.germinate.server.service.*;
+
 /**
  * @author Sebastian Raubach
  */
@@ -44,6 +46,7 @@ public class DeleteOldFilesThread extends Thread
 				if (files != null)
 				{
 					Arrays.stream(files)
+						  .filter(f -> !FileServlet.PUBLICLY_AVAILABLE_FILES.containsKey(f.getName())) // Exclude files that have been made publicly available
 						  .filter(f -> f.lastModified() < purgeTime)
 						  .forEach(File::delete);
 				}

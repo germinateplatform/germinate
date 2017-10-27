@@ -33,9 +33,9 @@ public class AnalysisMethod extends DatabaseObject
 {
 	private static final long serialVersionUID = -5477293220374152866L;
 
-	public static final String ID          = "analysismethod.id";
-	public static final String NAME        = "analysismethod.name";
-	public static final String DESCRIPTION = "analysismethod.description";
+	public static final String ID          = "analysismethods.id";
+	public static final String NAME        = "analysismethods.name";
+	public static final String DESCRIPTION = "analysismethods.description";
 
 	private String name;
 	private String description;

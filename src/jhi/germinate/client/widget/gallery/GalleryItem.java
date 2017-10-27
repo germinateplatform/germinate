@@ -93,7 +93,7 @@ public class GalleryItem extends Composite
 		paragraph.setText(img.getDescription());
 		paragraph.setTitle(img.getDescription());
 
-		anchor.getElement().setAttribute("data-fancybox", "gallery-item");
+		anchor.getElement().setAttribute("data-toggle", "lightbox");
 		anchor.setHref(UriUtils.fromTrustedString(urlLarge).asString());
 
 		if (img.getType() != null && showButton && isPageAvailable())
@@ -109,6 +109,11 @@ public class GalleryItem extends Composite
 
 			button.setText(text);
 		}
+	}
+
+	public void setGalleryId(String id)
+	{
+		anchor.getElement().setAttribute("data-gallery", id);
 	}
 
 	private boolean isPageAvailable()

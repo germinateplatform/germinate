@@ -50,13 +50,17 @@
 			margin-bottom: 15px;
 		}
 
-		.filter span.label-default{
+		.filter span.label-default {
 			margin: 0 10px;
+		}
+
+		.border {
+			border: 1px solid #ddd;
 		}
 	</ui:style>
 
 	<g:HTMLPanel ui:field="panel">
-		<g:FlowPanel addStyleNames="{style.filter}" ui:field="filterDisplay" />
+		<g:FlowPanel addStyleNames="{style.filter}" ui:field="filterDisplay"/>
 
 		<g:FlowPanel ui:field="topPanel">
 			<g:FlowPanel addStyleNames="{PULL_LEFT}">
@@ -65,10 +69,11 @@
 						<b:Button dataToggle="DROPDOWN" icon="COLUMNS" type="DEFAULT" toggleCaret="true" title="{msg.columnSelectorButtonTitle}"/>
 						<g8:NonAutoCloseDropDownMenu ui:field="columnSelectorMenu"/>
 					</b:ButtonGroup>
-					<g:FlowPanel addStyleNames="{style.inlineBlock}" ui:field="filterPlaceholder" visible="false">
-						<b:Button title="{msg.filterButtonTitle}" addStyleNames="{MDI} {MDI_FILTER} {style.marginTenRight} {style.noBorderLeft}"
-								  ui:field="filterButton"/>
-					</g:FlowPanel>
+					<b:ButtonGroup addStyleNames="{style.inlineBlock}" visible="false" ui:field="filterPlaceholder">
+						<b:Button addStyleNames="{MDI} {MDI_FILTER}" title="{msg.filterButtonTitle}" ui:field="filterButton"/>
+						<b:Button addStyleNames="{MDI} {MDI_DELETE}" title="{msg.generalClear}" type="DANGER" visible="false"
+								  ui:field="clearFilterButton"/>
+					</b:ButtonGroup>
 				</g:FlowPanel>
 			</g:FlowPanel>
 			<g:FlowPanel addStyleNames="{PULL_RIGHT}">
@@ -78,8 +83,8 @@
 			</g:FlowPanel>
 		</g:FlowPanel>
 
-		<g:FlowPanel addStyleNames="{LAYOUT_CLEAR_BOTH} {LAYOUT_OVERFLOW_X_AUTO}">
-			<bg:CellTable addStyleNames="{style.marginZero}" bordered="true" ui:field="table"/>
+		<g:FlowPanel addStyleNames="{LAYOUT_CLEAR_BOTH} table-responsive {style.marginZero} {style.border}">
+			<bg:CellTable addStyleNames="{style.marginZero}" ui:field="table"/>
 		</g:FlowPanel>
 
 		<g:FlowPanel ui:field="bottomPanel">

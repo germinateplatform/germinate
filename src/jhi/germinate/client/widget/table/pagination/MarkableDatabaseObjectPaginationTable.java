@@ -18,6 +18,7 @@
 package jhi.germinate.client.widget.table.pagination;
 
 import com.google.gwt.cell.client.*;
+import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.*;
@@ -40,6 +41,7 @@ import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.cell.*;
 import jhi.germinate.client.widget.table.pagination.resource.*;
@@ -47,6 +49,7 @@ import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -335,11 +338,18 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		popupPanel.add(menuBar);
 		popupPanel.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
 		{
-			int popupX = x + Window.getScrollLeft();
-			if (popupX + offsetWidth > Window.getClientWidth() + Window.getScrollLeft())
-				popupX = Window.getClientWidth() + Window.getScrollLeft() - offsetWidth;
+			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+			{
+				@Override
+				public void execute()
+				{
+					int popupX = x + Window.getScrollLeft();
+					if (popupX + offsetWidth > Window.getClientWidth() + Window.getScrollLeft())
+						popupX = Window.getClientWidth() + Window.getScrollLeft() - offsetWidth;
 
-			popupPanel.setPopupPosition(popupX, y + Window.getScrollTop());
+					popupPanel.setPopupPosition(popupX, y + Window.getScrollTop());
+				}
+			});
 		});
 //		popupPanel.setPopupPosition(popupX, y + Window.getScrollTop());
 //		popupPanel.show();
@@ -445,8 +455,92 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		};
 
         /* Adds a column header for the new checkbox column that will toggle the checkbox state of the rows */
-		Header<Boolean> header = new Header<Boolean>(new FACheckboxCell<>(false, true, handler))
+		Header<Boolean> header = new Header<Boolean>(new FACheckboxCell<T>(false, true, handler)
 		{
+			@Override
+			public Set<String> getConsumedEvents()
+			{
+				HashSet<String> events = new HashSet<>();
+				events.add(BrowserEvents.CLICK);
+				events.add(BrowserEvents.CONTEXTMENU);
+				return events;
+			}
+		})
+		{
+			@Override
+			public void onBrowserEvent(Cell.Context context, Element elem, NativeEvent event)
+			{
+				/* On click events */
+				if (BrowserEvents.CLICK.equals(event.getType()))
+				{
+					showPopupMenu(event.getClientX(), event.getClientY(), false, new MarkedItemListCallback()
+					{
+						private Long getId(DatabaseObject object)
+						{
+							if (object == null)
+								return null;
+
+							return DatabaseObject.getGroupSpecificId(object);
+						}
+
+						@Override
+						public List<String> getIds(boolean toBeMarked)
+						{
+							List<String> result = new ArrayList<>();
+
+							for (T row : getVisibleItems())
+							{
+								Long id = getId(row);
+								if (id != null)
+									result.add(Long.toString(id));
+							}
+
+							return result;
+						}
+
+						@Override
+						public String getId(boolean toBeMarked)
+						{
+							return null;
+						}
+
+						@Override
+						public void updateTable(Collection<String> ids)
+						{
+							if (CollectionUtils.isEmpty(ids))
+								return;
+
+							List<T> rows = getVisibleItems();
+							for (int i = 0; i < rows.size(); i++)
+							{
+								Long id = getId(rows.get(i));
+								if (id != null && ids.contains(Long.toString(id)))
+									redrawRow(i);
+							}
+						}
+
+						@Override
+						public void updateTable(String newId)
+						{
+							List<T> rows = getVisibleItems();
+							for (int i = 0; i < rows.size(); i++)
+							{
+								Long id = getId(rows.get(i));
+								if (id != null && newId.equals(Long.toString(id)))
+								{
+									redrawRow(i);
+//										break;
+								}
+							}
+						}
+					});
+				}
+				else
+				{
+					super.onBrowserEvent(context, elem, event);
+				}
+			}
+
 			@Override
 			public Boolean getValue()
 			{
@@ -502,24 +596,30 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 	 */
 	private void addMarkedItemListButton()
 	{
+		ButtonGroup group = new ButtonGroup();
+		group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
 		// Add the button
-		Button button = new Button("", IconType.TRASH, e -> {
-			AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), ev -> MarkedItemList.clear(itemType), null);
+		Button deleteButton = new Button("", e -> {
+			AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(itemType), null);
 		});
-		button.setTitle(Text.LANG.generalClear());
-		button.setMarginLeft(0);
-		button.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
+		deleteButton.addStyleName(Style.combine(Style.MDI, Style.MDI_DELETE));
+		deleteButton.setTitle(Text.LANG.generalClear());
 
+		Button badgeButton = new Button("", e -> {
+			ItemTypeParameterStore.Inst.get().put(Parameter.markedItemType, itemType);
+			History.newItem(Page.MARKED_ITEMS.name());
+		});
 		// Add the actual badge that shows the number
 		Badge badge = new Badge(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(itemType).size()));
-		badge.setMarginLeft(10);
-		button.add(badge);
+		group.add(deleteButton);
+		group.add(badgeButton);
+		badgeButton.add(badge);
 
 		// Listen to shopping cart changes
 		GerminateEventBus.BUS.addHandler(MarkedItemListEvent.TYPE, event -> badge.setText(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(itemType).size())));
 
 		// Add it to the top pager
-		topPager.add(button);
+		topPager.add(group);
 	}
 
 	private interface MarkedItemListCallback

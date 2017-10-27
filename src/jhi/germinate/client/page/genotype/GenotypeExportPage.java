@@ -17,6 +17,7 @@
 
 package jhi.germinate.client.page.genotype;
 
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.ListBox;
 
@@ -90,21 +91,86 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 
 							if (!StringUtils.isEmpty(result.getServerResult().getRawDataFile(), result.getServerResult().getProjectFile()))
 							{
-								resultPanel.add(new Heading(HeadingSize.H3, Text.LANG.genotypeResultTitleResult()));
-								resultPanel.add(new HTML(Text.LANG.genotypeResultParagraphOne()));
-								resultPanel.add(new HTML(Text.LANG.genotypeResultParagraphTwo()));
+								resultPanel.add(new Heading(HeadingSize.H2, Text.LANG.genotypeResultTitleResult()));
+
+//								String linkToGalaxy = StringParameterStore.Inst.get().get(Parameter.GALAXY_URL);
+//								String toolId = StringParameterStore.Inst.get().get(Parameter.tool_id);
+//								StringParameterStore.Inst.get().remove(Parameter.GALAXY_URL);
+//								StringParameterStore.Inst.get().remove(Parameter.tool_id);
+//
+//								if(!StringUtils.isEmpty(linkToGalaxy))
+//									linkToGalaxy += "?tool_id=" + toolId;
 
 								List<String> files = new ArrayList<>();
 								files.add(result.getServerResult().getRawDataFile());
 								files.add(result.getServerResult().getMapFile());
 								files.add(result.getServerResult().getProjectFile());
+//								if (!StringUtils.isEmpty(linkToGalaxy))
+//									files.add(linkToGalaxy);
 
 								List<String> names = new ArrayList<>();
 								names.add(Text.LANG.genotypeResultDownloadRaw());
 								names.add(Text.LANG.genotypeResultDownloadMap());
 								names.add(Text.LANG.genotypeResultDownloadFlapjack());
+//								if (!StringUtils.isEmpty(linkToGalaxy))
+//									names.add("Send to Galaxy"); // TODO: i18n
+//
+//								final String galaxyUrl = linkToGalaxy;
 
-								FileDownloadWidget fileDownload = new FileDownloadWidget(FileLocation.temporary, Text.LANG.downloadHeading(), null, files, names, null, true);
+								FileDownloadWidget fileDownload = new FileDownloadWidget(FileLocation.temporary, Text.LANG.downloadHeading(), null, files, names, null, true)
+								{
+									@Override
+									protected void onItemClicked(int index, ClickEvent event)
+									{
+//										if (index == 3)
+//										{
+//											event.preventDefault();
+//
+//											String map = new ServletConstants.Builder()
+//													.setUrl(GWT.getModuleBaseURL())
+//													.setPath(ServletConstants.SERVLET_FILES)
+//													.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult().getMapFile())
+//													.build();
+//
+//											String data = new ServletConstants.Builder()
+//													.setUrl(GWT.getModuleBaseURL())
+//													.setPath(ServletConstants.SERVLET_FILES)
+//													.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult().getRawDataFile())
+//													.build();
+//
+//											FlowPanel formPanel = new FlowPanel();
+//
+//											FormPanel form = new FormPanel(new NamedFrame("_blank"));
+//											form.setAction(galaxyUrl);
+//											form.setWidget(formPanel);
+//											form.setVisible(false);
+//											form.setMethod(FormPanel.METHOD_POST);
+//											formPanel.add(new Hidden("genotypeMap", map));
+//											formPanel.add(new Hidden("genotypeData", data));
+//											resultPanel.add(form);
+//											form.addSubmitHandler(new FormPanel.SubmitHandler()
+//											{
+//												@Override
+//												public void onSubmit(FormPanel.SubmitEvent event)
+//												{
+//													CommonService.Inst.get().makeFilesAvailablePublically(Cookie.getRequestProperties(), ExperimentType.genotype, new AsyncCallback<Void>()
+//													{
+//														@Override
+//														public void onFailure(Throwable caught)
+//														{
+//														}
+//
+//														@Override
+//														public void onSuccess(Void result)
+//														{
+//														}
+//													});
+//												}
+//											});
+//											Scheduler.get().scheduleDeferred(form::submit);
+//										}
+									}
+								};
 
 								resultPanel.add(fileDownload);
 

@@ -67,6 +67,7 @@ public class NewsWidget extends Composite
 				if (!CollectionUtils.isEmpty(result.getServerResult()))
 				{
 					projectColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_3);
+					projectColumn.addStyleName(Style.COL_XXS_12);
 					ProjectItem first = new ProjectItem(result.getServerResult().get(0));
 					projectColumn.add(first);
 
@@ -76,6 +77,7 @@ public class NewsWidget extends Composite
 					{
 						projectColumn.setSize(ColumnSize.XS_6, ColumnSize.MD_3);
 						projectColumn = new Column(ColumnSize.XS_6, ColumnSize.MD_3);
+						projectColumn.addStyleName(Style.COL_XXS_12);
 						ProjectItem second = new ProjectItem(result.getServerResult().get(1));
 
 						projectColumn.add(second);

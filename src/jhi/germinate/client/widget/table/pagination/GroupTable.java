@@ -92,8 +92,8 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 				@Override
 				public SafeHtml getValue(Group object)
 				{
-					if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSIONS_FOR_COLLSITE))
-						return TableUtils.getHyperlinkValue(object.getId(), "#" + Page.ACCESSIONS_FOR_COLLSITE);
+					if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
+						return TableUtils.getHyperlinkValue(object.getId(), "#" + Page.GROUPS);
 					else
 						return SimpleHtmlTemplate.INSTANCE.text(Long.toString(object.getId()));
 				}

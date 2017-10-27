@@ -320,14 +320,8 @@ public interface Text extends Messages
 	@Key("menu.genotype")
 	String menuGenotypes();
 
-	@Key("menu.genotype.gbs")
-	String menuGenotypicData();
-
 	@Key("menu.geography.search")
 	String menuGeographicSearch();
-
-	@Key("menu.geography.treemap")
-	String menuGeographicTreemap();
 
 	@Key("menu.geography")
 	String menuGeography();
@@ -347,10 +341,8 @@ public interface Text extends Messages
 	@Key("menu.environment.megaenvironment")
 	String menuMegaEnvironments();
 
-	@Key("menu.pco.coordinates")
-	String menuPCOCoordinates();
-
 	@Key("menu.phenotypes")
+	@DefaultMessage("Phenotypes")
 	String menuPhenotypes();
 
 	@Key("menu.search")
@@ -634,6 +626,7 @@ public interface Text extends Messages
 	String aboutTitle();
 
 	@Key("page.about.text")
+	@DefaultMessage("page.about.text=<p><strong>&copy; 2006-{1} Information & Computational Sciences, The James Hutton Institute.</strong></p><p><a target=\"_blank\" href=\"http://ics.hutton.ac.uk/germinate\">Germinate 3</a> is written, designed and developed by <strong>Paul Shaw and Sebastian Raubach</strong></p><p>Iain Milne, Gordon Stephen and David Marshall are involved in various aspects of its development such as integration of Germinate with other <a href=\"https://ics.hutton.ac.uk/software/\">Software Development Group visualization tools</a>.</p><p>In addition the following people have been instrumental in the development of Germinate. Linda Milne, Runxuan Zhang, Bill Thomas, Luke Ramsay, Robbie Waugh, Jordi Comadran, Joanne Russell and Andy Flavell.</p><p>Previous Members of the Germinate Team have included: Jennifer Lee, Jacek Grzebyta, Toby Philp and Nelo Onyiah.</p><p>We take privacy seriously. Your username is available to the Germinate 3 system but passwords are encrypted using the BCrypt algorithm and therefore cannot be viewed by us. If you forget your password please log in to the <a href=\"{0}\" target=\"_blank\">Germinate Gatekeeper website</a> to change it.</p><p>The Germinate system knows who you are based on your username. Groups you create using Germinate are unique to you and are not available to other users of the system. Adding notes to individual plant lines are available to other users and are tagged with your username. While this is important in gaining information please do not enter anything in notes fields on this site that you want to be kept private.</p><p>This particular implementation of Germinate 3 does not actively track your IP address or your operating system but it may detect your web browser. This is done solely for the purpose of tailoring features that may not be compatible with all browsers and is integral to the GWT (GWT Web Toolkit) tools that are used to develop this resource.</p><br/><p>For further information on the tools and databases that we produce visit our website at <a href=\"http://ics.hutton.ac.uk\" target=\"_blank\">http://ics.hutton.ac.uk</a> and follow our updates on Twitter <a href=\"https://twitter.com/cropgeeks\" target=\"_blank\"><span class=\"fa fa-twitter fa-lg font-awesome\"></span> @cropgeeks</a></p><br/><h4>Contact Details:</h4><p>You can contact us by email at <a href=\"mailto:germinate@hutton.ac.uk\">germinate@hutton.ac.uk</a> or you can write to us at:</p>")
 	String aboutText(String gatekeeperUrl, int year);
 
 	@Key("page.about.address")
@@ -784,6 +777,10 @@ public interface Text extends Messages
 
 	@Key("column.accessions.number")
 	String accessionsColumnNumber();
+
+	@Key("column.accessions.synonym")
+	@DefaultMessage("Synonyms")
+	String accessionsColumnSynonym();
 
 	@Key("column.accessions.collector.number")
 	String accessionsColumnCollNumber();
@@ -1284,6 +1281,10 @@ public interface Text extends Messages
 
 	@Key("column.markers.name")
 	String markersColumnName();
+
+	@Key("column.markers.synonyms")
+	@DefaultMessage("Synonyms")
+	String markersColumnSynonym();
 
 	@Key("column.markers.feature.description")
 	String markersColumnFeatureDescription();
@@ -2038,7 +2039,7 @@ public interface Text extends Messages
 
 	@Key("page.compound.datasets.title")
 	@DefaultMessage("Compound datasets")
-	SafeHtml compoundDatasetHeader();
+	String compoundDatasetHeader();
 
 	@Key("page.compounds.title")
 	@DefaultMessage("Compounds")
@@ -2535,4 +2536,36 @@ public interface Text extends Messages
 	@Key("widget.marked.item.list.clear.confirm")
 	@DefaultMessage("Are you sure you want to clear the marked item list?")
 	String markedItemListClearConfirm();
+
+	@Key("page.about.buttons.homepage.title")
+	@DefaultMessage("Visit the Germinate homepage")
+	String aboutButtonsHomepageTitle();
+
+	@Key("page.about.buttons.homepage.url")
+	@DefaultMessage("https://ics.hutton.ac.uk/get-germinate")
+	String aboutButtonsHomepageUrl();
+
+	@Key("page.about.buttons.github.title")
+	@DefaultMessage("View Germinate''s source code on GitHub")
+	String aboutButtonsGithubTitle();
+
+	@Key("page.about.buttons.github.url")
+	@DefaultMessage("https://github.com/germinateplatform/germinate")
+	String aboutButtonsGithubUrl();
+
+	@Key("page.about.buttons.publication.title")
+	@DefaultMessage("View or cite the Germinate publication")
+	String aboutButtonsPublicationTitle();
+
+	@Key("page.about.buttons.publication.url")
+	@DefaultMessage("https://dl.sciencesocieties.org/publications/cs/articles/57/3/1259")
+	String aboutButtonsPublicationUrl();
+
+	@Key("page.about.buttons.documentation.title")
+	@DefaultMessage("Read the Germinate documentation")
+	String aboutButtonsDocumentationTitle();
+
+	@Key("page.about.buttons.documentation.url")
+	@DefaultMessage("https://github.com/germinateplatform/germinate/wiki")
+	String aboutButtonsDocumentationUrl();
 }

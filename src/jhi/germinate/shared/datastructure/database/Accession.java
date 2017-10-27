@@ -70,6 +70,8 @@ public class Accession extends DatabaseObject
 	public static final String COLLSRC_ID          = "germinatebase.collsrc_id";
 	public static final String LOCATION_ID         = "germinatebase.location_id";
 
+	public static final String SYNONYMS = "synonyms";
+
 	private String           generalIdentifier;
 	private String           number;
 	private String           name;
@@ -97,6 +99,7 @@ public class Accession extends DatabaseObject
 	private CollectingSource collSrc;
 	private Location         location;
 	private MlsStatus        mlsStatus;
+	private String           synonyms;
 	private Long             createdOn;
 	private Long             updatedOn;
 
@@ -416,6 +419,17 @@ public class Accession extends DatabaseObject
 		return this;
 	}
 
+	public String getSynonyms()
+	{
+		return synonyms;
+	}
+
+	public Accession setSynonyms(String synonyms)
+	{
+		this.synonyms = synonyms;
+		return this;
+	}
+
 	public Long getCreatedOn()
 	{
 		return createdOn;
@@ -462,24 +476,51 @@ public class Accession extends DatabaseObject
 	@GwtIncompatible
 	public static class Parser extends DatabaseObjectParser<Accession>
 	{
-		public static final class Inst
+		@Override
+		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
 		{
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
-			 * InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"
-			 * >Initialization-on-demand holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
-			 * <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
-			private static final class InstanceHolder
+			try
 			{
-				private static final Parser INSTANCE = new Parser();
-			}
+				Long id = row.getLong(ID);
 
-			public static Parser get()
+				if (id == null)
+					return null;
+				else
+					return new Accession(id)
+							.setGeneralIdentifier(row.getString(GENERAL_IDENTIFIER))
+							.setNumber(row.getString(NUMBER))
+							.setName(row.getString(NAME))
+							.setBankNumber(row.getString(BANK_NUMBER))
+							.setBreedersCode(row.getString(BREEDERS_CODE))
+							.setBreedersName(row.getString(BREEDERS_NAME))
+							.setPuid(row.getString(PUID))
+							.setSubtaxa(SUBTAXA_CACHE.get(user, row.getLong(SUBTAXA_ID), row, foreignsFromResultSet))
+							.setTaxonomy(TAXONOMY_CACHE.get(user, row.getLong(TAXONOMY_ID), row, foreignsFromResultSet))
+							.setInstitution(INSTITUTION_CACHE.get(user, row.getLong(INSTITUTION_ID), row, false))
+							.setPlantPassport(row.getString(PLANT_PASSPORT))
+							.setDonorCode(row.getString(DONOR_CODE))
+							.setDonorName(row.getString(DONOR_NAME))
+							.setDonorNumber(row.getString(DONOR_NUMBER))
+							.setAcqDate(row.getString(ACQDATE))
+							.setCollNumb(row.getString(COLLNUMB))
+							.setCollDate(row.getDate(COLLDATE))
+							.setCollName(row.getString(COLLNAME))
+							.setCollCode(row.getString(COLLCODE))
+							.setOtherNumb(row.getString(OTHERNUMB))
+							.setCollMissId(row.getString(COLLMISSID))
+							.setDuplSite(row.getString(DUPLSITE))
+							.setDuplInstName(row.getString(DUPLINSTNAME))
+							.setMlsStatus(MLSSTATUS_CACHE.get(user, row.getLong(MLSSTATUS), row, foreignsFromResultSet))
+							.setBiologicalStatus(BIOLOGICALSTATUS_CACHE.get(user, row.getLong(BIOLOGICALSTATUS_ID), row, foreignsFromResultSet))
+							.setCollSrc(COLLECTINGSOURCE_CACHE.get(user, row.getLong(COLLSRC_ID), row, foreignsFromResultSet))
+							.setLocation(LOCATION_CACHE.get(user, row.getLong(LOCATION_ID), row, foreignsFromResultSet))
+							.setSynonyms(row.getString(SYNONYMS))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+			}
+			catch (InsufficientPermissionsException e)
 			{
-				return InstanceHolder.INSTANCE;
+				return null;
 			}
 		}
 
@@ -502,50 +543,24 @@ public class Accession extends DatabaseObject
 			MLSSTATUS_CACHE = createCache(MlsStatus.class, MlsStatusManager.class);
 		}
 
-		@Override
-		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		public static final class Inst
 		{
-			try
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
+			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
+			 * holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
+			 * <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
 			{
-				Long id = row.getLong(ID);
-
-				if (id == null)
-					return null;
-				else
-					return new Accession(id)
-							.setGeneralIdentifier(row.getString(GENERAL_IDENTIFIER))
-							.setNumber(row.getString(NUMBER))
-							.setName(row.getString(NAME))
-							.setBankNumber(row.getString(BANK_NUMBER))
-							.setBreedersCode(row.getString(BREEDERS_CODE))
-							.setBreedersName(row.getString(BREEDERS_NAME))
-							.setPuid(row.getString(PUID))
-							.setSubtaxa(SUBTAXA_CACHE.get(user, row.getLong(SUBTAXA_ID), row, foreignsFromResultSet))
-							.setTaxonomy(TAXONOMY_CACHE.get(user, row.getLong(TAXONOMY_ID), row, foreignsFromResultSet))
-							.setInstitution(INSTITUTION_CACHE.get(user, row.getLong(INSTITUTION_ID), row, foreignsFromResultSet))
-							.setPlantPassport(row.getString(PLANT_PASSPORT))
-							.setDonorCode(row.getString(DONOR_CODE))
-							.setDonorName(row.getString(DONOR_NAME))
-							.setDonorNumber(row.getString(DONOR_NUMBER))
-							.setAcqDate(row.getString(ACQDATE))
-							.setCollNumb(row.getString(COLLNUMB))
-							.setCollDate(row.getDate(COLLDATE))
-							.setCollName(row.getString(COLLNAME))
-							.setCollCode(row.getString(COLLCODE))
-							.setOtherNumb(row.getString(OTHERNUMB))
-							.setCollMissId(row.getString(COLLMISSID))
-							.setDuplSite(row.getString(DUPLSITE))
-							.setDuplInstName(row.getString(DUPLINSTNAME))
-							.setMlsStatus(MLSSTATUS_CACHE.get(user, row.getLong(MLSSTATUS), row, foreignsFromResultSet))
-							.setBiologicalStatus(BIOLOGICALSTATUS_CACHE.get(user, row.getLong(BIOLOGICALSTATUS_ID), row, foreignsFromResultSet))
-							.setCollSrc(COLLECTINGSOURCE_CACHE.get(user, row.getLong(COLLSRC_ID), row, foreignsFromResultSet))
-							.setLocation(LOCATION_CACHE.get(user, row.getLong(LOCATION_ID), row, foreignsFromResultSet))
-							.setCreatedOn(row.getTimestamp(CREATED_ON))
-							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+				private static final Parser INSTANCE = new Parser();
 			}
-			catch (InsufficientPermissionsException e)
+
+			public static Parser get()
 			{
-				return null;
+				return InstanceHolder.INSTANCE;
 			}
 		}
 	}
@@ -556,10 +571,10 @@ public class Accession extends DatabaseObject
 		public static final class Inst
 		{
 			/**
-			 * {@link Inst.InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the
-			 * first access to {@link Inst.InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href=
-			 * "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder idiom</a>) is thread-safe without
-			 * requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+			 * {@link Inst.InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
+			 * Inst.InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"
+			 * >Initialization-on-demand holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
+			 * <code>synchronized</code>).
 			 *
 			 * @author Sebastian Raubach
 			 */

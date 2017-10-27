@@ -96,6 +96,10 @@ public class ContentHolder
 		$wnd.$('.navbar-collapse').collapse('hide');
 	}-*/;
 
+	private native void closeGalleryModal()/*-{
+		$wnd.$('.ekko-lightbox.modal').modal('toggle');
+	}-*/;
+
 	/**
 	 * Appends the new content to the dynamic content div
 	 *
@@ -115,6 +119,7 @@ public class ContentHolder
 //		removeGoogleMapsLeftovers();
 
 		closeDropdownAndMenu();
+		closeGalleryModal();
 
 		/* Make sure username and password field are cleared all the time */
 		((InputElement) Document.get().getElementById(Id.LOGIN_USERNAME_INPUT)).setValue(null);

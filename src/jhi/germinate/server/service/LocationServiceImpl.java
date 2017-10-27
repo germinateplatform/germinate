@@ -292,7 +292,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 		HttpServletRequest req = this.getThreadLocalRequest();
 
         /* Check if the session is valid */
-		Session.checkSession(properties, req, getThreadLocalResponse());
+		Session.checkSession(properties, req);
 
         /* Get the base url */
 		String baseURL = req.getRequestURL().toString().replace(req.getRequestURI(), req.getContextPath());

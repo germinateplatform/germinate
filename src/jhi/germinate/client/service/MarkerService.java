@@ -36,8 +36,8 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("marker")
 public interface MarkerService extends RemoteService
 {
-	String[] COLUMNS_MAPDEFINITION_TABLE = {Marker.ID, Marker.MARKER_NAME, Map.ID, Map.DESCRIPTION, MapFeatureType.DESCRIPTION, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START};
-	String[] COLUMNS_MARKER_TABLE        = {Marker.ID, Marker.MARKER_NAME, MarkerType.DESCRIPTION};
+	String[] COLUMNS_MAPDEFINITION_TABLE = {Marker.ID, Marker.MARKER_NAME, Map.ID, Map.DESCRIPTION, MapFeatureType.DESCRIPTION, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START, Marker.SYNONYMS, Synonym.SYNONYM};
+	String[] COLUMNS_MARKER_TABLE        = {Marker.ID, Marker.MARKER_NAME, MarkerType.DESCRIPTION, Marker.SYNONYMS, Synonym.SYNONYM};
 
 	final class Inst
 	{

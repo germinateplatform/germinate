@@ -143,6 +143,24 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 		column.setDataStoreName(Marker.MARKER_NAME);
 		addColumn(column, Text.LANG.markersColumnName(), sortingEnabled);
 
+		/* Add the synonyms column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(MapDefinition object)
+			{
+				return object.getMarker().getSynonyms();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Synonym.SYNONYM);
+		addColumn(column, Text.LANG.markersColumnSynonym(), false);
+
 		/* Add the map feature type column */
 		column = new TextColumn()
 		{

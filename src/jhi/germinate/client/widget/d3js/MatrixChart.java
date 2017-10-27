@@ -18,14 +18,15 @@
 package jhi.germinate.client.widget.d3js;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.*;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.query.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
@@ -35,6 +36,7 @@ import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
@@ -56,6 +58,8 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 	private FlowPanel chartPanel;
 	private int maxNrOfPhenotypes = 5;
 	private MatrixChartSelection<T> parameterSelection;
+	private Button                  deleteButton;
+	private Button                  badgeButton;
 
 	public MatrixChart()
 	{
@@ -92,7 +96,38 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 	protected void updateChart(int width)
 	{
 		String coloringValue = parameterSelection.getColor();
-		create(coloringValue.equals(Text.LANG.trialsPByPColorByTreatment()), coloringValue.equals(Text.LANG.trialsPByPColorByDataset()), width);
+		create(coloringValue.equals(Text.LANG.trialsPByPColorByTreatment()), coloringValue.equals(Text.LANG.trialsPByPColorByDataset()), coloringValue.equals(Text.LANG.trialsPByPColorByYear()), width);
+	}
+
+	protected Button[] getAdditionalButtons()
+	{
+		// Add the button
+		if (deleteButton == null && badgeButton == null)
+		{
+			ButtonGroup group = new ButtonGroup();
+			group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
+			// Add the button
+			deleteButton = new Button("", e -> {
+				AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null);
+			});
+			deleteButton.addStyleName(Style.combine(Style.MDI, Style.MDI_DELETE));
+			deleteButton.setTitle(Text.LANG.generalClear());
+
+			badgeButton = new Button("", e -> {
+				ItemTypeParameterStore.Inst.get().put(Parameter.markedItemType, MarkedItemList.ItemType.ACCESSION);
+				History.newItem(Page.MARKED_ITEMS.name());
+			});
+			// Add the actual badge that shows the number
+			Badge badge = new Badge(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(MarkedItemList.ItemType.ACCESSION).size()));
+			group.add(deleteButton);
+			group.add(badgeButton);
+			badgeButton.add(badge);
+
+			// Listen to shopping cart changes
+			GerminateEventBus.BUS.addHandler(MarkedItemListEvent.TYPE, event -> badge.setText(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(MarkedItemList.ItemType.ACCESSION).size())));
+		}
+
+		return new Button[]{deleteButton, badgeButton};
 	}
 
 	private void initPlotButton()
@@ -215,7 +250,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 		return new HashSet<>(ids);
 	}
 
-	private native void create(boolean colorByTreatment, boolean colorByDataset, int widthHint)/*-{
+	private native void create(boolean colorByTreatment, boolean colorByDataset, boolean colorByYear, int widthHint)/*-{
 
 		var dotStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_DOT;
 		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_AXIS;
@@ -250,6 +285,8 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 							return d.treatments_description;
 						else if (colorByDataset)
 							return d.dataset_name;
+						else if (colorByYear)
+							return d.year;
 						else
 							return null;
 					})
@@ -263,7 +300,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 					.showLegend(true)
 					.legendWidth(legendWidth)
 					.idColumn("dbId")
-					.ignoreColumns(["general_identifier", "dataset_name", "license_name", "treatments_description", "name"])
+					.ignoreColumns(["general_identifier", "dataset_name", "license_name", "treatments_description", "name", "location_name", "year"])
 					.color(color));
 		});
 

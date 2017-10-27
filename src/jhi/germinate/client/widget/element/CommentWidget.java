@@ -76,7 +76,7 @@ public class CommentWidget extends Composite
 
 		html.setHTML(Text.LANG.annotationsText());
 
-		if (!ModuleCore.getUseAuthentication())
+		if (!ModuleCore.getUseAuthentication() || GerminateSettingsHolder.get().isReadOnlyMode.getValue())
 			addPanel.removeFromParent();
 	}
 

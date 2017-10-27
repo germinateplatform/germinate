@@ -47,6 +47,7 @@ public class HelpWidget
 			isInitialized = true;
 
 			Anchor helpAnchor = Anchor.wrap(Document.get().getElementById(Id.STRUCTURE_HELP_A));
+			helpAnchor.setVisible(true);
 			helpAnchor.setTitle(Text.LANG.helpTitle());
 
 			try

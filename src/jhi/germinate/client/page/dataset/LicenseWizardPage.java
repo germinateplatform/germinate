@@ -40,11 +40,13 @@ public class LicenseWizardPage extends Composite
 	private static LicenseWizardPageUiBinder ourUiBinder = GWT.create(LicenseWizardPageUiBinder.class);
 
 	@UiField
-	HTML   content;
+	HTML      content;
 	@UiField
-	Button accept;
+	FlowPanel acceptPart;
 	@UiField
-	Button decline;
+	Button    accept;
+	@UiField
+	Button    decline;
 
 	private Decision decision = Decision.UNKNOWN;
 	private License                 license;
@@ -57,6 +59,7 @@ public class LicenseWizardPage extends Composite
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
+		acceptPart.setVisible(handler != null);
 		content.setHTML(data.getContent());
 	}
 

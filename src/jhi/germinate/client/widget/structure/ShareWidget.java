@@ -54,6 +54,7 @@ public class ShareWidget
 			}
 
 			RootPanel p = RootPanel.get(Id.STRUCTURE_SHARE_UL);
+			p.setVisible(true);
 			p.getElement().appendChild(list);
 			p.removeFromParent();
 		}

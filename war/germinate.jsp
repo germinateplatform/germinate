@@ -2,6 +2,7 @@
 <%@ page import="java.io.*" %>
 <%@ page import="jhi.germinate.server.config.*" %>
 <%@ page import="jhi.germinate.shared.*" %>
+<%@ page import="jhi.germinate.shared.datastructure.*" %>
 <%@ page import="jhi.germinate.shared.enums.*" %>
 
 <%--
@@ -30,6 +31,9 @@
 	boolean useGoogleAnalytics = PropertyReader.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED);
 	String googleAnalyticsTrackingId = "'" + PropertyReader.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID) + "'";
 	String contact = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS);
+
+
+	String version = "v3.4.0";
 %>
 
 <!DOCTYPE html>
@@ -49,6 +53,7 @@
 
 	<!-- Bootstrap Core CSS -->
 	<link href="css/bootstrap-germinate.css" rel="stylesheet">
+	<link href="css/bootstrap-xxs.css" rel="stylesheet">
 
 	<!-- MetisMenu CSS -->
 	<link href="css/metisMenu.min.css" rel="stylesheet">
@@ -57,9 +62,9 @@
 	<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
-	<!-- Fancybox -->
-	<link type="text/css" rel="stylesheet" href="css/jquery.fancybox.min.css" media="screen"/>
-	<script type="text/javascript" src="js/jquery.fancybox.min.js"></script>
+	<!-- Lightbox -->
+	<link type="text/css" rel="stylesheet" href="css/ekko-lightbox.css" media="screen"/>
+	<script type="text/javascript" src="js/ekko-lightbox.js"></script>
 
 	<!-- Cookie policy notification -->
 	<script type="text/javascript" src="js/jquery.cookie.js"></script>
@@ -169,35 +174,35 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href='#' class='navbar-brand'>
+			<a href='#<%= Page.HOME.name() %>' class='navbar-brand'>
 				<img src='img/germinate.svg' class='logo'/>
 			</a>
 		</div>
 
 		<ul class="nav navbar-top-links navbar-right">
 			<!-- GM8 Language Selector -->
-			<li class="dropdown" id="<%= Id.STRUCTURE_LANGUAGE_SELECTOR_UL %>">
+			<li class="dropdown" id="<%= Id.STRUCTURE_LANGUAGE_SELECTOR_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="mdi mdi-translate fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Language Selector -->
 			<!-- GM8 Share Widget -->
-			<li class="dropdown" id="<%= Id.STRUCTURE_SHARE_UL %>">
+			<li class="dropdown" id="<%= Id.STRUCTURE_SHARE_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="mdi mdi-share-variant fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Share Widget -->
 			<!-- GM8 Shopping Cart -->
-			<li class="dropdown" id="<%= Id.STRUCTURE_MARKED_ITEM_UL %>">
+			<li class="dropdown" id="<%= Id.STRUCTURE_MARKED_ITEM_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="mdi mdi-bookmark-check fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Shopping Cart -->
 			<!-- GM8 Account Settings -->
-			<li class="dropdown" id="<%= Id.STRUCTURE_ACCOUNT_SETTINGS_UL %>">
+			<li class="dropdown" id="<%= Id.STRUCTURE_ACCOUNT_SETTINGS_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="mdi mdi-account fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
 				</a>
@@ -216,7 +221,7 @@
 			<% } %>
 			<!-- GM8 Help -->
 			<li>
-				<a href="#" id="<%= Id.STRUCTURE_HELP_A %>">
+				<a href="#" id="<%= Id.STRUCTURE_HELP_A %>" style="display: none;">
 					<i class="mdi mdi-help-circle-outline fa-fw fa-lg"></i>
 				</a>
 			</li>
@@ -226,6 +231,7 @@
 		<div class="navbar-default sidebar" role="navigation">
 			<div class="sidebar-nav navbar-collapse">
 				<ul class="nav" id="<%= Id.STRUCTURE_MAIN_MENU_UL %>">
+					<li id="<%= Id.STRUCTURE_VERSION_NUMBER %>"><%= version %></li>
 					<li class="sidebar-search" id="<%= Id.STRUCTURE_SEARCH_PANEL %>" style="display: none"></li>
 				</ul>
 				<ul class="nav <%= Style.LAYOUT_LOGO_SECTION %>">
@@ -257,8 +263,18 @@
 			}
 		%>
 
-		<div id="<%= Id.STRUCTURE_BANNER %>" class="well well-sm clearfix"><h4 class="pull-left"><%= pageTitle %>
-		</h4><img src="img/crop.svg" class="pull-right"/></div>
+
+		<div class="container-fluid">
+			<div class="well well-sm row">
+				<div class="col-xxs-12 col-xs-10 text-center-xxs text-left-xs">
+					<h4><%= pageTitle %></h4>
+				</div>
+				<div class="col-xxs-12 col-xs-2 text-center-xxs text-right-xs">
+					<img src="img/crop.svg">
+				</div>
+			</div>
+		</div>
+
 		<div id="<%= Id.STRUCTURE_DEBUG_INFO %>"></div>
 		<div id="<%= Id.STRUCTURE_PARALLAX %>"></div>
 		<div id="<%= Id.STRUCTURE_MAIN_CONTENT %>"></div>

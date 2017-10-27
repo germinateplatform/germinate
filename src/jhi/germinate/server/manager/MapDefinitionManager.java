@@ -34,13 +34,11 @@ import jhi.germinate.shared.search.*;
 public class MapDefinitionManager extends AbstractManager<MapDefinition>
 {
 	private static final String COMMON_TABLES                = "markers LEFT JOIN mapdefinitions ON markers.id = mapdefinitions.marker_id LEFT JOIN mapfeaturetypes ON mapfeaturetypes.id = mapdefinitions.mapfeaturetype_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
-	private static final String SELECT_IDS_FOR_GROUP         = "SELECT markers.id FROM        " + COMMON_TABLES + " WHERE groups.id = ? GROUP BY markers.id";
-	private static final String SELECT_ALL_FOR_GROUP         = "SELECT * FROM " + COMMON_TABLES + " LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, mapdefinitions.id, groupmembers.id %s LIMIT ?, ?";
 	private static final String SELECT_FOR_MARKER            = "SELECT * FROM " + COMMON_TABLES + " WHERE mapdefinitions.marker_id = ? GROUP BY maps.id, markers.id, mapdefinitions.id ORDER BY mapdefinitions.chromosome, mapdefinitions.definition_start LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_FILTER_EXPORT = "SELECT markers.id AS markers_id, markers.marker_name AS markers_marker_name, mapfeaturetypes.description AS markertypes_description, maps.description AS maps_description, mapdefinitions.chromosome AS mapdefinitions_chromosome, mapdefinitions.definition_start AS mapdefinitions_definition_start FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1) %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_FILTER        = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1) %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER_EXPORT = "SELECT markers.id AS markers_id, markers.marker_name AS markers_marker_name, mapfeaturetypes.description AS markertypes_description, maps.description AS maps_description, mapdefinitions.chromosome AS mapdefinitions_chromosome, mapdefinitions.definition_start AS mapdefinitions_definition_start, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms_synonym FROM " + COMMON_TABLES + " " + MarkerManager.COMMOM_SYNONYMS + " {{FILTER}} AND " + MarkerManager.WHERE_SYNONYMS + " AND (maps.user_id = ? OR maps.visibility = 1) GROUP BY markers.id, mapdefinitions.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER        = "SELECT " + MarkerManager.SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + MarkerManager.COMMOM_SYNONYMS + " {{FILTER}} AND " + MarkerManager.WHERE_SYNONYMS + " AND (maps.user_id = ? OR maps.visibility = 1) GROUP BY markers.id, mapdefinitions.id %s LIMIT ?, ?";
 
-	private static final String[] COLUMNS_MARKER_DATA_EXPORT = {"markers_id", "markers_marker_name", "markertypes_description", "maps_description", "mapdefinitions_chromosome", "mapdefinitions_definition_start"};
+	private static final String[] COLUMNS_MARKER_DATA_EXPORT = {"markers_id", "markers_marker_name", "markertypes_description", "maps_description", "mapdefinitions_chromosome", "mapdefinitions_definition_start", "synonyms_synonym"};
 
 	@Override
 	protected String getTable()
@@ -52,34 +50,6 @@ public class MapDefinitionManager extends AbstractManager<MapDefinition>
 	protected DatabaseObjectParser<MapDefinition> getParser()
 	{
 		return MapDefinition.Parser.Inst.get();
-	}
-
-	public static PaginatedServerResult<List<MapDefinition>> getAllForGroup(UserAuth userAuth, Long groupId, Pagination pagination) throws DatabaseException, InvalidColumnException, InsufficientPermissionsException
-	{
-		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
-			throw new InsufficientPermissionsException();
-
-		pagination.updateSortColumn(MarkerService.COLUMNS_MAPDEFINITION_TABLE, MapDefinition.CHROMOSOME + ", " + MapDefinition.DEFINITION_START);
-		String formatted = String.format(SELECT_ALL_FOR_GROUP, pagination.getSortQuery());
-
-		return new DatabaseObjectQuery<MapDefinition>(formatted, userAuth)
-				.setFetchesCount(pagination.getResultSize())
-				.setLong(groupId)
-				.setInt(pagination.getStart())
-				.setInt(pagination.getLength())
-				.run()
-				.getObjectsPaginated(MapDefinition.Parser.Inst.get(), true);
-	}
-
-	public static ServerResult<List<String>> getIdsForGroup(UserAuth userAuth, Long groupId) throws DatabaseException, InsufficientPermissionsException
-	{
-		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
-			throw new InsufficientPermissionsException();
-
-		return new ValueQuery(SELECT_IDS_FOR_GROUP, userAuth)
-				.setLong(groupId)
-				.run(Marker.ID)
-				.getStrings();
 	}
 
 	public static PaginatedServerResult<List<MapDefinition>> getForMarker(UserAuth userAuth, Long markerId, Pagination pagination) throws DatabaseException

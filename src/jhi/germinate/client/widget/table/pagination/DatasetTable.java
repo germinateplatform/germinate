@@ -34,6 +34,7 @@ import java.util.*;
 
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.page.dataset.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -130,58 +131,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			addColumn(column, Text.LANG.datasetsColumnDatasetId(), sortingEnabled);
 		}
 
-		/* Add the experiment type column */
-		column = new ClickableSafeHtmlColumn()
-		{
-			@Override
-			public SafeHtml getValue(Dataset object)
-			{
-				if (object.getExperiment().getType() != ExperimentType.unknown)
-				{
-					/* Check if we want to link to the export page */
-					if (linkToExportPage && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
-						return getExportPageLink(object, object.getExperiment().getType().name());
-					else
-						return DatasetTable.this.getValue(object, object.getExperiment().getType().name());
-				}
-				else
-				{
-					return SimpleHtmlTemplate.INSTANCE.text("");
-				}
-			}
-
-			@Override
-			public Class getType()
-			{
-				return String.class;
-			}
-		};
-		column.setDataStoreName(ExperimentType.DESCRIPTION);
-		addColumn(column, Text.LANG.datasetsColumnExperimentType(), sortingEnabled);
-
-		/* Experiment name */
-		column = new TextColumn()
-		{
-			@Override
-			public String getValue(Dataset object)
-			{
-				if (object.getExperiment() != null)
-				{
-					return object.getExperiment().getName();
-				}
-
-				return null;
-			}
-
-			@Override
-			public Class getType()
-			{
-				return String.class;
-			}
-		};
-		column.setDataStoreName(Experiment.EXPERIMENT_NAME);
-		addColumn(column, Text.LANG.datasetsColumnExperimentName(), sortingEnabled);
-
 		/* Add the dataset description column */
 		column = new ClickableSafeHtmlColumn()
 		{
@@ -203,6 +152,53 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		};
 		column.setDataStoreName(Dataset.DESCRIPTION);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDescription(), sortingEnabled);
+
+		/* Add the experiment type column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Dataset object)
+			{
+				if (object.getExperiment().getType() != ExperimentType.unknown)
+					return object.getExperiment().getType().name();
+				else
+					return null;
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(ExperimentType.DESCRIPTION);
+		addColumn(column, Text.LANG.datasetsColumnExperimentType(), sortingEnabled);
+
+		/* Experiment name */
+		column = new ClickableSafeHtmlColumn()
+		{
+			@Override
+			public SafeHtml getValue(Dataset object)
+			{
+				if (object.getExperiment() != null)
+				{
+					if(GerminateSettingsHolder.isPageAvailable(Page.EXPERIMENT_DETAILS))
+						return TableUtils.getHyperlinkValue(object.getExperiment().getName(), "#" + Page.EXPERIMENT_DETAILS);
+					else
+						return DatasetTable.this.getValue(object, object.getExperiment().getName());
+				}
+
+				return null;
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Experiment.EXPERIMENT_NAME);
+		addColumn(column, Text.LANG.datasetsColumnExperimentName(), sortingEnabled);
 
 		/* Add the dataset datatype column */
 		column = new ClickableSafeHtmlColumn()
@@ -269,16 +265,13 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 					{
-						new AlertDialog(Text.LANG.licenseWizardTitle(), new HTML(data.getContent()))
+						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
 								.open();
 					}
 					else
 					{
-						HTML html = new HTML(data.getContent());
-						html.getElement().getStyle().setProperty("maxHeight", "70vh");
-						html.getElement().getStyle().setOverflowY(com.google.gwt.dom.client.Style.Overflow.AUTO);
-						new AlertDialog(Text.LANG.licenseWizardTitle(), html)
+						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAccept(), IconType.CHECK, ButtonType.SUCCESS, e ->
 								{
 									LicenseLog log = new LicenseLog(-1L)
@@ -631,33 +624,40 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 	protected void onItemSelected(NativeEvent event, Dataset object, int column)
 	{
-		/* Get their ids */
-		List<Long> ids = new ArrayList<>();
-		ids.add(object.getId());
-
-		Parameter parameter = null;
-
-		switch (object.getExperiment().getType())
+		if(Objects.equals(table.getColumn(column).getDataStoreName(), Experiment.EXPERIMENT_NAME))
 		{
-			case allelefreq:
-				parameter = Parameter.allelefreqDatasetIds;
-				break;
-			case climate:
-				parameter = Parameter.climateDatasetIds;
-				break;
-			case compound:
-				parameter = Parameter.compoundDatasetIds;
-				break;
-			case genotype:
-				parameter = Parameter.genotypeDatasetIds;
-				break;
-			case trials:
-				parameter = Parameter.trialsDatasetIds;
-				break;
+			LongParameterStore.Inst.get().put(Parameter.experimentId, object.getExperiment().getId());
 		}
+		else
+		{
+			/* Get their ids */
+			List<Long> ids = new ArrayList<>();
+			ids.add(object.getId());
 
-		if (parameter != null)
-			LongListParameterStore.Inst.get().put(parameter, ids);
+			Parameter parameter = null;
+
+			switch (object.getExperiment().getType())
+			{
+				case allelefreq:
+					parameter = Parameter.allelefreqDatasetIds;
+					break;
+				case climate:
+					parameter = Parameter.climateDatasetIds;
+					break;
+				case compound:
+					parameter = Parameter.compoundDatasetIds;
+					break;
+				case genotype:
+					parameter = Parameter.genotypeDatasetIds;
+					break;
+				case trials:
+					parameter = Parameter.trialsDatasetIds;
+					break;
+			}
+
+			if (parameter != null)
+				LongListParameterStore.Inst.get().put(parameter, ids);
+		}
 	}
 
 	/**

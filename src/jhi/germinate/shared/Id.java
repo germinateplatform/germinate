@@ -37,8 +37,8 @@ public class Id
 	public static final String STRUCTURE_PAGE                 = "gm8-page";
 	public static final String STRUCTURE_SEARCH_PANEL         = "gm8-search-panel";
 	public static final String STRUCTURE_READ_ONLY_BANNER     = "gm8-read-only-banner";
-	public static final String STRUCTURE_BANNER               = "gm8-banner";
 	public static final String STRUCTURE_LOGIN_BACKGROUND_SVG = "gm8-fancy-login-background";
+	public static final String STRUCTURE_VERSION_NUMBER       = "gm8-version-number";
 
 	public static final String CHART_D3_TOOLTIP = "gm8-d3js-tooltip";
 	public static final String CHART_D3_LEGEND  = "gm8-d3js-legend";

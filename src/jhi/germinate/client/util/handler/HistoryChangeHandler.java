@@ -51,8 +51,7 @@ public class HistoryChangeHandler implements ValueChangeHandler<String>
 			else if (ModuleCore.getUseAuthentication() && !ModuleCore.isLoggedIn())
 			{
 				/* If not, show the login dialog */
-//				ContentHolder.getInstance().setContent(Page.LOGIN, null, new LoginPage());
-//				Notification.notify(Notification.Type.INFO, Text.LANG.notificationLoginPrompt());
+				GerminateEventBus.BUS.fireEvent(new LogoutEvent());
 			}
 			else
 			{

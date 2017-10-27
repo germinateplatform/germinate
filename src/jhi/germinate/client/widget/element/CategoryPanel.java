@@ -22,8 +22,6 @@ import com.google.gwt.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
-import org.gwtbootstrap3.client.ui.constants.*;
-
 import jhi.germinate.client.util.*;
 
 /**
@@ -52,7 +50,7 @@ public class CategoryPanel extends Composite
 	@UiField
 	SpanElement detailsLabel;
 
-	private IconType prevIcon;
+	private String prevIcon;
 
 	public CategoryPanel()
 	{
@@ -77,13 +75,18 @@ public class CategoryPanel extends Composite
 		this.detailsLabel.setInnerText(details);
 	}
 
-	public void setIcon(IconType icon)
+	public void setIcon(String icon)
 	{
 		if (prevIcon != null)
-			this.icon.removeClassName(prevIcon.getCssName());
+			this.icon.removeClassName(prevIcon);
 		prevIcon = icon;
 
-		this.icon.addClassName(icon.getCssName());
+		this.icon.addClassName(icon);
+	}
+
+	public void setAnchor(String url)
+	{
+		anchor.setHref(url);
 	}
 
 	public AnchorElement getAnchor()

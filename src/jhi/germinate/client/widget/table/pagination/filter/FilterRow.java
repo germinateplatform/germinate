@@ -33,6 +33,7 @@ import java.util.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
@@ -50,19 +51,19 @@ public class FilterRow extends Composite
 	@UiField(provided = true)
 	DropdownInputButton<ComparisonOperator> operator;
 	@UiField
-	FlowPanel input;
+	FlowPanel                               input;
 	@UiField
-	TextBox   firstInput;
+	TextBox                                 firstInput;
 	@UiField
-	TextBox   secondInput;
+	TextBox                                 secondInput;
 	@UiField
-	FlowPanel  date;
+	FlowPanel                               date;
 	@UiField
-	DatePicker firstDate;
+	DatePicker                              firstDate;
 	@UiField
-	DatePicker secondDate;
+	DatePicker                              secondDate;
 	@UiField
-	Button deleteButton;
+	Button                                  deleteButton;
 	private List<Column> columns;
 
 	public FilterRow(List<Column> columns, boolean canDelete)
@@ -156,6 +157,12 @@ public class FilterRow extends Composite
 		deleteButton.setEnabled(canDelete);
 	}
 
+	public void setEnterKeyListener(KeyPressHandler handler)
+	{
+		firstInput.addKeyPressHandler(handler);
+		secondInput.addKeyPressHandler(handler);
+	}
+
 	public void setValue(String col, String value, ComparisonOperator op)
 	{
 		columns.stream()
@@ -236,7 +243,17 @@ public class FilterRow extends Composite
 
 	public String getSearchConditionString()
 	{
-		return column.getSelection().displayName + " " + getOperatorString(operator.getSelection()) + " " + getFirst() + (secondInput.isVisible() ? ", " + getSecond() : "");
+		return column.getSelection().displayName + " " + getOperatorString(operator.getSelection()) + " " + getFirst() + (secondInput.isVisible() || secondDate.isVisible() ? ", " + getSecond() : "");
+	}
+
+	public boolean isEmpty()
+	{
+		if (StringUtils.isEmpty(getFirst()))
+			return true;
+		else if (secondInput.isVisible() || secondDate.isVisible())
+			return StringUtils.isEmpty(getSecond());
+		else
+			return false;
 	}
 
 	interface Style extends CssResource

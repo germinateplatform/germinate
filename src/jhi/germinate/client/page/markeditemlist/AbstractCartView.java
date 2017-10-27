@@ -21,16 +21,16 @@ import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.client.ui.Label;
 
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
+import org.gwtbootstrap3.client.ui.html.*;
 
 import java.util.*;
 
 import jhi.germinate.client.*;
-import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.page.groups.*;
 import jhi.germinate.client.service.*;
@@ -86,11 +86,11 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 
 		if (markedIds == null || markedIds.size() < 1)
 		{
-			content.add(new Label(Text.LANG.cartEmpty()));
+			content.add(new Paragraph(Text.LANG.cartEmpty()));
 		}
 		else
 		{
-			content.add(new Label(Text.LANG.cartText()));
+			content.add(new Paragraph(Text.LANG.cartText()));
 
 			ButtonGroup buttonBar = new ButtonGroup();
 			Button clear = new Button(Text.LANG.generalClear(), IconType.TRASH, r ->
@@ -119,16 +119,13 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 				});
 			}
 
-			content.add(HTMLUtils.createBR());
 			content.add(buttonBar);
-			content.add(HTMLUtils.createBR());
 
 			final FlowPanel tablePanel = new FlowPanel();
 			content.add(tablePanel);
 
 			table = getTable(markedIds);
 			tablePanel.add(table);
-			tablePanel.add(HTMLUtils.createBR());
 
 			FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) -> writeToFile(new ArrayList<>(MarkedItemList.get(getItemType())), callback), true)
 					.addFile(Text.LANG.downloadFileAsTxt())

@@ -137,7 +137,7 @@ td span.mdi:nth-child(2) {
 }
 
 .<%= Style.LAYOUT_DISPLAY_INLINE_BLOCK %> {
-	display: inline-block;
+	display: inline-block !important;
 }
 
 .<%= Style.LAYOUT_DISPLAY_NONE %> {
@@ -219,6 +219,11 @@ td span.mdi:nth-child(2) {
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 	border-top: 0;
+}
+
+#<%= Id.STRUCTURE_VERSION_NUMBER %> {
+	padding: 5px;
+	text-align: center;
 }
 
 #<%= Id.STRUCTURE_MAIN_MENU_UL%> li a {
@@ -1370,7 +1375,7 @@ th {
 }
 
 /* Responsive layout */
-@media (min-width: 768px) {
+@media (min-width: 992px) {
 	.<%= Style.LAYOUT_LOGO_SECTION %> img,
 	.<%= Style.LAYOUT_LOGO_SECTION %> object {
 		width: 100%;

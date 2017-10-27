@@ -18,7 +18,6 @@
 package jhi.germinate.client.widget.d3js;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
@@ -63,8 +62,9 @@ public abstract class AbstractChart extends GerminateComposite
 	private SafeHtml message;
 	private HTML     messageHtml;
 
-	private FlowPanel chartPanel;
-	private Button    button;
+	private FlowPanel   chartPanel;
+	private ButtonGroup buttonGroup;
+	private Button      button;
 
 	protected AbstractChart()
 	{
@@ -337,55 +337,50 @@ public abstract class AbstractChart extends GerminateComposite
 			if (button == null)
 			{
 				// Create the button that opens the menu
-				// On click, invoke the context menu handler
-				button = new Button("", IconType.DOWNLOAD, event ->
-				{
-					// On click, invoke the context menu handler
-					DomEvent.fireNativeEvent(Document.get().createContextMenuEvent(), chartPanel);
-				});
-				button.setPull(Pull.RIGHT);
+				button = new Button("", IconType.DOWNLOAD, event -> handleEvent(event, button, popup));
 				button.setTitle(Text.LANG.generalSaveAs());
 
-				chartPanel.add(button);
+				buttonGroup = new ButtonGroup();
+				buttonGroup.setPull(Pull.RIGHT);
+				panel.insert(buttonGroup, panel.getWidgetIndex(chartPanel));
+				buttonGroup.add(button);
+
+				Button[] additionalButtons = getAdditionalButtons();
+
+				if (!ArrayUtils.isEmpty(additionalButtons))
+				{
+					Arrays.stream(additionalButtons)
+						  .forEach(b -> buttonGroup.add(b));
+				}
 			}
 
 			/* Listen for context menu events */
-			// TODO: Fix positioning if opened too far to the right
-			handlers.put(chartPanel, chartPanel.addDomHandler(event ->
-			{
-				event.preventDefault();
-
-				popup.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
-				{
-					event.preventDefault();
-					int x = event.getNativeEvent().getClientX();
-					int y = event.getNativeEvent().getClientY();
-
-					// Ensure a good positioning of the menu (completely on screen)
-					if (x == 0)
-					{
-						x = button.getAbsoluteLeft() - (offsetWidth - button.getOffsetWidth()) + 2;
-						x = Math.min(x, Window.getClientWidth() + Window.getScrollLeft() - offsetWidth);
-					}
-					else
-					{
-						x += Window.getScrollLeft();
-					}
-
-					if (y == 0)
-					{
-						y = button.getAbsoluteTop() + button.getOffsetHeight() - 1;
-						y = Math.min(y, Window.getClientHeight() + Window.getScrollTop() - offsetHeight);
-					}
-					else
-					{
-						y += Window.getScrollTop();
-					}
-
-					popup.setPopupPosition(x, y);
-				});
-			}, ContextMenuEvent.getType()));
+			handlers.put(chartPanel, chartPanel.addDomHandler(event -> handleEvent(event, null, popup), ContextMenuEvent.getType()));
 		}
+	}
+
+	protected Button[] getAdditionalButtons()
+	{
+		return null;
+	}
+
+	private void handleEvent(DomEvent event, Widget relativeTo, PopupPanel popup)
+	{
+		event.preventDefault();
+
+		popup.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
+		{
+			int popupX = event.getNativeEvent().getClientX() + Window.getScrollLeft();
+			if (popupX + offsetWidth > Window.getClientWidth() + Window.getScrollLeft())
+				popupX = Window.getClientWidth() + Window.getScrollLeft() - offsetWidth;
+
+			int popupY = event.getNativeEvent().getClientY() + Window.getScrollTop();
+
+			if (relativeTo != null)
+				popupY = relativeTo.getAbsoluteTop() + relativeTo.getOffsetHeight() + Window.getScrollTop();
+
+			popup.setPopupPosition(popupX, popupY);
+		});
 	}
 
 	/**

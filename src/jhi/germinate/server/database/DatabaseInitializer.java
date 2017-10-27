@@ -46,8 +46,15 @@ public abstract class DatabaseInitializer
             /* Drop and recreate the views */
 			for (int i = 0; i < Math.min(names.length, queries.length); i++)
 			{
-				database.prepareStatement(String.format(dropStatement, names[i])).execute();
-				database.prepareStatement(String.format(createStatement, names[i], queries[i])).execute();
+				try
+				{
+					database.prepareStatement(String.format(dropStatement, names[i])).execute();
+					database.prepareStatement(String.format(createStatement, names[i], queries[i])).execute();
+				}
+				catch (DatabaseException e)
+				{
+					e.printStackTrace();
+				}
 			}
 
 			database.close();

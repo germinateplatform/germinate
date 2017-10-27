@@ -63,7 +63,7 @@
 
 			<g:SimplePanel addStyleNames="{CLEARFIX}"/>
 
-			<b:Button type="SUCCESS" icon="ARROW_CIRCLE_RIGHT" text="{msg.generalContinue}" ui:field="continueButton"/>
+			<b:Button icon="ARROW_CIRCLE_RIGHT" text="{msg.generalContinue}" type="PRIMARY" ui:field="continueButton"/>
 
 			<g:FlowPanel visible="false" ui:field="resultWrapper">
 				<b:Heading size="H3" text="{msg.generalResults}"/>

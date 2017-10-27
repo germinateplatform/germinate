@@ -26,6 +26,7 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 
@@ -36,6 +37,7 @@ import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.resource.*;
 import jhi.germinate.client.widget.element.*;
@@ -65,6 +67,8 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 	private FlowPanel                chartPanel;
 	private ScatterChartSelection<T> parameterSelection;
+	private Button deleteButton;
+	private Button badgeButton;
 
 	public ScatterChart()
 	{
@@ -106,6 +110,37 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 		computeChartSize(width);
 		String coloringValue = parameterSelection.getColor();
 		create(coloringValue.equals(Text.LANG.trialsPByPColorByTreatment()), coloringValue.equals(Text.LANG.trialsPByPColorByDataset()), coloringValue.equals(Text.LANG.trialsPByPColorByYear()), GerminateSettingsHolder.getCategoricalColor(0));
+	}
+
+	protected Button[] getAdditionalButtons()
+	{
+		// Add the button
+		if(deleteButton == null && badgeButton == null)
+		{
+			ButtonGroup group = new ButtonGroup();
+			group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
+			// Add the button
+			deleteButton = new Button("", e -> {
+				AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null);
+			});
+			deleteButton.addStyleName(Style.combine(Style.MDI, Style.MDI_DELETE));
+			deleteButton.setTitle(Text.LANG.generalClear());
+
+			badgeButton = new Button("", e -> {
+				ItemTypeParameterStore.Inst.get().put(Parameter.markedItemType, MarkedItemList.ItemType.ACCESSION);
+				History.newItem(Page.MARKED_ITEMS.name());
+			});
+			// Add the actual badge that shows the number
+			Badge badge = new Badge(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(MarkedItemList.ItemType.ACCESSION).size()));
+			group.add(deleteButton);
+			group.add(badgeButton);
+			badgeButton.add(badge);
+
+			// Listen to shopping cart changes
+			GerminateEventBus.BUS.addHandler(MarkedItemListEvent.TYPE, event -> badge.setText(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(MarkedItemList.ItemType.ACCESSION).size())));
+		}
+
+		return new Button[] {deleteButton, badgeButton};
 	}
 
 	private void initPlotButton()

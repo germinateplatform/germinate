@@ -57,7 +57,7 @@ public class UploadServlet extends BaseHttpServlet
 		{
 			try
 			{
-				Session.checkSession(workloadSessionId, request, response);
+				Session.checkSession(workloadSessionId, request);
 			}
 			catch (InvalidSessionException e)
 			{

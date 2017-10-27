@@ -44,8 +44,11 @@ public class Marker extends DatabaseObject
 	public static final String MARKERTYPE_ID = "markers.markertype_id";
 	public static final String MARKER_NAME   = "markers.marker_name";
 
+	public static final String SYNONYMS = "synonyms";
+
 	private MarkerType type;
 	private String     name;
+	private String     synonyms;
 	private Long       createdOn;
 	private Long       updatedOn;
 
@@ -77,6 +80,17 @@ public class Marker extends DatabaseObject
 	public Marker setName(String name)
 	{
 		this.name = name;
+		return this;
+	}
+
+	public String getSynonyms()
+	{
+		return synonyms;
+	}
+
+	public Marker setSynonyms(String synonyms)
+	{
+		this.synonyms = synonyms;
 		return this;
 	}
 
@@ -118,11 +132,41 @@ public class Marker extends DatabaseObject
 	@GwtIncompatible
 	public static class Parser extends DatabaseObjectParser<Marker>
 	{
+		@Override
+		public Marker parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			try
+			{
+				Long id = row.getLong(ID);
+
+				if (id == null)
+					return null;
+				else
+					return new Marker(id)
+							.setType(MARKERTYPE_CACHE.get(user, row.getLong(MARKERTYPE_ID), row, foreignsFromResultSet))
+							.setName(row.getString(MARKER_NAME))
+							.setSynonyms(row.getString(SYNONYMS))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+			}
+			catch (InsufficientPermissionsException e)
+			{
+				return null;
+			}
+		}
+
+		private static DatabaseObjectCache<MarkerType> MARKERTYPE_CACHE;
+
+		private Parser()
+		{
+			MARKERTYPE_CACHE = createCache(MarkerType.class, MarkerTypeManager.class);
+		}
+
 		public static final class Inst
 		{
 			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
-			 * InstanceHolder#INSTANCE}, not before.
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
+			 * not before.
 			 * <p/>
 			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
 			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
@@ -137,35 +181,6 @@ public class Marker extends DatabaseObject
 			public static Parser get()
 			{
 				return InstanceHolder.INSTANCE;
-			}
-		}
-
-		private static DatabaseObjectCache<MarkerType> MARKERTYPE_CACHE;
-
-		private Parser()
-		{
-			MARKERTYPE_CACHE = createCache(MarkerType.class, MarkerTypeManager.class);
-		}
-
-		@Override
-		public Marker parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
-		{
-			try
-			{
-				Long id = row.getLong(ID);
-
-				if (id == null)
-					return null;
-				else
-					return new Marker(id)
-							.setType(MARKERTYPE_CACHE.get(user, row.getLong(MARKERTYPE_ID), row, foreignsFromResultSet))
-							.setName(row.getString(MARKER_NAME))
-							.setCreatedOn(row.getTimestamp(CREATED_ON))
-							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
-			}
-			catch (InsufficientPermissionsException e)
-			{
-				return null;
 			}
 		}
 	}

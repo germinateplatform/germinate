@@ -299,7 +299,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				}
 			});
 
-			accessionSection.add(new AccessionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+			AccessionTable accessionTable = new AccessionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 			{
 				@Override
 				public boolean supportsFullIdMarking()
@@ -370,7 +370,44 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 					else
 						return null;
 				}
+			};
+
+			accessionTable.addMouseHoverHandler(new TableMouseHoverHandler<Accession>()
+			{
+				@Override
+				public void onMouseOverRow(Accession row)
+				{
+					if (geodesic != null)
+						pointMap.getMap().removeLayer(geodesic);
+
+					LeafletLatLng start = LeafletLatLng.newInstance(queryLocation.getLatitude(), queryLocation.getLongitude());
+					LeafletLatLng end = LeafletLatLng.newInstance(row.getLocation().getLatitude(), row.getLocation().getLongitude());
+
+					pointMap.updateData(Arrays.asList(queryLocation, row.getLocation()));
+
+					geodesic = LeafletGeodesic.newInstance(start, end)
+											  .addTo(pointMap.getMap());
+				}
+
+				@Override
+				public void onMouseOutRow(Accession row)
+				{
+				}
+
+				@Override
+				public void onMouseOverTable()
+				{
+
+				}
+
+				@Override
+				public void onMouseOutTable()
+				{
+
+				}
 			});
+
+			accessionSection.add(accessionTable);
 		}
 		else if (polygonTab.isActive())
 		{

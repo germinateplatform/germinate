@@ -67,7 +67,12 @@ public enum Parameter
 	markedItemType(MarkedItemList.ItemType.class, ParameterLifetime.TEMPORARY),
 	groupPreviewFile(String.class, ParameterLifetime.TEMPORARY),
 	compoundId(Long.class, ParameterLifetime.TEMPORARY),
-	experimentId(Long.class, ParameterLifetime.VOLATILE);
+	experimentId(Long.class, ParameterLifetime.TEMPORARY),
+
+
+
+	tool_id(String.class, ParameterLifetime.TEMPORARY),
+	GALAXY_URL(String.class, ParameterLifetime.TEMPORARY);
 
 	private Class<?> type;
 	private boolean acceptFromUrl = true;

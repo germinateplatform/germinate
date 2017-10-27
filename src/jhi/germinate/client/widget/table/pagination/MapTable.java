@@ -172,7 +172,7 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 				return Long.class;
 			}
 		};
-		addColumn(column, Text.LANG.datasetsColumnDatasetSize());
+		addColumn(column, Text.LANG.datasetsColumnDatasetSize(), sortingEnabled);
 	}
 
 	@Override

@@ -103,6 +103,13 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 				.setMapFile(mapFile.getName())
 				.setDeletedMarkers(deletedMarkers);
 
+		List<String> list = new ArrayList<>();
+		list.add(mapFile.getName());
+		list.add(result.subsetWithFlapjackLinks.getName());
+
+		getRequest().getSession().setAttribute(Session.GENOTYPE_MAP, mapFile.getName());
+		getRequest().getSession().setAttribute(Session.GENOTYPE_DATA, result.subsetWithFlapjackLinks.getName());
+
 		return new ServerResult<>(sqlDebug, fjExport);
 	}
 

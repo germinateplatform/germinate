@@ -86,10 +86,16 @@
 
 		<b:Container ui:field="container">
 
-			<b:Well size="SMALL" addStyleNames="{CLEARFIX}">
-				<b:Heading size="H4" addStyleNames="{PULL_LEFT}" ui:field="pageTitle"/>
-				<g:Image addStyleNames="{PULL_RIGHT}" url="img/crop.svg"/>
-			</b:Well>
+			<b:Container fluid="true">
+				<b:Well addStyleNames="{CLEARFIX} {ROW}" size="SMALL">
+					<b:Column addStyleNames="{COL_XXS_12} text-center-xxs text-left-xs" size="XS_10">
+						<b:Heading size="H4" ui:field="pageTitle"/>
+					</b:Column>
+					<b:Column addStyleNames="{COL_XXS_12} text-center-xxs text-right-xs" size="XS_2">
+						<g:Image url="img/crop.svg"/>
+					</b:Column>
+				</b:Well>
+			</b:Container>
 
 			<b:Row>
 				<b:Column size="XS_12">

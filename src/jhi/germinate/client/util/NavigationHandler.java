@@ -455,7 +455,7 @@ public class NavigationHandler
 				}, ExperimentType.compound, false);
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
-				widget.setHeaderText(Text.LANG.compoundDatasetHeader());
+				widget.setTitle(Text.LANG.compoundDatasetHeader());
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});

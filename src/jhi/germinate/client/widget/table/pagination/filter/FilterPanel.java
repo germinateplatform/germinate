@@ -28,10 +28,12 @@ import org.gwtbootstrap3.extras.toggleswitch.client.ui.*;
 import org.gwtbootstrap3.extras.toggleswitch.client.ui.base.constants.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
@@ -39,7 +41,7 @@ import jhi.germinate.shared.search.operators.*;
 /**
  * @author Sebastian Raubach
  */
-public class FilterPanel
+public class FilterPanel implements KeyPressHandler
 {
 	private AlertDialog dialog;
 	private List<ToggleSwitch> switches = new ArrayList<>();
@@ -99,7 +101,7 @@ public class FilterPanel
 		this.handler = handler;
 	}
 
-	private void clear()
+	public void clear()
 	{
 		if (rows.size() > 0)
 			rows.forEach(r -> r.removeFromParent());
@@ -175,6 +177,8 @@ public class FilterPanel
 			}
 		};
 
+		row.setEnterKeyListener(this);
+
 		if (rows.size() > 0)
 		{
 			ToggleSwitch toggleSwitch = new ToggleSwitch();
@@ -203,10 +207,14 @@ public class FilterPanel
 		/* Assemble the query */
 		PartialSearchQuery query = new PartialSearchQuery();
 
+		List<FilterRow> valid = rows.stream()
+									.filter(r -> !r.isEmpty())
+									.collect(Collectors.toList());
+
         /* For each of the rows */
-		for (int i = 0; i < rows.size(); i++)
+		for (int i = 0; i < valid.size(); i++)
 		{
-			FilterRow row = rows.get(i);
+			FilterRow row = valid.get(i);
 
             /* Otherwise add it and possibly the operator in between */
 			if (i > 0)
@@ -229,26 +237,43 @@ public class FilterPanel
 		return query;
 	}
 
-	public FlowPanel getQueryString()
+	public FlowPanel getQueryHtml()
 	{
 		FlowPanel result = new FlowPanel();
 
+		List<FilterRow> valid = rows.stream()
+									.filter(r -> !r.isEmpty())
+									.collect(Collectors.toList());
+
 		/* For each of the rows */
-		for (int i = 0; i < rows.size(); i++)
+		for (int i = 0; i < valid.size(); i++)
 		{
-			FilterRow row = rows.get(i);
+			FilterRow row = valid.get(i);
 
             /* Otherwise add it and possibly the operator in between */
 			if (i > 0)
 			{
 				boolean value = switches.get(i - 1).getValue();
-				result.add(new Label(value ? Text.LANG.operatorsAnd() : Text.LANG.operatorsOr()));
+				Label label = new Label(value ? Text.LANG.operatorsAnd() : Text.LANG.operatorsOr());
+				label.addStyleName(Style.LAYOUT_DISPLAY_INLINE_BLOCK);
+				result.add(label);
 			}
 
 			result.add(new Label(LabelType.SUCCESS, row.getSearchConditionString()));
 		}
 
 		return result;
+	}
+
+	@Override
+	public void onKeyPress(KeyPressEvent event)
+	{
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+		{
+			if (handler != null)
+				handler.onSearchClicked();
+			dialog.close();
+		}
 	}
 
 	public interface FilterPanelHandler

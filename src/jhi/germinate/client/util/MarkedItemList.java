@@ -139,6 +139,7 @@ public final class MarkedItemList
 				}
 
 				RootPanel p = RootPanel.get(Id.STRUCTURE_MARKED_ITEM_UL);
+				p.setVisible(true);
 				p.getElement().appendChild(list);
 				p.removeFromParent();
 			}
