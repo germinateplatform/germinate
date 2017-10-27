@@ -2,8 +2,8 @@
 	<%@ page import="jhi.germinate.shared.*"%>
 
 	<%--
-  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
-  ~  Information and Computational Sciences Group at JHI Dundee
+  ~  Copyright 2017 Information and Computational Sciences,
+  ~  The James Hutton Institute.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.

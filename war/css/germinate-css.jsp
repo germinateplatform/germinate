@@ -5,8 +5,8 @@
 <%@ page import="jhi.germinate.shared.enums.*"%>
 
 <%--
-  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
-  ~  Information and Computational Sciences Group at JHI Dundee
+  ~  Copyright 2017 Information and Computational Sciences,
+  ~  The James Hutton Institute.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -24,6 +24,21 @@
 <%
 	String highlightColor = CommonServiceImpl.getColors(PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS)).get(0);
 %>
+
+.fa-lg {
+	font-size: 1.33333333em;
+	line-height: .75em;
+	vertical-align: -15%;
+}
+
+.fa-fw {
+	width: 1.28571429em;
+	text-align: center;
+}
+
+.fa-4x {
+	font-size: 4em;
+}
 
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:active {
 	-webkit-box-shadow: 0 0 0 1000px white inset;

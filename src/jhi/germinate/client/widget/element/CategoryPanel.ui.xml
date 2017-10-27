@@ -1,6 +1,6 @@
 <!--
-  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
-  ~  Information and Computational Sciences Group at JHI Dundee
+  ~  Copyright 2017 Information and Computational Sciences,
+  ~  The James Hutton Institute.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@
 			<div class="{PANEL}" ui:field="panel">
 				<div class="{PANEL_HEADING}" ui:field="heading">
 					<div class="{TEXT_CENTER_ALIGN}">
-						<i class="{MDI} {FA_FIXED_WIDTH} {FA_4X}" ui:field="icon"/>
+						<i class="{MDI} {FA_FIXED_WIDTH} {MDI_48PX}" ui:field="icon"/>
 					</div>
 				</div>
 				<div class="{PANEL_FOOTER}">

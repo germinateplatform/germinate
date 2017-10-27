@@ -2,8 +2,8 @@
 <%@ page import="jhi.germinate.shared.*"%><%@ page import="jhi.germinate.shared.enums.*"%>
 
 <%--
-  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
-  ~  Information and Computational Sciences Group at JHI Dundee
+  ~  Copyright 2017 Information and Computational Sciences,
+  ~  The James Hutton Institute.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -161,10 +161,10 @@ footer > div.container-fluid {
   float: right;
   line-height: 21px;
 }
-.sidebar .fa.arrow:before {
+.sidebar .mdi.arrow:before {
   content: "\f104";
 }
-.sidebar .active > a > .fa.arrow:before {
+.sidebar .active > a > .mdi.arrow:before {
   content: "\f107";
 }
 .sidebar .nav-second-level li,

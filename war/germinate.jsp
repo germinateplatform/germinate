@@ -6,8 +6,8 @@
 <%@ page import="jhi.germinate.shared.enums.*" %>
 
 <%--
-  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
-  ~  Information and Computational Sciences Group at JHI Dundee
+  ~  Copyright 2017 Information and Computational Sciences,
+  ~  The James Hutton Institute.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -183,28 +183,28 @@
 			<!-- GM8 Language Selector -->
 			<li class="dropdown" id="<%= Id.STRUCTURE_LANGUAGE_SELECTOR_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="mdi mdi-translate fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
+					<i class="mdi mdi-translate fa-fw fa-lg"></i> <i class="mdi mdi-chevron-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Language Selector -->
 			<!-- GM8 Share Widget -->
 			<li class="dropdown" id="<%= Id.STRUCTURE_SHARE_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="mdi mdi-share-variant fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
+					<i class="mdi mdi-share-variant fa-fw fa-lg"></i> <i class="mdi mdi-chevron-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Share Widget -->
 			<!-- GM8 Shopping Cart -->
 			<li class="dropdown" id="<%= Id.STRUCTURE_MARKED_ITEM_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="mdi mdi-bookmark-check fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
+					<i class="mdi mdi-bookmark-check fa-fw fa-lg"></i> <i class="mdi mdi-chevron-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Shopping Cart -->
 			<!-- GM8 Account Settings -->
 			<li class="dropdown" id="<%= Id.STRUCTURE_ACCOUNT_SETTINGS_UL %>" style="display: none;">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="mdi mdi-account fa-fw fa-lg"></i> <i class="fa fa-caret-down"></i>
+					<i class="mdi mdi-account fa-fw fa-lg"></i> <i class="mdi mdi-chevron-down"></i>
 				</a>
 			</li>
 			<!-- /GM8 Account Settings -->

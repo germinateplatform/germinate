@@ -1,6 +1,6 @@
 /*
- *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
- *  Information and Computational Sciences Group at JHI Dundee
+ *  Copyright 2017 Information and Computational Sciences,
+ *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
 
 package jhi.germinate.client.page.genotype;
 
+import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.ListBox;
 
@@ -32,9 +34,11 @@ import jhi.germinate.client.page.search.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -93,82 +97,77 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 							{
 								resultPanel.add(new Heading(HeadingSize.H2, Text.LANG.genotypeResultTitleResult()));
 
-//								String linkToGalaxy = StringParameterStore.Inst.get().get(Parameter.GALAXY_URL);
-//								String toolId = StringParameterStore.Inst.get().get(Parameter.tool_id);
-//								StringParameterStore.Inst.get().remove(Parameter.GALAXY_URL);
-//								StringParameterStore.Inst.get().remove(Parameter.tool_id);
-//
-//								if(!StringUtils.isEmpty(linkToGalaxy))
-//									linkToGalaxy += "?tool_id=" + toolId;
+								String linkToGalaxy = StringParameterStore.Inst.get().get(Parameter.GALAXY_URL);
+								String toolId = StringParameterStore.Inst.get().get(Parameter.tool_id);
+								StringParameterStore.Inst.get().remove(Parameter.GALAXY_URL);
+								StringParameterStore.Inst.get().remove(Parameter.tool_id);
+
+								if (!StringUtils.isEmpty(linkToGalaxy))
+									linkToGalaxy += "?tool_id=" + toolId;
 
 								List<String> files = new ArrayList<>();
 								files.add(result.getServerResult().getRawDataFile());
 								files.add(result.getServerResult().getMapFile());
 								files.add(result.getServerResult().getProjectFile());
-//								if (!StringUtils.isEmpty(linkToGalaxy))
-//									files.add(linkToGalaxy);
+								if (!StringUtils.isEmpty(linkToGalaxy))
+									files.add(linkToGalaxy);
 
 								List<String> names = new ArrayList<>();
 								names.add(Text.LANG.genotypeResultDownloadRaw());
 								names.add(Text.LANG.genotypeResultDownloadMap());
 								names.add(Text.LANG.genotypeResultDownloadFlapjack());
-//								if (!StringUtils.isEmpty(linkToGalaxy))
-//									names.add("Send to Galaxy"); // TODO: i18n
-//
-//								final String galaxyUrl = linkToGalaxy;
+								if (!StringUtils.isEmpty(linkToGalaxy))
+									names.add("Send to Galaxy"); // TODO: i18n
+
+								final String galaxyUrl = linkToGalaxy;
 
 								FileDownloadWidget fileDownload = new FileDownloadWidget(FileLocation.temporary, Text.LANG.downloadHeading(), null, files, names, null, true)
 								{
 									@Override
 									protected void onItemClicked(int index, ClickEvent event)
 									{
-//										if (index == 3)
-//										{
-//											event.preventDefault();
-//
-//											String map = new ServletConstants.Builder()
-//													.setUrl(GWT.getModuleBaseURL())
-//													.setPath(ServletConstants.SERVLET_FILES)
-//													.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult().getMapFile())
-//													.build();
-//
-//											String data = new ServletConstants.Builder()
-//													.setUrl(GWT.getModuleBaseURL())
-//													.setPath(ServletConstants.SERVLET_FILES)
-//													.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult().getRawDataFile())
-//													.build();
-//
-//											FlowPanel formPanel = new FlowPanel();
-//
-//											FormPanel form = new FormPanel(new NamedFrame("_blank"));
-//											form.setAction(galaxyUrl);
-//											form.setWidget(formPanel);
-//											form.setVisible(false);
-//											form.setMethod(FormPanel.METHOD_POST);
-//											formPanel.add(new Hidden("genotypeMap", map));
-//											formPanel.add(new Hidden("genotypeData", data));
-//											resultPanel.add(form);
-//											form.addSubmitHandler(new FormPanel.SubmitHandler()
-//											{
-//												@Override
-//												public void onSubmit(FormPanel.SubmitEvent event)
-//												{
-//													CommonService.Inst.get().makeFilesAvailablePublically(Cookie.getRequestProperties(), ExperimentType.genotype, new AsyncCallback<Void>()
-//													{
-//														@Override
-//														public void onFailure(Throwable caught)
-//														{
-//														}
-//
-//														@Override
-//														public void onSuccess(Void result)
-//														{
-//														}
-//													});
-//												}
-//											});
-//											Scheduler.get().scheduleDeferred(form::submit);
-//										}
+										if (index == 3)
+										{
+											event.preventDefault();
+
+											String map = new ServletConstants.Builder()
+													.setUrl(GWT.getModuleBaseURL())
+													.setPath(ServletConstants.SERVLET_FILES)
+													.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult().getMapFile())
+													.build();
+
+											String data = new ServletConstants.Builder()
+													.setUrl(GWT.getModuleBaseURL())
+													.setPath(ServletConstants.SERVLET_FILES)
+													.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult().getRawDataFile())
+													.build();
+
+											FlowPanel formPanel = new FlowPanel();
+
+											FormPanel form = new FormPanel(new NamedFrame("_self"));
+											form.setAction(galaxyUrl);
+											form.setWidget(formPanel);
+											form.setVisible(false);
+											form.setMethod(FormPanel.METHOD_POST);
+											formPanel.add(new Hidden("genotypeMap", map));
+											formPanel.add(new Hidden("genotypeData", data));
+											resultPanel.add(form);
+
+											CommonService.Inst.get().makeFilesAvailablePublically(Cookie.getRequestProperties(), ExperimentType.genotype, new AsyncCallback<Void>()
+											{
+												@Override
+												public void onFailure(Throwable caught)
+												{
+													Notification.notify(Notification.Type.ERROR, Text.LANG.notificationUnspecifiedServerError());
+												}
+
+												@Override
+												public void onSuccess(Void result)
+												{
+													form.submit();
+												}
+											});
+										}
 									}
 								};
 

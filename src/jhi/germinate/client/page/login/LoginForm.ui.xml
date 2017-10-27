@@ -1,6 +1,6 @@
 <!--
-  ~  Copyright 2017 Sebastian Raubach and Paul Shaw from the
-  ~  Information and Computational Sciences Group at JHI Dundee
+  ~  Copyright 2017 Information and Computational Sciences,
+  ~  The James Hutton Institute.
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@
 							<li class="dropdown" ui:field="languageSelector">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 									<i class="{MDI} {FA_FIXED_WIDTH} {FA_LG} {MDI_TRANSLATE}"/>
-									<i class="fa fa-caret-down"></i>
+									<i class="mdi mdi-chevron-down"></i>
 								</a>
 							</li>
 							<li ui:field="emailAnchorParent">

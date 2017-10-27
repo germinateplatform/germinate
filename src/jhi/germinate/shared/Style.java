@@ -1,6 +1,6 @@
 /*
- *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
- *  Information and Computational Sciences Group at JHI Dundee
+ *  Copyright 2017 Information and Computational Sciences,
+ *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -82,12 +82,9 @@ public class Style
 
 	public static final String FA                                  = "fa";
 	public static final String FA_FIXED_WIDTH                      = "fa-fw";
-	public static final String FA_ICONLIST                         = "fa-iconlist";
 	public static final String FA_LG                               = "fa-lg";
-	public static final String FA_2X                               = "fa-2x";
-	public static final String FA_3X                               = "fa-3x";
-	public static final String FA_4X                               = "fa-4x";
-	public static final String FA_5X                               = "fa-5x";
+	public static final String MDI_24PX                            = "mdi-24px";
+	public static final String MDI_48PX                            = "mdi-48px";
 	public static final String MDI                                 = "mdi";
 	public static final String MDI_HOME                            = "mdi-home";
 	public static final String MDI_FLOWER                          = "mdi-flower";

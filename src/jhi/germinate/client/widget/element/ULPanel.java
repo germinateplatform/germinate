@@ -1,6 +1,6 @@
 /*
- *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
- *  Information and Computational Sciences Group at JHI Dundee
+ *  Copyright 2017 Information and Computational Sciences,
+ *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,7 +86,6 @@ public class ULPanel extends ComplexPanel
 			i.getStyle().setPaddingRight(7, com.google.gwt.dom.client.Style.Unit.PX);
 
 			li.appendChild(i);
-			li.addClassName(Style.FA_ICONLIST);
 			child.addStyleName(Style.LAYOUT_V_ALIGN_MIDDLE);
 		}
 
