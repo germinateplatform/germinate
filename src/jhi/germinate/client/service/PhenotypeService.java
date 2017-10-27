@@ -38,8 +38,9 @@ public interface PhenotypeService extends RemoteService
 	String NAME                  = "name";
 	String DATASET_NAME          = "dataset_name";
 	String LICENSE_NAME          = "license_name";
-	String LOCATION_NAME		 = "location_name";
+	String LOCATION_NAME         = "location_name";
 	String TREATMENT_DESCRIPTION = "treatments_description";
+	String YEAR                  = "year";
 
 	String[] COLUMNS_DATA_SORTABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Dataset.DESCRIPTION, ExperimentType.DESCRIPTION, Phenotype.NAME, Phenotype.SHORT_NAME, Unit.NAME, PhenotypeData.PHENOTYPE_VALUE, PhenotypeData.RECORDING_DATE};
 	String[] COLUMNS_SORTABLE      = {Phenotype.ID, Phenotype.NAME, Phenotype.DESCRIPTION, Phenotype.SHORT_NAME, Unit.ID, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION};

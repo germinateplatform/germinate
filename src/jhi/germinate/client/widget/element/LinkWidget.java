@@ -82,15 +82,21 @@ public class LinkWidget extends GerminateComposite
 
 						for (Link link : result.getServerResult())
 						{
-							String description = link.getDescription();
+							if(!StringUtils.isEmpty(link.getHyperlink()))
+							{
+								String description = link.getDescription();
 
-							if (StringUtils.isEmpty(description))
-								description = link.getType().getDescription();
+								if (StringUtils.isEmpty(description))
+									description = link.getType().getDescription();
 
-							ulPanel.add(new Anchor(description, link.getHyperlink(), "_blank"));
+								ulPanel.add(new Anchor(description, link.getHyperlink(), "_blank"));
+							}
 						}
 
-						panel.add(ulPanel);
+						if(ulPanel.getWidgetCount() > 0)
+							panel.add(ulPanel);
+						else
+							panel.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));
 					}
 					else
 					{

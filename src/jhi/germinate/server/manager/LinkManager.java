@@ -68,7 +68,10 @@ public class LinkManager extends AbstractManager<Link>
 
 					links.getDebugInfo().addAll(cellContent.getDebugInfo());
 
-					link.setHyperlink(link.getHyperlink().replace(link.getType().getPlaceholder(), cellContent.getServerResult()));
+					if (StringUtils.isEmpty(link.getHyperlink(), link.getType().getPlaceholder(), cellContent.getServerResult()))
+						link.setHyperlink(null);
+					else
+						link.setHyperlink(link.getHyperlink().replace(link.getType().getPlaceholder(), cellContent.getServerResult()));
 				}
 				/* Else it's not a placeholder link, remove it */
 				else

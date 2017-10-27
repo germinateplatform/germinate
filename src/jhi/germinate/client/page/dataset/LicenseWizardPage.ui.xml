@@ -24,7 +24,7 @@
 
 	<ui:style>
 		.height {
-			max-height: 30vh;
+			max-height: 60vh;
 			overflow-y: auto;
 		}
 
@@ -39,10 +39,12 @@
 
 	<g:HTMLPanel addStyleNames="{style.margin}">
 		<g:HTML ui:field="content" addStyleNames="{style.height}"/>
-		<g:Label text="{msg.licenseWizardDeclineMeaning}"/>
-		<b:ButtonGroup addStyleNames="{PULL_RIGHT}">
-			<b:Button icon="BAN" text="{msg.generalDecline}" ui:field="decline"/>
-			<b:Button icon="CHECK" text="{msg.generalAccept}" ui:field="accept"/>
-		</b:ButtonGroup>
+		<g:FlowPanel visible="false" ui:field="acceptPart">
+			<g:Label text="{msg.licenseWizardDeclineMeaning}"/>
+			<b:ButtonGroup addStyleNames="{PULL_RIGHT}">
+				<b:Button icon="BAN" text="{msg.generalDecline}" ui:field="decline"/>
+				<b:Button icon="CHECK" text="{msg.generalAccept}" ui:field="accept"/>
+			</b:ButtonGroup>
+		</g:FlowPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

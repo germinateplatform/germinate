@@ -228,12 +228,6 @@ public class FileDownloadWidget extends GerminateComposite
 
 			p.add(fileAnchor);
 
-			if (longRunning)
-			{
-				fileAnchor.getElement().getStyle().setMarginRight(15, Style.Unit.PX);
-				p.add(new Label(LabelType.DEFAULT, Text.LANG.notificationLongRunning()));
-			}
-
             /* Add it to the list and style it */
 			ulPanel.add(p, iconStyle, type);
 		}
@@ -241,6 +235,13 @@ public class FileDownloadWidget extends GerminateComposite
 		if (!StringUtils.isEmpty(heading))
 			panel.add(new Heading(HeadingSize.H3, heading));
 		panel.add(ulPanel);
+
+		if (longRunning)
+		{
+			ParagraphPanel p = new ParagraphPanel();
+			p.add(new Label(LabelType.DEFAULT, Text.LANG.notificationLongRunning()));
+			panel.add(p);
+		}
 	}
 
 	/**
@@ -251,6 +252,10 @@ public class FileDownloadWidget extends GerminateComposite
 	 */
 	protected String getLinkURL(int index)
 	{
+		String url = files.get(index);
+		if (url.startsWith("http") || url.startsWith("ftp"))
+			return url;
+
 		String prefixToUse = prefix == null ? "" : prefix + "/";
 
 		return new Builder().setUrl(GWT.getModuleBaseURL())
@@ -258,7 +263,7 @@ public class FileDownloadWidget extends GerminateComposite
 							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
 							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 							.setParam(ServletConstants.PARAM_FILE_LOCATION, location.name())
-							.setParam(ServletConstants.PARAM_FILE_PATH, prefixToUse + files.get(index))
+							.setParam(ServletConstants.PARAM_FILE_PATH, prefixToUse + url)
 							.build();
 	}
 

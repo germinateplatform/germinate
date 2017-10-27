@@ -21,6 +21,7 @@ import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 
@@ -30,13 +31,14 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.gwt.leaflet.client.basic.*;
 
 /**
  * {@link AboutGerminatePage} is the page used for {@link Page#ABOUT_GERMINATE} which will show the {@link Text#aboutText(String, int)} as its content
- * and {@link Text#aboutAddress()} on the map.
+ * and {@link Text#aboutAddress()} on the map. It also shows links to related content along the bottom.
  *
  * @author Sebastian Raubach
  */
@@ -54,9 +56,56 @@ public class AboutGerminatePage extends GerminateComposite implements ParallaxBa
 		PageHeader header = new PageHeader();
 		header.setText(Text.LANG.aboutTitle());
 		panel.add(header);
-		String text = Text.LANG.aboutText(GerminateSettingsHolder.get().gatekeeperUrl.getValue(), Integer.parseInt(DateTimeFormat.getFormat("yyyy").format(new Date())));
-		panel.add(new HTML(text));
-		panel.add(HTMLUtils.createBR());
+
+		Row row = new Row();
+		panel.add(row);
+
+		int i = 0;
+		Column column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		column.addStyleName(Style.COL_XXS_12);
+		CategoryPanel cp = new CategoryPanel();
+		cp.setText(Text.LANG.aboutButtonsHomepageTitle());
+		cp.setIcon(Style.MDI_WEB);
+		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		cp.setAnchor(Text.LANG.aboutButtonsHomepageUrl());
+		cp.getAnchor().setTarget("_blank");
+		column.add(cp);
+		row.add(column);
+
+		column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		column.addStyleName(Style.COL_XXS_12);
+		cp = new CategoryPanel();
+		cp.setText(Text.LANG.aboutButtonsGithubTitle());
+		cp.setIcon(Style.MDI_GITHUB_CIRCLE);
+		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		cp.setAnchor(Text.LANG.aboutButtonsGithubUrl());
+		cp.getAnchor().setTarget("_blank");
+		column.add(cp);
+		row.add(column);
+
+		column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		column.addStyleName(Style.COL_XXS_12);
+		cp = new CategoryPanel();
+		cp.setText(Text.LANG.aboutButtonsPublicationTitle());
+		cp.setIcon(Style.MDI_FILE_DOCUMENT);
+		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		cp.setAnchor(Text.LANG.aboutButtonsPublicationUrl());
+		cp.getAnchor().setTarget("_blank");
+		column.add(cp);
+		row.add(column);
+
+		column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		column.addStyleName(Style.COL_XXS_12);
+		cp = new CategoryPanel();
+		cp.setText(Text.LANG.aboutButtonsDocumentationTitle());
+		cp.setIcon(Style.MDI_GLASSES);
+		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		cp.setAnchor(Text.LANG.aboutButtonsDocumentationUrl());
+		cp.getAnchor().setTarget("_blank");
+		column.add(cp);
+		row.add(column);
+
+		panel.add(new HTML(Text.LANG.aboutText(GerminateSettingsHolder.get().gatekeeperUrl.getValue(), Integer.parseInt(DateTimeFormat.getFormat("yyyy").format(new Date())))));
 
 		Location l = new Location()
 				.setLatitude(56.4567)

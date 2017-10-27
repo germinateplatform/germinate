@@ -67,7 +67,8 @@ public class Home extends GerminateComposite implements HasHelp
 			protected void onSuccessImpl(ServerResult<Map<String, Long>> result)
 			{
 				int i = 0;
-				Column accessionColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+				Column accessionColumn = new Column(ColumnSize.XS_6, ColumnSize.MD_6, ColumnSize.LG_3);
+				accessionColumn.addStyleName(Style.COL_XXS_12);
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSION_OVERVIEW))
 				{
@@ -75,7 +76,8 @@ public class Home extends GerminateComposite implements HasHelp
 					row.add(accessionColumn);
 				}
 
-				Column markerColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+				Column markerColumn = new Column(ColumnSize.XS_6, ColumnSize.MD_6, ColumnSize.LG_3);
+				markerColumn.addStyleName(Style.COL_XXS_12);
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.MAP_DETAILS))
 				{
@@ -83,7 +85,8 @@ public class Home extends GerminateComposite implements HasHelp
 					row.add(markerColumn);
 				}
 
-				Column locationColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+				Column locationColumn = new Column(ColumnSize.XS_6, ColumnSize.MD_6, ColumnSize.LG_3);
+				locationColumn.addStyleName(Style.COL_XXS_12);
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.LOCATIONS))
 				{
@@ -91,7 +94,8 @@ public class Home extends GerminateComposite implements HasHelp
 					row.add(locationColumn);
 				}
 
-				Column groupColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+				Column groupColumn = new Column(ColumnSize.XS_6, ColumnSize.MD_6, ColumnSize.LG_3);
+				groupColumn.addStyleName(Style.COL_XXS_12);
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
 				{
@@ -140,13 +144,13 @@ public class Home extends GerminateComposite implements HasHelp
 					column.setSize(ColumnSize.XS_12);
 					break;
 				case 2:
-					column.setSize(ColumnSize.XS_12, ColumnSize.MD_6);
+					column.setSize(ColumnSize.XS_6, ColumnSize.MD_6);
 					break;
 				case 3:
-					column.setSize(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_4);
+					column.setSize(ColumnSize.XS_6, ColumnSize.MD_6, ColumnSize.LG_4);
 					break;
 				case 4:
-					column.setSize(ColumnSize.XS_12, ColumnSize.MD_6, ColumnSize.LG_3);
+					column.setSize(ColumnSize.XS_6, ColumnSize.MD_6, ColumnSize.LG_3);
 					break;
 			}
 		}

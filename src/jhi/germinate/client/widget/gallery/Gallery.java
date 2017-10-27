@@ -179,10 +179,12 @@ public abstract class Gallery extends GerminateComposite
 
         /* Create a GalleryItem for each image */
 		int counter = 0;
+		String galleryId = RandomUtils.generateRandomId();
 		for (Image image : storedResult)
 		{
 			GalleryItem item = new GalleryItem(image, showButton);
 			item.setSize(ColumnSize.XS_12, ColumnSize.SM_4, ColumnSize.MD_3, ColumnSize.LG_2);
+			item.setGalleryId(galleryId);
 			row.add(item);
 
 			counter++;

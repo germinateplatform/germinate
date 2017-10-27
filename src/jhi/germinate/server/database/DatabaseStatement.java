@@ -279,7 +279,6 @@ public final class DatabaseStatement
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}

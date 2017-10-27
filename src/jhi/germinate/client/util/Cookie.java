@@ -39,14 +39,12 @@ import jhi.germinate.shared.exception.InvalidSessionException.*;
  */
 public class Cookie
 {
-	public static final String SID     = "sid";
-	public static final String USER_ID = "user-id";
+	public static final String SID = "sid";
 
 	private static Long lifespan = null;
 
 	private static String path;
 	private static String sessionId;
-	private static String userId;
 
 	/**
 	 * Removes all cookies
@@ -55,8 +53,6 @@ public class Cookie
 	{
 		Cookies.removeCookie(SID, path);
 		sessionId = null;
-		Cookies.removeCookie(USER_ID, path);
-		userId = null;
 	}
 
 	/**
@@ -76,11 +72,6 @@ public class Cookie
 
 		if (ModuleCore.getUseAuthentication())
 			lifespan = 1000L * 60 * userAuth.getCookieLifespanMinutes();
-
-		if (userAuth.getId() != null)
-			userId = userAuth.getId() + "";
-		else
-			userId = null;
 	}
 
 	private static Date getExpiryDate()
@@ -190,15 +181,6 @@ public class Cookie
 			else if (Cookies.getCookie(SID) != null)
 			{
 				setCookie(SID, Cookies.getCookie(SID), expires, null, path, false);
-			}
-
-			if (userId != null)
-			{
-				setCookie(USER_ID, userId, expires, null, path, false);
-			}
-			else if (Cookies.getCookie(USER_ID) != null)
-			{
-				setCookie(USER_ID, Cookies.getCookie(USER_ID), expires, null, path, false);
 			}
 		}
 	}

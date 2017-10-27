@@ -127,7 +127,25 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 		column.setDataStoreName(Marker.MARKER_NAME);
 		addColumn(column, Text.LANG.markersColumnName(), sortingEnabled);
 
-		/* Add the marker name column */
+		/* Add the synonyms column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Marker object)
+			{
+				return object.getSynonyms();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Synonym.SYNONYM);
+		addColumn(column, Text.LANG.markersColumnSynonym(), false);
+
+		/* Add the marker type description column */
 		column = new TextColumn()
 		{
 			@Override

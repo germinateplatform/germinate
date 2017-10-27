@@ -108,6 +108,12 @@ public abstract class DatabaseObject implements Serializable
 		}
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return id.hashCode();
+	}
+
 	public static List<Long> getIds(Collection<? extends DatabaseObject> objects)
 	{
 		List<Long> ids = new ArrayList<>();

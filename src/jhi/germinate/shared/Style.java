@@ -43,8 +43,8 @@ public class Style
 	public static final String LAYOUT_BUTTON_MARGIN              = "gm8-button-margin";
 	public static final String LAYOUT_TABLE_CELL_PADDING_PADDING = "gm8-table-cell-padding";
 	public static final String LAYOUT_SELECT_BUTTON_COMBO        = "gm8-select-button-combo";
-	public static final String LAYOUT_FLOAT_INITIAL				 = "gm8-float-initial";
-	public static final String LAYOUT_NO_BORDER_LEFT			 = "gm8-no-border-left";
+	public static final String LAYOUT_FLOAT_INITIAL              = "gm8-float-initial";
+	public static final String LAYOUT_NO_BORDER_LEFT             = "gm8-no-border-left";
 
 	public static final String TAG_DUMMY_ANCHOR = "gm8-tag-dummy-anchor";
 
@@ -150,7 +150,14 @@ public class Style
 	public static final String MDI_CLOCK                           = "mdi-clock";
 	public static final String MDI_TRANSLATE                       = "mdi-translate";
 	public static final String MDI_EMAIL                           = "mdi-email";
+	public static final String MDI_EYE                             = "mdi-eye";
+	public static final String MDI_CHART_SCATTERPLOT_HEXBIN        = "mdi-chart-scatterplot-hexbin";
+	public static final String MDI_VIEW_GRID                       = "mdi-view-grid";
+	public static final String MDI_WEB                             = "mdi-web";
+	public static final String MDI_GITHUB_CIRCLE                   = "mdi-github-circle";
+	public static final String MDI_GLASSES                         = "mdi-glasses";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
+	public static final String COL_XXS_12                          = "col-xxs-12";
 
 	/**
 	 * Returns the combined style string

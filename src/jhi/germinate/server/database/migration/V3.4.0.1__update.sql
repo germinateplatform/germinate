@@ -11,9 +11,9 @@ CREATE TABLE `collaborators` (
   `id`  int(11) NOT NULL AUTO_INCREMENT ,
   `first_name`  varchar(255) NOT NULL COMMENT 'Last name (surname) of the author(s), researcher(s), scientist(s), student(s) responsible for producing the information product.' ,
   `last_name`  varchar(255) NOT NULL COMMENT 'First name (and middle name if available) of the author(s), researcher(s), scientist(s), student(s) responsible for producing the information product.' ,
-  `email`  varchar(255) NULL 'E-mail address of the author(s), researcher(s), scientist(s), student(s) responsible for producing the information product.' ,
-  `phone`  varchar(255) NULL 'Phone number of the author(s), researcher(s), scientist(s), student(s) responsible for producing the information product.' ,
-  `institution_id`  int(11) NULL 'Author''s affiliation when the resource was created. Foreign key to ''institutions''' ,
+  `email`  varchar(255) NULL COMMENT 'E-mail address of the author(s), researcher(s), scientist(s), student(s) responsible for producing the information product.' ,
+  `phone`  varchar(255) NULL COMMENT 'Phone number of the author(s), researcher(s), scientist(s), student(s) responsible for producing the information product.' ,
+  `institution_id`  int(11) NULL COMMENT 'Author''s affiliation when the resource was created. Foreign key to ''institutions''' ,
   `created_on`  datetime NULL ON UPDATE CURRENT_TIMESTAMP ,
   `updated_on`  timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`id`),
@@ -112,8 +112,8 @@ ALTER TABLE `datasetstates`
 MODIFY COLUMN `created_on`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.' AFTER `description`,
 MODIFY COLUMN `updated_on`  timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.' AFTER `created_on`;
 
-DROP TABLE droughtfreqdata;
-DROP TABLE droughtfreqseverity;
+DROP TABLE IF EXISTS droughtfreqdata;
+DROP TABLE IF EXISTS droughtfreqseverity;
 
 ALTER TABLE `experiments`
 MODIFY COLUMN `created_on`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.' AFTER `experiment_type_id`,
@@ -248,7 +248,9 @@ ALTER TABLE `phenotypes`
 MODIFY COLUMN `created_on`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.' AFTER `unit_id`,
 MODIFY COLUMN `updated_on`  timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if changes have been made subsequently to the underlying record.' AFTER `created_on`;
 
-DROP TABLE soils;ALTER TABLE `storage`
+DROP TABLE IF EXISTS soils;
+
+ALTER TABLE `storage`
 ADD COLUMN `created_on`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.' AFTER `description`,
 ADD COLUMN `updated_on`  timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.' AFTER `created_on`;
 

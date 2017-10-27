@@ -233,15 +233,12 @@ public class MegaEnvironmentsPage extends Composite implements ParallaxBannerPag
 			@Override
 			public void onSuccessImpl(PaginatedServerResult<List<Location>> result)
 			{
-				if (result.getServerResult().size() > 0)
-				{
-					mapWrapperPanel.setVisible(true);
+				mapWrapperPanel.setVisible(true);
 
-					if (map == null)
-						map = new LeafletUtils.ClusteredMarkerCreator(mapPanel, result.getServerResult(), null);
-					else
-						map.updateData(result.getServerResult());
-				}
+				if (map == null)
+					map = new LeafletUtils.ClusteredMarkerCreator(mapPanel, result.getServerResult(), null);
+				else
+					map.updateData(result.getServerResult());
 			}
 		});
 

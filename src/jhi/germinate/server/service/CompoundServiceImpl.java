@@ -49,7 +49,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 	private static final String QUERY_COMPOUND_DATA = "SELECT germinatebase.`name` AS name, compounddata.compound_value AS value FROM compounddata INNER JOIN compounds ON compounddata.compound_id = compounds.id INNER JOIN germinatebase ON compounddata.germinatebase_id = germinatebase.id WHERE compounds.id = ? AND compounddata.dataset_id = ? ORDER BY germinatebase.name";
 
-	private static final String QUERY_PHENOTYPE_STATS      = "SELECT compounds.id, compounds.`name`, compounds.description, MIN( cast( compound_value AS DECIMAL (30, 2) ) ) AS min, MAX( cast( compound_value AS DECIMAL (30, 2) ) ) AS max, AVG( cast( compound_value AS DECIMAL (30, 2) ) ) AS avg, STD( cast( compound_value AS DECIMAL (30, 2) ) ) AS std, datasets.description AS dataset_description FROM datasets LEFT JOIN compounddata ON datasets.id = compounddata.dataset_id LEFT JOIN compounds ON compounds.id = compounddata.compound_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND datasets.id IN (%s) GROUP BY compounds.id, datasets.id";
+	private static final String QUERY_PHENOTYPE_STATS      = "SELECT compounds.id, compounds.`name`, compounds.description, units.*, MIN( cast( compound_value AS DECIMAL (30, 2) ) ) AS min, MAX( cast( compound_value AS DECIMAL (30, 2) ) ) AS max, AVG( cast( compound_value AS DECIMAL (30, 2) ) ) AS avg, STD( cast( compound_value AS DECIMAL (30, 2) ) ) AS std, datasets.description AS dataset_description FROM datasets LEFT JOIN compounddata ON datasets.id = compounddata.dataset_id LEFT JOIN compounds ON compounds.id = compounddata.compound_id LEFT JOIN units ON units.id = compounds.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND datasets.id IN (%s) GROUP BY compounds.id, datasets.id";
 	private static final String QUERY_COMPOUND_BY_COMPOUND = "SELECT DATE_FORMAT(a.recording_date, '%%Y') AS recording_date, datasets.description AS dataset, %s AS name, a.germinatebase_id AS id, TRUNCATE(a.compound_value, 2) AS x, TRUNCATE(b.compound_value, 2) AS y FROM compounddata AS a JOIN compounddata AS b ON a.germinatebase_id = b.germinatebase_id AND a.recording_date <=> b.recording_date AND a.dataset_id = b.dataset_id AND a.dataset_id IN (%s) LEFT JOIN germinatebase ON germinatebase.id = a.germinatebase_id LEFT JOIN groupmembers ON groupmembers.foreign_id = a.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN datasets ON datasets.id = a.dataset_id WHERE groups.id LIKE ? AND a.compound_id = ? AND b.compound_id = ? GROUP BY id, x, y, recording_date, datasets.id";
 
 	private static final String QUERY_COMPOUND_NAMES          = "SELECT CONCAT(name, IF(ISNULL(compounds.unit_id), '', CONCAT(' [', units.unit_abbreviation, ']'))) AS name FROM compounds LEFT JOIN units ON units.id = compounds.unit_id WHERE compounds.id IN (%s)";
@@ -126,7 +126,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		return new DatabaseObjectQuery<DataStats>(formatted, userAuth)
 				.setLongs(datasetIds)
 				.run()
-				.getObjects(DataStats.Parser.Inst.get());
+				.getObjects(DataStats.Parser.Inst.get(), true);
 	}
 
 	@Override

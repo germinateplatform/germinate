@@ -198,6 +198,6 @@
 			</b:PanelCollapse>
 		</b:Panel>
 
-		<b:Button type="SUCCESS" icon="SAVE" text="{msg.adminConfigButtonSave}" ui:field="saveChanges"/>
+		<b:Button icon="SAVE" text="{msg.adminConfigButtonSave}" type="PRIMARY" ui:field="saveChanges"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -188,7 +188,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 						{
 							event.preventDefault();
 
-							AlertDialog.createYesNoDialog(Text.LANG.groupsDeleteTitle(), Text.LANG.groupsDeleteText(), e ->
+							AlertDialog.createYesNoDialog(Text.LANG.groupsDeleteTitle(), Text.LANG.groupsDeleteText(), true, e ->
 							{
 								List<Long> ids = Collections.singletonList(object.getId());
 
@@ -199,6 +199,12 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 									{
 										Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
 										groupTable.refreshTable();
+
+										if(group != null && Objects.equals(object.getId(), group.getId()))
+										{
+											group = null;
+											updateGroupMembers();
+										}
 									}
 								});
 							}, null);
@@ -257,11 +263,17 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 	private void updateIsPublic()
 	{
 		isPublic.setEnabled(canEdit(group));
-		isPublic.setValue(group.getVisibility());
+		isPublic.setValue(group != null && group.getVisibility());
 	}
 
 	private void updateGroupMembers()
 	{
+		if(group == null)
+		{
+			groupMembersWrapper.setVisible(false);
+			return;
+		}
+
 		groupName.setSubText(group.getDescription());
 
 		if (uploadAlertDialog != null)
@@ -379,7 +391,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 				List<Long> ids = DatabaseObject.getGroupSpecificIds(selectedItems);
 
-				AlertDialog.createYesNoDialog(Text.LANG.groupMembersDeleteTitle(), Text.LANG.groupMembersDeleteText(), event ->
+				AlertDialog.createYesNoDialog(Text.LANG.groupMembersDeleteTitle(), Text.LANG.groupMembersDeleteText(), true, event ->
 				{
 					GroupService.Inst.get().removeItems(Cookie.getRequestProperties(), group.getId(), ids, new DefaultAsyncCallback<DebugInfo>()
 					{

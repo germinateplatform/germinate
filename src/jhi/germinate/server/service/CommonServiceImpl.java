@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.stream.*;
 
 import javax.servlet.annotation.*;
+import javax.servlet.http.*;
 
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.config.*;
@@ -326,6 +327,37 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		result.setServerResult(count);
 
 		return result;
+	}
+
+	@Override
+	public Void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType) throws InvalidSessionException
+	{
+		switch (experimentType)
+		{
+			case genotype:
+				synchronized (FileServlet.PUBLICLY_AVAILABLE_FILES)
+				{
+					HttpSession session = getRequest().getSession();
+
+					String map = (String) session.getAttribute(Session.GENOTYPE_MAP);
+
+					if (!StringUtils.isEmpty(map))
+						FileServlet.PUBLICLY_AVAILABLE_FILES.put(map, System.currentTimeMillis());
+
+					String data = (String) session.getAttribute(Session.GENOTYPE_DATA);
+
+					if (!StringUtils.isEmpty(data))
+						FileServlet.PUBLICLY_AVAILABLE_FILES.put(data, System.currentTimeMillis());
+
+					session.removeAttribute(Session.GENOTYPE_MAP);
+					session.removeAttribute(Session.GENOTYPE_DATA);
+				}
+				break;
+			default:
+				break;
+		}
+
+		return null;
 	}
 
 	private boolean checkDatabaseVersion()

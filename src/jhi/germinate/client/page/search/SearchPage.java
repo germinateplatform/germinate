@@ -596,6 +596,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 						mapping.put(Taxonomy.GENUS, searchString);
 						mapping.put(Taxonomy.SPECIES, searchString);
 						mapping.put(Country.COUNTRY_NAME, searchString);
+						mapping.put(Synonym.SYNONYM, searchString);
 						accessionDataTable.forceFilter(mapping, false);
 					}
 					catch (InvalidArgumentException e)
@@ -659,6 +660,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 						mapping.put(MapFeatureType.DESCRIPTION, searchString);
 						mapping.put(jhi.germinate.shared.datastructure.database.Map.DESCRIPTION, searchString);
 						mapping.put(MapDefinition.CHROMOSOME, searchString);
+						mapping.put(Synonym.SYNONYM, searchString);
 						mapDefinitionTable.forceFilter(mapping, false);
 					}
 					catch (InvalidArgumentException e)

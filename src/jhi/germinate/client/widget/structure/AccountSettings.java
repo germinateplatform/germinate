@@ -63,6 +63,7 @@ public class AccountSettings
 				list.addClassName(Style.combine(Styles.DROPDOWN_MENU, Style.BOOTSTRAP_DROPDOWN_ALERT));
 
 				RootPanel p = RootPanel.get(Id.STRUCTURE_ACCOUNT_SETTINGS_UL);
+				p.setVisible(true);
 				p.getElement().appendChild(list);
 				p.removeFromParent();
 

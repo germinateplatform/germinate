@@ -51,7 +51,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	private static final String QUERY_DATA                     = "call " + StoredProcedureInitializer.PHENOTYPE_DATA + "(?, ?, ?)";
 	private static final String QUERY_DATA_PHENOTYPES          = "call " + StoredProcedureInitializer.PHENOTYPE_DATA_PHENOTYPE + "(?, ?)";
 	private static final String QUERY_DATA_COMPLETE            = "call " + StoredProcedureInitializer.PHENOTYPE_DATA_COMPLETE + "(?)";
-	private static final String QUERY_PHENOTYPE_STATS          = "SELECT phenotypes.id , phenotypes.`name`, phenotypes.description, MIN(cast(phenotype_value AS DECIMAL(30,2))) as min, MAX(cast(phenotype_value AS DECIMAL(30,2))) as max, AVG(cast(phenotype_value AS DECIMAL(30,2))) as avg, STD(cast(phenotype_value AS DECIMAL(30,2))) as std, datasets.description as dataset_description FROM datasets LEFT JOIN phenotypedata ON datasets.id = phenotypedata.dataset_id LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE phenotypes.datatype != 'char' AND datasets.id in (%s) GROUP by phenotypes.id, datasets.id";
+	private static final String QUERY_PHENOTYPE_STATS          = "SELECT phenotypes.id , phenotypes.`name`, phenotypes.description, units.*, MIN(cast(phenotype_value AS DECIMAL(30,2))) as min, MAX(cast(phenotype_value AS DECIMAL(30,2))) as max, AVG(cast(phenotype_value AS DECIMAL(30,2))) as avg, STD(cast(phenotype_value AS DECIMAL(30,2))) as std, datasets.description as dataset_description FROM datasets LEFT JOIN phenotypedata ON datasets.id = phenotypedata.dataset_id LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE phenotypes.datatype != 'char' AND datasets.id in (%s) GROUP by phenotypes.id, datasets.id";
 
 	@Override
 	public ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
@@ -89,6 +89,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		names.add(LICENSE_NAME);
 		names.add(LOCATION_NAME);
 		names.add(TREATMENT_DESCRIPTION);
+		names.add(YEAR);
 
 		// If the all items group is selected, export everything
 		if (containsAllItemsGroup(groupIds))
@@ -220,7 +221,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		return new DatabaseObjectQuery<DataStats>(formatted, userAuth)
 				.setLongs(datasetIds)
 				.run()
-				.getObjects(DataStats.Parser.Inst.get());
+				.getObjects(DataStats.Parser.Inst.get(), true);
 	}
 
 	@Override

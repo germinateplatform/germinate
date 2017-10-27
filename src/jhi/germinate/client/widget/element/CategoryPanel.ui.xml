@@ -30,7 +30,7 @@
 			<div class="{PANEL}" ui:field="panel">
 				<div class="{PANEL_HEADING}" ui:field="heading">
 					<div class="{TEXT_CENTER_ALIGN}">
-						<i class="{FA} {FA_FIXED_WIDTH} {FA_4X}" ui:field="icon"/>
+						<i class="{MDI} {FA_FIXED_WIDTH} {FA_4X}" ui:field="icon"/>
 					</div>
 				</div>
 				<div class="{PANEL_FOOTER}">

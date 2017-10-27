@@ -38,14 +38,16 @@ public class Session
 	public static final String SID  = "sid";
 	public static final String USER = "user";
 
+	public static final String GENOTYPE_MAP = "genotypeMap";
+	public static final String GENOTYPE_DATA = "genotypeData";
+
 	/**
 	 * Checks if the current session is still valid
 	 *
 	 * @param payloadSessionId The session id (transmitted in the request as the payload)
 	 * @param request          The http request containing the cookies
-	 * @param response         The http response
 	 */
-	public static void checkSession(String payloadSessionId, HttpServletRequest request, HttpServletResponse response) throws InvalidSessionException
+	public static void checkSession(String payloadSessionId, HttpServletRequest request) throws InvalidSessionException
 	{
 		String cookieSessionId = null;
 		String sessionSessionId = null;
@@ -103,14 +105,14 @@ public class Session
 	 * @param request           The http request containing the cookies
 	 * @param response          The http response
 	 */
-	public static void checkSession(RequestProperties requestProperties, HttpServletRequest request, HttpServletResponse response) throws InvalidSessionException
+	public static void checkSession(RequestProperties requestProperties, HttpServletRequest request) throws InvalidSessionException
 	{
-		checkSession(requestProperties.getSessionId(), request, response);
+		checkSession(requestProperties.getSessionId(), request);
 	}
 
 	public static void checkSession(RequestProperties properties, BaseRemoteServiceServlet servlet) throws InvalidSessionException
 	{
-		checkSession(properties, servlet.getRequest(), servlet.getResponse());
+		checkSession(properties, servlet.getRequest());
 	}
 
 	/**

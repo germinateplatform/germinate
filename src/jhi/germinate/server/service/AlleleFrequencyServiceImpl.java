@@ -138,7 +138,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 	{
 		HttpServletRequest req = getThreadLocalRequest();
 
-		Session.checkSession(properties, req, getThreadLocalResponse());
+		Session.checkSession(properties, req);
 
 		File mapFile = new File((String) getFromSession(SESSION_PARAM_MAP));
 		File subsetForFlapjack = new File((String) getFromSession(SESSION_PARAM_ALLELE_DATA_FILE));

@@ -263,13 +263,13 @@ public final class AlertDialog
 			positiveButton.click();
 	}
 
-	public static void createYesNoDialog(String title, String message, ClickHandler positive, ClickHandler negative)
+	public static void createYesNoDialog(String title, String message, boolean danger, ClickHandler positive, ClickHandler negative)
 	{
 		ModalBody body = new ModalBody();
 		body.add(new Label(message));
 		new AlertDialog(title, body)
-				.setPositiveButtonConfig(new ButtonConfig(Text.LANG.generalYes(), IconType.CHECK, ButtonType.SUCCESS, positive))
-				.setNegativeButtonConfig(new ButtonConfig(Text.LANG.generalNo(), IconType.BAN, ButtonType.DANGER, negative))
+				.setPositiveButtonConfig(new ButtonConfig(Text.LANG.generalYes(), IconType.CHECK, danger ? ButtonType.DANGER : ButtonType.PRIMARY, positive))
+				.setNegativeButtonConfig(new ButtonConfig(Text.LANG.generalNo(), IconType.BAN, ButtonType.DEFAULT, negative))
 				.open();
 	}
 

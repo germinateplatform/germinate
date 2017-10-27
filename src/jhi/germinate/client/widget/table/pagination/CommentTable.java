@@ -212,35 +212,31 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 
 			deleteColumn.setFieldUpdater((index, object, value) ->
 			{
-				new AlertDialog(Text.LANG.generalConfirm(), Text.LANG.annotationsDeleteConfirm(1))
-						.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalYes(), IconType.CHECK, ButtonType.PRIMARY, e ->
+				AlertDialog.createYesNoDialog(Text.LANG.generalConfirm(), Text.LANG.annotationsDeleteConfirm(1), false, e -> {
+					CommentService.Inst.get().disable(Cookie.getRequestProperties(), object, new DefaultAsyncCallback<Void>()
+					{
+						@Override
+						protected void onFailureImpl(Throwable caught)
 						{
-							CommentService.Inst.get().disable(Cookie.getRequestProperties(), object, new DefaultAsyncCallback<Void>()
+							if (caught instanceof InsufficientPermissionsException)
 							{
-								@Override
-								protected void onFailureImpl(Throwable caught)
-								{
-									if (caught instanceof InsufficientPermissionsException)
-									{
-										Notification.notify(Notification.Type.ERROR, Text.LANG.notificationActionInsufficientPermissions());
-									}
-									else
-									{
-										super.onFailureImpl(caught);
-									}
-								}
+								Notification.notify(Notification.Type.ERROR, Text.LANG.notificationActionInsufficientPermissions());
+							}
+							else
+							{
+								super.onFailureImpl(caught);
+							}
+						}
 
-								@Override
-								public void onSuccessImpl(Void result)
-								{
-									JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.ANNOTATIONS, "delete", Long.toString(object.getId()));
+						@Override
+						public void onSuccessImpl(Void result)
+						{
+							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.ANNOTATIONS, "delete", Long.toString(object.getId()));
 
-									refreshTable();
-								}
-							});
-						}))
-						.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalNo(), IconType.BAN, null))
-						.open();
+							refreshTable();
+						}
+					});
+				}, null);
 			});
 
 			fixItemAlignment();

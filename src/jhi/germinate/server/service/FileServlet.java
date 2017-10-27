@@ -21,6 +21,7 @@ import org.apache.http.*;
 
 import java.io.*;
 import java.io.IOException;
+import java.util.*;
 
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
@@ -41,14 +42,27 @@ public class FileServlet extends BaseHttpServlet
 {
 	private static final long serialVersionUID = -5992060281333827418L;
 
+	public static final Map<String, Long> PUBLICLY_AVAILABLE_FILES = Collections.synchronizedMap(new HashMap<>());
+
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
+//		// Delete publicly available files after they expire
+//		long purgeTime = System.currentTimeMillis() - (5 * 1000 * 60);
+//
+//		synchronized (PUBLICLY_AVAILABLE_FILES)
+//		{
+//			PUBLICLY_AVAILABLE_FILES.entrySet()
+//									.removeIf(e -> e.getValue() < purgeTime);
+//		}
+
 		/* Check parameters */
 		String workloadSessionId = req.getParameter(ServletConstants.PARAM_SID);
 		String filePath = req.getParameter(ServletConstants.PARAM_FILE_PATH);
 		String fileLocation = req.getParameter(ServletConstants.PARAM_FILE_LOCATION);
 		String fileLocale = req.getParameter(ServletConstants.PARAM_FILE_LOCALE);
+
+		boolean deleteAfterSend = false;
 
         /* Check if the locale is a valid one */
 		if (fileLocale != null)
@@ -59,12 +73,23 @@ public class FileServlet extends BaseHttpServlet
 
 		try
 		{
-			Session.checkSession(workloadSessionId, req, resp);
+			Session.checkSession(workloadSessionId, req);
 		}
 		catch (InvalidSessionException e)
 		{
-			error(resp, HttpStatus.SC_UNAUTHORIZED, "Your session expired.");
-			return;
+			synchronized (PUBLICLY_AVAILABLE_FILES)
+			{
+				if (PUBLICLY_AVAILABLE_FILES.containsKey(filePath))
+				{
+					deleteAfterSend = true;
+					PUBLICLY_AVAILABLE_FILES.remove(filePath);
+				}
+				else
+				{
+					error(resp, HttpStatus.SC_UNAUTHORIZED, "Your session expired.");
+					return;
+				}
+			}
 		}
 
 		if (StringUtils.isEmpty(filePath) || PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
@@ -145,5 +170,9 @@ public class FileServlet extends BaseHttpServlet
 
 		in.close();
 		out.close();
+
+		// Delete the file if required
+		if (deleteAfterSend)
+			file.delete();
 	}
 }

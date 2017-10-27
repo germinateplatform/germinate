@@ -65,7 +65,7 @@ public class ImageServlet extends BaseHttpServlet
 
 		try
 		{
-			Session.checkSession(workloadSessionId, req, resp);
+			Session.checkSession(workloadSessionId, req);
 		}
 		catch (InvalidSessionException e)
 		{
@@ -129,14 +129,14 @@ public class ImageServlet extends BaseHttpServlet
         /* Set the content type */
 		resp.setContentType(type.getContentType());
 
-        /* Suggest a filename */
-		resp.setHeader("Content-Disposition", "filename=\"" + file.getName() + "\"");
-
         /* If the image doesn't exist, use the missing/placeholder image instead */
-		if (!file.exists())
+		if (file == null || !file.exists())
 		{
 			file = getFile(req, FileLocation.download, fileLocale, ReferenceFolder.images, ImageService.MISSING_IMAGE);
 		}
+
+		/* Suggest a filename */
+		resp.setHeader("Content-Disposition", "filename=\"" + file.getName() + "\"");
 
 		resp.setContentLength((int) file.length());
 

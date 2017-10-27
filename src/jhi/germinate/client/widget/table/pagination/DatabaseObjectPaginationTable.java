@@ -89,9 +89,11 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	@UiField
 	FlowPanel                topPanel;
 	@UiField
-	FlowPanel                filterPlaceholder;
+	ButtonGroup              filterPlaceholder;
 	@UiField
 	Button                   filterButton;
+	@UiField
+	Button                   clearFilterButton;
 	@UiField
 	BootstrapPager           topPager;
 	@UiField
@@ -175,6 +177,15 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		};
 
 		initWidget(ourUiBinder.createAndBindUi(this));
+	}
+
+	@UiHandler("clearFilterButton")
+	void onClearFilterButtonClicked(ClickEvent event)
+	{
+		filterPanel.clear();
+		filterButton.setType(ButtonType.DEFAULT);
+		clearFilterButton.setVisible(false);
+		refreshTable();
 	}
 
 	@UiHandler("filterButton")
@@ -348,6 +359,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			public void onClearClicked()
 			{
 				filterButton.setType(ButtonType.DEFAULT);
+				clearFilterButton.setVisible(false);
 				refreshTable();
 			}
 		});
@@ -694,6 +706,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	{
 		filterDisplay.clear();
 		filterDisplay.add(filterObject);
+		clearFilterButton.setVisible(filterObject != null && filterObject.getWidgetCount() > 0);
 	}
 
 	/**
@@ -924,75 +937,10 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			return null;
 
 		if (forDisplay)
-			displayFilter(filterPanel.getQueryString());
+			displayFilter(filterPanel.getQueryHtml());
 
 
 		return filterPanel.getQuery();
-
-//		PartialSearchQuery q = new PartialSearchQuery();
-//
-//		boolean atLeastOne = false;
-//		for (DatabaseObjectFilterColumn<T, ?> column : filterCallbacks.keySet())
-//		{
-//			String databaseColumnName = column.getDataStoreName();
-//			FilterCell.FilterCallback.Range range = filterCallbacks.get(column).getRange();
-//
-//			if (StringUtils.isEmpty(databaseColumnName) || range == null)
-//				continue;
-//
-//			try
-//			{
-//				List<String> rangeValues = range.getValues();
-//
-//				if (rangeValues.size() == 2)
-//				{
-//					String first = rangeValues.get(0);
-//					String second = rangeValues.get(1);
-//
-//					SearchCondition condition = new SearchCondition();
-//					condition.setColumnName(databaseColumnName);
-//					condition.setType(column.getType().getSimpleName());
-//					condition.setComp(new Between());
-//					condition.addConditionValue(first);
-//					condition.addConditionValue(second);
-//					q.add(condition);
-//					if (filterOperatorButton.getValue())
-//						q.addLogicalOperator(new And());
-//					else
-//						q.addLogicalOperator(new Or());
-//				}
-//				else if (rangeValues.size() == 1)
-//				{
-//					SearchCondition condition = new SearchCondition();
-//					condition.setColumnName(databaseColumnName);
-//					condition.setType(column.getType().getSimpleName());
-//					condition.setComp(new Equal());
-//					condition.addConditionValue(rangeValues.get(0));
-//
-//					q.add(condition);
-//					if (filterOperatorButton.getValue())
-//						q.addLogicalOperator(new And());
-//					else
-//						q.addLogicalOperator(new Or());
-//				}
-//				else
-//				{
-//					continue;
-//				}
-//
-//				atLeastOne = true;
-//			}
-//			catch (InvalidSearchQueryException | InvalidArgumentException e)
-//			{
-//			}
-//		}
-//
-//		if (atLeastOne)
-//			q.removeLogicalOperator(q.getLogicalOperators().size() - 1);
-//		else
-//			q = null;
-//
-//		return q;
 	}
 
 	private void addSortBits(Column<T, ?> column)

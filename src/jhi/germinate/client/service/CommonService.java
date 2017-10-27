@@ -31,26 +31,7 @@ import jhi.germinate.shared.exception.*;
 @RemoteServiceRelativePath("common")
 public interface CommonService extends RemoteService
 {
-	final class Inst
-	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
-		 * InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"
-		 * >Initialization-on-demand holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
-		 * <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
-		private static final class InstanceHolder
-		{
-			private static final CommonServiceAsync INSTANCE = GWT.create(CommonService.class);
-		}
-
-		public static CommonServiceAsync get()
-		{
-			return InstanceHolder.INSTANCE;
-		}
-	}
+	Void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType) throws InvalidSessionException;
 
 	/**
 	 * Returns the columns of the {@link GerminateDatabaseTable}.
@@ -139,4 +120,24 @@ public interface CommonService extends RemoteService
 	ServerResult<List<Country>> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException;
 
 	ServerResult<Map<String, Long>> getOverviewStats(RequestProperties properties) throws InvalidSessionException, DatabaseException;
+
+	final class Inst
+	{
+		/**
+		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
+		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
+		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+		 *
+		 * @author Sebastian Raubach
+		 */
+		private static final class InstanceHolder
+		{
+			private static final CommonServiceAsync INSTANCE = GWT.create(CommonService.class);
+		}
+
+		public static CommonServiceAsync get()
+		{
+			return InstanceHolder.INSTANCE;
+		}
+	}
 }

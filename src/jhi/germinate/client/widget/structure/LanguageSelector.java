@@ -43,6 +43,7 @@ public class LanguageSelector
 			isInitialized = true;
 
 			RootPanel p = RootPanel.get(Id.STRUCTURE_LANGUAGE_SELECTOR_UL);
+			p.setVisible(true);
 			addTo(p.getElement());
 			p.removeFromParent();
 		}

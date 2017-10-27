@@ -102,4 +102,6 @@ public interface CommonServiceAsync
 	void getCountryStats(RequestProperties properties, AsyncCallback<ServerResult<List<Country>>> callback);
 
 	void getOverviewStats(RequestProperties properties, AsyncCallback<ServerResult<Map<String, Long>>> callback);
+
+	void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType, AsyncCallback<Void> callback);
 }

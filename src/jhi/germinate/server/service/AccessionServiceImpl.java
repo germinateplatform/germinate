@@ -49,8 +49,6 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 {
 	private static final long serialVersionUID = -8616536189132171506L;
 
-	private static final String QUERY_ACCESSIONS_DATA_IDS_DOWNLOAD = "SELECT germinatebase.*, subtaxa.subtaxa_author AS subtaxa_author, subtaxa.taxonomic_identifier AS subtaxa_taxonomic_identifier, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxonomies_species, taxonomies.species_author AS taxonomies_species_author, taxonomies.cropname AS taxonomies_crop_name, taxonomies.ploidy AS taxonomies_ploidy, locations.state AS locations_state, locations.region AS locations_region, locations.site_name AS locations_site_name, locations.elevation AS locations_elevation, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, countries.country_name AS countries_country_name, institutions.code AS institutions_code, institutions.name AS institutions_name, institutions.acronym AS institutions_acronym, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.address AS institutions_address FROM germinatebase LEFT JOIN subtaxa ON germinatebase.subtaxa_id = subtaxa.id LEFT JOIN taxonomies ON germinatebase.taxonomy_id = taxonomies.id LEFT JOIN locations ON germinatebase.location_id = locations.id LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN institutions ON institutions.id = germinatebase.institution_id WHERE germinatebase.id IN (%s)";
-
 	static final String GROUP_PREVIEW_LIST     = "group-preview-list";
 	static final String GROUP_PREVIEW_FILENAME = "group-preview-filename";
 
@@ -256,10 +254,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		String formatted = String.format(QUERY_ACCESSIONS_DATA_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
-		try (GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
-				.setStrings(ids)
-				.getStreamer())
+		try (GerminateTableStreamer streamer = AccessionManager.getStreamerForIds(userAuth, ids))
 		{
 			File output = createTemporaryFile("export_accession_group", FileType.txt.name());
 

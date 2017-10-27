@@ -23,6 +23,7 @@ import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import jhi.germinate.client.util.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -53,6 +54,14 @@ public class ParallaxBanner
 
 	public static void updateStyle(String style)
 	{
+		if(GerminateSettingsHolder.get() != null && !GerminateSettingsHolder.get().templateShowParallaxBanner.getValue())
+		{
+			if(INSTANCE != null)
+				INSTANCE.parallax.removeFromParent();
+
+			INSTANCE = null;
+		}
+
 		if (INSTANCE == null)
 			return;
 

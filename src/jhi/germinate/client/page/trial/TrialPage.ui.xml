@@ -23,25 +23,27 @@
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+
 	<g:HTMLPanel ui:field="panel">
 		<b:PageHeader text="{msg.trialsTitle}"/>
 
 		<b:Row ui:field="content" visible="false">
-			<b:Column size="XS_12,SM_6,LG_3">
-				<g8:CategoryPanel icon="EYE" text="{msg.phenotypeOverview}" ui:field="overviewTab"/>
+			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+				<g8:CategoryPanel icon="{MDI_EYE}" text="{msg.phenotypeOverview}" ui:field="overviewTab"/>
 			</b:Column>
-			<b:Column size="XS_12,SM_6,LG_3">
-				<g8:CategoryPanel icon="AREA_CHART" text="{msg.trialsPByPTitle}" ui:field="scatterTab"/>
+			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+				<g8:CategoryPanel icon="{MDI_CHART_SCATTERPLOT_HEXBIN}" text="{msg.trialsPByPTitle}" ui:field="scatterTab"/>
 			</b:Column>
-			<b:Column size="XS_12,SM_6,LG_3">
-				<g8:CategoryPanel icon="TH" text="{msg.trialsMatrix}" ui:field="matrixTab"/>
+			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+				<g8:CategoryPanel icon="{MDI_VIEW_GRID}" text="{msg.trialsMatrix}" ui:field="matrixTab"/>
 			</b:Column>
-			<b:Column size="XS_12,SM_6,LG_3">
-				<g8:CategoryPanel icon="DOWNLOAD" text="{msg.generalDownload}" ui:field="downloadTab"/>
+			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+				<g8:CategoryPanel icon="{MDI_DOWNLOAD}" text="{msg.generalDownload}" ui:field="downloadTab"/>
 			</b:Column>
 		</b:Row>
 
-		<g:DeckPanel animationEnabled="true" ui:field="deck">
+		<g:DeckPanel ui:field="deck">
 			<g:FlowPanel ui:field="overviewPanel"/>
 			<c:ScatterChart ui:field="phenotypeByPhenotypeChart"/>
 			<c:MatrixChart ui:field="matrixChart"/>
