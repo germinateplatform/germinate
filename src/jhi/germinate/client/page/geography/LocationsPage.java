@@ -82,11 +82,11 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 	SimplePanel         gradientPanel;
 
 	@UiField
-	HTML        html;
+	HTML                html;
 	@UiField
 	LocationTypeListBox locationTypeBoxTwo;
 	@UiField
-	SimplePanel chartPanel;
+	SimplePanel         chartPanel;
 
 	private LeafletUtils.ClusteredMarkerCreator clusteredMap;
 	private LeafletUtils.HeatmapCreator         heatmapMap;

@@ -44,6 +44,8 @@ public class AddGroupDialog extends Composite
 
 	@UiField
 	TextBox groupName;
+	@UiField
+	TextBox groupDescription;
 
 	public AddGroupDialog(List<GroupType> types, GroupType toSelect)
 	{
@@ -62,9 +64,28 @@ public class AddGroupDialog extends Composite
 		groupType.setAcceptableValues(types);
 	}
 
+	public void setGroup(Group group)
+	{
+		if (group != null)
+		{
+			groupName.setValue(group.getName());
+			groupDescription.setValue(group.getDescription());
+		}
+		else
+		{
+			groupName.setValue("");
+			groupDescription.setValue("");
+		}
+	}
+
 	public String getName()
 	{
-		return groupName.getText();
+		return groupName.getValue();
+	}
+
+	public String getDescription()
+	{
+		return groupDescription.getValue();
 	}
 
 	public GroupType getType()

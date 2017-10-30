@@ -59,8 +59,7 @@ public class ResizeRegister
 	}
 
 	/**
-	 * Triggers a {@link ResizeEvent} no all contained {@link ResizeHandler}s by calling their {@link GerminateComposite#onResize(boolean)}
-	 * method.
+	 * Triggers a {@link ResizeEvent} no all contained {@link ResizeHandler}s by calling their {@link GerminateComposite#onResize(boolean)} method.
 	 */
 	public static void triggerResize()
 	{

@@ -56,7 +56,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 	private ButtonGroup    group       = new ButtonGroup();
 	private Button         toggle      = new Button();
 	private DropDownMenu   menu        = new DropDownMenu();
-	private final FlowPanel panel;
+	private final FlowPanel     panel;
 	private final UnorderedList ul;
 
 	public BootstrapPager()

@@ -36,10 +36,10 @@ import jhi.germinate.shared.search.*;
  */
 public class MarkerManager extends AbstractManager<Marker>
 {
-	public static final  String COMMOM_SYNONYMS = "LEFT JOIN synonyms ON synonyms.foreign_id = markers.id LEFT JOIN synonymtypes ON synonymtypes.id = synonyms.synonymtype_id";
-	public static final  String SELECT_SYNONYMS = "mapdefinitions.*, mapfeaturetypes.*, maps.*, markers.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms";
-	public static final  String WHERE_SYNONYMS  = "(ISNULL(synonymtypes.id) OR synonymtypes.target_table = 'markers')";
-	private static final String COMMON_TABLES   = "mapdefinitions LEFT JOIN mapfeaturetypes ON mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
+	public static final  String COMMOM_SYNONYMS             = "LEFT JOIN synonyms ON synonyms.foreign_id = markers.id LEFT JOIN synonymtypes ON synonymtypes.id = synonyms.synonymtype_id";
+	public static final  String SELECT_SYNONYMS             = "mapdefinitions.*, mapfeaturetypes.*, maps.*, markers.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms";
+	public static final  String WHERE_SYNONYMS              = "(ISNULL(synonymtypes.id) OR synonymtypes.target_table = 'markers')";
+	private static final String COMMON_TABLES               = "mapdefinitions LEFT JOIN mapfeaturetypes ON mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
 	private static final String SELECT_BY_IDS               = "SELECT markers.* FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id WHERE markers.id IN (%s) %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_GROUP        = "SELECT markers.*, markertypes.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id " + COMMOM_SYNONYMS + " WHERE " + WHERE_SYNONYMS + " AND groups.id = ? GROUP BY markers.id, groupmembers.id %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_GROUP        = "SELECT markers.id FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id";

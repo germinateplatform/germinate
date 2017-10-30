@@ -73,10 +73,10 @@ public class ClimateYearData extends Location
 		public static final class Inst
 		{
 			/**
-			 * {@link Inst.InstanceHolder} is loaded on the first execution of {@link Inst#get()} or
-			 * the first access to {@link Inst.InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href=
-			 * "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder idiom</a>) is thread-safe without
-			 * requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+			 * {@link Inst.InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
+			 * Inst.InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"
+			 * >Initialization-on-demand holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
+			 * <code>synchronized</code>).
 			 *
 			 * @author Sebastian Raubach
 			 */

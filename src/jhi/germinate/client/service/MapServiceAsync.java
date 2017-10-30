@@ -27,6 +27,9 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.enums.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public interface MapServiceAsync
 {
 	void getById(RequestProperties properties, Long mapId, AsyncCallback<ServerResult<Map>> async);

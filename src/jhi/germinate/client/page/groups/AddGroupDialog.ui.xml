@@ -35,5 +35,9 @@
 			<b:FormLabel for="formGroupName" text="{msg.groupsColumnName}"/>
 			<b:TextBox b:id="formGroupName" ui:field="groupName"/>
 		</b:FormGroup>
+		<b:FormGroup>
+			<b:FormLabel for="formGroupDescription" text="{msg.groupsColumnDescription}"/>
+			<b:TextBox b:id="formGroupDescription" ui:field="groupDescription"/>
+		</b:FormGroup>
 	</g:FlowPanel>
 </ui:UiBinder>

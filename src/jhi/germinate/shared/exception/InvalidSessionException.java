@@ -20,8 +20,8 @@ package jhi.germinate.shared.exception;
 import java.io.*;
 
 /**
- * {@link InvalidSessionException} extends {@link BaseException} to indicate that the session id used for the communication with the server is
- * not valid.
+ * {@link InvalidSessionException} extends {@link BaseException} to indicate that the session id used for the communication with the server is not
+ * valid.
  *
  * @author Sebastian Raubach
  */

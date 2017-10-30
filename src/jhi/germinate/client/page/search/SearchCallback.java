@@ -21,6 +21,9 @@ import com.google.gwt.user.client.rpc.*;
 
 import jhi.germinate.shared.datastructure.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public class SearchCallback<T> implements AsyncCallback<PaginatedServerResult<T>>
 {
 	private SearchSection                           section;

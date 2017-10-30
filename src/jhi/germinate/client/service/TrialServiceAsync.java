@@ -26,6 +26,9 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Tuple.*;
 import jhi.germinate.shared.datastructure.database.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public interface TrialServiceAsync
 {
 	/**

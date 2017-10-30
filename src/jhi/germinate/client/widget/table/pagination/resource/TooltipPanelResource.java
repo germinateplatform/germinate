@@ -20,6 +20,9 @@ package jhi.germinate.client.widget.table.pagination.resource;
 import com.google.gwt.core.client.*;
 import com.google.gwt.resources.client.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public interface TooltipPanelResource extends ClientBundle
 {
 	TooltipPanelResource INSTANCE = GWT.create(TooltipPanelResource.class);

@@ -182,7 +182,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			{
 				if (object.getExperiment() != null)
 				{
-					if(GerminateSettingsHolder.isPageAvailable(Page.EXPERIMENT_DETAILS))
+					if (GerminateSettingsHolder.isPageAvailable(Page.EXPERIMENT_DETAILS))
 						return TableUtils.getHyperlinkValue(object.getExperiment().getName(), "#" + Page.EXPERIMENT_DETAILS);
 					else
 						return DatasetTable.this.getValue(object, object.getExperiment().getName());
@@ -624,7 +624,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 	protected void onItemSelected(NativeEvent event, Dataset object, int column)
 	{
-		if(Objects.equals(table.getColumn(column).getDataStoreName(), Experiment.EXPERIMENT_NAME))
+		if (Objects.equals(table.getColumn(column).getDataStoreName(), Experiment.EXPERIMENT_NAME))
 		{
 			LongParameterStore.Inst.get().put(Parameter.experimentId, object.getExperiment().getId());
 		}

@@ -38,7 +38,7 @@ public class Session
 	public static final String SID  = "sid";
 	public static final String USER = "user";
 
-	public static final String GENOTYPE_MAP = "genotypeMap";
+	public static final String GENOTYPE_MAP  = "genotypeMap";
 	public static final String GENOTYPE_DATA = "genotypeData";
 
 	/**

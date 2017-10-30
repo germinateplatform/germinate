@@ -26,6 +26,9 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.search.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public interface CompoundServiceAsync
 {
 	/**

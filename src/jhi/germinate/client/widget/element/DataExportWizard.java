@@ -43,6 +43,9 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.enums.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public abstract class DataExportWizard extends Composite
 {
 	private static final DataExportWizardUiBinder uiBinder = GWT.create(DataExportWizardUiBinder.class);

@@ -20,8 +20,8 @@ package jhi.germinate.shared.exception;
 import java.io.*;
 
 /**
- * {@link DatabaseException} extends {@link BaseException} that will be used to wrap all exceptions that occur while interacting with the
- * database, e.g. {@link java.sql.SQLException}
+ * {@link DatabaseException} extends {@link BaseException} that will be used to wrap all exceptions that occur while interacting with the database,
+ * e.g. {@link java.sql.SQLException}
  *
  * @author Sebastian Raubach
  */

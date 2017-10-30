@@ -20,8 +20,7 @@ package jhi.germinate.shared.exception;
 import java.io.*;
 
 /**
- * {@link InvalidArgumentException} extends {@link BaseException} that will be used to when any conversion between search parameters and SQL
- * fails.
+ * {@link InvalidArgumentException} extends {@link BaseException} that will be used to when any conversion between search parameters and SQL fails.
  *
  * @author Sebastian Raubach
  */

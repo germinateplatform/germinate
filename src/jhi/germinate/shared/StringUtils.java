@@ -262,4 +262,12 @@ public class StringUtils
 			return split;
 		}
 	}
+
+	public static String toEmptyIfNull(String input)
+	{
+		if (isEmpty(input))
+			return "";
+		else
+			return input;
+	}
 }

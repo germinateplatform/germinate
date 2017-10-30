@@ -127,7 +127,7 @@ public class NewsWidget extends Composite
 
 	public String getProjectColumnId()
 	{
-		if(projectColumn != null)
+		if (projectColumn != null)
 			return projectColumn.getId();
 		else
 			return null;

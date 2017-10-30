@@ -35,6 +35,8 @@ import jhi.germinate.server.database.*;
  * The {@link ApplicationListener} is the main {@link ServletContextListener} of the application. It's started when the application is loaded by
  * Tomcat. It contains {@link #contextInitialized(ServletContextEvent)} which is executed on start and {@link #contextDestroyed(ServletContextEvent)}
  * which is executed when the application terminates.
+ *
+ * @author Sebastian Raubach
  */
 public class ApplicationListener implements ServletContextListener
 {

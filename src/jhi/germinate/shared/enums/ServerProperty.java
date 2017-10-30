@@ -17,6 +17,9 @@
 
 package jhi.germinate.shared.enums;
 
+/**
+ * @author Sebastian Raubach
+ */
 public enum ServerProperty
 {
 	DATABASE_USERNAME("Germinate.Database.Username", null, true),

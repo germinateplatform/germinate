@@ -62,13 +62,13 @@
 		<g8:DropdownInputButton ui:field="operator"/>
 
 		<g:FlowPanel ui:field="input">
-		<b:TextBox addStyleNames="{style.input}" ui:field="firstInput"/>
-		<b:TextBox addStyleNames="{style.input}" visible="false" ui:field="secondInput"/>
+			<b:TextBox addStyleNames="{style.input}" ui:field="firstInput"/>
+			<b:TextBox addStyleNames="{style.input}" visible="false" ui:field="secondInput"/>
 		</g:FlowPanel>
 
 		<g:FlowPanel visible="false" ui:field="date">
 			<d:DatePicker autoClose="true" ui:field="firstDate"/>
-			<d:DatePicker autoClose="true" visible="false" ui:field="secondDate" />
+			<d:DatePicker autoClose="true" visible="false" ui:field="secondDate"/>
 		</g:FlowPanel>
 
 		<b:InputGroupButton>

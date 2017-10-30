@@ -1063,11 +1063,11 @@
 	 */
 	function draggable(element, onmove, onstart, onstop) {
 		onmove = onmove || function () {
-			};
+		};
 		onstart = onstart || function () {
-			};
+		};
 		onstop = onstop || function () {
-			};
+		};
 		var doc = document;
 		var dragging = false;
 		var offset = {};

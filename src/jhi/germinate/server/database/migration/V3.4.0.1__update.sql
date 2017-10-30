@@ -294,3 +294,6 @@ ALTER TABLE `usergroups`
 MODIFY COLUMN `created_on`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.' AFTER `description`,
 MODIFY COLUMN `updated_on`  timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if changes have been made subsequently to the underlying record.' AFTER `created_on`;
 
+ALTER TABLE `germinate_demo_large`.`groups`
+CHANGE COLUMN `description` `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'The name of the group which can be used to identify it.' AFTER `grouptype_id`,
+ADD COLUMN `description` text NULL COMMENT 'A free text description of the group. This has no length limitations.' AFTER `name`;

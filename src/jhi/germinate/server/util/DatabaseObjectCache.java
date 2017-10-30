@@ -134,8 +134,8 @@ public class DatabaseObjectCache<T extends DatabaseObject>
 	}
 
 	/**
-	 * Returns the {@link DatabaseObject} by parsing it straight from the {@link DatabaseResult} without running another database query.
-	 * <p>This obviously means that all the information required to parse the object needs to be part of this {@link DatabaseResult}.
+	 * Returns the {@link DatabaseObject} by parsing it straight from the {@link DatabaseResult} without running another database query. <p>This
+	 * obviously means that all the information required to parse the object needs to be part of this {@link DatabaseResult}.
 	 *
 	 * @param user The {@link UserAuth}
 	 * @param res  The {@link DatabaseResult} containing all the required information to parse the {@link DatabaseObject}

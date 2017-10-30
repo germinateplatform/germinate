@@ -125,6 +125,13 @@ public final class AlertDialog
 		return this;
 	}
 
+	public AlertDialog setContent(Widget widget)
+	{
+		this.content = new ModalBody();
+		this.content.add(widget);
+		return this;
+	}
+
 	public AlertDialog addShownHandler(ModalShownHandler handler)
 	{
 		dialog.addShownHandler(handler);

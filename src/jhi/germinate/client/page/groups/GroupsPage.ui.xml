@@ -17,6 +17,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
 			 xmlns:t='urn:import:org.gwtbootstrap3.extras.toggleswitch.client.ui'
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
 
@@ -40,6 +41,11 @@
 				<b:FormLabel text="{msg.groupsGroupPublic}"/>
 				<t:ToggleSwitch onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="isPublic"/>
 			</b:FormGroup>
+
+			<g:FlowPanel ui:field="descriptionPanel">
+				<b:Heading size="H4" text="{msg.groupsColumnDescription}" />
+				<g8:ParagraphPanel ui:field="description" />
+			</g:FlowPanel>
 
 			<g:SimplePanel ui:field="groupMembersPanel"/>
 

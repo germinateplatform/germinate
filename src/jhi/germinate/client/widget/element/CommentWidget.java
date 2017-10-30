@@ -149,7 +149,7 @@ public class CommentWidget extends Composite
 						filter.add(condition);
 
 						if (filter.getAll().size() > 1)
-								filter.addLogicalOperator(new And());
+							filter.addLogicalOperator(new And());
 
 						condition = new SearchCondition();
 						condition.setColumnName(CommentType.REFERENCE_TABLE);
@@ -159,7 +159,7 @@ public class CommentWidget extends Composite
 						filter.add(condition);
 
 						if (filter.getAll().size() > 1)
-								filter.addLogicalOperator(new And());
+							filter.addLogicalOperator(new And());
 					}
 					catch (InvalidArgumentException | InvalidSearchQueryException e)
 					{

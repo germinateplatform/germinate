@@ -22,7 +22,6 @@ import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.rpc.*;
 
-import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
@@ -114,7 +113,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			addColumn(column, Text.LANG.groupsColumnId(), sortingEnabled);
 		}
 
-		/* Add the group description column */
+		/* Add the group name column */
 		column = new ClickableSafeHtmlColumn()
 		{
 			@Override
@@ -123,16 +122,16 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 				if (GroupsPage.canEdit(object))
 				{
 					if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
-						return SimpleHtmlTemplate.INSTANCE.materialIconAnchorWithText(Style.MDI_RENAME_BOX, object.getDescription(), Text.LANG.generalRename(), UriUtils.fromString("#" + Page.GROUPS), "");
+						return SimpleHtmlTemplate.INSTANCE.materialIconAnchorWithText(Style.MDI_RENAME_BOX, object.getName(), Text.LANG.generalRename(), UriUtils.fromString("#" + Page.GROUPS), "");
 					else
-						return SimpleHtmlTemplate.INSTANCE.materialIconWithText(Style.MDI_RENAME_BOX, object.getDescription(), Text.LANG.generalRename());
+						return SimpleHtmlTemplate.INSTANCE.materialIconWithText(Style.MDI_RENAME_BOX, object.getName(), Text.LANG.generalRename());
 				}
 				else
 				{
 					if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
-						return TableUtils.getHyperlinkValue(object.getDescription(), "#" + Page.GROUPS);
+						return TableUtils.getHyperlinkValue(object.getName(), "#" + Page.GROUPS);
 					else
-						return SimpleHtmlTemplate.INSTANCE.text(object.getDescription());
+						return SimpleHtmlTemplate.INSTANCE.text(object.getName());
 				}
 			}
 
@@ -151,13 +150,14 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 				{
 					event.preventDefault();
 
-					final TextBox name = new TextBox();
-					name.setText(object.getDescription());
+					AddGroupDialog content = new AddGroupDialog(Collections.singletonList(object.getType()), object.getType());
+					content.setGroup(object);
 
-					new AlertDialog(Text.LANG.generalRename(), name)
+					new AlertDialog(Text.LANG.generalRename())
 							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalRename(), IconType.PENCIL_SQUARE_O, ButtonType.PRIMARY, e ->
 							{
-								object.setDescription(name.getText());
+								object.setName(content.getName());
+								object.setDescription(content.getDescription());
 								GroupService.Inst.get().renameGroup(Cookie.getRequestProperties(), object, new DefaultAsyncCallback<ServerResult<Void>>()
 								{
 									@Override
@@ -168,18 +168,31 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 								});
 							}))
 							.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, null))
-							.addShownHandler(e ->
-									{
-										name.setFocus(true);
-										name.selectAll();
-									}
-							)
+							.setContent(content)
 							.open();
 				}
 				else
 				{
 					super.onBrowserEvent(context, elem, object, event);
 				}
+			}
+		};
+		column.setDataStoreName(Group.NAME);
+		addColumn(column, Text.LANG.groupsColumnName(), sortingEnabled);
+
+		/* Add the group description column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Group object)
+			{
+				return TableUtils.getCellValueAsString(object.getDescription());
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
 			}
 		};
 		column.setDataStoreName(Group.DESCRIPTION);

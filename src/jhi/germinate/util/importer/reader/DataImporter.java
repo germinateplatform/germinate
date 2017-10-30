@@ -45,8 +45,7 @@ public abstract class DataImporter<T>
 	protected abstract IDataReader getFallbackReader();
 
 	/**
-	 * This method is called when an error occurs during the data export.
-	 * Deletes the items that have been inserted before the error occurred.
+	 * This method is called when an error occurs during the data export. Deletes the items that have been inserted before the error occurred.
 	 */
 	protected abstract void deleteInsertedItems();
 

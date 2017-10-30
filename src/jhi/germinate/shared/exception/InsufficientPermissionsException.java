@@ -20,8 +20,8 @@ package jhi.germinate.shared.exception;
 import java.io.*;
 
 /**
- * {@link InsufficientPermissionsException} extends {@link BaseException} that indicates that there was an attempt to perform an operation for
- * which the user's permissions are not sufficient.
+ * {@link InsufficientPermissionsException} extends {@link BaseException} that indicates that there was an attempt to perform an operation for which
+ * the user's permissions are not sufficient.
  *
  * @author Sebastian Raubach
  */

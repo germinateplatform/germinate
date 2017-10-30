@@ -67,11 +67,11 @@ public interface GroupServiceAsync
 	 * Creates a new group of the given type
 	 *
 	 * @param properties     The {@link RequestProperties}
-	 * @param groupName      The name of the new group
+	 * @param group          The new group
 	 * @param referenceTable The {@link GerminateDatabaseTable}
 	 * @param callback       The {@link AsyncCallback}
 	 */
-	void createNew(RequestProperties properties, String groupName, GerminateDatabaseTable referenceTable, AsyncCallback<ServerResult<Group>> callback);
+	void createNew(RequestProperties properties, Group group, GerminateDatabaseTable referenceTable, AsyncCallback<ServerResult<Group>> callback);
 
 	/**
 	 * Deletes the {@link Group} with the given id.
@@ -181,8 +181,8 @@ public interface GroupServiceAsync
 	void addItems(RequestProperties properties, String result, GerminateDatabaseTable referenceTable, String column, Long groupId, AsyncCallback<ServerResult<Tuple.Pair<Integer, Integer>>> callback);
 
 	/**
-	 * Adds the {@link DatabaseObject} items from the array to the given {@link Group}. Uses the {@link GerminateDatabaseTable}
-	 * and column to identify the items in question.
+	 * Adds the {@link DatabaseObject} items from the array to the given {@link Group}. Uses the {@link GerminateDatabaseTable} and column to identify
+	 * the items in question.
 	 *
 	 * @param properties     The {@link RequestProperties}
 	 * @param split          The new group members

@@ -77,7 +77,7 @@ public class ClimateChart extends AbstractChart
 				else
 				{
 					/* Clean up and notify the user */
-					if (group == null || StringUtils.isEmpty(group.getDescription()))
+					if (group == null || StringUtils.isEmpty(group.getName()))
 					{
 						Notification.notify(Notification.Type.INFO, Text.LANG.notificationClimateNoInformationClimate());
 					}

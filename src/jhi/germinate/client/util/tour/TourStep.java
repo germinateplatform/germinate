@@ -20,6 +20,9 @@ package jhi.germinate.client.util.tour;
 import com.google.gwt.core.client.*;
 import com.google.gwt.query.client.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public class TourStep extends JavaScriptObject
 {
 	public enum Position

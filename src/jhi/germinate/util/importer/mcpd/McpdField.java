@@ -19,6 +19,8 @@ package jhi.germinate.util.importer.mcpd;
 
 /**
  * {@link McpdField} contains constants for all the fields of the MCPD v2.1
+ *
+ * @author Sebastian Raubach
  */
 public enum McpdField
 {

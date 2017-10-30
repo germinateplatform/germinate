@@ -73,7 +73,7 @@ public class AccessionDataDownloadWidget extends Composite
 		if (CollectionUtils.isEmpty(groups))
 			groups = new ArrayList<>();
 
-		Group dummy = new Group(-2L).setDescription(Text.LANG.accessionsDownloadSelectedAccessions());
+		Group dummy = new Group(-2L).setName(Text.LANG.accessionsDownloadSelectedAccessions());
 		groups.add(0, dummy);
 
 		groupBox.setValue(dummy, false);

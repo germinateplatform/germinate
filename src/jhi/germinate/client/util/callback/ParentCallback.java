@@ -17,6 +17,9 @@
 
 package jhi.germinate.client.util.callback;
 
+/**
+ * @author Sebastian Raubach
+ */
 public interface ParentCallback
 {
 	/**

@@ -67,19 +67,23 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 	private static GroupsPageUiBinder ourUiBinder = GWT.create(GroupsPageUiBinder.class);
 
 	@UiField
-	SimplePanel  tablePanel;
+	SimplePanel    tablePanel;
 	@UiField
-	FlowPanel    groupMembersWrapper;
+	FlowPanel      groupMembersWrapper;
 	@UiField
-	SimplePanel  groupMembersPanel;
+	SimplePanel    groupMembersPanel;
 	@UiField
-	FlowPanel    newGroupMembersPanel;
+	FlowPanel      newGroupMembersPanel;
 	@UiField
-	SimplePanel  newGroupMembersTable;
+	SimplePanel    newGroupMembersTable;
 	@UiField
-	ToggleSwitch isPublic;
+	ToggleSwitch   isPublic;
 	@UiField
-	Heading      groupName;
+	Heading        groupName;
+	@UiField
+	FlowPanel      descriptionPanel;
+	@UiField
+	ParagraphPanel description;
 
 	private final GroupTable                       groupTable;
 	private       Button                           addGroup;
@@ -200,7 +204,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 										Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
 										groupTable.refreshTable();
 
-										if(group != null && Objects.equals(object.getId(), group.getId()))
+										if (group != null && Objects.equals(object.getId(), group.getId()))
 										{
 											group = null;
 											updateGroupMembers();
@@ -240,16 +244,12 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 			addGroup = new Button(Text.LANG.groupsButtonAddGroup(), IconType.PLUS_SQUARE_O, e ->
 			{
-				ModalBody dialogContent = new ModalBody();
 				AddGroupDialog content = new AddGroupDialog(groupTypes, null);
 
-				dialogContent.add(content);
-
-				final AlertDialog dialog = new AlertDialog(Text.LANG.groupsSubtitleNewGroup())
-						.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev -> addNewGroup(content.getName(), content.getType())))
-						.setContent(dialogContent);
-
-				dialog.open();
+				new AlertDialog(Text.LANG.groupsSubtitleNewGroup())
+						.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev -> addNewGroup(content.getName(), content.getDescription(), content.getType())))
+						.setContent(content)
+						.open();
 			});
 			addGroup.setEnabled(false);
 
@@ -268,13 +268,15 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 	private void updateGroupMembers()
 	{
-		if(group == null)
+		if (group == null)
 		{
 			groupMembersWrapper.setVisible(false);
 			return;
 		}
 
-		groupName.setSubText(group.getDescription());
+		groupName.setSubText(group.getName());
+		descriptionPanel.setVisible(!StringUtils.isEmpty(group.getDescription()));
+		description.setText(StringUtils.toEmptyIfNull(group.getDescription()));
 
 		if (uploadAlertDialog != null)
 			uploadAlertDialog.close();
@@ -614,7 +616,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 	 *
 	 * @param newGroup The new group name
 	 */
-	private void addNewGroup(String newGroup, GroupType type)
+	private void addNewGroup(String newGroup, String newGroupDescription, GroupType type)
 	{
 		if (StringUtils.isEmpty(newGroup))
 		{
@@ -624,7 +626,9 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 		final String strippedString = HTMLUtils.stripHtmlTags(newGroup);
 
-		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), strippedString, type.getTargetTable(), new DefaultAsyncCallback<ServerResult<Group>>()
+		Group g = new Group().setName(strippedString).setDescription(newGroupDescription);
+
+		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), g, type.getTargetTable(), new DefaultAsyncCallback<ServerResult<Group>>()
 		{
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)

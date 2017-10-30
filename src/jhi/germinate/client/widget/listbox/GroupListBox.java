@@ -56,7 +56,7 @@ public class GroupListBox extends GerminateValueListBox<Group>
 			@Override
 			protected String getText(Group object)
 			{
-				return object.getDescription();
+				return object.getName();
 			}
 
 			@Override
@@ -73,6 +73,7 @@ public class GroupListBox extends GerminateValueListBox<Group>
 		});
 
 		setMultipleSelect(true);
+		setTooltipProvider(Group::getDescription);
 	}
 
 	public GroupListBox(MarkedItemList.ItemType type)
@@ -139,13 +140,13 @@ public class GroupListBox extends GerminateValueListBox<Group>
 		switch (type)
 		{
 			case MARKER:
-				allItems.setDescription(Text.LANG.groupsAllMarkers());
+				allItems.setName(Text.LANG.groupsAllMarkers());
 				break;
 			case ACCESSION:
-				allItems.setDescription(Text.LANG.groupsAllAccessions());
+				allItems.setName(Text.LANG.groupsAllAccessions());
 				break;
 			case LOCATION:
-				allItems.setDescription(Text.LANG.groupsAllLocations());
+				allItems.setName(Text.LANG.groupsAllLocations());
 				break;
 		}
 

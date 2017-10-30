@@ -32,6 +32,9 @@ import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public class TrialsCellTable extends GerminateComposite
 {
 	private List<String>              years;

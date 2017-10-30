@@ -67,8 +67,8 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 	private FlowPanel                chartPanel;
 	private ScatterChartSelection<T> parameterSelection;
-	private Button deleteButton;
-	private Button badgeButton;
+	private Button                   deleteButton;
+	private Button                   badgeButton;
 
 	public ScatterChart()
 	{
@@ -115,7 +115,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	protected Button[] getAdditionalButtons()
 	{
 		// Add the button
-		if(deleteButton == null && badgeButton == null)
+		if (deleteButton == null && badgeButton == null)
 		{
 			ButtonGroup group = new ButtonGroup();
 			group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
@@ -140,7 +140,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			GerminateEventBus.BUS.addHandler(MarkedItemListEvent.TYPE, event -> badge.setText(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(MarkedItemList.ItemType.ACCESSION).size())));
 		}
 
-		return new Button[] {deleteButton, badgeButton};
+		return new Button[]{deleteButton, badgeButton};
 	}
 
 	private void initPlotButton()

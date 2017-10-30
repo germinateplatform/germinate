@@ -27,8 +27,8 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link TabDelimitedMcpdReader} is a simple implementation of {@link IStreamableReader} that can parse tab-delimited MCPD files. The column
- * headers have to match the MCPD 2.1 field names, e.g. PUID for the Persistent unique identifier.
+ * {@link TabDelimitedMcpdReader} is a simple implementation of {@link IStreamableReader} that can parse tab-delimited MCPD files. The column headers
+ * have to match the MCPD 2.1 field names, e.g. PUID for the Persistent unique identifier.
  *
  * @author Sebastian Raubach
  */
@@ -201,8 +201,8 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	}
 
 	/**
-	 * Tries to parse a data from the value of the given {@link McpdObject.McpdField}.
-	 * Since Java can't represent missing months or days in a meaningful way, the first of each will be used in the case of a missing field.
+	 * Tries to parse a data from the value of the given {@link McpdObject.McpdField}. Since Java can't represent missing months or days in a
+	 * meaningful way, the first of each will be used in the case of a missing field.
 	 *
 	 * @param field The {@link McpdObject.McpdField}
 	 * @return The parsed {@link Date} or null.

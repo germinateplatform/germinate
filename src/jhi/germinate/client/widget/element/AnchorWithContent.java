@@ -25,6 +25,9 @@ import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public class AnchorWithContent extends Panel
 {
 	private List<Widget> children = new ArrayList<>();
@@ -155,17 +158,5 @@ public class AnchorWithContent extends Panel
 	public void setTarget(String frameName)
 	{
 		getElement().setAttribute("target", frameName);
-	}
-
-	public void addClickHandler(final ClickHandler handler)
-	{
-		this.handler = handler;
-
-//		sinkEvents(Event.ONCLICK);
-//		addHandler(event ->
-//		{
-//			event.preventDefault();
-//			handler.onClick(event);
-//		}, ClickEvent.getType());
 	}
 }

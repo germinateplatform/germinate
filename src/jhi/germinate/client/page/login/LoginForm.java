@@ -76,7 +76,7 @@ public class LoginForm extends Composite
 	LIElement languageSelector;
 
 	@UiField
-	LIElement     emailAnchorParent;
+	LIElement emailAnchorParent;
 
 	@UiField
 	AnchorElement emailAnchor;

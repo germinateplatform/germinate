@@ -21,8 +21,7 @@ import jhi.germinate.shared.datastructure.database.*;
 
 /**
  * {@link TableMouseHoverHandler} is an interface that can be used to react to hover events on the table. <p/> <p/> A {@link TableMouseHoverHandler}
- * can be added to {@link jhi.germinate.client.widget.table.pagination.DatabaseObjectPaginationTable} s and {@link
- * jhi.germinate.client.widget.table.pagination.DatabaseObjectPaginationTable} s and their respective subclasses.
+ * can be added to {@link DatabaseObjectPaginationTable} s and {@link DatabaseObjectPaginationTable}s and their respective subclasses.
  *
  * @author Sebastian Raubach
  */

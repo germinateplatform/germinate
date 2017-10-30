@@ -28,34 +28,63 @@ import java.util.*;
 public interface DublinCore
 {
 	List<String> getTitle();
+
 	void setTitle(List<String> title);
+
 	List<String> getCreator();
+
 	void setCreator(List<String> creator);
+
 	List<String> getSubject();
+
 	void setSubject(List<String> subject);
+
 	List<String> getDescription();
+
 	void setDescription(List<String> description);
+
 	List<String> getPublisher();
+
 	void setPublisher(List<String> publisher);
+
 	List<String> getContributor();
+
 	void setContributor(List<String> contributor);
+
 	List<String> getDate();
+
 	void setDate(List<String> date);
+
 	List<String> getType();
+
 	void setType(List<String> type);
+
 	List<String> getFormat();
+
 	void setFormat(List<String> format);
+
 	List<String> getIdentifier();
+
 	void setIdentifier(List<String> identifier);
+
 	List<String> getSource();
+
 	void setSource(List<String> source);
+
 	List<String> getLanguage();
+
 	void setLanguage(List<String> language);
+
 	List<String> getRelation();
+
 	void setRelation(List<String> relation);
+
 	List<String> getCoverage();
+
 	void setCoverage(List<String> coverage);
+
 	List<String> getRights();
+
 	void setRights(List<String> rights);
 
 	public interface DublinCoreFactory extends AutoBeanFactory

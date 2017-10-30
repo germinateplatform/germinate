@@ -166,7 +166,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				return String.class;
 			}
 		};
-//		column.setDataStoreName(CommentType.DESCRIPTION);
+//		column.setDataStoreName(CommentType.NAME);
 		addColumn(column, Text.LANG.commentColumnUser(), false);
 
 		/* Add the created on */

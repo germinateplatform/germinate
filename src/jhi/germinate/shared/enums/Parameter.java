@@ -70,7 +70,6 @@ public enum Parameter
 	experimentId(Long.class, ParameterLifetime.TEMPORARY),
 
 
-
 	tool_id(String.class, ParameterLifetime.TEMPORARY),
 	GALAXY_URL(String.class, ParameterLifetime.TEMPORARY);
 

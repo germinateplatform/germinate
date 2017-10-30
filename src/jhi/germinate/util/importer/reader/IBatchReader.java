@@ -21,8 +21,8 @@ import java.io.*;
 import java.util.*;
 
 /**
- * The {@link IBatchReader} extends {@link IDataReader} and should be used for readers that need the whole file first and then return all items in
- * one go. I.e. Use this if your implementation cannot stream the items one by one.
+ * The {@link IBatchReader} extends {@link IDataReader} and should be used for readers that need the whole file first and then return all items in one
+ * go. I.e. Use this if your implementation cannot stream the items one by one.
  *
  * @author Sebastian Raubach
  */

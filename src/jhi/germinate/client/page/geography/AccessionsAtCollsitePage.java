@@ -163,7 +163,7 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 					filter.add(condition);
 
 					if (filter.getAll().size() > 1)
-							filter.addLogicalOperator(new And());
+						filter.addLogicalOperator(new And());
 				}
 				catch (InvalidArgumentException | InvalidSearchQueryException e)
 				{

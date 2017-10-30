@@ -155,19 +155,16 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 					}
 				}
 
-				ModalBody dialogContent = new ModalBody();
 				AddGroupDialog content = new AddGroupDialog(types, type);
-
-				dialogContent.add(content);
 
 				final AlertDialog dialog = new AlertDialog(Text.LANG.groupsSubtitleNewGroup());
 				dialog.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev ->
 				{
-					if (addNewGroup(content.getName(), markedIds, itemType, callback))
+					if (addNewGroup(content.getName(), content.getDescription(), markedIds, itemType, callback))
 						dialog.close();
 				}))
 					  .setAutoCloseOnPositive(false)
-					  .setContent(dialogContent);
+					  .setContent(content);
 
 				dialog.open();
 			}
@@ -179,7 +176,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 	 *
 	 * @param newGroup The new group name
 	 */
-	private static boolean addNewGroup(String newGroup, final List<String> newGroupMembers, MarkedItemList.ItemType type, AsyncCallback<ServerResult<Group>> callback)
+	private static boolean addNewGroup(String newGroup, String description, final List<String> newGroupMembers, MarkedItemList.ItemType type, AsyncCallback<ServerResult<Group>> callback)
 	{
 		if (StringUtils.isEmpty(newGroup))
 		{
@@ -189,7 +186,9 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 
 		final String strippedString = HTMLUtils.stripHtmlTags(newGroup);
 
-		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), strippedString, type.getTarget(), callback != null ? callback : new DefaultAsyncCallback<ServerResult<Group>>()
+		Group g = new Group().setName(strippedString).setDescription(description);
+
+		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), g, type.getTarget(), callback != null ? callback : new DefaultAsyncCallback<ServerResult<Group>>()
 		{
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)

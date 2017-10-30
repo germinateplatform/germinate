@@ -179,7 +179,7 @@ public class SearchCondition implements Serializable, HasToSqlString
 		{
 			throw new InvalidSearchQueryException("Comparison operator must be specified before values can be handled.");
 		}
-		else if(StringUtils.isEmpty(value))
+		else if (StringUtils.isEmpty(value))
 		{
 			throw new InvalidSearchQueryException("Comparison conditional value cannot be empty.");
 		}

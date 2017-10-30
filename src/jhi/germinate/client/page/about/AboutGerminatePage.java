@@ -61,7 +61,7 @@ public class AboutGerminatePage extends GerminateComposite implements ParallaxBa
 		panel.add(row);
 
 		int i = 0;
-		Column column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		Column column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
 		column.addStyleName(Style.COL_XXS_12);
 		CategoryPanel cp = new CategoryPanel();
 		cp.setText(Text.LANG.aboutButtonsHomepageTitle());
@@ -72,7 +72,7 @@ public class AboutGerminatePage extends GerminateComposite implements ParallaxBa
 		column.add(cp);
 		row.add(column);
 
-		column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
 		column.addStyleName(Style.COL_XXS_12);
 		cp = new CategoryPanel();
 		cp.setText(Text.LANG.aboutButtonsGithubTitle());
@@ -83,7 +83,7 @@ public class AboutGerminatePage extends GerminateComposite implements ParallaxBa
 		column.add(cp);
 		row.add(column);
 
-		column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
 		column.addStyleName(Style.COL_XXS_12);
 		cp = new CategoryPanel();
 		cp.setText(Text.LANG.aboutButtonsPublicationTitle());
@@ -94,7 +94,7 @@ public class AboutGerminatePage extends GerminateComposite implements ParallaxBa
 		column.add(cp);
 		row.add(column);
 
-		column = new Column(ColumnSize.XS_6,ColumnSize.SM_6,ColumnSize.LG_3);
+		column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
 		column.addStyleName(Style.COL_XXS_12);
 		cp = new CategoryPanel();
 		cp.setText(Text.LANG.aboutButtonsDocumentationTitle());

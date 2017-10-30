@@ -54,9 +54,9 @@ public class ParallaxBanner
 
 	public static void updateStyle(String style)
 	{
-		if(GerminateSettingsHolder.get() != null && !GerminateSettingsHolder.get().templateShowParallaxBanner.getValue())
+		if (GerminateSettingsHolder.get() != null && !GerminateSettingsHolder.get().templateShowParallaxBanner.getValue())
 		{
-			if(INSTANCE != null)
+			if (INSTANCE != null)
 				INSTANCE.parallax.removeFromParent();
 
 			INSTANCE = null;

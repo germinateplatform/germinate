@@ -41,8 +41,8 @@ public class Gradient implements Serializable
 	}
 
 	/**
-	 * Creates an Inst of Gradient using an array of Color objects. It uses a linear interpolation between each pair of points. The parameter
-	 * numSteps defines the total number of colors in the returned array, not the number of colors per segment.
+	 * Creates an Inst of Gradient using an array of Color objects. It uses a linear interpolation between each pair of points. The parameter numSteps
+	 * defines the total number of colors in the returned array, not the number of colors per segment.
 	 *
 	 * @param colors   An array of Color objects used for the gradient. The Color at index 0 will be the lowest color.
 	 * @param numSteps The number of steps in the gradient. 250 is a good number.

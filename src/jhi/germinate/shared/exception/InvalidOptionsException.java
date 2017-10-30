@@ -20,8 +20,8 @@ package jhi.germinate.shared.exception;
 import java.io.*;
 
 /**
- * {@link InvalidOptionsException} extends {@link BaseException} to indicate that the selected {@link
- * jhi.germinate.shared.datastructure.MapExportOptions} doesn't contain all the necessary information.
+ * {@link InvalidOptionsException} extends {@link BaseException} to indicate that the selected {@link jhi.germinate.shared.datastructure.MapExportOptions}
+ * doesn't contain all the necessary information.
  *
  * @author Sebastian Raubach
  */

@@ -27,8 +27,7 @@ import jhi.germinate.shared.exception.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link MarkerMetadataImporter} uses an {@link IDataReader} to read and parse the {@link Map} object and then writes it to a Germinate
- * database.
+ * {@link MarkerMetadataImporter} uses an {@link IDataReader} to read and parse the {@link Map} object and then writes it to a Germinate database.
  *
  * @author Sebastian Raubach
  */

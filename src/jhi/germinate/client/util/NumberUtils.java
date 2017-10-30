@@ -19,6 +19,9 @@ package jhi.germinate.client.util;
 
 import com.google.gwt.i18n.client.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public class NumberUtils
 {
 	/**

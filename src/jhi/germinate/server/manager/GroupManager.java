@@ -36,7 +36,7 @@ import jhi.germinate.shared.search.*;
  */
 public class GroupManager extends AbstractManager<Group>
 {
-	public static final String[] COLUMNS_TABLE = {Group.ID, Group.DESCRIPTION, GroupType.DESCRIPTION, Group.CREATED_BY, Group.CREATED_ON, DatabaseObject.COUNT};
+	public static final String[] COLUMNS_TABLE = {Group.ID, Group.NAME, Group.DESCRIPTION, GroupType.DESCRIPTION, Group.CREATED_BY, Group.CREATED_ON, DatabaseObject.COUNT};
 
 	private static final String SELECT_ALL_FOR_FILTER                          = "SELECT groups.*, COUNT(groupmembers.id) AS count, grouptypes.id, grouptypes.description, grouptypes.target_table FROM groups LEFT JOIN grouptypes ON groups.grouptype_id = grouptypes.id LEFT JOIN groupmembers ON groupmembers.group_id = groups.id {{FILTER}} AND %s GROUP BY groups.id %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_ACCESSION                       = "SELECT groups.*, COUNT(groupmembers.id) AS count FROM germinatebase LEFT JOIN groupmembers ON germinatebase.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id WHERE grouptypes.target_table = 'germinatebase' AND %s AND EXISTS (SELECT 1 FROM groupmembers WHERE groupmembers.foreign_id = ? AND groupmembers.group_id = groups.id) GROUP BY groups.id %s LIMIT ?, ?";
@@ -52,13 +52,13 @@ public class GroupManager extends AbstractManager<Group>
 	private static final String SELECT_ADMINISTRATOR = "1=1";
 
 	private static final String INSERT_MEMBERS = "INSERT INTO groupmembers (foreign_id, group_id) SELECT ?, ? FROM dual WHERE NOT EXISTS (SELECT foreign_id, group_id FROM groupmembers WHERE foreign_id = ? AND group_id = ?) LIMIT 1";
-	private static final String INSERT         = "INSERT INTO groups (grouptype_id, description, visibility, created_by, created_on) SELECT ?, ?, 0, ?, NOW() FROM dual WHERE NOT EXISTS (SELECT grouptype_id, description, created_by FROM groups WHERE grouptype_id = ? AND description = ? AND created_by = ?)";
+	private static final String INSERT         = "INSERT INTO groups (grouptype_id, name, description, visibility, created_by, created_on) SELECT ?, ?, ?, 0, ?, NOW() FROM dual WHERE NOT EXISTS (SELECT grouptype_id, name, created_by FROM groups WHERE grouptype_id = ? AND name = ? AND created_by = ?)";
 
 	private static final String DELETE         = "DELETE FROM groups WHERE id = ?";
 	private static final String DELETE_MEMBERS = "DELETE FROM groupmembers WHERE group_id = ? AND foreign_id IN (%s)";
 
-	private static final String UPDATE_VISIBILITY  = "UPDATE groups SET visibility = ?, updated_on = NOW() WHERE id = ?";
-	private static final String UPDATE_DESCRIPTION = "UPDATE groups SET description = ?, updated_on = NOW() WHERE id = ?";
+	private static final String UPDATE_VISIBILITY = "UPDATE groups SET visibility = ?, updated_on = NOW() WHERE id = ?";
+	private static final String UPDATE_NAME       = "UPDATE groups SET name = ?, description = ?, updated_on = NOW() WHERE id = ?";
 
 	@Override
 	protected String getTable()
@@ -149,7 +149,7 @@ public class GroupManager extends AbstractManager<Group>
 	 */
 	public static PaginatedServerResult<List<Group>> getAllForFilter(UserAuth user, PartialSearchQuery filter, Pagination pagination) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException
 	{
-		pagination.updateSortColumn(GroupService.COLUMNS_SORTABLE, GroupType.DESCRIPTION + ", " + Group.DESCRIPTION);
+		pagination.updateSortColumn(GroupService.COLUMNS_SORTABLE, GroupType.DESCRIPTION + ", " + Group.NAME);
 
 		String formatted;
 
@@ -218,7 +218,7 @@ public class GroupManager extends AbstractManager<Group>
 		return new ServerResult<>(sqlDebug, newIds);
 	}
 
-	public static ServerResult<Group> create(UserAuth userAuth, String groupName, GerminateDatabaseTable table) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
+	public static ServerResult<Group> create(UserAuth userAuth, Group group, GerminateDatabaseTable table) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
@@ -227,10 +227,11 @@ public class GroupManager extends AbstractManager<Group>
 
 		ServerResult<List<Long>> newIds = new ValueQuery(INSERT, userAuth)
 				.setLong(groupTypeId.getServerResult())
-				.setString(groupName)
+				.setString(group.getName())
+				.setString(group.getDescription())
 				.setLong(userAuth.getId())
 				.setLong(groupTypeId.getServerResult())
-				.setString(groupName)
+				.setString(group.getName())
 				.setLong(userAuth.getId())
 				.execute();
 
@@ -405,7 +406,8 @@ public class GroupManager extends AbstractManager<Group>
 		if (!hasAccessToGroup(userAuth, group.getId(), true))
 			throw new InsufficientPermissionsException();
 
-		ServerResult<List<Long>> result = new ValueQuery(UPDATE_DESCRIPTION, userAuth)
+		ServerResult<List<Long>> result = new ValueQuery(UPDATE_NAME, userAuth)
+				.setString(group.getName())
 				.setString(group.getDescription())
 				.setLong(group.getId())
 				.execute();

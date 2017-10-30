@@ -36,6 +36,9 @@ import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public final class MarkedItemList
 {
 	public enum ItemType

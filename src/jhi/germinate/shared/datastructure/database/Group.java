@@ -36,12 +36,14 @@ public class Group extends DatabaseObject
 	private static final long serialVersionUID = 344654284944184140L;
 
 	public static final String ID            = "groups.id";
+	public static final String NAME          = "groups.name";
 	public static final String DESCRIPTION   = "groups.description";
 	public static final String GROUP_TYPE_ID = "groups.grouptype_id";
 	public static final String VISIBILITY    = "groups.visibility";
 	public static final String CREATED_BY    = "groups.created_by";
 
 	private GroupType type;
+	private String    name;
 	private String    description;
 	private boolean   visibility;
 	private Long      createdBy;
@@ -67,6 +69,17 @@ public class Group extends DatabaseObject
 	public Group setType(GroupType type)
 	{
 		this.type = type;
+		return this;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public Group setName(String name)
+	{
+		this.name = name;
 		return this;
 	}
 
@@ -152,15 +165,16 @@ public class Group extends DatabaseObject
 	public String toString()
 	{
 		return "Group{" +
-				"id=" + id +
-				", type=" + type +
+				"type=" + type +
+				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", visibility=" + visibility +
 				", createdBy=" + createdBy +
+				", user='" + user + '\'' +
 				", createdOn=" + createdOn +
 				", updatedOn=" + updatedOn +
 				", size=" + size +
-				'}';
+				"} " + super.toString();
 	}
 
 	@Override
@@ -173,37 +187,6 @@ public class Group extends DatabaseObject
 	@GwtIncompatible
 	public static class Parser extends DatabaseObjectParser<Group>
 	{
-		public static final class Inst
-		{
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link
-			 * InstanceHolder#INSTANCE}, not before.
-			 * <p/>
-			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
-			private static final class InstanceHolder
-			{
-				private static final Parser INSTANCE = new Parser();
-			}
-
-			public static Parser get()
-			{
-				return InstanceHolder.INSTANCE;
-			}
-		}
-
-		private static DatabaseObjectCache<GroupType>      GROUPTYPE_CACHE;
-		private static DatabaseObjectCache<GatekeeperUser> GATEKEEPER_USER_CACHE;
-
-		private Parser()
-		{
-			GROUPTYPE_CACHE = createCache(GroupType.class, GroupTypeManager.class);
-			GATEKEEPER_USER_CACHE = createCache(GatekeeperUser.class, GatekeeperUserManager.class);
-		}
-
 		@Override
 		public Group parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
 		{
@@ -216,6 +199,7 @@ public class Group extends DatabaseObject
 				else
 				{
 					Group group = new Group(id)
+							.setName(row.getString(NAME))
 							.setDescription(row.getString(DESCRIPTION))
 							.setType(GROUPTYPE_CACHE.get(user, row.getLong(GROUP_TYPE_ID), row, foreignsFromResultSet))
 							.setVisibility(row.getBoolean(VISIBILITY))
@@ -249,6 +233,37 @@ public class Group extends DatabaseObject
 			catch (InsufficientPermissionsException e)
 			{
 				return null;
+			}
+		}
+
+		private static DatabaseObjectCache<GroupType>      GROUPTYPE_CACHE;
+		private static DatabaseObjectCache<GatekeeperUser> GATEKEEPER_USER_CACHE;
+
+		private Parser()
+		{
+			GROUPTYPE_CACHE = createCache(GroupType.class, GroupTypeManager.class);
+			GATEKEEPER_USER_CACHE = createCache(GatekeeperUser.class, GatekeeperUserManager.class);
+		}
+
+		public static final class Inst
+		{
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
+			 * not before.
+			 * <p/>
+			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
+			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final Parser INSTANCE = new Parser();
+			}
+
+			public static Parser get()
+			{
+				return InstanceHolder.INSTANCE;
 			}
 		}
 	}

@@ -87,8 +87,8 @@ public abstract class GerminateComposite extends Composite
 	 * Asks for a list of {@link Library}s to load before laying out the content. Returning <code>null</code> indicates that no libraries should be
 	 * loaded.
 	 * <p/>
-	 * <b>IMPORTANT</b>: The get of items matters, since they are loaded in this get. Loading {@link Library#D3_TOOLTIP} before {@link
-	 * Library#D3_V3} will consequently fail, since the tooltip depends on d3 in general.
+	 * <b>IMPORTANT</b>: The get of items matters, since they are loaded in this get. Loading {@link Library#D3_TOOLTIP} before {@link Library#D3_V3}
+	 * will consequently fail, since the tooltip depends on d3 in general.
 	 *
 	 * @return The list of {@link Library}s to load
 	 */

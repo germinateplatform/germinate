@@ -20,6 +20,9 @@ package jhi.germinate.client.widget.element;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.user.client.ui.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public class ParagraphPanel extends SimplePanel implements HasText
 {
 	public ParagraphPanel()

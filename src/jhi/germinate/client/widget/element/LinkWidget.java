@@ -82,7 +82,7 @@ public class LinkWidget extends GerminateComposite
 
 						for (Link link : result.getServerResult())
 						{
-							if(!StringUtils.isEmpty(link.getHyperlink()))
+							if (!StringUtils.isEmpty(link.getHyperlink()))
 							{
 								String description = link.getDescription();
 
@@ -93,7 +93,7 @@ public class LinkWidget extends GerminateComposite
 							}
 						}
 
-						if(ulPanel.getWidgetCount() > 0)
+						if (ulPanel.getWidgetCount() > 0)
 							panel.add(ulPanel);
 						else
 							panel.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));

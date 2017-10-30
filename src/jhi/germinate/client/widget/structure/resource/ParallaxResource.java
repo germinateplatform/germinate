@@ -20,6 +20,9 @@ package jhi.germinate.client.widget.structure.resource;
 import com.google.gwt.core.client.*;
 import com.google.gwt.resources.client.*;
 
+/**
+ * @author Sebastian Raubach
+ */
 public interface ParallaxResource extends ClientBundle
 {
 	ParallaxResource INSTANCE = GWT.create(ParallaxResource.class);

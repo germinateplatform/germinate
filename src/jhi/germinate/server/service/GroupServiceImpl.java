@@ -79,11 +79,11 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	}
 
 	@Override
-	public ServerResult<Group> createNew(RequestProperties properties, String groupName, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
+	public ServerResult<Group> createNew(RequestProperties properties, Group group, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return GroupManager.create(userAuth, groupName, table);
+		return GroupManager.create(userAuth, group, table);
 	}
 
 	@Override

@@ -42,6 +42,7 @@ import jhi.germinate.shared.*;
  * used to get user-presentable strings to display in the select element.
  *
  * @param <T> the selected type
+ * @author Sebastian Raubach
  */
 public class GerminateValueListBox<T> extends Composite implements Focusable, HasEnabled, HasValueChangeHandlers<List<T>>
 {
