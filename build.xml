@@ -34,30 +34,6 @@
 		</fileset>
 	</path>
 
-	<!-- Check if a browser optimization is disabled -->
-	<condition property="noBrowserOpt">
-		<or>
-			<not>
-				<isset property="settings.browseropt"/>
-			</not>
-			<equals arg1="${settings.browseropt}" arg2=""/>
-			<equals arg1="${settings.browseropt}" arg2="false"/>
-			<equals arg1="${settings.browseropt}" arg2="none"/>
-			<equals arg1="${settings.browseropt}" arg2="no"/>
-		</or>
-	</condition>
-
-	<!-- Check if a compile optimization is enabled -->
-	<condition property="compileOpt">
-		<and>
-			<isset property="settings.compileopt"/>
-			<or>
-				<equals arg1="${settings.compileopt}" arg2="true"/>
-				<equals arg1="${settings.compileopt}" arg2="yes"/>
-			</or>
-		</and>
-	</condition>
-
 	<!-- First, make sure there are no leftovers from the previous build -->
 	<target name="delete_old_stuff" description="Deletes all the old files of the previously compiled Germinate instance">
 		<delete failonerror="false" verbose="true" quiet="true">
@@ -88,37 +64,40 @@
 		<delete failonerror="false" verbose="true" quiet="true" dir="${build.dir}/WEB-INF/lib-temp"/>
 	</target>
 
-	<!-- Prepare the gwt.xml file without browser optimization -->
-	<target name="no_browser_opt_xml" description="Replaces the placeholder for browser optimization with an empty string" if="noBrowserOpt">
-		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.browseropt.placeholder}" value=""/>
-		<echo level="info" message="BROWSER OPTIMIZATION DISABLED"/>
+	<target name="prepare_gwt_xml" description="Prepares the Germinate.gwt.xml file for compilation">
+		<java classname="jhi.germinate.util.build.GwtXmlWriter" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="${src.dir}"/>
+				<pathelement location="${build.dir}/WEB-INF/classes"/>
+				<path refid="compile.classpath"/>
+			</classpath>
+			<arg value="${instance.files}/config.properties" />
+			<arg value="${instance.files}/i18n" />
+			<arg value="${src.dir}/jhi/germinate/client/i18n" />
+			<arg value="./Germinate.gwt.template.xml" />
+			<arg value="${src.dir}/jhi/germinate/Germinate.gwt.xml" />
+			<arg value="${settings.browseropt}" />
+			<arg value="${settings.compileopt}" />
+		</java>
 	</target>
 
-	<!-- Prepare the gwt.xml file with browser optimization -->
-	<target name="browser_opt_xml" description="Replaces the placeholder for browser optimization with the selected optimization"
-			unless="noBrowserOpt">
-		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.browseropt.placeholder}"
-				 value="&lt;set-property name=&quot;user.agent&quot; value=&quot;${settings.browseropt}&quot;/&gt;"/>
-		<echo level="info" message="BROWSER OPTIMIZATION ENABLED"/>
-	</target>
-
-	<!-- Prepare the gwt.xml file without compile optimization -->
-	<target name="no_compile_opt_xml" description="Replaces the placeholder for compile optimization with an empty string" unless="compileOpt">
-		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.compileopt.placeholder}" value=""/>
-		<echo level="info" message="COMPILE OPTIMIZATION DISABLED"/>
-	</target>
-
-	<!-- Prepare the gwt.xml file with compile optimization -->
-	<target name="compile_opt_xml" description="Replaces the placeholder for compile optimization with the selected optimization" if="compileOpt">
-		<replace file="${src.dir}/jhi/germinate/Germinate.gwt.xml" token="${settings.compileopt.placeholder}"
-				 value="&lt;collapse-property name=&quot;locale&quot; values=&quot;*&quot;/&gt;"/>
-		<echo level="info" message="COMPILE OPTIMIZATION ENABLED"/>
+	<target name="prepare_web_xml" description="Prepares the web.xml file for deployment">
+		<java classname="jhi.germinate.util.build.WebXmlWriter" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="${src.dir}"/>
+				<pathelement location="${build.dir}/WEB-INF/classes"/>
+				<path refid="compile.classpath"/>
+			</classpath>
+			<arg value="${instance.files}/config.properties" />
+			<arg value="./web.template.xml" />
+			<arg value="${build.dir}/WEB-INF/web.xml" />
+		</java>
 	</target>
 
 	<!-- Prepare the config.properties file without google analytics -->
 	<target name="google_analytics_properties"
 			description="Replaces the placeholder for google analytics with the value specified in the build properties">
-		<replace file="./config.properties" token="${settings.googleanalytics.placeholder}" value="${settings.googleanalytics}"
+		<replace file="./config.properties" token="@google_analytics@" value="${settings.googleanalytics}"
 				 failOnNoReplacements="false"/>
 		<echo level="info" message="GOOGLE ANALYTICS VALUE SET TO ${settings.googleanalytics}"/>
 	</target>
@@ -132,10 +111,6 @@
 		<copy todir="./" overwrite="true" failonerror="true" verbose="true">
 			<fileset dir="${instance.files}" includes="**/config.properties"/>
 		</copy>
-
-		<copy file="${instance.files}/Germinate.gwt.xml" tofile="${src.dir}/jhi/germinate/Germinate.gwt.xml" overwrite="true" failonerror="true"
-			  verbose="true"/>
-		<copy file="${instance.files}/web.xml" tofile="${build.dir}/WEB-INF/web.xml" overwrite="true" failonerror="true" verbose="true"/>
 
 		<!-- Copy template styling -->
 		<copy file="${instance.files}/template/logo.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
@@ -182,8 +157,7 @@
 	</target>
 
 	<!-- Compile the Java code -->
-	<target depends="copy_files, browser_opt_xml, no_browser_opt_xml, compile_opt_xml, no_compile_opt_xml, google_analytics_properties"
-			name="build-project">
+	<target name="build-project" depends="copy_files, google_analytics_properties">
 
 		<!-- Delete old compiled code -->
 		<delete failonerror="false" verbose="true" quiet="true" dir="${build.dir}/WEB-INF/classes"/>
@@ -197,7 +171,7 @@
 	</target>
 
 	<!-- Compile the code with gwtc -->
-	<target name="gwtc" depends="build-project" description="GWT compile to JavaScript">
+	<target name="gwtc" depends="build-project, prepare_gwt_xml, prepare_web_xml" description="GWT compile to JavaScript">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
 				<pathelement location="${src.dir}"/>
@@ -267,6 +241,9 @@
 			location = project.getProperty("tomcat.manager.url").toString().replace("manager/text", project.getProperty("project.name").toString());
 			java.awt.Desktop.getDesktop().browse(java.net.URI.create(location));
 		]]></script>
+	</target>
+
+	<target name="debug" depends="delete_old_stuff, prepare_gwt_xml, prepare_web_xml" description="Prepares the debug mode">
 	</target>
 
 	<target name="jar-importer-lib" depends="build-project">

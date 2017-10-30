@@ -46,6 +46,7 @@ public enum ServerProperty
 	GERMINATE_HIDE_ID_COLUMNS("Germinate.HideIdColumns", "false", false),
 	GERMINATE_GALLERY_IMAGES_PER_PAGE("Germinate.Gallery.Images.Per.Page", "16", false),
 	GERMINATE_GALLERY_MAKE_THUMBNAILS_SQUARE("Germinate.Gallery.Make.Thumbnails.Square", "false", false),
+	GERMINATE_BUILD_ADDITIONAL_LOCALES("Germinate.Build.Additional.Locales", "en_GB", false),
 	GERMINATE_TEMPLATE_MENU("Germinate.Template.CustomMenu", null, false),
 	GERMINATE_TEMPLATE_TITLE("Germinate.Template.Title", "Germinate", false),
 	GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK("Germinate.Template.Logo.Contains.Link", "false", false),
