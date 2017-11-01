@@ -17,7 +17,6 @@
 
 package jhi.germinate.client.widget.listbox;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.rpc.*;
 
@@ -27,7 +26,7 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import java.util.*;
 
 import jhi.germinate.client.*;
-import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -48,6 +47,34 @@ public class GroupListBox extends GerminateValueListBox<Group>
 	private HandlerRegistration     groupRegistration;
 
 	private boolean hasCustomFirstValue = false;
+
+	private Long idToSelect = null;
+
+	private DefaultAsyncCallback<ServerResult<List<Group>>> callback = new DefaultAsyncCallback<ServerResult<List<Group>>>()
+	{
+		@Override
+		protected void onSuccessImpl(ServerResult<List<Group>> result)
+		{
+			// Update the list and select the new group
+			GroupListBox.this.clear();
+
+			Group toSelect = result.getServerResult().get(0);
+
+			for (Group group : result.getServerResult())
+			{
+				if (group.getId().equals(idToSelect))
+				{
+					toSelect = group;
+					idToSelect = null;
+					break;
+				}
+			}
+
+			GroupListBox.this.setValue(toSelect, false);
+			GroupListBox.this.setAcceptableValues(result.getServerResult());
+
+		}
+	};
 
 	public GroupListBox()
 	{
@@ -91,44 +118,32 @@ public class GroupListBox extends GerminateValueListBox<Group>
 		if (groupCreationInterface != null && type != null && !CollectionUtils.isEmpty(MarkedItemList.get(type)) && ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
 		{
 			// Create a new button that users can use to create a new group from this page
-			Button createGroup = new Button(Text.LANG.buttonCreateGroupFromCart(), IconType.PLUS_SQUARE, event ->
+			Button createGroup = new Button(Text.LANG.buttonCreateGroupFromCart());
+			createGroup.addStyleName(Style.mdiLg(Style.MDI_PLUS_BOX));
+			createGroup.setType(ButtonType.DEFAULT);
+			createGroup.addClickHandler(event ->
 			{
 				// Create the group
-				AbstractCartView.askForGroupNameAndCreate(new ArrayList<>(MarkedItemList.get(type)), type, null);
+				AbstractCartView.askForGroupNameAndCreate(new ArrayList<>(MarkedItemList.get(type)), type, new DefaultAsyncCallback<ServerResult<Group>>()
+				{
+					@Override
+					protected void onSuccessImpl(ServerResult<Group> result)
+					{
+						groupCreationInterface.updateData(callback);
+						createGroup.removeFromParent();
+					}
+				});
 			});
-			createGroup.setType(ButtonType.DEFAULT);
 
-			createGroup.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+			createGroup.getElement().getStyle().setDisplay(com.google.gwt.dom.client.Style.Display.INLINE_BLOCK);
 			additionalButtonPanel.add(createGroup);
 			additionalButtonPanel.setVisible(true);
 
 			groupRegistration = GerminateEventBus.BUS.addHandler(GroupCreationEvent.TYPE, event ->
 			{
+				idToSelect = event.getId();
 				/* Get the updated group data */
-				groupCreationInterface.updateData(new DefaultAsyncCallback<ServerResult<List<Group>>>()
-												  {
-													  @Override
-													  protected void onSuccessImpl(ServerResult<List<Group>> result)
-													  {
-														  // Update the list and select the new group
-														  GroupListBox.this.clear();
-
-														  Group toSelect = result.getServerResult().get(0);
-
-														  for (Group group : result.getServerResult())
-														  {
-															  if (group.getId().equals(event.getId()))
-															  {
-																  toSelect = group;
-																  break;
-															  }
-														  }
-
-														  GroupListBox.this.setValue(toSelect, false);
-														  GroupListBox.this.setAcceptableValues(result.getServerResult());
-													  }
-												  }
-				);
+				groupCreationInterface.updateData(callback);
 			});
 		}
 	}

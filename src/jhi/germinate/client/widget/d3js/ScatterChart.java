@@ -123,7 +123,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			deleteButton = new Button("", e -> {
 				AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null);
 			});
-			deleteButton.addStyleName(Style.combine(Style.MDI, Style.MDI_DELETE));
+			deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 			deleteButton.setTitle(Text.LANG.generalClear());
 
 			badgeButton = new Button("", e -> {
@@ -145,7 +145,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 	private void initPlotButton()
 	{
-		Button plot = new Button(Text.LANG.trialsPlot(), IconType.ARROW_CIRCLE_RIGHT, e ->
+		Button plot = new Button(Text.LANG.trialsPlot(), e ->
 		{
 			// JavaScript.D3.removeD3();
 			T first = parameterSelection.getFirstObject().get(0);
@@ -186,6 +186,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 				}
 			});
 		});
+		plot.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
 		plot.setType(ButtonType.PRIMARY);
 
 		panel.add(plot);

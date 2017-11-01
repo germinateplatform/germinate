@@ -109,7 +109,7 @@ public class Home extends GerminateComposite implements HasHelp
 
 		panel.add(new HTML(Text.LANG.homeText()));
 
-		Button intro = new Button(Text.LANG.introductionTourButton(), IconType.PLAY, e ->
+		Button intro = new Button(Text.LANG.introductionTourButton(), e ->
 		{
 			Tour tour = Tour.newInstance();
 
@@ -128,6 +128,7 @@ public class Home extends GerminateComposite implements HasHelp
 
 			tour.start();
 		});
+		intro.addStyleName(Style.mdiLg(Style.MDI_PLAY));
 		intro.setType(ButtonType.PRIMARY);
 		panel.add(intro);
 

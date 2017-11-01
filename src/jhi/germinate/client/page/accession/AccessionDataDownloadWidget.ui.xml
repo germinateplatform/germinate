@@ -48,8 +48,8 @@
 			<t:ToggleSwitch b:id="formAttributes" ui:field="includeAttributes"/>
 		</b:FormGroup>
 		<b:ButtonGroup>
-			<b:Button ui:field="download" type="PRIMARY" icon="DOWNLOAD" text="{msg.accessionsDownloadAccessionData}"/>
-			<b:Button ui:field="pedigree" type="PRIMARY" icon="SITEMAP" text="{msg.accessionsDownloadPedigreeData}"/>
+			<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DOWNLOAD}" text="{msg.accessionsDownloadAccessionData}" type="PRIMARY" ui:field="download"/>
+			<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_SITEMAP}" text="{msg.accessionsDownloadPedigreeData}" type="PRIMARY" ui:field="pedigree"/>
 		</b:ButtonGroup>
 	</g:FlowPanel>
 </ui:UiBinder>

@@ -115,7 +115,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * @param title The title attribute
 	 * @return A <code>&lt;span&gt;</code> element with the given FontAwesome style and the given title attribute
 	 */
-	@Template("<span class='" + Style.MDI + " " + Style.FA_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
+	@Template("<span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
 	SafeHtml materialIconFixedWidth(String mdi, String title);
 
 	/**
@@ -127,7 +127,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * @param target The target
 	 * @return An anchor with the given link, target, title and FontAwesome style
 	 */
-	@Template("<a href='{2}' target ='{3}' style='word-break: break-word;'><span class='" + Style.MDI + " " + Style.FA_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
+	@Template("<a href='{2}' target ='{3}' style='word-break: break-word;'><span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
 	SafeHtml materialIconAnchor(String mdi, String title, SafeUri href, String target);
 
 	/**
@@ -139,7 +139,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * @param target The target
 	 * @return An anchor with the given link, target, title and FontAwesome style
 	 */
-	@Template("<span><a href='{3}' target ='{4}' style='word-break: break-word;'>{1}</a><a href='#'><span class='" + Style.MDI + " " + Style.FA_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='margin-left: 5px; vertical-align: middle' title='{2}'></span></a></span>")
+	@Template("<span><a href='{3}' target ='{4}' style='word-break: break-word;'>{1}</a><a href='#'><span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='margin-left: 5px; vertical-align: middle' title='{2}'></span></a></span>")
 	SafeHtml materialIconAnchorWithText(String mdi, String text, String iconTitle, SafeUri href, String target);
 
 	/**
@@ -149,7 +149,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * @param text The title attribuge
 	 * @return An anchor with the given link, target, title and FontAwesome style
 	 */
-	@Template("<span><span>{1}</span><a href='#'><span class='" + Style.MDI + " " + Style.FA_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='margin-left: 5px; vertical-align: middle' title='{2}'></span></a></span>")
+	@Template("<span><span>{1}</span><a href='#'><span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='margin-left: 5px; vertical-align: middle' title='{2}'></span></a></span>")
 	SafeHtml materialIconWithText(String mdi, String text, String iconTitle);
 
 	/**
@@ -219,7 +219,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * @param text        The text
 	 * @return A span element with the given text and FontAwesome styling
 	 */
-	@Template("<span class='text-primary " + Style.MDI + " " + Style.FA_FIXED_WIDTH + " " + Style.FA_LG + " " + Style.LAYOUT_V_ALIGN_MIDDLE
+	@Template("<span class='text-primary " + Style.MDI + " " + Style.FA_FIXED_WIDTH + " " + Style.MDI_LG + " " + Style.LAYOUT_V_ALIGN_MIDDLE
 			+ " {0}'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "' style='margin-left: 5px; white-space: nowrap;'>{1}</span>")
 	SafeHtml contextMenuItemMaterialIcon(String fontAwesome, String text);
 

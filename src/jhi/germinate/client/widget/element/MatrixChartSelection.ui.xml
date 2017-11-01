@@ -33,8 +33,8 @@
 			<b:Column size="XS_12,MD_6">
 				<b:Heading size="H4" ui:field="heading"/>
 				<g:HTML ui:field="html"/>
-				<g:Label ui:field="text"/>
 				<g8:GerminateValueListBox selectAllVisible="false" multipleSelect="true" ui:field="objectBox"/>
+				<g:Label ui:field="text"/>
 			</b:Column>
 			<b:Column size="XS_12,MD_6">
 				<b:Heading size="H4" text="{msg.phenotypeExportHeadingAccessionGroups}"/>

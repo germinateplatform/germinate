@@ -89,7 +89,7 @@ public class AccountSettings
 			list.appendChild(divider);
 		}
 
-		list.appendChild(new AccountSettingsItem(Text.LANG.menuLogout(), Style.MDI_LOGOUT, event ->
+		list.appendChild(new AccountSettingsItem(Text.LANG.menuLogout(), Style.MDI_LOGOUT_VARIANT, event ->
 		{
 			/* Track information using Google Analytics */
 			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGOUT, "logout");

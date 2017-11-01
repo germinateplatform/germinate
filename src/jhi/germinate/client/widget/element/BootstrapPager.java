@@ -48,14 +48,14 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 
 	private NumberFormat formatter;
 
-	private AnchorListItem firstPage   = new AnchorListItem();
-	private AnchorListItem prevPage    = new AnchorListItem();
-	private AnchorListItem currentPage = new AnchorListItem();
-	private AnchorListItem nextPage    = new AnchorListItem();
-	private AnchorListItem lastPage    = new AnchorListItem();
-	private ButtonGroup    group       = new ButtonGroup();
-	private Button         toggle      = new Button();
-	private DropDownMenu   menu        = new DropDownMenu();
+	private MdiAnchorListItem firstPage   = new MdiAnchorListItem();
+	private MdiAnchorListItem prevPage    = new MdiAnchorListItem();
+	private AnchorListItem    currentPage = new AnchorListItem();
+	private MdiAnchorListItem nextPage    = new MdiAnchorListItem();
+	private MdiAnchorListItem lastPage    = new MdiAnchorListItem();
+	private ButtonGroup       group       = new ButtonGroup();
+	private Button            toggle      = new Button();
+	private DropDownMenu      menu        = new DropDownMenu();
 	private final FlowPanel     panel;
 	private final UnorderedList ul;
 
@@ -89,11 +89,11 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 		ul.add(nextPage);
 		ul.add(lastPage);
 
-		firstPage.setIcon(IconType.ANGLE_DOUBLE_LEFT);
-		prevPage.setIcon(IconType.ANGLE_LEFT);
+		firstPage.setMdi(Style.MDI_CHEVRON_DOUBLE_LEFT);
+		prevPage.setMdi(Style.MDI_CHEVRON_LEFT);
 		currentPage.setHiddenOn(DeviceSize.XS);
-		nextPage.setIcon(IconType.ANGLE_RIGHT);
-		lastPage.setIcon(IconType.ANGLE_DOUBLE_RIGHT);
+		nextPage.setMdi(Style.MDI_CHEVRON_RIGHT);
+		lastPage.setMdi(Style.MDI_CHEVRON_DOUBLE_RIGHT);
 
 		ul.addStyleName(Style.combine(Style.LAYOUT_NO_PADDING, Style.LAYOUT_NO_MARGIN, Style.LAYOUT_V_ALIGN_MIDDLE, Styles.PAGINATION));
 
@@ -172,7 +172,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 		group.add(box);
 
 		AlertDialog dialog = new AlertDialog(Text.LANG.pagerJumpToPageTitle(), group);
-		dialog.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), IconType.CHECK, e ->
+		dialog.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, e ->
 		{
 			if (box.validate(true))
 			{
@@ -180,7 +180,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 				dialog.close();
 			}
 		}))
-			  .setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, null))
+			  .setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), Style.MDI_CANCEL, null))
 			  .setAutoCloseOnPositive(false)
 			  .addShownHandler(e ->
 			  {

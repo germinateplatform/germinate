@@ -113,7 +113,7 @@ public class GroupPreviewPage extends Composite
 
 		/* Add a delete button below the table that starts a server call to delete the selected items from the group */
 		ButtonGroup buttonGroup = new ButtonGroup();
-		Button deleteButton = new Button(Text.LANG.generalDelete(), IconType.TRASH, e ->
+		Button deleteButton = new Button(Text.LANG.generalDelete(), e ->
 		{
 			Set<? extends DatabaseObject> selectedItems = table.getSelection();
 
@@ -131,6 +131,7 @@ public class GroupPreviewPage extends Composite
 				});
 			}
 		});
+		deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 		buttonGroup.add(deleteButton);
 
 		table.addExtraContent(buttonGroup);

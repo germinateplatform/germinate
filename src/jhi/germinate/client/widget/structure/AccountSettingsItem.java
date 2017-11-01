@@ -39,7 +39,7 @@ public class AccountSettingsItem
 
 	public AccountSettingsItem(String text, String iconStyle, ClickHandler handler)
 	{
-		icon.addClassName(Style.combine(iconStyle, Style.MDI, Style.FA_FIXED_WIDTH, Style.FA_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
+		icon.addClassName(Style.combine(iconStyle, Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
 
 		name.setInnerText(text);
 		name.getStyle().setTextTransform(com.google.gwt.dom.client.Style.TextTransform.CAPITALIZE);

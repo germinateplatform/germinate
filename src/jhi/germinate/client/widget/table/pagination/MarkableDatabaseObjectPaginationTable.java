@@ -338,21 +338,14 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		popupPanel.add(menuBar);
 		popupPanel.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
 		{
-			Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
-			{
-				@Override
-				public void execute()
-				{
-					int popupX = x + Window.getScrollLeft();
-					if (popupX + offsetWidth > Window.getClientWidth() + Window.getScrollLeft())
-						popupX = Window.getClientWidth() + Window.getScrollLeft() - offsetWidth;
+			Scheduler.get().scheduleDeferred(() -> {
+				int popupX = x + Window.getScrollLeft();
+				if (popupX + offsetWidth > Window.getClientWidth() + Window.getScrollLeft())
+					popupX = Window.getClientWidth() + Window.getScrollLeft() - offsetWidth;
 
-					popupPanel.setPopupPosition(popupX, y + Window.getScrollTop());
-				}
+				popupPanel.setPopupPosition(popupX, y + Window.getScrollTop());
 			});
 		});
-//		popupPanel.setPopupPosition(popupX, y + Window.getScrollTop());
-//		popupPanel.show();
 		return true;
 	}
 
@@ -602,7 +595,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		Button deleteButton = new Button("", e -> {
 			AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(itemType), null);
 		});
-		deleteButton.addStyleName(Style.combine(Style.MDI, Style.MDI_DELETE));
+		deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 		deleteButton.setTitle(Text.LANG.generalClear());
 
 		Button badgeButton = new Button("", e -> {

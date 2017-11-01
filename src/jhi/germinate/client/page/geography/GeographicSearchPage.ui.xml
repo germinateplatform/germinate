@@ -34,8 +34,8 @@
 		<b:PageHeader text="{msg.geographicSearchTitle}"/>
 
 		<b:NavTabs>
-			<b:TabListItem active="true" dataTarget="#pointSearch" text="{msg.geographicSearchTabPoint}" icon="CROSSHAIRS" ui:field="pointTab"/>
-			<b:TabListItem dataTarget="#polygonSearch" text="{msg.geographicSearchTabPolygon}" icon="OBJECT_UNGROUP" ui:field="polygonTab"/>
+			<g8:MdiTabListItem active="true" dataTarget="#pointSearch" mdi="{MDI_CROSSHAIRS_GPS} {MDI_LG}" text="{msg.geographicSearchTabPoint}" ui:field="pointTab"/>
+			<g8:MdiTabListItem dataTarget="#polygonSearch" mdi="{MDI_VECTOR_POLYGON} {MDI_LG}" text="{msg.geographicSearchTabPolygon}" ui:field="polygonTab"/>
 		</b:NavTabs>
 		<b:TabContent>
 			<b:TabPane active="true" b:id="pointSearch" ui:field="pointTabContent">
@@ -62,7 +62,7 @@
 			</b:TabPane>
 		</b:TabContent>
 
-		<b:Button icon="ARROW_CIRCLE_RIGHT" text="{msg.generalConfirm}" type="PRIMARY" addStyleNames="{LAYOUT_BUTTON_MARGIN}"
+		<b:Button addStyleNames="{LAYOUT_BUTTON_MARGIN} {MDI} {MDI_LG} {MDI_ARROW_RIGHT_BOLD}" text="{msg.generalConfirm}" type="PRIMARY"
 				  ui:field="continueButton"/>
 
 		<g:FlowPanel visible="false" ui:field="resultPanel">

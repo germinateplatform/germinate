@@ -377,7 +377,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 			}
 
 			Button add = new Button();
-			add.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.MDI, Style.MDI_PLUS_BOX, Style.FA_LG));
+			add.setStyleName(Style.combine(Style.WIDGET_ICON_BUTTON, Style.MDI, Style.MDI_PLUS_BOX, Style.MDI_LG));
 
 			add.addClickHandler(event ->
 			{
@@ -426,8 +426,8 @@ public class AdminConfigPage extends Composite implements HasHelp
 	{
 		/* When clicked, show an AlertDialog asking for confirmation */
 		new AlertDialog(Text.LANG.generalConfirm(), Text.LANG.adminConfigAlertConfirmChanges())
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalYes(), IconType.CHECK_CIRCLE, ButtonType.SUCCESS, e -> updateSettings()))
-				.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalNo(), IconType.BAN, ButtonType.DANGER, null))
+				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalYes(), Style.MDI_CHECK_CIRCLE, ButtonType.SUCCESS, e -> updateSettings()))
+				.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalNo(), Style.MDI_CANCEL, ButtonType.DANGER, null))
 				.open();
 	}
 

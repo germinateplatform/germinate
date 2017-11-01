@@ -239,7 +239,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		{
 			/* Handle "continue" click events */
 			/* Get the selected items *//* Get their ids *//* Save the ids to the parameter store *//* Notify the callback */
-			continueButton = new Button(Text.LANG.generalContinue(), IconType.ARROW_CIRCLE_RIGHT, event ->
+			continueButton = new Button(Text.LANG.generalContinue(), event ->
 			{
 				/* Get the selected items */
 				Set<Dataset> selectedItems = table.getSelection();
@@ -269,6 +269,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 					continueWithDatasets(selectedItems);
 				}
 			});
+			continueButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
 			continueButton.setType(ButtonType.PRIMARY);
 			continueButton.addStyleName(Style.LAYOUT_BUTTON_MARGIN);
 

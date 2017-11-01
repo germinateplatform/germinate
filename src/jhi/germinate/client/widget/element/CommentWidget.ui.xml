@@ -21,6 +21,7 @@
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<ui:style>
 		.height {
@@ -53,7 +54,7 @@
 				<b:TextArea b:id="formComment" ui:field="commentBox" addStyleNames="{style.height}"/>
 			</b:FormGroup>
 
-			<b:Button icon="ARROW_CIRCLE_RIGHT" text="{msg.generalSubmitAnnotation}" ui:field="submitButton"/>
+			<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_ARROW_RIGHT_BOLD}" text="{msg.generalSubmitAnnotation}" ui:field="submitButton"/>
 
 		</g:FlowPanel>
 	</g:HTMLPanel>

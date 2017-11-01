@@ -48,7 +48,7 @@ public class ShareWidgetItem
 
 	public ShareWidgetItem(ShareUtils.ShareType type)
 	{
-		icon.addClassName(Style.combine(type.getIcon(), Style.MDI, Style.FA_FIXED_WIDTH, Style.FA_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
+		icon.addClassName(Style.combine(type.getIcon(), Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
 
 		String display = type.getTitle();
 

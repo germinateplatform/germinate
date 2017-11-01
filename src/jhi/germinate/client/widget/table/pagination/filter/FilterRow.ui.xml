@@ -22,6 +22,7 @@
 			 xmlns:ui="urn:ui:com.google.gwt.uibinder">
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<ui:style type="jhi.germinate.client.widget.table.pagination.filter.FilterRow.Style">
 		@external input-group-btn;
@@ -72,7 +73,7 @@
 		</g:FlowPanel>
 
 		<b:InputGroupButton>
-			<b:Button icon="TRASH" type="DANGER" ui:field="deleteButton"/>
+			<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DELETE}" type="DANGER" ui:field="deleteButton"/>
 		</b:InputGroupButton>
 	</b:InputGroup>
 </ui:UiBinder>

@@ -75,67 +75,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 			groupRegistration.removeHandler();
 	}
 
-	@Override
-	protected void setUpContent()
-	{
-		final List<String> markedIds = getItemType().getMarkedIds();
-
-		final FlowPanel content = new FlowPanel();
-		panel.add(content);
-		content.add(new Heading(HeadingSize.H3, Text.LANG.cartTitle()));
-
-		if (markedIds == null || markedIds.size() < 1)
-		{
-			content.add(new Paragraph(Text.LANG.cartEmpty()));
-		}
-		else
-		{
-			content.add(new Paragraph(Text.LANG.cartText()));
-
-			ButtonGroup buttonBar = new ButtonGroup();
-			Button clear = new Button(Text.LANG.generalClear(), IconType.TRASH, r ->
-			{
-				MarkedItemList.clear(getItemType());
-				History.fireCurrentHistoryState();
-			});
-			buttonBar.add(clear);
-
-            /* If logged in and groups page is available, add a create group
-			 * button */
-			if (ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue() && GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
-			{
-				GroupService.Inst.get().getTypes(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<GroupType>>>()
-				{
-					@Override
-					protected void onSuccessImpl(ServerResult<List<GroupType>> result)
-					{
-						types = result.getServerResult();
-
-						groupRegistration = GerminateEventBus.BUS.addHandler(GroupCreationEvent.TYPE, e -> History.fireCurrentHistoryState());
-
-						Button createGroup = new Button(Text.LANG.cartCreateGroup(), IconType.OBJECT_GROUP, e -> askForGroupNameAndCreate(markedIds, getItemType(), null));
-						buttonBar.add(createGroup);
-					}
-				});
-			}
-
-			content.add(buttonBar);
-
-			final FlowPanel tablePanel = new FlowPanel();
-			content.add(tablePanel);
-
-			table = getTable(markedIds);
-			tablePanel.add(table);
-
-			FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) -> writeToFile(new ArrayList<>(MarkedItemList.get(getItemType())), callback), true)
-					.addFile(Text.LANG.downloadFileAsTxt())
-					.addType(FileType.txt);
-
-			tablePanel.add(widget);
-		}
-	}
-
-	public static void askForGroupNameAndCreate(List<String> markedIds, MarkedItemList.ItemType itemType, AsyncCallback<ServerResult<Group>> callback)
+	public static void askForGroupNameAndCreate(List<String> newGroupMembers, MarkedItemList.ItemType itemType, AsyncCallback<ServerResult<Group>> callback)
 	{
 		GroupService.Inst.get().getTypes(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<GroupType>>>()
 		{
@@ -158,9 +98,9 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 				AddGroupDialog content = new AddGroupDialog(types, type);
 
 				final AlertDialog dialog = new AlertDialog(Text.LANG.groupsSubtitleNewGroup());
-				dialog.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev ->
+				dialog.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), Style.MDI_PLUS_BOX, ButtonType.SUCCESS, ev ->
 				{
-					if (addNewGroup(content.getName(), content.getDescription(), markedIds, itemType, callback))
+					if (addNewGroup(content.getName(), content.getDescription(), newGroupMembers, itemType, callback))
 						dialog.close();
 				}))
 					  .setAutoCloseOnPositive(false)
@@ -188,8 +128,17 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 
 		Group g = new Group().setName(strippedString).setDescription(description);
 
-		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), g, type.getTarget(), callback != null ? callback : new DefaultAsyncCallback<ServerResult<Group>>()
+		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), g, type.getTarget(), new DefaultAsyncCallback<ServerResult<Group>>()
 		{
+			@Override
+			protected void onFailureImpl(Throwable caught)
+			{
+				if (callback != null)
+					callback.onFailure(caught);
+				else
+					super.onFailureImpl(caught);
+			}
+
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)
 			{
@@ -197,10 +146,76 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 
 				if (!CollectionUtils.isEmpty(newGroupMembers))
 					addGroupMembers(newGroupMembers, result.getServerResult().getId(), type);
+
+				if (callback != null)
+					callback.onSuccess(result);
 			}
 		});
 
 		return true;
+	}
+
+	@Override
+	protected void setUpContent()
+	{
+		final List<String> markedIds = getItemType().getMarkedIds();
+
+		final FlowPanel content = new FlowPanel();
+		panel.add(content);
+		content.add(new Heading(HeadingSize.H3, Text.LANG.cartTitle()));
+
+		if (markedIds == null || markedIds.size() < 1)
+		{
+			content.add(new Paragraph(Text.LANG.cartEmpty()));
+		}
+		else
+		{
+			content.add(new Paragraph(Text.LANG.cartText()));
+
+			ButtonGroup buttonBar = new ButtonGroup();
+			Button clear = new Button(Text.LANG.generalClear(), r ->
+			{
+				MarkedItemList.clear(getItemType());
+				History.fireCurrentHistoryState();
+			});
+			clear.addStyleName(Style.mdiLg(Style.MDI_DELETE));
+			buttonBar.add(clear);
+
+            /* If logged in and groups page is available, add a create group
+			 * button */
+			if (ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue() && GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
+			{
+				GroupService.Inst.get().getTypes(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<GroupType>>>()
+				{
+					@Override
+					protected void onSuccessImpl(ServerResult<List<GroupType>> result)
+					{
+						types = result.getServerResult();
+
+						groupRegistration = GerminateEventBus.BUS.addHandler(GroupCreationEvent.TYPE, e -> History.fireCurrentHistoryState());
+
+						Button createGroup = new Button(Text.LANG.cartCreateGroup(), e -> askForGroupNameAndCreate(markedIds, getItemType(), null));
+						createGroup.addStyleName(Style.mdiLg(Style.MDI_GROUP));
+						buttonBar.add(createGroup);
+					}
+				});
+			}
+
+			content.add(buttonBar);
+
+			final FlowPanel tablePanel = new FlowPanel();
+			content.add(tablePanel);
+
+			table = getTable(markedIds);
+			tablePanel.add(table);
+
+			FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) -> writeToFile(new ArrayList<>(MarkedItemList.get(getItemType())), callback), true)
+					.addFile(Text.LANG.downloadFileAsTxt())
+					.setIconStyle(FileDownloadWidget.IconStyle.MDI)
+					.addType(FileType.txt);
+
+			tablePanel.add(widget);
+		}
 	}
 
 	private static void addGroupMembers(List<String> newGroupMembers, Long groupId, MarkedItemList.ItemType type)

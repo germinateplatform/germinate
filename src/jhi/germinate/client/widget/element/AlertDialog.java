@@ -181,6 +181,28 @@ public final class AlertDialog
 		dialog.removeFromParent();
 	}
 
+	public static void createYesNoDialog(String title, String message, boolean danger, ClickHandler positive, ClickHandler negative)
+	{
+		ModalBody body = new ModalBody();
+		body.add(new Label(message));
+		new AlertDialog(title, body)
+				.setPositiveButtonConfig(new ButtonConfig(Text.LANG.generalYes(), Style.MDI_CHECK, danger ? ButtonType.DANGER : ButtonType.PRIMARY, positive))
+				.setNegativeButtonConfig(new ButtonConfig(Text.LANG.generalNo(), Style.MDI_CANCEL, ButtonType.DEFAULT, negative))
+				.focusPositiveButton()
+				.open();
+	}
+
+	/**
+	 * Opens the {@link AlertDialog}.
+	 */
+	public void open()
+	{
+		if (!isSetUp)
+			setUp();
+
+		dialog.show();
+	}
+
 	private void setUp()
 	{
 		isSetUp = true;
@@ -200,7 +222,8 @@ public final class AlertDialog
 		{
 			negativeButton = new Button(negativeConfig.text);
 			negativeButton.setType(negativeConfig.buttonType);
-			negativeButton.setIcon(negativeConfig.icon);
+			if (!StringUtils.isEmpty(negativeConfig.mdiIcon))
+				negativeButton.addStyleName(Style.mdiLg(negativeConfig.mdiIcon));
 
 			if (!StringUtils.isEmpty(negativeConfig.id))
 				negativeButton.getElement().setId(negativeConfig.id);
@@ -221,7 +244,8 @@ public final class AlertDialog
 		{
 			positiveButton = new Button(positiveConfig.text);
 			positiveButton.setType(positiveConfig.buttonType);
-			positiveButton.setIcon(positiveConfig.icon);
+			if (!StringUtils.isEmpty(positiveConfig.mdiIcon))
+				positiveButton.addStyleName(Style.mdiLg(positiveConfig.mdiIcon));
 
 			if (!StringUtils.isEmpty(positiveConfig.id))
 				positiveButton.getElement().setId(positiveConfig.id);
@@ -239,17 +263,6 @@ public final class AlertDialog
 		}
 
 		dialog.add(footer);
-	}
-
-	/**
-	 * Opens the {@link AlertDialog}.
-	 */
-	public void open()
-	{
-		if (!isSetUp)
-			setUp();
-
-		dialog.show();
 	}
 
 	public AlertDialog setSize(ModalSize size)
@@ -270,14 +283,14 @@ public final class AlertDialog
 			positiveButton.click();
 	}
 
-	public static void createYesNoDialog(String title, String message, boolean danger, ClickHandler positive, ClickHandler negative)
+	public AlertDialog focusPositiveButton()
 	{
-		ModalBody body = new ModalBody();
-		body.add(new Label(message));
-		new AlertDialog(title, body)
-				.setPositiveButtonConfig(new ButtonConfig(Text.LANG.generalYes(), IconType.CHECK, danger ? ButtonType.DANGER : ButtonType.PRIMARY, positive))
-				.setNegativeButtonConfig(new ButtonConfig(Text.LANG.generalNo(), IconType.BAN, ButtonType.DEFAULT, negative))
-				.open();
+		dialog.addShownHandler(e -> {
+			if (positiveButton != null)
+				positiveButton.setFocus(true);
+		});
+
+		return this;
 	}
 
 	/**
@@ -288,7 +301,7 @@ public final class AlertDialog
 	public static final class ButtonConfig
 	{
 		private String       text;
-		private IconType     icon;
+		private String       mdiIcon;
 		private ButtonType   buttonType;
 		private String       id;
 		private ClickHandler callback;
@@ -297,13 +310,14 @@ public final class AlertDialog
 		 * Creates a new instance of {@link ButtonConfig} using the given text, {@link Icon} and {@link Size}
 		 *
 		 * @param text     The text to display on the button
-		 * @param icon     The {@link IconType} to show on the left
+		 * @param icon     The MDI style to show on the left
+		 * @param type     The {@link ButtonType}
 		 * @param callback The {@link ClickHandler}
 		 */
-		public ButtonConfig(String text, IconType icon, ButtonType type, ClickHandler callback)
+		public ButtonConfig(String text, String icon, ButtonType type, ClickHandler callback)
 		{
 			this.text = text;
-			this.icon = icon;
+			this.mdiIcon = icon;
 			this.buttonType = type;
 			this.callback = callback;
 		}
@@ -312,13 +326,12 @@ public final class AlertDialog
 		 * Creates a new instance of {@link ButtonConfig} using the given text, {@link Icon} and {@link Size}
 		 *
 		 * @param text     The text to display on the button
-		 * @param icon     The {@link IconType} to show on the left
+		 * @param icon     The MDI style to show on the left
 		 * @param callback The {@link ClickHandler}
 		 */
-		public ButtonConfig(String text, IconType icon, ClickHandler callback)
+		public ButtonConfig(String text, String icon, ClickHandler callback)
 		{
 			this(text, icon, ButtonType.DEFAULT, callback);
 		}
-
 	}
 }

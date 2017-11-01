@@ -51,13 +51,15 @@ public class AdvancedTable<T> extends Composite
 		}
 
 		table = new CellTable<>(data.size());
-		table.setWidth("100%");
+		table.addStyleName(Style.LAYOUT_NO_MARGIN);
 
 		table.setAutoFooterRefreshDisabled(false);
 		table.setAutoHeaderRefreshDisabled(false);
 		table.getElement().setId(id);
 
 		FlowPanel scrollPanel = new FlowPanel();
+		scrollPanel.addStyleName(Style.TABLE_BORDER);
+		scrollPanel.addStyleName("table-responsive");
 		scrollPanel.add(table);
 
         /* Take care of sorting */

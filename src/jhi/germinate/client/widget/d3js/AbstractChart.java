@@ -337,7 +337,8 @@ public abstract class AbstractChart extends GerminateComposite
 			if (button == null)
 			{
 				// Create the button that opens the menu
-				button = new Button("", IconType.DOWNLOAD, event -> handleEvent(event, button, popup));
+				button = new Button("", event -> handleEvent(event, button, popup));
+				button.addStyleName(Style.mdiLg(Style.MDI_DOWNLOAD));
 				button.setTitle(Text.LANG.generalSaveAs());
 
 				buttonGroup = new ButtonGroup();
@@ -410,8 +411,8 @@ public abstract class AbstractChart extends GerminateComposite
 		body.add(textBox);
 
 		final AlertDialog dialog = new AlertDialog(Text.LANG.generalFilename(), body)
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalContinue(), IconType.ARROW_CIRCLE_RIGHT, (e) -> callback.onSuccess(textBox.getValue())))
-				.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, (e) -> callback.onFailure(null)));
+				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalContinue(), Style.MDI_ARROW_RIGHT_BOLD, (e) -> callback.onSuccess(textBox.getValue())))
+				.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), Style.MDI_CANCEL, (e) -> callback.onFailure(null)));
 
 		// Add an enter key listener
 		textBox.addKeyUpHandler(event ->

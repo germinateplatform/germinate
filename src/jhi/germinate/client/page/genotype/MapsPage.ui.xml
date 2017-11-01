@@ -21,6 +21,7 @@
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<ui:style>
 		.margin {
@@ -84,44 +85,58 @@
 							<b:TabPane b:id="region">
 								<g:HTML ui:field="regionHtml"/>
 
-								<g:SimplePanel ui:field="regionTable"/>
+								<g:SimplePanel addStyleNames="{TABLE_BORDER}" ui:field="regionTable"/>
 
 								<b:ButtonGroup>
-									<b:Button addStyleNames="{style.no-border-top}" icon="TRASH_O" ui:field="deleteRegion"/>
-									<b:Button addStyleNames="{style.no-border-top}" icon="PLUS_SQUARE_O" ui:field="addRegion"/>
+									<b:Button addStyleNames="{style.no-border-top} {MDI} {MDI_LG} {MDI_DELETE}" ui:field="deleteRegion"/>
+									<b:Button addStyleNames="{style.no-border-top} {MDI} {MDI_LG} {MDI_PLUS_BOX}" ui:field="addRegion"/>
 								</b:ButtonGroup>
 							</b:TabPane>
 							<b:TabPane b:id="interval">
 								<g:HTML ui:field="intervalHtml"/>
 
-								<b:FormGroup>
-									<b:FormLabel for="formFirst" text="{msg.markersExportOptionsIntervalFirstMarker}"/>
-									<b:TextBox b:id="formFirst" ui:field="intervalFirstMarker"/>
-								</b:FormGroup>
-								<b:FormGroup>
-									<b:FormLabel for="formSecond" text="{msg.markersExportOptionsIntervalSecondMarker}"/>
-									<b:TextBox b:id="formSecond" ui:field="intervalSecondMarker"/>
-								</b:FormGroup>
+								<b:Row>
+									<b:Column size="XS_12,SM_6">
+										<b:FormGroup>
+											<b:FormLabel for="formFirst" text="{msg.markersExportOptionsIntervalFirstMarker}"/>
+											<b:TextBox b:id="formFirst" ui:field="intervalFirstMarker"/>
+										</b:FormGroup>
+									</b:Column>
+									<b:Column size="XS_12,SM_6">
+										<b:FormGroup>
+											<b:FormLabel for="formSecond" text="{msg.markersExportOptionsIntervalSecondMarker}"/>
+											<b:TextBox b:id="formSecond" ui:field="intervalSecondMarker"/>
+										</b:FormGroup>
+									</b:Column>
+								</b:Row>
 							</b:TabPane>
 							<b:TabPane b:id="radius">
 								<g:HTML ui:field="radiusHtml"/>
 
-								<b:FormGroup>
-									<b:FormLabel for="formLeft" text="{msg.markersExportOptionsRadiusOffsetLeft}"/>
-									<i:RangedLongTextBox min="0" ui:field="radiusLeft" b:id="formLeft"/>
-								</b:FormGroup>
-								<b:FormGroup>
-									<b:FormLabel for="formMarker" text="{msg.markersExportOptionsRadiusMarker}"/>
-									<b:TextBox ui:field="radiusMarker" b:id="formMarker"/>
-								</b:FormGroup>
-								<b:FormGroup>
-									<b:FormLabel for="formRight" text="{msg.markersExportOptionsRadiusOffsetRight}"/>
-									<i:RangedLongTextBox min="0" ui:field="radiusRight" b:id="formRight"/>
-								</b:FormGroup>
+								<b:Row>
+									<b:Column size="XS_12,SM_4">
+										<b:FormGroup>
+											<b:FormLabel for="formLeft" text="{msg.markersExportOptionsRadiusOffsetLeft}"/>
+											<i:RangedLongTextBox min="0" b:id="formLeft" ui:field="radiusLeft"/>
+										</b:FormGroup>
+									</b:Column>
+									<b:Column size="XS_12,SM_4">
+										<b:FormGroup>
+											<b:FormLabel for="formMarker" text="{msg.markersExportOptionsRadiusMarker}"/>
+											<b:TextBox b:id="formMarker" ui:field="radiusMarker"/>
+										</b:FormGroup>
+									</b:Column>
+									<b:Column size="XS_12,SM_4">
+										<b:FormGroup>
+											<b:FormLabel for="formRight" text="{msg.markersExportOptionsRadiusOffsetRight}"/>
+											<i:RangedLongTextBox min="0" b:id="formRight" ui:field="radiusRight"/>
+										</b:FormGroup>
+									</b:Column>
+								</b:Row>
 							</b:TabPane>
 						</b:TabContent>
 
-						<b:Button addStyleNames="{style.margin}" type="DANGER" icon="BAN" text="{msg.markersExportOptionsClosePanel}"
+						<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_CANCEL}" text="{msg.markersExportOptionsClosePanel}" type="DANGER"
 								  ui:field="closeOptions"/>
 					</b:PanelBody>
 				</b:PanelCollapse>

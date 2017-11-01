@@ -17,38 +17,31 @@
 
 package jhi.germinate.client.widget.element;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.dom.client.*;
 
-import jhi.germinate.client.i18n.*;
-import jhi.germinate.shared.*;
+import org.gwtbootstrap3.client.ui.*;
+
+import jhi.germinate.shared.Style;
 
 /**
  * @author Sebastian Raubach
  */
-public class HelpModal extends Composite
+public class MdiTabListItem extends TabListItem
 {
-	public static void show(Widget content)
-	{
-		new AlertDialog(Text.LANG.helpTitle(), new HelpModal(content))
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, null))
-				.open();
-	}
-
-	interface HelpModalUiBinder extends UiBinder<HTMLPanel, HelpModal>
+	public MdiTabListItem()
 	{
 	}
 
-	private static HelpModalUiBinder ourUiBinder = GWT.create(HelpModalUiBinder.class);
-
-	@UiField
-	HTMLPanel content;
-
-	public HelpModal(Widget widget)
+	public MdiTabListItem(String text)
 	{
-		initWidget(ourUiBinder.createAndBindUi(this));
+		super(text);
+	}
 
-		content.add(widget);
+	public void setMdi(String style)
+	{
+		SpanElement span = Document.get().createSpanElement();
+		span.getStyle().setMarginRight(5, com.google.gwt.dom.client.Style.Unit.PX);
+		span.addClassName(Style.mdi(style));
+		anchor.getElement().insertFirst(span);
 	}
 }

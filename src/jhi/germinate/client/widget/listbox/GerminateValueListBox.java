@@ -18,7 +18,6 @@
 package jhi.germinate.client.widget.listbox;
 
 import com.google.gwt.dom.client.*;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.text.shared.*;
@@ -36,6 +35,7 @@ import java.util.*;
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.shared.*;
+import jhi.germinate.shared.Style;
 
 /**
  * Implementation of {@link HasConstrainedValue} based on a {@link com.google.gwt.dom.client.SelectElement}. <p> A {@link Renderer Renderer<T>} is
@@ -318,7 +318,6 @@ public class GerminateValueListBox<T> extends Composite implements Focusable, Ha
 		content.add(listBox);
 		content.add(additionalButtonPanel);
 		additionalButtonPanel.setVisible(false);
-//		additionalButtonPanel.getElement().getStyle().setMarginTop(10, Style.Unit.PX);
 
 		getListBox().addChangeHandler(event ->
 		{
@@ -338,8 +337,8 @@ public class GerminateValueListBox<T> extends Composite implements Focusable, Ha
 			additionalButtonPanel.setVisible(true);
 			content.addStyleName(jhi.germinate.shared.Style.LAYOUT_SELECT_BUTTON_COMBO);
 
-			selectAll.setIcon(IconType.CHECK_SQUARE_O);
-			selectAll.getElement().getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+			selectAll.addStyleName(Style.mdiLg(Style.CHECKBOX_MULTIPLE_MARKED_OUTLINE));
+			selectAll.getElement().getStyle().setDisplay(com.google.gwt.dom.client.Style.Display.INLINE_BLOCK);
 			selectAll.addClickHandler(event -> setValues(values, false));
 			selectAll.setType(ButtonType.DEFAULT);
 		}

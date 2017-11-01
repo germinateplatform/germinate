@@ -56,7 +56,8 @@ public class FilterPanel implements KeyPressHandler
 	{
 		body = new FlowPanel();
 		content = new FlowPanel();
-		Button addButton = new Button(Text.LANG.generalAdd(), IconType.PLUS_SQUARE_O, e -> addRow());
+		Button addButton = new Button(Text.LANG.generalAdd(), e -> addRow());
+		addButton.addStyleName(Style.mdiLg(Style.MDI_PLUS_BOX));
 
 		body.add(new HTML(Text.LANG.tableFilterInfo()));
 		body.add(content);
@@ -69,12 +70,12 @@ public class FilterPanel implements KeyPressHandler
 		{
 			dialog = new AlertDialog(Text.LANG.generalFilter(), body)
 					.setRemoveOnHide(false)
-					.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClear(), IconType.BAN, e -> {
+					.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClear(), Style.MDI_CANCEL, e -> {
 						clear();
 						if (handler != null)
 							handler.onClearClicked();
 					}))
-					.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalSearch(), IconType.SEARCH, ButtonType.PRIMARY, e -> {
+					.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalSearch(), Style.MDI_MAGNIFY, ButtonType.PRIMARY, e -> {
 						if (handler != null)
 							handler.onSearchClicked();
 					}));

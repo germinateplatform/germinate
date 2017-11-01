@@ -58,6 +58,7 @@ public class Style
 
 	public static final String MAPS_PANEL = "gm8-maps-panel";
 
+	public static final String TABLE_BORDER               = "gm8-table-border";
 	public static final String TABLE_CONTROL_PANEL        = "gm8-table-control-panel";
 	public static final String TABLE_CONTROL_PANEL_TOP    = TABLE_CONTROL_PANEL + " top";
 	public static final String TABLE_CONTROL_PANEL_BOTTOM = TABLE_CONTROL_PANEL + " bottom";
@@ -111,11 +112,14 @@ public class Style
 	public static final String MDI_REORDER_VERTICAL                = "mdi-reorder-vertical";
 	public static final String MDI_GOOGLE_MAPS                     = "mdi-google-maps";
 	public static final String MDI_VIEW_QUILT                      = "mdi-view-quilt";
+	public static final String MDI_VIEW_LIST                       = "mdi-view-list";
 	public static final String MDI_CROSSHAIRS_GPS                  = "mdi-crosshairs-gps";
 	public static final String MDI_BULLETIN_BOARD                  = "mdi-bulletin-board";
 	public static final String MDI_NEWSPAPER                       = "mdi-newspaper";
 	public static final String MDI_REFRESH                         = "mdi-refresh";
 	public static final String MDI_LOGOUT                          = "mdi-logout";
+	public static final String MDI_LOGIN_VARIANT                   = "mdi-login-variant";
+	public static final String MDI_LOGOUT_VARIANT                  = "mdi-logout-variant";
 	public static final String MDI_SETTINGS                        = "mdi-settings";
 	public static final String MDI_EYE_OFF                         = "mdi-eye-off";
 	public static final String MDI_LOCK_OPEN                       = "mdi-lock-open";
@@ -144,6 +148,7 @@ public class Style
 	public static final String MDI_HELP_CIRCLE_OUTLINE             = "mdi-help-circle-outline";
 	public static final String MDI_FILTER                          = "mdi-filter";
 	public static final String MDI_ARROW_RIGHT_BOLD_CIRCLE         = "mdi-arrow-right-bold-circle";
+	public static final String MDI_ARROW_LEFT_BOLD_CIRCLE          = "mdi-arrow-left-bold-circle";
 	public static final String MDI_CLOCK                           = "mdi-clock";
 	public static final String MDI_TRANSLATE                       = "mdi-translate";
 	public static final String MDI_EMAIL                           = "mdi-email";
@@ -152,7 +157,32 @@ public class Style
 	public static final String MDI_VIEW_GRID                       = "mdi-view-grid";
 	public static final String MDI_WEB                             = "mdi-web";
 	public static final String MDI_GITHUB_CIRCLE                   = "mdi-github-circle";
+	public static final String MDI_PLAY                            = "mdi-play";
 	public static final String MDI_GLASSES                         = "mdi-glasses";
+	public static final String MDI_CANCEL                          = "mdi-cancel";
+	public static final String MDI_CHECK_CIRCLE                    = "mdi-check-circle";
+	public static final String MDI_UPLOAD                          = "mdi-upload";
+	public static final String MDI_ALERT                           = "mdi-alert";
+	public static final String MDI_PLUS_BOX_OUTLINE                = "mdi-plus-box-outline";
+	public static final String MDI_CHEVRON_LEFT                    = "mdi-chevron-left";
+	public static final String MDI_CHEVRON_DOUBLE_LEFT             = "mdi-chevron-double-left";
+	public static final String MDI_CHEVRON_RIGHT                   = "mdi-chevron-right";
+	public static final String MDI_CHEVRON_DOUBLE_RIGHT            = "mdi-chevron-double-right";
+	public static final String CHECKBOX_MULTIPLE_MARKED_OUTLINE    = "mdi-checkbox-multiple-marked-outline";
+	public static final String MDI_PENCIL_BOX_OUTLINE              = "mdi-pencil-box-outline";
+	public static final String MDI_ARROW_LEFT_BOLD                 = "mdi-arrow-left-bold";
+	public static final String MDI_ARROW_RIGHT_BOLD                = "mdi-arrow-right-bold";
+	public static final String MDI_VIEW_COLUMN                     = "mdi-view-column";
+	public static final String MDI_CONTENT_SAVE                    = "mdi-content-save";
+	public static final String MDI_CONTENT_PASTE                   = "mdi-content-paste";
+	public static final String MDI_FORMAT_ALIGN_JUSTIFY            = "mdi-format-align-justify";
+	public static final String MDI_FORMAT_ALIGN_LEFT               = "mdi-format-align-left";
+	public static final String MDI_ROTATE_90                       = "mdi-rotate-90";
+	public static final String MDI_ROTATE_270                      = "mdi-rotate-270";
+	public static final String MDI_FORMAT_INDENT_INCREASE          = "mdi-format-indent-increase";
+	public static final String MDI_VECTOR_POLYGON                  = "mdi-vector-polygon";
+	public static final String MDI_LG                              = "mdi-lg";
+	public static final String MDI_PLAYLIST_PLUS                   = "mdi-playlist-plus";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
 	public static final String COL_XXS_12                          = "col-xxs-12";
 
@@ -172,5 +202,15 @@ public class Style
 						 .filter(s -> !StringUtils.isEmpty(s))
 						 .collect(Collectors.joining(" "));
 		}
+	}
+
+	public static String mdi(String style)
+	{
+		return combine(MDI, style);
+	}
+
+	public static String mdiLg(String style)
+	{
+		return combine(MDI, style, MDI_LG);
 	}
 }

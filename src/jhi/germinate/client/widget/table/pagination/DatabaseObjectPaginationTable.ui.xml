@@ -53,10 +53,6 @@
 		.filter span.label-default {
 			margin: 0 10px;
 		}
-
-		.border {
-			border: 1px solid #ddd;
-		}
 	</ui:style>
 
 	<g:HTMLPanel ui:field="panel">
@@ -66,12 +62,12 @@
 			<g:FlowPanel addStyleNames="{PULL_LEFT}">
 				<g:FlowPanel addStyleNames="{TABLE_CONTROL_PANEL_TOP} {BTN_GROUP}">
 					<b:ButtonGroup ui:field="columnSelectorButton">
-						<b:Button dataToggle="DROPDOWN" icon="COLUMNS" type="DEFAULT" toggleCaret="true" title="{msg.columnSelectorButtonTitle}"/>
+						<b:Button addStyleNames="{MDI} {MDI_VIEW_COLUMN} {MDI_LG}" dataToggle="DROPDOWN" title="{msg.columnSelectorButtonTitle}" toggleCaret="true" type="DEFAULT"/>
 						<g8:NonAutoCloseDropDownMenu ui:field="columnSelectorMenu"/>
 					</b:ButtonGroup>
 					<b:ButtonGroup addStyleNames="{style.inlineBlock}" visible="false" ui:field="filterPlaceholder">
-						<b:Button addStyleNames="{MDI} {MDI_FILTER}" title="{msg.filterButtonTitle}" ui:field="filterButton"/>
-						<b:Button addStyleNames="{MDI} {MDI_DELETE}" title="{msg.generalClear}" type="DANGER" visible="false"
+						<b:Button addStyleNames="{MDI} {MDI_FILTER} {MDI_LG}" title="{msg.filterButtonTitle}" ui:field="filterButton"/>
+						<b:Button addStyleNames="{MDI} {MDI_DELETE} {MDI_LG}" title="{msg.generalClear}" type="DANGER" visible="false"
 								  ui:field="clearFilterButton"/>
 					</b:ButtonGroup>
 				</g:FlowPanel>
@@ -83,14 +79,14 @@
 			</g:FlowPanel>
 		</g:FlowPanel>
 
-		<g:FlowPanel addStyleNames="{LAYOUT_CLEAR_BOTH} table-responsive {style.marginZero} {style.border}">
+		<g:FlowPanel addStyleNames="{LAYOUT_CLEAR_BOTH} table-responsive {style.marginZero} {TABLE_BORDER}">
 			<bg:CellTable addStyleNames="{style.marginZero}" ui:field="table"/>
 		</g:FlowPanel>
 
 		<g:FlowPanel ui:field="bottomPanel">
 			<g:FlowPanel addStyleNames="{PULL_LEFT}">
 				<b:ButtonGroup addStyleNames="{TABLE_CONTROL_PANEL_BOTTOM}" visible="false" ui:field="extrasPlaceholder">
-					<b:Button icon="DOWNLOAD" title="{msg.generalDownload}" ui:field="downloadButton"/>
+					<b:Button addStyleNames="{MDI} {MDI_DOWNLOAD} {MDI_LG}" title="{msg.generalDownload}" ui:field="downloadButton"/>
 				</b:ButtonGroup>
 			</g:FlowPanel>
 			<g:FlowPanel addStyleNames="{PULL_RIGHT}">

@@ -17,12 +17,12 @@
 
 package jhi.germinate.client.util;
 
-import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.extras.notify.client.constants.*;
 import org.gwtbootstrap3.extras.notify.client.ui.*;
 
 import java.util.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.Tuple.*;
 
 /**
@@ -152,19 +152,19 @@ public class Notification
 		{
 			case WARNING:
 				settings.setType(NotifyType.WARNING);
-				Notify.notify(null, message, IconType.WARNING, settings);
+				Notify.notify(null, message, Style.mdiLg(Style.MDI_ALERT), settings);
 				break;
 			case INFO:
 				settings.setType(NotifyType.INFO);
-				Notify.notify(null, message, IconType.INFO, settings);
+				Notify.notify(null, message, Style.mdiLg(Style.MDI_INFORMATION_OUTLINE), settings);
 				break;
 			case ERROR:
 				settings.setType(NotifyType.DANGER);
-				Notify.notify(null, message, IconType.BAN, settings);
+				Notify.notify(null, message, Style.mdiLg(Style.MDI_CANCEL), settings);
 				break;
 			case SUCCESS:
 				settings.setType(NotifyType.SUCCESS);
-				Notify.notify(null, message, IconType.CHECK, settings);
+				Notify.notify(null, message, Style.mdiLg(Style.MDI_CHECK), settings);
 				break;
 		}
 	}

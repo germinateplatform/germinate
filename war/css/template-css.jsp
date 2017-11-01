@@ -43,6 +43,24 @@ footer > div.container-fluid {
   line-height: 40px;
 }
 
+button.mdi:empty:before {
+  margin-right: 0;
+}
+
+.mdi.<%= Style.MDI_LG %>:before {
+  font-size: 1.15em;
+  line-height: .4em;
+  vertical-align: -15%;
+}
+
+button.mdi:before {
+  margin-right: 5px;
+}
+
+.<%= Style.TABLE_BORDER %> {
+  border: 1px solid #ddd;
+}
+
 #<%= Id.STRUCTURE_LOGIN %> .navbar > .container .navbar-brand .logo,
 #<%= Id.STRUCTURE_PAGE %> .navbar > .container .navbar-brand .logo {
  height: 50px;
@@ -160,12 +178,6 @@ footer > div.container-fluid {
 .sidebar .arrow {
   float: right;
   line-height: 21px;
-}
-.sidebar .mdi.arrow:before {
-  content: "\f104";
-}
-.sidebar .active > a > .mdi.arrow:before {
-  content: "\f107";
 }
 .sidebar .nav-second-level li,
 .sidebar .nav-third-level li {

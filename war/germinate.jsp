@@ -72,7 +72,6 @@
 	<link type="text/css" rel="stylesheet" href="css/cookiecuttr.css"/>
 
 	<!-- Custom Fonts -->
-	<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="css/materialdesignicons.min.css" rel="stylesheet" type="text/css">
 
 	<!-- Intro.js -->

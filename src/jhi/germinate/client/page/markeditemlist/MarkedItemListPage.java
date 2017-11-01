@@ -27,6 +27,7 @@ import jhi.germinate.client.page.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -54,10 +55,11 @@ public class MarkedItemListPage extends GerminateComposite implements HasHelp
 
 		for (MarkedItemList.ItemType type : MarkedItemList.ItemType.values())
 		{
-			TabListItem item = new TabListItem(type.getDisplayName());
+			MdiTabListItem item = new MdiTabListItem(type.getDisplayName());
 
 			item.setDataTarget("#gm8-cart-" + type.name());
 			item.setActive(type == selectedType);
+			item.setMdi(Style.combine(Style.MDI_LG, type.getIcon()));
 			item.setBadgeText(NumberUtils.INTEGER_FORMAT.format(MarkedItemList.get(type).size()));
 
 			tabs.add(item);

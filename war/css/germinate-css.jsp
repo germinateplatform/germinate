@@ -398,6 +398,7 @@ th {
 	background-position: 0 -456px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_AE,
 .<%= Style.COUNTRY_FLAG %>.ae {
 	background-position: 0 -480px;
 }
@@ -414,6 +415,7 @@ th {
 	background-position: 0 -552px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.sq_AL,
 .<%= Style.COUNTRY_FLAG %>.al {
 	background-position: 0 -576px;
 }
@@ -434,6 +436,7 @@ th {
 	background-position: 0 -672px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_AR,
 .<%= Style.COUNTRY_FLAG %>.ar {
 	background-position: 0 -696px;
 }
@@ -442,10 +445,12 @@ th {
 	background-position: 0 -720px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.de_AT,
 .<%= Style.COUNTRY_FLAG %>.at {
 	background-position: 0 -744px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_AU,
 .<%= Style.COUNTRY_FLAG %>.au {
 	background-position: 0 -768px;
 }
@@ -462,6 +467,7 @@ th {
 	background-position: 0 -840px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.sr_BA,
 .<%= Style.COUNTRY_FLAG %>.ba {
 	background-position: 0 -864px;
 }
@@ -474,6 +480,8 @@ th {
 	background-position: 0 -912px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.nl_BE,
+.<%= Style.COUNTRY_FLAG %>.fr_BE,
 .<%= Style.COUNTRY_FLAG %>.be {
 	background-position: 0 -936px;
 }
@@ -482,10 +490,12 @@ th {
 	background-position: 0 -960px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.bg_BG,
 .<%= Style.COUNTRY_FLAG %>.bg {
 	background-position: 0 -984px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_BH,
 .<%= Style.COUNTRY_FLAG %>.bh {
 	background-position: 0 -1008px;
 }
@@ -510,10 +520,12 @@ th {
 	background-position: 0 -1128px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_BO,
 .<%= Style.COUNTRY_FLAG %>.bo {
 	background-position: 0 -1152px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.pt_BR,
 .<%= Style.COUNTRY_FLAG %>.br {
 	background-position: 0 -1176px;
 }
@@ -530,6 +542,7 @@ th {
 	background-position: 0 -1248px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.be_BY,
 .<%= Style.COUNTRY_FLAG %>.by {
 	background-position: 0 -1272px;
 }
@@ -538,6 +551,8 @@ th {
 	background-position: 0 -1296px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_CA,
+.<%= Style.COUNTRY_FLAG %>.fr_CA,
 .<%= Style.COUNTRY_FLAG %>.ca {
 	background-position: 0 -1320px;
 }
@@ -558,6 +573,9 @@ th {
 	background-position: 0 -1416px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.fr_CH,
+.<%= Style.COUNTRY_FLAG %>.de_CH,
+.<%= Style.COUNTRY_FLAG %>.it_CH,
 .<%= Style.COUNTRY_FLAG %>.ch {
 	background-position: 0 -1440px;
 }
@@ -570,6 +588,7 @@ th {
 	background-position: 0 -1488px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_CL,
 .<%= Style.COUNTRY_FLAG %>.cl {
 	background-position: 0 -1512px;
 }
@@ -578,14 +597,17 @@ th {
 	background-position: 0 -1536px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.zh_CN,
 .<%= Style.COUNTRY_FLAG %>.cn {
 	background-position: 0 -1560px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_CO,
 .<%= Style.COUNTRY_FLAG %>.co {
 	background-position: 0 -1584px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_CR,
 .<%= Style.COUNTRY_FLAG %>.cr {
 	background-position: 0 -1608px;
 }
@@ -606,16 +628,17 @@ th {
 	background-position: 0 -1704px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.el_CY,
 .<%= Style.COUNTRY_FLAG %>.cy {
 	background-position: 0 -1728px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.cs_CZ,
 .<%= Style.COUNTRY_FLAG %>.cz {
 	background-position: 0 -1752px;
 }
 
 .<%= Style.COUNTRY_FLAG %>.de_DE,
-.<%= Style.COUNTRY_FLAG %>.de,
 .<%= Style.COUNTRY_FLAG %>.de {
 	background-position: 0 -1776px;
 }
@@ -624,6 +647,7 @@ th {
 	background-position: 0 -1800px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.da_DK,
 .<%= Style.COUNTRY_FLAG %>.dk {
 	background-position: 0 -1824px;
 }
@@ -632,22 +656,27 @@ th {
 	background-position: 0 -1848px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_DO,
 .<%= Style.COUNTRY_FLAG %>.do {
 	background-position: 0 -1872px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_DZ,
 .<%= Style.COUNTRY_FLAG %>.dz {
 	background-position: 0 -1896px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_EC,
 .<%= Style.COUNTRY_FLAG %>.ec {
 	background-position: 0 -1920px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.et_EE,
 .<%= Style.COUNTRY_FLAG %>.ee {
 	background-position: 0 -1944px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_EG,
 .<%= Style.COUNTRY_FLAG %>.eg {
 	background-position: 0 -1968px;
 }
@@ -660,6 +689,8 @@ th {
 	background-position: 0 -2016px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ca_ES,
+.<%= Style.COUNTRY_FLAG %>.es_ES,
 .<%= Style.COUNTRY_FLAG %>.es {
 	background-position: 0 -2040px;
 }
@@ -672,6 +703,7 @@ th {
 	background-position: 0 -2088px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.fi_FI,
 .<%= Style.COUNTRY_FLAG %>.fi {
 	background-position: 0 -2112px;
 }
@@ -692,6 +724,7 @@ th {
 	background-position: 0 -2208px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.fr_FR,
 .<%= Style.COUNTRY_FLAG %>.fr {
 	background-position: 0 -2232px;
 }
@@ -742,6 +775,7 @@ th {
 	background-position: 0 -2496px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.el_GR,
 .<%= Style.COUNTRY_FLAG %>.gr {
 	background-position: 0 -2520px;
 }
@@ -750,6 +784,7 @@ th {
 	background-position: 0 -2544px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_GT,
 .<%= Style.COUNTRY_FLAG %>.gt {
 	background-position: 0 -2568px;
 }
@@ -766,14 +801,17 @@ th {
 	background-position: 0 -2640px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.zh_HK,
 .<%= Style.COUNTRY_FLAG %>.hk {
 	background-position: 0 -2664px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_HN,
 .<%= Style.COUNTRY_FLAG %>.hn {
 	background-position: 0 -2688px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.hr_HR,
 .<%= Style.COUNTRY_FLAG %>.hr {
 	background-position: 0 -2712px;
 }
@@ -782,6 +820,7 @@ th {
 	background-position: 0 -2736px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.hu_HU,
 .<%= Style.COUNTRY_FLAG %>.hu {
 	background-position: 0 -2760px;
 }
@@ -790,14 +829,18 @@ th {
 	background-position: 0 -2784px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.in_ID,
 .<%= Style.COUNTRY_FLAG %>.id {
 	background-position: 0 -2808px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_IE,
+.<%= Style.COUNTRY_FLAG %>.ga_IE,
 .<%= Style.COUNTRY_FLAG %>.ie {
 	background-position: 0 -2832px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.iw_IL,
 .<%= Style.COUNTRY_FLAG %>.il {
 	background-position: 0 -2856px;
 }
@@ -806,10 +849,12 @@ th {
 	background-position: 0 -2880px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_IN,
+.<%= Style.COUNTRY_FLAG %>.hi_IN,
 .<%= Style.COUNTRY_FLAG %>.in {
 	background-position: 0 -2904px;
 }
-
+.<%= Style.COUNTRY_FLAG %>.ar_IQ,
 .<%= Style.COUNTRY_FLAG %>.iq {
 	background-position: 0 -2928px;
 }
@@ -818,10 +863,12 @@ th {
 	background-position: 0 -2952px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.is_IS,
 .<%= Style.COUNTRY_FLAG %>.is {
 	background-position: 0 -2976px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.it_IT,
 .<%= Style.COUNTRY_FLAG %>.it {
 	background-position: 0 -3000px;
 }
@@ -834,10 +881,12 @@ th {
 	background-position: 0 -3048px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_JO,
 .<%= Style.COUNTRY_FLAG %>.jo {
 	background-position: 0 -3072px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ja_JP,
 .<%= Style.COUNTRY_FLAG %>.jp {
 	background-position: 0 -3096px;
 }
@@ -870,10 +919,12 @@ th {
 	background-position: 0 -3264px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ko_KR,
 .<%= Style.COUNTRY_FLAG %>.kr {
 	background-position: 0 -3288px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_KW,
 .<%= Style.COUNTRY_FLAG %>.kw {
 	background-position: 0 -3312px;
 }
@@ -890,6 +941,7 @@ th {
 	background-position: 0 -3384px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_LB,
 .<%= Style.COUNTRY_FLAG %>.lb {
 	background-position: 0 -3408px;
 }
@@ -914,22 +966,28 @@ th {
 	background-position: 0 -3528px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.lt_LT,
 .<%= Style.COUNTRY_FLAG %>.lt {
 	background-position: 0 -3552px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.fr_LU,
+.<%= Style.COUNTRY_FLAG %>.de_LU,
 .<%= Style.COUNTRY_FLAG %>.lu {
 	background-position: 0 -3576px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.lv_LV,
 .<%= Style.COUNTRY_FLAG %>.lv {
 	background-position: 0 -3600px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_LY,
 .<%= Style.COUNTRY_FLAG %>.ly {
 	background-position: 0 -3624px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_MA,
 .<%= Style.COUNTRY_FLAG %>.ma {
 	background-position: 0 -3648px;
 }
@@ -942,6 +1000,7 @@ th {
 	background-position: 0 -3696px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.sr_ME,
 .<%= Style.COUNTRY_FLAG %>.me {
 	background-position: 0 -3720px;
 }
@@ -958,6 +1017,7 @@ th {
 	background-position: 0 -3792px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.mk_MK,
 .<%= Style.COUNTRY_FLAG %>.mk {
 	background-position: 0 -3816px;
 }
@@ -994,6 +1054,8 @@ th {
 	background-position: 0 -4008px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_MT,
+.<%= Style.COUNTRY_FLAG %>.mt_MT,
 .<%= Style.COUNTRY_FLAG %>.mt {
 	background-position: 0 -4032px;
 }
@@ -1015,6 +1077,7 @@ th {
 	background-position: 0 -4128px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ms_MY,
 .<%= Style.COUNTRY_FLAG %>.my {
 	background-position: 0 -4152px;
 }
@@ -1043,14 +1106,19 @@ th {
 	background-position: 0 -4296px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_NI,
 .<%= Style.COUNTRY_FLAG %>.ni {
 	background-position: 0 -4320px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.nl_NL,
 .<%= Style.COUNTRY_FLAG %>.nl {
 	background-position: 0 -4344px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.no_NO,
+.<%= Style.COUNTRY_FLAG %>.nb_NO,
+.<%= Style.COUNTRY_FLAG %>.nn_NO,
 .<%= Style.COUNTRY_FLAG %>.no {
 	background-position: 0 -4368px;
 }
@@ -1067,18 +1135,22 @@ th {
 	background-position: 0 -4440px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_NZ,
 .<%= Style.COUNTRY_FLAG %>.nz {
 	background-position: 0 -4464px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_OM,
 .<%= Style.COUNTRY_FLAG %>.om {
 	background-position: 0 -4488px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_PA,
 .<%= Style.COUNTRY_FLAG %>.pa {
 	background-position: 0 -4512px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_PE,
 .<%= Style.COUNTRY_FLAG %>.pe {
 	background-position: 0 -4536px;
 }
@@ -1091,6 +1163,7 @@ th {
 	background-position: 0 -4584px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_PH,
 .<%= Style.COUNTRY_FLAG %>.ph {
 	background-position: 0 -4608px;
 }
@@ -1099,6 +1172,7 @@ th {
 	background-position: 0 -4632px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.pl_PL,
 .<%= Style.COUNTRY_FLAG %>.pl {
 	background-position: 0 -4656px;
 }
@@ -1107,6 +1181,7 @@ th {
 	background-position: 0 -4680px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_PR,
 .<%= Style.COUNTRY_FLAG %>.pr {
 	background-position: 0 -4704px;
 }
@@ -1115,6 +1190,7 @@ th {
 	background-position: 0 -4728px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.pt_PT,
 .<%= Style.COUNTRY_FLAG %>.pt {
 	background-position: 0 -4752px;
 }
@@ -1123,22 +1199,27 @@ th {
 	background-position: 0 -4776px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_PY,
 .<%= Style.COUNTRY_FLAG %>.py {
 	background-position: 0 -4800px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_QA,
 .<%= Style.COUNTRY_FLAG %>.qa {
 	background-position: 0 -4824px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ro_RO,
 .<%= Style.COUNTRY_FLAG %>.ro {
 	background-position: 0 -4848px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.sr_RS,
 .<%= Style.COUNTRY_FLAG %>.rs {
 	background-position: 0 -4872px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ru_RU,
 .<%= Style.COUNTRY_FLAG %>.ru {
 	background-position: 0 -4896px;
 }
@@ -1147,6 +1228,7 @@ th {
 	background-position: 0 -4920px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_SA,
 .<%= Style.COUNTRY_FLAG %>.sa {
 	background-position: 0 -4944px;
 }
@@ -1159,14 +1241,18 @@ th {
 	background-position: 0 -4992px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_SD,
 .<%= Style.COUNTRY_FLAG %>.sd {
 	background-position: 0 -5016px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.sv_SE,
 .<%= Style.COUNTRY_FLAG %>.se {
 	background-position: 0 -5040px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.zh_SG,
+.<%= Style.COUNTRY_FLAG %>.en_SG,
 .<%= Style.COUNTRY_FLAG %>.sg {
 	background-position: 0 -5064px;
 }
@@ -1175,10 +1261,12 @@ th {
 	background-position: 0 -5088px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.sl_SI,
 .<%= Style.COUNTRY_FLAG %>.si {
 	background-position: 0 -5112px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.sk_SK,
 .<%= Style.COUNTRY_FLAG %>.sk {
 	background-position: 0 -5136px;
 }
@@ -1211,10 +1299,12 @@ th {
 	background-position: 0 -5304px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_SV,
 .<%= Style.COUNTRY_FLAG %>.sv {
 	background-position: 0 -5328px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_SY,
 .<%= Style.COUNTRY_FLAG %>.sy {
 	background-position: 0 -5352px;
 }
@@ -1239,6 +1329,7 @@ th {
 	background-position: 0 -5472px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.th_TH,
 .<%= Style.COUNTRY_FLAG %>.th {
 	background-position: 0 -5496px;
 }
@@ -1259,6 +1350,7 @@ th {
 	background-position: 0 -5592px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_TN,
 .<%= Style.COUNTRY_FLAG %>.tn {
 	background-position: 0 -5616px;
 }
@@ -1267,6 +1359,7 @@ th {
 	background-position: 0 -5640px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.tr_TR,
 .<%= Style.COUNTRY_FLAG %>.tr {
 	background-position: 0 -5664px;
 }
@@ -1279,6 +1372,7 @@ th {
 	background-position: 0 -5712px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.zh_TW,
 .<%= Style.COUNTRY_FLAG %>.tw {
 	background-position: 0 -5736px;
 }
@@ -1287,6 +1381,7 @@ th {
 	background-position: 0 -5760px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.uk_UA,
 .<%= Style.COUNTRY_FLAG %>.ua {
 	background-position: 0 -5784px;
 }
@@ -1295,10 +1390,13 @@ th {
 	background-position: 0 -5808px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_US,
+.<%= Style.COUNTRY_FLAG %>.es_US,
 .<%= Style.COUNTRY_FLAG %>.us {
 	background-position: 0 -5832px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_UY,
 .<%= Style.COUNTRY_FLAG %>.uy {
 	background-position: 0 -5856px;
 }
@@ -1315,6 +1413,7 @@ th {
 	background-position: 0 -5928px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.es_VE,
 .<%= Style.COUNTRY_FLAG %>.ve {
 	background-position: 0 -5952px;
 }
@@ -1327,6 +1426,7 @@ th {
 	background-position: 0 -6000px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.vi_VN,
 .<%= Style.COUNTRY_FLAG %>.vn {
 	background-position: 0 -6024px;
 }
@@ -1343,6 +1443,7 @@ th {
 	background-position: 0 -6096px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.ar_YE,
 .<%= Style.COUNTRY_FLAG %>.ye {
 	background-position: 0 -6120px;
 }
@@ -1351,6 +1452,7 @@ th {
 	background-position: 0 -6144px;
 }
 
+.<%= Style.COUNTRY_FLAG %>.en_ZA,
 .<%= Style.COUNTRY_FLAG %>.za {
 	background-position: 0 -6168px;
 }

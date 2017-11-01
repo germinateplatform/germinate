@@ -23,6 +23,7 @@
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<g:FlowPanel>
 		<p:ParagraphPanel text="{msg.allelefreqTextSplit}"/>
@@ -33,7 +34,7 @@
 					<b:InputGroup>
 						<g8:RangedIntegerTextBox min="1" max="10" value="5" b:id="formLeft" ui:field="nrOfBinsLeft"/>
 						<b:InputGroupButton>
-							<b:Button icon="REFRESH" ui:field="refreshButtonOne"/>
+							<b:Button addStyleNames="{MDI} {MDI_REFRESH} {MDI_LG}" ui:field="refreshButtonOne"/>
 						</b:InputGroupButton>
 					</b:InputGroup>
 				</b:FormGroup>
@@ -44,7 +45,7 @@
 					<b:InputGroup>
 						<g8:RangedNumberTextBox min="0.02" max="0.98" value="0.5" b:id="formSplit" ui:field="splitPoint"/>
 						<b:InputGroupButton>
-							<b:Button icon="REFRESH" ui:field="refreshButtonTwo"/>
+							<b:Button addStyleNames="{MDI} {MDI_REFRESH} {MDI_LG}" ui:field="refreshButtonTwo"/>
 						</b:InputGroupButton>
 					</b:InputGroup>
 				</b:FormGroup>
@@ -55,7 +56,7 @@
 					<b:InputGroup>
 						<g8:RangedIntegerTextBox min="1" max="10" value="5" b:id="formRight" ui:field="nrOfBinsRight"/>
 						<b:InputGroupButton>
-							<b:Button icon="REFRESH" ui:field="refreshButtonThree"/>
+							<b:Button addStyleNames="{MDI} {MDI_REFRESH} {MDI_LG}" ui:field="refreshButtonThree"/>
 						</b:InputGroupButton>
 					</b:InputGroup>
 				</b:FormGroup>

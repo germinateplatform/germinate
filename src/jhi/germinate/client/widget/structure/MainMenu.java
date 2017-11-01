@@ -385,7 +385,7 @@ public final class MainMenu
 				if (icon != null)
 				{
 					i = Document.get().createElement("i");
-					i.setClassName(Style.combine(Style.MDI, icon, Style.FA_FIXED_WIDTH, Style.FA_LG));
+					i.setClassName(Style.combine(Style.MDI, icon, Style.FA_FIXED_WIDTH, Style.MDI_LG));
 				}
 
 				AnchorElement e = Document.get().createAnchorElement();
@@ -401,7 +401,7 @@ public final class MainMenu
 						e.setHref("#");
 
 						SpanElement child = Document.get().createSpanElement();
-						child.setClassName("fa arrow");
+						child.setClassName(Style.mdi(Style.combine(Style.MDI_CHEVRON_RIGHT, "arrow")));
 
 						e.appendChild(child);
 					}

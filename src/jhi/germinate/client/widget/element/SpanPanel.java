@@ -17,38 +17,34 @@
 
 package jhi.germinate.client.widget.element;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.uibinder.client.*;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.user.client.ui.*;
-
-import jhi.germinate.client.i18n.*;
-import jhi.germinate.shared.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class HelpModal extends Composite
+public class SpanPanel extends SimplePanel implements HasText
 {
-	public static void show(Widget content)
+	public SpanPanel()
 	{
-		new AlertDialog(Text.LANG.helpTitle(), new HelpModal(content))
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, null))
-				.open();
+		super(Document.get().createSpanElement());
 	}
 
-	interface HelpModalUiBinder extends UiBinder<HTMLPanel, HelpModal>
+	public SpanPanel(String paragraph)
 	{
+		this();
+		setText(paragraph);
 	}
 
-	private static HelpModalUiBinder ourUiBinder = GWT.create(HelpModalUiBinder.class);
-
-	@UiField
-	HTMLPanel content;
-
-	public HelpModal(Widget widget)
+	@Override
+	public String getText()
 	{
-		initWidget(ourUiBinder.createAndBindUi(this));
+		return getElement().getInnerText();
+	}
 
-		content.add(widget);
+	@Override
+	public void setText(String text)
+	{
+		getElement().setInnerText(text);
 	}
 }

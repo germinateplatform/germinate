@@ -53,8 +53,8 @@ public class MarkedItemListItem
 	{
 		this.type = type;
 
-		icon.addClassName(Style.combine(type.getIcon(), Style.MDI, Style.FA_FIXED_WIDTH, Style.FA_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
-		trash.addClassName(Style.combine(Style.MDI, Style.FA_FIXED_WIDTH, Style.FA_LG, Style.MDI_DELETE));
+		icon.addClassName(Style.combine(type.getIcon(), Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
+		trash.addClassName(Style.combine(Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_LG, Style.MDI_DELETE));
 
 		String display = type.getDisplayName();
 

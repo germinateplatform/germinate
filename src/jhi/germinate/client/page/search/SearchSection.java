@@ -28,6 +28,7 @@ import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -47,6 +48,8 @@ public class SearchSection extends Composite
 	Panel         panel;
 	@UiField
 	PanelHeader   panelHeader;
+	@UiField
+	SpanPanel     icon;
 	@UiField
 	PanelCollapse target;
 	@UiField
@@ -99,6 +102,12 @@ public class SearchSection extends Composite
 	{
 		progress.setVisible(loading);
 		label.setVisible(!loading);
+	}
+
+	public void setMdi(String style)
+	{
+		icon.setVisible(true);
+		icon.addStyleName(Style.mdi(style));
 	}
 
 	public void setLabel(Integer value)

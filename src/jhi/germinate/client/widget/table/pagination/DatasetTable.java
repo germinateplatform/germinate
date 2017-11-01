@@ -242,9 +242,9 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 						icon = Style.MDI_CHECK;
 
 					if (data != null)
-						return TableUtils.getHyperlinkValueWithIcon(object.getLicense().getName(), null, Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
+						return TableUtils.getHyperlinkValueWithIcon(object.getLicense().getName(), null, Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
 					else
-						return TableUtils.getCellValueWithIcon(object.getLicense().getName(), Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
+						return TableUtils.getCellValueWithIcon(object.getLicense().getName(), Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
 				}
 				else
 					return null;
@@ -266,13 +266,13 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 					{
 						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
-								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
+								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
 								.open();
 					}
 					else
 					{
 						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
-								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAccept(), IconType.CHECK, ButtonType.SUCCESS, e ->
+								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAccept(), Style.MDI_CHECK, ButtonType.SUCCESS, e ->
 								{
 									LicenseLog log = new LicenseLog(-1L)
 											.setLicense(object.getLicense().getId())
@@ -293,7 +293,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 										}
 									});
 								}))
-								.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDecline(), IconType.BAN, ButtonType.DANGER, null))
+								.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDecline(), Style.MDI_CANCEL, ButtonType.DANGER, null))
 								.open();
 					}
 				}
@@ -436,7 +436,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 							return null;
 						}
 					})
-							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
+							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
 							.setSize(ModalSize.LARGE)
 							.open();
 				}
@@ -482,7 +482,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					if (content.getWidgetCount() > 0)
 					{
 						new AlertDialog(Text.LANG.datasetAttributesTitle(), content)
-								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), IconType.BAN, null))
+								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
 								.open();
 					}
 				}

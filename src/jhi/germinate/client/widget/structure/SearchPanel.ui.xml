@@ -32,7 +32,7 @@
 			<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
 		</b:Tooltip>
 		<b:InputGroupButton>
-			<b:Button ui:field="searchButton" icon="SEARCH"/>
+			<b:Button addStyleNames="{MDI} {MDI_MAGNIFY} {MDI_LG}" ui:field="searchButton"/>
 		</b:InputGroupButton>
 	</b:InputGroup>
 </ui:UiBinder>

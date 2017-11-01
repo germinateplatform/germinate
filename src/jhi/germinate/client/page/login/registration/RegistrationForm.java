@@ -171,8 +171,8 @@ public class RegistrationForm extends Composite implements Validator<String>
 		AlertDialog dialog = new AlertDialog(Text.LANG.registrationAddNewInstitution())
 				.setContent(body)
 				.setAutoCloseOnPositive(false);
-		dialog.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, ev -> dialog.close()));
-		dialog.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), IconType.CHECK, ButtonType.PRIMARY, ev ->
+		dialog.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), Style.MDI_CANCEL, ev -> dialog.close()));
+		dialog.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, ButtonType.PRIMARY, ev ->
 		{
 			Institution i = newInstitution.getInstitution();
 			if (i != null)

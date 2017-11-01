@@ -154,7 +154,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 					content.setGroup(object);
 
 					new AlertDialog(Text.LANG.generalRename())
-							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalRename(), IconType.PENCIL_SQUARE_O, ButtonType.PRIMARY, e ->
+							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalRename(), Style.MDI_PENCIL_BOX_OUTLINE, ButtonType.PRIMARY, e ->
 							{
 								object.setName(content.getName());
 								object.setDescription(content.getDescription());
@@ -167,7 +167,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 									}
 								});
 							}))
-							.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, null))
+							.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), Style.MDI_CANCEL, null))
 							.setContent(content)
 							.open();
 				}

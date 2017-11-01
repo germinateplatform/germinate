@@ -42,7 +42,7 @@
 			<div class="{PANEL_FOOTER}">
 				<span class="{PULL_LEFT}" ui:field="detailsLabel"/>
 				<span class="{PULL_RIGHT}">
-					<i class="{MDI} {MDI_ARROW_RIGHT_BOLD_CIRCLE} {FA_LG}"/>
+					<i class="{MDI} {MDI_ARROW_RIGHT_BOLD_CIRCLE} {MDI_LG}"/>
 				</span>
 				<div class="{CLEARFIX}"/>
 			</div>

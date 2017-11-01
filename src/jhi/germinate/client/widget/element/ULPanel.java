@@ -82,7 +82,7 @@ public class ULPanel extends ComplexPanel
 		else
 		{
 			Element i = Document.get().createElement("i");
-			i.setClassName(Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, type.getMdiStyle()));
+			i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, type.getMdiStyle()));
 			i.getStyle().setPaddingRight(7, com.google.gwt.dom.client.Style.Unit.PX);
 
 			li.appendChild(i);
@@ -104,7 +104,7 @@ public class ULPanel extends ComplexPanel
 		LIElement li = Document.get().createLIElement();
 
 		Element i = Document.get().createElement("i");
-		i.setClassName(Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, faStyle));
+		i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, faStyle));
 		i.getStyle().setPaddingRight(7, com.google.gwt.dom.client.Style.Unit.PX);
 
 		li.appendChild(i);

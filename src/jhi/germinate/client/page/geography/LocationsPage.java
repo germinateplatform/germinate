@@ -92,7 +92,8 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 	private LeafletUtils.HeatmapCreator         heatmapMap;
 	private LocationTreemapChart                chart;
 
-	private LeafletUtils.ImageOverlayWrapper climateOverlays = new LeafletUtils.ImageOverlayWrapper();
+	private LeafletUtils.ImageOverlayWrapper clusteredClimateOverlays = new LeafletUtils.ImageOverlayWrapper();
+	private LeafletUtils.ImageOverlayWrapper heatmapClimateOverlays = new LeafletUtils.ImageOverlayWrapper();
 
 	public LocationsPage()
 	{
@@ -169,7 +170,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 		});
 	}
 
-	private void updateMaps(List<Location> result, LocationType type)
+	private void updateMaps(List<Location> result)
 	{
 		climateBox.selectItem(0, true);
 
@@ -200,7 +201,8 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 	{
 		Climate climate = climateBox.getSelection();
 
-		climateOverlays.clear(clusteredMap.getMap());
+		clusteredClimateOverlays.clear(clusteredMap.getMap());
+		heatmapClimateOverlays.clear(heatmapMap.getMap());
 
 		if (climate != null && climate.getId() != -1)
 		{
@@ -211,7 +213,8 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 				{
 					if (result.getServerResult().size() > 0)
 					{
-						climateOverlays = LeafletUtils.addClimateOverlays(clusteredMap.getMap(), result.getServerResult());
+						clusteredClimateOverlays = LeafletUtils.addClimateOverlays(clusteredMap.getMap(), result.getServerResult());
+						heatmapClimateOverlays = LeafletUtils.addClimateOverlays(heatmapMap.getMap(), result.getServerResult());
 					}
 					else
 					{
@@ -270,7 +273,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 			@Override
 			public void onSuccessImpl(PaginatedServerResult<List<Location>> result)
 			{
-				updateMaps(result.getServerResult(), type);
+				updateMaps(result.getServerResult());
 			}
 		});
 	}

@@ -246,7 +246,6 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 	private void setUpTable()
 	{
 		table = new CellTable<>(DatabaseObjectPaginationTable.DEFAULT_NR_OF_ITEMS_PER_PAGE);
-		table.setBordered(true);
 		regionTable.add(table);
 		final SelectionModel<MappingEntry> selectionModel = new MultiSelectionModel<>();
 		table.setSelectionModel(selectionModel, DefaultSelectionEventManager.createCheckboxManager());

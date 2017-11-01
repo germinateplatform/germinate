@@ -19,11 +19,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
 
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+
 	<b:ButtonGroup>
-		<b:Button ui:field="firstPage" icon="ANGLE_DOUBLE_LEFT"/>
-		<b:Button ui:field="prevPage" icon="ANGLE_LEFT"/>
+		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_CHEVRON_DOUBLE_LEFT}" ui:field="firstPage"/>
+		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_CHEVRON_LEFT}" ui:field="prevPage"/>
 		<b:Button ui:field="pagerText" enabled="false"/>
-		<b:Button ui:field="nextPage" icon="ANGLE_RIGHT"/>
-		<b:Button ui:field="lastPage" icon="ANGLE_DOUBLE_RIGHT"/>
+		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_CHEVRON_RIGHT}" ui:field="nextPage"/>
+		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_CHEVRON_DOUBLE_RIGHT}" ui:field="lastPage"/>
 	</b:ButtonGroup>
 </ui:UiBinder> 

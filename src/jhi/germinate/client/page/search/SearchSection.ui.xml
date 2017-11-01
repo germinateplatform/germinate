@@ -16,6 +16,7 @@
   -->
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
 
 	<ui:import field="jhi.germinate.shared.Style.*"/>
@@ -40,11 +41,16 @@
 		.progressbar {
 			width: 100px;
 		}
+
+		.margin {
+			margin-right: 5px;
+		}
 	</ui:style>
 
 
 	<b:Panel ui:field="panel">
 		<b:PanelHeader dataToggle="COLLAPSE" dataParent="#accordion" addStyleNames="{style.header}" ui:field="panelHeader">
+			<g8:SpanPanel addStyleNames="{MDI} {MDI_LG} {style.margin}" visible="false" ui:field="icon"/>
 			<b:Heading size="H4" addStyleNames="{LAYOUT_DISPLAY_INLINE_BLOCK}" ui:field="header"/>
 			<b:Progress active="true" type="STRIPED" addStyleNames="{PULL_RIGHT} {style.progressbar}" ui:field="progress" visible="false">
 				<b:ProgressBar type="INFO" percent="100"/>

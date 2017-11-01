@@ -21,10 +21,9 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
-import org.gwtbootstrap3.client.ui.constants.*;
-
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.shared.*;
 
 /**
  * @author Sebastian Raubach
@@ -34,7 +33,7 @@ public class CookieModal extends Composite
 	public static void show()
 	{
 		new AlertDialog(Text.LANG.cookieTitle(), new CookieModal())
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), IconType.CHECK, null))
+				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, null))
 				.open();
 	}
 

@@ -54,7 +54,7 @@
 							<strong ui:field="title"/>
 						</a>
 						<small class="{PULL_RIGHT}">
-							<i class="{MDI} {MDI_CLOCK} {FA_FIXED_WIDTH} {FA_LG}"/>
+							<i class="{MDI} {MDI_CLOCK} {FA_FIXED_WIDTH} {MDI_LG}"/>
 							<span ui:field="date"/>
 						</small>
 					</g:HTMLPanel>

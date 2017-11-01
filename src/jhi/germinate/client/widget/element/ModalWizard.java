@@ -17,7 +17,6 @@
 
 package jhi.germinate.client.widget.element;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.gwtbootstrap3.client.ui.*;
@@ -27,7 +26,7 @@ import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 
 import java.util.*;
 
-import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -42,14 +41,16 @@ public abstract class ModalWizard
 	private Alert       errorMessage = new Alert("", AlertType.DANGER);
 	private FlowPanel   content      = new FlowPanel();
 	private ModalFooter footer       = new ModalFooter();
-	private Button      backButton   = new Button(Text.LANG.generalBack(), IconType.ARROW_CIRCLE_LEFT, event -> updateContent(false));
-	private Button      nextButton   = new Button(Text.LANG.generalNext(), IconType.ARROW_CIRCLE_RIGHT, event -> updateContent(true));
+	private Button      nextButton   = new Button(Text.LANG.generalNext(), event -> updateContent(true));
+	private Button      backButton   = new Button(Text.LANG.generalBack(), event -> updateContent(false));
 
 	private int          position = 0;
 	private List<Widget> widgets  = new ArrayList<>();
 
 	public ModalWizard()
 	{
+		backButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_LEFT_BOLD));
+		nextButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
 		modal.add(body);
 		modal.add(footer);
 		body.add(progress);
@@ -74,7 +75,7 @@ public abstract class ModalWizard
 		errorMessage.setVisible(false);
 
 		content.getElement().getStyle().setProperty("maxHeight", "70vh");
-		content.getElement().getStyle().setOverflowY(Style.Overflow.AUTO);
+		content.getElement().getStyle().setOverflowY(com.google.gwt.dom.client.Style.Overflow.AUTO);
 	}
 
 	public void add(Widget widget)

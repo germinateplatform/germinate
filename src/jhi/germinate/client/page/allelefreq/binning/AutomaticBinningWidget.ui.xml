@@ -23,6 +23,7 @@
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<g:FlowPanel>
 		<p:ParagraphPanel text="{msg.allelefreqTextAutomatic}"/>
@@ -31,7 +32,7 @@
 			<b:InputGroup>
 				<g8:RangedIntegerTextBox min="2" max="20" value="10" b:id="formInput" ui:field="nrOfBins"/>
 				<b:InputGroupButton>
-					<b:Button icon="REFRESH" ui:field="refreshButton"/>
+					<b:Button addStyleNames="{MDI} {MDI_REFRESH} {MDI_LG}" ui:field="refreshButton"/>
 				</b:InputGroupButton>
 			</b:InputGroup>
 		</b:FormGroup>

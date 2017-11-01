@@ -24,6 +24,7 @@
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 	<ui:import field="jhi.germinate.client.util.MarkedItemList.ItemType.*"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<ui:style>
 	</ui:style>
@@ -75,7 +76,7 @@
 		<g:HTML>
 			<br/>
 		</g:HTML>
-		<b:Button icon="ARROW_CIRCLE_RIGHT" type="PRIMARY" text="{msg.generalContinue}" ui:field="continueButton"/>
+		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_ARROW_RIGHT_BOLD}" text="{msg.generalContinue}" type="PRIMARY" ui:field="continueButton"/>
 	</g:FlowPanel>
 
 </ui:UiBinder> 

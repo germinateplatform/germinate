@@ -242,15 +242,16 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		{
 			ButtonGroup group = new ButtonGroup();
 
-			addGroup = new Button(Text.LANG.groupsButtonAddGroup(), IconType.PLUS_SQUARE_O, e ->
+			addGroup = new Button(Text.LANG.groupsButtonAddGroup(), e ->
 			{
 				AddGroupDialog content = new AddGroupDialog(groupTypes, null);
 
 				new AlertDialog(Text.LANG.groupsSubtitleNewGroup())
-						.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, ButtonType.SUCCESS, ev -> addNewGroup(content.getName(), content.getDescription(), content.getType())))
+						.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAdd(), Style.MDI_PLUS_BOX, ButtonType.SUCCESS, ev -> addNewGroup(content.getName(), content.getDescription(), content.getType())))
 						.setContent(content)
 						.open();
 			});
+			addGroup.addStyleName(Style.mdiLg(Style.MDI_PLUS_BOX));
 			addGroup.setEnabled(false);
 
 			group.add(addGroup);
@@ -381,7 +382,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		if (canEdit)
 		{
 			ButtonGroup buttonGroup = new ButtonGroup();
-			deleteGroupMember = new Button(Text.LANG.groupsButtonDeleteMembers(), IconType.TRASH_O, e ->
+			deleteGroupMember = new Button(Text.LANG.groupsButtonDeleteMembers(), e ->
 			{
 				Set<? extends DatabaseObject> selectedItems = table.getSelection();
 
@@ -423,22 +424,24 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					});
 				}, null);
 			});
+			deleteGroupMember.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 
 			updateNewGroupMembersPanel();
 
-			uploadGroupMember = new Button(Text.LANG.groupsButtonUploadMembers(), IconType.UPLOAD, e ->
+			uploadGroupMember = new Button(Text.LANG.groupsButtonUploadMembers(), e ->
 			{
 				if (uploadAlertDialog == null)
 				{
 					GroupUploadWidget w = new GroupUploadWidget(group);
 					uploadAlertDialog = new AlertDialog(Text.LANG.groupsButtonUploadMembers(), w)
-							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalUpload(), IconType.UPLOAD, ButtonType.PRIMARY, ev -> w.onUploadButtonClicked()))
-							.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), IconType.BAN, null))
+							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalUpload(), Style.MDI_UPLOAD, ButtonType.PRIMARY, ev -> w.onUploadButtonClicked()))
+							.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), Style.MDI_CANCEL, null))
 							.setAutoCloseOnPositive(false)
 							.setRemoveOnHide(false);
 				}
 				uploadAlertDialog.open();
 			});
+			uploadGroupMember.addStyleName(Style.mdi(Style.MDI_UPLOAD));
 
 			buttonGroup.add(deleteGroupMember);
 			buttonGroup.add(uploadGroupMember);
@@ -544,7 +547,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		final DatabaseObjectPaginationTable<? extends DatabaseObject> t = result;
 
 		ButtonGroup buttonGroup = new ButtonGroup();
-		Button addGroupMember = new Button(Text.LANG.generalAdd(), IconType.PLUS_SQUARE, e ->
+		Button addGroupMember = new Button(Text.LANG.generalAdd(), e ->
 		{
 			Set<? extends DatabaseObject> selectedItems = t.getSelection();
 
@@ -565,6 +568,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				}
 			});
 		});
+		addGroupMember.addStyleName(Style.mdiLg(Style.MDI_PLUS_BOX));
 
 		buttonGroup.add(addGroupMember);
 		result.addExtraContent(buttonGroup);

@@ -22,7 +22,6 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.*;
 
 import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.widget.element.*;
@@ -121,7 +120,7 @@ public class ShareUtils
 			box.setText(finalUrl);
 
 			new AlertDialog(Text.LANG.generalGetLinkToPageTitle(), box)
-					.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), IconType.CHECK, null))
+					.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, null))
 					.addShownHandler(e ->
 							{
 								box.setFocus(true);

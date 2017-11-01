@@ -38,8 +38,6 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 	{
 		super(data);
 
-		getTable().setBordered(true);
-
 		Column<DataStats, String> column;
 
 		if (!GerminateSettingsHolder.get().hideIdColumn.getValue())

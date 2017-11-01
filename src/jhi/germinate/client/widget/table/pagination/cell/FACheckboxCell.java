@@ -41,12 +41,12 @@ public class FACheckboxCell<T extends DatabaseObject> extends AbstractEditableCe
 	/**
 	 * An html string representation of a checked input box.
 	 */
-	private static final SafeHtml INPUT_CHECKED = SafeHtmlUtils.fromSafeConstant("<span class='" + Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Style.MDI_CHECKBOX_MARKED, Emphasis.PRIMARY.getCssName()) + "'/>");
+	private static final SafeHtml INPUT_CHECKED = SafeHtmlUtils.fromSafeConstant("<span class='" + Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.MDI_CHECKBOX_MARKED, Emphasis.PRIMARY.getCssName()) + "'/>");
 
 	/**
 	 * An html string representation of an unchecked input box.
 	 */
-	private static final SafeHtml INPUT_UNCHECKED = SafeHtmlUtils.fromSafeConstant("<span class='" + Style.combine(Style.MDI, Style.FA_LG, Style.FA_FIXED_WIDTH, Style.MDI_CHECKBOX_BLANK_OUTLINE) + "'/>");
+	private static final SafeHtml INPUT_UNCHECKED = SafeHtmlUtils.fromSafeConstant("<span class='" + Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.MDI_CHECKBOX_BLANK_OUTLINE) + "'/>");
 
 	private final boolean                                             dependsOnSelection;
 	private final boolean                                             handlesSelection;

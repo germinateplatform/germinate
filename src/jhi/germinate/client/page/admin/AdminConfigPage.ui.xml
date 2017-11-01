@@ -23,6 +23,7 @@
 			 xmlns:i='urn:import:jhi.germinate.client.widget.input'
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
 	<ui:style>
@@ -163,6 +164,12 @@
 								<t:ToggleSwitch b:id="formCookies" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="cookies"/>
 							</b:FormGroup>
 							<b:FormGroup>
+								<b:FormLabel for="formCustomMenu" ui:field="customMenuLabel"/>
+								<b:TextArea b:id="formCustomMenu" ui:field="customMenu" addStyleNames="{style.height}"/>
+							</b:FormGroup>
+						</b:Column>
+						<b:Column size="XS_12,MD_6">
+							<b:FormGroup>
 								<b:FormLabel for="formTemp" ui:field="tempLabel"/>
 								<i:NumberTextBox b:id="formTemp" ui:field="temp"/>
 							</b:FormGroup>
@@ -170,12 +177,6 @@
 								<b:FormLabel for="formUpLimit" ui:field="upLimitLabel"/>
 								<i:NumberTextBox b:id="formUpLimit" ui:field="upLimit"/>
 							</b:FormGroup>
-							<b:FormGroup>
-								<b:FormLabel for="formCustomMenu" ui:field="customMenuLabel"/>
-								<b:TextArea b:id="formCustomMenu" ui:field="customMenu" addStyleNames="{style.height}"/>
-							</b:FormGroup>
-						</b:Column>
-						<b:Column size="XS_12,MD_6">
 							<b:FormGroup>
 								<b:FormLabel for="formCookieLifespan" ui:field="cookieLifespanLabel"/>
 								<i:IntegerTextBox b:id="formCookieLifespan" ui:field="cookieLifespan"/>
@@ -198,6 +199,6 @@
 			</b:PanelCollapse>
 		</b:Panel>
 
-		<b:Button icon="SAVE" text="{msg.adminConfigButtonSave}" type="PRIMARY" ui:field="saveChanges"/>
+		<b:Button addStyleNames="{MDI} {MDI_CONTENT_SAVE} {MDI_LG}" text="{msg.adminConfigButtonSave}" type="PRIMARY" ui:field="saveChanges"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

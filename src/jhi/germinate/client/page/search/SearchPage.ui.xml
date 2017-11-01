@@ -48,7 +48,7 @@
 					<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
 				</b:Tooltip>
 				<b:InputGroupButton>
-					<b:Button ui:field="searchButton" icon="SEARCH"/>
+					<b:Button addStyleNames="{MDI} {MDI_MAGNIFY} {MDI_LG}" ui:field="searchButton"/>
 				</b:InputGroupButton>
 			</b:InputGroup>
 		</b:FormGroup>
@@ -59,15 +59,24 @@
 			<g:HTML ui:field="additionalDataTextShort" visible="false"/>
 
 			<b:PanelGroup b:id="accordion">
-				<s:SearchSection heading="{msg.searchSectionAccessionData}" preventHideSibling="true" ui:field="accessionSection"/>
-				<s:SearchSection heading="{msg.searchSectionAccessionAttributeData}" preventHideSibling="true" ui:field="accessionAttributeSection"/>
-				<s:SearchSection heading="{msg.searchSectionPhenotypeData}" preventHideSibling="true" ui:field="phenotypeSection"/>
-				<s:SearchSection heading="{msg.searchSectionCompoundData}" preventHideSibling="true" ui:field="compoundSection"/>
-				<s:SearchSection heading="{msg.searchSectionMapDefinitionData}" preventHideSibling="true" ui:field="mapDefinitionSection"/>
-				<s:SearchSection heading="{msg.searchSectionDatasets}" preventHideSibling="true" ui:field="datasetSection"/>
-				<s:SearchSection heading="{msg.searchSectionDatasetAttributeData}" preventHideSibling="true" ui:field="datasetAttributeSection"/>
-				<s:SearchSection heading="{msg.searchSectionPedigreeData}" preventHideSibling="true" ui:field="pedigreeSection"/>
-				<s:SearchSection heading="{msg.searchSectionLocationData}" preventHideSibling="true" ui:field="locationSection"/>
+				<s:SearchSection heading="{msg.searchSectionAccessionData}" mdi="{MDI_LG} {MDI_FLOWER}" preventHideSibling="true"
+								 ui:field="accessionSection"/>
+				<s:SearchSection heading="{msg.searchSectionAccessionAttributeData}" mdi="{MDI_LG} {MDI_PLAYLIST_PLUS}" preventHideSibling="true"
+								 ui:field="accessionAttributeSection"/>
+				<s:SearchSection heading="{msg.searchSectionPhenotypeData}" mdi="{MDI_LG} {MDI_TAG_MULTIPLE}" preventHideSibling="true"
+								 ui:field="phenotypeSection"/>
+				<s:SearchSection heading="{msg.searchSectionCompoundData}" mdi="{MDI_LG} {MDI_FLASK}" preventHideSibling="true"
+								 ui:field="compoundSection"/>
+				<s:SearchSection heading="{msg.searchSectionMapDefinitionData}" mdi="{MDI_LG} {MDI_DNA}" preventHideSibling="true"
+								 ui:field="mapDefinitionSection"/>
+				<s:SearchSection heading="{msg.searchSectionDatasets}" mdi="{MDI_LG} {MDI_DATABASE}" preventHideSibling="true"
+								 ui:field="datasetSection"/>
+				<s:SearchSection heading="{msg.searchSectionDatasetAttributeData}" mdi="{MDI_LG} {MDI_PLAYLIST_PLUS}" preventHideSibling="true"
+								 ui:field="datasetAttributeSection"/>
+				<s:SearchSection heading="{msg.searchSectionPedigreeData}" mdi="{MDI_LG} {MDI_SITEMAP}" preventHideSibling="true"
+								 ui:field="pedigreeSection"/>
+				<s:SearchSection heading="{msg.searchSectionLocationData}" mdi="{MDI_LG} {MDI_GOOGLE_MAPS}" preventHideSibling="true"
+								 ui:field="locationSection"/>
 			</b:PanelGroup>
 		</g:FlowPanel>
 
@@ -78,7 +87,7 @@
 
 			<g:SimplePanel ui:field="additionalDataTablePanel"/>
 
-			<b:Button icon="REFRESH" text="{msg.generalUpdate}" ui:field="updateButton"/>
+			<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_REFRESH}" text="{msg.generalUpdate}" ui:field="updateButton"/>
 		</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder>

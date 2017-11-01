@@ -113,7 +113,7 @@
 										<b:FormLabel for="login-form-password" styleName="{SR_ONLY}" text="{msg.loginPassword}"/>
 									</g:FlowPanel>
 
-									<b:SubmitButton type="PRIMARY" addStyleNames="btn-lg {BTN_BLOCK}" text="{msg.loginTitle}" ui:field="button"/>
+									<b:SubmitButton addStyleNames="btn-lg {BTN_BLOCK} {MDI} {MDI_LG} {MDI_LOGIN_VARIANT}" text="{msg.loginTitle}" type="PRIMARY" ui:field="button"/>
 								</g:FlowPanel>
 							</g:FormPanel>
 							<b:Anchor href="#" text="{msg.loginRegistrationLink}" ui:field="registerAnchor" visible="false"/>

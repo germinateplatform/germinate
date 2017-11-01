@@ -22,6 +22,7 @@
 			 xmlns:a="urn:import:jhi.germinate.client.page.allelefreq.binning"
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
@@ -40,13 +41,9 @@
 			<g8:ParagraphPanel text="{msg.allelefreqTextFlapjackColors}"/>
 
 			<b:NavTabs>
-				<b:TabListItem active="true" dataTarget="#equalWidth" text="{msg.allelefreqHeadingEqualWidth}" iconRotate="ROTATE_270"
-							   icon="ALIGN_JUSTIFY"
-							   ui:field="equalWidthTab"/>
-				<b:TabListItem dataTarget="#splitPoint" text="{msg.allelefreqHeadingSplit}" iconRotate="ROTATE_270" icon="INDENT"
-							   ui:field="splitPointTab"/>
-				<b:TabListItem dataTarget="#automatic" text="{msg.allelefreqHeadingAutomatic}" iconRotate="ROTATE_270" icon="ALIGN_LEFT"
-							   ui:field="automaticTab"/>
+				<g8:MdiTabListItem active="true" dataTarget="#equalWidth" mdi="{MDI_FORMAT_ALIGN_JUSTIFY} {MDI_ROTATE_90} {MDI_LG}" text="{msg.allelefreqHeadingEqualWidth}" ui:field="equalWidthTab"/>
+				<g8:MdiTabListItem dataTarget="#splitPoint" mdi="{MDI_FORMAT_INDENT_INCREASE} {MDI_ROTATE_270} {MDI_LG}" text="{msg.allelefreqHeadingSplit}"  ui:field="splitPointTab"/>
+				<g8:MdiTabListItem dataTarget="#automatic" mdi="{MDI_FORMAT_ALIGN_LEFT} {MDI_ROTATE_270} {MDI_LG}" text="{msg.allelefreqHeadingAutomatic}" ui:field="automaticTab"/>
 			</b:NavTabs>
 			<b:TabContent>
 				<b:TabPane active="true" b:id="equalWidth" ui:field="equalWidthTabContent">
@@ -63,7 +60,7 @@
 
 			<g:SimplePanel addStyleNames="{CLEARFIX}"/>
 
-			<b:Button icon="ARROW_CIRCLE_RIGHT" text="{msg.generalContinue}" type="PRIMARY" ui:field="continueButton"/>
+			<b:Button addStyleNames="{MDI} {MDI_ARROW_RIGHT_BOLD} {MDI_LG}" text="{msg.generalContinue}" type="PRIMARY" ui:field="continueButton"/>
 
 			<g:FlowPanel visible="false" ui:field="resultWrapper">
 				<b:Heading size="H3" text="{msg.generalResults}"/>

@@ -20,6 +20,7 @@
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<ui:style>
 		.margin {
@@ -35,7 +36,7 @@
 
 			<g:SimplePanel ui:field="tablePanel"/>
 
-			<b:Button addStyleNames="{style.margin}" type="PRIMARY" icon="PLUS_SQUARE" text="{msg.groupsPreviewAddButton}"
+			<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_PLUS_BOX}" text="{msg.groupsPreviewAddButton}" type="PRIMARY"
 					  ui:field="createGroupButton"/>
 		</g:HTMLPanel>
 	</g:HTMLPanel>

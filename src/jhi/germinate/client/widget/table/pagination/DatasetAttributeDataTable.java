@@ -86,7 +86,7 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 					return Style.LAYOUT_WHITE_SPACE_NO_WRAP;
 				}
 			};
-			column.setDataStoreName(Accession.ID);
+			column.setDataStoreName(Dataset.ID);
 			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 

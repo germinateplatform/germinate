@@ -21,6 +21,7 @@
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<ui:style>
 		.margin {
@@ -42,7 +43,7 @@
 			</b:Column>
 		</b:Row>
 
-		<b:Button addStyleNames="{style.margin}" icon="DOWNLOAD" type="SUCCESS" text="{msg.generalDownload}" enabled="false"
+		<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_DOWNLOAD}" enabled="false" text="{msg.generalDownload}" type="SUCCESS"
 				  ui:field="downloadButton"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

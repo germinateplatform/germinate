@@ -37,7 +37,7 @@
 
 	<b:Panel addStyleNames="{PANEL} {style.panel}">
 		<b:PanelHeader>
-			<g:InlineHTML addStyleNames="{MDI} {MDI_NEWSPAPER}"/>
+			<g:InlineHTML addStyleNames="{MDI} {MDI_LG} {MDI_NEWSPAPER}"/>
 			<g:InlineHTML addStyleNames="{style.margin}" text="{msg.newsTitle}"/>
 		</b:PanelHeader>
 		<b:PanelBody>
