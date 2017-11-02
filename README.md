@@ -28,3 +28,16 @@ Please consult the [Wiki](../../wiki/Setup) for a variety of options to download
 
 ## Contact
 If you have any questions or suggestions, please send us an email on [germinate@hutton.ac.uk](mailto:germinate@hutton.ac.uk) or post an issue.
+
+## Acknowledgements
+The Germinate Team gratefully acknowledges support by the following organizations who have generously probided us with open source licenses for their software products:
+
+### Crowdin
+<img src="https://github.com/germinateplatform/germinate/raw/master/external-resources/crowdin-logo.png" width="250">
+
+We use <a href="https://crowdin.com">Crowdin</a> to manage Germinate's translations.
+
+### Dataedo
+<img src="https://github.com/germinateplatform/germinate/raw/master/external-resources/dataedo-logo.png" width="250">
+
+We use <a href="https://dataedo.com">Dataedo</a> to generate our database documentation which is available [here](https://ics.hutton.ac.uk/resources/germinate/database-docs/). 
