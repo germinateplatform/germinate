@@ -167,7 +167,7 @@ public class ContentHolder
 			loginPanel.setVisible(false);
 		}
 
-		Window.scrollTo(0, 0);
+		JavaScript.smoothScrollTo(0);
 
 		/* Set the parallax banner */
 		if (newContent instanceof ParallaxBannerPage)

@@ -72,6 +72,8 @@ public class Cookie
 
 		if (ModuleCore.getUseAuthentication())
 			lifespan = 1000L * 60 * userAuth.getCookieLifespanMinutes();
+
+		extend();
 	}
 
 	private static Date getExpiryDate()

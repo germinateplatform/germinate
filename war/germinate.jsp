@@ -63,8 +63,8 @@
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 
 	<!-- Lightbox -->
-	<link type="text/css" rel="stylesheet" href="css/ekko-lightbox.css" media="screen"/>
-	<script type="text/javascript" src="js/ekko-lightbox.js"></script>
+	<link type="text/css" rel="stylesheet" href="css/baguetteBox.css" media="screen"/>
+	<script type="text/javascript" src="js/baguetteBox.js"></script>
 
 	<!-- Cookie policy notification -->
 	<script type="text/javascript" src="js/jquery.cookie.js"></script>

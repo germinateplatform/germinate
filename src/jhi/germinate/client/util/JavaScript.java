@@ -49,6 +49,12 @@ public class JavaScript
 		});
 	}-*/;
 
+	public static native void smoothScrollTo(int y)/*-{
+		$wnd.$('html, body').animate({
+			scrollTop: y
+		});
+	}-*/;
+
 	public static native void scrollToBottom(Element element)/*-{
 		element.scrollTop = element.scrollHeight;
 	}-*/;

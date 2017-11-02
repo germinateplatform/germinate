@@ -56,6 +56,7 @@ public abstract class Gallery extends GerminateComposite
 
 	private boolean showHeading = true;
 	private boolean showButton  = false;
+	private boolean setUp = false;
 
 	/**
 	 * Creates a new instance of {@link Gallery} with the default number of items as defined by {@link GerminateSettings#galleryImagesPerPage}.
@@ -95,6 +96,8 @@ public abstract class Gallery extends GerminateComposite
 	@Override
 	protected void setUpContent()
 	{
+		panel.getElement().setId("gallery-" + RandomUtils.generateRandomId());
+
 		if (showHeading)
 		{
 			PageHeader header = new PageHeader();
@@ -179,12 +182,10 @@ public abstract class Gallery extends GerminateComposite
 
         /* Create a GalleryItem for each image */
 		int counter = 0;
-		String galleryId = RandomUtils.generateRandomId();
 		for (Image image : storedResult)
 		{
 			GalleryItem item = new GalleryItem(image, showButton);
 			item.setSize(ColumnSize.XS_12, ColumnSize.SM_4, ColumnSize.MD_3, ColumnSize.LG_2);
-			item.setGalleryId(galleryId);
 			row.add(item);
 
 			counter++;
@@ -199,7 +200,26 @@ public abstract class Gallery extends GerminateComposite
 
 			row.add(fix);
 		}
+
+		jsniRun(panel.getElement().getId());
+		setUp = true;
 	}
+
+	@Override
+	protected void onUnload()
+	{
+		if(setUp)
+			jsniDestroy();
+		super.onUnload();
+	}
+
+	private native void jsniRun(String id)/*-{
+		$wnd.baguetteBox.run('#' + id + ' .row', {'captions': 'true'});
+	}-*/;
+
+	private native void jsniDestroy()/*-{
+		$wnd.baguetteBox.destroy();
+	}-*/;
 
 	/**
 	 * This method will be called to get the next chunk of images from the server. The chunk starts from {@code start} and contains at most {@code

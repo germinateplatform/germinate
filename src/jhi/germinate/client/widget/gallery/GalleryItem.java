@@ -93,8 +93,8 @@ public class GalleryItem extends Composite
 		paragraph.setText(img.getDescription());
 		paragraph.setTitle(img.getDescription());
 
-		anchor.getElement().setAttribute("data-toggle", "lightbox");
 		anchor.setHref(UriUtils.fromTrustedString(urlLarge).asString());
+		anchor.setTitle(img.getDescription());
 
 		if (img.getType() != null && showButton && isPageAvailable())
 		{
