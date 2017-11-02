@@ -15,6 +15,7 @@
  *  limitations under the License.
  */
 
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -746,11 +747,11 @@ INSERT INTO `experimenttypes` VALUES (5, 'climate', '2015-09-02 10:35:58', NULL)
 DROP TABLE IF EXISTS `germinatebase`;
 CREATE TABLE `germinatebase`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
-  `general_identifier` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `general_identifier` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'A unique identifier.',
   `number` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'This is the unique identifier for accessions within a genebank, and is assigned when a sample is\nentered into the genebank collection (e.g. ‘PI 113869’).',
   `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'A unique name which defines an entry in the germinatbase table.',
   `bank_number` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Alternative genebank number.',
-  `breeders_code` char(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Any code that is assigned to the germplasm by a breeder.',
+  `breeders_code` char(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'FAO WIEWS code of the institute that has bred the material. If the holding institute has bred the material, the breeding institute code (BREDCODE) should be the same as the holding institute code (INSTCODE). Follows INSTCODE standard. Multiple values are separated by a semicolon without space.',
   `breeders_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Name of the institute (or person) that bred the material. This descriptor should be used only if BREDCODE cannot be filled because the FAO WIEWS code for this institute is not available. Multiple names are separated by a semicolon without space.',
   `subtaxa_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to subtaxa (subtaxa.id).',
   `taxonomy_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to taxonomies (taxonomies.id).',
@@ -768,7 +769,7 @@ CREATE TABLE `germinatebase`  (
   `othernumb` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL COMMENT 'Any other identifiers known to exist in other collections for this accession. Use the following format: INSTCODE:ACCENUMB;INSTCODE:identifier;… INSTCODE and identifier are separated by a colon without space. Pairs of INSTCODE and identifier are separated by a semicolon without space. When the institute is not known, the identifier should be preceded by a colon.',
   `duplsite` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'FAO WIEWS code of the institute(s) where a safety duplicate of the accession is maintained.\nMultiple values are separated by a semicolon without space. Follows INSTCODE standard.',
   `duplinstname` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Name of the institute where a safety duplicate of the accession is maintained. Multiple values are separated by a semicolon without space.',
-  `mlsstatus_id` int(11) NULL DEFAULT NULL,
+  `mlsstatus_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to mlsstatus (mlsstatus.id).',
   `puid` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Any persistent, unique identifier assigned to the accession so it can be unambiguously referenced at the global level and the information associated with it harvested through automated means. Report one PUID for each accession.',
   `biologicalstatus_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to biologicalstatus (biologicalstaus.id).',
   `collsrc_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to collectionsources (collectionsources.id).',
@@ -816,7 +817,8 @@ DROP TABLE IF EXISTS `groups`;
 CREATE TABLE `groups`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
   `grouptype_id` int(11) NOT NULL COMMENT 'Foreign key to grouptypes (grouptypes.id).',
-  `description` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'A description of the group which can be used to identify it.',
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'The name of the group which can be used to identify it.',
+  `description` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL COMMENT 'A free text description of the group. This has no length limitations.',
   `visibility` tinyint(1) NULL DEFAULT NULL COMMENT 'Defines if the group is visuble or hidden from the Germinate user interface.',
   `created_by` int(11) NULL DEFAULT NULL COMMENT 'Defines who created the group. Foreign key to Gatekeeper users (Gatekeeper users.id).',
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Foreign key to locations (locations.id).',

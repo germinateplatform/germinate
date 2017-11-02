@@ -448,13 +448,20 @@ public class DatasetManager extends AbstractManager<Dataset>
 
 		if (isPrivate)
 		{
-			// Filter the datasets to make sure only the ones where the user accepted the license are included
-			List<Dataset> datasets = result.getServerResult()
-										   .parallelStream()
-										   .filter(d -> d.getLicense() == null || d.hasLicenseBeenAccepted(userAuth.getId()))
-										   .collect(Collectors.toList());
+			if (!CollectionUtils.isEmpty(result.getServerResult()))
+			{
+				// Filter the datasets to make sure only the ones where the user accepted the license are included
+				List<Dataset> datasets = result.getServerResult()
+											   .parallelStream()
+											   .filter(d -> d.getLicense() == null || d.hasLicenseBeenAccepted(userAuth.getId()))
+											   .collect(Collectors.toList());
 
-			result.setServerResult(datasets);
+				result.setServerResult(datasets);
+			}
+			else
+			{
+				result.setServerResult(new ArrayList<>());
+			}
 		}
 
 
