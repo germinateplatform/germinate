@@ -119,7 +119,7 @@
 		<copy file="${instance.files}/template/custom.css" todir="${build.dir}/css" overwrite="true" failonerror="false" verbose="true"/>
 		<copy file="${instance.files}/template/custom.html" todir="${build.dir}" overwrite="true" failonerror="false" verbose="true"/>
 		<copy file="${instance.files}/template/favicon.ico" todir="${build.dir}/" overwrite="true" failonerror="true" verbose="true"/>
-		<copy todir="${build.dir}/css/images/css-images" overwrite="true" failonerror="true" verbose="true">
+		<copy failonerror="false" overwrite="true" todir="${build.dir}/css/images/css-images" verbose="true">
 			<fileset dir="${instance.files}/template/css-images"/>
 		</copy>
 		<!-- Copy default parallax images first to have fallback images -->
