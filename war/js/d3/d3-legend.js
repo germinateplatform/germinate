@@ -98,7 +98,7 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
         });
 
     legendItems.append("i")
-        .attr("class", "fa font-awesome fa-circle fa-lg")
+        .attr("class", "mdi mdi-lg mdi-circle")
         .style("vertical-align", "middle")
         .style("color", function (d) {
             return scale(d);
