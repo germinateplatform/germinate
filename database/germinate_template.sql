@@ -791,7 +791,7 @@ CREATE TABLE `germinatebase`  (
   CONSTRAINT `germinatebase_ibfk_4` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `germinatebase_ibfk_5` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `germinatebase_ibfk_6` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_8` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `germinatebase_ibfk_7` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci COMMENT = 'Germinatebase is the Germinate base table which contains passport and other germplasm definition data.' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
