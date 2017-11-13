@@ -84,7 +84,6 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		switch (experimentType)
 		{
 			case allelefreq:
-				return MapManager.getAllHavingAlleleFreqData(userAuth, pagination);
 			case genotype:
 				return MapManager.getAll(userAuth, pagination);
 			default:

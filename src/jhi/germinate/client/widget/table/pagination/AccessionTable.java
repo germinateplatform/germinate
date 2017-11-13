@@ -173,6 +173,24 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		column.setDataStoreName(Accession.NUMBER);
 		addColumn(column, Text.LANG.accessionsColumnNumber(), sortingEnabled);
 
+		/* Add the entity type column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Accession object)
+			{
+				return object.getEntityType().getName();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return EntityType.class;
+			}
+		};
+		column.setDataStoreName(EntityType.NAME);
+		addColumn(column, Text.LANG.accessionsColumnEntityType(), sortingEnabled);
+
 		/* Add the synonyms column */
 		column = new TextColumn()
 		{

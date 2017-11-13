@@ -33,6 +33,8 @@ public enum NewsType
 
 	public static final String NAME        = "newstypes.name";
 	public static final String DESCRIPTION = "newstypes.description";
+	public static final String CREATED_ON  = "newstypes.created_on";
+	public static final String UPDATED_ON  = "newstypes.updated_on";
 
 	private final Long   id;
 	private final String name;

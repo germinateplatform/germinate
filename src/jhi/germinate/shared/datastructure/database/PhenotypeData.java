@@ -49,6 +49,8 @@ public class PhenotypeData extends DatabaseObject
 	public static final String LOCATION_ID      = "phenotypedata.location_id";
 	public static final String TREATMENT_ID     = "phenotypedata.treatment_id";
 	public static final String TRIALSERIES_ID   = "phenotypedata.trialseries_id";
+	public static final String CREATED_ON       = "phenotypedata.created_on";
+	public static final String UPDATED_ON       = "phenotypedata.updated_on";
 
 	private Phenotype   phenotype;
 	private Accession   accession;

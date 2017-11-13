@@ -36,6 +36,8 @@ public class LocationType extends DatabaseObject
 	public static final String ID          = "locationtypes.id";
 	public static final String NAME        = "locationtypes.name";
 	public static final String DESCRIPTION = "locationtypes.description";
+	public static final String CREATED_ON  = "locationtypes.created_on";
+	public static final String UPDATED_ON  = "locationtypes.updated_on";
 
 	private String name;
 	private String description;

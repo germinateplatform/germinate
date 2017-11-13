@@ -39,7 +39,8 @@ public class Synonym extends DatabaseObject
 	public static final String FOREIGN_ID     = "synonyms.foreign_id";
 	public static final String SYNONYMTYPE_ID = "synonyms.synonymtype_id";
 	public static final String SYNONYM        = "synonyms.synonym";
-
+	public static final String CREATED_ON     = "synonyms.created_on";
+	public static final String UPDATED_ON     = "synonyms.updated_on";
 
 	private Long        foreignId;
 	private SynonymType type;

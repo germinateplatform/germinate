@@ -41,6 +41,8 @@ public class Image extends DatabaseObject
 	public static final String DESCRIPTION  = "images.description";
 	public static final String FOREIGN_ID   = "images.foreign_id";
 	public static final String PATH         = "images.path";
+	public static final String CREATED_ON   = "images.created_on";
+	public static final String UPDATED_ON   = "images.updated_on";
 
 	private ImageType type;
 	private String    description;

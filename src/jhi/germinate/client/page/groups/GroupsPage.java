@@ -441,7 +441,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				}
 				uploadAlertDialog.open();
 			});
-			uploadGroupMember.addStyleName(Style.mdi(Style.MDI_UPLOAD));
+			uploadGroupMember.addStyleName(Style.mdiLg(Style.MDI_UPLOAD));
 
 			buttonGroup.add(deleteGroupMember);
 			buttonGroup.add(uploadGroupMember);

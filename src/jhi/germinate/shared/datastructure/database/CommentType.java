@@ -37,6 +37,8 @@ public class CommentType extends DatabaseObject
 	public static final String ID              = "commenttypes.id";
 	public static final String DESCRIPTION     = "commenttypes.description";
 	public static final String REFERENCE_TABLE = "commenttypes.reference_table";
+	public static final String CREATED_ON      = "commenttypes.created_on";
+	public static final String UPDATED_ON      = "commenttypes.updated_on";
 
 	private String                 description;
 	private GerminateDatabaseTable referenceTable;

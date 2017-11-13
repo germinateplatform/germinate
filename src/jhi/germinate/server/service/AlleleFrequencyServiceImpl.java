@@ -145,12 +145,9 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		File histogramFile = new File((String) getFromSession(SESSION_PARAM_HISTOGRAM));
 		File binnedFile = createTemporaryFile("allelefreq_binned_", FileType.txt.name());
 
+		/* Update the last modified date => it won't get deleted by the automatic file delete thread */
 		if (mapFile.exists())
-		{
-			/* Update the last modified date => it won't get deleted by the
-			 * automatic file delete thread */
 			FileUtils.setLastModifyDateNow(mapFile);
-		}
 
 		String debugOutput = FlapjackUtils.createBinnedFile(params, subsetForFlapjack.getAbsolutePath(), binnedFile.getAbsolutePath(), histogramFile.getAbsolutePath());
 
@@ -180,8 +177,8 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		FlapjackAllelefreqBinningResult result = new FlapjackAllelefreqBinningResult();
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.ALLELEFREQ, accessionGroups, markerGroups, datasetId, mapId, false, missingOn);
-		CommonServiceImpl.ExportResult exportResult = getExportResult(DataExporter.Type.ALLELEFREQ, this);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.allelefreq, accessionGroups, markerGroups, datasetId, mapId, false, missingOn);
+		CommonServiceImpl.ExportResult exportResult = getExportResult(ExperimentType.allelefreq, this);
 
         /* Kick off the extraction process, because we need the exported data before we can start with the histogram */
 		try

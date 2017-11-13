@@ -38,6 +38,8 @@ public class LinkType extends DatabaseObject
 	public static final String TARGET_TABLE  = "linktypes.target_table";
 	public static final String TARGET_COLUMN = "linktypes.target_column";
 	public static final String PLACEHOLDER   = "linktypes.placeholder";
+	public static final String CREATED_ON    = "linktypes.created_on";
+	public static final String UPDATED_ON    = "linktypes.updated_on";
 
 	private String description;
 	private String targetTable;

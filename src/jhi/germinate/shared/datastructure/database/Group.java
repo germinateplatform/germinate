@@ -41,6 +41,8 @@ public class Group extends DatabaseObject
 	public static final String GROUP_TYPE_ID = "groups.grouptype_id";
 	public static final String VISIBILITY    = "groups.visibility";
 	public static final String CREATED_BY    = "groups.created_by";
+	public static final String CREATED_ON    = "groups.created_on";
+	public static final String UPDATED_ON    = "groups.updated_on";
 
 	private GroupType type;
 	private String    name;

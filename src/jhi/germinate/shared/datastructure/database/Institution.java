@@ -49,6 +49,8 @@ public class Institution extends DatabaseObject
 	public static final String PHONE      = "institutions.phone";
 	public static final String EMAIL      = "institutions.email";
 	public static final String ADDRESS    = "institutions.address";
+	public static final String CREATED_ON = "institutions.created_on";
+	public static final String UPDATED_ON = "institutions.updated_on";
 
 	private String  code;
 	private String  name;

@@ -19,6 +19,7 @@
 			 xmlns:d="urn:import:org.gwtbootstrap3.extras.datepicker.client.ui"
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:g8="urn:import:jhi.germinate.client.widget.element"
+			 xmlns:lb="urn:import:jhi.germinate.client.widget.listbox"
 			 xmlns:ui="urn:ui:com.google.gwt.uibinder">
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
@@ -56,6 +57,12 @@
 		.inputDual {
 			width: 50% !important;
 		}
+
+		.entity select {
+			border-radius: 0;
+			padding: 7px 12px;
+			margin-left: -1px;
+		}
 	</ui:style>
 
 	<b:InputGroup addStyleNames="{style.clear} {style.margin} {style.group}">
@@ -68,8 +75,13 @@
 		</g:FlowPanel>
 
 		<g:FlowPanel visible="false" ui:field="date">
-			<d:DatePicker autoClose="true" ui:field="firstDate"/>
-			<d:DatePicker autoClose="true" visible="false" ui:field="secondDate"/>
+			<d:DatePicker addStyleNames="{style.input}" autoClose="true" ui:field="firstDate"/>
+			<d:DatePicker addStyleNames="{style.input}" autoClose="true" visible="false" ui:field="secondDate"/>
+		</g:FlowPanel>
+
+		<g:FlowPanel visible="false" ui:field="entity">
+			<lb:EntityTypeListBox addStyleNames="{style.entity}" ui:field="firstEntity"/>
+			<lb:EntityTypeListBox addStyleNames="{style.entity}" visible="false" ui:field="secondEntity"/>
 		</g:FlowPanel>
 
 		<b:InputGroupButton>

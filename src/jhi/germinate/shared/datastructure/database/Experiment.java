@@ -44,6 +44,8 @@ public class Experiment extends DatabaseObject
 	public static final String DESCRIPTION        = "experiments.description";
 	public static final String EXPERIMENT_DATE    = "experiments.experiment_date";
 	public static final String EXPERIMENT_TYPE_ID = "experiments.experiment_type_id";
+	public static final String CREATED_ON         = "experiments.created_on";
+	public static final String UPDATED_ON         = "experiments.updated_on";
 
 	private String         name;
 	private Long           userId;

@@ -39,6 +39,8 @@ public class Collaborator extends DatabaseObject
 	public static final String EMAIL          = "collaborators.email";
 	public static final String PHONE          = "collaborators.phone";
 	public static final String INSTITUTION_ID = "collaborators.institution_id";
+	public static final String CREATED_ON     = "collaborators.created_on";
+	public static final String UPDATED_ON     = "collaborators.updated_on";
 
 	private String      firstName;
 	private String      lastName;

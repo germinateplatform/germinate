@@ -19,6 +19,8 @@ package jhi.germinate.shared.datastructure.database;
 
 import com.google.gwt.core.shared.*;
 
+import java.sql.*;
+import java.util.Date;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
@@ -46,6 +48,9 @@ public class MapDefinition extends DatabaseObject
 	public static final String DEFINITION_END    = "mapdefinitions.definition_end";
 	public static final String CHROMOSOME        = "mapdefinitions.chromosome";
 	public static final String ARM_IMPUTE        = "mapdefinitions.arm_impute";
+	public static final String CREATED_ON        = "mapdefinitions.created_on";
+	public static final String UPDATED_ON        = "mapdefinitions.updated_on";
+
 
 	private MapFeatureType type;
 	private Marker         marker;
@@ -54,6 +59,8 @@ public class MapDefinition extends DatabaseObject
 	private Double         definitionEnd;
 	private String         chromosome;
 	private String         armImpute;
+	private Long           createdOn;
+	private Long           updatedOn;
 
 	public MapDefinition()
 	{
@@ -141,6 +148,34 @@ public class MapDefinition extends DatabaseObject
 		return this;
 	}
 
+	public Long getCreatedOn()
+	{
+		return createdOn;
+	}
+
+	public MapDefinition setCreatedOn(Date createdOn)
+	{
+		if (createdOn == null)
+			this.createdOn = null;
+		else
+			this.createdOn = createdOn.getTime();
+		return this;
+	}
+
+	public Long getUpdatedOn()
+	{
+		return updatedOn;
+	}
+
+	public MapDefinition setUpdatedOn(Date updatedOn)
+	{
+		if (updatedOn == null)
+			this.updatedOn = null;
+		else
+			this.updatedOn = updatedOn.getTime();
+		return this;
+	}
+
 	@Override
 	@GwtIncompatible
 	public DatabaseObjectParser<? extends DatabaseObject> getDefaultParser()
@@ -201,7 +236,9 @@ public class MapDefinition extends DatabaseObject
 							.setDefinitionStart(row.getDouble(DEFINITION_START))
 							.setDefinitionEnd(row.getDouble(DEFINITION_END))
 							.setChromosome(row.getString(CHROMOSOME))
-							.setArmImpute(row.getString(ARM_IMPUTE));
+							.setArmImpute(row.getString(ARM_IMPUTE))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
 			catch (InsufficientPermissionsException e)
 			{
@@ -229,13 +266,22 @@ public class MapDefinition extends DatabaseObject
 		@Override
 		public void write(Database database, MapDefinition object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO mapdefinitions (" + MAPFEATURETYPE_ID + ", " + MARKER_ID + ", " + MAP_ID + ", " + DEFINITION_START + ", " + DEFINITION_END + ", " + CHROMOSOME + ") VALUES (?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO mapdefinitions (" + MAPFEATURETYPE_ID + ", " + MARKER_ID + ", " + MAP_ID + ", " + DEFINITION_START + ", " + DEFINITION_END + ", " + CHROMOSOME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getType().getId())
 					.setLong(object.getMarker().getId())
 					.setLong(object.getMap().getId())
 					.setDouble(object.getDefinitionStart())
 					.setDouble(object.getDefinitionEnd())
 					.setString(object.getChromosome());
+
+			if (object.getCreatedOn() != null)
+				query.setTimestamp(new Date(object.getCreatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				query.setTimestamp(new Date(object.getUpdatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
 
 			ServerResult<List<Long>> ids = query.execute(false);
 

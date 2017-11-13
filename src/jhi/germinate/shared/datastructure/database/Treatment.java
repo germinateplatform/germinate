@@ -36,6 +36,8 @@ public class Treatment extends DatabaseObject
 	public static final String ID          = "treatments.id";
 	public static final String NAME        = "treatments.name";
 	public static final String DESCRIPTION = "treatments.description";
+	public static final String CREATED_ON  = "treatments.created_on";
+	public static final String UPDATED_ON  = "treatments.updated_on";
 
 	private String name;
 	private String description;

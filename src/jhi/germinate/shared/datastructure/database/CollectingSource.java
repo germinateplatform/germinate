@@ -33,8 +33,10 @@ public class CollectingSource extends DatabaseObject
 {
 	private static final long serialVersionUID = -3446227106496704279L;
 
-	public static final String ID      = "collectingsources.id";
-	public static final String COLLSRC = "collectingsources.collsrc";
+	public static final String ID         = "collectingsources.id";
+	public static final String COLLSRC    = "collectingsources.collsrc";
+	public static final String CREATED_ON = "collectingsources.created_on";
+	public static final String UPDATED_ON = "collectingsources.updated_on";
 
 	private String collSrc;
 	private Long   createdOn;

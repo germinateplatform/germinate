@@ -778,6 +778,10 @@ public interface Text extends Messages
 	@Key("column.accessions.number")
 	String accessionsColumnNumber();
 
+	@Key("column.accessions.entity.type")
+	@DefaultMessage("Entity type")
+	String accessionsColumnEntityType();
+
 	@Key("column.accessions.synonym")
 	@DefaultMessage("Synonyms")
 	String accessionsColumnSynonym();

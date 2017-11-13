@@ -34,8 +34,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class MapManager extends AbstractManager<Map>
 {
-	private static final String SELECT_ALL                    = "SELECT maps.*, COUNT(1) AS count          FROM maps LEFT JOIN mapdefinitions ON mapdefinitions.map_id = maps.id WHERE maps.user_id <=> ? OR maps.visibility = 1 GROUP BY maps.id %s LIMIT ?, ?";
-	private static final String SELECT_ALL_HAVING_ALLELE_FREQ = "SELECT maps.*, COUNT(markers.id) AS count FROM maps LEFT JOIN mapdefinitions ON mapdefinitions.map_id = maps.id LEFT JOIN markers ON mapdefinitions.marker_id = markers.id WHERE EXISTS (SELECT 1 FROM allelefrequencydata WHERE allelefrequencydata.marker_id = markers.id) AND (maps.user_id = ? OR maps.visibility = 1) GROUP BY maps.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL = "SELECT maps.*, COUNT(1) AS count FROM maps LEFT JOIN mapdefinitions ON mapdefinitions.map_id = maps.id WHERE maps.user_id <=> ? OR maps.visibility = 1 GROUP BY maps.id %s LIMIT ?, ?";
 
 	@Override
 	protected String getTable()
@@ -54,21 +53,6 @@ public class MapManager extends AbstractManager<Map>
 		pagination.updateSortColumn(MapService.COLUMNS_MAP_SORTABLE, Map.ID);
 
 		String formatted = String.format(SELECT_ALL, pagination.getSortQuery());
-
-		return new DatabaseObjectQuery<Map>(formatted, userAuth)
-				.setFetchesCount(pagination.getResultSize())
-				.setLong(userAuth.getId())
-				.setInt(pagination.getStart())
-				.setInt(pagination.getLength())
-				.run()
-				.getObjectsPaginated(Map.Parser.Inst.get());
-	}
-
-	public static PaginatedServerResult<List<Map>> getAllHavingAlleleFreqData(UserAuth userAuth, Pagination pagination) throws DatabaseException, InvalidColumnException
-	{
-		pagination.updateSortColumn(MapService.COLUMNS_MAP_SORTABLE, Map.ID);
-
-		String formatted = String.format(SELECT_ALL_HAVING_ALLELE_FREQ, pagination.getSortQuery());
 
 		return new DatabaseObjectQuery<Map>(formatted, userAuth)
 				.setFetchesCount(pagination.getResultSize())

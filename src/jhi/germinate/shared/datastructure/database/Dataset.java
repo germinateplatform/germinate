@@ -57,8 +57,9 @@ public class Dataset extends DatabaseObject
 	public static final String DATASET_STATE_ID = "datasets.dataset_state_id";
 	public static final String LICENSE_ID       = "datasets.license_id";
 	public static final String IS_EXTERNAL      = "datasets.is_external";
-
-	public static final String HYPERLINK = "datasets.hyperlink";
+	public static final String HYPERLINK        = "datasets.hyperlink";
+	public static final String CREATED_ON       = "datasets.created_on";
+	public static final String UPDATED_ON       = "datasets.updated_on";
 
 	public static final String NR_OF_DATA_OBJECTS = "nr_of_data_objects";
 	public static final String NR_OF_DATA_POINTS  = "nr_of_data_points";

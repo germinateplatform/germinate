@@ -1,0 +1,53 @@
+/**************************************************/
+/*              GERMINATE 3                       */
+/*              MIGRATION SCRIPT                  */
+/*              v3.4.0 -> v3.5.0                  */
+/**************************************************/
+
+/* Create the new tables used for different levels of material/entities */
+CREATE TABLE `entitytypes`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
+  `name` varchar(255) NOT NULL COMMENT 'The name of the entity type.',
+  `description` text NULL COMMENT 'Describes the entity type.',
+  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`)
+);
+
+/* Insert the default values */
+INSERT INTO `entitytypes` (`id`, `name`, `description`) VALUES (1, 'Accession', 'The basic working unit of conservation in the genebanks.'),
+                                                               (2, 'Plant/Plot', 'An individual grown from an accession OR a plot of individuals from the same accession.'),
+                                                               (3, 'Sample', 'A sample from a plant. An example would be taking multiple readings for the same phenotype from a plant.');
+
+/* Add the new columns to `germinatebase` */
+ALTER TABLE `germinatebase`
+ADD COLUMN `entitytype_id` int(11) NULL DEFAULT 1 COMMENT 'Foreign key to entitytypes (entitytypes.id).' AFTER `location_id`,
+ADD COLUMN `entityparent_id` int(11) NULL COMMENT 'Foreign key to germinatebase (germinatebase.id).' AFTER `entitytype_id`;
+
+/* Update some foreign keys. This forces the columns to be set to NULL when referenced items are deleted. */
+ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_1`;
+ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_2`;
+ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_3`;
+ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_4`;
+ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_5`;
+ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_6`;
+ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_7`;
+
+ALTER TABLE `germinatebase`
+ADD CONSTRAINT `germinatebase_ibfk_1` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_2` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_3` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomies` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_4` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_5` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_6` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_7` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_8` FOREIGN KEY (`entitytype_id`) REFERENCES `entitytypes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_9` FOREIGN KEY (`entityparent_id`) REFERENCES `germinatebase` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+/* Create sample entries in `germinatebase` for each sample in the `allelefrequencydata` table */
+INSERT INTO germinatebase (general_identifier, name, entitytype_id, entityparent_id)
+SELECT DISTINCT CONCAT(germinatebase.name, "-", sample_id), CONCAT(germinatebase.name, "-", sample_id), 2, germinatebase.id
+FROM allelefrequencydata LEFT JOIN germinatebase ON germinatebase.id = allelefrequencydata.germinatebase_id;
+
+/* Now drop the whole table, we don't need it anymore */
+DROP TABLE `allelefrequencydata`;

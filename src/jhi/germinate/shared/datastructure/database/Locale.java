@@ -34,6 +34,8 @@ public class Locale extends DatabaseObject
 	public static final String ID           = "locales.id";
 	public static final String NAME         = "locales.name";
 	public static final String DESCRIPTTION = "locales.description";
+	public static final String CREATED_ON   = "locales.created_on";
+	public static final String UPDATED_ON   = "locales.updated_on";
 
 	private String name;
 	private String description;

@@ -35,8 +35,6 @@ public abstract class DatabaseObject implements Serializable
 	private static final long serialVersionUID = 1226813007200682358L;
 
 	public static final String COUNT      = "count";
-	public static final String CREATED_ON = "created_on";
-	public static final String UPDATED_ON = "updated_on";
 
 	protected Long                id;
 	protected Map<String, String> extra;

@@ -69,6 +69,10 @@ public class Accession extends DatabaseObject
 	public static final String BIOLOGICALSTATUS_ID = "germinatebase.biologicalstatus_id";
 	public static final String COLLSRC_ID          = "germinatebase.collsrc_id";
 	public static final String LOCATION_ID         = "germinatebase.location_id";
+	public static final String ENTITYTYPE_ID       = "germinatebase.entitytype_id";
+	public static final String ENTITYPARENT_ID     = "germinatebase.entityparent_id";
+	public static final String CREATED_ON          = "germinatebase.created_on";
+	public static final String UPDATED_ON          = "germinatebase.updated_on";
 
 	public static final String SYNONYMS = "synonyms";
 
@@ -100,6 +104,7 @@ public class Accession extends DatabaseObject
 	private Location         location;
 	private MlsStatus        mlsStatus;
 	private String           synonyms;
+	private EntityType       entityType;
 	private Long             createdOn;
 	private Long             updatedOn;
 
@@ -430,6 +435,17 @@ public class Accession extends DatabaseObject
 		return this;
 	}
 
+	public EntityType getEntityType()
+	{
+		return entityType;
+	}
+
+	public Accession setEntityType(EntityType entityType)
+	{
+		this.entityType = entityType;
+		return this;
+	}
+
 	public Long getCreatedOn()
 	{
 		return createdOn;
@@ -515,6 +531,7 @@ public class Accession extends DatabaseObject
 							.setCollSrc(COLLECTINGSOURCE_CACHE.get(user, row.getLong(COLLSRC_ID), row, foreignsFromResultSet))
 							.setLocation(LOCATION_CACHE.get(user, row.getLong(LOCATION_ID), row, foreignsFromResultSet))
 							.setSynonyms(row.getString(SYNONYMS))
+							.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
@@ -541,6 +558,70 @@ public class Accession extends DatabaseObject
 			COLLECTINGSOURCE_CACHE = createCache(CollectingSource.class, CollectingSourceManager.class);
 			LOCATION_CACHE = createCache(Location.class, LocationManager.class);
 			MLSSTATUS_CACHE = createCache(MlsStatus.class, MlsStatusManager.class);
+		}
+
+		public static final class Inst
+		{
+			public static Parser get()
+			{
+				return InstanceHolder.INSTANCE;
+			}
+
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
+			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
+			 * holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
+			 * <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final Parser INSTANCE = new Parser();
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class MinimalParser extends DatabaseObjectParser<Accession>
+	{
+		private MinimalParser()
+		{
+		}
+
+		@Override
+		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			Long id = row.getLong(ID);
+
+			if (id == null)
+				return null;
+			else
+				return new Accession(id)
+						.setGeneralIdentifier(row.getString(GENERAL_IDENTIFIER))
+						.setNumber(row.getString(NUMBER))
+						.setName(row.getString(NAME))
+						.setBankNumber(row.getString(BANK_NUMBER))
+						.setBreedersCode(row.getString(BREEDERS_CODE))
+						.setBreedersName(row.getString(BREEDERS_NAME))
+						.setPuid(row.getString(PUID))
+						.setPlantPassport(row.getString(PLANT_PASSPORT))
+						.setDonorCode(row.getString(DONOR_CODE))
+						.setDonorName(row.getString(DONOR_NAME))
+						.setDonorNumber(row.getString(DONOR_NUMBER))
+						.setAcqDate(row.getString(ACQDATE))
+						.setCollNumb(row.getString(COLLNUMB))
+						.setCollDate(row.getDate(COLLDATE))
+						.setCollName(row.getString(COLLNAME))
+						.setCollCode(row.getString(COLLCODE))
+						.setOtherNumb(row.getString(OTHERNUMB))
+						.setCollMissId(row.getString(COLLMISSID))
+						.setDuplSite(row.getString(DUPLSITE))
+						.setDuplInstName(row.getString(DUPLINSTNAME))
+						.setSynonyms(row.getString(SYNONYMS))
+						.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
+						.setCreatedOn(row.getTimestamp(CREATED_ON))
+						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 		}
 
 		public static final class Inst

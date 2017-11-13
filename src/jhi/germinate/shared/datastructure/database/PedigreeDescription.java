@@ -42,6 +42,8 @@ public class PedigreeDescription extends DatabaseObject
 	public static final String NAME        = "pedigreedescriptions.name";
 	public static final String DESCRIPTION = "pedigreedescriptions.description";
 	public static final String AUTHOR      = "pedigreedescriptions.author";
+	public static final String CREATED_ON  = "pedigreedescriptions.created_on";
+	public static final String UPDATED_ON  = "pedigreedescriptions.updated_on";
 
 	private String name;
 	private String description;

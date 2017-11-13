@@ -42,6 +42,8 @@ public class News extends DatabaseObject
 	public static final String IMAGE       = "news.image";
 	public static final String HYPERLINK   = "news.hyperlink";
 	public static final String USER_ID     = "news.user_id";
+	public static final String CREATED_ON  = "news.created_on";
+	public static final String UPDATED_ON  = "news.updated_on";
 
 	private NewsType type;
 	private String   title;

@@ -37,6 +37,8 @@ public class ImageType extends DatabaseObject
 	public static final String ID              = "imagetypes.id";
 	public static final String DESCRIPTION     = "imagetypes.description";
 	public static final String REFERENCE_TABLE = "imagetypes.reference_table";
+	public static final String CREATED_ON      = "imagetypes.created_on";
+	public static final String UPDATED_ON      = "imagetypes.updated_on";
 
 	private String                 description;
 	private GerminateDatabaseTable referenceTable;

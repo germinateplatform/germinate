@@ -45,6 +45,8 @@ public class PedigreeDefinition extends DatabaseObject
 	public static final String PEDIGREENOTATION_ID    = "pedigreedefinitions.pedigreenotation_id";
 	public static final String PEDIGREEDESCRIPTION_ID = "pedigreedefinitions.pedigreedescription_id";
 	public static final String DEFINITION             = "pedigreedefinitions.definition";
+	public static final String CREATED_ON             = "pedigreedefinitions.created_on";
+	public static final String UPDATED_ON             = "pedigreedefinitions.updated_on";
 
 	private Accession           accession;
 	private PedigreeNotation    notation;

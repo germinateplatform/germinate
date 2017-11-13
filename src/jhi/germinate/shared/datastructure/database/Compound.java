@@ -46,6 +46,8 @@ public class Compound extends DatabaseObject
 	public static final String AVERAGE_MASS      = "compounds.average_mass";
 	public static final String CLASS             = "compounds.class";
 	public static final String UNIT_ID           = "compounds.unit_id";
+	public static final String CREATED_ON        = "compounds.created_on";
+	public static final String UPDATED_ON        = "compounds.updated_on";
 
 	private String name;
 	private String description;

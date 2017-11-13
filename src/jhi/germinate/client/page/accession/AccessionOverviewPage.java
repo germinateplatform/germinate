@@ -96,22 +96,26 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 		panel.add(table);
 
 		/* Apply any filtering that another page requested before redirecting here */
-		final Map<String, String> mapping = StringStringMapParameterStore.Inst.get().get(Parameter.tableFilterMapping);
-		if (mapping != null)
-		{
-			StringStringMapParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
+		Map<String, String> mapping = StringStringMapParameterStore.Inst.get().get(Parameter.tableFilterMapping);
 
-			Scheduler.get().scheduleDeferred(() ->
+		if (mapping == null)
+			mapping = new HashMap<>();
+
+		/* By default, filter down to accessions only */
+		mapping.put(EntityType.NAME, EntityType.ACCESSION.getName());
+		StringStringMapParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
+
+		final Map<String, String> m = mapping;
+		Scheduler.get().scheduleDeferred(() ->
+		{
+			try
 			{
-				try
-				{
-					table.forceFilter(mapping, true);
-				}
-				catch (InvalidArgumentException e)
-				{
-				}
-			});
-		}
+				table.forceFilter(m, true);
+			}
+			catch (InvalidArgumentException e)
+			{
+			}
+		});
 
 		/* Set up callbacks for column names and groups */
 		ParallelAsyncCallback<ServerResult<List<String>>> columnCallback = new ParallelAsyncCallback<ServerResult<List<String>>>()

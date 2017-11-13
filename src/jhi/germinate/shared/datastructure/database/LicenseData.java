@@ -37,6 +37,8 @@ public class LicenseData extends DatabaseObject
 	public static final String LICENSE_ID = "licensedata.license_id";
 	public static final String LOCALE_ID  = "licensedata.locale_id";
 	public static final String CONTENT    = "licensedata.content";
+	public static final String CREATED_ON = "licensedata.created_on";
+	public static final String UPDATED_ON = "licensedata.updated_on";
 
 	private Long   license;
 	private Locale locale;

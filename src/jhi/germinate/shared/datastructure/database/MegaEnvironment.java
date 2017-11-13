@@ -19,6 +19,8 @@ package jhi.germinate.shared.datastructure.database;
 
 import com.google.gwt.core.shared.*;
 
+import java.util.*;
+
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.parser.*;
 import jhi.germinate.server.manager.*;
@@ -32,10 +34,14 @@ public class MegaEnvironment extends DatabaseObject
 {
 	private static final long serialVersionUID = 3208912675996165659L;
 
-	public static final String ID   = "megaenvironments.id";
-	public static final String NAME = "megaenvironments.name";
+	public static final String ID         = "megaenvironments.id";
+	public static final String NAME       = "megaenvironments.name";
+	public static final String CREATED_ON = "megaenvironments.created_on";
+	public static final String UPDATED_ON = "megaenvironments.updated_on";
 
 	private String name;
+	private Long   createdOn;
+	private Long   updatedOn;
 	private Long size = 0L;
 
 	public MegaEnvironment()
@@ -55,6 +61,34 @@ public class MegaEnvironment extends DatabaseObject
 	public MegaEnvironment setName(String name)
 	{
 		this.name = name;
+		return this;
+	}
+
+	public Long getCreatedOn()
+	{
+		return createdOn;
+	}
+
+	public MegaEnvironment setCreatedOn(Date createdOn)
+	{
+		if (createdOn == null)
+			this.createdOn = null;
+		else
+			this.createdOn = createdOn.getTime();
+		return this;
+	}
+
+	public Long getUpdatedOn()
+	{
+		return updatedOn;
+	}
+
+	public MegaEnvironment setUpdatedOn(Date updatedOn)
+	{
+		if (updatedOn == null)
+			this.updatedOn = null;
+		else
+			this.updatedOn = updatedOn.getTime();
 		return this;
 	}
 
@@ -123,7 +157,9 @@ public class MegaEnvironment extends DatabaseObject
 			else
 			{
 				MegaEnvironment megaEnvironment = new MegaEnvironment(id)
-						.setName(row.getString(NAME));
+						.setName(row.getString(NAME))
+						.setCreatedOn(row.getTimestamp(CREATED_ON))
+						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 
 				try
 				{
@@ -177,7 +213,9 @@ public class MegaEnvironment extends DatabaseObject
 			else
 			{
 				MegaEnvironment megaEnvironment = new MegaEnvironment(id)
-						.setName(row.getString("name"));
+						.setName(row.getString("name"))
+						.setCreatedOn(row.getTimestamp(CREATED_ON))
+						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 
 				try
 				{

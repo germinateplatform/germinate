@@ -54,8 +54,8 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.GENOTYPE, accessionGroups, markerGroups, datasetId, mapId, heterozygousFilter, misingDataFilter);
-		CommonServiceImpl.ExportResult result = getExportResult(DataExporter.Type.GENOTYPE, this);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, accessionGroups, markerGroups, datasetId, mapId, heterozygousFilter, misingDataFilter);
+		CommonServiceImpl.ExportResult result = getExportResult(ExperimentType.genotype, this);
 
 		Set<String> deletedMarkers = new HashSet<>(); // TODO: Once the HDF5 export supports the CDF (Crap Data Filter), we need to fill this...
 		File mapFile;
@@ -120,8 +120,8 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, DataExporter.Type.GENOTYPE, null, null, datasetId, null, false, false);
-		CommonServiceImpl.ExportResult result = getExportResult(DataExporter.Type.GENOTYPE, this);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, null, null, datasetId, null, false, false);
+		CommonServiceImpl.ExportResult result = getExportResult(ExperimentType.genotype, this);
 
         /* Kick off the extraction process */
 		DataExporter exporter = new DataExporter(settings, result.subsetWithFlapjackLinks.getAbsolutePath());

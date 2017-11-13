@@ -69,7 +69,7 @@ public class InSet implements ComparisonOperator
 			throw new InvalidArgumentException("In set comparison requires that at least one comparison value is selected.");
 		}
 
-		return " IN (" + Util.generateSqlPlaceholderString(values.size()) + ") ";
+		return " " + columnName + " IN (" + Util.generateSqlPlaceholderString(values.size()) + ") ";
 	}
 
 	@Override

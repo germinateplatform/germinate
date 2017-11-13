@@ -42,6 +42,8 @@ public class Unit extends DatabaseObject
 	public static final String NAME         = "units.unit_name";
 	public static final String ABBREVIATION = "units.unit_abbreviation";
 	public static final String DESCRIPTION  = "units.unit_description";
+	public static final String CREATED_ON   = "units.created_on";
+	public static final String UPDATED_ON   = "units.updated_on";
 
 	private String name;
 	private String abbreviation;

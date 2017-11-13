@@ -42,6 +42,8 @@ public class CompoundData extends DatabaseObject
 	public static final String ANALYSISMETHOD_ID = "compounddata.analysismethod_id";
 	public static final String COMPOUND_VALUE    = "compounddata.compound_value";
 	public static final String RECORDING_DATE    = "compounddata.recording_date";
+	public static final String CREATED_ON        = "compounddata.created_on";
+	public static final String UPDATED_ON        = "compounddata.updated_on";
 
 	private Compound       compound;
 	private Accession      accession;

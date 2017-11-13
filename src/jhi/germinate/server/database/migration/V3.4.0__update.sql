@@ -58,7 +58,7 @@ ADD COLUMN `coordinate_uncertainty`  int(11) NULL COMMENT 'Uncertainty associate
 ADD COLUMN `coordinate_datum`  varchar(255) NULL COMMENT 'The geodetic datum or spatial reference system upon which the coordinates given in decimal latitude and decimal longitude are based (e.g. WGS84, ETRS89, NAD83). The GPS uses the WGS84 datum.' AFTER `coordinate_uncertainty`,
 ADD COLUMN `georeferencing_method`  varchar(255) NULL COMMENT 'The georeferencing method used (GPS, determined from map, gazetteer, or estimated using software). Leave the value empty if georeferencing method is not known.' AFTER `coordinate_datum`;
 
-ALTER TABLE `germinatebase` ADD CONSTRAINT `germinatebase_ibfk_8` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE `germinatebase` ADD CONSTRAINT `germinatebase_ibfk_7` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE `pedigreedefinitions`
 ADD COLUMN `pedigreedescription_id`  int(11) NULL AFTER `pedigreenotation_id`;

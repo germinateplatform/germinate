@@ -411,7 +411,7 @@ public abstract class AbstractChart extends GerminateComposite
 		body.add(textBox);
 
 		final AlertDialog dialog = new AlertDialog(Text.LANG.generalFilename(), body)
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalContinue(), Style.MDI_ARROW_RIGHT_BOLD, (e) -> callback.onSuccess(textBox.getValue())))
+				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalContinue(), Style.MDI_ARROW_RIGHT_BOLD, ButtonType.PRIMARY, (e) -> callback.onSuccess(textBox.getValue())))
 				.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), Style.MDI_CANCEL, (e) -> callback.onFailure(null)));
 
 		// Add an enter key listener
@@ -419,9 +419,7 @@ public abstract class AbstractChart extends GerminateComposite
 		{
 			// If enter is pressed, invoke the positive button click
 			if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
-			{
 				dialog.positiveClick();
-			}
 		});
 
 		dialog.open();

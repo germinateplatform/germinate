@@ -26,7 +26,6 @@ import jhi.germinate.client.service.*;
  */
 public enum GerminateDatabaseTable
 {
-	allelefrequencydata,
 	analysismethods,
 	attributedata,
 	attributes,

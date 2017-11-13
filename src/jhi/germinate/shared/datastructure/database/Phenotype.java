@@ -46,6 +46,8 @@ public class Phenotype extends DatabaseObject
 	public static final String DESCRIPTION = "phenotypes.description";
 	public static final String DATATYPE    = "phenotypes.datatype";
 	public static final String UNIT_ID     = "phenotypes.unit_id";
+	public static final String CREATED_ON  = "phenotypes.created_on";
+	public static final String UPDATED_ON  = "phenotypes.updated_on";
 
 	private String name;
 	private String shortName;

@@ -33,8 +33,10 @@ public class BiologicalStatus extends DatabaseObject
 {
 	private static final long serialVersionUID = 8372226159752467096L;
 
-	public static final String ID       = "biologicalstatus.id";
-	public static final String SAMPSTAT = "biologicalstatus.sampstat";
+	public static final String ID         = "biologicalstatus.id";
+	public static final String SAMPSTAT   = "biologicalstatus.sampstat";
+	public static final String CREATED_ON = "biologicalstatus.created_on";
+	public static final String UPDATED_ON = "biologicalstatus.updated_on";
 
 	private String sampStat;
 	private Long   createdOn;

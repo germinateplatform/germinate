@@ -44,6 +44,8 @@ public class Attribute extends DatabaseObject
 	public static final String DESCRIPTION  = "attributes.description";
 	public static final String DATA_TYPE    = "attributes.datatype";
 	public static final String TARGET_TABLE = "attributes.target_table";
+	public static final String CREATED_ON   = "attributes.created_on";
+	public static final String UPDATED_ON   = "attributes.updated_on";
 
 	private String name;
 	private String description;

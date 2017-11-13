@@ -41,6 +41,8 @@ public class Link extends DatabaseObject
 	public static final String HYPERLINK   = "links.hyperlink";
 	public static final String DESCRIPTION = "links.description";
 	public static final String VISIBILITY  = "links.visibility";
+	public static final String CREATED_ON  = "links.created_on";
+	public static final String UPDATED_ON  = "links.updated_on";
 
 	private LinkType type;
 	private Long     foreignId;

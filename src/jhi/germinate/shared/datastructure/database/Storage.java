@@ -19,6 +19,8 @@ package jhi.germinate.shared.datastructure.database;
 
 import com.google.gwt.core.shared.*;
 
+import java.util.*;
+
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.parser.*;
 import jhi.germinate.shared.datastructure.*;
@@ -33,8 +35,12 @@ public class Storage extends DatabaseObject
 
 	public static final String ID          = "storage.id";
 	public static final String DESCRIPTION = "storage.description";
+	public static final String CREATED_ON  = "phenotypedata.created_on";
+	public static final String UPDATED_ON  = "phenotypedata.updated_on";
 
 	private String description;
+	private Long   createdOn;
+	private Long   updatedOn;
 
 	public Storage()
 	{
@@ -53,6 +59,34 @@ public class Storage extends DatabaseObject
 	public Storage setDescription(String description)
 	{
 		this.description = description;
+		return this;
+	}
+
+	public Long getCreatedOn()
+	{
+		return createdOn;
+	}
+
+	public Storage setCreatedOn(Date createdOn)
+	{
+		if (createdOn == null)
+			this.createdOn = null;
+		else
+			this.createdOn = createdOn.getTime();
+		return this;
+	}
+
+	public Long getUpdatedOn()
+	{
+		return updatedOn;
+	}
+
+	public Storage setUpdatedOn(Date updatedOn)
+	{
+		if (updatedOn == null)
+			this.updatedOn = null;
+		else
+			this.updatedOn = updatedOn.getTime();
 		return this;
 	}
 
@@ -101,7 +135,9 @@ public class Storage extends DatabaseObject
 				return null;
 			else
 				return new Storage(id)
-						.setDescription(row.getString(DESCRIPTION));
+						.setDescription(row.getString(DESCRIPTION))
+						.setCreatedOn(row.getTimestamp(CREATED_ON))
+						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 		}
 	}
 }

@@ -33,7 +33,9 @@ import java.util.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.*;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
@@ -63,6 +65,12 @@ public class FilterRow extends Composite
 	@UiField
 	DatePicker                              secondDate;
 	@UiField
+	FlowPanel                               entity;
+	@UiField
+	EntityTypeListBox                       firstEntity;
+	@UiField
+	EntityTypeListBox                       secondEntity;
+	@UiField
 	Button                                  deleteButton;
 	private List<Column> columns;
 
@@ -85,11 +93,19 @@ public class FilterRow extends Composite
 				{
 					date.setVisible(true);
 					input.setVisible(false);
+					entity.setVisible(false);
+				}
+				else if (item.getDataType().equals(EntityType.class))
+				{
+					date.setVisible(false);
+					input.setVisible(false);
+					entity.setVisible(true);
 				}
 				else
 				{
 					date.setVisible(false);
 					input.setVisible(true);
+					entity.setVisible(false);
 				}
 			}
 		};
@@ -104,48 +120,7 @@ public class FilterRow extends Composite
 			@Override
 			protected void onValueChange(ComparisonOperator value)
 			{
-				boolean firstVisible;
-				boolean secondVisible;
-				boolean add;
-
-				switch (value.getRequiredNumberOfvalues().ordinal())
-				{
-					case 1:
-						firstVisible = true;
-						secondVisible = false;
-						add = false;
-						break;
-					case 2:
-						firstVisible = true;
-						secondVisible = true;
-						add = true;
-						break;
-					default:
-						firstVisible = false;
-						secondVisible = false;
-						add = false;
-						break;
-				}
-
-				firstInput.setVisible(firstVisible);
-				secondInput.setVisible(secondVisible);
-				firstDate.setVisible(firstVisible);
-				secondDate.setVisible(secondVisible);
-
-				if (add)
-				{
-					firstInput.addStyleName(style.inputDual());
-					secondInput.addStyleName(style.inputDual());
-					firstDate.addStyleName(style.inputDual());
-					secondDate.addStyleName(style.inputDual());
-				}
-				else
-				{
-					firstInput.removeStyleName(style.inputDual());
-					secondInput.removeStyleName(style.inputDual());
-					firstDate.removeStyleName(style.inputDual());
-					secondDate.removeStyleName(style.inputDual());
-				}
+				update(value);
 			}
 		};
 
@@ -155,6 +130,58 @@ public class FilterRow extends Composite
 
 		operator.setData(Arrays.asList(new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between()), true);
 		deleteButton.setEnabled(canDelete);
+	}
+
+	private void update(ComparisonOperator value)
+	{
+		boolean firstVisible;
+		boolean secondVisible;
+		boolean add;
+
+		switch (value.getRequiredNumberOfvalues().ordinal())
+		{
+			case 1:
+				firstVisible = true;
+				secondVisible = false;
+				add = false;
+				break;
+			case 2:
+				firstVisible = true;
+				secondVisible = true;
+				add = true;
+				break;
+			default:
+				firstVisible = false;
+				secondVisible = false;
+				add = false;
+				break;
+		}
+
+		firstInput.setVisible(firstVisible);
+		secondInput.setVisible(secondVisible);
+		firstDate.setVisible(firstVisible);
+		secondDate.setVisible(secondVisible);
+		firstEntity.setVisible(firstVisible);
+		secondEntity.setVisible(secondVisible);
+
+		if (add)
+		{
+			firstInput.addStyleName(style.inputDual());
+			secondInput.addStyleName(style.inputDual());
+			firstDate.addStyleName(style.inputDual());
+			secondDate.addStyleName(style.inputDual());
+			firstEntity.addStyleName(style.inputDual());
+			secondEntity.addStyleName(style.inputDual());
+		}
+		else
+		{
+			firstInput.removeStyleName(style.inputDual());
+			secondInput.removeStyleName(style.inputDual());
+			firstDate.removeStyleName(style.inputDual());
+			secondDate.removeStyleName(style.inputDual());
+			firstEntity.removeStyleName(style.inputDual());
+			secondEntity.removeStyleName(style.inputDual());
+		}
 	}
 
 	public void setEnterKeyListener(KeyPressHandler handler)
@@ -169,9 +196,24 @@ public class FilterRow extends Composite
 			   .filter(c -> c.databaseColumn.equalsIgnoreCase(col))
 			   .findFirst()
 			   .ifPresent(c -> {
-				   column.setSelection(c);
-				   operator.setSelection(op);
-				   firstInput.setValue(value);
+				   column.setSelection(c, true);
+				   operator.setSelection(op, true);
+
+				   if (c.getDataType().equals(EntityType.class))
+				   {
+					   try
+					   {
+						   firstEntity.setValue(EntityType.valueOf(value), true);
+					   }
+					   catch (IllegalArgumentException e)
+					   {
+						   firstInput.setValue(value);
+					   }
+				   }
+				   else
+				   {
+					   firstInput.setValue(value);
+				   }
 			   });
 	}
 
@@ -229,28 +271,36 @@ public class FilterRow extends Composite
 	{
 		if (input.isVisible())
 			return firstInput.getValue();
-		else
+		else if (date.isVisible())
 			return DateUtils.getDatabaseDate(firstDate.getValue().getTime());
+		else if (entity.isVisible())
+			return firstEntity.getSelection().getName();
+		else
+			return "";
 	}
 
 	private String getSecond()
 	{
 		if (input.isVisible())
 			return secondInput.getValue();
-		else
+		else if (date.isVisible())
 			return DateUtils.getDatabaseDate(secondDate.getValue().getTime());
+		else if (entity.isVisible())
+			return secondEntity.getSelection().getName();
+		else
+			return "";
 	}
 
 	public String getSearchConditionString()
 	{
-		return column.getSelection().displayName + " " + getOperatorString(operator.getSelection()) + " " + getFirst() + (secondInput.isVisible() || secondDate.isVisible() ? ", " + getSecond() : "");
+		return column.getSelection().displayName + " " + getOperatorString(operator.getSelection()) + " " + getFirst() + (secondInput.isVisible() || secondDate.isVisible() || secondEntity.isVisible() ? ", " + getSecond() : "");
 	}
 
 	public boolean isEmpty()
 	{
 		if (StringUtils.isEmpty(getFirst()))
 			return true;
-		else if (secondInput.isVisible() || secondDate.isVisible())
+		else if (secondInput.isVisible() || secondDate.isVisible() || secondEntity.isVisible())
 			return StringUtils.isEmpty(getSecond());
 		else
 			return false;

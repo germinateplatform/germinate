@@ -205,9 +205,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 
 			List<String> lines = new ArrayList<>();
 			while ((line = reader.readLine()) != null)
-			{
 				lines.add(line);
-			}
 
 			return addItems(properties, lines.toArray(new String[lines.size()]), referenceTable, column, groupId);
 		}
@@ -285,10 +283,10 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		{
 			ServerResult<Boolean> hasLocalResourceFile = DatasetManager.hasSourceFile(userAuth, datasetIds);
 
-			if (type == ExperimentType.allelefreq || !hasLocalResourceFile.getServerResult())
-				return GroupManager.getAccessionGroupsForDatasets(userAuth, datasetIds, type);
-			else
+			if (hasLocalResourceFile.getServerResult())
 				return GroupManager.getAllForType(userAuth, GerminateDatabaseTable.germinatebase);
+			else
+				return GroupManager.getAccessionGroupsForDatasets(userAuth, datasetIds, type);
 		}
 		catch (InsufficientPermissionsException e)
 		{
@@ -308,10 +306,10 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		{
 			ServerResult<Boolean> hasLocalResourceFile = DatasetManager.hasSourceFile(userAuth, datasetIds);
 
-			if (type == ExperimentType.allelefreq || !hasLocalResourceFile.getServerResult())
-				return GroupManager.getMarkerGroupsForDataset(userAuth, datasetIds, type);
-			else
+			if (hasLocalResourceFile.getServerResult())
 				return GroupManager.getAllForType(userAuth, GerminateDatabaseTable.markers);
+			else
+				return GroupManager.getMarkerGroupsForDataset(userAuth, datasetIds, type);
 		}
 		catch (InsufficientPermissionsException e)
 		{

@@ -38,6 +38,8 @@ public class SynonymType extends DatabaseObject
 	public static final String REFERENCE_TABLE = "synonymtypes.target_table";
 	public static final String NAME            = "synonymtypes.name";
 	public static final String DESCRIPTION     = "synonymtypes.description";
+	public static final String CREATED_ON      = "synonymtypes.created_on";
+	public static final String UPDATED_ON      = "synonymtypes.updated_on";
 
 	private GerminateDatabaseTable targetTable;
 	private String                 name;

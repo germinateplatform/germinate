@@ -54,6 +54,8 @@ public class Location extends DatabaseObject
 	public static final String COORDINATE_UNCERTAINTY = "locations.coordinate_uncertainty";
 	public static final String COORDINATE_DATUM       = "locations.coordinate_datum";
 	public static final String GEOREFERENCING_METHOD  = "locations.georeferencing_method";
+	public static final String CREATED_ON             = "locations.created_on";
+	public static final String UPDATED_ON             = "locations.updated_on";
 
 	private Country      country;
 	private LocationType type;

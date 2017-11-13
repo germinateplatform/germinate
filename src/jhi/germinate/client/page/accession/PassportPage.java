@@ -513,6 +513,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 		String toDisplay = StringUtils.join(" / ", name, number, gid);
 
 		pageHeader.setText(toDisplay);
+		pageHeader.setSubText(accession.getEntityType().getName());
 	}
 
 	private void updateMcpd()
