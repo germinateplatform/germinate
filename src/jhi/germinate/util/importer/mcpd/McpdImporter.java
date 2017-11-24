@@ -290,7 +290,7 @@ public class McpdImporter extends DataImporter<Accession>
 
 		if (rs.next())
 		{
-			result = Accession.Parser.Inst.get().parse(rs, null, true);
+			result = Accession.ImportParser.Inst.get().parse(rs, null, true);
 		}
 		else
 		{

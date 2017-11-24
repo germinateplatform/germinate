@@ -43,7 +43,6 @@ import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.enums.LocationType;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
@@ -93,7 +92,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 	private LocationTreemapChart                chart;
 
 	private LeafletUtils.ImageOverlayWrapper clusteredClimateOverlays = new LeafletUtils.ImageOverlayWrapper();
-	private LeafletUtils.ImageOverlayWrapper heatmapClimateOverlays = new LeafletUtils.ImageOverlayWrapper();
+	private LeafletUtils.ImageOverlayWrapper heatmapClimateOverlays   = new LeafletUtils.ImageOverlayWrapper();
 
 	public LocationsPage()
 	{

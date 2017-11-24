@@ -34,7 +34,7 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.datastructure.database.*;
 
 /**
  * @author Sebastian Raubach

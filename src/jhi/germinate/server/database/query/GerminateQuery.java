@@ -83,9 +83,13 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 					break;
 			}
 
-			this.stmt = database.prepareStatement(query);
 
-        	/* Check if debugging is activated */
+		}
+
+		if(stmt == null)
+		{
+			this.stmt = database.prepareStatement(query);
+			/* Check if debugging is activated */
 			sqlDebug = DebugInfo.create(userAuth);
 		}
 	}
@@ -247,7 +251,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	 * @return this
 	 * @throws DatabaseException Thrown if the query fails with a {@link SQLException}
 	 */
-	public T setBoolean(boolean value) throws DatabaseException
+	public T setBoolean(Boolean value) throws DatabaseException
 	{
 		init();
 		stmt.setBoolean(i++, value);

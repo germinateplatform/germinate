@@ -21,6 +21,7 @@ import org.apache.poi.openxml4j.exceptions.*;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
+import java.util.*;
 
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
@@ -37,7 +38,7 @@ public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
 
 	private int rowCount   = 0;
 	private int colCount   = 0;
-	private int currentRow = -1;
+	private int currentRow = 1;
 	private XSSFRow      row;
 	private XSSFWorkbook wb;
 
@@ -62,7 +63,7 @@ public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
 		dataSheet = wb.getSheet("DATA");
 
 		rowCount = dataSheet.getPhysicalNumberOfRows();
-		colCount = dataSheet.getRow(0).getPhysicalNumberOfCells();
+		colCount = dataSheet.getRow(2).getPhysicalNumberOfCells();
 	}
 
 	@Override
@@ -70,6 +71,27 @@ public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
 	{
 		if (wb != null)
 			wb.close();
+	}
+
+	public List<MapDefinition> getMapDefinitions()
+	{
+		List<MapDefinition> markers = new ArrayList<>();
+
+		XSSFRow chromosomes = dataSheet.getRow(0);
+		XSSFRow positions = dataSheet.getRow(1);
+		XSSFRow markerNames = dataSheet.getRow(2);
+
+		for (int i = 1; i < colCount; i++)
+		{
+			markers.add(new MapDefinition()
+					.setChromosome(IExcelReader.getCellValue(wb, chromosomes, i))
+					.setDefinitionStart(IExcelReader.getCellValue(wb, positions, i))
+					.setDefinitionEnd(IExcelReader.getCellValue(wb, positions, i))
+					.setMarker(new Marker()
+							.setName(IExcelReader.getCellValue(wb, markerNames, i))));
+		}
+
+		return markers;
 	}
 
 	private String[] parse()

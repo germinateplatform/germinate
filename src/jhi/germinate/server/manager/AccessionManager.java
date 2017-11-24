@@ -60,7 +60,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_ALL_IN_POLYGON         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN locationtypes ON locations.locationtype_id = locationtypes.id WHERE " + WHERE_SYNONYMS + " AND locationtypes.name = ? AND !ISNULL(locations.latitude) AND !ISNULL(locations.longitude) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', locations.longitude, ' ', locations.latitude, ')'))) GROUP BY germinatebase.id %s LIMIT ?, ?";
 	private static final String SELECT_IDS_DOWNLOAD           = "SELECT germinatebase.*, subtaxa.subtaxa_author AS subtaxa_author, subtaxa.taxonomic_identifier AS subtaxa_taxonomic_identifier, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxonomies_species, taxonomies.species_author AS taxonomies_species_author, taxonomies.cropname AS taxonomies_crop_name, taxonomies.ploidy AS taxonomies_ploidy, locations.state AS locations_state, locations.region AS locations_region, locations.site_name AS locations_site_name, locations.elevation AS locations_elevation, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, countries.country_name AS countries_country_name, institutions.code AS institutions_code, institutions.name AS institutions_name, institutions.acronym AS institutions_acronym, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.address AS institutions_address, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " WHERE " + WHERE_SYNONYMS + " AND germinatebase.id IN (%s) GROUP BY germinatebase.id";
 
-	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM germinatebase";
+	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM germinatebase WHERE entitytype_id = 1 OR ISNULL(entitytype_id)";
 
 	private static final String SELECT_IDS_FOR_GROUP = "SELECT germinatebase.id FROM " + COMMON_TABLES + " LEFT JOIN groupmembers ON germinatebase.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ?";
 
@@ -345,7 +345,7 @@ public class AccessionManager extends AbstractManager<Accession>
 		String polygon = LocationManager.getPolygon(bounds);
 		return new DatabaseObjectQuery<Accession>(formatted, userAuth)
 				.setFetchesCount(pagination.getResultSize())
-				.setString(jhi.germinate.shared.enums.LocationType.collectingsites.name())
+				.setString(LocationType.collectingsites.name())
 				.setString(polygon)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
@@ -357,7 +357,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	{
 		String polygon = LocationManager.getPolygon(bounds);
 		return new ValueQuery(SELECT_IDS_IN_POLYGON, userAuth)
-				.setString(jhi.germinate.shared.enums.LocationType.collectingsites.name())
+				.setString(LocationType.collectingsites.name())
 				.setString(polygon)
 				.run(Accession.ID)
 				.getStrings();

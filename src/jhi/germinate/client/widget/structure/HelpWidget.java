@@ -55,7 +55,7 @@ public class HelpWidget
 				Anchor contactAnchor = Anchor.wrap(Document.get().getElementById(Id.STRUCTURE_CONTACT_A));
 				contactAnchor.setTitle(Text.LANG.contact());
 			}
-			catch (Exception e)
+			catch (Exception | Error e)
 			{
 			}
 

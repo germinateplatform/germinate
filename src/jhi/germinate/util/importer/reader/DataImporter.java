@@ -98,6 +98,11 @@ public abstract class DataImporter<T>
 		}
 	}
 
+	protected void prepareReader(IDataReader reader)
+	{
+
+	}
+
 	/**
 	 * Starts the import process using the given database access parameters and the name of the {@link IDataReader}.
 	 *
@@ -139,11 +144,12 @@ public abstract class DataImporter<T>
 		{
 			// Pass the InputStream to it
 			reader.init(input);
+			prepareReader(reader);
 
 			try
 			{
 				// Connect to the database
-				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database + "?useSSL=false", username, password);
 
 				// Now check which reader type we're using
 				if (reader instanceof IStreamableReader)
@@ -197,6 +203,7 @@ public abstract class DataImporter<T>
 			return;
 
 		System.out.println("Deleting inserted items for table: '" + table + "'");
+		System.out.println("Deleting items: " + ids);
 
 		try
 		{

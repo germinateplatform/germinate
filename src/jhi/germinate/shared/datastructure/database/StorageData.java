@@ -43,8 +43,8 @@ public class StorageData extends DatabaseObject
 	public static final String ID               = "storagedata.id";
 	public static final String GERMINATEBASE_ID = "storagedata.germinatebase_id";
 	public static final String STORAGE_ID       = "storagedata.storage_id";
-	public static final String CREATED_ON       = "phenotypedata.created_on";
-	public static final String UPDATED_ON       = "phenotypedata.updated_on";
+	public static final String CREATED_ON       = "storagedata.created_on";
+	public static final String UPDATED_ON       = "storagedata.updated_on";
 
 	private Accession accession;
 	private Storage   storage;

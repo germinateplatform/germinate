@@ -26,7 +26,6 @@ import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.enums.LocationType;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 

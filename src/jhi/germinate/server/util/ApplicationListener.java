@@ -119,7 +119,7 @@ public class ApplicationListener implements ServletContextListener
 		{
 			AbandonedConnectionCleanupThread.shutdown();
 		}
-		catch (InterruptedException e)
+		catch (Exception e)
 		{
 			Logger.getLogger("").log(Level.SEVERE, "SEVERE problem cleaning up: " + e.getMessage());
 			e.printStackTrace();

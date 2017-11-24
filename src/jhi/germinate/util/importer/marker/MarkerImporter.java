@@ -18,6 +18,7 @@
 package jhi.germinate.util.importer.marker;
 
 import java.io.*;
+import java.sql.*;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
@@ -34,16 +35,17 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class MarkerImporter extends DataImporter<MapDefinition>
 {
-	private static Map            map;
-	private static MapFeatureType mapfeatureType;
-
-	private HashMap<String, MarkerType> markerTypeCache = new HashMap<>();
-	private List<MapDefinition>         cache           = new ArrayList<>();
+	private List<MapDefinition> cache = new ArrayList<>();
 
 	private Set<Long> createdMarkerIds        = new HashSet<>();
-	private Set<Long> createdMarkerTypeIds    = new HashSet<>();
 	private Set<Long> createdMapDefinitionIds = new HashSet<>();
-	private MarkerMetadataImporter metadataImporter;
+
+	private MapImporter        mapImporter;
+	private MarkerTypeImporter markerTypeImporter;
+
+	private Map            map;
+	private MarkerType     markerType;
+	private MapFeatureType mapFeatureType;
 
 	public static void main(String[] args)
 	{
@@ -54,12 +56,14 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 	@Override
 	public void run(File input, String server, String database, String username, String password, String port, String readerName)
 	{
-		// Import the metadata first
-		metadataImporter = new MarkerMetadataImporter();
-		metadataImporter.run(input, server, database, username, password, port, ExcelMarkerMetadataReader.class.getCanonicalName());
-		// Get the map and mapfeaturetype from the importer
-		map = metadataImporter.getMap();
-		mapfeatureType = metadataImporter.getMapfeatureType();
+		mapImporter = new MapImporter();
+		mapImporter.run(input, server, database, username, password, port, ExcelMapReader.class.getCanonicalName());
+		map = mapImporter.getMap();
+
+		markerTypeImporter = new MarkerTypeImporter();
+		markerTypeImporter.run(input, server, database, username, password, port, ExcelMarkerTypeReader.class.getCanonicalName());
+		markerType = markerTypeImporter.getMarkerType();
+		mapFeatureType = markerTypeImporter.getMapFeatureType();
 
 		super.run(input, server, database, username, password, port, readerName);
 	}
@@ -71,14 +75,13 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 	}
 
 	@Override
-	protected void deleteInsertedItems()
+	public void deleteInsertedItems()
 	{
-		// Remember to delete the items of the other importer
-		metadataImporter.deleteInsertedItems();
+		mapImporter.deleteInsertedItems();
+		markerTypeImporter.deleteInsertedItems();
 
 		// Then delete our stuff
 		deleteItems(createdMarkerIds, "markers");
-		deleteItems(createdMarkerTypeIds, "markertypes");
 		deleteItems(createdMapDefinitionIds, "mapdefinitions");
 	}
 
@@ -88,8 +91,6 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 		if (!StringUtils.isEmpty(entry.getMarker().getName()))
 		{
 			// Write the marker type first
-			createOrGetMarkerType(entry);
-
 			cache.add(entry);
 
 			if (cache.size() >= 10000)
@@ -126,8 +127,18 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 
 		for (MapDefinition entry : cache)
 		{
+			if (map == null || StringUtils.isEmpty(entry.getChromosome()) || entry.getDefinitionStart() == null)
+				continue;
+
+			entry.setType(mapFeatureType)
+				 .setMap(map);
+
 			int i = 1;
-			select.setLong(i++, mapfeatureType.getId());
+			if (mapFeatureType != null)
+				select.setLong(i++, mapFeatureType.getId());
+			else
+				select.setNull(i++, Types.INTEGER);
+
 			select.setLong(i++, entry.getMarker().getId());
 			select.setLong(i++, map.getId());
 			select.setDouble(i++, entry.getDefinitionStart());
@@ -138,9 +149,6 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 
 			if (!rs.next())
 			{
-				entry.setType(mapfeatureType)
-					 .setMap(map);
-
 				MapDefinition.Writer.Inst.get().writeBatched(insert, entry);
 			}
 		}
@@ -156,9 +164,15 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 
 		for (MapDefinition entry : cache)
 		{
+			entry.getMarker().setType(markerType);
+
 			int i = 1;
 			select.setString(i++, entry.getMarker().getName());
-			select.setLong(i++, entry.getMarker().getType().getId());
+
+			if (markerType != null)
+				select.setLong(i++, markerType.getId());
+			else
+				select.setNull(i++, Types.INTEGER);
 
 			DatabaseResult rs = select.query();
 
@@ -178,44 +192,5 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 			}
 		}
 		createdMarkerIds.addAll(ids);
-	}
-
-	/**
-	 * Imports the {@link MarkerType} object into the database if it doesn't already exist, otherwise returns the existing object from the database.
-	 *
-	 * @param entry The {@link MapDefinition} object containing the {@link MarkerType} to import.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private void createOrGetMarkerType(MapDefinition entry) throws DatabaseException
-	{
-		String name = entry.getMarker().getType().getDescription();
-
-		if (StringUtils.isEmpty(name))
-			return;
-
-		MarkerType cached = markerTypeCache.get(name);
-
-		if (cached == null)
-		{
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM markertypes WHERE description = ?");
-			stmt.setString(1, name);
-
-			DatabaseResult rs = stmt.query();
-
-			if (rs.next())
-			{
-				cached = MarkerType.Parser.Inst.get().parse(rs, null, true);
-			}
-			else
-			{
-				cached = entry.getMarker().getType();
-
-				MarkerType.Writer.Inst.get().write(databaseConnection, cached);
-				createdMarkerTypeIds.add(cached.getId());
-			}
-		}
-
-		entry.getMarker().setType(cached);
-		markerTypeCache.put(name, cached);
 	}
 }

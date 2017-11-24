@@ -340,12 +340,10 @@ public class Location extends DatabaseObject
 		}
 
 		private static DatabaseObjectCache<Country>      COUNTRY_CACHE;
-		private static DatabaseObjectCache<LocationType> LOCATIONTYPE_CACHE;
 
 		protected Parser()
 		{
 			COUNTRY_CACHE = createCache(Country.class, CountryManager.class);
-			LOCATIONTYPE_CACHE = createCache(LocationType.class, LocationTypeManager.class);
 		}
 
 		@Override
@@ -361,7 +359,7 @@ public class Location extends DatabaseObject
 				{
 					Location location = new Location(id)
 							.setCountry(COUNTRY_CACHE.get(user, row.getLong(COUNTRY_ID), row, foreignsFromResultSet))
-							.setType(LOCATIONTYPE_CACHE.get(user, row.getLong(LOCATIONTYPE_ID), row, foreignsFromResultSet))
+							.setType(LocationType.getById(row.getLong(LOCATIONTYPE_ID)))
 							.setState(row.getString(STATE))
 							.setRegion(row.getString(REGION))
 							.setName(row.getString(SITE_NAME))

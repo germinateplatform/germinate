@@ -115,6 +115,19 @@ public class MapDefinition extends DatabaseObject
 		return this;
 	}
 
+	public MapDefinition setDefinitionStart(String definitionStart)
+	{
+		try
+		{
+			this.definitionStart = Double.parseDouble(definitionStart);
+		}
+		catch (Exception e)
+		{
+		}
+
+		return this;
+	}
+
 	public Double getDefinitionEnd()
 	{
 		return definitionEnd;
@@ -123,6 +136,19 @@ public class MapDefinition extends DatabaseObject
 	public MapDefinition setDefinitionEnd(Double definitionEnd)
 	{
 		this.definitionEnd = definitionEnd;
+		return this;
+	}
+
+	public MapDefinition setDefinitionEnd(String definitionEnd)
+	{
+		try
+		{
+			this.definitionEnd = Double.parseDouble(definitionEnd);
+		}
+		catch (Exception e)
+		{
+		}
+
 		return this;
 	}
 

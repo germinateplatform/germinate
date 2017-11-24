@@ -25,7 +25,6 @@ import java.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.enums.LocationType;
 import jhi.germinate.shared.search.*;
 
 /**

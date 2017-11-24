@@ -43,14 +43,12 @@ public class PedigreeDefinition extends DatabaseObject
 	public static final String ID                     = "pedigreedefinitions.id";
 	public static final String GERMINATEBASE_ID       = "pedigreedefinitions.germinatebase_id";
 	public static final String PEDIGREENOTATION_ID    = "pedigreedefinitions.pedigreenotation_id";
-	public static final String PEDIGREEDESCRIPTION_ID = "pedigreedefinitions.pedigreedescription_id";
 	public static final String DEFINITION             = "pedigreedefinitions.definition";
 	public static final String CREATED_ON             = "pedigreedefinitions.created_on";
 	public static final String UPDATED_ON             = "pedigreedefinitions.updated_on";
 
 	private Accession           accession;
 	private PedigreeNotation    notation;
-	private PedigreeDescription description;
 	private String              definition;
 	private Long                createdOn;
 	private Long                updatedOn;
@@ -108,17 +106,6 @@ public class PedigreeDefinition extends DatabaseObject
 			this.createdOn = null;
 		else
 			this.createdOn = createdOn.getTime();
-		return this;
-	}
-
-	public PedigreeDescription getDescription()
-	{
-		return description;
-	}
-
-	public PedigreeDefinition setDescription(PedigreeDescription description)
-	{
-		this.description = description;
 		return this;
 	}
 
@@ -192,7 +179,6 @@ public class PedigreeDefinition extends DatabaseObject
 					return new PedigreeDefinition(id)
 							.setAccession(ACCESSION_CACHE.get(user, row.getLong(GERMINATEBASE_ID), row, foreignsFromResultSet))
 							.setNotation(PEDIGREENOTATION_CACHE.get(user, row.getLong(PEDIGREENOTATION_ID), row, foreignsFromResultSet))
-							.setDescription(PEDIGREEDESCRIPTION_CACHE.get(user, row.getLong(PEDIGREEDESCRIPTION_ID), row, foreignsFromResultSet))
 							.setDefinition(row.getString(DEFINITION))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
@@ -224,10 +210,9 @@ public class PedigreeDefinition extends DatabaseObject
 		@Override
 		public void write(Database database, PedigreeDefinition object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO pedigreedefinitions (" + GERMINATEBASE_ID + ", " + PEDIGREENOTATION_ID + ", " + PEDIGREEDESCRIPTION_ID + ", " + DEFINITION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO pedigreedefinitions (" + GERMINATEBASE_ID + ", " + PEDIGREENOTATION_ID + ", " + DEFINITION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setLong(object.getAccession().getId())
 					.setLong(object.getNotation() != null ? object.getNotation().getId() : null)
-					.setLong(object.getDescription() != null ? object.getDescription().getId() : null)
 					.setString(object.getDefinition());
 
 			if (object.getCreatedOn() != null)

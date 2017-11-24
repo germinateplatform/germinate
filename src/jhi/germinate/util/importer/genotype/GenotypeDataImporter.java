@@ -27,6 +27,8 @@ import jhi.germinate.server.database.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
+import jhi.germinate.util.importer.common.*;
+import jhi.germinate.util.importer.marker.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
@@ -37,6 +39,7 @@ import jhi.germinate.util.importer.reader.*;
 public class GenotypeDataImporter extends DataImporter<String[]>
 {
 	private GenotypeMetadataImporter metadataImporter;
+	private MarkerImporter           markerImporter;
 
 	private File           tempFile;
 	private File           hdf5File;
@@ -54,9 +57,12 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 	public void run(File input, String server, String database, String username, String password, String port, String readerName)
 	{
 		// Import the meta-data first. Get the created dataset
-		metadataImporter = new GenotypeMetadataImporter();
-		metadataImporter.run(input, server, database, username, password, port, ExcelGenotypeMetadataReader.class.getCanonicalName());
+		metadataImporter = new GenotypeMetadataImporter(ExperimentType.genotype);
+		metadataImporter.run(input, server, database, username, password, port, ExcelMetadataReader.class.getCanonicalName());
 		hdf5File = metadataImporter.getHdf5File();
+
+		markerImporter = new MarkerImporter();
+		markerImporter.run(input, server, database, username, password, port, ExcelMarkerReader.class.getCanonicalName());
 
 		try
 		{
@@ -97,6 +103,7 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 	protected void deleteInsertedItems()
 	{
 		metadataImporter.deleteInsertedItems();
+		markerImporter.deleteInsertedItems();
 	}
 
 	@Override

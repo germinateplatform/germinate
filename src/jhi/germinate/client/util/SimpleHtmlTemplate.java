@@ -44,6 +44,16 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	SafeHtml anchorNewTab(SafeUri href, String name);
 
 	/**
+	 * Creates an anchor with the given url and text (opens in new tab)
+	 *
+	 * @param href The link url
+	 * @param name The link text
+	 * @return An anchor with the given url and text (opens in new tab)
+	 */
+	@Template("<a href='{0}' target='_blank' style='word-break: break-word;' title='{1}'>{2}</a>")
+	SafeHtml anchorNewTabTruncated(SafeUri href, String text, String truncated);
+
+	/**
 	 * Creates an anchor with the given url and text
 	 *
 	 * @param href The link url
@@ -52,6 +62,16 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 */
 	@Template("<a href='{0}' style='word-break: break-word;'>{1}</a>")
 	SafeHtml anchor(SafeUri href, String name);
+
+	/**
+	 * Creates an anchor with the given url and text
+	 *
+	 * @param href The link url
+	 * @param name The link text
+	 * @return An anchor with the given url and text
+	 */
+	@Template("<a href='{0}' title='{1}' style='word-break: break-word;'>{2}</a>")
+	SafeHtml anchorTruncated(SafeUri href, String text, String truncated);
 
 	/**
 	 * Creates an anchor with the given url and text
@@ -81,6 +101,15 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 */
 	@Template("{0}")
 	SafeHtml text(String name);
+
+	/**
+	 * Creates a simple text
+	 *
+	 * @param name The text to display
+	 * @return A simple text
+	 */
+	@Template("<span title='{0}'>{1}</span>")
+	SafeHtml textTruncated(String text, String truncated);
 
 	/**
 	 * Creates a simple text

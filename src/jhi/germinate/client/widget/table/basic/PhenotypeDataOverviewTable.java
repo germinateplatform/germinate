@@ -84,10 +84,12 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 				String result = null;
 
 				if (object.getUnit() != null)
+				{
 					result = object.getUnit().getName();
 
-				if (!StringUtils.isEmpty(object.getUnit().getAbbreviation()))
-					result += " [" + object.getUnit().getAbbreviation() + "]";
+					if (!StringUtils.isEmpty(object.getUnit().getAbbreviation()))
+						result += " [" + object.getUnit().getAbbreviation() + "]";
+				}
 
 				return result;
 			}

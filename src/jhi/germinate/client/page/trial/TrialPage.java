@@ -39,7 +39,6 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.basic.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -223,8 +222,10 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			@Override
 			protected void onSuccessImpl(ServerResult<List<Integer>> result)
 			{
-				if (CollectionUtils.isEmpty(result.getServerResult()))
+				// If there are no years or if there's just one, then just plot the basics
+				if (result.getServerResult() == null || result.getServerResult().size() <= 1)
 					getBasicOverviewStats();
+				// Otherwise show the development over time
 				else
 					overviewPanel.add(new TrialOverviewWidget(phenotypes, result.getServerResult()));
 			}

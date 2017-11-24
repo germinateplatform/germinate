@@ -17,20 +17,16 @@
 
 package jhi.germinate.shared.datastructure.database;
 
-import com.google.gwt.core.shared.*;
-
-import java.util.*;
-
-import jhi.germinate.server.database.*;
-import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.exception.*;
-
 /**
  * @author Sebastian Raubach
  */
-public class LocationType extends DatabaseObject
+public enum LocationType
 {
+	all(-1L, "All", "All locations"),
+	collectingsites(1L, "Collecting sites", "Locations where accessions have been collected"),
+	datasets(2L, "Dataset locations", "Locations associated with datasets"),
+	trialsite(3L, "Trial sites", "Locations associated with a trial");
+
 	private static final long serialVersionUID = -4993137085796903421L;
 
 	public static final String ID          = "locationtypes.id";
@@ -39,18 +35,29 @@ public class LocationType extends DatabaseObject
 	public static final String CREATED_ON  = "locationtypes.created_on";
 	public static final String UPDATED_ON  = "locationtypes.updated_on";
 
+	private Long   id;
 	private String name;
 	private String description;
-	private Long   createdOn;
-	private Long   updatedOn;
 
-	public LocationType()
+	LocationType(Long id, String name, String description)
 	{
+		this.id = id;
+		this.name = name;
+		this.description = description;
 	}
 
-	public LocationType(Long id)
+	public static LocationType getById(Long id)
 	{
-		super(id);
+		if (id != null)
+		{
+			for (LocationType type : values())
+			{
+				if (type.id == id.longValue())
+					return type;
+			}
+		}
+
+		return null;
 	}
 
 	public String getName()
@@ -58,101 +65,13 @@ public class LocationType extends DatabaseObject
 		return name;
 	}
 
-	public LocationType setName(String name)
-	{
-		this.name = name;
-		return this;
-	}
-
 	public String getDescription()
 	{
 		return description;
 	}
 
-	public LocationType setDescription(String description)
+	public Long getId()
 	{
-		this.description = description;
-		return this;
-	}
-
-	public Long getCreatedOn()
-	{
-		return createdOn;
-	}
-
-	public LocationType setCreatedOn(Date createdOn)
-	{
-		if (createdOn == null)
-			this.createdOn = null;
-		else
-			this.createdOn = createdOn.getTime();
-		return this;
-
-	}
-
-	public Long getUpdatedOn()
-	{
-		return updatedOn;
-	}
-
-	public LocationType setUpdatedOn(Date updatedOn)
-	{
-		if (updatedOn == null)
-			this.updatedOn = null;
-		else
-			this.updatedOn = updatedOn.getTime();
-		return this;
-	}
-
-	@Override
-	@GwtIncompatible
-	public DatabaseObjectParser<? extends DatabaseObject> getDefaultParser()
-	{
-		return Parser.Inst.get();
-	}
-
-	@GwtIncompatible
-	public static class Parser extends DatabaseObjectParser<LocationType>
-	{
-		public static final class Inst
-		{
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
-			 * not before.
-			 * <p/>
-			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
-			private static final class InstanceHolder
-			{
-				private static final Parser INSTANCE = new Parser();
-			}
-
-			public static Parser get()
-			{
-				return InstanceHolder.INSTANCE;
-			}
-		}
-
-		private Parser()
-		{
-		}
-
-		@Override
-		public LocationType parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
-		{
-			Long id = row.getLong(ID);
-
-			if (id == null)
-				return null;
-			else
-				return new LocationType(id)
-						.setName(row.getString(NAME))
-						.setDescription(row.getString(DESCRIPTION))
-						.setCreatedOn(row.getTimestamp(CREATED_ON))
-						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
-		}
+		return id;
 	}
 }

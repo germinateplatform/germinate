@@ -156,14 +156,23 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	 */
 	private void createMap(List<Dataset> datasets)
 	{
-		final Map<Location, Dataset> mapping = new HashMap<>();
+		final Map<Location, List<Dataset>> mapping = new HashMap<>();
 
 		for (Dataset dataset : datasets)
 		{
 			Location location = dataset.getLocation();
 
 			if (location != null)
-				mapping.put(location, dataset);
+			{
+				List<Dataset> mappedDatasets = mapping.get(location);
+
+				if(mappedDatasets == null)
+					mappedDatasets = new ArrayList<>();
+
+				mappedDatasets.add(dataset);
+
+				mapping.put(location, mappedDatasets);
+			}
 		}
 
 		if (mapping.size() < 1)

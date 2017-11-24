@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package jhi.germinate.util.importer.pedigree;
+package jhi.germinate.util.importer.common;
 
 import org.apache.poi.openxml4j.exceptions.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -27,30 +27,25 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link ExcelPedigreeStringReader} implements {@link IStreamableReader} and reads and streams one {@link PedigreeDefinition} object at a time.
- *
  * @author Sebastian Raubach
  */
-public class ExcelPedigreeStringReader implements IStreamableReader<PedigreeDefinition>
+public class ExcelCollaboratorReader implements IBatchReader<Collaborator>
 {
 	private XSSFSheet dataSheet;
 
-	private int rowCount   = 0;
-	private int currentRow = 0;
-	private XSSFRow      row;
 	private XSSFWorkbook wb;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public List<Collaborator> readAll() throws IOException
 	{
-		return ++currentRow < rowCount;
-	}
+		List<Collaborator> result = new ArrayList<>();
 
-	@Override
-	public PedigreeDefinition next() throws IOException
-	{
-		row = dataSheet.getRow(currentRow);
-		return parse();
+		int rowCount = dataSheet.getPhysicalNumberOfRows();
+
+		for (int i = 2; i < rowCount; i++)
+			result.add(parse(dataSheet.getRow(i)));
+
+		return result;
 	}
 
 	@Override
@@ -58,9 +53,7 @@ public class ExcelPedigreeStringReader implements IStreamableReader<PedigreeDefi
 	{
 		wb = new XSSFWorkbook(input);
 
-		dataSheet = wb.getSheet("DATA-STRING");
-
-		rowCount = dataSheet.getPhysicalNumberOfRows();
+		dataSheet = wb.getSheet("COLLABORATORS");
 	}
 
 	@Override
@@ -70,14 +63,19 @@ public class ExcelPedigreeStringReader implements IStreamableReader<PedigreeDefi
 			wb.close();
 	}
 
-	private PedigreeDefinition parse()
+	private Collaborator parse(XSSFRow row)
 	{
-		return new PedigreeDefinition()
-				.setAccession(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 0)))
-				.setDefinition(IExcelReader.getCellValue(wb, row, 1))
-				.setNotation(new PedigreeNotation()
-						.setName(IExcelReader.getCellValue(wb, row, 2))
-						.setDescription(IExcelReader.getCellValue(wb, row, 2))
+		int i = 0;
+		return new Collaborator()
+				.setLastName(IExcelReader.getCellValue(wb, row, i++))
+				.setFirstName(IExcelReader.getCellValue(wb, row, i++))
+				.setEmail(IExcelReader.getCellValue(wb, row, i++))
+				.setPhone(IExcelReader.getCellValue(wb, row, i++))
+				.setInstitution(new Institution()
+						.setName(IExcelReader.getCellValue(wb, row, i++))
+						.setAddress(IExcelReader.getCellValue(wb, row, i++))
+						.setCountry(new Country()
+								.setCountryCode2(IExcelReader.getCellValue(wb, row, i++)))
 						.setCreatedOn(new Date())
 						.setUpdatedOn(new Date()))
 				.setCreatedOn(new Date())

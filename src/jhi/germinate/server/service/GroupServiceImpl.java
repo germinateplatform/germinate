@@ -244,22 +244,32 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 			default:
 				return null;
 		}
-		String formatted = String.format(query, column, Util.generateSqlPlaceholderString(split.length));
-		ServerResult<List<Long>> result = new ValueQuery(formatted, userAuth)
-				.setStrings(Arrays.asList(split))
-				.run("id")
-				.getLongs();
 
 		int newItemCount = 0;
+		DebugInfo debug = DebugInfo.create(userAuth);
 
-		if (result.getServerResult() != null)
+		List<String> items = Arrays.asList(split);
+
+		for(int i = 0; i < items.size(); i += 1000)
 		{
-			ServerResult<Set<Long>> newIds = addItems(properties, groupId, result.getServerResult());
-			newItemCount = newIds.getServerResult().size();
-			result.getDebugInfo().addAll(newIds.getDebugInfo());
+			List<String> currentItems = items.subList(i, Math.min(items.size(), i + 1000));
+			String formatted = String.format(query, column, Util.generateSqlPlaceholderString(currentItems.size()));
+			ServerResult<List<Long>> result = new ValueQuery(formatted, userAuth)
+					.setStrings(currentItems)
+					.run("id")
+					.getLongs();
+
+			if (result.getServerResult() != null)
+			{
+				ServerResult<Set<Long>> newIds = addItems(properties, groupId, result.getServerResult());
+				newItemCount += newIds.getServerResult().size();
+
+				debug.addAll(result.getDebugInfo());
+				debug.addAll(newIds.getDebugInfo());
+			}
 		}
 
-		return new ServerResult<>(result.getDebugInfo(), new Tuple.Pair<>(newItemCount, Math.max(0, split.length - newItemCount)));
+		return new ServerResult<>(debug, new Tuple.Pair<>(newItemCount, Math.max(0, split.length - newItemCount)));
 	}
 
 	@Override

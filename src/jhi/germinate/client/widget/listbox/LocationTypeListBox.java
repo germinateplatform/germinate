@@ -18,7 +18,6 @@
 package jhi.germinate.client.widget.listbox;
 
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.enums.LocationType;
 
 /**
  * LocationTypeListBox LocationTypeListBox {@link GerminateValueListBox} and displays {@link Location}s.

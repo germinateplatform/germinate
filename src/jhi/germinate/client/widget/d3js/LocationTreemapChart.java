@@ -24,6 +24,7 @@ import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 
 /**

@@ -222,7 +222,10 @@ public final class DatabaseStatement
 	{
 		try
 		{
-			this.stmt.setBoolean(parameterIndex, val);
+			if(val == null)
+				stmt.setNull(parameterIndex, Types.BOOLEAN);
+			else
+				stmt.setBoolean(parameterIndex, val);
 		}
 		catch (SQLException e)
 		{

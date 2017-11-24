@@ -126,7 +126,7 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	private Location parseLocation()
 	{
 		return new Location()
-				.setType(new LocationType(1L))
+				.setType(LocationType.collectingsites)
 				.setName(getPart(McpdField.COLLSITE))
 				.setLatitude(getLatitudeLongitude(getDouble(McpdField.DECLATITUDE), getPart(McpdField.LATITUDE)))
 				.setLongitude(getLatitudeLongitude(getDouble(McpdField.DECLONGITUDE), getPart(McpdField.LONGITUDE)))

@@ -27,16 +27,12 @@ import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link ExcelMarkerMetadataReader} implements {@link IBatchReader} and reads the single {@link Map} object from the metadata sheet.
+ * {@link ExcelMapReader} implements {@link IBatchReader} and reads the single {@link Map} object from the metadata sheet.
  *
  * @author Sebastian Raubach
  */
-public class ExcelMarkerMetadataReader implements IBatchReader<Map>
+public class ExcelMapReader implements IBatchReader<Map>
 {
-	public static final String TECHNOLOGY = "Technology";
-	public static final String TYPE       = "Type";
-	public static final String UNIT       = "Unit";
-
 	private XSSFSheet dataSheet;
 
 	private XSSFWorkbook wb;
@@ -46,17 +42,9 @@ public class ExcelMarkerMetadataReader implements IBatchReader<Map>
 	{
 		List<Map> result = new ArrayList<>();
 
-		Map map = new Map()
-				.setDescription(IExcelReader.getCellValue(wb, dataSheet.getRow(2), 1))
+		result.add(new Map()
 				.setVisibility(true)
-				.setCreatedOn(new Date())
-				.setUpdatedOn(new Date());
-
-		map.setExtra(TECHNOLOGY, IExcelReader.getCellValue(wb, dataSheet.getRow(3), 1));
-		map.setExtra(TYPE, IExcelReader.getCellValue(wb, dataSheet.getRow(4), 1));
-		map.setExtra(UNIT, IExcelReader.getCellValue(wb, dataSheet.getRow(5), 1));
-
-		result.add(map);
+				.setDescription(IExcelReader.getCellValue(wb, dataSheet.getRow(12), 2)));
 
 		return result;
 	}

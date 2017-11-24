@@ -143,26 +143,18 @@ public abstract class DataExportWizard extends Composite
 				ServerResult<List<Group>> markerGroups = getCallbackData(1);
 				PaginatedServerResult<List<Map>> mapsData = getCallbackData(2);
 
-				if (CollectionUtils.isEmpty(accessionGroups.getServerResult()))
-				{
-					handleFailure(new RuntimeException(Text.LANG.notificationGenotypeExportNoAccessionGroupsForDataset()));
-					return;
-				}
-				if (CollectionUtils.isEmpty(markerGroups.getServerResult()))
-				{
-					handleFailure(new RuntimeException(Text.LANG.notificationGenotypeExportNoMarkerGroupsForDataset()));
-					return;
-				}
 				if (CollectionUtils.isEmpty(mapsData.getServerResult()))
 				{
 					handleFailure(new RuntimeException(Text.LANG.notificationGenotypeExportNoMap()));
 					return;
 				}
 
-				accessionGroupsList.setValue(accessionGroups.getServerResult().get(0), false);
+				if(!CollectionUtils.isEmpty(accessionGroups.getServerResult()))
+					accessionGroupsList.setValue(accessionGroups.getServerResult().get(0), false);
 				accessionGroupsList.setAcceptableValues(accessionGroups.getServerResult());
 
-				markerGroupsList.setValue(markerGroups.getServerResult().get(0), false);
+				if(!CollectionUtils.isEmpty(markerGroups.getServerResult()))
+					markerGroupsList.setValue(markerGroups.getServerResult().get(0), false);
 				markerGroupsList.setAcceptableValues(markerGroups.getServerResult());
 
 				mapsList.setValue(mapsData.getServerResult().get(0), false);

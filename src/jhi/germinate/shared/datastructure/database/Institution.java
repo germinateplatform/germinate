@@ -279,7 +279,7 @@ public class Institution extends DatabaseObject
 					.setString(object.getCode())
 					.setString(object.getName())
 					.setString(object.getAcronym())
-					.setLong(object.getCountry() != null ? object.getCountry().getId() : null)
+					.setLong((object.getCountry() != null && object.getCountry().getId() > 0) ? object.getCountry().getId() : null)
 					.setString(object.getContact())
 					.setString(object.getPhone())
 					.setString(object.getAddress());

@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
 import java.util.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
@@ -34,17 +35,24 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData>
 {
+	public static final  String EXTRA_REP       = "EXTRA_REP";
+	public static final  String EXTRA_TREATMENT = "EXTRA_TREATMENT";
+	private static final int COLUMN_DATA_START = 2;
+
 	private XSSFSheet dataSheetData;
 	private XSSFSheet dataSheetDates;
 
 	private int rowCount   = 0;
 	private int colCount   = 0;
 	private int currentRow = 0;
-	private int currentCol = 0;
+	private int currentCol = 2;
 	private XSSFRow      rowData;
 	private XSSFRow      rowDates;
 	private XSSFRow      headerRow;
 	private XSSFWorkbook wb;
+
+	private String treatment;
+	private String rep;
 
 	@Override
 	public boolean hasNext() throws IOException
@@ -52,7 +60,7 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 		if (++currentCol == colCount)
 		{
 			currentRow++;
-			currentCol = 1;
+			currentCol = 3;
 		}
 
 		return currentRow < rowCount && currentCol < colCount;
@@ -63,6 +71,13 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 	{
 		rowData = dataSheetData.getRow(currentRow);
 		rowDates = dataSheetDates.getRow(currentRow);
+
+		if (currentCol == 3)
+		{
+			rep = IExcelReader.getCellValue(wb, rowData, 1);
+			treatment = IExcelReader.getCellValue(wb, rowData, 2);
+		}
+
 		return parse();
 	}
 
@@ -93,11 +108,25 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 	private PhenotypeData parse()
 	{
 		return new PhenotypeData()
-				.setAccession(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, rowData, 0)))
+				.setAccession(getAccession())
 				.setPhenotype(new Phenotype().setName(IExcelReader.getCellValue(wb, headerRow, currentCol)))
 				.setValue(IExcelReader.getCellValue(wb, rowData, currentCol))
 				.setRecordingDate(IDataReader.getDate(IExcelReader.getCellValue(wb, rowDates, currentCol)))
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
+	}
+
+	private Accession getAccession()
+	{
+		Accession accession = new Accession()
+				.setGeneralIdentifier(IExcelReader.getCellValue(wb, rowData, 0));
+
+		if (!StringUtils.isEmpty(rep))
+			accession.setExtra(EXTRA_REP, rep);
+
+		if (!StringUtils.isEmpty(treatment))
+			accession.setExtra(EXTRA_TREATMENT, treatment);
+
+		return accession;
 	}
 }

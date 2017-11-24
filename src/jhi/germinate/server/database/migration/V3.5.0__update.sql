@@ -51,3 +51,17 @@ FROM allelefrequencydata LEFT JOIN germinatebase ON germinatebase.id = allelefre
 
 /* Now drop the whole table, we don't need it anymore */
 DROP TABLE `allelefrequencydata`;
+
+ALTER TABLE `institutions`
+MODIFY COLUMN `country_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to countries.id.' AFTER `acronym`;
+
+ALTER TABLE `germinatebase`
+MODIFY COLUMN `collcode` varchar(255) NULL DEFAULT NULL COMMENT 'FAO WIEWS code of the institute collecting the sample. If the holding institute has collected the\nmaterial, the collecting institute code (COLLCODE) should be the same as the holding institute\ncode (INSTCODE). Follows INSTCODE standard. Multiple values are separated by a semicolon\nwithout space.' AFTER `colldate`;
+
+ALTER TABLE `maps`
+MODIFY COLUMN `visibility` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Determines if the map is visible to the Germinate interface or hidden.' AFTER `description`;
+
+ALTER TABLE `datasetcollaborators` DROP FOREIGN KEY `datasetcollaborators_ibfk_1`;
+
+ALTER TABLE `datasetcollaborators`
+ADD CONSTRAINT `datasetcollaborators_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -242,7 +242,8 @@ public abstract class CollaboratorTable extends DatabaseObjectPaginationTable<Co
 				String value = getValue(object);
 				if (value != null)
 				{
-					sb.appendHtmlConstant("<span class=\"" + Style.COUNTRY_FLAG + " " + object.getInstitution().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "\"></span>");
+					if(object.getInstitution().getCountry() != null)
+						sb.appendHtmlConstant("<span class=\"" + Style.COUNTRY_FLAG + " " + object.getInstitution().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "\"></span>");
 					sb.append(SafeHtmlUtils.fromString(value));
 				}
 				else
