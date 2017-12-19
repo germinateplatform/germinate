@@ -187,4 +187,6 @@ public interface AccessionServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	void getMcpd(RequestProperties properties, Long id, AsyncCallback<ServerResult<Mcpd>> callback);
+
+	Request getEntityPairs(RequestProperties properties, Long id, Pagination pagination, AsyncCallback<PaginatedServerResult<List<EntityPair>>> callback);
 }

@@ -43,8 +43,8 @@
 			</b:FormGroup>
 
 			<g:FlowPanel ui:field="descriptionPanel">
-				<b:Heading size="H4" text="{msg.groupsColumnDescription}" />
-				<g8:ParagraphPanel ui:field="description" />
+				<b:Heading size="H4" text="{msg.groupsColumnDescription}"/>
+				<g8:ParagraphPanel ui:field="description"/>
 			</g:FlowPanel>
 
 			<g:SimplePanel ui:field="groupMembersPanel"/>

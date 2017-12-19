@@ -38,7 +38,6 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.enums.*;
@@ -125,12 +124,12 @@ public abstract class DataExportWizard extends Composite
 				GroupService.Inst.get().getMarkerGroups(Cookie.getRequestProperties(), selectedDatasets, type.type, this);
 			}
 		};
-		ParallelAsyncCallback<PaginatedServerResult<List<Map>>> mapsCallback = new ParallelAsyncCallback<PaginatedServerResult<List<Map>>>()
+		ParallelAsyncCallback<ServerResult<List<Map>>> mapsCallback = new ParallelAsyncCallback<ServerResult<List<Map>>>()
 		{
 			@Override
 			protected void start()
 			{
-				MapService.Inst.get().get(Cookie.getRequestProperties(), type.type, Pagination.getDefault(), this);
+				MapService.Inst.get().getForDatasets(Cookie.getRequestProperties(), selectedDatasets, this);
 			}
 		};
 
@@ -141,7 +140,7 @@ public abstract class DataExportWizard extends Composite
 			{
 				ServerResult<List<Group>> accessionGroups = getCallbackData(0);
 				ServerResult<List<Group>> markerGroups = getCallbackData(1);
-				PaginatedServerResult<List<Map>> mapsData = getCallbackData(2);
+				ServerResult<List<Map>> mapsData = getCallbackData(2);
 
 				if (CollectionUtils.isEmpty(mapsData.getServerResult()))
 				{
@@ -149,11 +148,11 @@ public abstract class DataExportWizard extends Composite
 					return;
 				}
 
-				if(!CollectionUtils.isEmpty(accessionGroups.getServerResult()))
+				if (!CollectionUtils.isEmpty(accessionGroups.getServerResult()))
 					accessionGroupsList.setValue(accessionGroups.getServerResult().get(0), false);
 				accessionGroupsList.setAcceptableValues(accessionGroups.getServerResult());
 
-				if(!CollectionUtils.isEmpty(markerGroups.getServerResult()))
+				if (!CollectionUtils.isEmpty(markerGroups.getServerResult()))
 					markerGroupsList.setValue(markerGroups.getServerResult().get(0), false);
 				markerGroupsList.setAcceptableValues(markerGroups.getServerResult());
 

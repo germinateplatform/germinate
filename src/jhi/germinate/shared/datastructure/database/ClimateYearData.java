@@ -91,7 +91,7 @@ public class ClimateYearData extends Location
 			}
 		}
 
-		private static DatabaseObjectCache<Country>      COUNTRY_CACHE;
+		private static DatabaseObjectCache<Country> COUNTRY_CACHE;
 
 		private Parser()
 		{

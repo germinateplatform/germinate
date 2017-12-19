@@ -86,7 +86,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 
 		}
 
-		if(stmt == null)
+		if (stmt == null)
 		{
 			this.stmt = database.prepareStatement(query);
 			/* Check if debugging is activated */

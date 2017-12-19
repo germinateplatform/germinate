@@ -35,9 +35,9 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData>
 {
-	public static final  String EXTRA_REP       = "EXTRA_REP";
-	public static final  String EXTRA_TREATMENT = "EXTRA_TREATMENT";
-	private static final int COLUMN_DATA_START = 2;
+	public static final  String EXTRA_REP         = "EXTRA_REP";
+	public static final  String EXTRA_TREATMENT   = "EXTRA_TREATMENT";
+	private static final int    COLUMN_DATA_START = 2;
 
 	private XSSFSheet dataSheetData;
 	private XSSFSheet dataSheetDates;

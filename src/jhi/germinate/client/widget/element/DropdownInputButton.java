@@ -83,7 +83,7 @@ public abstract class DropdownInputButton<T> extends Composite
 		this.selection = selection;
 		button.setText(getLabel(selection));
 
-		if(trigger)
+		if (trigger)
 			onValueChange(getSelection());
 	}
 

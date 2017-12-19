@@ -18,6 +18,7 @@
 package jhi.germinate.util.importer.reader;
 
 import org.apache.commons.cli.*;
+import org.apache.poi.openxml4j.util.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -138,6 +139,9 @@ public abstract class DataImporter<T>
 				throw new RuntimeException("Invalid reader class specified");
 			}
 		}
+
+		// We're going to assume that the files that are being imported are not Zip bombs, so we reduce the threshold.
+		ZipSecureFile.setMinInflateRatio(0.001);
 
 		// If we've got a reflection constructor, use it. Otherwise use the #getFallbackReader() as a fallback.
 		try (IDataReader reader = constructor == null ? getFallbackReader() : (IDataReader) constructor.newInstance())

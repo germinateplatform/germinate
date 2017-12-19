@@ -23,8 +23,8 @@ import java.util.*;
 
 import jhi.germinate.server.database.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.util.importer.reader.*;
 
@@ -39,6 +39,7 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 
 	private Set<Long> createdMarkerIds        = new HashSet<>();
 	private Set<Long> createdMapDefinitionIds = new HashSet<>();
+	private Set<Long> createdDatasetMemberIds = new HashSet<>();
 
 	private MapImporter        mapImporter;
 	private MarkerTypeImporter markerTypeImporter;
@@ -46,6 +47,8 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 	private Map            map;
 	private MarkerType     markerType;
 	private MapFeatureType mapFeatureType;
+
+	private Dataset dataset;
 
 	public static void main(String[] args)
 	{
@@ -83,6 +86,7 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 		// Then delete our stuff
 		deleteItems(createdMarkerIds, "markers");
 		deleteItems(createdMapDefinitionIds, "mapdefinitions");
+		deleteItems(createdDatasetMemberIds, "datasetmembers");
 	}
 
 	@Override
@@ -114,10 +118,35 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 			writeCacheMarkers();
 			writeCacheMapDefinitions();
 
+			if (dataset != null)
+			{
+				writeDatasetMembers();
+			}
+
 			databaseConnection.setAutoCommit(previous);
 		}
 
+
 		cache.clear();
+	}
+
+	private void writeDatasetMembers() throws DatabaseException
+	{
+		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO datasetmembers (dataset_id, foreign_id, datasetmembertype_id) VALUES (?, ?, 1)");
+
+		for (MapDefinition entry : cache)
+		{
+			if (map == null || StringUtils.isEmpty(entry.getChromosome()) || entry.getDefinitionStart() == null)
+				continue;
+
+			int i = 1;
+			insert.setLong(i++, dataset.getId());
+			insert.setLong(i++, entry.getMarker().getId());
+			insert.addBatch();
+		}
+
+		List<Long> ids = insert.executeBatch();
+		createdDatasetMemberIds.addAll(ids);
 	}
 
 	private void writeCacheMapDefinitions() throws DatabaseException
@@ -192,5 +221,11 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 			}
 		}
 		createdMarkerIds.addAll(ids);
+	}
+
+	public MarkerImporter setDataset(Dataset dataset)
+	{
+		this.dataset = dataset;
+		return this;
 	}
 }

@@ -164,7 +164,7 @@ public abstract class InstitutionTable extends DatabaseObjectPaginationTable<Ins
 				String value = getValue(object);
 				if (value != null)
 				{
-					if(object.getCountry() != null)
+					if (object.getCountry() != null)
 						sb.appendHtmlConstant("<span class=\"" + Style.COUNTRY_FLAG + " " + object.getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "\"></span>");
 					sb.append(SafeHtmlUtils.fromString(value));
 				}

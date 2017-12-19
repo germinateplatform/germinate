@@ -339,7 +339,7 @@ public class Location extends DatabaseObject
 			}
 		}
 
-		private static DatabaseObjectCache<Country>      COUNTRY_CACHE;
+		private static DatabaseObjectCache<Country> COUNTRY_CACHE;
 
 		protected Parser()
 		{

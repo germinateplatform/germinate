@@ -23,9 +23,10 @@ import com.google.gwt.user.client.rpc.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.exception.*;
 
 /**
  * @author Sebastian Raubach
@@ -40,7 +41,17 @@ public interface MapServiceAsync
 	 * @param properties The {@link RequestProperties}
 	 * @return The available maps for the given user
 	 */
-	Request get(RequestProperties properties, ExperimentType experimentType, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Map>>> async);
+	Request get(RequestProperties properties, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Map>>> async);
+
+	/**
+	 * Returns the available maps for the given datasets
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @return The available maps for the given user
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	void getForDatasets(RequestProperties properties, List<Long> datasetIds, AsyncCallback<ServerResult<List<Map>>> async);
 
 	/**
 	 * Creates a map file for the given regions in the given format and returns the relative path to the file

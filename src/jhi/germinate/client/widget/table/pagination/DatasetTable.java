@@ -227,7 +227,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			public SafeHtml getValue(Dataset object)
 			{
 				/* Check if we want to link to the export page */
-				if (linkToExportPage && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+				if (linkToExportPage && (ModuleCore.getUseAuthentication() && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId())))
 					return getExportPageLinkTruncated(object, object.getDescription());
 				else
 					return DatasetTable.getValueTruncated(object, object.getDescription());
@@ -327,7 +327,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 					String icon = Style.MDI_NEW_BOX;
 
-					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (ModuleCore.getUseAuthentication() && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 						icon = Style.MDI_CHECK;
 
 					if (data != null)
@@ -352,7 +352,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				{
 					event.preventDefault();
 
-					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (!ModuleCore.getUseAuthentication() || object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 					{
 						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
@@ -478,7 +478,12 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				if (count == null || count == 0L)
 					return null;
 				else
-					return Long.toString(count);
+				{
+					if (object.getExperiment().getType() == ExperimentType.genotype || object.getExperiment().getType() == ExperimentType.allelefreq)
+						return "≤" + Long.toString(count);
+					else
+						return Long.toString(count);
+				}
 			}
 
 			@Override
@@ -638,7 +643,8 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				@Override
 				public SafeHtml getValue(Dataset row)
 				{
-					if (ModuleCore.getUseAuthentication() && !row.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					// If no authentication, but license available OR authentication but user hasn't accepted
+					if ((!ModuleCore.getUseAuthentication() && row.getLicense() != null) || !row.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 					{
 						return SimpleHtmlTemplate.INSTANCE.text("");
 					}

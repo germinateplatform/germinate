@@ -9,8 +9,8 @@ CREATE TABLE `entitytypes`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
   `name` varchar(255) NOT NULL COMMENT 'The name of the entity type.',
   `description` text NULL COMMENT 'Describes the entity type.',
-  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
-  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  `created_on`  datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on`  timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',,
   PRIMARY KEY (`id`)
 );
 
@@ -21,7 +21,7 @@ INSERT INTO `entitytypes` (`id`, `name`, `description`) VALUES (1, 'Accession', 
 
 /* Add the new columns to `germinatebase` */
 ALTER TABLE `germinatebase`
-ADD COLUMN `entitytype_id` int(11) NULL DEFAULT 1 COMMENT 'Foreign key to entitytypes (entitytypes.id).' AFTER `location_id`,
+ADD COLUMN `entitytype_id` int(11) NOT NULL DEFAULT 1 COMMENT 'Foreign key to entitytypes (entitytypes.id).' AFTER `location_id`,
 ADD COLUMN `entityparent_id` int(11) NULL COMMENT 'Foreign key to germinatebase (germinatebase.id).' AFTER `entitytype_id`;
 
 /* Update some foreign keys. This forces the columns to be set to NULL when referenced items are deleted. */
@@ -65,3 +65,26 @@ ALTER TABLE `datasetcollaborators` DROP FOREIGN KEY `datasetcollaborators_ibfk_1
 
 ALTER TABLE `datasetcollaborators`
 ADD CONSTRAINT `datasetcollaborators_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE `datasetmembertypes`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `target_table` varchar(255) NOT NULL,
+  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `datasetmembers`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dataset_id` int(11) NOT NULL,
+  `foreign_id` int(11) NOT NULL,
+  `datasetmembertype_id` int(11) NOT NULL,
+  `created_on` datetime(255) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`datasetmembertype_id`) REFERENCES `datasetmembertypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO `datasetmembertypes` VALUES (1, 'markers', NOW(), NOW());
+INSERT INTO `datasetmembertypes` VALUES (2, 'germinatebase', NOW(), NOW());

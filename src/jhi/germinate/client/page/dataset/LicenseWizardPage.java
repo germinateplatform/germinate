@@ -73,7 +73,7 @@ public class LicenseWizardPage extends Composite
 
 		license.setLicenseLog(new LicenseLog(-1L)
 				.setLicense(license.getId())
-				.setUser(ModuleCore.getUserAuth().getId())
+				.setUser(ModuleCore.getUseAuthentication() ? ModuleCore.getUserAuth().getId() : null)
 				.setAcceptedOn(System.currentTimeMillis()));
 
 		if (handler != null)

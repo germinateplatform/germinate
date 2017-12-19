@@ -68,6 +68,7 @@ public class Page implements Serializable
 	public static final Page MEGA_ENVIRONMENT         = new Page("mega-environments", false, Style.MDI_EARTH);
 	public static final Page NEWS                     = new Page("news", true);
 	public static final Page PASSPORT                 = new Page("passport", false);
+	public static final Page OSTEREI                  = new Page("osterei", true);
 	public static final Page SEARCH                   = new Page("search", false, Style.MDI_MAGNIFY);
 	public static final Page TRIALS                   = new Page("trials", false).addLegacyNames("categorical-export");
 	public static final Page TRIALS_DATASETS          = new Page("trials-datasets", false, Style.MDI_SHOVEL).addLegacyNames("categorical-datasets");

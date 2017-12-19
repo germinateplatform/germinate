@@ -419,4 +419,12 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		return AccessionManager.getMcpd(userAuth, id);
 	}
+
+	@Override
+	public PaginatedServerResult<List<EntityPair>> getEntityPairs(RequestProperties properties, Long id, Pagination pagination) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		return AccessionManager.getEntityPairsForAccession(userAuth, id, pagination);
+	}
 }

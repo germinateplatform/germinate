@@ -73,7 +73,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 		pagination.updateSortColumn(PhenotypeService.COLUMNS_DATA_SORTABLE, Accession.ID);
 
 		if (datasetIds == null)
-			datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(user).getServerResult());
+			datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(user, true).getServerResult());
 
 		if (CollectionUtils.isEmpty(datasetIds))
 			return new PaginatedServerResult<>(DebugInfo.create(user), new ArrayList<>(), 0);
@@ -91,7 +91,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		pagination.updateSortColumn(PhenotypeService.COLUMNS_DATA_SORTABLE, Accession.ID);
-		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(userAuth).getServerResult());
+		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(userAuth, true).getServerResult());
 
 		String formatted = String.format(SELECT_DATA_FOR_FILTER_EXPORT, Util.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
@@ -104,7 +104,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 
 	public static ServerResult<List<String>> getIdsForFilter(UserAuth user, PartialSearchQuery filter) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException
 	{
-		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(user).getServerResult());
+		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(user, true).getServerResult());
 
 		if (CollectionUtils.isEmpty(datasetIds))
 			return new PaginatedServerResult<>(DebugInfo.create(user), new ArrayList<>(), 0);

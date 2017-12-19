@@ -295,6 +295,11 @@ public class NavigationHandler
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ACCESSION_OVERVIEW, new PassportPage()));
 		}
+		// OSTEREI
+		else if (Page.OSTEREI.is(page))
+		{
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new OsterPassportPage()));
+		}
 		// SEARCH
 		else if (Page.SEARCH.is(page))
 		{

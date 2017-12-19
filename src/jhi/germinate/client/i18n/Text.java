@@ -681,6 +681,10 @@ public interface Text extends Messages
 	@DefaultMessage("Pedigree")
 	String passportPedigreeData();
 
+	@Key("page.passport.entity.title")
+	@DefaultMessage("Entity data")
+	String passportEntityData();
+
 	@Key("page.passport.institutions.title")
 	String passportInstitutionsData();
 
@@ -2222,7 +2226,7 @@ public interface Text extends Messages
 	String mcpdRemarks();
 
 	@Key("button.group.from.cart")
-	@DefaultMessage("Create group from cart")
+	@DefaultMessage("Create group from list")
 	String buttonCreateGroupFromCart();
 
 	@Key("button.group.from.selection")

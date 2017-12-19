@@ -25,6 +25,7 @@ import java.util.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 
@@ -174,7 +175,7 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return object.getDataset();
+				return DatasetTable.getTextTruncated(object.getDataset());
 			}
 		};
 		column.setSortable(true);

@@ -50,8 +50,8 @@ public class AttributeData extends DatabaseObject
 	private Attribute      attribute;
 	private DatabaseObject foreign;
 	private String         value;
-	private Long   createdOn;
-	private Long   updatedOn;
+	private Long           createdOn;
+	private Long           updatedOn;
 
 	public AttributeData()
 	{

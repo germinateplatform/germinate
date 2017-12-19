@@ -38,6 +38,8 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class GenotypeDataImporter extends DataImporter<String[]>
 {
+	private Set<Long> createdDatasetMemberIds = new HashSet<>();
+
 	private GenotypeMetadataImporter metadataImporter;
 	private MarkerImporter           markerImporter;
 
@@ -46,6 +48,7 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 	private BufferedWriter bw;
 
 	private boolean firstRow = true;
+	private Dataset dataset;
 
 	public static void main(String[] args)
 	{
@@ -60,8 +63,10 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 		metadataImporter = new GenotypeMetadataImporter(ExperimentType.genotype);
 		metadataImporter.run(input, server, database, username, password, port, ExcelMetadataReader.class.getCanonicalName());
 		hdf5File = metadataImporter.getHdf5File();
+		dataset = metadataImporter.getDataset();
 
 		markerImporter = new MarkerImporter();
+		markerImporter.setDataset(dataset);
 		markerImporter.run(input, server, database, username, password, port, ExcelMarkerReader.class.getCanonicalName());
 
 		try
@@ -104,6 +109,8 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 	{
 		metadataImporter.deleteInsertedItems();
 		markerImporter.deleteInsertedItems();
+
+		deleteItems(createdDatasetMemberIds, "datasetmembers");
 	}
 
 	@Override
@@ -123,7 +130,9 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 			else
 			{
 				// Check that the accession exists
-				checkAccession(entry);
+				Accession accession = checkAccession(entry);
+
+				checkDatasetMember(accession);
 
 				// Insert the cell value
 				writeToTempFile(entry);
@@ -146,13 +155,25 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 		}
 	}
 
+	private void checkDatasetMember(Accession entry) throws DatabaseException
+	{
+		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO datasetmembers (dataset_id, foreign_id, datasetmembertype_id) VALUES (?, ?, 2)");
+
+		int i = 1;
+		insert.setLong(i++, dataset.getId());
+		insert.setLong(i++, entry.getId());
+
+		List<Long> ids = insert.execute();
+		createdDatasetMemberIds.addAll(ids);
+	}
+
 	/**
 	 * Checks if the {@link Accession} object exists.
 	 *
 	 * @param entry The {@link String[]} containing the {@link Accession} information.
 	 * @throws DatabaseException Thrown if the interaction with the database fails.
 	 */
-	private void checkAccession(String[] entry) throws DatabaseException
+	private Accession checkAccession(String[] entry) throws DatabaseException
 	{
 		if (StringUtils.isEmpty(entry[0]))
 			throw new DatabaseException("ACCENUMB cannot be empty!");
@@ -164,7 +185,7 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 		DatabaseResult rs = stmt.query();
 
 		if (rs.next())
-			Accession.Parser.Inst.get().parse(rs, null, true);
+			return Accession.Parser.Inst.get().parse(rs, null, true);
 		else
 			throw new DatabaseException("Accession not found: " + entry[0]);
 	}

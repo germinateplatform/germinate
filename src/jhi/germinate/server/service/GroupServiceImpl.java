@@ -250,7 +250,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 
 		List<String> items = Arrays.asList(split);
 
-		for(int i = 0; i < items.size(); i += 1000)
+		for (int i = 0; i < items.size(); i += 1000)
 		{
 			List<String> currentItems = items.subList(i, Math.min(items.size(), i + 1000));
 			String formatted = String.format(query, column, Util.generateSqlPlaceholderString(currentItems.size()));
@@ -289,21 +289,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		try
-		{
-			ServerResult<Boolean> hasLocalResourceFile = DatasetManager.hasSourceFile(userAuth, datasetIds);
-
-			if (hasLocalResourceFile.getServerResult())
-				return GroupManager.getAllForType(userAuth, GerminateDatabaseTable.germinatebase);
-			else
-				return GroupManager.getAccessionGroupsForDatasets(userAuth, datasetIds, type);
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			e.printStackTrace();
-		}
-
-		return new ServerResult<>(null, Collections.emptyList());
+		return GroupManager.getAccessionGroupsForDatasets(userAuth, datasetIds, type);
 	}
 
 	@Override
@@ -312,21 +298,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		try
-		{
-			ServerResult<Boolean> hasLocalResourceFile = DatasetManager.hasSourceFile(userAuth, datasetIds);
-
-			if (hasLocalResourceFile.getServerResult())
-				return GroupManager.getAllForType(userAuth, GerminateDatabaseTable.markers);
-			else
-				return GroupManager.getMarkerGroupsForDataset(userAuth, datasetIds, type);
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			e.printStackTrace();
-		}
-
-		return new ServerResult<>(null, Collections.emptyList());
+		return GroupManager.getMarkerGroupsForDataset(userAuth, datasetIds, type);
 	}
 
 	@Override

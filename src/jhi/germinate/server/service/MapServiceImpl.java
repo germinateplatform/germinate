@@ -29,8 +29,8 @@ import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
@@ -71,7 +71,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	}
 
 	@Override
-	public PaginatedServerResult<List<Map>> get(RequestProperties properties, ExperimentType experimentType, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException
+	public PaginatedServerResult<List<Map>> get(RequestProperties properties, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		if (pagination == null)
 			pagination = Pagination.getDefault();
@@ -79,16 +79,16 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		if (experimentType == null)
-			return MapManager.getAll(userAuth, pagination);
-		switch (experimentType)
-		{
-			case allelefreq:
-			case genotype:
-				return MapManager.getAll(userAuth, pagination);
-			default:
-				return new PaginatedServerResult<>(null, null, 0);
-		}
+		return MapManager.getAll(userAuth, pagination);
+	}
+
+	@Override
+	public ServerResult<List<Map>> getForDatasets(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return MapManager.getAllForDatasets(userAuth, datasetIds);
 	}
 
 	/**

@@ -22,6 +22,7 @@ import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
@@ -32,6 +33,8 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
 {
+	private static final String CHROMOSOME_UNKNOWN = "UNK";
+
 	private XSSFSheet dataSheet;
 
 	private int colCount   = 0;
@@ -76,10 +79,18 @@ public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
 
 	private MapDefinition parse()
 	{
+		String chromosome = IExcelReader.getCellValue(wb, chromosomes, currentCol);
+		String position = IExcelReader.getCellValue(wb, positions, currentCol);
+
+		if (StringUtils.isEmpty(chromosome))
+			chromosome = CHROMOSOME_UNKNOWN;
+		if (StringUtils.isEmpty(position))
+			position = currentCol + "";
+
 		return new MapDefinition()
-				.setChromosome(IExcelReader.getCellValue(wb, chromosomes, currentCol))
-				.setDefinitionStart(IExcelReader.getCellValue(wb, positions, currentCol))
-				.setDefinitionEnd(IExcelReader.getCellValue(wb, positions, currentCol))
+				.setChromosome(chromosome)
+				.setDefinitionStart(position)
+				.setDefinitionEnd(position)
 				.setMarker(new Marker()
 						.setName(IExcelReader.getCellValue(wb, markerNames, currentCol)));
 	}

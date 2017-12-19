@@ -605,6 +605,7 @@ public class Accession extends DatabaseObject
 		protected static DatabaseObjectCache<CollectingSource> COLLECTINGSOURCE_CACHE;
 		protected static DatabaseObjectCache<Location>         LOCATION_CACHE;
 		protected static DatabaseObjectCache<MlsStatus>        MLSSTATUS_CACHE;
+
 		private ImportParser()
 		{
 			SUBTAXA_CACHE = createCache(Subtaxa.class, SubtaxaManager.class);

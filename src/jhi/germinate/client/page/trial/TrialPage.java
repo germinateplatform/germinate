@@ -225,7 +225,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 				// If there are no years or if there's just one, then just plot the basics
 				if (result.getServerResult() == null || result.getServerResult().size() <= 1)
 					getBasicOverviewStats();
-				// Otherwise show the development over time
+					// Otherwise show the development over time
 				else
 					overviewPanel.add(new TrialOverviewWidget(phenotypes, result.getServerResult()));
 			}

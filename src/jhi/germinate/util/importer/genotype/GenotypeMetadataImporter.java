@@ -33,7 +33,7 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class GenotypeMetadataImporter extends MetadataImporter
 {
-	private File                        hdf5File;
+	private File hdf5File;
 
 	public GenotypeMetadataImporter(ExperimentType type)
 	{

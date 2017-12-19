@@ -36,7 +36,6 @@ import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.datastructure.database.LocationType;
 import jhi.germinate.shared.enums.*;
 
 /**

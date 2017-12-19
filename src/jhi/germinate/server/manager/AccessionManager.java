@@ -59,6 +59,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_IDS_IN_POLYGON         = "SELECT DISTINCT(germinatebase.id) FROM " + COMMON_TABLES + " LEFT JOIN locationtypes ON locations.locationtype_id = locationtypes.id WHERE locationtypes.name = ? AND !ISNULL(locations.latitude) AND !ISNULL(locations.longitude) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', locations.longitude, ' ', locations.latitude, ')')))";
 	private static final String SELECT_ALL_IN_POLYGON         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN locationtypes ON locations.locationtype_id = locationtypes.id WHERE " + WHERE_SYNONYMS + " AND locationtypes.name = ? AND !ISNULL(locations.latitude) AND !ISNULL(locations.longitude) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', locations.longitude, ' ', locations.latitude, ')'))) GROUP BY germinatebase.id %s LIMIT ?, ?";
 	private static final String SELECT_IDS_DOWNLOAD           = "SELECT germinatebase.*, subtaxa.subtaxa_author AS subtaxa_author, subtaxa.taxonomic_identifier AS subtaxa_taxonomic_identifier, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxonomies_species, taxonomies.species_author AS taxonomies_species_author, taxonomies.cropname AS taxonomies_crop_name, taxonomies.ploidy AS taxonomies_ploidy, locations.state AS locations_state, locations.region AS locations_region, locations.site_name AS locations_site_name, locations.elevation AS locations_elevation, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, countries.country_name AS countries_country_name, institutions.code AS institutions_code, institutions.name AS institutions_name, institutions.acronym AS institutions_acronym, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.address AS institutions_address, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " WHERE " + WHERE_SYNONYMS + " AND germinatebase.id IN (%s) GROUP BY germinatebase.id";
+	private static final String SELECT_ENTITY_PAIRS           = "SELECT child.id, parent.id FROM germinatebase child LEFT JOIN germinatebase parent ON child.entityparent_id = parent.id WHERE ( child.id = ? OR parent.id = ? ) AND child.entitytype_id > 1 %s LIMIT ?, ?";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM germinatebase WHERE entitytype_id = 1 OR ISNULL(entitytype_id)";
 
@@ -392,5 +393,19 @@ public class AccessionManager extends AbstractManager<Accession>
 		return new GerminateTableQuery(formatted, userAuth, null)
 				.setStrings(ids)
 				.getStreamer();
+	}
+
+	public static PaginatedServerResult<List<EntityPair>> getEntityPairsForAccession(UserAuth userAuth, Long id, Pagination pagination) throws DatabaseException
+	{
+		String formatted = String.format(SELECT_ENTITY_PAIRS, pagination.getSortQuery());
+
+		return new DatabaseObjectQuery<EntityPair>(formatted, userAuth)
+				.setFetchesCount(pagination.getResultSize())
+				.setLong(id)
+				.setLong(id)
+				.setInt(pagination.getStart())
+				.setInt(pagination.getLength())
+				.run()
+				.getObjectsPaginated(EntityPair.Parser.Inst.get(), false);
 	}
 }

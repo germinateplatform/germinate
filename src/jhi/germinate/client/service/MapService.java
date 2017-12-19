@@ -23,8 +23,8 @@ import com.google.gwt.user.client.rpc.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -71,7 +71,17 @@ public interface MapService extends RemoteService
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
-	PaginatedServerResult<List<Map>> get(RequestProperties properties, ExperimentType type, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+	PaginatedServerResult<List<Map>> get(RequestProperties properties, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+
+	/**
+	 * Returns the available maps for the given datasets
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @return The available maps for the given user
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	ServerResult<List<Map>> getForDatasets(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Creates a map file for the given regions in the given format and returns the relative path to the file

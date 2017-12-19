@@ -41,7 +41,7 @@ public class MatrixChartSelection<T extends DatabaseObject> extends Composite
 
 	private static MatrixChartSelectionUiBinder ourUiBinder = GWT.create(MatrixChartSelectionUiBinder.class);
 
-	private static final int MAX_NR_OF_OBJECTS = 5;
+	public static final int MAX_NR_OF_OBJECTS = 10;
 
 	@UiField
 	Heading heading;

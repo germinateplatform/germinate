@@ -21,27 +21,32 @@ import org.gwtbootstrap3.client.ui.base.*;
 
 import jhi.germinate.shared.*;
 
-public class MdiAnchorListItem extends AbstractAnchorListItem implements com.google.gwt.user.client.ui.HasText {
+public class MdiAnchorListItem extends AbstractAnchorListItem implements com.google.gwt.user.client.ui.HasText
+{
 
-    public MdiAnchorListItem() {
-    }
+	public MdiAnchorListItem()
+	{
+	}
 
-    public MdiAnchorListItem(final String text) {
-        setText(text);
-    }
+	public MdiAnchorListItem(final String text)
+	{
+		setText(text);
+	}
 
-    @Override
-    public String getText() {
-        return anchor.getText();
-    }
+	@Override
+	public String getText()
+	{
+		return anchor.getText();
+	}
 
-    @Override
-    public void setText(final String text) {
-        anchor.setText(text);
-    }
+	@Override
+	public void setText(final String text)
+	{
+		anchor.setText(text);
+	}
 
-    public void setMdi(String style)
-    {
-        anchor.addStyleName(Style.mdiLg(style));
-    }
+	public void setMdi(String style)
+	{
+		anchor.addStyleName(Style.mdiLg(style));
+	}
 }

@@ -255,7 +255,7 @@ public class FilterPanel implements KeyPressHandler
 			if (i > 0)
 			{
 				boolean value = switches.get(i - 1).getValue();
-				Label label = new Label(value ? Text.LANG.operatorsAnd() : Text.LANG.operatorsOr());
+				Label label = new Label(" " + (value ? Text.LANG.operatorsAnd() : Text.LANG.operatorsOr()) + " ");
 				label.addStyleName(Style.LAYOUT_DISPLAY_INLINE_BLOCK);
 				result.add(label);
 			}

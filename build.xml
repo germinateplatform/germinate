@@ -53,7 +53,6 @@
 		<!-- Delete template styling -->
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/logo.svg"/>
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/crop.svg"/>
-		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/css/logo.css"/>
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/css/custom.css"/>
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/custom.html"/>
 		<delete failonerror="false" verbose="true" quiet="true" dir="${build.dir}/css/images/css-images"/>
@@ -115,7 +114,6 @@
 		<!-- Copy template styling -->
 		<copy file="${instance.files}/template/logo.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
 		<copy file="${instance.files}/template/crop.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
-		<copy file="${instance.files}/template/logo.css" todir="${build.dir}/css" overwrite="true" failonerror="true" verbose="true"/>
 		<copy file="${instance.files}/template/custom.css" todir="${build.dir}/css" overwrite="true" failonerror="false" verbose="true"/>
 		<copy file="${instance.files}/template/custom.html" todir="${build.dir}" overwrite="true" failonerror="false" verbose="true"/>
 		<copy file="${instance.files}/template/favicon.ico" todir="${build.dir}/" overwrite="true" failonerror="true" verbose="true"/>

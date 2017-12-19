@@ -65,6 +65,15 @@
 			<g:SimplePanel addStyleNames="{style.pedigree-padding}" ui:field="pedigreeDownloadPanel"/>
 		</g:FlowPanel>
 
+		<g:FlowPanel visible="false" ui:field="entityWrapper">
+			<g:HTMLPanel>
+				<hr/>
+			</g:HTMLPanel>
+
+			<b:Heading size="H3" text="{msg.passportEntityData}"/>
+			<g:SimplePanel addStyleNames="{style.pedigree-padding}" ui:field="entityTablePanel"/>
+		</g:FlowPanel>
+
 		<g:FlowPanel ui:field="locationWrapper" visible="false">
 			<g:HTMLPanel>
 				<hr/>

@@ -145,7 +145,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Map>>> callback)
 			{
-				return MapService.Inst.get().get(Cookie.getRequestProperties(), null, pagination, callback);
+				return MapService.Inst.get().get(Cookie.getRequestProperties(), pagination, callback);
 			}
 
 			@Override

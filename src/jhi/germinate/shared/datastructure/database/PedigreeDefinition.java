@@ -40,18 +40,18 @@ public class PedigreeDefinition extends DatabaseObject
 {
 	private static final long serialVersionUID = -6786321095022860722L;
 
-	public static final String ID                     = "pedigreedefinitions.id";
-	public static final String GERMINATEBASE_ID       = "pedigreedefinitions.germinatebase_id";
-	public static final String PEDIGREENOTATION_ID    = "pedigreedefinitions.pedigreenotation_id";
-	public static final String DEFINITION             = "pedigreedefinitions.definition";
-	public static final String CREATED_ON             = "pedigreedefinitions.created_on";
-	public static final String UPDATED_ON             = "pedigreedefinitions.updated_on";
+	public static final String ID                  = "pedigreedefinitions.id";
+	public static final String GERMINATEBASE_ID    = "pedigreedefinitions.germinatebase_id";
+	public static final String PEDIGREENOTATION_ID = "pedigreedefinitions.pedigreenotation_id";
+	public static final String DEFINITION          = "pedigreedefinitions.definition";
+	public static final String CREATED_ON          = "pedigreedefinitions.created_on";
+	public static final String UPDATED_ON          = "pedigreedefinitions.updated_on";
 
-	private Accession           accession;
-	private PedigreeNotation    notation;
-	private String              definition;
-	private Long                createdOn;
-	private Long                updatedOn;
+	private Accession        accession;
+	private PedigreeNotation notation;
+	private String           definition;
+	private Long             createdOn;
+	private Long             updatedOn;
 
 	public PedigreeDefinition()
 	{

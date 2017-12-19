@@ -96,6 +96,11 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	SimplePanel pedigreeDownloadPanel;
 
 	@UiField
+	FlowPanel   entityWrapper;
+	@UiField
+	SimplePanel entityTablePanel;
+
+	@UiField
 	FlowPanel locationWrapper;
 	@UiField
 	FlowPanel locationPanel;
@@ -223,6 +228,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			updateInstitution();
 			updateSynonyms();
 			updatePedigree();
+			updateEntityData();
 			updateLocation();
 			updateImages();
 			updateGroups();
@@ -414,7 +420,6 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 					e.printStackTrace();
 				}
 
-
 				return PedigreeService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, new AsyncCallback<PaginatedServerResult<List<Pedigree>>>()
 				{
 					@Override
@@ -444,6 +449,26 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				.setIconStyle(FileDownloadWidget.IconStyle.IMAGE)
 				.addFile(Text.LANG.downloadPedigreeHelium())
 				.addType(FileType.helium));
+	}
+
+	private void updateEntityData()
+	{
+		entityWrapper.setVisible(true);
+
+		entityTablePanel.add(new EntityPairTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		{
+			@Override
+			protected boolean supportsFiltering()
+			{
+				return false;
+			}
+
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<EntityPair>>> callback)
+			{
+				return AccessionService.Inst.get().getEntityPairs(Cookie.getRequestProperties(), accession.getId(), pagination, callback);
+			}
+		});
 	}
 
 	private void updateSynonyms()

@@ -48,8 +48,8 @@ public class StorageData extends DatabaseObject
 
 	private Accession accession;
 	private Storage   storage;
-	private Long   createdOn;
-	private Long   updatedOn;
+	private Long      createdOn;
+	private Long      updatedOn;
 
 	public StorageData()
 	{

@@ -263,4 +263,6 @@ public interface AccessionService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	ServerResult<Mcpd> getMcpd(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException;
+
+	PaginatedServerResult<List<EntityPair>> getEntityPairs(RequestProperties properties, Long id, Pagination pagination) throws InvalidSessionException, DatabaseException;
 }

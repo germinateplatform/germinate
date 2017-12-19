@@ -64,18 +64,18 @@ public class OsterPassportPage extends PassportPage
 			.setCountry(GERMANY)
 			.setName("Cologne")
 			.setShortName("Cologne")
-			.setLatitude(57d)
-			.setLongitude(50.8919)
-			.setElevation(7.0511)
+			.setElevation(57d)
+			.setLatitude(50.8919)
+			.setLongitude(7.0511)
 			.setSize(1L);
 
 	private static final Location PERTH = new Location(-2L)
 			.setCountry(UK)
 			.setName("Perth")
 			.setShortName("Perth")
-			.setLatitude(107d)
-			.setLongitude(56.3927)
-			.setElevation(-3.4495)
+			.setElevation(107d)
+			.setLatitude(56.3927)
+			.setLongitude(-3.4495)
 			.setSize(1L);
 
 	private static final Institution JHI = new Institution(-1L)
@@ -89,6 +89,7 @@ public class OsterPassportPage extends PassportPage
 
 	private static final Accession SEBASTIAN_RAUBACH = new Accession(-7L)
 			.setName("Sebastian Raubach")
+			.setEntityType(EntityType.ACCESSION)
 			.setTaxonomy(HOMO_SAPIENS)
 			.setLocation(COLOGNE)
 			.setInstitution(JHI)
@@ -96,6 +97,7 @@ public class OsterPassportPage extends PassportPage
 
 	private static final Accession PAUL_SHAW = new Accession(-999999L)
 			.setName("Paul Shaw")
+			.setEntityType(EntityType.ACCESSION)
 			.setTaxonomy(HOMO_SAPIENS)
 			.setLocation(PERTH)
 			.setInstitution(JHI)

@@ -55,8 +55,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 	private List<T>        objects;
 	private ExperimentType experimentType;
 
-	private FlowPanel chartPanel;
-	private int maxNrOfPhenotypes = 5;
+	private FlowPanel               chartPanel;
 	private MatrixChartSelection<T> parameterSelection;
 	private Button                  deleteButton;
 	private Button                  badgeButton;
@@ -155,9 +154,9 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 					return;
 				}
 
-				if (objectIds.size() > maxNrOfPhenotypes)
+				if (objectIds.size() > MatrixChartSelection.MAX_NR_OF_OBJECTS)
 				{
-					Notification.notify(Notification.Type.ERROR, Text.LANG.phenotypeMatrixAtMost(maxNrOfPhenotypes));
+					Notification.notify(Notification.Type.ERROR, Text.LANG.phenotypeMatrixAtMost(MatrixChartSelection.MAX_NR_OF_OBJECTS));
 					return;
 				}
 

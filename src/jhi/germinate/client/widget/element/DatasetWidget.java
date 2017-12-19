@@ -166,7 +166,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 			{
 				List<Dataset> mappedDatasets = mapping.get(location);
 
-				if(mappedDatasets == null)
+				if (mappedDatasets == null)
 					mappedDatasets = new ArrayList<>();
 
 				mappedDatasets.add(dataset);
@@ -254,7 +254,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 				Set<Dataset> selectedItems = table.getSelection();
 
 				Set<License> licensesToAgreeTo = selectedItems.stream()
-															  .filter(d -> !d.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+															  .filter(d -> !ModuleCore.getUseAuthentication() || !d.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
 															  .map(Dataset::getLicense)
 															  .collect(Collectors.toCollection(HashSet::new));
 

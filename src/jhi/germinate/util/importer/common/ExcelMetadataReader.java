@@ -36,7 +36,7 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelMetadataReader implements IBatchReader<Dataset>
 {
-	protected XSSFSheet dataSheet;
+	protected XSSFSheet    dataSheet;
 	protected XSSFWorkbook wb;
 
 	private ExperimentType type;

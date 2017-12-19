@@ -34,7 +34,7 @@ public abstract class DatabaseObject implements Serializable
 {
 	private static final long serialVersionUID = 1226813007200682358L;
 
-	public static final String COUNT      = "count";
+	public static final String COUNT = "count";
 
 	protected Long                id;
 	protected Map<String, String> extra;

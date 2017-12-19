@@ -21,6 +21,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
@@ -36,7 +37,6 @@ import java.util.stream.*;
 
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.*;
-import jhi.germinate.client.management.*;
 import jhi.germinate.client.page.accession.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
@@ -120,7 +120,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 		initWidget(ourUiBinder.createAndBindUi(this));
 
 		String searchString = StringParameterStore.Inst.get().get(Parameter.searchString);
-//		StringParameterStore.Inst.get().remove(Parameter.searchString);
 
 		if (!StringUtils.isEmpty(searchString))
 		{
@@ -139,7 +138,10 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 			LongParameterStore.Inst.get().put(Parameter.accessionId, id);
 			StringParameterStore.Inst.get().remove(Parameter.searchString);
 
-			ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new OsterPassportPage());
+			History.newItem(Page.OSTEREI.name());
+//			ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new OsterPassportPage());
+
+			return;
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -595,6 +597,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 						mapping.put(Accession.COLLNUMB, searchString);
 						mapping.put(Taxonomy.GENUS, searchString);
 						mapping.put(Taxonomy.SPECIES, searchString);
+						mapping.put(Subtaxa.TAXONOMY_IDENTIFIER, searchString);
 						mapping.put(Country.COUNTRY_NAME, searchString);
 						mapping.put(Synonym.SYNONYM, searchString);
 						accessionDataTable.forceFilter(mapping, false);

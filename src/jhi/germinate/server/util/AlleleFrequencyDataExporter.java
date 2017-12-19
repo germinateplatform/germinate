@@ -41,7 +41,7 @@ public class AlleleFrequencyDataExporter
 	private int linesToExport = 0;
 
 	private DataExporter.DataExporterParameters parameters;
-	private boolean allLines = false;
+	private boolean allLines   = false;
 	private boolean allMarkers = false;
 
 	/**

@@ -24,7 +24,6 @@ import java.util.stream.*;
 
 import javax.servlet.annotation.*;
 
-import jhi.flapjack.io.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
@@ -224,62 +223,10 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	@Override
 	public PaginatedServerResult<List<Dataset>> getForMarker(RequestProperties properties, Pagination pagination, Long markerId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidArgumentException
 	{
-		if (pagination == null)
-			pagination = Pagination.getDefault();
-
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		List<Dataset> availableDatasets = DatasetManager.getForUser(userAuth).getServerResult();
-
-		Marker m = null;
-
-		MarkerManager manager = new MarkerManager();
-
-		/* Iterate over the available datasets */
-		for (Iterator<Dataset> it = availableDatasets.iterator(); it.hasNext(); )
-		{
-			Dataset d = it.next();
-
-			/* Check if the dataset comes from a source hdf5 file and if it's a genotype file */
-			if (!StringUtils.isEmpty(d.getSourceFile()) && d.getSourceFile().endsWith(".hdf5") && d.getExperiment().getType() == ExperimentType.genotype)
-			{
-				try
-				{
-					/* Get the marker information */
-					if (m == null)
-						m = manager.getById(userAuth, markerId).getServerResult();
-
-					/* Create a list with just one element (the marker name) */
-					List<String> markers = new ArrayList<>();
-					markers.add(m.getName());
-
-					/* Get the genotype resource file (hdf5) */
-					File file = getFile(FileLocation.data, null, ReferenceFolder.genotype, d.getSourceFile());
-
-					/* Check if the marker is part of this dataset */
-					boolean contains = Hdf5Utils.retainMarkersFrom(file, markers)
-												.contains(m.getName());
-
-					/* If not, remove it */
-					if (!contains)
-						it.remove();
-				}
-				catch (InsufficientPermissionsException e)
-				{
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				it.remove();
-			}
-		}
-
-		List<Long> ids = DatabaseObject.getIds(availableDatasets);
-
-		/* Get the data based on the dataset ids of the datasets containing the marker */
-		return DatasetManager.getByIdsPaginated(userAuth, ids, pagination);
+		return DatasetManager.getAllForMarkerId(userAuth, markerId, pagination);
 	}
 
 	@Override

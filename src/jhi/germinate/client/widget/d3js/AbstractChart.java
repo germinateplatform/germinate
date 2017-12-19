@@ -446,7 +446,7 @@ public abstract class AbstractChart extends GerminateComposite
 	 */
 	private native void downloadImage(Element svg, String filename)/*-{
 		if ($wnd.saveSvgAsPng)
-			$wnd.saveSvgAsPng(svg, filename, 2);
+			$wnd.saveSvgAsPng(svg, filename, 1);
 		else
 			console.error("Load D3_DOWNLOAD library to download d3 charts");
 	}-*/;

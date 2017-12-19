@@ -35,19 +35,19 @@
 
 		<b:Row>
 			<b:Column size="XS_12,MD_6">
-				<b:Heading size="H4" text="{msg.genotypeExportHeadingAccessionGroups}"/>
+				<b:Heading size="H3" text="{msg.genotypeExportHeadingAccessionGroups}"/>
 				<g:HTML ui:field="accessionText"/>
 				<lb:GroupListBox multipleSelect="true" type="ACCESSION" ui:field="accessionGroupsList"/>
 			</b:Column>
 			<b:Column size="XS_12,MD_6">
-				<b:Heading size="H4" text="{msg.genotypeExportHeadingMarkerGroups}"/>
+				<b:Heading size="H3" text="{msg.genotypeExportHeadingMarkerGroups}"/>
 				<g:HTML ui:field="markerText"/>
 				<lb:GroupListBox multipleSelect="true" type="MARKER" ui:field="markerGroupsList"/>
 			</b:Column>
 		</b:Row>
 
-		<g:HTMLPanel>
-			<b:Heading size="H4" text="{msg.genotypeExportHeadingCDF}"/>
+		<g:HTMLPanel visible="false">
+			<b:Heading size="H3" text="{msg.genotypeExportHeadingCDF}"/>
 			<ul>
 				<li>
 					<ui:text from='{msg.genotypeExportSubtitleCDFOne}'/>
@@ -70,7 +70,7 @@
 		</g:HTMLPanel>
 
 		<g:FlowPanel>
-			<b:Heading size="H4" text="{msg.genotypeExportHeadingMap}"/>
+			<b:Heading size="H3" text="{msg.genotypeExportHeadingMap}"/>
 			<lb:MapListBox ui:field="mapsList"/>
 		</g:FlowPanel>
 		<g:HTML>

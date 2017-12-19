@@ -20,7 +20,6 @@ package jhi.germinate.client.util.handler;
 import com.google.gwt.user.client.*;
 
 import jhi.germinate.client.*;
-import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.management.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.event.*;
@@ -46,26 +45,14 @@ public class LoginHandler implements LoginEvent.LoginEventHandler
 
 		ContentHolder.getInstance().initContent();
 
-		if (!event.isAutomaticLogin())
-		{
-			/* Show notification */
-			Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationLoginSuccessful());
-		}
-
 		/* Track information using Google Analytics */
 		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGIN, "login", event.getUserAuthentication().getUsername());
 
 		/* Fire a page update */
 		String historyToken = History.getToken();
 
-		boolean hasReadParameters = UrlParameterReader.readUrlParameters();
-
-		/*
-		 * If there are URL parameters and there is a valid page to
-		 * navigate to, then do so
-		 * Also do this, if this is a page refresh event
-		 */
-		if ((hasReadParameters && !StringUtils.isEmpty(historyToken)) || event.isAutomaticLogin())
+		// If there are URL parameters and there is a valid page to navigate to, then do so. Also do this, if this is a page refresh event
+		if ((UrlParameterReader.readUrlParameters() && !StringUtils.isEmpty(historyToken)) || event.isAutomaticLogin())
 		{
 			History.fireCurrentHistoryState();
 		}
