@@ -94,7 +94,6 @@ class ImageScaler
 		}
 	}
 
-	// TODO: Include sub-directories?
 	private static void scaleImages(final File folder)
 	{
 		File fullsize = new File(folder, ImageServlet.FULL_SIZE);

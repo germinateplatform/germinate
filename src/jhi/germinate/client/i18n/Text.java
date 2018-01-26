@@ -1297,6 +1297,10 @@ public interface Text extends Messages
 	@Key("column.markers.feature.description")
 	String markersColumnFeatureDescription();
 
+	@Key("column.markers.type.description")
+	@DefaultMessage("Marker Type")
+	String markersColumnTypeDescription();
+
 	@Key("column.markers.chromosome")
 	String markersColumnChromosome();
 

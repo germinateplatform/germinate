@@ -135,10 +135,11 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 	 */
 	private void createPhenotypeData(PhenotypeData entry) throws DatabaseException
 	{
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM phenotypedata WHERE phenotype_id = ? AND germinatebase_id = ? AND phenotype_value = ? AND recording_date <=> ? AND treatment_id <=> ?");
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM phenotypedata WHERE phenotype_id = ? AND germinatebase_id = ? AND dataset_id <=> ? AND phenotype_value = ? AND recording_date <=> ? AND treatment_id <=> ?");
 		int i = 1;
 		stmt.setLong(i++, entry.getPhenotype().getId());
 		stmt.setLong(i++, entry.getAccession().getId());
+		stmt.setLong(i++, dataset.getId());
 		stmt.setString(i++, entry.getValue());
 
 		if (entry.getRecordingDate() != null)

@@ -47,12 +47,6 @@ public class CheckboxListItem extends AbstractAnchorListItem implements HasText
 		box.setValue(value);
 		anchor.add(box);
 		box.getElement().getStyle().setMargin(0, Style.Unit.PX);
-
-		anchor.addClickHandler(e ->
-		{
-//			e.preventDefault();
-//			box.setValue(!box.getValue());
-		});
 	}
 
 	public CheckboxListItem(final boolean value, final String text)
@@ -70,7 +64,6 @@ public class CheckboxListItem extends AbstractAnchorListItem implements HasText
 	@Override
 	protected void delegateEvent(Widget target, GwtEvent<?> event)
 	{
-		// TODO: Do nothing here
 	}
 
 	public void setValue(boolean value)

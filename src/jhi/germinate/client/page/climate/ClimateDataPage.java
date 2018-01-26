@@ -50,7 +50,7 @@ import jhi.germinate.shared.search.*;
 /**
  * @author Sebastian Raubach
  */
-public class ClimateDataPage extends Composite implements ParallaxBannerPage, HasHyperlinkButton
+public class ClimateDataPage extends Composite implements ParallaxBannerPage, HasHyperlinkButton, HasLibraries
 {
 	interface ClimateDataPageUiBinder extends UiBinder<HTMLPanel, ClimateDataPage>
 	{
@@ -317,5 +317,11 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 		return new HyperlinkPopupOptions()
 				.setPage(Page.CLIMATE)
 				.addParam(Parameter.climateDatasetIds);
+	}
+
+	@Override
+	public Library[] getLibraries()
+	{
+		return new Library[]{Library.LEAFLET_COMPLETE};
 	}
 }

@@ -221,8 +221,6 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	{
 		if (accession != null)
 		{
-//			ContentHolder.getInstance().updateShoppingCartButton(this, MarkedItemList.ItemType.ACCESSION); // TODO
-
 			updateHeader();
 			updateMcpd();
 			updateInstitution();
@@ -498,11 +496,6 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 						return false;
 					}
 				});
-//				anchor.addClickHandler(event ->
-//				{
-//					LongParameterStore.Inst.get().put(Parameter.institutionId, institution.getId());
-//					History.newItem(Page.INSTITUTIONS.name());
-//				});
 				new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnName(), anchor, true);
 			}
 			else
