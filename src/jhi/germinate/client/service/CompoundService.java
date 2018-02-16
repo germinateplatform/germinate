@@ -138,21 +138,6 @@ public interface CompoundService extends RemoteService
 	ServerResult<List<DataStats>> getDataStatsForDatasets(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException;
 
 	/**
-	 * Retrieves the compound by compound chart file for d3.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param datasetIds The selected {@link Dataset} ids
-	 * @param firstId    The id of the first {@link Compound}
-	 * @param secondId   The id of the second {@link Compound}
-	 * @return The relative path to the generated file or <code>null</code> if there is not data for the query
-	 * @throws InvalidSessionException          Thrown if the current session is invalid
-	 * @throws DatabaseException                Thrown if the database interaction fails
-	 * @throws IOException                      Thrown if the file creation fails
-	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
-	 */
-	ServerResult<String> getCompoundByCompoundFile(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InsufficientPermissionsException;
-
-	/**
 	 * Exports the {@link Compound} information to a file and returns the name of the result file.
 	 *
 	 * @param properties  The {@link RequestProperties}

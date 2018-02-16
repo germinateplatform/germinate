@@ -17,9 +17,11 @@
 
 package jhi.germinate.client.widget.element;
 
+import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import jhi.germinate.client.i18n.Text;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.enums.*;
 
@@ -71,18 +73,18 @@ public class ULPanel extends ComplexPanel
 	 * @param style The IconStyle
 	 * @param type  The FileType
 	 */
-	public void add(Widget child, FileDownloadWidget.IconStyle style, FileType type)
+	public void add(Widget child, FileType.IconStyle style, FileType type, boolean longRunning)
 	{
 		LIElement li = Document.get().createLIElement();
 
-		if (style == FileDownloadWidget.IconStyle.IMAGE)
+		if (style == FileType.IconStyle.IMAGE)
 		{
-			li.setClassName(type.getIconStyle());
+			li.setClassName(type.getStyle(style));
 		}
 		else
 		{
 			Element i = Document.get().createElement("i");
-			i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, type.getMdiStyle()));
+			i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, type.getStyle(style)));
 			i.getStyle().setPaddingRight(7, com.google.gwt.dom.client.Style.Unit.PX);
 
 			li.appendChild(i);
@@ -91,7 +93,24 @@ public class ULPanel extends ComplexPanel
 
 		list.appendChild(li);
 		super.add(child, li);
+
+		if(longRunning)
+		{
+			Element i = Document.get().createElement("i");
+			i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.LAYOUT_V_ALIGN_MIDDLE, Style.MDI_TIMER_SAND));
+			i.getStyle().setPaddingLeft(7, com.google.gwt.dom.client.Style.Unit.PX);
+			i.setTitle(Text.LANG.notificationLongRunning());
+			i.setAttribute("data-toggle", "tooltip");
+			i.setAttribute("data-placement", "top");
+			li.appendChild(i);
+
+			Scheduler.get().scheduleDeferred(() -> tooltip(i));
+		}
 	}
+
+	private native void tooltip(final Element e) /*-{
+		$wnd.jQuery(e).tooltip();
+	}-*/;
 
 	/**
 	 * Adds the given widget as a new li to the ul with the given font awesome style

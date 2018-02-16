@@ -181,6 +181,11 @@ public class Style
 	public static final String MDI_ROTATE_270                      = "mdi-rotate-270";
 	public static final String MDI_FORMAT_INDENT_INCREASE          = "mdi-format-indent-increase";
 	public static final String MDI_VECTOR_POLYGON                  = "mdi-vector-polygon";
+	public static final String MDI_TIMER_SAND                      = "mdi-timer-sand";
+	public static final String MDI_PASSPORT                        = "mdi-passport";
+	public static final String MDI_CITY                            = "mdi-city";
+	public static final String MDI_SELECTION                       = "mdi-selection";
+	public static final String MDI_COMMENT_TEXT_OUTLINE            = "mdi-comment-text-outline";
 	public static final String MDI_LG                              = "mdi-lg";
 	public static final String MDI_PLAYLIST_PLUS                   = "mdi-playlist-plus";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";

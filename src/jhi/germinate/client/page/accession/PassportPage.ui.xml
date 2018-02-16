@@ -24,23 +24,17 @@
 	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
-	<ui:style>
-		.pedigree-padding {
-			padding: 10px 0;
-		}
-	</ui:style>
-
 	<g:HTMLPanel>
 		<b:PageHeader ui:field="pageHeader"/>
 		<g:HTML ui:field="html"/>
 
 		<b:Row ui:field="topWrapper" visible="false">
 			<b:Column size="XS_12,LG_6">
-				<b:Heading size="H3" text="{msg.passportPassportData}"/>
+				<g8:MdiHeading mdi="{MDI_PASSPORT}" size="H3" text="{msg.passportPassportData}" />
 				<g:FlowPanel ui:field="mcpdPanel"/>
 			</b:Column>
 			<b:Column size="XS_12,LG_6">
-				<b:Heading size="H3" text="{msg.passportInstitutionsData}"/>
+				<g8:MdiHeading mdi="{MDI_CITY}" size="H3" text="{msg.passportInstitutionsData}"/>
 				<g:FlowPanel ui:field="institutionPanel"/>
 			</b:Column>
 		</b:Row>
@@ -50,7 +44,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.synonymsTitle}"/>
+			<g8:MdiHeading mdi="{MDI_TAG_MULTIPLE}" size="H3" text="{msg.synonymsTitle}"/>
 			<g8:SynonymWidget ui:field="synonyms"/>
 		</g:FlowPanel>
 
@@ -59,10 +53,10 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportPedigreeData}"/>
-			<g:SimplePanel addStyleNames="{style.pedigree-padding}" ui:field="pedigreeListPanel"/>
-			<g:SimplePanel addStyleNames="{style.pedigree-padding}" ui:field="pedigreeTablePanel"/>
-			<g:SimplePanel addStyleNames="{style.pedigree-padding}" ui:field="pedigreeDownloadPanel"/>
+			<g8:MdiHeading mdi="{MDI_SITEMAP}" size="H3" text="{msg.passportPedigreeData}"/>
+			<g:SimplePanel ui:field="pedigreeListPanel"/>
+			<g:SimplePanel ui:field="pedigreeTablePanel"/>
+			<g:SimplePanel ui:field="pedigreeDownloadPanel"/>
 		</g:FlowPanel>
 
 		<g:FlowPanel visible="false" ui:field="entityWrapper">
@@ -70,8 +64,8 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportEntityData}"/>
-			<g:SimplePanel addStyleNames="{style.pedigree-padding}" ui:field="entityTablePanel"/>
+			<g8:MdiHeading mdi="{MDI_SELECTION}" size="H3" text="{msg.passportEntityData}"/>
+			<g:SimplePanel ui:field="entityTablePanel"/>
 		</g:FlowPanel>
 
 		<g:FlowPanel ui:field="locationWrapper" visible="false">
@@ -79,7 +73,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportLocationData}"/>
+			<g8:MdiHeading mdi="{MDI_MAP_MARKER}" size="H3" text="{msg.passportLocationData}"/>
 			<g:FlowPanel ui:field="locationPanel"/>
 		</g:FlowPanel>
 
@@ -88,7 +82,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportImages}"/>
+			<g8:MdiHeading mdi="{MDI_IMAGE_MULTIPLE}" size="H3" text="{msg.passportImages}"/>
 			<g:FlowPanel ui:field="imagePanel"/>
 		</g:FlowPanel>
 
@@ -97,7 +91,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportGroupsOverview}"/>
+			<g8:MdiHeading mdi="{MDI_GROUP}" size="H3" text="{msg.passportGroupsOverview}"/>
 			<g:HTML ui:field="groupHtml"/>
 			<g:FlowPanel ui:field="groupPanel"/>
 		</g:FlowPanel>
@@ -107,7 +101,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportDatasetsOverview}"/>
+			<g8:MdiHeading mdi="{MDI_DATABASE}" size="H3" text="{msg.passportDatasetsOverview}"/>
 			<g:HTML ui:field="datasetHtml"/>
 			<g:FlowPanel ui:field="datasetPanel"/>
 		</g:FlowPanel>
@@ -117,7 +111,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportAttributes}"/>
+			<g8:MdiHeading mdi="{MDI_PLAYLIST_PLUS}" size="H3" text="{msg.passportAttributes}"/>
 			<g:FlowPanel ui:field="attributePanel"/>
 		</g:FlowPanel>
 
@@ -126,7 +120,8 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<g8:CommentWidget ui:field="commentWidget"/>
+			<g8:MdiHeading mdi="{MDI_COMMENT_TEXT_OUTLINE}" size="H3" text="{msg.generalAnnotations}"/>
+			<g8:CommentWidget headingVisible="false" ui:field="commentWidget"/>
 		</g:FlowPanel>
 
 		<g:FlowPanel ui:field="linkWrapper" visible="false">
@@ -134,7 +129,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.passportExternalLinks}"/>
+			<g8:MdiHeading mdi="{MDI_LINK_VARIANT}" size="H3" text="{msg.passportExternalLinks}"/>
 			<g8:LinkWidget ui:field="linkWidget"/>
 		</g:FlowPanel>
 
@@ -143,7 +138,7 @@
 				<hr/>
 			</g:HTMLPanel>
 
-			<b:Heading size="H3" text="{msg.downloadHeading}"/>
+			<g8:MdiHeading mdi="{MDI_DOWNLOAD}" size="H3" text="{msg.downloadHeading}"/>
 			<g:SimplePanel ui:field="downloadPanel"/>
 		</g:FlowPanel>
 	</g:HTMLPanel>

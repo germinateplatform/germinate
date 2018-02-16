@@ -34,6 +34,13 @@
 		</fileset>
 	</path>
 
+	<pathconvert pathsep=" " property="manifest.classpath">
+		<path refid="compile.classpath"/>
+		<mapper>
+			<globmapper from="${basedir}/*" handledirsep="true" to="*"/>
+		</mapper>
+	</pathconvert>
+
 	<!-- First, make sure there are no leftovers from the previous build -->
 	<target name="delete_old_stuff" description="Deletes all the old files of the previously compiled Germinate instance">
 		<delete failonerror="false" verbose="true" quiet="true">
@@ -166,6 +173,24 @@
 			<src path="${src.dir}"/>
 			<classpath refid="compile.classpath"/>
 		</javac>
+	</target>
+
+	<target name="build-importer-jar" depends="build-project">
+		<jar destfile="germinate-importer.jar">
+			<manifest>
+				<attribute name="Main-Class" value="jhi.germinate.util.importer.reader.DataImporter"/>
+				<attribute name="Class-Path" value="${manifest.classpath}"/>
+			</manifest>
+			<fileset dir="${build.dir}/WEB-INF/classes">
+				<include name="**/germinate/util/**" />
+				<exclude name="**/germinate/shared/search/**" />
+				<include name="**/germinate/shared/**" />
+				<exclude name="**/germinate/server/service/**" />
+				<include name="**/germinate/server/**" />
+			</fileset>
+		</jar>
+
+		<antcall target="delete_old_stuff"/>
 	</target>
 
 	<!-- Compile the code with gwtc -->

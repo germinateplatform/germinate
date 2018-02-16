@@ -38,6 +38,12 @@ public class ServerResult<T> implements Serializable
 
 	}
 
+	public ServerResult(T serverResult)
+	{
+		this.debugInfo = null;
+		this.serverResult = serverResult;
+	}
+
 	public ServerResult(DebugInfo debugInfo, T serverResult)
 	{
 		this.debugInfo = debugInfo;

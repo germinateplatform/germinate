@@ -185,21 +185,27 @@ public abstract class EntityPairTable extends DatabaseObjectPaginationTable<Enti
 	{
 		String storeName = getTable().getColumn(column).getDataStoreName();
 
+		Long id = null;
 		switch (storeName)
 		{
 			case PedigreeService.CHILD_GID:
 			case PedigreeService.CHILD_NAME:
-				LongParameterStore.Inst.get().put(Parameter.accessionId, object.getChild().getId());
+				id = object.getChild().getId();
 				break;
 			case PedigreeService.PARENT_GID:
 			case PedigreeService.PARENT_NAME:
-				LongParameterStore.Inst.get().put(Parameter.accessionId, object.getParent().getId());
+				id = object.getParent().getId();
 				break;
 		}
 
-		if (History.getToken().equals(Page.PASSPORT.name()))
-			History.fireCurrentHistoryState();
-		else
-			History.newItem(Page.PASSPORT.name());
+		if (id != null)
+		{
+			LongParameterStore.Inst.get().put(Parameter.accessionId, id);
+
+			if (History.getToken().equals(Page.PASSPORT.name()))
+				History.fireCurrentHistoryState();
+			else
+				History.newItem(Page.PASSPORT.name());
+		}
 	}
 }

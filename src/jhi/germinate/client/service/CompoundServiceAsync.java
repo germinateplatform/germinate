@@ -88,17 +88,6 @@ public interface CompoundServiceAsync
 	void getDataStatsForDatasets(RequestProperties properties, List<Long> datasetIds, AsyncCallback<ServerResult<List<DataStats>>> callback);
 
 	/**
-	 * Retrieves the compound by compound chart file for d3.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param datasetIds The selected {@link Dataset} ids
-	 * @param firstId    The id of the first {@link Compound}
-	 * @param secondId   The id of the second {@link Compound}
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getCompoundByCompoundFile(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId, AsyncCallback<ServerResult<String>> callback);
-
-	/**
 	 * Exports the {@link Compound} information to a file and returns the name of the result file.
 	 *
 	 * @param properties  The {@link RequestProperties}

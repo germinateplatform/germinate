@@ -368,6 +368,7 @@ public abstract class AbstractChart extends GerminateComposite
 	private void handleEvent(DomEvent event, Widget relativeTo, PopupPanel popup)
 	{
 		event.preventDefault();
+		event.stopPropagation();
 
 		popup.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
 		{

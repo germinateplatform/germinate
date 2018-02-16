@@ -15,32 +15,8 @@
  *  limitations under the License.
  */
 
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for allelefrequencydata
--- ----------------------------
-DROP TABLE IF EXISTS `allelefrequencydata`;
-CREATE TABLE `allelefrequencydata`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
-  `sample_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'This is not a FK. This is the name of the sample.',
-  `marker_id` int(11) NOT NULL COMMENT 'Foreign key to markers (markers.id).',
-  `dataset_id` int(11) NOT NULL COMMENT 'Foreign key to datasets (datasets.id).',
-  `germinatebase_id` int(11) NOT NULL COMMENT 'Foreign key to germinatebase (germinatebase.id).',
-  `description` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Describes the entry for this specific row.',
-  `value` double(64, 10) NULL DEFAULT NULL COMMENT 'Describes the value associated with this sample, marker, germinatebase and dataset entry.',
-  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
-  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `marker_id`(`marker_id`) USING BTREE,
-  INDEX `dataset_id`(`dataset_id`) USING BTREE,
-  INDEX `germinatebase_id`(`germinatebase_id`) USING BTREE,
-  CONSTRAINT `allelefrequencydata_ibfk_1` FOREIGN KEY (`marker_id`) REFERENCES `markers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `allelefrequencydata_ibfk_2` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `allelefrequencydata_ibfk_3` FOREIGN KEY (`germinatebase_id`) REFERENCES `germinatebase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci COMMENT = 'Holds information on allele frequency datasets.' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for analysismethods
@@ -609,9 +585,45 @@ CREATE TABLE `datasetcollaborators`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `dataset_id`(`dataset_id`) USING BTREE,
   INDEX `collaborator_id`(`collaborator_id`) USING BTREE,
-  CONSTRAINT `datasetcollaborators_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `datasetcollaborators_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `datasetcollaborators_ibfk_2` FOREIGN KEY (`collaborator_id`) REFERENCES `collaborators` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for datasetmembers
+-- ----------------------------
+DROP TABLE IF EXISTS `datasetmembers`;
+CREATE TABLE `datasetmembers`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dataset_id` int(11) NOT NULL,
+  `foreign_id` int(11) NOT NULL,
+  `datasetmembertype_id` int(11) NOT NULL,
+  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `dataset_id`(`dataset_id`) USING BTREE,
+  INDEX `datasetmembertype_id`(`datasetmembertype_id`) USING BTREE,
+  CONSTRAINT `datasetmembers_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `datasetmembers_ibfk_2` FOREIGN KEY (`datasetmembertype_id`) REFERENCES `datasetmembertypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for datasetmembertypes
+-- ----------------------------
+DROP TABLE IF EXISTS `datasetmembertypes`;
+CREATE TABLE `datasetmembertypes`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `target_table` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of datasetmembertypes
+-- ----------------------------
+INSERT INTO `datasetmembertypes` VALUES (1, 'markers', '2018-02-16 08:07:34', '2018-02-16 08:07:34');
+INSERT INTO `datasetmembertypes` VALUES (2, 'germinatebase', '2018-02-16 08:07:34', '2018-02-16 08:07:34');
 
 -- ----------------------------
 -- Table structure for datasetmeta
@@ -703,6 +715,26 @@ INSERT INTO `datasetstates` VALUES (2, 'private', 'Private datasets are visible 
 INSERT INTO `datasetstates` VALUES (3, 'hidden', 'Hidden datasets are only visible to admins.', '2014-08-07 11:54:33', '2014-08-07 14:09:50');
 
 -- ----------------------------
+-- Table structure for entitytypes
+-- ----------------------------
+DROP TABLE IF EXISTS `entitytypes`;
+CREATE TABLE `entitytypes`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'The name of the entity type.',
+  `description` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL COMMENT 'Describes the entity type.',
+  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of entitytypes
+-- ----------------------------
+INSERT INTO `entitytypes` VALUES (1, 'Accession', 'The basic working unit of conservation in the genebanks.', '2017-11-07 11:54:59', '2017-11-07 11:54:59');
+INSERT INTO `entitytypes` VALUES (2, 'Plant/Plot', 'An individual grown from an accession OR a plot of individuals from the same accession.', '2017-11-07 11:54:59', '2017-11-07 11:54:59');
+INSERT INTO `entitytypes` VALUES (3, 'Sample', 'A sample from a plant. An example would be taking multiple readings for the same phenotype from a plant.', '2017-11-07 11:54:59', '2017-11-07 11:54:59');
+
+-- ----------------------------
 -- Table structure for experiments
 -- ----------------------------
 DROP TABLE IF EXISTS `experiments`;
@@ -774,6 +806,8 @@ CREATE TABLE `germinatebase`  (
   `biologicalstatus_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to biologicalstatus (biologicalstaus.id).',
   `collsrc_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to collectionsources (collectionsources.id).',
   `location_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to locations (locations.id).',
+  `entitytype_id` int(11) NULL DEFAULT 1 COMMENT 'Foreign key to entitytypes (entitytypes.id).',
+  `entityparent_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to germinatebase (germinatebase.id).',
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
   `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
   PRIMARY KEY (`id`) USING BTREE,
@@ -785,13 +819,17 @@ CREATE TABLE `germinatebase`  (
   INDEX `germinatebase_ibfk_biologicalstatus`(`biologicalstatus_id`) USING BTREE,
   INDEX `germinatebase_ibfk_collectingsource`(`collsrc_id`) USING BTREE,
   INDEX `germinatebase_ibfk_8`(`mlsstatus_id`) USING BTREE,
-  CONSTRAINT `germinatebase_ibfk_1` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_2` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_3` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomies` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_4` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_5` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_6` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_7` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  INDEX `germinatebase_ibfk_9`(`entitytype_id`) USING BTREE,
+  INDEX `germinatebase_ibfk_10`(`entityparent_id`) USING BTREE,
+  CONSTRAINT `germinatebase_ibfk_1` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_10` FOREIGN KEY (`entityparent_id`) REFERENCES `germinatebase` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_2` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_3` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomies` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_4` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_5` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_6` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_8` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_9` FOREIGN KEY (`entitytype_id`) REFERENCES `entitytypes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci COMMENT = 'Germinatebase is the Germinate base table which contains passport and other germplasm definition data.' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -893,7 +931,7 @@ CREATE TABLE `institutions`  (
   `code` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'If there is a defined ISO code for the institute this should be used here.',
   `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '' COMMENT 'The institute name.',
   `acronym` varchar(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'If there is an acronym for the institute.',
-  `country_id` int(11) NOT NULL DEFAULT 0 COMMENT 'Foreign key to countries (countries.id).',
+  `country_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to countries.id.',
   `contact` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'The contact at the institute which should be used for correspondence.',
   `phone` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'The telephone number for the institute.',
   `email` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'The email address to contact the institute.',
@@ -1089,7 +1127,7 @@ DROP TABLE IF EXISTS `maps`;
 CREATE TABLE `maps`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
   `description` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Describes the map.',
-  `visibility` int(11) NOT NULL COMMENT 'Determines if the map is visible to the Germinate interface or hidden.',
+  `visibility` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Determines if the map is visible to the Germinate interface or hidden.',
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
   `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
   `user_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to Gatekeeper users (Gatekeeper users.id).',
@@ -1385,7 +1423,8 @@ INSERT INTO `schema_version` VALUES (2, '3.3.2', 'update', 'SQL', 'V3.3.2__updat
 INSERT INTO `schema_version` VALUES (3, '3.3.2.1', 'update', 'SQL', 'V3.3.2.1__update.sql', -256506759, 'germinate3', '2016-11-03 15:46:40', 123, 1);
 INSERT INTO `schema_version` VALUES (4, '3.3.2.2', 'update', 'SQL', 'V3.3.2.2__update.sql', 508407614, 'germinate3', '2016-11-04 10:31:18', 9, 1);
 INSERT INTO `schema_version` VALUES (5, '3.4.0', 'update', 'SQL', 'V3.4.0__update.sql', 1635546146, 'germinate3', '2017-01-10 14:23:11', 198, 1);
-INSERT INTO `schema_version` VALUES (6, '3.4.0.1', 'update', 'SQL', 'V3.4.0.1__update.sql', -1497522993, 'germinate3', '2017-09-28 15:58:00', 161, 1);
+INSERT INTO `schema_version` VALUES (6, '3.4.0.1', 'update', 'SQL', 'V3.4.0.1__update.sql', 278320740, 'germinate3', '2017-09-28 15:58:00', 161, 1);
+INSERT INTO `schema_version` VALUES (7, '3.5.0', 'update', 'SQL', 'V3.5.0__update.sql', 1031750692, 'germiante3', '2018-02-16 08:09:05', 123, 1);
 
 -- ----------------------------
 -- Table structure for storage

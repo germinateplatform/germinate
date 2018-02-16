@@ -240,4 +240,10 @@ public abstract class DataImporter<T>
 			e.printStackTrace();
 		}
 	}
+
+	public static void main(String[] args)
+	{
+		System.err.println("You're not supposed to be here...");
+		System.err.println("Please run `java -cp germinate-importer.jar` instead...");
+	}
 }

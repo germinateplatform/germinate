@@ -47,7 +47,6 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 {
 	private static final long serialVersionUID = -8532526273822554012L;
 
-	private static final String QUERY_PHENOTYPE_BY_PHENOTYPE = "SELECT DATE_FORMAT(a.recording_date, '%%Y') AS recording_date, datasets.description AS dataset, licenses.name AS license, treatments.name AS treatment, germinatebase.name AS name, a.germinatebase_id AS id, a.phenotype_value AS x, b.phenotype_value AS y FROM phenotypedata AS a JOIN phenotypedata AS b ON a.germinatebase_id = b.germinatebase_id AND a.location_id <=> b.location_id AND a.trialseries_id <=> b.trialseries_id %s AND a.treatment_id <=> b.treatment_id AND a.dataset_id = b.dataset_id AND a.dataset_id IN (%s) LEFT JOIN germinatebase ON germinatebase.id = a.germinatebase_id LEFT JOIN treatments ON a.treatment_id = treatments.id LEFT JOIN groupmembers ON groupmembers.foreign_id = a.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN datasets ON datasets.id = a.dataset_id LEFT JOIN licenses ON licenses.id = datasets.license_id WHERE %s a.phenotype_id = ? AND b.phenotype_id = ? GROUP BY id, x, y, recording_date, treatment, datasets.id";
 	private static final String QUERY_PHENOTYPES_OVERVIEW    = "SELECT phenotypedata.phenotype_value, germinatebase.name AS germinatebase_identifier, DATE_FORMAT( phenotypedata.recording_date, '%%Y' ) AS recording_date, germinatebase.id, phenotypes.*, units.* FROM phenotypedata LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON datasets.experiment_id = experiments.id LEFT JOIN experimenttypes ON experiments.experiment_type_id = experimenttypes.id LEFT JOIN germinatebase ON phenotypedata.germinatebase_id = germinatebase.id WHERE datasets.id IN (%s) AND phenotypes.id IN (%s) AND DATE_FORMAT(recording_date, '%%Y') IN (%s) AND phenotypes.datatype IN ('int', 'float') AND experimenttypes.description = 'trials'";
 	private static final String QUERY_DISTINCT_YEARS         = "SELECT DISTINCT DATE_FORMAT(recording_date, '%%Y') AS recording_date FROM phenotypedata WHERE NOT ISNULL(recording_date) AND dataset_id IN (%s) ORDER BY recording_date";
 
@@ -65,91 +64,6 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 				.setLongs(datasetIds)
 				.run("recording_date")
 				.getInts();
-	}
-
-	@Override
-	public ServerResult<String> exportPhenotypeScatter(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId) throws InvalidSessionException, DatabaseException,
-			IOException, InsufficientPermissionsException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
-
-		if (CollectionUtils.isEmpty(datasetIds))
-			return new ServerResult<>(DebugInfo.create(userAuth), "");
-
-		String formatted;
-
-		boolean validGroupId = groupId != null && groupId > 0;
-
-		formatted = String.format(QUERY_PHENOTYPE_BY_PHENOTYPE, "AND a.recording_date <=> b.recording_date", Util.generateSqlPlaceholderString(datasetIds.size()), validGroupId ? "groups.id LIKE ? AND" : ""); // TODO: do they have to be from the same time? is this even likely?
-
-		GerminateTableQuery q = new GerminateTableQuery(formatted, userAuth, null)
-				.setLongs(datasetIds);
-
-		if (validGroupId)
-			q.setLong(groupId);
-
-		GerminateTableStreamer streamer = q.setLong(firstId)
-										   .setLong(secondId)
-										   .getStreamer();
-
-		PhenotypeManager manager = new PhenotypeManager();
-
-		Phenotype one = manager.getById(userAuth, firstId).getServerResult();
-		Phenotype two = manager.getById(userAuth, secondId).getServerResult();
-
-		File tempFile = createTemporaryFile("trials_p_by_p", FileType.txt.name());
-		File finalFile = createTemporaryFile("trials_p_by_p", FileType.txt.name());
-
-		try
-		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, tempFile);
-		}
-		catch (java.io.IOException e)
-		{
-			throw new IOException(e);
-		}
-
-        /* Check if there are at least two rows. Also, replace the "x" and "y" headers with the actual phenotype names and units. */
-		try (BufferedReader br = new BufferedReader(new FileReader(tempFile));
-			 BufferedWriter bw = new BufferedWriter(new FileWriter(finalFile)))
-		{
-			int counter = 0;
-
-			for (String line; (line = br.readLine()) != null; counter++)
-			{
-				/* If it's the header row, replace "x" and "y" column headers with the phenotype names and units */
-				if (counter == 0)
-				{
-					String firstUnit = one.getUnit() != null ? one.getUnit().getAbbreviation() : null;
-					String secondUnit = two.getUnit() != null ? two.getUnit().getAbbreviation() : null;
-					String firstHeader = one.getName() + (StringUtils.isEmpty(firstUnit) ? "" : " [" + one.getUnit().getAbbreviation() + "]");
-					String secondHeader = two.getName() + (StringUtils.isEmpty(secondUnit) ? "" : " [" + two.getUnit().getAbbreviation() + "]");
-					line = line.replace("\tx\ty", "\t" + firstHeader + "\t" + secondHeader);
-				}
-
-				/* Then write to the final file */
-				bw.write(line);
-				bw.newLine();
-			}
-
-			tempFile.delete();
-
-			if (counter < 2)
-			{
-				finalFile.delete();
-				return new ServerResult<>(streamer.getDebugInfo(), null);
-			}
-		}
-		catch (java.io.IOException e)
-		{
-			throw new IOException(e);
-		}
-
-        /* If we get here, the file was successfully generated and contains data */
-		return new ServerResult<>(streamer.getDebugInfo(), finalFile.getName());
 	}
 
 	@Override

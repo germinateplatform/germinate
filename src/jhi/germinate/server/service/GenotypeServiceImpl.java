@@ -29,6 +29,7 @@ import jhi.germinate.server.util.FlapjackUtils.*;
 import jhi.germinate.server.util.FlapjackUtils.FlapjackParams.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
 
@@ -46,7 +47,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	private static final String QUERY_EXPORT_MAP = "SELECT markers.marker_name, mapdefinitions.chromosome, mapdefinitions.definition_start FROM mapdefinitions, mapfeaturetypes, markers WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND map_id = ? ORDER BY chromosome, definition_start";
 
 	@Override
-	public ServerResult<FlapjackProjectCreationResult> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId,
+	public ServerResult<List<String>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId,
 																			boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, FlapjackException,
 			MissingPropertyException, InvalidArgumentException
 	{
@@ -57,7 +58,6 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, accessionGroups, markerGroups, datasetId, mapId, heterozygousFilter, misingDataFilter);
 		CommonServiceImpl.ExportResult result = getExportResult(ExperimentType.genotype, this);
 
-		Set<String> deletedMarkers = new HashSet<>(); // TODO: Once the HDF5 export supports the CDF (Crap Data Filter), we need to fill this...
 		File mapFile;
 
         /* Kick off the extraction process */
@@ -83,34 +83,47 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 			throw new IOException(e);
 		}
 
-        /* Now we call Flapjack to create the project file for us */
+		List<String> list = new ArrayList<>();
+		list.add(mapFile.getName());
+		list.add(result.subsetWithFlapjackLinks.getName());
+
+		/* Remember the files */
+		getRequest().getSession().setAttribute(Session.GENOTYPE_MAP, mapFile.getName());
+		getRequest().getSession().setAttribute(Session.GENOTYPE_DATA, result.subsetWithFlapjackLinks.getName());
+
+		return new ServerResult<>(sqlDebug, list);
+	}
+
+	@Override
+	public ServerResult<FlapjackProjectCreationResult> convertToFlapjack(RequestProperties properties, String map, String genotype) throws InvalidSessionException, FlapjackException
+	{
+		Session.checkSession(properties, this);
+
+		File mapFile = getFile(FileLocation.temporary, map);
+		File genotypeFile = getFile(FileLocation.temporary, genotype);
+
+		/* Now we call Flapjack to create the project file for us */
 		File flapjackResultFile = createTemporaryFile("genotype", "flapjack");
 		String debugOutput;
 
 		FlapjackParams params = new FlapjackParams()
 				.add(Param.map, mapFile)
-				.add(Param.genotypes, result.subsetWithFlapjackLinks)
+				.add(Param.genotypes, genotypeFile)
 				.add(Param.project, flapjackResultFile);
 
 		/* Get the debug output from flapjack */
 		debugOutput = FlapjackUtils.createProject(params);
 
-        /* Create a list of newly created files */
+		Set<String> deletedMarkers = new HashSet<>(); // TODO: Once the HDF5 export supports the CDF (Crap Data Filter), we need to fill this...
+		/* Create a list of newly created files */
 		FlapjackProjectCreationResult fjExport = new FlapjackProjectCreationResult()
 				.setDebugOutput(debugOutput)
 				.setProjectFile(flapjackResultFile.getName())
-				.setRawDataFile(result.subsetWithFlapjackLinks.getName())
+				.setRawDataFile(genotypeFile.getName())
 				.setMapFile(mapFile.getName())
 				.setDeletedMarkers(deletedMarkers);
 
-		List<String> list = new ArrayList<>();
-		list.add(mapFile.getName());
-		list.add(result.subsetWithFlapjackLinks.getName());
-
-		getRequest().getSession().setAttribute(Session.GENOTYPE_MAP, mapFile.getName());
-		getRequest().getSession().setAttribute(Session.GENOTYPE_DATA, result.subsetWithFlapjackLinks.getName());
-
-		return new ServerResult<>(sqlDebug, fjExport);
+		return new ServerResult<>(fjExport);
 	}
 
 	@Override

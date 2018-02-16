@@ -57,21 +57,6 @@ public interface TrialService extends RemoteService
 	}
 
 	/**
-	 * Exports the data for a list of {@link Dataset}s, two {@link Phenotype}s and a {@link Group}.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param datasetIds The selected dataset ids
-	 * @param firstId    The id of the first phenotype
-	 * @param secondId   The id of the second phenotype
-	 * @return The data for a list of {@link Dataset}s, two {@link Phenotype}s and a {@link Group}
-	 * @throws InvalidSessionException          Thrown if the current session is invalid
-	 * @throws DatabaseException                Thrown if the database interaction fails
-	 * @throws IOException                      Thrown if the file creation fails
-	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to access the group
-	 */
-	ServerResult<String> exportPhenotypeScatter(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InsufficientPermissionsException;
-
-	/**
 	 * Returns the list of years, the table data and the mapping between {@link TrialsRow.TrialsAttribute} and the associated d3 chart file.
 	 *
 	 * @param properties    The {@link RequestProperties}

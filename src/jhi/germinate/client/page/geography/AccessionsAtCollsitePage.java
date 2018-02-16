@@ -18,6 +18,7 @@
 package jhi.germinate.client.page.geography;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
@@ -99,10 +100,15 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 
 	private void addDownloadWidget()
 	{
-		downloadPanel.add(new OnDemandFileDownloadWidget((index, callback) -> LocationService.Inst.get().exportToKml(Cookie.getRequestProperties(), KmlType.collectingsite, collsiteId, callback), true)
-				.setIconStyle(FileDownloadWidget.IconStyle.MDI)
-				.addFile(Text.LANG.downloadGoogleEarth())
-				.addType(FileType.kmz));
+		DownloadWidget widget = new DownloadWidget() {
+			@Override
+			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
+			{
+				LocationService.Inst.get().exportToKml(Cookie.getRequestProperties(), KmlType.collectingsite, collsiteId, callback);
+			}
+		};
+		widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadGoogleEarth()).setType(FileType.kmz	));
+		downloadPanel.add(widget);
 	}
 
 

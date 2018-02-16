@@ -18,6 +18,7 @@
 package jhi.germinate.client.page.accession;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
@@ -31,6 +32,7 @@ import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 import java.util.Locale;
+import java.util.stream.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
@@ -171,13 +173,13 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 		/*
 		 * We prefer the generalId, since it's only used for hard links to
-         * Germinate. In this case we don't want to use internally stored
-         * accession ids, but rather use the external one
-         */
+		 * Germinate. In this case we don't want to use internally stored
+		 * accession ids, but rather use the external one
+		 */
 		PartialSearchQuery filter = null;
 		if (stateGeneralId != null)
 			filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Equal(), stateGeneralId, Long.class.getSimpleName()));
-		/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
+			/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
 		else if (!StringUtils.isEmpty(accessionName))
 			filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Equal(), accessionName, String.class.getSimpleName()));
 		else if (stateAccessionId != null)
@@ -248,12 +250,15 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				if (!CollectionUtils.isEmpty(files))
 				{
 					downloadWrapper.setVisible(true);
-					downloadPanel.add(new FileDownloadWidget()
-							.setIconStyle(FileDownloadWidget.IconStyle.MDI)
-							.setLocation(FileLocation.download)
-							.setHeading(null)
-							.setPrefix(ReferenceFolder.passport.name())
-							.setFiles(files));
+
+					List<DownloadWidget.FileConfig> conf = files.stream()
+																.map(s -> new DownloadWidget.FileConfig()
+																		.setLocation(FileLocation.download)
+																		.setName(s)
+																		.setPath(ReferenceFolder.passport.name() + "/" + s))
+																.collect(Collectors.toList());
+
+					downloadPanel.add(new DownloadWidget().addAll(conf));
 				}
 			}
 		});
@@ -442,11 +447,19 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			}
 		});
 
-		pedigreeDownloadPanel.add(new OnDemandFileDownloadWidget((index, callback) -> PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), Collections.singletonList(accession.getId()), Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE, callback), true)
-				.setHeading(null)
-				.setIconStyle(FileDownloadWidget.IconStyle.IMAGE)
-				.addFile(Text.LANG.downloadPedigreeHelium())
-				.addType(FileType.helium));
+		DownloadWidget widget = new DownloadWidget()
+		{
+			@Override
+			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
+			{
+				PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), Collections.singletonList(accession.getId()), Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE, callback);
+			}
+		};
+		widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadPedigreeHelium())
+				.setType(FileType.helium)
+				.setLongRunning(true)
+				.setStyle(FileType.IconStyle.IMAGE));
+		pedigreeDownloadPanel.add(widget);
 	}
 
 	private void updateEntityData()
@@ -507,7 +520,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnCode(), institution.getCode());
 
 			if (institution.getCountry() != null)
-				new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnCountry(), "<span class='" + Style.COUNTRY_FLAG + " " + institution.getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span>" + institution.getCountry().getName(), true);
+				new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnCountry(), "<span class='" + Style.COUNTRY_FLAG + " " + institution.getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "'>" + institution.getCountry().getName() + "</span>", true);
 
 			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnContact(), institution.getContact());
 			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnPhone(), institution.getPhone());
@@ -585,7 +598,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 					if (accession.getLocation() != null)
 					{
 						if (accession.getLocation().getCountry() != null)
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdOrigcty(), "<span class='" + Style.COUNTRY_FLAG + " " + accession.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span>" + accession.getLocation().getCountry().getName(), true);
+							new DescriptionWidget(institutionPanel, Text.LANG.mcpdOrigcty(), "<span class='" + Style.COUNTRY_FLAG + " " + accession.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "'>" + accession.getLocation().getCountry().getName() + "</span>", true);
 
 						if (accession.getLocation().getCoordinateUncertainty() != null)
 							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCoorduncert(), Integer.toString(accession.getLocation().getCoordinateUncertainty()));

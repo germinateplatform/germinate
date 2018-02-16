@@ -73,7 +73,7 @@ public interface GenotypeService extends RemoteService
 	 * @throws IOException              Thrown if the file I/O fails
 	 * @throws MissingPropertyException Thrown if a required flapjack property is missing from the properties file
 	 */
-	ServerResult<FlapjackProjectCreationResult> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapToUse) throws InvalidSessionException, DatabaseException, IOException, FlapjackException, MissingPropertyException, InvalidArgumentException;
+	ServerResult<List<String>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapToUse) throws InvalidSessionException, DatabaseException, IOException, FlapjackException, MissingPropertyException, InvalidArgumentException;
 
 	/**
 	 * Exports the Hdf5 file of the specified {@link jhi.germinate.shared.datastructure.database.Dataset} id to a flat file and returns the result
@@ -89,4 +89,6 @@ public interface GenotypeService extends RemoteService
 	 * @throws FlapjackException        Thrown if Flapjack crashes
 	 */
 	ServerResult<String> convertHdf5ToFlapjack(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, InvalidArgumentException, IOException, FlapjackException;
+
+	ServerResult<FlapjackProjectCreationResult> convertToFlapjack(RequestProperties properties, String map, String genotype) throws InvalidSessionException, FlapjackException;
 }

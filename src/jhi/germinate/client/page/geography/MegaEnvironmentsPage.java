@@ -19,6 +19,7 @@ package jhi.germinate.client.page.geography;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
@@ -200,14 +201,15 @@ public class MegaEnvironmentsPage extends Composite implements ParallaxBannerPag
 		};
 		accessionSection.add(accessionTable);
 
-		downloadPanel.add(new OnDemandFileDownloadWidget((index, callback) ->
-		{
-			/* Request the file creation on the server */
-			LocationService.Inst.get().exportToKml(Cookie.getRequestProperties(), KmlType.megaEnvironment, megaEnvironment.getId(), callback);
-		}, true)
-				.setIconStyle(FileDownloadWidget.IconStyle.MDI)
-				.addFile(Text.LANG.downloadGoogleEarth())
-				.addType(FileType.kmz));
+		DownloadWidget widget = new DownloadWidget(Text.LANG.downloadHeading()){
+			@Override
+			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
+			{
+				LocationService.Inst.get().exportToKml(Cookie.getRequestProperties(), KmlType.megaEnvironment, megaEnvironment.getId(), callback);
+			}
+		};
+		widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadGoogleEarth()).setType(FileType.kmz));
+		downloadPanel.add(widget);
 	}
 
 	private void setData()

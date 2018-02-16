@@ -19,12 +19,15 @@ package jhi.germinate.shared.datastructure.database;
 
 import com.google.gwt.core.shared.*;
 
+import java.sql.*;
+import java.util.Date;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.manager.*;
-import jhi.germinate.server.util.*;
+import jhi.germinate.server.database.query.writer.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.exception.*;
 
@@ -150,38 +153,67 @@ public class Synonym extends DatabaseObject
 			}
 		}
 
-		private static DatabaseObjectCache<SynonymType> SYNONYM_TYPE_CACHE;
-
-		private Parser()
-		{
-			SYNONYM_TYPE_CACHE = createCache(SynonymType.class, SynonymTypeManager.class);
+		private Parser(){
 		}
 
 		@Override
 		public Synonym parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
 		{
-			try
-			{
-				Long id = row.getLong(ID);
+			Long id = row.getLong(ID);
 
-				if (id == null)
-				{
-					return null;
-				}
-				else
-				{
-					return new Synonym(id)
-							.setForeignId(row.getLong(FOREIGN_ID))
-							.setType(SYNONYM_TYPE_CACHE.get(user, row.getLong(SYNONYMTYPE_ID), row, foreignsFromResultSet))
-							.setSynonym(row.getString(SYNONYM))
-							.setCreatedOn(row.getTimestamp(CREATED_ON))
-							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
-
-				}
-			}
-			catch (InsufficientPermissionsException e)
+			if (id == null)
 			{
 				return null;
+			}
+			else
+			{
+				return new Synonym(id)
+						.setForeignId(row.getLong(FOREIGN_ID))
+						.setType(SynonymType.getById(row.getLong(SYNONYMTYPE_ID)))
+						.setSynonym(row.getString(SYNONYM))
+						.setCreatedOn(row.getTimestamp(CREATED_ON))
+						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class Writer implements DatabaseObjectWriter<Synonym>
+	{
+		@Override
+		public void write(Database database, Synonym object) throws DatabaseException
+		{
+			ValueQuery query = new ValueQuery(database, "INSERT INTO synonyms (" + FOREIGN_ID + ", " + SYNONYMTYPE_ID + ", " + SYNONYM + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
+					.setLong(object.getForeignId())
+					.setLong(object.getType().getId())
+					.setString(object.getSynonym());
+
+			if (object.getCreatedOn() != null)
+				query.setTimestamp(new Date(object.getCreatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				query.setTimestamp(new Date(object.getUpdatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+
+			ServerResult<List<Long>> ids = query.execute(false);
+
+			if (ids != null && !CollectionUtils.isEmpty(ids.getServerResult()))
+				object.setId(ids.getServerResult().get(0));
+		}
+
+		public static final class Inst
+		{
+			public static Writer get()
+			{
+				return Writer.Inst.InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final Writer INSTANCE = new Writer();
 			}
 		}
 	}

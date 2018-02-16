@@ -17,6 +17,7 @@
 
 package jhi.germinate.client.page.markeditemlist;
 
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
@@ -181,7 +182,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 			clear.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 			buttonBar.add(clear);
 
-            /* If logged in and groups page is available, add a create group
+			/* If logged in and groups page is available, add a create group
 			 * button */
 			if (ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue() && GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
 			{
@@ -209,10 +210,15 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 			table = getTable(markedIds);
 			tablePanel.add(table);
 
-			FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) -> writeToFile(new ArrayList<>(MarkedItemList.get(getItemType())), callback), true)
-					.addFile(Text.LANG.downloadFileAsTxt())
-					.setIconStyle(FileDownloadWidget.IconStyle.MDI)
-					.addType(FileType.txt);
+			DownloadWidget widget = new DownloadWidget(Text.LANG.downloadHeading())
+			{
+				@Override
+				protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
+				{
+					writeToFile(new ArrayList<>(MarkedItemList.get(getItemType())), callback);
+				}
+			};
+			widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadFileAsTxt()).setType(FileType.txt).setLongRunning(true));
 
 			tablePanel.add(widget);
 		}

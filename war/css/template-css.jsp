@@ -362,35 +362,35 @@ ul.<%= Style.WIDGET_UL_ICON_LIST %> li.empty {
   background: url(../img/mime/empty.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.helium.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.helium.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/helium.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.txt.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.txt.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/txt.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.pdf.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.pdf.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/pdf.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.unknown.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.unknown.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/unknown.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.flapjack.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.flapjack.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/flapjack.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.xlsx.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.xlsx.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/xlsx.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.strudel.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.strudel.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/strudel.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.mct.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.mct.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/mct.png) no-repeat 0 50%;
 }
 

@@ -176,43 +176,45 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 			});
 		}
 
-		String[] files = new String[]{Text.LANG.downloadInFlapjackFormat(), Text.LANG.downloadInMapChartFormat(), Text.LANG.downloadInStrudelFormat()};
-		FileType[] fileTypes = new FileType[]{FileType.map, FileType.mct, FileType.strudel};
+		List<DownloadWidget.FileConfig> files = new ArrayList<>();
+		files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInFlapjackFormat(), FileType.flapjack).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
+		files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInMapChartFormat(), FileType.mct).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
+		files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInStrudelFormat(), FileType.strudel).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
 
-		FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) ->
-		{
-			MapFormat format;
-
-			switch (index)
+		DownloadWidget widget = new DownloadWidget(){
+			@Override
+			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 			{
-				case 0:
-					format = MapFormat.flapjack;
-					break;
-				case 1:
-					format = MapFormat.mapchart;
-					break;
-				case 2:
-					format = MapFormat.strudel;
-					break;
-				default:
-					format = MapFormat.flapjack;
-			}
+				MapFormat format;
 
-			try
-			{
-				MapExportOptions settings = getOptions();
+				switch (config.getType())
+				{
+					case flapjack:
+						format = MapFormat.flapjack;
+						break;
+					case mct:
+						format = MapFormat.mapchart;
+						break;
+					case strudel:
+						format = MapFormat.strudel;
+						break;
+					default:
+						format = MapFormat.flapjack;
+				}
 
-				MapService.Inst.get().getInFormat(Cookie.getRequestProperties(), map.getId(), format, settings, callback);
-			}
-			catch (InvalidOptionsException e)
-			{
-				callback.onFailure(e);
-			}
-		}, true)
-				.setHeading(null)
-				.setFiles(Arrays.asList(files))
-				.setTypes(Arrays.asList(fileTypes));
+				try
+				{
+					MapExportOptions settings = getOptions();
 
+					MapService.Inst.get().getInFormat(Cookie.getRequestProperties(), map.getId(), format, settings, callback);
+				}
+				catch (InvalidOptionsException e)
+				{
+					callback.onFailure(e);
+				}
+			}
+		};
+		widget.addAll(files);
 		markerDownloadPanel.add(widget);
 
 		panelHtml.setHTML(Text.LANG.markersExportOptionsText());

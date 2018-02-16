@@ -85,6 +85,15 @@ function scatterPlot() {
                 d.id = id(d);
             });
 
+            data = $.map(data, function (d, key) {
+                if(!isNaN(d.xValue) && !isNaN(d.yValue))
+                    return d;
+			});
+
+            data = data.filter(function (d) {
+                return !isNaN(d.xValue) && !isNaN(d.yValue);
+            });
+
             if (xTickFormat)
                 xAxis.tickFormat(xTickFormat);
             if (yTickFormat)
