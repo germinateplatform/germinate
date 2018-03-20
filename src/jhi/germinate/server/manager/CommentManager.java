@@ -58,28 +58,6 @@ public class CommentManager extends AbstractManager<Comment>
 	}
 
 	/**
-	 * Returns all comments for the given reference table and reference id (paginated)
-	 *
-	 * @param user           The current user
-	 * @param referenceTable The {@link GerminateDatabaseTable}
-	 * @param referenceId    The id of the referenced object
-	 * @param pagination     The {@link Pagination} object
-	 * @return All comments for the given reference table and reference id (paginated)
-	 * @throws DatabaseException Thrown if the interaction with the database fails
-	 */
-	public static PaginatedServerResult<List<Comment>> getAll(UserAuth user, GerminateDatabaseTable referenceTable, long referenceId, Pagination pagination) throws DatabaseException
-	{
-		return new DatabaseObjectQuery<Comment>(SELECT_ALL_PAGINATED, user)
-				.setFetchesCount(pagination.getResultSize())
-				.setString(referenceTable.name())
-				.setLong(referenceId)
-				.setInt(pagination.getStart())
-				.setInt(pagination.getLength())
-				.run()
-				.getObjectsPaginated(Comment.Parser.Inst.get());
-	}
-
-	/**
 	 * Sets the visibility of a comment
 	 *
 	 * @param user    The current user

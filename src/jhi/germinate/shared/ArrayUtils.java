@@ -26,25 +26,6 @@ package jhi.germinate.shared;
 public class ArrayUtils
 {
 	/**
-	 * Concatenates two arrays
-	 *
-	 * @param A The first array
-	 * @param B The second array
-	 * @param C The array to copy the stuff into
-	 * @return The concatenated array
-	 */
-	public static <T> T[] concatenate(T[] A, T[] B, T[] C)
-	{
-		int aLen = A.length;
-		int bLen = B.length;
-
-		System.arraycopy(A, 0, C, 0, aLen);
-		System.arraycopy(B, 0, C, aLen, bLen);
-
-		return C;
-	}
-
-	/**
 	 * Checks if the given array is either <code>null</code> or its size is smaller than 1.
 	 *
 	 * @param input The array to check

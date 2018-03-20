@@ -18,9 +18,6 @@
 package jhi.germinate.client.widget.element;
 
 import com.google.gwt.dom.client.*;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
@@ -32,8 +29,6 @@ public class AnchorWithContent extends Panel
 {
 	private List<Widget> children = new ArrayList<>();
 
-	private ClickHandler handler;
-
 	public AnchorWithContent()
 	{
 		this(Document.get().createAnchorElement());
@@ -42,22 +37,6 @@ public class AnchorWithContent extends Panel
 	protected AnchorWithContent(Element elem)
 	{
 		setElement(elem);
-	}
-
-	@Override
-	protected void onLoad()
-	{
-		super.onLoad();
-
-		if (handler != null)
-		{
-			Event.sinkEvents(getElement(), Event.ONCLICK);
-			Event.setEventListener(getElement(), event ->
-			{
-				event.preventDefault();
-				handler.onClick(null);
-			});
-		}
 	}
 
 	/**

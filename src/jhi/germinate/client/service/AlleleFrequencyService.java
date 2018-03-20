@@ -65,6 +65,7 @@ public interface AlleleFrequencyService extends RemoteService
 		public double          splitPoint;
 		public int             nrOfBins;
 		public int             nrOfBinsRight;
+		public List<Long>      datasetIds;
 
 		public HistogramParams()
 		{

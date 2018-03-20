@@ -92,6 +92,7 @@ public class DataInitializer
 			{
 				Logger.getLogger("").log(Level.INFO, "RUNNING FLYWAY");
 				Flyway flyway = new Flyway();
+				flyway.setTable("schema_version");
 				flyway.setDataSource(Database.DatabaseType.MYSQL.getConnectionString() + PropertyReader.getServerString(Database.DatabaseType.MYSQL), PropertyReader.get(ServerProperty.DATABASE_USERNAME), PropertyReader.get(ServerProperty.DATABASE_PASSWORD));
 				flyway.setLocations("classpath:jhi.germinate.server.database.migration");
 				flyway.setBaselineOnMigrate(true);

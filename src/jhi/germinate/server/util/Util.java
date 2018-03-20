@@ -17,7 +17,6 @@
 
 package jhi.germinate.server.util;
 
-import java.awt.image.*;
 import java.io.*;
 import java.io.IOException;
 import java.text.*;
@@ -25,13 +24,11 @@ import java.util.*;
 import java.util.regex.*;
 import java.util.stream.*;
 
-import javax.imageio.*;
 import javax.servlet.http.*;
 
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.Tuple.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
@@ -138,24 +135,6 @@ public class Util
 		builder.append(joined);
 
 		return builder.toString();
-	}
-
-	/**
-	 * Sets the dimenstions of the image file to the Image object
-	 *
-	 * @param image The image
-	 * @param file  The file
-	 * @throws IOException Thrown if I/O interaction with the image fails
-	 */
-	public static void setImageDimensions(Image image, File file) throws IOException
-	{
-		if (image == null || !file.exists())
-			return;
-
-		BufferedImage img = ImageIO.read(file);
-
-		image.setWidth(img.getWidth());
-		image.setHeight(img.getHeight());
 	}
 
 	/**

@@ -149,24 +149,6 @@ public class AccessionManager extends AbstractManager<Accession>
 	}
 
 	/**
-	 * Returns the names of all the {@link Accession}s fulfilling the {@link PartialSearchQuery} filter.
-	 *
-	 * @param user   The user requesting the data
-	 * @param filter The user-specified filter
-	 * @return The names of all the {@link Accession}s fulfilling the {@link PartialSearchQuery} filter.
-	 * @throws DatabaseException           Thrown if the interaction with the database failed
-	 * @throws InvalidColumnException      Thrown if the sort column is invalid
-	 * @throws InvalidArgumentException    Thrown if the query assembly fails
-	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
-	 */
-	public static ServerResult<List<String>> getNamesForFilter(UserAuth user, PartialSearchQuery filter) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException
-	{
-		return getFilteredValueQuery(filter, user, SELECT_NAMES_FOR_FILTER, AccessionService.COLUMNS_SORTABLE)
-				.run(Accession.NAME)
-				.getStrings();
-	}
-
-	/**
 	 * Returns all the paginated {@link Accession}s fulfilling the {@link PartialSearchQuery} filter.
 	 *
 	 * @param user       The user requesting the data

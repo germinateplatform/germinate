@@ -106,9 +106,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 			ButtonGroup group = new ButtonGroup();
 			group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
 			// Add the button
-			deleteButton = new Button("", e -> {
-				AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null);
-			});
+			deleteButton = new Button("", e -> AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null));
 			deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 			deleteButton.setTitle(Text.LANG.generalClear());
 

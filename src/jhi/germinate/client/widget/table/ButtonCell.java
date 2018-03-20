@@ -120,8 +120,6 @@ public class ButtonCell extends com.google.gwt.cell.client.ButtonCell implements
 		if (!StringUtils.isEmpty(icon))
 		{
 			String iconHtml = new StringBuilder("<i class=\"")
-					.append(Styles.FONT_AWESOME_BASE)
-					.append(" ")
 					.append(Style.mdiLg(icon))
 					.append("\"></i> ")
 					.toString();

@@ -64,8 +64,7 @@ public class UrlParameterReader
 							/* Make a copy first, since the type of List that GWT
 							 * returns doesn't behave well when trying to send it to
 							 * the server */
-							List<String> listToStore = new ArrayList<>();
-							listToStore.addAll(values);
+							List<String> listToStore = new ArrayList<>(values);
 
 							StringListParameterStore.Inst.get().put(param, listToStore);
 						}

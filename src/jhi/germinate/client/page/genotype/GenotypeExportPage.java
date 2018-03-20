@@ -48,7 +48,6 @@ import jhi.germinate.shared.exception.*;
 public class GenotypeExportPage extends GerminateComposite implements HasHyperlinkButton
 {
 	private FlowPanel resultPanel = new FlowPanel();
-	private FlapjackProjectCreationResult flapjackResult;
 
 	@Override
 	public Library[] getLibraryList()
@@ -73,7 +72,6 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 
 	private void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, List<Long> markerGroups, List<Long> maps, boolean missingOn, boolean heterozygousOn)
 	{
-		flapjackResult = null;
 		Long mapToUse = maps.size() > 0 ? maps.get(0) : null;
 
 		GenotypeService.Inst.get().computeExportDataset(Cookie.getRequestProperties(), accessionGroups, markerGroups, datasets.get(0), heterozygousOn, missingOn, mapToUse,
@@ -205,7 +203,6 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 			@Override
 			protected void onSuccessImpl(ServerResult<FlapjackProjectCreationResult> result)
 			{
-				flapjackResult = result.getServerResult();
 				callback.onSuccess(new ServerResult<>(result.getServerResult().getProjectFile()));
 
 				/* Show the deleted markers in a list */

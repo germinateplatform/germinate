@@ -113,17 +113,17 @@ public class ULPanel extends ComplexPanel
 	}-*/;
 
 	/**
-	 * Adds the given widget as a new li to the ul with the given font awesome style
+	 * Adds the given widget as a new li to the ul with the given Material Design Icon style
 	 *
 	 * @param child   The widget to add
-	 * @param faStyle The fontawesome style
+	 * @param mdi The Material Design Icon style
 	 */
-	public void add(Widget child, String faStyle)
+	public void add(Widget child, String mdi)
 	{
 		LIElement li = Document.get().createLIElement();
 
 		Element i = Document.get().createElement("i");
-		i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, faStyle));
+		i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Style.LAYOUT_V_ALIGN_MIDDLE, mdi));
 		i.getStyle().setPaddingRight(7, com.google.gwt.dom.client.Style.Unit.PX);
 
 		li.appendChild(i);

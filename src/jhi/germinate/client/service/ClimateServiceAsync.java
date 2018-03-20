@@ -58,7 +58,7 @@ public interface ClimateServiceAsync
 	 * @param groupId    The {@link Group} id (can be <code>null</code> to get the overall values of the whole dataset)
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void getMinAvgMaxFile(RequestProperties properties, Long climateId, Long groupId, AsyncCallback<ServerResult<Pair<String, String>>> callback);
+	void getMinAvgMaxFile(RequestProperties properties, List<Long> datasetIds, Long climateId, Long groupId, AsyncCallback<ServerResult<Pair<String, String>>> callback);
 
 	/**
 	 * Returns a paginated list of {@link ClimateYearData} for the given {@link Climate} and {@link Group} ids.

@@ -20,11 +20,15 @@ package jhi.germinate.shared.datastructure.database;
 import com.google.gwt.core.shared.*;
 import com.google.gwt.safehtml.shared.*;
 
+import java.sql.*;
+import java.util.Date;
 import java.util.*;
 import java.util.regex.*;
 
 import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.server.database.query.writer.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
@@ -284,6 +288,50 @@ public class Compound extends DatabaseObject
 			catch (InsufficientPermissionsException e)
 			{
 				return null;
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class Writer implements DatabaseObjectWriter<Compound>
+	{
+		@Override
+		public void write(Database database, Compound object) throws DatabaseException
+		{
+			ValueQuery query = new ValueQuery(database, "INSERT INTO compounds (" + NAME + ", " + DESCRIPTION + ", " + MOLECULAR_FORMULA + ", " + MONOISOTOPIC_MASS + ", " + AVERAGE_MASS + ", " + CLASS + ", " + UNIT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+					.setString(object.getName())
+					.setString(object.getDescription())
+					.setString(object.getMolecularFormula())
+					.setDouble(object.getMonoisotopicMass())
+					.setDouble(object.getAverageMass())
+					.setString(object.getTheClass())
+					.setLong(object.getUnit() != null ? object.getUnit().getId() : null);
+
+			if (object.getCreatedOn() != null)
+				query.setTimestamp(new Date(object.getCreatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				query.setTimestamp(new Date(object.getUpdatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+
+			ServerResult<List<Long>> ids = query.execute(false);
+
+			if (ids != null && !CollectionUtils.isEmpty(ids.getServerResult()))
+				object.setId(ids.getServerResult().get(0));
+		}
+
+		public static final class Inst
+		{
+			public static Writer get()
+			{
+				return Writer.Inst.InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final Writer INSTANCE = new Writer();
 			}
 		}
 	}

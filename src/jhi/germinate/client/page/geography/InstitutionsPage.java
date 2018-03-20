@@ -102,8 +102,8 @@ public class InstitutionsPage extends Composite
 					public void onSelectionCleared()
 					{
 						/* If something is de-selected in the chart, clear the table filtering (if available) */
-						if (institutionsTable.isFilterVisible())
-							institutionsTable.toggleFilter();
+						if (institutionsTable.isFiltered())
+							institutionsTable.clearFilter();
 					}
 				});
 				map.add(chart);

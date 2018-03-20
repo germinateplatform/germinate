@@ -85,7 +85,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		FileUtils.setLastModifyDateNow(histogramFile);
 		FileUtils.setLastModifyDateNow(subsetForFlapjack);
 
-		File imageDataFile = createTemporaryFile("histogram_" + params.method, FileType.txt.name());
+		File imageDataFile = createTemporaryFile("histogram_" + params.method, params.datasetIds, FileType.txt.name());
 		String output = FlapjackUtils.createImage(imageDataFile.getAbsolutePath(), histogramFile.getAbsolutePath(), params);
 
 		return new Pair<>(output, readImageDataFile(imageDataFile));
@@ -137,13 +137,12 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 	public Pair<String, FlapjackProjectCreationResult> createProject(RequestProperties properties, HistogramParams params) throws InvalidSessionException, FlapjackException
 	{
 		HttpServletRequest req = getThreadLocalRequest();
-
 		Session.checkSession(properties, req);
 
 		File mapFile = new File((String) getFromSession(SESSION_PARAM_MAP));
 		File subsetForFlapjack = new File((String) getFromSession(SESSION_PARAM_ALLELE_DATA_FILE));
 		File histogramFile = new File((String) getFromSession(SESSION_PARAM_HISTOGRAM));
-		File binnedFile = createTemporaryFile("allelefreq_binned_", FileType.txt.name());
+		File binnedFile = createTemporaryFile("allelefreq_binned", params.datasetIds, FileType.txt.name());
 
 		/* Update the last modified date => it won't get deleted by the automatic file delete thread */
 		if (mapFile.exists())
@@ -152,7 +151,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		String debugOutput = FlapjackUtils.createBinnedFile(params, subsetForFlapjack.getAbsolutePath(), binnedFile.getAbsolutePath(), histogramFile.getAbsolutePath());
 
         /* Now we call Flapjack to create the project file for us */
-		File flapjackResultFile = createTemporaryFile("genotype", "flapjack");
+		File flapjackResultFile = createTemporaryFile("genotype", params.datasetIds, "flapjack");
 
 		FlapjackParams flapjackParams = new FlapjackParams()
 				.add(Param.map, mapFile)
@@ -178,7 +177,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.allelefreq, accessionGroups, markerGroups, datasetId, mapId, false, missingOn);
-		CommonServiceImpl.ExportResult exportResult = getExportResult(ExperimentType.allelefreq, this);
+		CommonServiceImpl.ExportResult exportResult = getExportResult(datasetId, ExperimentType.allelefreq, this);
 
         /* Kick off the extraction process, because we need the exported data before we can start with the histogram */
 		try
@@ -188,7 +187,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 			int size = exporter.exportResult(exportResult.subsetWithFlapjackLinks.getAbsolutePath(), "# fjFile = ALLELE_FREQUENCY\n" + exportResult.flapjackLinks);
 
 			/* Now we call Flapjack to create histogram file for us */
-			File histogramFile = createTemporaryFile("histogram", FileType.txt.name());
+			File histogramFile = createTemporaryFile("histogram", datasetId, FileType.txt.name());
 			String debugOutput = FlapjackUtils.makeHistogram(exportResult.subsetWithFlapjackLinks.getAbsolutePath(), histogramFile.getAbsolutePath(), nrOfBins);
 
 			storeInSession(SESSION_PARAM_HISTOGRAM, histogramFile.getAbsolutePath());
@@ -204,7 +203,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 			{
 				Set<String> keptMarkers = exporter.getUsedColumnNames();
 				Set<String> deletedMarkers = exporter.getDeletedMarkers();
-				File filename = createTemporaryFile("map", "map");
+				File filename = createTemporaryFile("map", datasetId, "map");
 				FlapjackUtils.writeTemporaryMapFile(filename, mapData, keptMarkers, null);
 
 				/* Remember the map file location in the session */

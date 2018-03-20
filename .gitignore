@@ -30,6 +30,7 @@ instance-stuff/*
 !instance-stuff/template
 
 # Local configuration files
+build.properties
 build-dev.properties
 /germinate3-bootstrap.iml
 

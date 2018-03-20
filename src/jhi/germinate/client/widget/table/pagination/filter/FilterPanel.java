@@ -105,12 +105,12 @@ public class FilterPanel implements KeyPressHandler
 	public void clear()
 	{
 		if (rows.size() > 0)
-			rows.forEach(r -> r.removeFromParent());
+			rows.forEach(Widget::removeFromParent);
 
 		rows.clear();
 
 		if (switches.size() > 0)
-			switches.forEach(s -> s.removeFromParent());
+			switches.forEach(Widget::removeFromParent);
 
 		switches.clear();
 	}

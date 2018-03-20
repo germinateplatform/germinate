@@ -1,4 +1,4 @@
-<%@ page language ="java" contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page  contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="jhi.germinate.server.config.*"%>
 <%@ page import="jhi.germinate.server.service.*"%>
 <%@ page import="jhi.germinate.shared.*"%>
@@ -104,7 +104,6 @@ td span.mdi:nth-child(2) {
 	-ms-transition: all 0.1s ease-in-out;
 	-o-transition: all 0.1s ease-in-out;
 	outline: none;
-	font-family: FontAwesome, serif !important;
 	line-height: 1 !important;
 	/*font-size: 12pt !important;*/
 	background: none;

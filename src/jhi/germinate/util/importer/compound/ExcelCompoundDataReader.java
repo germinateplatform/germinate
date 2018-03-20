@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package jhi.germinate.util.importer.phenotype;
+package jhi.germinate.util.importer.compound;
 
 import org.apache.poi.openxml4j.exceptions.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -23,20 +23,18 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
 import java.util.*;
 
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link ExcelPhenotypeDataReader} implements {@link IStreamableReader} and reads and streams one {@link PhenotypeData} object at a time (one cell of
+ * {@link ExcelCompoundDataReader} implements {@link IStreamableReader} and reads and streams one {@link CompoundData} object at a time (one cell of
  * the data matrix).
  *
  * @author Sebastian Raubach
  */
-public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData>
+public class ExcelCompoundDataReader implements IStreamableReader<CompoundData>
 {
-	public static final  String EXTRA_REP         = "EXTRA_REP";
-	public static final  String EXTRA_TREATMENT   = "EXTRA_TREATMENT";
+	private static final int COLUMN_DATA_START = 0;
 
 	private XSSFSheet dataSheetData;
 	private XSSFSheet dataSheetDates;
@@ -50,32 +48,23 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 	private XSSFRow      headerRow;
 	private XSSFWorkbook wb;
 
-	private String treatment;
-	private String rep;
-
 	@Override
 	public boolean hasNext() throws IOException
 	{
 		if (++currentCol == colCount)
 		{
 			currentRow++;
-			currentCol = 3;
+			currentCol = 1;
 		}
 
 		return currentRow < rowCount && currentCol < colCount;
 	}
 
 	@Override
-	public PhenotypeData next() throws IOException
+	public CompoundData next() throws IOException
 	{
 		rowData = dataSheetData.getRow(currentRow);
 		rowDates = dataSheetDates.getRow(currentRow);
-
-		if (currentCol == 3)
-		{
-			rep = IExcelReader.getCellValue(wb, rowData, 1);
-			treatment = IExcelReader.getCellValue(wb, rowData, 2);
-		}
 
 		return parse();
 	}
@@ -104,12 +93,12 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 			wb.close();
 	}
 
-	private PhenotypeData parse()
+	private CompoundData parse()
 	{
-		return new PhenotypeData()
+		return new CompoundData()
 				.setAccession(getAccession())
-				.setPhenotype(new Phenotype().setName(IExcelReader.getCellValue(wb, headerRow, currentCol)))
-				.setValue(IExcelReader.getCellValue(wb, rowData, currentCol))
+				.setCompound(new Compound().setName(IExcelReader.getCellValue(wb, headerRow, currentCol)))
+				.setValue(IExcelReader.getCellValueAsDouble(wb, rowData, currentCol))
 				.setRecordingDate(IDataReader.getDate(IExcelReader.getCellValue(wb, rowDates, currentCol)))
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
@@ -117,15 +106,7 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 
 	private Accession getAccession()
 	{
-		Accession accession = new Accession()
+		return new Accession()
 				.setGeneralIdentifier(IExcelReader.getCellValue(wb, rowData, 0));
-
-		if (!StringUtils.isEmpty(rep))
-			accession.setExtra(EXTRA_REP, rep);
-
-		if (!StringUtils.isEmpty(treatment))
-			accession.setExtra(EXTRA_TREATMENT, treatment);
-
-		return accession;
 	}
 }

@@ -82,6 +82,7 @@ public interface ClimateService extends RemoteService
 	 * Exports the min/avg/max data for the given {@link Climate} and {@link Group} ids and returns the name of the result file.
 	 *
 	 * @param properties The {@link RequestProperties}
+	 * @param datasetIds a {@link List} of {@link Dataset} ids.
 	 * @param climateId  The {@link Climate} id
 	 * @param groupId    The {@link Group} id (can be <code>null</code> to get the overall values of the whole dataset)
 	 * @return The name of the result file.
@@ -90,7 +91,7 @@ public interface ClimateService extends RemoteService
 	 * @throws IOException               Thrown if the file interaction fails
 	 * @throws InvalidSelectionException Thrown if there is no data for the given selection
 	 */
-	ServerResult<Pair<String, String>> getMinAvgMaxFile(RequestProperties properties, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException;
+	ServerResult<Pair<String, String>> getMinAvgMaxFile(RequestProperties properties, List<Long> datasetIds, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException;
 
 	/**
 	 * Returns a paginated list of {@link ClimateYearData} for the given {@link Climate} and {@link Group} ids.

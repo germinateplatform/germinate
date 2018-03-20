@@ -42,60 +42,6 @@ public class NumberUtils
 	public static final NumberFormat INTEGER_FORMAT             = NumberFormat.getFormat("#,###").overrideFractionDigits(0, 0);
 
 	/**
-	 * Checks if the given number is an int in the local format
-	 *
-	 * @param input The potential int in local format
-	 * @return <code>true</code> if the number is an int in the local format
-	 */
-	public static boolean isInteger(String input)
-	{
-		try
-		{
-			INTEGER_FORMAT.parse(input);
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Parses an int from the given number in local format
-	 *
-	 * @param input The number in local format
-	 * @return The int
-	 */
-	public static int toInteger(String input)
-	{
-		return (int) Math.round(DECIMAL_FORMAT.parse(input));
-	}
-
-	/**
-	 * Checks if the given number is a decimal (float) in the local format.
-	 * <p/>
-	 * <b>IMPORTANT</b>: This will return <code>false</code> if {@link #isInteger(String)} returns <code>true</code>.
-	 *
-	 * @param input The potential decimal in local format
-	 * @return <code>true</code> if the number is a decimal in the local format
-	 */
-	public static boolean isDecimal(String input)
-	{
-		if (isInteger(input))
-			return false;
-
-		try
-		{
-			DECIMAL_FORMAT.parse(input);
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
-	}
-
-	/**
 	 * Parses a double from the given decimal in local format
 	 *
 	 * @param input The decimal in local format

@@ -130,12 +130,12 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		return names.getServerResult();
 	}
 
-	public CommonServiceImpl.ExportResult getExportResult(ExperimentType type, BaseRemoteServiceServlet servlet)
+	public CommonServiceImpl.ExportResult getExportResult(Long datasetId, ExperimentType type, BaseRemoteServiceServlet servlet)
 	{
 		CommonServiceImpl.ExportResult exportResult = new CommonServiceImpl.ExportResult();
 
-        /* Set up the temporary file and make sure the output folder exists */
-		exportResult.subsetWithFlapjackLinks = createTemporaryFile(type.name() + "_links", FileType.txt.name());
+		/* Set up the temporary file and make sure the output folder exists */
+		exportResult.subsetWithFlapjackLinks = createTemporaryFile(type.name() + "_links", datasetId, FileType.txt.name());
 
 		/* Check which Germinate pages are available. We do this to only add links to those pages that are actually available */
 		Set<Page> availablePages = PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
@@ -170,7 +170,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		/* Get the datasets the user is allowed to use */
 		Boolean isAllowedToUse = DatasetManager.userHasAccessToDataset(userAuth, datasetId).getServerResult();
 
-        /* Get the line names to extract */
+		/* Get the line names to extract */
 		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, sqlDebug, accessionGroups) : new ArrayList<>();
 		/* Get the marker names to extract */
 		List<String> colNames = getColumnNames(sqlDebug, markerGroups, mapId, userAuth);

@@ -195,18 +195,6 @@ public class CollectionUtils
 		return join(pairs, outerSeparator);
 	}
 
-	public static <T> Set<T> combineSet(Collection<T> first, Collection<T> second)
-	{
-		Set<T> result = new HashSet<>();
-
-		if (!isEmpty(first))
-			result.addAll(first);
-		if (!isEmpty(second))
-			result.addAll(second);
-
-		return result;
-	}
-
 	public static <T> List<T> combineList(Collection<T> first, Collection<T> second)
 	{
 		List<T> result = new ArrayList<>();

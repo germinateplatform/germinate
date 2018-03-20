@@ -59,14 +59,6 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		return PedigreeDefinitionManager.getByAccessionId(userAuth, accessionId);
 	}
 
-	public PaginatedServerResult<List<Pedigree>> get(RequestProperties properties, Long accessionId, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		return PedigreeManager.getAllByAccessionId(userAuth, accessionId, pagination);
-	}
-
 	@Override
 	public PaginatedServerResult<List<Pedigree>> getForFilter(RequestProperties properties, PartialSearchQuery filter, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
 	{

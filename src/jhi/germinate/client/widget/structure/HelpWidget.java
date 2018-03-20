@@ -100,8 +100,13 @@ public class HelpWidget
 	public static void show()
 	{
 		if (helpContent != null)
+		{
 			HelpModal.show(helpContent);
+		}
 		else
+		{
+			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.HELP, History.getToken());
 			Notification.notify(Notification.Type.INFO, Text.LANG.notificationHelpNotAvailable());
+		}
 	}
 }

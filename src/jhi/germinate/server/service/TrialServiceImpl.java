@@ -47,8 +47,8 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 {
 	private static final long serialVersionUID = -8532526273822554012L;
 
-	private static final String QUERY_PHENOTYPES_OVERVIEW    = "SELECT phenotypedata.phenotype_value, germinatebase.name AS germinatebase_identifier, DATE_FORMAT( phenotypedata.recording_date, '%%Y' ) AS recording_date, germinatebase.id, phenotypes.*, units.* FROM phenotypedata LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON datasets.experiment_id = experiments.id LEFT JOIN experimenttypes ON experiments.experiment_type_id = experimenttypes.id LEFT JOIN germinatebase ON phenotypedata.germinatebase_id = germinatebase.id WHERE datasets.id IN (%s) AND phenotypes.id IN (%s) AND DATE_FORMAT(recording_date, '%%Y') IN (%s) AND phenotypes.datatype IN ('int', 'float') AND experimenttypes.description = 'trials'";
-	private static final String QUERY_DISTINCT_YEARS         = "SELECT DISTINCT DATE_FORMAT(recording_date, '%%Y') AS recording_date FROM phenotypedata WHERE NOT ISNULL(recording_date) AND dataset_id IN (%s) ORDER BY recording_date";
+	private static final String QUERY_PHENOTYPES_OVERVIEW = "SELECT phenotypedata.phenotype_value, germinatebase.name AS germinatebase_identifier, DATE_FORMAT( phenotypedata.recording_date, '%%Y' ) AS recording_date, germinatebase.id, phenotypes.*, units.* FROM phenotypedata LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON datasets.experiment_id = experiments.id LEFT JOIN experimenttypes ON experiments.experiment_type_id = experimenttypes.id LEFT JOIN germinatebase ON phenotypedata.germinatebase_id = germinatebase.id WHERE datasets.id IN (%s) AND phenotypes.id IN (%s) AND DATE_FORMAT(recording_date, '%%Y') IN (%s) AND phenotypes.datatype IN ('int', 'float') AND experimenttypes.description = 'trials'";
+	private static final String QUERY_DISTINCT_YEARS      = "SELECT DISTINCT DATE_FORMAT(recording_date, '%%Y') AS recording_date FROM phenotypedata WHERE NOT ISNULL(recording_date) AND dataset_id IN (%s) ORDER BY recording_date";
 
 	@Override
 	public ServerResult<List<Integer>> getTrialYears(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
@@ -136,19 +136,19 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 		List<String> sortedYears = new ArrayList<>(years);
 		Collections.sort(sortedYears);
 
-        /*
+		/*
 		 * Sort based on phenotype name here. Too costly to pre-sort it on the
-         * database.
-         */
+		 * database.
+		 */
 		result.sort(Comparator.comparing(o -> o.getPhenotype().getName()));
 
-        /* Export the data to .tsv files for the d3.js visualization charts */
+		/* Export the data to .tsv files for the d3.js visualization charts */
 		try
 		{
-			chartFiles.put(TrialsRow.TrialsAttribute.MIN, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), sortedYears, result, TrialsRow.TrialsAttribute.MIN));
-			chartFiles.put(TrialsRow.TrialsAttribute.AVG, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), sortedYears, result, TrialsRow.TrialsAttribute.AVG));
-			chartFiles.put(TrialsRow.TrialsAttribute.MAX, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), sortedYears, result, TrialsRow.TrialsAttribute.MAX));
-			chartFiles.put(TrialsRow.TrialsAttribute.COUNT, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), sortedYears, result, TrialsRow.TrialsAttribute.COUNT));
+			chartFiles.put(TrialsRow.TrialsAttribute.MIN, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), datasetIds, sortedYears, result, TrialsRow.TrialsAttribute.MIN));
+			chartFiles.put(TrialsRow.TrialsAttribute.AVG, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), datasetIds, sortedYears, result, TrialsRow.TrialsAttribute.AVG));
+			chartFiles.put(TrialsRow.TrialsAttribute.MAX, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), datasetIds, sortedYears, result, TrialsRow.TrialsAttribute.MAX));
+			chartFiles.put(TrialsRow.TrialsAttribute.COUNT, exportTrialsData(Util.getOperatingSystem(getThreadLocalRequest()), datasetIds, sortedYears, result, TrialsRow.TrialsAttribute.COUNT));
 		}
 		catch (IOException e)
 		{
@@ -158,9 +158,9 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 		return new ServerResult<>(null, new Triple<>(sortedYears, result, chartFiles));
 	}
 
-	private String exportTrialsData(OperatingSystem os, List<String> years, List<TrialsRow> table, TrialsRow.TrialsAttribute attr) throws IOException
+	private String exportTrialsData(OperatingSystem os, List<Long> datasetIds, List<String> years, List<TrialsRow> table, TrialsRow.TrialsAttribute attr) throws IOException
 	{
-		File file = createTemporaryFile("trials-" + attr.name(), FileType.txt.name());
+		File file = createTemporaryFile("trials-" + attr.name(), datasetIds, FileType.txt.name());
 
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")))
 		{

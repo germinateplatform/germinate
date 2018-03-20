@@ -55,17 +55,6 @@ public enum SynonymType
 		return null;
 	}
 
-	public static SynonymType getByName(String name)
-	{
-		for (SynonymType type : values())
-		{
-			if (type.name.equals(name))
-				return type;
-		}
-
-		return null;
-	}
-
 	public String getName()
 	{
 		return name;
@@ -90,10 +79,5 @@ public enum SynonymType
 	public Long getId()
 	{
 		return id;
-	}
-
-	public String getTargetTable()
-	{
-		return targetTable;
 	}
 }

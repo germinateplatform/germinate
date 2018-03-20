@@ -628,10 +628,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 		if (showDownload)
 		{
-			/*
-			 * Add the style for the dataset download column and the column
-             * itself
-             */
+			// Add the style for the dataset download column and the column itself
 			Column<Dataset, SafeHtml> downloadColumn = new Column<Dataset, SafeHtml>(clickCell)
 			{
 				@Override
@@ -692,6 +689,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					if (BrowserEvents.CLICK.equals(event.getType()) && downloadCallback != null)
 					{
 						event.preventDefault();
+						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "dataset", Long.toString(object.getId()));
 						downloadCallback.onSuccess(object);
 					}
 					else

@@ -297,33 +297,6 @@ public class JavaScript
 	}-*/;
 
 	/**
-	 * Applies sticky headers to the table with the given id
-	 *
-	 * @param id The id of the table
-	 */
-	public static native void makeHeaderSticky(String id)/*-{
-		$wnd.$("#" + id).freezeHeader();
-	}-*/;
-
-	/**
-	 * Checks if the freeze header library has successfully been loaded
-	 *
-	 * @return <code>true</code> if it has been successfully loaded
-	 */
-	public static native boolean isFreezeHeaderLoaded()/*-{
-		return typeof ($wnd.$('').freezeHeader) === 'function';
-	}-*/;
-
-	/**
-	 * Checks if the GoogleMaps API was loaded and initialized successfully by trying to access it in JavaScript
-	 *
-	 * @return <code>true</code> if the GoogleMaps API was loaded and initialized successfully
-	 */
-	public static native boolean isGoogleMapsLoaded()/*-{
-		return $wnd['google'].maps !== 'undefined';
-	}-*/;
-
-	/**
 	 * Highlights the given {@link Widget}'s {@link Element} using <code>$(element).delay(250).effect("highlight")</code>
 	 *
 	 * @param widget   The {@link Widget} to highlight

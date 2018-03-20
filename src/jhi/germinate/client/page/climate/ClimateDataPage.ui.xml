@@ -29,14 +29,20 @@
 		<b:PageHeader text="{msg.climateTitle}"/>
 
 		<g:FlowPanel ui:field="content">
-			<b:FormGroup>
-				<b:FormLabel for="formClimate" text="{msg.climateSelectClimate}"/>
-				<g8:ClimateListBox b:id="formClimate" ui:field="climateBox"/>
-			</b:FormGroup>
-			<b:FormGroup>
-				<b:FormLabel for="formGroup" text="{msg.climateSelectGroup}"/>
-				<g8:GroupListBox type="LOCATION" b:id="formGroup" ui:field="groupBox"/>
-			</b:FormGroup>
+			<b:Row>
+				<b:Column size="XS_12,MD_6">
+					<b:FormGroup>
+						<b:FormLabel for="formClimate" text="{msg.climateSelectClimate}"/>
+						<g8:ClimateListBox b:id="formClimate" ui:field="climateBox"/>
+					</b:FormGroup>
+				</b:Column>
+				<b:Column size="XS_12,MD_6">
+					<b:FormGroup>
+						<b:FormLabel for="formGroup" text="{msg.climateSelectGroup}"/>
+						<g8:GroupListBox type="LOCATION" b:id="formGroup" ui:field="groupBox"/>
+					</b:FormGroup>
+				</b:Column>
+			</b:Row>
 
 			<g:FlowPanel ui:field="resultPanel" visible="false">
 

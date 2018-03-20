@@ -48,8 +48,6 @@ public class Image extends DatabaseObject
 	private String    description;
 	private Long      foreignId;
 	private String    path;
-	private int width  = 0;
-	private int height = 0;
 	private Long createdOn;
 	private Long updatedOn;
 
@@ -106,28 +104,6 @@ public class Image extends DatabaseObject
 		return this;
 	}
 
-	public int getWidth()
-	{
-		return width;
-	}
-
-	public Image setWidth(int width)
-	{
-		this.width = width;
-		return this;
-	}
-
-	public int getHeight()
-	{
-		return height;
-	}
-
-	public Image setHeight(int height)
-	{
-		this.height = height;
-		return this;
-	}
-
 	public Long getCreatedOn()
 	{
 		return createdOn;
@@ -165,8 +141,6 @@ public class Image extends DatabaseObject
 				", description='" + description + '\'' +
 				", foreignId=" + foreignId +
 				", path='" + path + '\'' +
-				", width=" + width +
-				", height=" + height +
 				"} " + super.toString();
 	}
 

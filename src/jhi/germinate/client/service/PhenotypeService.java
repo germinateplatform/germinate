@@ -43,7 +43,6 @@ public interface PhenotypeService extends RemoteService
 	String YEAR                  = "year";
 
 	String[] COLUMNS_DATA_SORTABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Dataset.DESCRIPTION, ExperimentType.DESCRIPTION, Phenotype.NAME, Phenotype.SHORT_NAME, Unit.NAME, PhenotypeData.PHENOTYPE_VALUE, PhenotypeData.RECORDING_DATE};
-	String[] COLUMNS_SORTABLE      = {Phenotype.ID, Phenotype.NAME, Phenotype.DESCRIPTION, Phenotype.SHORT_NAME, Unit.ID, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION};
 
 	/**
 	 * Returns a paginated list of {@link PhenotypeData}s that match the given {@link PartialSearchQuery}.

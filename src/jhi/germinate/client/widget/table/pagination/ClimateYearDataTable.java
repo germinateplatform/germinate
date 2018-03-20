@@ -170,10 +170,13 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 				{
 					Double doubleValue = object.getYearToValues().get(theYear);
 
-					SafeStyles textColor = SafeStylesUtils.forTrustedColor(gradient.getTextColor(doubleValue).toRGBValue());
-					SafeStyles backgroundColor = SafeStylesUtils.forTrustedBackgroundColor(gradient.getColor(doubleValue).toRGBValue());
+					if(doubleValue != null)
+					{
+						SafeStyles textColor = SafeStylesUtils.forTrustedColor(gradient.getTextColor(doubleValue).toRGBValue());
+						SafeStyles backgroundColor = SafeStylesUtils.forTrustedBackgroundColor(gradient.getColor(doubleValue).toRGBValue());
 
-					sb.append(SimpleHtmlTemplate.INSTANCE.color(backgroundColor, textColor, getValue(object).asString()));
+						sb.append(SimpleHtmlTemplate.INSTANCE.color(backgroundColor, textColor, getValue(object).asString()));
+					}
 				}
 
 				@Override
@@ -214,13 +217,16 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 			/* And each column */
 			for (int i = 1; i <= 12; i++)
 			{
-				double value = row.getYearToValues().get(i);
+				Double value = row.getYearToValues().get(i);
 
-                /* Check for min/max */
-				if (value < minValue)
-					minValue = value;
-				if (value > maxValue)
-					maxValue = value;
+				if(value != null)
+				{
+					/* Check for min/max */
+					if (value < minValue)
+						minValue = value;
+					if (value > maxValue)
+						maxValue = value;
+				}
 			}
 		}
 

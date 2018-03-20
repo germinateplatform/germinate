@@ -138,45 +138,45 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	SafeHtml empty();
 
 	/**
-	 * Creates a <code>&lt;span&gt;</code> element with the given FontAwesome style and the given title attribute
+	 * Creates a <code>&lt;span&gt;</code> element with the given Material Design Icon style and the given title attribute
 	 *
 	 * @param mdi   The MaterialDesignIcon style
 	 * @param title The title attribute
-	 * @return A <code>&lt;span&gt;</code> element with the given FontAwesome style and the given title attribute
+	 * @return A <code>&lt;span&gt;</code> element with the given Material Design Icon style and the given title attribute
 	 */
 	@Template("<span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
 	SafeHtml materialIconFixedWidth(String mdi, String title);
 
 	/**
-	 * Creates an anchor with the given link, target, title and FontAwesome style
+	 * Creates an anchor with the given link, target, title and Material Design Icon style
 	 *
 	 * @param mdi    The MaterialDesignIcon style
 	 * @param title  The title attribuge
 	 * @param href   The link url
 	 * @param target The target
-	 * @return An anchor with the given link, target, title and FontAwesome style
+	 * @return An anchor with the given link, target, title and Material Design Icon style
 	 */
 	@Template("<a href='{2}' target ='{3}' style='word-break: break-word;'><span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
 	SafeHtml materialIconAnchor(String mdi, String title, SafeUri href, String target);
 
 	/**
-	 * Creates an anchor with the given link, target, title and FontAwesome style
+	 * Creates an anchor with the given link, target, title and Material Design Icon style
 	 *
 	 * @param mdi    The MaterialDesignIcon style
 	 * @param text   The title attribuge
 	 * @param href   The link url
 	 * @param target The target
-	 * @return An anchor with the given link, target, title and FontAwesome style
+	 * @return An anchor with the given link, target, title and Material Design Icon style
 	 */
 	@Template("<span><a href='{3}' target ='{4}' style='word-break: break-word;'>{1}</a><a href='#'><span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='margin-left: 5px; vertical-align: middle' title='{2}'></span></a></span>")
 	SafeHtml materialIconAnchorWithText(String mdi, String text, String iconTitle, SafeUri href, String target);
 
 	/**
-	 * Creates an anchor with the given link, target, title and FontAwesome style
+	 * Creates an anchor with the given link, target, title and Material Design Icon style
 	 *
 	 * @param mdi  The MaterialDesignIcon style
 	 * @param text The title attribuge
-	 * @return An anchor with the given link, target, title and FontAwesome style
+	 * @return An anchor with the given link, target, title and Material Design Icon style
 	 */
 	@Template("<span><span>{1}</span><a href='#'><span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='margin-left: 5px; vertical-align: middle' title='{2}'></span></a></span>")
 	SafeHtml materialIconWithText(String mdi, String text, String iconTitle);
@@ -213,17 +213,6 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	SafeHtml gradientLegendHorizontal(SafeStyles backgroundColor);
 
 	/**
-	 * Creates a div with the given background color and a space symbol as its content
-	 *
-	 * @param backgroundColor The background color
-	 * @param lineHeight      The height of the cell
-	 * @param width           The width of the cell
-	 * @return A div with the given background color and a space symbol as its content
-	 */
-	@Template("<div class='gradient-legend' style='{0}{1}{2}'>&nbsp;</div>")
-	SafeHtml gradientLegendVertical(SafeStyles backgroundColor, SafeStyles lineHeight, SafeStyles width);
-
-	/**
 	 * Creates a span pretending to be a link (color and cursor)
 	 *
 	 * @param name The anchor text
@@ -242,15 +231,15 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	SafeHtml dummyAnchorWithIcon(String name, String iconStyle);
 
 	/**
-	 * Creates a span element with the given text and FontAwesome styling
+	 * Creates a span element with the given text and Material Design Icon styling
 	 *
-	 * @param fontAwesome The FontAwesome style
+	 * @param mdi The Material Design Icon style
 	 * @param text        The text
-	 * @return A span element with the given text and FontAwesome styling
+	 * @return A span element with the given text and Material Design Icon styling
 	 */
 	@Template("<span class='text-primary " + Style.MDI + " " + Style.FA_FIXED_WIDTH + " " + Style.MDI_LG + " " + Style.LAYOUT_V_ALIGN_MIDDLE
 			+ " {0}'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "' style='margin-left: 5px; white-space: nowrap;'>{1}</span>")
-	SafeHtml contextMenuItemMaterialIcon(String fontAwesome, String text);
+	SafeHtml contextMenuItemMaterialIcon(String mdi, String text);
 
 	/**
 	 * Creates a 'mailto' anchor with the given email address.

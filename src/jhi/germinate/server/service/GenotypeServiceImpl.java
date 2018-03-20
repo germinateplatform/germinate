@@ -43,12 +43,11 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 {
 	private static final long serialVersionUID = -1828922709884114932L;
 
-	//private static final String QUERY_EXPORT_MAP = "SELECT markers.marker_name, mapdefinitions.chromosome, mapdefinitions.definition_start FROM mapdefinitions, mapfeaturetypes, markers WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND map_id = ? AND marker_name IN (%s) ORDER BY chromosome, definition_start";
 	private static final String QUERY_EXPORT_MAP = "SELECT markers.marker_name, mapdefinitions.chromosome, mapdefinitions.definition_start FROM mapdefinitions, mapfeaturetypes, markers WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND map_id = ? ORDER BY chromosome, definition_start";
 
 	@Override
 	public ServerResult<List<String>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId,
-																			boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, FlapjackException,
+														   boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, FlapjackException,
 			MissingPropertyException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
@@ -56,11 +55,11 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, accessionGroups, markerGroups, datasetId, mapId, heterozygousFilter, misingDataFilter);
-		CommonServiceImpl.ExportResult result = getExportResult(ExperimentType.genotype, this);
+		CommonServiceImpl.ExportResult result = getExportResult(datasetId, ExperimentType.genotype, this);
 
 		File mapFile;
 
-        /* Kick off the extraction process */
+		/* Kick off the extraction process */
 		try
 		{
 			DataExporter exporter = new DataExporter(settings, result.subsetWithFlapjackLinks.getAbsolutePath());
@@ -71,11 +70,11 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 			/* Store the deleted markers */
 			List<String> keptMarkers = exporter.getKeptMarkers();
 
-            /* Get the map */
+			/* Get the map */
 			GerminateTableStreamer mapData = getMap(userAuth, sqlDebug, mapId);
 
 			/* Write the map file */
-			File filename = createTemporaryFile("map", "map");
+			File filename = createTemporaryFile("map", datasetId, "map");
 			mapFile = FlapjackUtils.writeTemporaryMapFile(filename, mapData, keptMarkers, null);
 		}
 		catch (java.io.IOException e)
@@ -134,9 +133,9 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, null, null, datasetId, null, false, false);
-		CommonServiceImpl.ExportResult result = getExportResult(ExperimentType.genotype, this);
+		CommonServiceImpl.ExportResult result = getExportResult(datasetId, ExperimentType.genotype, this);
 
-        /* Kick off the extraction process */
+		/* Kick off the extraction process */
 		DataExporter exporter = new DataExporter(settings, result.subsetWithFlapjackLinks.getAbsolutePath());
 		exporter.readInput();
 		/* Export the data with the links */

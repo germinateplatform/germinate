@@ -156,13 +156,11 @@ public class PedigreeDefinition extends DatabaseObject
 
 		private static DatabaseObjectCache<Accession>           ACCESSION_CACHE;
 		private static DatabaseObjectCache<PedigreeNotation>    PEDIGREENOTATION_CACHE;
-		private static DatabaseObjectCache<PedigreeDescription> PEDIGREEDESCRIPTION_CACHE;
 
 		private Parser()
 		{
 			ACCESSION_CACHE = createCache(Accession.class, AccessionManager.class);
 			PEDIGREENOTATION_CACHE = createCache(PedigreeNotation.class, PedigreeNotationManager.class);
-			PEDIGREEDESCRIPTION_CACHE = createCache(PedigreeDescription.class, PedigreeDescriptionManager.class);
 		}
 
 		@Override

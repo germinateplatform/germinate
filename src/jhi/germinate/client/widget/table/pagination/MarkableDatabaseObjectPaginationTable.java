@@ -592,9 +592,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		ButtonGroup group = new ButtonGroup();
 		group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
 		// Add the button
-		Button deleteButton = new Button("", e -> {
-			AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(itemType), null);
-		});
+		Button deleteButton = new Button("", e -> AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(itemType), null));
 		deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 		deleteButton.setTitle(Text.LANG.generalClear());
 

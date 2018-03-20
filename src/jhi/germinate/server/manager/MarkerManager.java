@@ -46,7 +46,6 @@ public class MarkerManager extends AbstractManager<Marker>
 	private static final String SELECT_IDS_FOR_FILTER_MAP   = "SELECT DISTINCT(markers.id) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
 	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(markers.marker_name) FROM " + COMMON_TABLES + " LEFT JOIN groupmembers ON groupmembers.foreign_id = markers.id LEFT JOIN groups ON groups.id = groupmembers.group_id {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
 	private static final String SELECT_COUNT                = "SELECT COUNT(1) AS count FROM markers";
-	private static final String SELECT_GROUP_AS_QTL         = "SELECT groups.description AS \"Name\", mapdefinitions.chromosome AS \"Chromosome\", FLOOR(AVG( mapdefinitions.definition_start )) AS \"Position\", FLOOR(MIN( mapdefinitions.definition_start )) AS \"Pos-Min\", FLOOR(MAX( mapdefinitions.definition_start )) AS \"Pos-Max\", null AS \"Trait\", null AS \"Experiment\" FROM mapdefinitions LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN groupmembers ON groupmembers.foreign_id = markers.id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY groups.id, mapdefinitions.chromosome";
 
 	@Override
 	protected String getTable()
@@ -134,12 +133,5 @@ public class MarkerManager extends AbstractManager<Marker>
 		return new ValueQuery(SELECT_COUNT, user)
 				.run(COUNT)
 				.getLong(0L);
-	}
-
-	public static GerminateTableStreamer getMarkerGroupAsQtl(UserAuth user, Long groupId) throws DatabaseException
-	{
-		return new GerminateTableQuery(SELECT_GROUP_AS_QTL, user, null)
-				.setLong(groupId)
-				.getStreamer();
 	}
 }

@@ -54,9 +54,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
-import jhi.germinate.client.widget.table.pagination.cell.*;
 import jhi.germinate.client.widget.table.pagination.filter.*;
-import jhi.germinate.client.widget.table.pagination.resource.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
@@ -70,7 +68,7 @@ import jhi.germinate.shared.search.operators.*;
 /**
  * @author Sebastian Raubach
  */
-public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> extends Composite implements FilterCell.VisibilityCallback
+public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> extends Composite
 {
 	interface DatabaseObjectPaginationTableUiBinder extends UiBinder<HTMLPanel, DatabaseObjectPaginationTable>
 	{
@@ -124,7 +122,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	private   int     nrOfItemsPerPage       = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_NR_OF_ITEMS_PER_PAGE);
 
 	// CURRENT STATE
-	private boolean                filterVisible = false;
 	//	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
 	private List<FilterRow.Column> columns       = new ArrayList<>();
 	private RefreshableAsyncDataProvider<T> dataProvider;
@@ -157,24 +154,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		this.selectionMode = selectionMode;
 		this.sortingEnabled = sortingEnabled;
 
-		table = new CellTable<T>(nrOfItemsPerPage)
-		{
-			@Override
-			protected void onBrowserEvent2(Event event)
-			{
-				/* If this table is filterable and the event happened on an inputelement, just return */
-				if (supportsFiltering() && InputElement.is(event.getEventTarget()) && (TableUtils.isEvent(event.getType(), BrowserEvents.CLICK, BrowserEvents.MOUSEDOWN, BrowserEvents.MOUSEUP, BrowserEvents.KEYDOWN)))
-				{
-					InputElement input = InputElement.as(event.getEventTarget()).cast();
-					if (Objects.equals(input.getType(), "checkbox"))
-						super.onBrowserEvent2(event);
-				}
-				else
-				{
-					super.onBrowserEvent2(event);
-				}
-			}
-		};
+		table = new CellTable<T>(nrOfItemsPerPage);
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 	}
@@ -358,9 +338,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			@Override
 			public void onClearClicked()
 			{
-				filterButton.setType(ButtonType.DEFAULT);
-				clearFilterButton.setVisible(false);
-				refreshTable();
+				clearFilter();
 			}
 		});
 
@@ -377,6 +355,14 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		fetchTableData();
 	}
 
+	public void clearFilter()
+	{
+		filterPanel.clear();
+		filterButton.setType(ButtonType.DEFAULT);
+		clearFilterButton.setVisible(false);
+		refreshTable();
+	}
+
 	public void toggleFilter()
 	{
 //		filterVisible = !filterVisible;
@@ -385,6 +371,11 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 //		if (!filterVisible)
 //			refreshTable();
+	}
+
+	public boolean isFiltered()
+	{
+		return filterPanel.getSize() > 0;
 	}
 
 	public boolean forceFilter(Map<String, String> columnToValue, boolean isAnd) throws InvalidArgumentException
@@ -736,65 +727,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	}
 
 	/**
-	 * Adds a tooltip to the table. The tooltip will get its position and content from the {@link TableTooltipHandler}
-	 *
-	 * @param handler The {@link TableTooltipHandler} supplying the content of the tooltip and the {@link Alignment}
-	 */
-	public void addTooltipHandler(final TableTooltipHandler<T> handler)
-	{
-		tooltipPanel = new PopupPanel();
-		tooltipPanel.setStyleName(TooltipPanelResource.INSTANCE.css().wrapper());
-
-		table.addCellPreviewHandler(event ->
-		{
-			if (BrowserEvents.MOUSEOVER.equals(event.getNativeEvent().getType().toLowerCase()))
-			{
-				T row = event.getValue();
-
-				/* Get the necessary information from the handler */
-				IsWidget actualContent = handler.getTooltipContent(row, event.getColumn());
-				TableTooltipHandler.Alignment alignment = handler.getAlignment();
-
-				/* If there is nothing to display for this cell, return */
-				if (actualContent == null)
-					return;
-
-				/* Get the visible range of the table and the start of the current page */
-				int start = table.getVisibleRange().getStart();
-
-				/* Determine the row index on this page */
-				int rowIndex = event.getIndex() - start;
-
-				/* Determine which table item the mouse is hovering over */
-				TableCellElement reference = table.getRowElement(rowIndex).getCells().getItem(event.getColumn());
-
-				/* Create the tooltip content */
-				SimplePanel content = new SimplePanel();
-				content.add(actualContent);
-				content.setStyleName(TooltipPanelResource.INSTANCE.css().panel());
-
-				/* Make sure an alignment is selected */
-				if (alignment == null)
-					alignment = TableTooltipHandler.Alignment.BELOW_ALIGN_LEFT;
-
-				/* Determine left and top position based on the alignment */
-				int left = alignment.getLeft(reference.getAbsoluteLeft(), reference.getAbsoluteRight(), content.getOffsetWidth());
-				int top = alignment.getTop(reference.getAbsoluteTop(), reference.getAbsoluteBottom(), content.getOffsetHeight());
-
-				/* Add the content to the tooltip and show it */
-				tooltipPanel.setWidget(content);
-				tooltipPanel.show();
-				/* Set the position of the tooltip */
-				tooltipPanel.setPopupPosition(left, top);
-			}
-			else if (BrowserEvents.MOUSEOUT.equals(event.getNativeEvent().getType().toLowerCase()))
-			{
-				tooltipPanel.hide();
-			}
-		});
-	}
-
-	/**
 	 * Adds the column style names based on the database column that is associated with it.
 	 *
 	 * @param column The {@link Column} to add the style to
@@ -899,27 +831,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	}
 
 	/**
-	 * Adds the given column to the table
-	 *
-	 * @param column       The column
-	 * @param headerString The column header text
-	 */
-	public void addColumn(DatabaseObjectFilterColumn<T, ?> column, String headerString)
-	{
-		addColumn(column, headerString, false);
-	}
-
-	/**
-	 * Adds the given column to the table
-	 *
-	 * @param column The column
-	 */
-	public void addColumn(DatabaseObjectFilterColumn<T, ?> column)
-	{
-		addColumn(column, "", false);
-	}
-
-	/**
 	 * Adds the given column to the table. The Header parameter is used as the column header.
 	 *
 	 * @param column The column
@@ -997,12 +908,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	public CellTable<T> getTable()
 	{
 		return table;
-	}
-
-	@Override
-	public boolean isFilterVisible()
-	{
-		return filterVisible;
 	}
 
 	/**

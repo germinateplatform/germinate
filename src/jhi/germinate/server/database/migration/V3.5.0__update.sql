@@ -88,3 +88,11 @@ CREATE TABLE `datasetmembers`  (
 
 INSERT INTO `datasetmembertypes` VALUES (1, 'markers', NOW(), NOW());
 INSERT INTO `datasetmembertypes` VALUES (2, 'germinatebase', NOW(), NOW());
+
+ALTER TABLE `climateoverlays`
+MODIFY COLUMN `bottom_left_longitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.' AFTER `path`,
+MODIFY COLUMN `bottom_left_latitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.' AFTER `bottom_left_longitude`,
+MODIFY COLUMN `top_right_longitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.' AFTER `bottom_left_latitude`,
+MODIFY COLUMN `top_right_latitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.' AFTER `top_right_longitude`;
+
+ALTER TABLE `climateoverlays` COMMENT = 'Climate overlays can be used in conjunction with OpenStreetMap in order to visualize climate data in a geographic context.';

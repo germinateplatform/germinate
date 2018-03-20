@@ -30,7 +30,6 @@ import jhi.germinate.shared.exception.*;
  */
 public class ImageTypeManager extends AbstractManager<ImageType>
 {
-	private static final String SELECT_ALL             = "SELECT * FROM imagetypes";
 	private static final String SELECT_ALL_WITH_IMAGES = "SELECT * FROM imagetypes WHERE EXISTS (SELECT 1 FROM images WHERE images.imagetype_id = imagetypes.id LIMIT 1)";
 
 	@Override
@@ -43,13 +42,6 @@ public class ImageTypeManager extends AbstractManager<ImageType>
 	protected DatabaseObjectParser<ImageType> getParser()
 	{
 		return ImageType.Parser.Inst.get();
-	}
-
-	public static ServerResult<List<ImageType>> getAll(UserAuth userAuth) throws DatabaseException
-	{
-		return new DatabaseObjectQuery<ImageType>(SELECT_ALL, userAuth)
-				.run()
-				.getObjects(ImageType.Parser.Inst.get(), true);
 	}
 
 	public static ServerResult<List<ImageType>> getAllWithImages(UserAuth userAuth) throws DatabaseException

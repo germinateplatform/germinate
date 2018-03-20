@@ -191,6 +191,9 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	@UiHandler("continueButton")
 	void onContinueClicked(ClickEvent event)
 	{
+		AlleleFrequencyService.HistogramParams params = getHistogramParams();
+		params.datasetIds = LongListParameterStore.Inst.get().get(Parameter.allelefreqDatasetIds);
+
 		AlleleFrequencyService.Inst.get().createProject(Cookie.getRequestProperties(), getHistogramParams(), new DefaultAsyncCallback<Tuple.Pair<String, FlapjackProjectCreationResult>>(true)
 		{
 			@Override

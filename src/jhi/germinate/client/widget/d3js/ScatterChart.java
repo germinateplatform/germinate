@@ -74,16 +74,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	{
 	}
 
-	public ScatterChart(List<T> objects, List<Group> groups, ExperimentType experimentType, String title, SafeHtml message)
-	{
-		super(title, message);
-		this.experimentType = experimentType;
-		if (objects != null)
-			this.objects = new ArrayList<>(objects);
-		if (groups != null)
-			this.groups = new ArrayList<>(groups);
-	}
-
 	public void update(ExperimentType expertimentType, List<T> objects, List<Group> groups, SafeHtml message)
 	{
 		setMessage(message);
@@ -120,9 +110,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			ButtonGroup group = new ButtonGroup();
 			group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
 			// Add the button
-			deleteButton = new Button("", e -> {
-				AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null);
-			});
+			deleteButton = new Button("", e -> AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null));
 			deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 			deleteButton.setTitle(Text.LANG.generalClear());
 

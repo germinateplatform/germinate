@@ -241,7 +241,7 @@ public class RegistrationForm extends Composite implements Validator<String>
 		final LoadingIndicator indicator = new LoadingIndicator(Text.LANG.notificationLongRunning());
 		indicator.show();
 
-			/* Try to register the new user */
+		/* Try to register the new user */
 		UserService.Inst.get().register(Cookie.getRequestProperties(), user, new AsyncCallback<Void>()
 		{
 			@Override

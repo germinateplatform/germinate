@@ -66,6 +66,18 @@ public interface IExcelReader
 		}
 	}
 
+	static Double getCellValueAsDouble(Workbook wb, Row row, int column)
+	{
+		try
+		{
+			return Double.parseDouble(getCellValue(wb, row, column));
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+	}
+
 	static JsonValue getJson(XSSFWorkbook wb, XSSFRow row, int i)
 	{
 		String value = IExcelReader.getCellValue(wb, row, i);

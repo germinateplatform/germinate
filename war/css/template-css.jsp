@@ -1,4 +1,4 @@
-<%@ page language ="java" contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page  contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="jhi.germinate.shared.*"%><%@ page import="jhi.germinate.shared.enums.*"%>
 
 <%--
@@ -57,6 +57,12 @@ button.mdi:before {
   margin-right: 5px;
 }
 
+.navbar-toggle {
+	height: 40px;
+	margin: 10px;
+	display: inline-block !important;
+}
+
 .<%= Style.TABLE_BORDER %> {
   border: 1px solid #ddd;
 }
@@ -101,17 +107,29 @@ button.mdi:before {
   min-height: 568px;
   background-color: white;
 }
+
 <%--.<%= Style.MAPS_PANEL %> {--%>
   <%--margin-left: -15px;--%>
   <%--margin-right: -15px;--%>
 <%--}--%>
 @media (min-width: 992px) {
+
+	.<%= Style.LAYOUT_SIDEBAR_TOGGLED %> .navbar-default.sidebar {
+		width: 0;
+		overflow-x: hidden;
+	}
+
   #content-wrapper {
     position: inherit;
     margin: 0 0 0 250px;
     padding: 30px;
     border-left: 1px solid #e7e7e7;
   }
+
+	.<%= Style.LAYOUT_SIDEBAR_TOGGLED %> #content-wrapper {
+		margin: 0;
+	}
+
   <%--.<%= Style.MAPS_PANEL %> {--%>
     <%--margin-left: -30px;--%>
     <%--margin-right: -30px;--%>
@@ -289,22 +307,7 @@ table.dataTable thead .sorting_asc_disabled,
 table.dataTable thead .sorting_desc_disabled {
   background: transparent;
 }
-table.dataTable thead .sorting_asc:after {
-  content: "\f0de";
-  float: right;
-  font-family: fontawesome;
-}
-table.dataTable thead .sorting_desc:after {
-  content: "\f0dd";
-  float: right;
-  font-family: fontawesome;
-}
-table.dataTable thead .sorting:after {
-  content: "\f0dc";
-  float: right;
-  font-family: fontawesome;
-  color: rgba(50, 50, 50, 0.5);
-}
+
 .btn-circle {
   width: 30px;
   height: 30px;

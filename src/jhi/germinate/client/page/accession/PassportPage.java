@@ -598,7 +598,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 					if (accession.getLocation() != null)
 					{
 						if (accession.getLocation().getCountry() != null)
-							new DescriptionWidget(institutionPanel, Text.LANG.mcpdOrigcty(), "<span class='" + Style.COUNTRY_FLAG + " " + accession.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "'>" + accession.getLocation().getCountry().getName() + "</span>", true);
+							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdOrigcty(), "<span class='" + Style.COUNTRY_FLAG + " " + accession.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "'>" + accession.getLocation().getCountry().getName() + "</span>", true);
 
 						if (accession.getLocation().getCoordinateUncertainty() != null)
 							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCoorduncert(), Integer.toString(accession.getLocation().getCoordinateUncertainty()));
