@@ -43,7 +43,8 @@ footer > div.container-fluid {
   line-height: 40px;
 }
 
-button.mdi:empty:before {
+button.mdi:empty:before,
+a.mdi:empty:before {
   margin-right: 0;
 }
 
@@ -53,7 +54,8 @@ button.mdi:empty:before {
   vertical-align: -15%;
 }
 
-button.mdi:before {
+button.mdi:before,
+a.mdi:before {
   margin-right: 5px;
 }
 
@@ -61,6 +63,10 @@ button.mdi:before {
 	height: 40px;
 	margin: 10px;
 	display: inline-block !important;
+}
+
+.form-group.<%= Style.FORM_REQUIRED %> label:after {
+  content: " *";
 }
 
 .<%= Style.TABLE_BORDER %> {

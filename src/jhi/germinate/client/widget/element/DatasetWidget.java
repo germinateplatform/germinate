@@ -37,6 +37,7 @@ import jhi.germinate.client.page.dataset.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.table.pagination.*;
@@ -206,7 +207,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 			/* If the continue button is available -> multi */
 			if (datasetCallback.isContinueButtonAvailable())
 				selectionMode = DatasetTable.SelectionMode.MULTI;
-			/* If not -> none */
+				/* If not -> none */
 			else
 				selectionMode = DatasetTable.SelectionMode.NONE;
 		}
@@ -295,7 +296,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 
 		if (ids.size() > 0)
 		{
-					/* Save the ids to the parameter store */
+			/* Save the ids to the parameter store */
 			switch (experimentType)
 			{
 				case allelefreq:
@@ -315,7 +316,9 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 					break;
 			}
 
-					/* Notify the callback */
+			GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(ids));
+
+			/* Notify the callback */
 			datasetCallback.onContinuePressed();
 		}
 		else
@@ -454,15 +457,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	public void setShowLoadingIndicator(boolean showLoadingIndicator)
 	{
 		this.showLoadingIndicator = showLoadingIndicator;
-	}
-
-	public void setShowDownload(boolean showDownload, ReferenceFolder refrenceFolder)
-	{
-		this.showDownload = showDownload;
-		this.referenceFolder = refrenceFolder;
-
-		if (table != null)
-			table.setShowDownload(showDownload, referenceFolder);
 	}
 
 	public void setShowDownload(boolean showDownload, SimpleCallback<Dataset> downloadCallback)

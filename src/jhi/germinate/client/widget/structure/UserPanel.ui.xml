@@ -1,0 +1,88 @@
+<!--
+  ~  Copyright 2018 Information and Computational Sciences,
+  ~  The James Hutton Institute.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
+
+	<ui:with field='i18n' type='jhi.germinate.client.i18n.Text'/>
+
+	<ui:style>
+		@external row;
+
+		.userdetails {
+			min-width: 200px;
+			padding: 10px;
+			padding-bottom: 0px;
+		}
+
+		.userdetails button {
+			text-transform: capitalize;
+		}
+
+		.root li:last-child .row {
+			margin-bottom: 5px;
+		}
+	</ui:style>
+
+	<ul class="{DROPDOWN_MENU} {style.root}" ui:field="root">
+		<li>
+			<div class="{style.userdetails}">
+				<div class="{ROW}">
+					<div class="col-lg-4">
+						<p class="text-center">
+							<span class="{MDI} {MDI_ACCOUNT} {MDI_48PX}"></span>
+						</p>
+					</div>
+					<div class="col-lg-8">
+						<p class="strong" ui:field="username"/>
+						<!--<p ui:field="email" />-->
+						<a class="{BTN} btn-default {BTN_BLOCK} {MDI} {MDI_LG} {MDI_SETTINGS}" target="_blank" ui:field="gatekeeperLink">
+							<ui:text from='{i18n.menuSettings}'/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li class="{DIVIDER}"></li>
+		<li ui:field="adminContainer">
+			<div class="{style.userdetails}">
+				<div class="{ROW}">
+					<div class="col-lg-12">
+						<a class="{BTN} btn-default {BTN_BLOCK} {MDI} {MDI_LG} {MDI_ACCOUNT_SETTINGS_VARIANT}" title="{i18n.adminConfigMenuItem}"
+						   ui:field="adminLink">
+							<ui:text from='{i18n.adminConfigMenuItem}'/>
+						</a>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li>
+			<div class="{style.userdetails}">
+				<div class="{ROW}">
+					<div class="col-lg-12">
+						<button class="{BTN} btn-danger {BTN_BLOCK} {MDI} {MDI_LG} {MDI_LOGOUT_VARIANT}" title="{i18n.menuLogout}"
+								ui:field="logoutLink">
+							<ui:text from='{i18n.menuLogout}'/>
+						</button>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+</ui:UiBinder>

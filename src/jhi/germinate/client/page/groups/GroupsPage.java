@@ -263,8 +263,9 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 	private void updateIsPublic()
 	{
-		isPublic.setEnabled(canEdit(group));
+		isPublic.setEnabled(true);
 		isPublic.setValue(group != null && group.getVisibility());
+		isPublic.setEnabled(canEdit(group));
 	}
 
 	private void updateGroupMembers()

@@ -335,6 +335,10 @@ public interface Text extends Messages
 	@Key("menu.logout")
 	String menuLogout();
 
+	@Key("menu.settings")
+	@DefaultMessage("Settings")
+	String menuSettings();
+
 	@Key("menu.genotype.maps")
 	String menuMaps();
 
@@ -2580,4 +2584,24 @@ public interface Text extends Messages
 	@Key("page.about.buttons.documentation.url")
 	@DefaultMessage("https://github.com/germinateplatform/germinate/wiki")
 	String aboutButtonsDocumentationUrl();
+
+	@Key("widget.user.tracking.heading")
+	@DefaultMessage("")
+	SafeHtml userTrackingHeading();
+
+	@Key("widget.dataset.user.tracking.name")
+	@DefaultMessage("Full name")
+	String userTrackingName();
+
+	@Key("widget.dataset.user.tracking.email")
+	@DefaultMessage("Email address")
+	String userTrackingEmail();
+
+	@Key("widget.dataset.user.tracking.institution")
+	@DefaultMessage("Institution")
+	String userTrackingInstitution();
+
+	@Key("widget.dataset.user.tracking.explanation")
+	@DefaultMessage("Can you let us know what you intend to use this data for in your research?")
+	String userTrackingExplanation();
 }

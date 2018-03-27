@@ -102,6 +102,11 @@ public class AdminConfigPage extends Composite implements HasHelp
 	TextBox   analyticsId;
 
 	@UiField
+	FormLabel    downloadTrackingLabel;
+	@UiField
+	ToggleSwitch downloadTracking;
+
+	@UiField
 	FormLabel templateTitleLabel;
 	@UiField
 	TextBox   templateTitle;
@@ -259,6 +264,8 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateBoolean(settings.googleAnalyticsEnabled, analytics, analyticsLabel);
 		updateString(settings.googleAnalyticsTrackingId, analyticsId, analyticsIdLabel);
 
+		updateBoolean(settings.downloadTrackingEnabled, downloadTracking, downloadTrackingLabel);
+
 		updateString(settings.templateTitle, templateTitle, templateTitleLabel);
 		updateString(settings.templateDatabaseName, templateDatabaseName, templateDatabaseNameLabel);
 		updateString(settings.templateContactEmail, templateEmail, templateEmailLabel);
@@ -300,10 +307,10 @@ public class AdminConfigPage extends Composite implements HasHelp
 		/* Take care of selection */
 		final SelectionModel<Page> selectionModel = new MultiSelectionModel<>();
 
-        /* Checkbox cell */
+		/* Checkbox cell */
 		CheckboxCell cell = new CheckboxCell(true, false);
 
-        /* First column: checkboxes */
+		/* First column: checkboxes */
 		Column<Page, Boolean> checkboxColumn = new Column<Page, Boolean>(cell)
 		{
 			@Override
@@ -448,6 +455,8 @@ public class AdminConfigPage extends Composite implements HasHelp
 
 			settings.googleAnalyticsEnabled.setValue(analytics.getValue());
 			settings.googleAnalyticsTrackingId.setValue(analyticsId.getValue());
+
+			settings.downloadTrackingEnabled.setValue(downloadTracking.getValue());
 
 			settings.templateTitle.setValue(templateTitle.getValue());
 			settings.templateDatabaseName.setValue(templateDatabaseName.getValue());

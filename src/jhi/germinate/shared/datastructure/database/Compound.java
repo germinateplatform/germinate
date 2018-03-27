@@ -48,7 +48,7 @@ public class Compound extends DatabaseObject
 	public static final String MOLECULAR_FORMULA = "compounds.molecular_formula";
 	public static final String MONOISOTOPIC_MASS = "compounds.monoisotopic_mass";
 	public static final String AVERAGE_MASS      = "compounds.average_mass";
-	public static final String CLASS             = "compounds.class";
+	public static final String COMPOUND_CLASS    = "compounds.compound_class";
 	public static final String UNIT_ID           = "compounds.unit_id";
 	public static final String CREATED_ON        = "compounds.created_on";
 	public static final String UPDATED_ON        = "compounds.updated_on";
@@ -59,7 +59,7 @@ public class Compound extends DatabaseObject
 	private String molecularFormulaHtml;
 	private Double monoisotopicMass;
 	private Double averageMass;
-	private String theClass;
+	private String compoundClass;
 	private Unit   unit;
 	private Long   createdOn;
 	private Long   updatedOn;
@@ -128,14 +128,14 @@ public class Compound extends DatabaseObject
 		return this;
 	}
 
-	public String getTheClass()
+	public String getCompoundClass()
 	{
-		return theClass;
+		return compoundClass;
 	}
 
-	public Compound setTheClass(String theClass)
+	public Compound setCompoundClass(String compoundClass)
 	{
-		this.theClass = theClass;
+		this.compoundClass = compoundClass;
 		return this;
 	}
 
@@ -280,7 +280,7 @@ public class Compound extends DatabaseObject
 							.setFormattedMolecularFormula()
 							.setMonoisotopicMass(row.getDouble(MONOISOTOPIC_MASS))
 							.setAverageMass(row.getDouble(AVERAGE_MASS))
-							.setTheClass(row.getString(CLASS))
+							.setCompoundClass(row.getString(COMPOUND_CLASS))
 							.setUnit(UNIT_CACHE.get(user, row.getLong(UNIT_ID), row, foreignsFromResultSet))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
@@ -298,13 +298,13 @@ public class Compound extends DatabaseObject
 		@Override
 		public void write(Database database, Compound object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO compounds (" + NAME + ", " + DESCRIPTION + ", " + MOLECULAR_FORMULA + ", " + MONOISOTOPIC_MASS + ", " + AVERAGE_MASS + ", " + CLASS + ", " + UNIT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO compounds (" + NAME + ", " + DESCRIPTION + ", " + MOLECULAR_FORMULA + ", " + MONOISOTOPIC_MASS + ", " + AVERAGE_MASS + ", " + COMPOUND_CLASS + ", " + UNIT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getName())
 					.setString(object.getDescription())
 					.setString(object.getMolecularFormula())
 					.setDouble(object.getMonoisotopicMass())
 					.setDouble(object.getAverageMass())
-					.setString(object.getTheClass())
+					.setString(object.getCompoundClass())
 					.setLong(object.getUnit() != null ? object.getUnit().getId() : null);
 
 			if (object.getCreatedOn() != null)

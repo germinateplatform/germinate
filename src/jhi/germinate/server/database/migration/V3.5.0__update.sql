@@ -96,3 +96,20 @@ MODIFY COLUMN `top_right_longitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Al
 MODIFY COLUMN `top_right_latitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.' AFTER `top_right_longitude`;
 
 ALTER TABLE `climateoverlays` COMMENT = 'Climate overlays can be used in conjunction with OpenStreetMap in order to visualize climate data in a geographic context.';
+
+CREATE TABLE `datasetaccesslogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
+  `user_id` int(11) NULL,
+  `user_name` varchar(255) NULL,
+  `user_email` varchar(255) NULL,
+  `user_institution` varchar(255) NULL,
+  `dataset_id` int(11) NOT NULL,
+  `reason` text NULL,
+  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) COMMENT = 'If enabled, tracks which user accessed which datasets.';
+
+ALTER TABLE `compounds`
+CHANGE COLUMN `class` `compound_class` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `average_mass`;

@@ -88,4 +88,6 @@ public interface DatasetServiceAsync
 	void getExperiment(RequestProperties properties, Long id, AsyncCallback<ServerResult<Experiment>> callback);
 
 	void getJson(AsyncCallback<String> callback);
+
+	void trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user, AsyncCallback<ServerResult<Boolean>> callback);
 }

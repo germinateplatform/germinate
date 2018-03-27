@@ -79,7 +79,7 @@ public class ExcelCompoundReader implements IStreamableReader<Compound>
 				.setMolecularFormula(IExcelReader.getCellValue(wb, row, i++))
 				.setMonoisotopicMass(IExcelReader.getCellValueAsDouble(wb, row, i++))
 				.setAverageMass(IExcelReader.getCellValueAsDouble(wb, row, i++))
-				.setTheClass(IExcelReader.getCellValue(wb, row, i++))
+				.setCompoundClass(IExcelReader.getCellValue(wb, row, i++))
 				.setUnit(new Unit().setName(IExcelReader.getCellValue(wb, row, i++))
 								   .setAbbreviation(IExcelReader.getCellValue(wb, row, i++))
 								   .setDescription(IExcelReader.getCellValue(wb, row, i++))

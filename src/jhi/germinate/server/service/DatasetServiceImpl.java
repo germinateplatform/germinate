@@ -107,10 +107,10 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		if (userAuth != null)
 			details = GatekeeperUserManager.getByIdWithPasswordForSystem(null, userAuth.getId());
 
-        /*
+		/*
 		 * If login is required, but the given user id is either invalid or
-         * there is no password set, fail
-         */
+		 * there is no password set, fail
+		 */
 		if (isPrivate && (details == null || StringUtils.isEmpty(details.getPassword())))
 			return new ServerResult<>(null, null);
 
@@ -118,8 +118,8 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		/*
 		 * We restrict the list of visible datasets, if login is required AND
-         * the user isn't an admin
-         */
+		 * the user isn't an admin
+		 */
 		if (isPrivate)
 		{
 			/* Admins can see everything */
@@ -129,8 +129,8 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 			}
 			/*
 			 * Regular users can see public datasets and private ones they
-             * created themselves
-             */
+			 * created themselves
+			 */
 			else
 			{
 				formatted = String.format(QUERY_DATASET_STATS, DatasetManager.BITS_PRIVATE_REGULAR);
@@ -261,6 +261,26 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	public String getJson()
 	{
 		return "{  \"creator\": [\"Creator1\", \"Creator2\"],  \"subject\": [\"Subject1\", \"Subject2\"],  \"description\": [\"Description1\", \"Description2\"],  \"publisher\": [\"Publisher1\", \"Publisher2\"],  \"contributor\": [\"Contributor1\", \"Contributor2\"],  \"date\": [\"2017-01-01\", \"2017-01-02\"],  \"type\": [\"Type1\", \"Type2\"],  \"format\": [\"Format1\", \"Format2\"],  \"identifier\": [\"identifier1\", \"identifier2\"],  \"source\": [\"source1\", \"source2\"],  \"language\": [\"English\", \"German\"],  \"relation\": [\"relation1\", \"relation2\"],  \"coverage\": [\"coverage1\", \"coverage2\"],  \"rights\": [\"rights1\", \"rights2\"] }";
+	}
+
+	@Override
+	public ServerResult<Boolean> trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED) && !PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
+		{
+			boolean worked = true;
+			for (Long dataset : datasetIds)
+				worked |= DatasetManager.addTracking(userAuth, dataset, user);
+
+			return new ServerResult<>(worked);
+		}
+		else
+		{
+			return new ServerResult<>(false);
+		}
 	}
 
 	private static class DatasetStats

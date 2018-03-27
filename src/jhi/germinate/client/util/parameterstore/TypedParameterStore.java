@@ -57,6 +57,10 @@ public abstract class TypedParameterStore<T>
 		{
 			return FlapjackAllelefreqBinningResultParameterStore.Inst.get().getAsString(parameter);
 		}
+		else if(UnapprovedUser.class.equals(parameter.getType()))
+		{
+			return UnapprovedUserParameterStore.Inst.get().getAsString(parameter);
+		}
 		else if (Float.class.equals(parameter.getType()))
 		{
 			return FloatParameterStore.Inst.get().getAsString(parameter);

@@ -29,6 +29,7 @@ public class UnapprovedUser implements Serializable
 	private static final long serialVersionUID = -6350229035824380532L;
 
 	public boolean toRegister;
+	public Long    id;
 	public String  userUsername;
 	public String  userPassword;
 	public String  userFullName;
@@ -37,6 +38,7 @@ public class UnapprovedUser implements Serializable
 	public String  institutionName;
 	public String  institutionAcronym;
 	public String  institutionAddress;
+	public String  extra;
 
 	public UnapprovedUser()
 	{

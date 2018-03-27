@@ -47,6 +47,8 @@ public class Style
 	public static final String LAYOUT_NO_BORDER_LEFT             = "gm8-no-border-left";
 	public static final String LAYOUT_SIDEBAR_TOGGLED            = "gm8-sidebar-toggled";
 
+	public static final String FORM_REQUIRED = "form-required";
+
 	public static final String TAG_DUMMY_ANCHOR = "gm8-tag-dummy-anchor";
 
 	public static final String WIDGET_BUSY_INDICATOR = "gm8-widget-busy-indicator";
@@ -134,6 +136,8 @@ public class Style
 	public static final String MDI_FILE_XML                        = "mdi-file-xml";
 	public static final String MDI_FILE_DOCUMENT                   = "mdi-file-document";
 	public static final String MDI_SITEMAP                         = "mdi-sitemap";
+	public static final String MDI_ACCOUNT                         = "mdi-account";
+	public static final String MDI_ACCOUNT_SETTINGS_VARIANT        = "mdi-account-settings-variant";
 	public static final String MDI_ACCOUNT_MULTIPLE                = "mdi-account-multiple";
 	public static final String MDI_MAGNIFY                         = "mdi-magnify";
 	public static final String MDI_LINK_VARIANT                    = "mdi-link-variant";

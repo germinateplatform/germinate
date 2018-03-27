@@ -145,6 +145,8 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			PropertyReader.setBoolean(settings.googleAnalyticsEnabled.getServerProperty(), settings.googleAnalyticsEnabled.getValue());
 			PropertyReader.set(settings.googleAnalyticsTrackingId.getServerProperty(), settings.googleAnalyticsTrackingId.getValue());
 
+			PropertyReader.setBoolean(settings.downloadTrackingEnabled.getServerProperty(), settings.downloadTrackingEnabled.getValue());
+
 			PropertyReader.setBoolean(settings.socialShowFacebook.getServerProperty(), settings.socialShowFacebook.getValue());
 			PropertyReader.setBoolean(settings.socialShowTwitter.getServerProperty(), settings.socialShowTwitter.getValue());
 			PropertyReader.setBoolean(settings.socialShowGooglePlus.getServerProperty(), settings.socialShowGooglePlus.getValue());
@@ -206,6 +208,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		settings.galleryImagesPerPage = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE, PropertyReader.getInteger(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE));
 		settings.templateShowParallaxBanner = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER));
 		settings.templateTitle = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TITLE, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TITLE));
+		settings.downloadTrackingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED));
 
 		settings.supportsAdvancedGeography = checkDatabaseVersion();
 

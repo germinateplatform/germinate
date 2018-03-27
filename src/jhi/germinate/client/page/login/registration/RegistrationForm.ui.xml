@@ -32,33 +32,33 @@
 	</ui:style>
 
 	<g:FlowPanel>
-		<b:FormGroup>
+		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formGatekeeper" text="{msg.registrationAlreadyHaveAccount}"/>
 			<t:ToggleSwitch b:id="formGatekeeper" onText="{msg.generalYes}" offText="{msg.generalNo}" value="true" ui:field="accountToggle"/>
 		</b:FormGroup>
-		<b:FormGroup>
+		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formUsername" text="{msg.registrationUsername}"/>
 			<b:TextBox b:id="formUsername" ui:field="username"/>
 		</b:FormGroup>
-		<b:FormGroup>
+		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formPassword" text="{msg.registrationPassword}"/>
 			<b:Input type="PASSWORD" b:id="formPassword" ui:field="password"/>
 		</b:FormGroup>
 
 		<g:FlowPanel visible="false" ui:field="newAccountPanel">
-			<b:FormGroup>
+			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formPasswordConfirm" text="{msg.registrationConfirmPassword}"/>
 				<b:Input type="PASSWORD" b:id="formPasswordConfirm" ui:field="passwordConfirm"/>
 			</b:FormGroup>
-			<b:FormGroup>
+			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formName" text="{msg.registrationFullName}"/>
 				<b:TextBox b:id="formName" ui:field="name"/>
 			</b:FormGroup>
-			<b:FormGroup>
+			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formEmail" text="{msg.registrationEmailAddress}"/>
 				<b:TextBox b:id="formEmail" ui:field="email"/>
 			</b:FormGroup>
-			<b:FormGroup ui:field="institutionGroup">
+			<b:FormGroup addStyleNames="{FORM_REQUIRED}" ui:field="institutionGroup">
 				<b:FormLabel for="formInstitution" text="{msg.registrationInstitution}"/>
 				<b:InputGroup>
 					<lb:InstitutionListBox addStyleNames="{style.select}" ui:field="institution"/>

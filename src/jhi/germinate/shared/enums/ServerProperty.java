@@ -42,6 +42,7 @@ public enum ServerProperty
 	GERMINATE_UPLOAD_SIZE_LIMIT_MB("Germinate.UploadSizeLimitMB", "0.5", false),
 	GOOGLE_ANALYTICS_ENABLED("GoogleAnalytics.Enabled", "false", false),
 	GOOGLE_ANALYTICS_TRACKING_ID("GoogleAnalytics.TrackingId", null, false),
+	GERMINATE_DOWNLOAD_TRACKING_ENABLED("Germinate.Download.Tracking.Enabled", "false", false),
 	COOKIE_NOTIFIER_ENABLED("CookieNotifier.Enabled", "false", false),
 	GERMINATE_AVAILABLE_PAGES("Germinate.AvailablePages", null, true),
 	GERMINATE_SHOW_HOME_ON_LOGIN("Germinate.ShowHomeOnLogin", "false", false),

@@ -211,10 +211,10 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 			@Override
 			public String getValue(Compound object)
 			{
-				return object.getTheClass();
+				return object.getCompoundClass();
 			}
 		};
-		column.setDataStoreName(Compound.CLASS);
+		column.setDataStoreName(Compound.COMPOUND_CLASS);
 		addColumn(column, Text.LANG.compoundColumnClass(), sortingEnabled);
 
 		/* Add the unit column */

@@ -68,6 +68,7 @@ public enum Parameter
 	groupPreviewFile(String.class, ParameterLifetime.TEMPORARY),
 	compoundId(Long.class, ParameterLifetime.TEMPORARY),
 	experimentId(Long.class, ParameterLifetime.TEMPORARY),
+	user(UnapprovedUser.class, ParameterLifetime.TEMPORARY),
 
 
 	tool_id(String.class, ParameterLifetime.TEMPORARY),

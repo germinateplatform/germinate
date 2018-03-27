@@ -46,12 +46,6 @@ public class GatekeeperUserWithPassword extends GatekeeperUser
 		super(id);
 	}
 
-	public GatekeeperUserWithPassword(Long id, String username, String fullName, boolean isAdmin, boolean isSuspended, String databaseName, String databaseServer, String password)
-	{
-		super(id, username, fullName, isAdmin, isSuspended, databaseName, databaseServer);
-		this.password = password;
-	}
-
 	public String getPassword()
 	{
 		return password;

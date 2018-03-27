@@ -55,6 +55,8 @@ public class GerminateSettings implements Serializable
 	public ClientProperty<Boolean> googleAnalyticsEnabled;
 	public ClientProperty<String>  googleAnalyticsTrackingId;
 
+	public ClientProperty<Boolean> downloadTrackingEnabled;
+
 	public ClientProperty<Set<Page>> availablePages;
 
 	public ClientProperty<String> externalDataFolder;

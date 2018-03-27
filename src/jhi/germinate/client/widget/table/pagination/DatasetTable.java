@@ -38,6 +38,7 @@ import jhi.germinate.client.page.dataset.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.*;
@@ -147,6 +148,8 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 			if (parameter != null)
 				LongListParameterStore.Inst.get().put(parameter, ids);
+
+			GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(ids));
 		}
 	}
 
@@ -690,6 +693,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					{
 						event.preventDefault();
 						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "dataset", Long.toString(object.getId()));
+						GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(object.getId())));
 						downloadCallback.onSuccess(object);
 					}
 					else

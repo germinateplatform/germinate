@@ -132,4 +132,6 @@ public interface DatasetService extends RemoteService
 	ServerResult<Experiment> getExperiment(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException;
 
 	String getJson();
+
+	ServerResult<Boolean> trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user) throws InvalidSessionException, DatabaseException;
 }
