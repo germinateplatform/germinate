@@ -36,11 +36,16 @@ public enum Parameter
 	generalId(String.class, ParameterLifetime.TEMPORARY),
 	accessionName(String.class, ParameterLifetime.TEMPORARY),
 	searchString(String.class, ParameterLifetime.TEMPORARY),
-	genotypeDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
-	allelefreqDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
-	compoundDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
-	climateDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
-	trialsDatasetIds(List.class, ParameterLifetime.VOLATILE, false),
+	genotypeDatasets(List.class, ParameterLifetime.VOLATILE, false),
+	genotypeDatasetIds(List.class, ParameterLifetime.TEMPORARY),
+	allelefreqDatasets(List.class, ParameterLifetime.VOLATILE, false),
+	allelefreqDatasetIds(List.class, ParameterLifetime.TEMPORARY),
+	compoundDatasets(List.class, ParameterLifetime.VOLATILE, false),
+	compoundDatasetIds(List.class, ParameterLifetime.TEMPORARY),
+	climateDatasets(List.class, ParameterLifetime.VOLATILE, false),
+	climateDatasetIds(List.class, ParameterLifetime.TEMPORARY),
+	trialsDatasets(List.class, ParameterLifetime.VOLATILE, false),
+	trialsDatasetIds(List.class, ParameterLifetime.TEMPORARY),
 	tableFilterMapping(Map.class, ParameterLifetime.VOLATILE),
 	flapjackExportResult(FlapjackProjectCreationResult.class, ParameterLifetime.VOLATILE),
 	megaEnvironmentId(Long.class, ParameterLifetime.TEMPORARY),
@@ -74,8 +79,8 @@ public enum Parameter
 	tool_id(String.class, ParameterLifetime.TEMPORARY),
 	GALAXY_URL(String.class, ParameterLifetime.TEMPORARY);
 
-	private Class<?> type;
-	private boolean acceptFromUrl = true;
+	private Class<?>          type;
+	private boolean           acceptFromUrl = true;
 	private ParameterLifetime lifetime;
 
 	Parameter(Class<?> type, ParameterLifetime lifetime)
@@ -88,6 +93,25 @@ public enum Parameter
 	{
 		this(type, lifetime);
 		this.acceptFromUrl = acceptFromUrl;
+	}
+
+	public static Parameter getDatasetParam(Parameter param)
+	{
+		switch (param)
+		{
+			case trialsDatasetIds:
+				return trialsDatasets;
+			case climateDatasetIds:
+				return climateDatasets;
+			case compoundDatasetIds:
+				return compoundDatasets;
+			case allelefreqDatasetIds:
+				return allelefreqDatasets;
+			case genotypeDatasetIds:
+				return genotypeDatasets;
+			default:
+				return null;
+		}
 	}
 
 	public Class<?> getType()
@@ -103,6 +127,12 @@ public enum Parameter
 	public ParameterLifetime getLifetime()
 	{
 		return lifetime;
+	}
+
+	public boolean isDatasetParam()
+	{
+		return this == trialsDatasets || this == climateDatasets || this == compoundDatasets || this == genotypeDatasets || this == allelefreqDatasets
+				|| this == trialsDatasetIds || this == climateDatasetIds || this == compoundDatasetIds || this == genotypeDatasetIds || this == allelefreqDatasetIds;
 	}
 
 	public enum ParameterLifetime

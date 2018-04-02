@@ -233,7 +233,7 @@ public class NavigationHandler
 
 									JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), result.getSourceFile());
 
-            						/* Click it */
+									/* Click it */
 									JavaScript.invokeDownload(href);
 								}
 							}
@@ -344,11 +344,11 @@ public class NavigationHandler
 					@Override
 					public void onSuccess(Dataset result)
 					{
-							/* Get the id of the selected dataset */
+						/* Get the id of the selected dataset */
 						List<Long> ids = new ArrayList<>();
 						ids.add(result.getId());
 
-							/* Start the export process */
+						/* Start the export process */
 						PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
 						{
 							@Override

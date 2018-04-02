@@ -201,7 +201,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		String formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
 		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
 				.setStrings(ids)
 				.getStreamer();

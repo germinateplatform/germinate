@@ -17,6 +17,7 @@
 
 package jhi.germinate.client.service;
 
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.rpc.*;
 
 import java.util.*;
@@ -39,7 +40,7 @@ public interface UserServiceAsync
 	 * @param credentials the {@link UserCredentials}
 	 * @param callback    The {@link AsyncCallback}
 	 */
-	void login(RequestProperties properties, UserCredentials credentials, AsyncCallback<UserAuth> callback);
+	Request login(RequestProperties properties, UserCredentials credentials, AsyncCallback<UserAuth> callback);
 
 	/**
 	 * Attempts to register the new {@link UnapprovedUser}.

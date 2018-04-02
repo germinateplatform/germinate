@@ -32,7 +32,6 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
-import java.util.Map;
 import java.util.stream.*;
 
 import jhi.germinate.client.*;
@@ -45,6 +44,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
@@ -590,7 +590,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				{
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
 						mapping.put(Accession.NAME, searchString);
 						mapping.put(Accession.NUMBER, searchString);
@@ -610,7 +610,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				{
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
 						mapping.put(Accession.NAME, searchString);
 						mapping.put(Attribute.NAME, searchString);
@@ -627,7 +627,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					experimentTypes.add(ExperimentType.trials);
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
 						mapping.put(Accession.NAME, searchString);
 						mapping.put(Dataset.DESCRIPTION, searchString);
@@ -644,7 +644,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					experimentTypes.add(ExperimentType.compound);
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
 						mapping.put(Accession.NAME, searchString);
 						mapping.put(Compound.NAME, searchString);
@@ -658,7 +658,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				{
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Marker.MARKER_NAME, searchString);
 						mapping.put(MapFeatureType.DESCRIPTION, searchString);
 						mapping.put(jhi.germinate.shared.datastructure.database.Map.DESCRIPTION, searchString);
@@ -674,7 +674,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				{
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Dataset.DESCRIPTION, searchString);
 						mapping.put(ExperimentType.DESCRIPTION, searchString);
 						mapping.put(Experiment.EXPERIMENT_NAME, searchString);
@@ -689,7 +689,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				{
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Dataset.DESCRIPTION, searchString);
 						mapping.put(Attribute.NAME, searchString);
 						mapping.put(Attribute.DESCRIPTION, searchString);
@@ -704,7 +704,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				{
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(PedigreeService.CHILD_GID, searchString);
 						mapping.put(PedigreeService.CHILD_NAME, searchString);
 						mapping.put(PedigreeService.PARENT_GID, searchString);
@@ -719,7 +719,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				{
 					try
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Location.SITE_NAME, searchString);
 						mapping.put(Location.REGION, searchString);
 						mapping.put(Location.STATE, searchString);
@@ -808,10 +808,10 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		if (!CollectionUtils.isEmpty(licensesToAgreeTo))
 		{
-			DatasetWidget.showLicenseAcceptWizard(additionalDataTable, licensesToAgreeTo, new DefaultAsyncCallback<Set<Dataset>>()
+			DatasetWidget.showLicenseAcceptWizard(additionalDataTable, licensesToAgreeTo, new DefaultAsyncCallback<List<Dataset>>()
 			{
 				@Override
-				protected void onSuccessImpl(Set<Dataset> result)
+				protected void onSuccessImpl(List<Dataset> result)
 				{
 					// Refresh the table
 					updateTables();

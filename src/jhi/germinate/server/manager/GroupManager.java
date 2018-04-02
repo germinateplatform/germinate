@@ -23,7 +23,6 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -276,7 +275,7 @@ public class GroupManager extends AbstractManager<Group>
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 
-		String formatted = String.format(DELETE_MEMBERS, Util.generateSqlPlaceholderString(memberIds.size()));
+		String formatted = String.format(DELETE_MEMBERS, StringUtils.generateSqlPlaceholderString(memberIds.size()));
 
 		sqlDebug.addAll(new ValueQuery(formatted, userAuth)
 				.setLong(groupId)
@@ -356,9 +355,9 @@ public class GroupManager extends AbstractManager<Group>
 		String formatted;
 
 		if (userAuth.isAdmin())
-			formatted = String.format(q, Util.generateSqlPlaceholderString(datasetIds.size()), SELECT_ADMINISTRATOR);
+			formatted = String.format(q, StringUtils.generateSqlPlaceholderString(datasetIds.size()), SELECT_ADMINISTRATOR);
 		else
-			formatted = String.format(q, Util.generateSqlPlaceholderString(datasetIds.size()), SELECT_REGULAR_USER);
+			formatted = String.format(q, StringUtils.generateSqlPlaceholderString(datasetIds.size()), SELECT_REGULAR_USER);
 
 		DatabaseObjectQuery<Group> query = new DatabaseObjectQuery<Group>(formatted, userAuth)
 				.setLongs(datasetIds);

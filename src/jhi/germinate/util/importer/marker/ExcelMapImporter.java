@@ -27,11 +27,11 @@ import jhi.germinate.shared.exception.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link MapImporter} uses an {@link IDataReader} to read and parse attribute data and then writes it to a Germinate database.
+ * {@link ExcelMapImporter} uses an {@link IDataReader} to read and parse attribute data and then writes it to a Germinate database.
  *
  * @author Sebastian Raubach
  */
-public class MapImporter extends DataImporter<Map>
+public class ExcelMapImporter extends DataImporter<Map>
 {
 	private Set<Long> createdMapIds = new HashSet<>();
 
@@ -39,7 +39,7 @@ public class MapImporter extends DataImporter<Map>
 
 	public static void main(String[] args)
 	{
-		new MapImporter()
+		new ExcelMapImporter()
 				.run(args);
 	}
 
@@ -72,7 +72,7 @@ public class MapImporter extends DataImporter<Map>
 	 * @param entry The {@link MapDefinition} object containing the {@link MarkerType} to import.
 	 * @throws DatabaseException Thrown if the interaction with the database fails.
 	 */
-	private void createOrGetMap(Map entry) throws DatabaseException
+	protected void createOrGetMap(Map entry) throws DatabaseException
 	{
 		String name = entry.getDescription();
 

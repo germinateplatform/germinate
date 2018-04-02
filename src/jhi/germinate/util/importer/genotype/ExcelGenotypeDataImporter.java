@@ -32,27 +32,24 @@ import jhi.germinate.util.importer.marker.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link GenotypeDataImporter} uses an {@link IDataReader} to read and parse {@link String[]} objects and then writes it to a Germinate database.
+ * {@link ExcelGenotypeDataImporter} uses an {@link IDataReader} to read and parse {@link String[]} objects and then writes it to a Germinate database.
  *
  * @author Sebastian Raubach
  */
-public class GenotypeDataImporter extends DataImporter<String[]>
+public class ExcelGenotypeDataImporter extends DataImporter<String[]>
 {
+	protected GenotypeMetadataImporter metadataImporter;
+	protected ExcelMarkerImporter      markerImporter;
+	protected File           tempFile;
+	protected File           hdf5File;
+	protected Dataset dataset;
 	private Set<Long> createdDatasetMemberIds = new HashSet<>();
-
-	private GenotypeMetadataImporter metadataImporter;
-	private MarkerImporter           markerImporter;
-
-	private File           tempFile;
-	private File           hdf5File;
 	private BufferedWriter bw;
-
 	private boolean firstRow = true;
-	private Dataset dataset;
 
 	public static void main(String[] args)
 	{
-		new GenotypeDataImporter()
+		new ExcelGenotypeDataImporter()
 				.run(args);
 	}
 
@@ -65,7 +62,7 @@ public class GenotypeDataImporter extends DataImporter<String[]>
 		hdf5File = metadataImporter.getHdf5File();
 		dataset = metadataImporter.getDataset();
 
-		markerImporter = new MarkerImporter();
+		markerImporter = new ExcelMarkerImporter();
 		markerImporter.setDataset(dataset);
 		markerImporter.run(input, server, database, username, password, port, ExcelMarkerReader.class.getCanonicalName());
 

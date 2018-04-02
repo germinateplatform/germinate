@@ -24,7 +24,6 @@ import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -100,7 +99,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 
 		try
 		{
-			String formatted = SELECT_BY_ID.replace("{{DATASET_IDS}}", Util.generateSqlPlaceholderString(ids.size()));
+			String formatted = SELECT_BY_ID.replace("{{DATASET_IDS}}", StringUtils.generateSqlPlaceholderString(ids.size()));
 
 			return getDatabaseObjectQuery(formatted, user, null, (ExperimentType) null, null)
 					.setLongs(ids)
@@ -468,7 +467,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 												   else if (!isPrivate)
 													   return false;
 												   else
-													   return d.hasLicenseBeenAccepted(userAuth.getId());
+													   return d.hasLicenseBeenAccepted(userAuth);
 											   })
 											   .collect(Collectors.toList());
 

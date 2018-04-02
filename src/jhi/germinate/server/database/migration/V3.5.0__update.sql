@@ -31,18 +31,17 @@ ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_3`;
 ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_4`;
 ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_5`;
 ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_6`;
-ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_7`;
 
 ALTER TABLE `germinatebase`
-ADD CONSTRAINT `germinatebase_ibfk_1` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_2` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_3` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomies` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_4` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_5` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_6` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_7` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_8` FOREIGN KEY (`entitytype_id`) REFERENCES `entitytypes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-ADD CONSTRAINT `germinatebase_ibfk_9` FOREIGN KEY (`entityparent_id`) REFERENCES `germinatebase` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ADD CONSTRAINT `germinatebase_ibfk_subtaxa` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_institution` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_taxonomy` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomies` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_location` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_biologicalstatus` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_collsrc` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_mlsstatus` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_entitytype` FOREIGN KEY (`entitytype_id`) REFERENCES `entitytypes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+ADD CONSTRAINT `germinatebase_ibfk_entityparent` FOREIGN KEY (`entityparent_id`) REFERENCES `germinatebase` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 /* Create sample entries in `germinatebase` for each sample in the `allelefrequencydata` table */
 INSERT INTO germinatebase (general_identifier, name, entitytype_id, entityparent_id)

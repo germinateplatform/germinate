@@ -1206,6 +1206,10 @@ public interface Text extends Messages
 	@DefaultMessage("Between")
 	String operatorsBetween();
 
+	@Key("operators.in.set")
+	@DefaultMessage("In set")
+	String operatorsInSet();
+
 	@Key("operators.and")
 	String operatorsAnd();
 
@@ -2265,6 +2269,10 @@ public interface Text extends Messages
 	@DefaultMessage("Genotype data")
 	String genotypePageTitle();
 
+	@Key("page.allelefreq.title")
+	@DefaultMessage("Allele frequency data")
+	String allelefreqPageTitle();
+
 	@Key("page.allelefreq.binning.title")
 	@DefaultMessage("Allele Frequency Binning")
 	String allelefreqBinningTitle();
@@ -2588,6 +2596,10 @@ public interface Text extends Messages
 	@Key("widget.user.tracking.heading")
 	@DefaultMessage("")
 	SafeHtml userTrackingHeading();
+
+	@Key("widget.dataset.selected")
+	@DefaultMessage("Selected datasets")
+	String selectedDatasets();
 
 	@Key("widget.dataset.user.tracking.name")
 	@DefaultMessage("Full name")

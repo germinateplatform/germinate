@@ -26,6 +26,7 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Tuple.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -75,7 +76,7 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 
 		if (groupId == null)
 		{
-			String placeholder = Util.generateSqlPlaceholderString(datasetIds.size());
+			String placeholder = StringUtils.generateSqlPlaceholderString(datasetIds.size());
 			String formatted = String.format(QUERY_MIN_AVG_MAX_COLLSITE, placeholder, placeholder, placeholder, placeholder, placeholder);
 			query = new GerminateTableQuery(formatted, userAuth, COLUMNS_MIN_AVG_MAX_COLLSITE)
 					.setLong(climateId)
@@ -91,7 +92,7 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 		}
 		else
 		{
-			String placeholder = Util.generateSqlPlaceholderString(datasetIds.size());
+			String placeholder = StringUtils.generateSqlPlaceholderString(datasetIds.size());
 			String formatted = String.format(QUERY_GROUP_MIN_AVG_MAX_COLLSITE, placeholder, placeholder, placeholder, placeholder, placeholder);
 			query = new GerminateTableQuery(formatted, userAuth, COLUMNS_MIN_AVG_MAX_COLLSITE)
 					.setLong(climateId)

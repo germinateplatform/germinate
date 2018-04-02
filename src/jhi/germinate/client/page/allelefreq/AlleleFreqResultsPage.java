@@ -41,6 +41,7 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -192,7 +193,8 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	void onContinueClicked(ClickEvent event)
 	{
 		AlleleFrequencyService.HistogramParams params = getHistogramParams();
-		params.datasetIds = LongListParameterStore.Inst.get().get(Parameter.allelefreqDatasetIds);
+		List<Dataset> selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.allelefreqDatasets);
+		params.datasetIds = DatabaseObject.getIds(selectedDatasets);
 
 		AlleleFrequencyService.Inst.get().createProject(Cookie.getRequestProperties(), getHistogramParams(), new DefaultAsyncCallback<Tuple.Pair<String, FlapjackProjectCreationResult>>(true)
 		{

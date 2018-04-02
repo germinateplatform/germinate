@@ -332,21 +332,12 @@ public class Dataset extends DatabaseObject
 		return this;
 	}
 
-	public boolean hasLicenseBeenAccepted(String userId)
+	public boolean hasLicenseBeenAccepted(UserAuth user)
 	{
-		try
-		{
-			return hasLicenseBeenAccepted(Long.parseLong(userId));
-		}
-		catch (Exception e)
-		{
+		if(user == null)
 			return false;
-		}
-	}
-
-	public boolean hasLicenseBeenAccepted(Long userId)
-	{
-		return license == null || license.getLicenseLog() != null && Objects.equals(license.getLicenseLog().getUser(), userId);
+		else
+			return license == null || license.getLicenseLog() != null && Objects.equals(license.getLicenseLog().getUser(), user.getId());
 	}
 
 	@Override

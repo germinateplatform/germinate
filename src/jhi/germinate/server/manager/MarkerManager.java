@@ -22,7 +22,7 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -91,7 +91,7 @@ public class MarkerManager extends AbstractManager<Marker>
 	{
 		pagination.updateSortColumn(MarkerService.COLUMNS_MARKER_TABLE, Marker.ID);
 
-		String formatted = String.format(SELECT_BY_IDS, Util.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
+		String formatted = String.format(SELECT_BY_IDS, StringUtils.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
 		return new DatabaseObjectQuery<Marker>(formatted, userAuth)
 				.setStrings(ids)
 				.setInt(pagination.getStart())

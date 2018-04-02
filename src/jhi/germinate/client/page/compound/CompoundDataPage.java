@@ -45,7 +45,7 @@ import jhi.germinate.shared.enums.*;
  * @author Sebastian Raubach
  * @see Parameter#compoundDatasetIds
  */
-public class CompoundDataPage extends Composite implements HasLibraries
+public class CompoundDataPage extends Composite implements HasLibraries, HasHyperlinkButton
 {
 	private List<Compound> compounds;
 	private List<Group>    groups;
@@ -57,17 +57,19 @@ public class CompoundDataPage extends Composite implements HasLibraries
 	private static CompoundDataPageUiBinder ourUiBinder = GWT.create(CompoundDataPageUiBinder.class);
 
 	@UiField
-	HTMLPanel     panel;
+	DatasetListWidget datasetList;
 	@UiField
-	Row           content;
+	HTMLPanel         panel;
 	@UiField
-	CategoryPanel overviewTab;
+	Row               content;
 	@UiField
-	CategoryPanel scatterTab;
+	CategoryPanel     overviewTab;
 	@UiField
-	CategoryPanel matrixTab;
+	CategoryPanel     scatterTab;
 	@UiField
-	CategoryPanel downloadTab;
+	CategoryPanel     matrixTab;
+	@UiField
+	CategoryPanel     downloadTab;
 
 	@UiField
 	FlowPanel                     overviewPanel;
@@ -81,7 +83,7 @@ public class CompoundDataPage extends Composite implements HasLibraries
 	@UiField
 	DeckPanel deck;
 
-	private List<Long> selectedDatasets;
+	private List<Dataset> selectedDatasets;
 
 	public CompoundDataPage()
 	{
@@ -90,6 +92,8 @@ public class CompoundDataPage extends Composite implements HasLibraries
 		exportSelection = new DataExportSelection<>(ExperimentType.compound);
 
 		initWidget(ourUiBinder.createAndBindUi(this));
+
+		datasetList.setType(ExperimentType.compound);
 	}
 
 	@Override
@@ -98,11 +102,11 @@ public class CompoundDataPage extends Composite implements HasLibraries
 		super.onLoad();
 
 		/* See if there are selected datasets in the parameter store */
-		selectedDatasets = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
+		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
 
 		if (selectedDatasets == null || selectedDatasets.size() < 1)
 		{
-					/* If not, show an error message */
+			/* If not, show an error message */
 			content.clear();
 			panel.add(new Heading(HeadingSize.H3, Text.LANG.notificationExportNoDataset()));
 		}
@@ -159,12 +163,13 @@ public class CompoundDataPage extends Composite implements HasLibraries
 
 	private void getCompounds()
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		final ParallelAsyncCallback<ServerResult<List<Compound>>> compoundCallback = new ParallelAsyncCallback<ServerResult<List<Compound>>>()
 		{
 			@Override
 			protected void start()
 			{
-				CompoundService.Inst.get().getForDatasetIds(Cookie.getRequestProperties(), selectedDatasets, this);
+				CompoundService.Inst.get().getForDatasetIds(Cookie.getRequestProperties(), ids, this);
 			}
 		};
 		final ParallelAsyncCallback<ServerResult<List<Group>>> groupCallback = new ParallelAsyncCallback<ServerResult<List<Group>>>()
@@ -172,7 +177,7 @@ public class CompoundDataPage extends Composite implements HasLibraries
 			@Override
 			protected void start()
 			{
-				GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), selectedDatasets, ExperimentType.compound, this);
+				GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), ids, ExperimentType.compound, this);
 			}
 		};
 
@@ -191,7 +196,7 @@ public class CompoundDataPage extends Composite implements HasLibraries
 
 				compoundByCompoundChart.update(ExperimentType.compound, compounds, groups, null);
 				compoundMatrixChart.update(ExperimentType.compound, compounds, groups);
-				exportSelection.update(selectedDatasets, compounds, groups);
+				exportSelection.update(ids, compounds, groups);
 			}
 
 			@Override
@@ -204,7 +209,8 @@ public class CompoundDataPage extends Composite implements HasLibraries
 
 	private void getOverviewStats()
 	{
-		CompoundService.Inst.get().getDataStatsForDatasets(Cookie.getRequestProperties(), selectedDatasets, new DefaultAsyncCallback<ServerResult<List<DataStats>>>()
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
+		CompoundService.Inst.get().getDataStatsForDatasets(Cookie.getRequestProperties(), ids, new DefaultAsyncCallback<ServerResult<List<DataStats>>>()
 		{
 			@Override
 			protected void onFailureImpl(Throwable caught)
@@ -227,5 +233,13 @@ public class CompoundDataPage extends Composite implements HasLibraries
 	public Library[] getLibraries()
 	{
 		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LASSO, Library.D3_LEGEND, Library.D3_SCATTER_MATRIX, Library.D3_SCATTER_PLOT, Library.D3_DOWNLOAD};
+	}
+
+	@Override
+	public HyperlinkPopupOptions getHyperlinkOptions()
+	{
+		return new HyperlinkPopupOptions()
+				.setPage(Page.COMPOUND_DATASETS)
+				.addParam(Parameter.compoundDatasetIds);
 	}
 }

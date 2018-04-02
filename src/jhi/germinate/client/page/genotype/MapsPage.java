@@ -172,6 +172,12 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 						map = result.getServerResult();
 						updateMapDetails();
 					}
+					else
+					{
+						LongParameterStore.Inst.get().remove(Parameter.mapId);
+						map = null;
+						updateMapDetails();
+					}
 				}
 			});
 		}
@@ -181,7 +187,8 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 		files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInMapChartFormat(), FileType.mct).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
 		files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInStrudelFormat(), FileType.strudel).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
 
-		DownloadWidget widget = new DownloadWidget(){
+		DownloadWidget widget = new DownloadWidget()
+		{
 			@Override
 			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 			{
@@ -595,8 +602,8 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 	private class MappingEntry
 	{
 		private String chromosome;
-		private Long start = null;
-		private Long end   = null;
+		private Long   start = null;
+		private Long   end   = null;
 
 		MappingEntry(String chromosome, Long start, Long end)
 		{

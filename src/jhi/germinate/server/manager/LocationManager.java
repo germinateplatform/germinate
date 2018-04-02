@@ -22,7 +22,6 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -148,7 +147,7 @@ public class LocationManager extends AbstractManager<Location>
 	{
 		if (phenotypeId == null)
 		{
-			String formatted = String.format(SELECT_ALL_FOR_TRIAL, Util.generateSqlPlaceholderString(datasetIds.size()));
+			String formatted = String.format(SELECT_ALL_FOR_TRIAL, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 			return new DatabaseObjectQuery<Country>(formatted, user)
 					.setLongs(datasetIds)
 					.setString(type.name())
@@ -157,7 +156,7 @@ public class LocationManager extends AbstractManager<Location>
 		}
 		else
 		{
-			String formatted = String.format(SELECT_ALL_FOR_PHENOTYPE, Util.generateSqlPlaceholderString(datasetIds.size()));
+			String formatted = String.format(SELECT_ALL_FOR_PHENOTYPE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 			return new DatabaseObjectQuery<Country>(formatted, user)
 					.setLongs(datasetIds)
 					.setString(type.name())
@@ -194,9 +193,9 @@ public class LocationManager extends AbstractManager<Location>
 		String formatted;
 
 		if (groupId != null && groupId >= 0)
-			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "LEFT JOIN groupmembers ON groupmembers.foreign_id = locations.id", " groupmembers.group_id = ? AND ", Util.generateSqlPlaceholderString(datasetIds.size()));
+			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "LEFT JOIN groupmembers ON groupmembers.foreign_id = locations.id", " groupmembers.group_id = ? AND ", StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 		else
-			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "", "", Util.generateSqlPlaceholderString(datasetIds.size()));
+			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "", "", StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		DatabaseObjectQuery<Location> query = new DatabaseObjectQuery<>(formatted, userAuth);
 
@@ -267,7 +266,7 @@ public class LocationManager extends AbstractManager<Location>
 	{
 		pagination.updateSortColumn(LocationService.COLUMNS_LOCATION_SORTABLE, Location.ID);
 
-		String formatted = String.format(SELECT_BY_IDS, Util.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
+		String formatted = String.format(SELECT_BY_IDS, StringUtils.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
 		return new DatabaseObjectQuery<Location>(formatted, userAuth)
 				.setStrings(ids)
 				.setInt(pagination.getStart())
@@ -339,9 +338,9 @@ public class LocationManager extends AbstractManager<Location>
 		String formatted;
 
 		if (groupId != null && groupId >= 0)
-			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", Util.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", StringUtils.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
 		else
-			formatted = String.format(SELECT_CLIMATE_DATA, "", Util.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "", StringUtils.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
 
 		DatabaseObjectQuery<ClimateYearData> query = new DatabaseObjectQuery<ClimateYearData>(formatted, userAuth)
 				.setFetchesCount(pagination.getResultSize())
@@ -369,9 +368,9 @@ public class LocationManager extends AbstractManager<Location>
 		String formatted;
 
 		if (groupId != null && groupId >= 0)
-			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", Util.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", StringUtils.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
 		else
-			formatted = String.format(SELECT_CLIMATE_DATA, "", Util.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "", StringUtils.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
 
 		GerminateTableQuery query = new GerminateTableQuery(formatted, userAuth, null)
 				.setLongs(datasetIds)

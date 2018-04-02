@@ -120,7 +120,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	{
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
-		String formatted = String.format(QUERY_PHENOTYPE_STATS, Util.generateSqlPlaceholderString(datasetIds.size()));
+		String formatted = String.format(QUERY_PHENOTYPE_STATS, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		return new DatabaseObjectQuery<DataStats>(formatted, userAuth)
 				.setLongs(datasetIds)
@@ -163,7 +163,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		/* If both are empty, return everything */
 		if (CollectionUtils.isEmpty(groupIds) && CollectionUtils.isEmpty(compoundIds))
 		{
-			String formatted = String.format(QUERY_COMPOUND_NAMES_COMPLETE, Util.generateSqlPlaceholderString(datasetIds.size()));
+			String formatted = String.format(QUERY_COMPOUND_NAMES_COMPLETE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(datasetIds)
@@ -188,7 +188,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 			String groups = Util.joinCollection(groupIds, ", ", true);
 			String phenotypes = Util.joinCollection(compoundIds, ", ", true);
 
-			String formatted = String.format(QUERY_COMPOUND_NAMES, Util.generateSqlPlaceholderString(compoundIds.size()));
+			String formatted = String.format(QUERY_COMPOUND_NAMES, StringUtils.generateSqlPlaceholderString(compoundIds.size()));
 
 			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(compoundIds)

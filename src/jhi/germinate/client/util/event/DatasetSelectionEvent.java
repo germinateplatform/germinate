@@ -21,6 +21,8 @@ import com.google.gwt.event.shared.*;
 
 import java.util.*;
 
+import jhi.germinate.shared.datastructure.database.*;
+
 /**
  * A {@link DatasetSelectionEvent} indicates that the user selected some datasets.
  *
@@ -29,19 +31,19 @@ import java.util.*;
 public class DatasetSelectionEvent extends GwtEvent<DatasetSelectionEvent.DatasetSelectionEventHandler>
 {
 	public static final Type<DatasetSelectionEventHandler> TYPE = new Type<>();
-	private List<Long> ids;
+	private             List<Dataset>                      datasets;
 
 	/**
 	 * Creates a new instance of {@link LogoutEvent}
 	 */
-	public DatasetSelectionEvent(List<Long> ids)
+	public DatasetSelectionEvent(List<Dataset> dataset)
 	{
-		this.ids = ids;
+		this.datasets = datasets;
 	}
 
-	public List<Long> getIds()
+	public List<Dataset> getDatasets()
 	{
-		return ids;
+		return datasets;
 	}
 
 	@Override

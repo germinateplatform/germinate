@@ -26,6 +26,7 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -43,8 +44,7 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 {
 	private static final long serialVersionUID = 3127051583642953437L;
 
-	private static final String QUERY_MARKERS_DATA_IDS_DOWNLOAD = "SELECT markers.*, markertypes.description AS markertypes_description, mapdefinitions.definition_start AS mapdefinitions_definition_start, mapdefinitions.definition_end AS mapdefinitions_definition_end, mapdefinitions.chromosome AS mapdefinitions_chromosome, mapdefinitions.arm_impute AS mapdefinitions_arm_impute, maps.description AS maps_description FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN mapdefinitions ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id LEFT JOIN mapfeaturetypes ON mapfeaturetypes.id = mapdefinitions.mapfeaturetype_id WHERE markers.id IN (%s)";
-
+	private static final String QUERY_MARKERS_DATA_IDS_DOWNLOAD = "SELECT markers.*, markertypes.description AS markertypes_description, mapdefinitions.definition_start AS mapdefinitions_definition_start, mapdefinitions.definition_end AS mapdefinitions_definition_end, mapdefinitions.chromosome AS mapdefinitions_chromosome, mapdefinitions.arm_impute AS mapdefinitions_arm_impute, maps.description AS maps_description FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN mapdefinitions ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id LEFT JOIN mapfeaturetypes ON mapfeaturetypes.id = mapdefinitions.mapfeaturetype_id WHERE (maps.visibility = 1 OR maps.user_id = ?) AND markers.id IN (%s)";
 	private static final String QUERY_MARKER_DATA_WITH_NAMES = "SELECT mapdefinitions.chromosome, mapdefinitions.definition_start, mapfeaturetypes.description, markers.id, markers.marker_name FROM mapdefinitions, mapfeaturetypes, markers, maps WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND maps.id = mapdefinitions.map_id AND (maps.user_id = ? OR maps.visibility = 1) AND markers.marker_name IN (%s)";
 
 	@Override
@@ -92,7 +92,7 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		String query = String.format(QUERY_MARKER_DATA_WITH_NAMES, Util.generateSqlPlaceholderString(markerNames.size()));
+		String query = String.format(QUERY_MARKER_DATA_WITH_NAMES, StringUtils.generateSqlPlaceholderString(markerNames.size()));
 
 		GerminateTableStreamer data = new GerminateTableQuery(query, userAuth, null)
 				.setLong(properties.getUserId())
@@ -130,8 +130,9 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		String formatted = String.format(QUERY_MARKERS_DATA_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(QUERY_MARKERS_DATA_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
 		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
+				.setLong(userAuth.getId())
 				.setStrings(ids)
 				.getStreamer();
 

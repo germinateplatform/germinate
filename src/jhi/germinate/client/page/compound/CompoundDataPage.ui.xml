@@ -26,6 +26,10 @@
 	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<g:HTMLPanel ui:field="panel">
+		<b:PageHeader text="{msg.compoundsTitle}"/>
+
+		<g8:DatasetListWidget ui:field="datasetList" />
+
 		<b:Row ui:field="content" visible="false">
 			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
 				<g8:CategoryPanel icon="{MDI_EYE}" text="{msg.phenotypeOverview}" ui:field="overviewTab"/>

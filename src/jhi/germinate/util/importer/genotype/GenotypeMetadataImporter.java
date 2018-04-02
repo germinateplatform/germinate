@@ -52,17 +52,18 @@ public class GenotypeMetadataImporter extends MetadataImporter
 	@Override
 	protected void createOrGetDataset() throws DatabaseException
 	{
-		super.createOrGetDataset();
-
 		try
 		{
 			hdf5File = File.createTempFile("germinate_genotype_", ".hdf5");
+			dataset.setSourceFile(hdf5File.getName());
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 			throw new DatabaseException(e);
 		}
+
+		super.createOrGetDataset();
 	}
 
 	public File getHdf5File()

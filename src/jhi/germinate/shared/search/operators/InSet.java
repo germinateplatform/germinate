@@ -19,7 +19,6 @@ package jhi.germinate.shared.search.operators;
 
 import java.util.*;
 
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
@@ -69,7 +68,7 @@ public class InSet implements ComparisonOperator
 			throw new InvalidArgumentException("In set comparison requires that at least one comparison value is selected.");
 		}
 
-		return " " + columnName + " IN (" + Util.generateSqlPlaceholderString(values.size()) + ") ";
+		return " " + columnName + " IN (" + StringUtils.generateSqlPlaceholderString(values.size()) + ") ";
 	}
 
 	@Override

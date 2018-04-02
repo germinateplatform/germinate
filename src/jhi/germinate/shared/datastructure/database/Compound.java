@@ -295,6 +295,19 @@ public class Compound extends DatabaseObject
 	@GwtIncompatible
 	public static class Writer implements DatabaseObjectWriter<Compound>
 	{
+		public static final class Inst
+		{
+			public static Writer get()
+			{
+				return Writer.Inst.InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final Writer INSTANCE = new Writer();
+			}
+		}
+
 		@Override
 		public void write(Database database, Compound object) throws DatabaseException
 		{
@@ -320,19 +333,6 @@ public class Compound extends DatabaseObject
 
 			if (ids != null && !CollectionUtils.isEmpty(ids.getServerResult()))
 				object.setId(ids.getServerResult().get(0));
-		}
-
-		public static final class Inst
-		{
-			public static Writer get()
-			{
-				return Writer.Inst.InstanceHolder.INSTANCE;
-			}
-
-			private static final class InstanceHolder
-			{
-				private static final Writer INSTANCE = new Writer();
-			}
 		}
 	}
 }

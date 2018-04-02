@@ -378,14 +378,19 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		return filterPanel.getSize() > 0;
 	}
 
-	public boolean forceFilter(Map<String, String> columnToValue, boolean isAnd) throws InvalidArgumentException
+	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd) throws InvalidArgumentException
+	{
+		return forceFilter(columnToValue, isAnd, new Equal());
+	}
+
+	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd, ComparisonOperator operator) throws InvalidArgumentException
 	{
 		/* Cancel any currently running request */
 		if (currentRequest != null && currentRequest.isPending())
 			currentRequest.cancel();
 
 		filterPanel.setVisible(false);
-		filterPanel.add(columnToValue, isAnd, new Equal());
+		filterPanel.add(columnToValue, isAnd, operator);
 		filterButton.setType(ButtonType.SUCCESS);
 		refreshTable();
 

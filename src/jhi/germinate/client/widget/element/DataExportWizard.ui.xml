@@ -20,6 +20,7 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:lb="urn:import:jhi.germinate.client.widget.listbox"
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
 			 xmlns:t='urn:import:org.gwtbootstrap3.extras.toggleswitch.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
@@ -31,7 +32,9 @@
 
 	<g:FlowPanel ui:field="overallPanel">
 
-		<b:PageHeader text="{msg.genotypePageTitle}"/>
+		<b:PageHeader ui:field="pageHeader"/>
+
+		<g8:DatasetListWidget ui:field="selectedDatasetPanel" />
 
 		<b:Row>
 			<b:Column size="XS_12,MD_6">

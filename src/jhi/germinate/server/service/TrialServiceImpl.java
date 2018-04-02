@@ -58,7 +58,7 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
-		String formatted = String.format(QUERY_DISTINCT_YEARS, Util.generateSqlPlaceholderString(datasetIds.size()));
+		String formatted = String.format(QUERY_DISTINCT_YEARS, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		return new ValueQuery(formatted, userAuth)
 				.setLongs(datasetIds)
@@ -74,7 +74,7 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
-		String formatted = String.format(QUERY_PHENOTYPES_OVERVIEW, Util.generateSqlPlaceholderString(datasetIds.size()), Util.generateSqlPlaceholderString(phenotypes.size()), Util.generateSqlPlaceholderString(selectedYears.size()));
+		String formatted = String.format(QUERY_PHENOTYPES_OVERVIEW, StringUtils.generateSqlPlaceholderString(datasetIds.size()), StringUtils.generateSqlPlaceholderString(phenotypes.size()), StringUtils.generateSqlPlaceholderString(selectedYears.size()));
 
 		List<TrialsRow> result = new ArrayList<>();
 

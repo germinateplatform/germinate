@@ -55,17 +55,19 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	private static TrialPageUiBinder ourUiBinder = GWT.create(TrialPageUiBinder.class);
 
 	@UiField
-	HTMLPanel     panel;
+	DatasetListWidget datasetList;
 	@UiField
-	Row           content;
+	HTMLPanel         panel;
 	@UiField
-	CategoryPanel overviewTab;
+	Row               content;
 	@UiField
-	CategoryPanel scatterTab;
+	CategoryPanel     overviewTab;
 	@UiField
-	CategoryPanel matrixTab;
+	CategoryPanel     scatterTab;
 	@UiField
-	CategoryPanel downloadTab;
+	CategoryPanel     matrixTab;
+	@UiField
+	CategoryPanel     downloadTab;
 
 	@UiField
 	FlowPanel                      overviewPanel;
@@ -81,7 +83,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 	private List<Phenotype> phenotypes;
 	private List<Group>     groups;
-	private List<Long>      selectedDatasets;
+	private List<Dataset>   selectedDatasets;
 
 	public TrialPage()
 	{
@@ -90,6 +92,8 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 		exportSelection = new DataExportSelection<>(ExperimentType.trials);
 
 		initWidget(ourUiBinder.createAndBindUi(this));
+
+		datasetList.setType(ExperimentType.trials);
 	}
 
 	@Override
@@ -98,11 +102,11 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 		super.onLoad();
 
 		/* See if there are selected datasets in the parameter store */
-		selectedDatasets = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
+		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 
 		if (selectedDatasets == null || selectedDatasets.size() < 1)
 		{
-					/* If not, show an error message */
+			/* If not, show an error message */
 			content.clear();
 			panel.add(new Heading(HeadingSize.H3, Text.LANG.notificationExportNoDataset()));
 		}
@@ -159,12 +163,13 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 	private void getPhenotypes()
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		final ParallelAsyncCallback<ServerResult<List<Phenotype>>> phenotypeCallback = new ParallelAsyncCallback<ServerResult<List<Phenotype>>>()
 		{
 			@Override
 			protected void start()
 			{
-				PhenotypeService.Inst.get().get(Cookie.getRequestProperties(), selectedDatasets, ExperimentType.trials, false, this);
+				PhenotypeService.Inst.get().get(Cookie.getRequestProperties(), ids, ExperimentType.trials, false, this);
 			}
 		};
 		final ParallelAsyncCallback<ServerResult<List<Group>>> groupCallback = new ParallelAsyncCallback<ServerResult<List<Group>>>()
@@ -172,7 +177,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			@Override
 			protected void start()
 			{
-				GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), selectedDatasets, ExperimentType.trials, this);
+				GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), ids, ExperimentType.trials, this);
 			}
 		};
 
@@ -183,6 +188,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			{
 				ServerResult<List<Phenotype>> phenotypeData = getCallbackData(0);
 				ServerResult<List<Group>> groupData = getCallbackData(1);
+				final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 
 				phenotypes = phenotypeData.getServerResult();
 				groups = groupData.getServerResult();
@@ -191,7 +197,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 				phenotypeByPhenotypeChart.update(ExperimentType.trials, getNumericalPhenotypes(), groups, Text.LANG.trialsPByPText());
 				matrixChart.update(ExperimentType.trials, getNumericalPhenotypes(), groups);
-				exportSelection.update(selectedDatasets, phenotypes, groups);
+				exportSelection.update(ids, phenotypes, groups);
 			}
 
 			@Override
@@ -211,7 +217,8 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 	private void getYearOverviewStats()
 	{
-		TrialService.Inst.get().getTrialYears(Cookie.getRequestProperties(), selectedDatasets, new DefaultAsyncCallback<ServerResult<List<Integer>>>()
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
+		TrialService.Inst.get().getTrialYears(Cookie.getRequestProperties(), ids, new DefaultAsyncCallback<ServerResult<List<Integer>>>()
 		{
 			@Override
 			protected void onFailureImpl(Throwable caught)
@@ -234,7 +241,8 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 	private void getBasicOverviewStats()
 	{
-		PhenotypeService.Inst.get().getOverviewStats(Cookie.getRequestProperties(), selectedDatasets, new DefaultAsyncCallback<ServerResult<List<DataStats>>>()
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
+		PhenotypeService.Inst.get().getOverviewStats(Cookie.getRequestProperties(), ids, new DefaultAsyncCallback<ServerResult<List<DataStats>>>()
 		{
 			@Override
 			protected void onFailureImpl(Throwable caught)
@@ -257,7 +265,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	public HyperlinkPopupOptions getHyperlinkOptions()
 	{
 		return new HyperlinkPopupOptions()
-				.setPage(Page.TRIALS)
+				.setPage(Page.TRIALS_DATASETS)
 				.addParam(Parameter.trialsDatasetIds);
 	}
 

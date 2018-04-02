@@ -180,6 +180,9 @@ public abstract class TypedParameterStore<T>
 
 	public final T get(Parameter parameter)
 	{
+		if(parameter == null)
+			return null;
+
 		T result = STATE.get(parameter);
 
 		if (result == null && parameter.getLifetime() != Parameter.ParameterLifetime.VOLATILE)
@@ -199,6 +202,9 @@ public abstract class TypedParameterStore<T>
 
 	public final T get(Parameter parameter, T fallback)
 	{
+		if(parameter == null)
+			return fallback;
+
 		T result = STATE.get(parameter);
 
 		if (result == null && parameter.getLifetime() != Parameter.ParameterLifetime.VOLATILE)

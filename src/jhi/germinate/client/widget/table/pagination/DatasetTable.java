@@ -122,32 +122,32 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		else
 		{
 			/* Get their ids */
-			List<Long> ids = new ArrayList<>();
-			ids.add(object.getId());
+			List<Dataset> ids = new ArrayList<>();
+			ids.add(object);
 
 			Parameter parameter = null;
 
 			switch (object.getExperiment().getType())
 			{
 				case allelefreq:
-					parameter = Parameter.allelefreqDatasetIds;
+					parameter = Parameter.allelefreqDatasets;
 					break;
 				case climate:
-					parameter = Parameter.climateDatasetIds;
+					parameter = Parameter.climateDatasets;
 					break;
 				case compound:
-					parameter = Parameter.compoundDatasetIds;
+					parameter = Parameter.compoundDatasets;
 					break;
 				case genotype:
-					parameter = Parameter.genotypeDatasetIds;
+					parameter = Parameter.genotypeDatasets;
 					break;
 				case trials:
-					parameter = Parameter.trialsDatasetIds;
+					parameter = Parameter.trialsDatasets;
 					break;
 			}
 
 			if (parameter != null)
-				LongListParameterStore.Inst.get().put(parameter, ids);
+				DatasetListParameterStore.Inst.get().put(parameter, ids);
 
 			GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(ids));
 		}
@@ -230,7 +230,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			public SafeHtml getValue(Dataset object)
 			{
 				/* Check if we want to link to the export page */
-				if (linkToExportPage && (ModuleCore.getUseAuthentication() && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId())))
+				if(linkToExportPage && canAccess(object))
 					return getExportPageLinkTruncated(object, object.getDescription());
 				else
 					return DatasetTable.getValueTruncated(object, object.getDescription());
@@ -330,7 +330,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 					String icon = Style.MDI_NEW_BOX;
 
-					if (ModuleCore.getUseAuthentication() && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (canAccess(object))
 						icon = Style.MDI_CHECK;
 
 					if (data != null)
@@ -355,7 +355,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				{
 					event.preventDefault();
 
-					if (!ModuleCore.getUseAuthentication() || object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (!ModuleCore.getUseAuthentication() || object.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
 					{
 						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
@@ -644,7 +644,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				public SafeHtml getValue(Dataset row)
 				{
 					// If no authentication, but license available OR authentication but user hasn't accepted
-					if ((!ModuleCore.getUseAuthentication() && row.getLicense() != null) || !row.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if(!canAccess(row))
 					{
 						return SimpleHtmlTemplate.INSTANCE.text("");
 					}
@@ -683,7 +683,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				@Override
 				public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
 				{
-					if (ModuleCore.getUseAuthentication() && !object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (!canAccess(object))
 					{
 						event.preventDefault();
 						return;
@@ -693,7 +693,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					{
 						event.preventDefault();
 						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "dataset", Long.toString(object.getId()));
-						GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(object.getId())));
+						GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(object)));
 						downloadCallback.onSuccess(object);
 					}
 					else
@@ -705,6 +705,16 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 			addColumn(downloadColumn, "", false);
 		}
+	}
+
+	private boolean canAccess(Dataset dataset)
+	{
+		if (ModuleCore.getUseAuthentication() && !dataset.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
+			return false;
+		else if (!ModuleCore.getUseAuthentication() && dataset.getLicense() != null)
+			return false;
+		else
+			return true;
 	}
 
 	/**

@@ -26,7 +26,6 @@ import java.util.*;
 
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
-import jhi.germinate.server.util.Util;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 
@@ -207,7 +206,7 @@ public abstract class DataImporter<T>
 			return;
 
 		System.out.println("Deleting inserted items for table: '" + table + "'");
-		System.out.println("Deleting items: " + ids);
+		System.out.println("Deleting items: " + ids.size());
 
 		try
 		{
@@ -216,7 +215,7 @@ public abstract class DataImporter<T>
 				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
 
 			// Delete all items with the given ids
-			new ValueQuery(databaseConnection, "DELETE FROM " + table + " WHERE id IN (" + Util.generateSqlPlaceholderString(ids.size()) + ")")
+			new ValueQuery(databaseConnection, "DELETE FROM " + table + " WHERE id IN (" + StringUtils.generateSqlPlaceholderString(ids.size()) + ")")
 					.setLongs(ids)
 					.execute(false);
 

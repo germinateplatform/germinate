@@ -28,6 +28,7 @@ import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.datastructure.database.*;
@@ -285,7 +286,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 				List<String> chromosomes = options.getChromosomes();
 				/* Create the query for the actual data */
 				String dataString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_CHROMOSOMES_APPENDIX);
-				dataString = String.format(dataString, Util.generateSqlPlaceholderString(chromosomes.size()));
+				dataString = String.format(dataString, StringUtils.generateSqlPlaceholderString(chromosomes.size()));
 				dataQuery = new GerminateTableQuery(dataString, userAuth, COLUMNS_MAP_EXPORT)
 						.setLong(mapId);
 

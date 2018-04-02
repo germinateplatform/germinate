@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.*;
 import org.gwtbootstrap3.client.ui.*;
 
 import java.util.*;
-import java.util.Map;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
@@ -37,6 +36,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -96,16 +96,16 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 		panel.add(table);
 
 		/* Apply any filtering that another page requested before redirecting here */
-		Map<String, String> mapping = StringStringMapParameterStore.Inst.get().get(Parameter.tableFilterMapping);
+		FilterPanel.FilterMapping mapping = FilterMappingParameterStore.Inst.get().get(Parameter.tableFilterMapping);
 
 		if (mapping == null)
-			mapping = new HashMap<>();
+			mapping = new FilterPanel.FilterMapping();
 
 		/* By default, filter down to accessions only */
 		mapping.put(EntityType.NAME, EntityType.ACCESSION.getName());
-		StringStringMapParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
+		FilterMappingParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
 
-		final Map<String, String> m = mapping;
+		final FilterPanel.FilterMapping m = mapping;
 		Scheduler.get().scheduleDeferred(() ->
 		{
 			try
@@ -143,7 +143,7 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 			}
 		};
 
-        /* Start them both in parallel */
+		/* Start them both in parallel */
 		new ParallelParentAsyncCallback(columnCallback, groupCallback, hasPedigreeCallback)
 		{
 			@Override

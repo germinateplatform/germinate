@@ -22,7 +22,6 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -57,7 +56,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 
 	public static ServerResult<List<Phenotype>> getAllForType(UserAuth user, List<Long> datasetIds, ExperimentType type, boolean onlyNumeric) throws DatabaseException
 	{
-		String formatted = String.format(SELECT_ALL_FOR_TYPE, Util.generateSqlPlaceholderString(datasetIds.size()), onlyNumeric ? "AND " + Phenotype.DATATYPE + " != 'char'" : "");
+		String formatted = String.format(SELECT_ALL_FOR_TYPE, StringUtils.generateSqlPlaceholderString(datasetIds.size()), onlyNumeric ? "AND " + Phenotype.DATATYPE + " != 'char'" : "");
 
 		DatasetManager.restrictToAvailableDatasets(user, datasetIds);
 
@@ -78,7 +77,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 		if (CollectionUtils.isEmpty(datasetIds))
 			return new PaginatedServerResult<>(DebugInfo.create(user), new ArrayList<>(), 0);
 
-		String formatted = String.format(SELECT_DATA_FOR_FILTER, Util.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
+		String formatted = String.format(SELECT_DATA_FOR_FILTER, StringUtils.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
 		return AbstractManager.<PhenotypeData>getFilteredDatabaseObjectQuery(user, filter, formatted, PhenotypeService.COLUMNS_DATA_SORTABLE, pagination.getResultSize())
 				.setLongs(datasetIds)
@@ -93,7 +92,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 		pagination.updateSortColumn(PhenotypeService.COLUMNS_DATA_SORTABLE, Accession.ID);
 		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(userAuth, true).getServerResult());
 
-		String formatted = String.format(SELECT_DATA_FOR_FILTER_EXPORT, Util.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
+		String formatted = String.format(SELECT_DATA_FOR_FILTER_EXPORT, StringUtils.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
 		return getFilteredGerminateTableQuery(userAuth, filter, formatted, PhenotypeService.COLUMNS_DATA_SORTABLE, COLUMNS_PHENOTYPE_DATA_EXPORT)
 				.setLongs(datasetIds)
@@ -109,7 +108,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 		if (CollectionUtils.isEmpty(datasetIds))
 			return new PaginatedServerResult<>(DebugInfo.create(user), new ArrayList<>(), 0);
 
-		String formatted = String.format(SELECT_IDS_FOR_FILTER, Util.generateSqlPlaceholderString(datasetIds.size()));
+		String formatted = String.format(SELECT_IDS_FOR_FILTER, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		return AbstractManager.<CompoundData>getFilteredValueQuery(filter, user, formatted, PhenotypeService.COLUMNS_DATA_SORTABLE)
 				.setLongs(datasetIds)

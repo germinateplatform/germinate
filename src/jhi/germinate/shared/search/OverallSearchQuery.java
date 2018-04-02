@@ -215,4 +215,17 @@ public class OverallSearchQuery<T extends HasToSqlString> implements Serializabl
 
 		return null;
 	}
+
+	@Override
+	public String toString()
+	{
+		try
+		{
+			return toPreparedStatementString();
+		}
+		catch (InvalidArgumentException | InvalidSearchQueryException e)
+		{
+			return "INVALID";
+		}
+	}
 }

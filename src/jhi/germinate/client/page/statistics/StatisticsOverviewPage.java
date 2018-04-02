@@ -25,7 +25,6 @@ import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
-import java.util.Map;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
@@ -37,6 +36,7 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -84,9 +84,9 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 					@Override
 					public void onCountySelected(Country country)
 					{
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Country.COUNTRY_NAME, country.getName());
-						StringStringMapParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
+						FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
 						History.newItem(Page.ACCESSION_OVERVIEW.name());
 					}
 

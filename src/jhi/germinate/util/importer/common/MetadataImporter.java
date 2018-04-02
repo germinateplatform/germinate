@@ -37,9 +37,10 @@ public class MetadataImporter extends DataImporter<Dataset>
 	private static Set<Long> createdExperimentIds          = new HashSet<>();
 	private static Set<Long> createdLocationIds            = new HashSet<>();
 	private static Set<Long> createdDatasetCollaboratorIds = new HashSet<>();
+
 	protected ExperimentType     type;
-	private   Dataset            dataset;
-	private   List<Collaborator> collaborators;
+	protected Dataset            dataset;
+	private   List<Collaborator> collaborators = new ArrayList<>();
 
 	private CollaboratorImporter collaboratorImporter;
 
@@ -69,10 +70,11 @@ public class MetadataImporter extends DataImporter<Dataset>
 	@Override
 	public void deleteInsertedItems()
 	{
-		collaboratorImporter.deleteInsertedItems();
+		if(collaboratorImporter != null)
+			collaboratorImporter.deleteInsertedItems();
+		deleteItems(createdExperimentIds, "experiments");
 		deleteItems(createdDatasetIds, "datasets");
 		deleteItems(createdDatasetCollaboratorIds, "datasetcollaborators");
-		deleteItems(createdExperimentIds, "experiments");
 		deleteItems(createdLocationIds, "locations");
 	}
 
@@ -178,7 +180,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 	 * @param entry The {@link Dataset} object containing the {@link Experiment} to import.
 	 * @throws DatabaseException Thrown if the interaction with the database fails.
 	 */
-	private void createOrGetExperiment() throws DatabaseException
+	protected void createOrGetExperiment() throws DatabaseException
 	{
 		String name = dataset.getExperiment().getName();
 

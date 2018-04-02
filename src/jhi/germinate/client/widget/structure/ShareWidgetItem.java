@@ -24,11 +24,14 @@ import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import java.util.*;
+
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -96,14 +99,25 @@ public class ShareWidgetItem
 		if (hyperlinkPopupOptions == null)
 			return null;
 
-        /* Build the URL */
+		/* Build the URL */
 		ServletConstants.Builder builder = new ServletConstants.Builder().setUrl(GWT.getHostPageBaseURL());
 
 		for (Parameter param : hyperlinkPopupOptions.getRelevantParameters())
 		{
 			try
 			{
-				String value = TypedParameterStore.getUntyped(param);
+				String value;
+
+				if (param.isDatasetParam())
+				{
+					List<Dataset> datasets = DatasetListParameterStore.Inst.get().get(Parameter.getDatasetParam(param));
+					List<Long> ids = DatabaseObject.getIds(datasets);
+					value = CollectionUtils.join(ids, ",");
+				}
+				else
+				{
+					value = TypedParameterStore.getUntyped(param);
+				}
 
 				if (StringUtils.isEmpty(value))
 					continue;

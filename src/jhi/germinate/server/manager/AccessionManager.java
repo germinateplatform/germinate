@@ -92,7 +92,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	{
 		pagination.updateSortColumn(AccessionService.COLUMNS_SORTABLE, Accession.ID);
 
-		String formatted = String.format(SELECT_BY_IDS, Util.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
+		String formatted = String.format(SELECT_BY_IDS, StringUtils.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
 		return new DatabaseObjectQuery<Accession>(formatted, user)
 				.setStrings(ids)
 				.setInt(pagination.getStart())
@@ -199,7 +199,7 @@ public class AccessionManager extends AbstractManager<Accession>
 			}
 		});
 
-		String formatted = String.format(SELECT_NAMES_FOR_GROUPS, Util.generateSqlPlaceholderString(groupIds.size()));
+		String formatted = String.format(SELECT_NAMES_FOR_GROUPS, StringUtils.generateSqlPlaceholderString(groupIds.size()));
 
 		return new ValueQuery(formatted, userAuth)
 				.setLongs(groupIds)
@@ -369,7 +369,7 @@ public class AccessionManager extends AbstractManager<Accession>
 
 	public static GerminateTableStreamer getStreamerForIds(UserAuth userAuth, List<String> ids) throws DatabaseException
 	{
-		String formatted = String.format(SELECT_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(SELECT_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
 
 		return new GerminateTableQuery(formatted, userAuth, null)
 				.setStrings(ids)

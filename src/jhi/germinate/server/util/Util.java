@@ -279,22 +279,6 @@ public class Util
 	}
 
 	/**
-	 * Generates a SQL placeholder String of the form: "?,?,?,?" for the given size.
-	 *
-	 * @param size The number of placeholders to generate
-	 * @return The generated String
-	 */
-	public static String generateSqlPlaceholderString(int size)
-	{
-		if (size < 1)
-			return "";
-
-		return IntStream.range(0, size)
-						.mapToObj(value -> "?")
-						.collect(Collectors.joining(","));
-	}
-
-	/**
 	 * Returns the {@link OperatingSystem} based on the information in the {@link HttpServletRequest} (user-agent).
 	 *
 	 * @param request The current {@link HttpServletRequest}

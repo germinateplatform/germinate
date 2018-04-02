@@ -36,6 +36,7 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
@@ -57,6 +58,9 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 	}
 
 	private static ClimateDataPageUiBinder ourUiBinder = GWT.create(ClimateDataPageUiBinder.class);
+
+	@UiField
+	DatasetListWidget datasetList;
 
 	@UiField
 	FlowPanel content;
@@ -83,13 +87,15 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 
 	private LeafletUtils.ClusteredMarkerCreator map;
 	private ClimateYearDataTable                climateDataTable;
-	private List<Long>                          climateDatasetIds;
+	private List<Dataset>                       selectedDatasets;
 
 	public ClimateDataPage()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
-		climateDatasetIds = LongListParameterStore.Inst.get().get(Parameter.climateDatasetIds);
+		datasetList.setType(ExperimentType.climate);
+
+		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.climateDatasets);
 
 		groupBox.setMultipleSelect(false);
 
@@ -106,11 +112,12 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 			{
 				Climate climate = climateBox.getSelection();
 				Group group = groupBox.getSelection();
+				final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 
 				if (climate == null || climate.getId() == -1)
 					callback.onSuccess(new ServerResult<>(null, null));
 				else
-					ClimateService.Inst.get().export(Cookie.getRequestProperties(), climateDatasetIds, climate.getId(), group.getId(), callback);
+					ClimateService.Inst.get().export(Cookie.getRequestProperties(), ids, climate.getId(), group.getId(), callback);
 			}
 
 			@Override
@@ -119,6 +126,7 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 				Climate climate = climateBox.getSelection();
 				Group group = groupBox.getSelection();
 				final ClimateYearDataTable that = this;
+				final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 
 				if (climate == null || climate.getId() == -1)
 				{
@@ -127,7 +135,7 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 				}
 				else
 				{
-					return ClimateService.Inst.get().getGroupData(Cookie.getRequestProperties(), climateDatasetIds, climate.getId(), group.getId(), pagination, new DefaultAsyncCallback<PaginatedServerResult<List<ClimateYearData>>>()
+					return ClimateService.Inst.get().getGroupData(Cookie.getRequestProperties(), ids, climate.getId(), group.getId(), pagination, new DefaultAsyncCallback<PaginatedServerResult<List<ClimateYearData>>>()
 					{
 						@Override
 						protected void onFailureImpl(Throwable caught)
@@ -153,10 +161,11 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 
 	private void getClimatesAndGroups()
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		/*
 		 * Now we set up two callbacks, since we only want to do stuff when both
-         * returned successfully
-         */
+		 * returned successfully
+		 */
 		ParallelAsyncCallback<ServerResult<List<Group>>> callbackGroups = new ParallelAsyncCallback<ServerResult<List<Group>>>()
 		{
 			@Override
@@ -171,7 +180,7 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 			@Override
 			protected void start()
 			{
-				ClimateService.Inst.get().get(Cookie.getRequestProperties(), climateDatasetIds, true, this);
+				ClimateService.Inst.get().get(Cookie.getRequestProperties(), ids, true, this);
 			}
 		};
 
@@ -251,12 +260,14 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 		if (map != null)
 			climateOverlays.clear(map.getMap());
 
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
+
 		ParallelAsyncCallback<ServerResult<List<Location>>> locationData = new ParallelAsyncCallback<ServerResult<List<Location>>>()
 		{
 			@Override
 			protected void start()
 			{
-				LocationService.Inst.get().getForClimateAndGroup(Cookie.getRequestProperties(), climateDatasetIds, climate.getId(), group.getId(), this);
+				LocationService.Inst.get().getForClimateAndGroup(Cookie.getRequestProperties(), ids, climate.getId(), group.getId(), this);
 			}
 		};
 		ParallelAsyncCallback<ServerResult<List<ClimateOverlay>>> overlayData = new ParallelAsyncCallback<ServerResult<List<ClimateOverlay>>>()
@@ -277,7 +288,7 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 				final ServerResult<List<Location>> locations = getCallbackData(0);
 				final ServerResult<List<ClimateOverlay>> overlays = getCallbackData(1);
 
-                /* If there is data to display */
+				/* If there is data to display */
 				if (!CollectionUtils.isEmpty(locations.getServerResult()))
 				{
 					mapWrapper.setVisible(true);
@@ -315,7 +326,7 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 	public HyperlinkPopupOptions getHyperlinkOptions()
 	{
 		return new HyperlinkPopupOptions()
-				.setPage(Page.CLIMATE)
+				.setPage(Page.CLIMATE_DATASETS)
 				.addParam(Parameter.climateDatasetIds);
 	}
 

@@ -366,7 +366,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	private static void undoNewUserInsert(List<Long> ids) throws DatabaseException
 	{
 		/* Delete the created entries again */
-		String formatted = String.format(DELETE_UNAPPROVED_USER, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(DELETE_UNAPPROVED_USER, StringUtils.generateSqlPlaceholderString(ids.size()));
 		new ValueQuery(formatted)
 				.setQueryType(QueryType.AUTHENTICATION)
 				.setLongs(ids)
@@ -382,7 +382,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	private static void undoRequestInsert(List<Long> ids) throws DatabaseException
 	{
 		/* Delete the created entries again */
-		String formatted = String.format(DELETE_ACCESS_REQUEST, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(DELETE_ACCESS_REQUEST, StringUtils.generateSqlPlaceholderString(ids.size()));
 		new ValueQuery(formatted)
 				.setQueryType(QueryType.AUTHENTICATION)
 				.setLongs(ids)

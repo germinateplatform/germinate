@@ -17,6 +17,8 @@
 
 package jhi.germinate.client.util.handler;
 
+import java.util.*;
+
 import jhi.germinate.client.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
@@ -24,6 +26,7 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -50,7 +53,8 @@ public class DatasetSelectionHandler implements DatasetSelectionEvent.DatasetSel
 
 		if (user != null)
 		{
-			DatasetService.Inst.get().trackDatasetAccess(Cookie.getRequestProperties(), event.getIds(), user, new DefaultAsyncCallback<ServerResult<Boolean>>());
+			final List<Long> ids = DatabaseObject.getIds(event.getDatasets());
+			DatasetService.Inst.get().trackDatasetAccess(Cookie.getRequestProperties(), ids, user, new DefaultAsyncCallback<ServerResult<Boolean>>());
 		}
 	}
 }

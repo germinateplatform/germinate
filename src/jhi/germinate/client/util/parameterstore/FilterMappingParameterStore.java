@@ -17,17 +17,33 @@
 
 package jhi.germinate.client.util.parameterstore;
 
-import java.util.*;
-
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class StringStringMapParameterStore extends TypedParameterStore<Map<String, String>>
+public class FilterMappingParameterStore extends TypedParameterStore<FilterPanel.FilterMapping>
 {
+	@Override
+	protected FilterPanel.FilterMapping stringToValue(String value)
+	{
+		return CollectionUtils.parseFilterMapping(value, ";", ",");
+	}
+
+	@Override
+	protected String valueToString(FilterPanel.FilterMapping value)
+	{
+		return CollectionUtils.joinFilterMapping(value, ";", ",");
+	}
+
 	public final static class Inst
 	{
+		public static FilterMappingParameterStore get()
+		{
+			return InstanceHolder.INSTANCE;
+		}
+
 		/**
 		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
 		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
@@ -37,24 +53,7 @@ public class StringStringMapParameterStore extends TypedParameterStore<Map<Strin
 		 */
 		private static final class InstanceHolder
 		{
-			private static final StringStringMapParameterStore INSTANCE = new StringStringMapParameterStore();
+			private static final FilterMappingParameterStore INSTANCE = new FilterMappingParameterStore();
 		}
-
-		public static StringStringMapParameterStore get()
-		{
-			return InstanceHolder.INSTANCE;
-		}
-	}
-
-	@Override
-	protected Map<String, String> stringToValue(String value)
-	{
-		return CollectionUtils.parseStringMap(value, ";", ",");
-	}
-
-	@Override
-	protected String valueToString(Map<String, String> value)
-	{
-		return CollectionUtils.joinMap(value, ";", ",");
 	}
 }

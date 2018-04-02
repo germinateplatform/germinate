@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,10 @@
 package jhi.germinate.util.importer.genotype;
 
 import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
@@ -30,54 +30,52 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
+public class TabDelimitedGenotypeDataReader implements IStreamableReader<String[]>
 {
-	private XSSFSheet dataSheet;
+	private String[]            parts;
 
-	private int rowCount   = 0;
-	private int colCount   = 0;
-	private int currentRow = 1;
-	private XSSFRow      row;
-	private XSSFWorkbook wb;
+	private BufferedReader br;
+
+	private String currentLine = null;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public void close() throws IOException
 	{
-		return ++currentRow < rowCount;
-	}
+		if (br != null)
+			br.close();
 
-	@Override
-	public String[] next() throws IOException
-	{
-		row = dataSheet.getRow(currentRow);
-		return parse();
+		br = null;
 	}
 
 	@Override
 	public void init(File input) throws IOException, InvalidFormatException
 	{
-		wb = new XSSFWorkbook(input);
+		br = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
 
-		dataSheet = wb.getSheet("DATA");
-
-		rowCount = dataSheet.getPhysicalNumberOfRows();
-		colCount = dataSheet.getRow(2).getPhysicalNumberOfCells();
+		br.readLine();
+		br.readLine();
 	}
 
 	@Override
-	public void close() throws IOException
+	public boolean hasNext() throws IOException
 	{
-		if (wb != null)
-			wb.close();
+		boolean hasNext = (currentLine = br.readLine()) != null;
+
+		if (!hasNext)
+		{
+			close();
+		}
+
+		return hasNext;
 	}
 
-	private String[] parse()
+	@Override
+	public String[] next() throws IOException
 	{
-		String[] result = new String[colCount];
+		parts = currentLine.split("\t", -1);
 
-		for (int i = 0; i < colCount; i++)
-			result[i] = IExcelReader.getCellValue(wb, row, i);
+		StringUtils.trim(parts);
 
-		return result;
+		return parts;
 	}
 }

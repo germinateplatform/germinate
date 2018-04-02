@@ -38,7 +38,7 @@ public final class DefaultStreamer
 		this.database = database;
 		this.info = info;
 
-        /* Run the query */
+		/* Run the query */
 		info.add(stmt.getStringRepresentation());
 		stmt.setFetchSize(Integer.MIN_VALUE);
 		res = stmt.query();
@@ -66,6 +66,18 @@ public final class DefaultStreamer
 		}
 
 		return null;
+	}
+
+	public boolean hasData() throws DatabaseException
+	{
+		if (!database.isClosed())
+		{
+			return res.isBeforeFirst();
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	/**

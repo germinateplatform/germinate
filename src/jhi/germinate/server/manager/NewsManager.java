@@ -21,7 +21,7 @@ import java.util.*;
 
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -50,7 +50,7 @@ public class NewsManager extends AbstractManager<News>
 		pagination.setSortColumn(News.UPDATED_ON);
 		pagination.setAscending(false);
 
-		String formatted = String.format(SELECT_FOR_TYPE, Util.generateSqlPlaceholderString(newsTypes.length), pagination.getSortQuery());
+		String formatted = String.format(SELECT_FOR_TYPE, StringUtils.generateSqlPlaceholderString(newsTypes.length), pagination.getSortQuery());
 
 		DatabaseObjectQuery<News> query = new DatabaseObjectQuery<>(formatted, null);
 
@@ -68,7 +68,7 @@ public class NewsManager extends AbstractManager<News>
 	public static ServerResult<Integer> getIndex(Long newsId) throws DatabaseException
 	{
 		NewsType[] newsTypes = {NewsType.general, NewsType.data, NewsType.updates};
-		String formatted = String.format(SELECT_FOR_TYPE, Util.generateSqlPlaceholderString(newsTypes.length), "ORDER BY " + News.UPDATED_ON + " DESC");
+		String formatted = String.format(SELECT_FOR_TYPE, StringUtils.generateSqlPlaceholderString(newsTypes.length), "ORDER BY " + News.UPDATED_ON + " DESC");
 
 
 		ValueQuery query = new ValueQuery(formatted);

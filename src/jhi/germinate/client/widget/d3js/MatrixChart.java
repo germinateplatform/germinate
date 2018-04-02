@@ -50,7 +50,7 @@ import jhi.germinate.shared.enums.*;
  */
 public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 {
-	private List<Long>     datasetIds;
+	private List<Dataset>  selectedDatasets;
 	private List<Group>    groups;
 	private List<T>        objects;
 	private ExperimentType experimentType;
@@ -134,10 +134,10 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 			switch (experimentType)
 			{
 				case trials:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 					break;
 				case compound:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
 					break;
 			}
 
@@ -201,14 +201,15 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 
 	private void getData(List<Long> groupIds, List<Long> objectIds, AsyncCallback<ServerResult<String>> callback)
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		switch (experimentType)
 		{
 			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
+				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, groupIds, objectIds, true, callback);
 				break;
 
 			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
+				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, groupIds, objectIds, true, callback);
 				break;
 		}
 

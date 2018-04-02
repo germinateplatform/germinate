@@ -29,11 +29,11 @@ import jhi.germinate.shared.exception.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link MarkerImporter} uses an {@link IDataReader} to read and parse attribute data and then writes it to a Germinate database.
+ * {@link ExcelMarkerImporter} uses an {@link IDataReader} to read and parse attribute data and then writes it to a Germinate database.
  *
  * @author Sebastian Raubach
  */
-public class MarkerImporter extends DataImporter<MapDefinition>
+public class ExcelMarkerImporter extends DataImporter<MapDefinition>
 {
 	private List<MapDefinition> cache = new ArrayList<>();
 
@@ -41,29 +41,29 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 	private Set<Long> createdMapDefinitionIds = new HashSet<>();
 	private Set<Long> createdDatasetMemberIds = new HashSet<>();
 
-	private MapImporter        mapImporter;
-	private MarkerTypeImporter markerTypeImporter;
+	protected ExcelMapImporter        mapImporter;
+	protected ExcelMarkerTypeImporter markerTypeImporter;
 
-	private Map            map;
-	private MarkerType     markerType;
-	private MapFeatureType mapFeatureType;
+	protected Map            map;
+	protected MarkerType     markerType;
+	protected MapFeatureType mapFeatureType;
 
 	private Dataset dataset;
 
 	public static void main(String[] args)
 	{
-		new MarkerImporter()
+		new ExcelMarkerImporter()
 				.run(args);
 	}
 
 	@Override
 	public void run(File input, String server, String database, String username, String password, String port, String readerName)
 	{
-		mapImporter = new MapImporter();
+		mapImporter = new ExcelMapImporter();
 		mapImporter.run(input, server, database, username, password, port, ExcelMapReader.class.getCanonicalName());
 		map = mapImporter.getMap();
 
-		markerTypeImporter = new MarkerTypeImporter();
+		markerTypeImporter = new ExcelMarkerTypeImporter();
 		markerTypeImporter.run(input, server, database, username, password, port, ExcelMarkerTypeReader.class.getCanonicalName());
 		markerType = markerTypeImporter.getMarkerType();
 		mapFeatureType = markerTypeImporter.getMapFeatureType();
@@ -223,7 +223,7 @@ public class MarkerImporter extends DataImporter<MapDefinition>
 		createdMarkerIds.addAll(ids);
 	}
 
-	public MarkerImporter setDataset(Dataset dataset)
+	public ExcelMarkerImporter setDataset(Dataset dataset)
 	{
 		this.dataset = dataset;
 		return this;

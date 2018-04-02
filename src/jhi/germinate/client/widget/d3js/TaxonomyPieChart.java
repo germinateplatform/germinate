@@ -26,15 +26,13 @@ import com.google.gwt.user.client.ui.Label;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
-import java.util.*;
-import java.util.Map;
-
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -113,12 +111,12 @@ public class TaxonomyPieChart extends AbstractChart
 			String species = genusSpecies.substring(index + 1);
 
 			/* Create the mapping */
-			Map<String, String> mapping = new HashMap<>();
+			FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 			mapping.put(Taxonomy.GENUS, genus);
 			mapping.put(Taxonomy.SPECIES, species);
 
 			/* Save it to the parameter store and change to the browse page */
-			StringStringMapParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
+			FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
 			History.newItem(Page.ACCESSION_OVERVIEW.name());
 		}
 		catch (Exception e)

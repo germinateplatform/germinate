@@ -61,9 +61,9 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	private JsArrayInteger size       = null;
 	private ExperimentType experimentType;
 
-	private List<Long>  datasetIds;
-	private List<T>     objects;
-	private List<Group> groups;
+	private List<Dataset> selectedDatasets;
+	private List<T>       objects;
+	private List<Group>   groups;
 
 	private FlowPanel                chartPanel;
 	private ScatterChartSelection<T> parameterSelection;
@@ -215,13 +215,14 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 	private void getData(Long groupId, Long firstId, Long secondId, AsyncCallback<ServerResult<String>> callback)
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		switch (experimentType)
 		{
 			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
+				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
 				break;
 			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
+				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
 				break;
 		}
 
@@ -234,10 +235,10 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			switch (experimentType)
 			{
 				case trials:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 					break;
 				case compound:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
 					break;
 			}
 

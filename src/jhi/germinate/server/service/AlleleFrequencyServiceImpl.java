@@ -59,7 +59,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 	 */
 	private GerminateTable getMap(UserAuth userAuth, DebugInfo sqlDebug, Long mapToUse, Set<String> markers) throws DatabaseException
 	{
-		String formatted = String.format(QUERY_EXPORT_MAP, Util.generateSqlPlaceholderString(markers.size()));
+		String formatted = String.format(QUERY_EXPORT_MAP, StringUtils.generateSqlPlaceholderString(markers.size()));
 		ServerResult<GerminateTable> temp = new GerminateTableQuery(formatted, userAuth, new String[]{Marker.MARKER_NAME, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START})
 				.setLong(mapToUse)
 				.setStrings(markers)
@@ -194,9 +194,9 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 			storeInSession(SESSION_PARAM_ALLELE_DATA_FILE, exportResult.subsetWithFlapjackLinks.getAbsolutePath());
 
             /* Get the map */
-			GerminateTable mapData = getMap(userAuth, sqlDebug, mapId, exporter.getUsedColumnNames());
+			DefaultStreamer mapData = GenotypeServiceImpl.getMap(userAuth, sqlDebug, mapId);
 
-			if (mapData == null || mapData.size() < 1)
+			if (mapData == null || !mapData.hasData())
 				throw new InvalidArgumentException("There is no data to export for the current selection.");
 
 			try

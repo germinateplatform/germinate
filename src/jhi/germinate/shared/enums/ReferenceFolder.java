@@ -24,6 +24,7 @@ package jhi.germinate.shared.enums;
  */
 public enum ReferenceFolder
 {
+	allelefreq,
 	climate,
 	flapjack,
 	passport,

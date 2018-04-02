@@ -43,11 +43,11 @@ import jhi.germinate.shared.search.operators.*;
  */
 public class FilterPanel implements KeyPressHandler
 {
-	private AlertDialog dialog;
-	private List<ToggleSwitch> switches = new ArrayList<>();
-	private List<FilterRow>    rows     = new ArrayList<>();
-	private final FlowPanel content;
-	private final FlowPanel body;
+	private final FlowPanel          content;
+	private final FlowPanel          body;
+	private       AlertDialog        dialog;
+	private       List<ToggleSwitch> switches = new ArrayList<>();
+	private       List<FilterRow>    rows     = new ArrayList<>();
 
 	private List<FilterRow.Column> columns;
 	private FilterPanelHandler     handler;
@@ -115,16 +115,16 @@ public class FilterPanel implements KeyPressHandler
 		switches.clear();
 	}
 
-	public void add(Map<String, String> mapping, boolean isAnd, ComparisonOperator operator)
+	public void add(FilterMapping mapping, boolean isAnd, ComparisonOperator operator)
 	{
 		clear();
 
-		for (Map.Entry<String, String> entry : mapping.entrySet())
+		for (FilterMappingEntry entry : mapping.mapping)
 		{
 			addRow();
 
 			FilterRow row = rows.get(rows.size() - 1);
-			row.setValue(entry.getKey(), entry.getValue(), operator);
+			row.setValue(entry.column, entry.value, operator);
 
 			if (switches.size() > 0)
 				switches.get(switches.size() - 1).setValue(isAnd);
@@ -212,12 +212,12 @@ public class FilterPanel implements KeyPressHandler
 									.filter(r -> !r.isEmpty())
 									.collect(Collectors.toList());
 
-        /* For each of the rows */
+		/* For each of the rows */
 		for (int i = 0; i < valid.size(); i++)
 		{
 			FilterRow row = valid.get(i);
 
-            /* Otherwise add it and possibly the operator in between */
+			/* Otherwise add it and possibly the operator in between */
 			if (i > 0)
 			{
 				boolean value = switches.get(i - 1).getValue();
@@ -251,7 +251,7 @@ public class FilterPanel implements KeyPressHandler
 		{
 			FilterRow row = valid.get(i);
 
-            /* Otherwise add it and possibly the operator in between */
+			/* Otherwise add it and possibly the operator in between */
 			if (i > 0)
 			{
 				boolean value = switches.get(i - 1).getValue();
@@ -274,6 +274,55 @@ public class FilterPanel implements KeyPressHandler
 			if (handler != null)
 				handler.onSearchClicked();
 			dialog.close();
+		}
+	}
+
+	public static class FilterMapping
+	{
+		private List<FilterMappingEntry> mapping = new ArrayList<>();
+
+		public void put(String column, String value)
+		{
+			mapping.add(new FilterMappingEntry(column, value));
+		}
+
+		public List<FilterMappingEntry> getMapping()
+		{
+			return mapping;
+		}
+	}
+
+	public static class FilterMappingEntry
+	{
+		private String column;
+		private String value;
+
+		public FilterMappingEntry(String column, String value)
+		{
+			this.column = column;
+			this.value = value;
+		}
+
+		public String getColumn()
+		{
+			return column;
+		}
+
+		public FilterMappingEntry setColumn(String column)
+		{
+			this.column = column;
+			return this;
+		}
+
+		public String getValue()
+		{
+			return value;
+		}
+
+		public FilterMappingEntry setValue(String value)
+		{
+			this.value = value;
+			return this;
 		}
 	}
 

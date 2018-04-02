@@ -217,7 +217,6 @@ public class Pacman
 			if (!injected)
 			{
 				style = Css.INST.style(degree);
-				JavaScript.consoleLog(style);
 				StyleInjector.injectAtStart(style, true);
 				injected = true;
 			}

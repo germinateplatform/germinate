@@ -65,7 +65,6 @@ public class UrlParameterReader
 							 * returns doesn't behave well when trying to send it to
 							 * the server */
 							List<String> listToStore = new ArrayList<>(values);
-
 							StringListParameterStore.Inst.get().put(param, listToStore);
 						}
 						else
@@ -82,9 +81,7 @@ public class UrlParameterReader
 								if ((param == Parameter.accessionId || param == Parameter.markerId) && value.matches("^\\d+\\|.*$"))
 									LongParameterStore.Inst.get().putAsString(param, value.substring(0, value.indexOf("|")));
 								else
-								{
 									TypedParameterStore.putUntyped(param, value);
-								}
 							}
 							catch (UnsupportedDataTypeException | NumberFormatException e)
 							{

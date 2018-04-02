@@ -247,7 +247,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 	public HyperlinkPopupOptions getHyperlinkOptions()
 	{
 		return new HyperlinkPopupOptions()
-				.setPage(Page.GENOTYPE_EXPORT)
+				.setPage(Page.GENOTYPE_DATASETS)
 				.addParam(Parameter.genotypeDatasetIds);
 	}
 }

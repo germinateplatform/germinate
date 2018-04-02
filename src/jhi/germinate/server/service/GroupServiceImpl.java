@@ -253,7 +253,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		for (int i = 0; i < items.size(); i += 1000)
 		{
 			List<String> currentItems = items.subList(i, Math.min(items.size(), i + 1000));
-			String formatted = String.format(query, column, Util.generateSqlPlaceholderString(currentItems.size()));
+			String formatted = String.format(query, column, StringUtils.generateSqlPlaceholderString(currentItems.size()));
 			ServerResult<List<Long>> result = new ValueQuery(formatted, userAuth)
 					.setStrings(currentItems)
 					.run("id")
