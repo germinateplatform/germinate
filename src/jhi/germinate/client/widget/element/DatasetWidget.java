@@ -66,8 +66,9 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	private SimplePanel  mapPanel;
 	private FlowPanel    buttonPanel;
 	private DatasetTable table;
-	private SafeHtml     headerText             = null;
-	private String       titleText;
+	private PageHeader   header;
+	private String       headerText;
+	private SafeHtml     text                   = null;
 	private List<Long>   urlParameterDatasetIds = null;
 
 	private boolean internal             = true;
@@ -119,8 +120,17 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		panel.add(buttonPanel);
 		panel.add(mapPanel);
 
-		if (!StringUtils.isEmpty(titleText))
-			tablePanel.add(new Heading(HeadingSize.H3, titleText));
+		if (!StringUtils.isEmpty(headerText))
+		{
+			PageHeader header = new PageHeader();
+			header.setText(headerText);
+			tablePanel.add(header);
+		}
+
+		if (text != null)
+		{
+			tablePanel.add(new HTML(text));
+		}
 
 		if (showMap)
 		{
@@ -461,7 +471,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 
 	public void setTitle(String title)
 	{
-		this.titleText = title;
+		this.headerText = title;
 	}
 
 	/**
@@ -469,14 +479,14 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	 *
 	 * @param headerText The text to display above the dataset table)
 	 */
-	public void setHeaderText(SafeHtml headerText)
+	public void setText(SafeHtml headerText)
 	{
-		this.headerText = headerText;
+		this.text = headerText;
 	}
 
-	public void setHeaderText(String headerText)
+	public void setText(String headerText)
 	{
-		this.setHeaderText(SafeHtmlUtils.fromTrustedString(new Heading(HeadingSize.H3, headerText).toString()));
+		this.setText(SafeHtmlUtils.fromTrustedString(new Heading(HeadingSize.H3, headerText).toString()));
 	}
 
 	public boolean isInternal()
@@ -528,10 +538,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	@Override
 	protected void setUpContent()
 	{
-		if (headerText != null)
-		{
-			panel.add(new HTML(headerText));
-		}
 		requestData();
 	}
 

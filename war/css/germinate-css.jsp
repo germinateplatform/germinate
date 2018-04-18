@@ -25,6 +25,11 @@
 	String highlightColor = CommonServiceImpl.getColors(PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS)).get(0);
 %>
 
+/* This is a hack to counteract the padding that is added when you look at the data statistics page. No idea how it's added, but it happens... */
+body {
+	padding-right: 0 !important;
+}
+
 .fa-lg {
 	font-size: 1.33333333em;
 	line-height: .75em;

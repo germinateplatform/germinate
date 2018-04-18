@@ -26,14 +26,20 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 
 /**
  * @author Sebastian Raubach
  */
 public interface MapServiceAsync
 {
-	void getById(RequestProperties properties, Long mapId, AsyncCallback<ServerResult<Map>> async);
+	/**
+	 * Returns the {@link Map} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param mapId      The id of the {@link Map}
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void getById(RequestProperties properties, Long mapId, AsyncCallback<ServerResult<Map>> callback);
 
 	/**
 	 * Returns the available maps for the given user
@@ -47,9 +53,6 @@ public interface MapServiceAsync
 	 * Returns the available maps for the given datasets
 	 *
 	 * @param properties The {@link RequestProperties}
-	 * @return The available maps for the given user
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	void getForDatasets(RequestProperties properties, List<Long> datasetIds, AsyncCallback<ServerResult<List<Map>>> async);
 

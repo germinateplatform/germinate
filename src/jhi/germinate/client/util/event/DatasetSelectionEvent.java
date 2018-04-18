@@ -36,7 +36,7 @@ public class DatasetSelectionEvent extends GwtEvent<DatasetSelectionEvent.Datase
 	/**
 	 * Creates a new instance of {@link LogoutEvent}
 	 */
-	public DatasetSelectionEvent(List<Dataset> dataset)
+	public DatasetSelectionEvent(List<Dataset> datasets)
 	{
 		this.datasets = datasets;
 	}

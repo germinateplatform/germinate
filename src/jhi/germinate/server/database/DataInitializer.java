@@ -88,9 +88,10 @@ public class DataInitializer
 		/* Automatically update the database if this is enabled */
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_AUTO_UPDATE_DATABASE))
 		{
+			String database = PropertyReader.get(ServerProperty.DATABASE_NAME);
 			try
 			{
-				Logger.getLogger("").log(Level.INFO, "RUNNING FLYWAY");
+				Logger.getLogger("").log(Level.INFO, "RUNNING FLYWAY on: " + database);
 				Flyway flyway = new Flyway();
 				flyway.setTable("schema_version");
 				flyway.setDataSource(Database.DatabaseType.MYSQL.getConnectionString() + PropertyReader.getServerString(Database.DatabaseType.MYSQL), PropertyReader.get(ServerProperty.DATABASE_USERNAME), PropertyReader.get(ServerProperty.DATABASE_PASSWORD));

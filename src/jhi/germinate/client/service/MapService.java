@@ -40,14 +40,6 @@ public interface MapService extends RemoteService
 
 	final class Inst
 	{
-
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 
@@ -58,9 +50,17 @@ public interface MapService extends RemoteService
 		{
 			return InstanceHolder.INSTANCE;
 		}
-
 	}
 
+	/**
+	 * Returns the {@link Map} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param mapId      The id of the {@link Map}
+	 * @return The {@link Map} with the given id.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException Thrown if the query fails on the server
+	 */
 	ServerResult<Map> getById(RequestProperties properties, Long mapId) throws InvalidSessionException, DatabaseException;
 
 	/**

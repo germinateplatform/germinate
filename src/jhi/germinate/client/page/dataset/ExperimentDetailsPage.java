@@ -174,7 +174,7 @@ public class ExperimentDetailsPage extends Composite
 							if (result.getSourceFile().endsWith(".hdf5"))
 							{
 									/* Start the export process */
-								GenotypeService.Inst.get().convertHdf5ToFlapjack(Cookie.getRequestProperties(), result.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
+								GenotypeService.Inst.get().convertHdf5ToText(Cookie.getRequestProperties(), result.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
 								{
 									@Override
 									protected void onFailureImpl(Throwable caught)

@@ -55,9 +55,9 @@ public class GerminateValueListBox<T> extends Composite implements Focusable, Ha
 	private final   Button               selectAll             = new Button(Text.LANG.generalSelectAll());
 	private final   List<T>              values                = new ArrayList<>();
 	private final   Map<Object, Integer> valueKeyToIndex       = new HashMap<>();
-	private final Renderer<? super T> renderer;
-	private final ProvidesKey<T>      keyProvider;
-	private       TooltipProvider<T>  tooltipProvider;
+	private final   Renderer<? super T>  renderer;
+	private final   ProvidesKey<T>       keyProvider;
+	private         TooltipProvider<T>   tooltipProvider;
 
 	private List<T> selected = new ArrayList<>();
 
@@ -380,18 +380,23 @@ public class GerminateValueListBox<T> extends Composite implements Focusable, Ha
 	 * @param item The display text of the item to select
 	 * @see Renderer#render(Object)
 	 */
-	public void selectItem(String item)
+	public boolean selectItem(String item, boolean fireEvent)
 	{
-		for (T row : values)
+		if (!StringUtils.isEmpty(item))
 		{
-			String name = renderer.render(row);
-
-			if (name.equalsIgnoreCase(item))
+			for (T row : values)
 			{
-				setValue(row, true);
-				return;
+				String name = renderer.render(row);
+
+				if (name.equalsIgnoreCase(item))
+				{
+					setValue(row, fireEvent);
+					return true;
+				}
 			}
 		}
+
+		return false;
 	}
 
 	public interface TooltipProvider<T>

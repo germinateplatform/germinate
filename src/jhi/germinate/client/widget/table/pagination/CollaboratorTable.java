@@ -27,7 +27,6 @@ import java.util.Locale;
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.table.column.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -191,26 +190,26 @@ public abstract class CollaboratorTable extends DatabaseObjectPaginationTable<Co
 		column.setDataStoreName(Institution.NAME);
 		addColumn(column, Text.LANG.institutionsColumnName(), sortingEnabled);
 
-		/* Add the institution acronym column */
-		column = new TextColumn()
-		{
-			@Override
-			public String getValue(Collaborator object)
-			{
-				if (object.getInstitution() != null)
-					return object.getInstitution().getAcronym();
-				else
-					return null;
-			}
-
-			@Override
-			public Class getType()
-			{
-				return String.class;
-			}
-		};
-		column.setDataStoreName(Institution.ACRONYM);
-		addColumn(column, Text.LANG.institutionsColumnAcronym(), sortingEnabled);
+//		/* Add the institution acronym column */
+//		column = new TextColumn()
+//		{
+//			@Override
+//			public String getValue(Collaborator object)
+//			{
+//				if (object.getInstitution() != null)
+//					return object.getInstitution().getAcronym();
+//				else
+//					return null;
+//			}
+//
+//			@Override
+//			public Class getType()
+//			{
+//				return String.class;
+//			}
+//		};
+//		column.setDataStoreName(Institution.ACRONYM);
+//		addColumn(column, Text.LANG.institutionsColumnAcronym(), sortingEnabled);
 
 		/* Add the country column */
 		column = new TextColumn()
@@ -255,68 +254,68 @@ public abstract class CollaboratorTable extends DatabaseObjectPaginationTable<Co
 		column.setDataStoreName(Country.COUNTRY_NAME);
 		addColumn(column, Text.LANG.institutionsColumnCountry(), sortingEnabled);
 
-		/* Add the institution contact column */
-		column = new TextColumn()
-		{
-			@Override
-			public String getValue(Collaborator object)
-			{
-				if (object.getInstitution() != null)
-					return object.getInstitution().getContact();
-				else
-					return null;
-			}
+//		/* Add the institution contact column */
+//		column = new TextColumn()
+//		{
+//			@Override
+//			public String getValue(Collaborator object)
+//			{
+//				if (object.getInstitution() != null)
+//					return object.getInstitution().getContact();
+//				else
+//					return null;
+//			}
+//
+//			@Override
+//			public Class getType()
+//			{
+//				return String.class;
+//			}
+//		};
+//		column.setDataStoreName(Institution.CONTACT);
+//		addColumn(column, Text.LANG.institutionsColumnContact(), sortingEnabled);
 
-			@Override
-			public Class getType()
-			{
-				return String.class;
-			}
-		};
-		column.setDataStoreName(Institution.CONTACT);
-		addColumn(column, Text.LANG.institutionsColumnContact(), sortingEnabled);
+//		/* Add the institution phone column */
+//		column = new TextColumn()
+//		{
+//			@Override
+//			public String getValue(Collaborator object)
+//			{
+//				if (object.getInstitution() != null)
+//					return object.getInstitution().getPhone();
+//				else
+//					return null;
+//			}
+//
+//			@Override
+//			public Class getType()
+//			{
+//				return String.class;
+//			}
+//		};
+//		column.setDataStoreName(Institution.PHONE);
+//		addColumn(column, Text.LANG.institutionsColumnPhone(), sortingEnabled);
 
-		/* Add the institution phone column */
-		column = new TextColumn()
-		{
-			@Override
-			public String getValue(Collaborator object)
-			{
-				if (object.getInstitution() != null)
-					return object.getInstitution().getPhone();
-				else
-					return null;
-			}
-
-			@Override
-			public Class getType()
-			{
-				return String.class;
-			}
-		};
-		column.setDataStoreName(Institution.PHONE);
-		addColumn(column, Text.LANG.institutionsColumnPhone(), sortingEnabled);
-
-		/* Add the institution email column */
-		column = new SafeHtmlColumn()
-		{
-			@Override
-			public SafeHtml getValue(Collaborator object)
-			{
-				if (object.getInstitution() != null && !StringUtils.isEmpty(object.getInstitution().getEmail()))
-					return SimpleHtmlTemplate.INSTANCE.mailto(object.getInstitution().getEmail());
-				else
-					return null;
-			}
-
-			@Override
-			public Class getType()
-			{
-				return String.class;
-			}
-		};
-		column.setDataStoreName(Institution.EMAIL);
-		addColumn(column, Text.LANG.institutionsColumnEmail(), sortingEnabled);
+//		/* Add the institution email column */
+//		column = new SafeHtmlColumn()
+//		{
+//			@Override
+//			public SafeHtml getValue(Collaborator object)
+//			{
+//				if (object.getInstitution() != null && !StringUtils.isEmpty(object.getInstitution().getEmail()))
+//					return SimpleHtmlTemplate.INSTANCE.mailto(object.getInstitution().getEmail());
+//				else
+//					return null;
+//			}
+//
+//			@Override
+//			public Class getType()
+//			{
+//				return String.class;
+//			}
+//		};
+//		column.setDataStoreName(Institution.EMAIL);
+//		addColumn(column, Text.LANG.institutionsColumnEmail(), sortingEnabled);
 
 		/* Add the institution address column */
 		column = new TextColumn()

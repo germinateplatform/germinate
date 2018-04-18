@@ -39,13 +39,6 @@ public interface AccessionService extends RemoteService
 
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final AccessionServiceAsync INSTANCE = GWT.create(AccessionService.class);
@@ -60,8 +53,8 @@ public interface AccessionService extends RemoteService
 	/**
 	 * Returns a paginated list of {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 *
-	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
-	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @return A paginated list of {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 * @throws InvalidSessionException     Thrown if the current session is invalid
@@ -75,7 +68,7 @@ public interface AccessionService extends RemoteService
 	/**
 	 * Returns the ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 *
-	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param properties The {@link RequestProperties}
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @return The ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 * @throws InvalidSessionException     Thrown if the current session is invalid
@@ -264,5 +257,15 @@ public interface AccessionService extends RemoteService
 	 */
 	ServerResult<Mcpd> getMcpd(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException;
 
+	/**
+	 * Returns the {@link EntityPair}s (entity parents and entity children) related to the {@link Accession} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param id         The {@link Accession} id
+	 * @param pagination The {@link Pagination}
+	 * @return The {@link EntityPair}s (entity parents and entity children) related to the {@link Accession} with the given id.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
 	PaginatedServerResult<List<EntityPair>> getEntityPairs(RequestProperties properties, Long id, Pagination pagination) throws InvalidSessionException, DatabaseException;
 }

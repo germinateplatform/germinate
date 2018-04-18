@@ -448,7 +448,7 @@ public class McpdImporter extends DataImporter<Accession>
 	 */
 	private void createOrGetSubtaxa(Accession entry) throws DatabaseException
 	{
-		if (entry.getTaxonomy() == null || entry.getSubtaxa() == null || StringUtils.areEmpty(entry.getSubtaxa().getTaxonomyIdentifier(), entry.getSubtaxa().getAuthor()))
+		if (entry.getTaxonomy() == null || entry.getSubtaxa() == null || StringUtils.isEmpty(entry.getSubtaxa().getTaxonomyIdentifier()))
 			return;
 
 		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM subtaxa WHERE taxonomy_id = ? AND subtaxa_author <=> ? AND taxonomic_identifier <=> ?");

@@ -58,7 +58,19 @@ public interface UserServiceAsync
 	 */
 	void getInstitutions(AsyncCallback<List<Institution>> callback);
 
+	/**
+	 * Logs the current user out.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param async      The {@link AsyncCallback}
+	 */
 	void logout(RequestProperties properties, AsyncCallback<Void> async);
 
+	/**
+	 * Adds a new institution to the database.
+	 *
+	 * @param institution The {@link Institution} to add
+	 * @param async       The {@link AsyncCallback}
+	 */
 	void addInstitution(Institution institution, AsyncCallback<Void> async);
 }

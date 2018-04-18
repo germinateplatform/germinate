@@ -32,14 +32,6 @@ public interface DatasetService extends RemoteService
 {
 	final class Inst
 	{
-
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final DatasetServiceAsync INSTANCE = GWT.create(DatasetService.class);
@@ -49,7 +41,6 @@ public interface DatasetService extends RemoteService
 		{
 			return InstanceHolder.INSTANCE;
 		}
-
 	}
 
 	/**
@@ -125,13 +116,55 @@ public interface DatasetService extends RemoteService
 	 */
 	PaginatedServerResult<List<Dataset>> getForMarker(RequestProperties properties, Pagination pagination, Long markerId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidArgumentException;
 
+	/**
+	 * Updates the {@link LicenseLog}s within the database. This represents a user accepting a number of {@link License}s.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param logs       The {@link LicenseLog}s to update
+	 * @return <code>true</code> if at least one entry was successfully updated
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException
+	 */
 	ServerResult<Boolean> updateLicenseLogs(RequestProperties properties, List<LicenseLog> logs) throws InvalidSessionException, DatabaseException;
 
+	/**
+	 * Returns all the {@link Dataset}s that have {@link License}s that the current user hasn't accepted yet.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param types      The {@link ExperimentType}s to check
+	 * @param pagination The {@link Pagination}
+	 * @return All the {@link Dataset}s that have {@link License}s that the current user hasn't accepted yet.
+	 * @throws InvalidSessionException          Thrown if the current session is invalid
+	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
+	 * @throws InvalidArgumentException         Thrown if one of the provided arguments for the filtering is invalid
+	 * @throws InvalidSearchQueryException      Thrown if the search query is invalid
+	 * @throws InvalidColumnException           Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws DatabaseException                Thrown if the query fails on the server
+	 */
 	PaginatedServerResult<List<Dataset>> getWithUnacceptedLicense(RequestProperties properties, List<ExperimentType> types, Pagination pagination) throws InvalidSessionException, InsufficientPermissionsException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException;
 
+	/**
+	 * Returns the {@link Experiment} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param id         The id of the {@link Experiment}
+	 * @return The {@link Experiment} with the given id.
+	 * @throws InvalidSessionException          Thrown if the current session is invalid
+	 * @throws DatabaseException                Thrown if the query fails on the server
+	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
+	 */
 	ServerResult<Experiment> getExperiment(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException;
 
-	String getJson();
-
-	ServerResult<Boolean> trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user) throws InvalidSessionException, DatabaseException;
+	/**
+	 * Tracks that the current user (represented by an {@link UnapprovedUser}) accessed the given {@link Dataset}s.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetIds The {@link List} of {@link Dataset} ids.
+	 * @param user       The user that accessed the datasets.
+	 * @return <code>true</code> if the event was successfully tracked
+	 * @throws InvalidSessionException       Thrown if the current session is invalid
+	 * @throws DatabaseException             Thrown if the query fails on the server
+	 * @throws SystemInReadOnlyModeException Thrown if Germinate is currently operating in "read-only" mode
+	 */
+	ServerResult<Boolean> trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException;
 }

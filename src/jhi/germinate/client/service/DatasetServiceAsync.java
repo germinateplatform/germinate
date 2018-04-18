@@ -81,13 +81,41 @@ public interface DatasetServiceAsync
 	 */
 	Request getForMarker(RequestProperties properties, Pagination pagination, Long markerId, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
 
+	/**
+	 * Updates the {@link LicenseLog}s within the database. This represents a user accepting a number of {@link License}s.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param logs       The {@link LicenseLog}s to update
+	 * @param callback   The {@link AsyncCallback}
+	 */
 	void updateLicenseLogs(RequestProperties properties, List<LicenseLog> logs, AsyncCallback<ServerResult<Boolean>> callback);
 
+	/**
+	 * Returns all the {@link Dataset}s that have {@link License}s that the current user hasn't accepted yet.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param types      The {@link ExperimentType}s to check
+	 * @param pagination The {@link Pagination}
+	 * @param callback   The {@link AsyncCallback}
+	 */
 	Request getWithUnacceptedLicense(RequestProperties properties, List<ExperimentType> types, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
 
+	/**
+	 * Returns the {@link Experiment} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param id         The id of the {@link Experiment}
+	 * @param callback   The {@link AsyncCallback}
+	 */
 	void getExperiment(RequestProperties properties, Long id, AsyncCallback<ServerResult<Experiment>> callback);
 
-	void getJson(AsyncCallback<String> callback);
-
+	/**
+	 * Tracks that the current user (represented by an {@link UnapprovedUser}) accessed the given {@link Dataset}s.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetIds The {@link List} of {@link Dataset} ids.
+	 * @param user       The user that accessed the datasets.
+	 * @param callback   The {@link AsyncCallback}
+	 */
 	void trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user, AsyncCallback<ServerResult<Boolean>> callback);
 }

@@ -1528,6 +1528,7 @@ public interface Text extends Messages
 	String introductionTourMessageLanguage();
 
 	@Key("tour.introduction.share.text")
+	@DefaultMessage("Click on this to reveal the supported ways of sharing this page with your colleagues/friends/...")
 	String introductionTourMessageShare();
 
 	@Key("tour.introduction.help.text")
@@ -1794,13 +1795,44 @@ public interface Text extends Messages
 	String readOnlyBanner();
 
 	@Key("widget.dataset.title.allelefreq")
-	SafeHtml allelefreqDatasetHeader();
+	@DefaultMessage("Allele Frequency Data Export")
+	String allelefreqDatasetHeader();
+
+	@Key("widget.dataset.text.allelefreq")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml allelefreqDatasetText();
 
 	@Key("widget.dataset.title.trials")
-	SafeHtml trialsDatasetHeader();
+	@DefaultMessage("Trials Data Export")
+	String trialsDatasetHeader();
+
+	@Key("widget.dataset.text.trials")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml trialsDatasetText();
 
 	@Key("widget.dataset.title.genotypes")
-	SafeHtml genotypeDatasetHeader();
+	@DefaultMessage("Genotypic Data Export")
+	String genotypeDatasetHeader();
+
+	@Key("widget.dataset.text.genotypes")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml genotypeDatasetText();
+
+	@Key("widget.dataset.title.compounds")
+	@DefaultMessage("Compound Data Export")
+	String compoundDatasetHeader();
+
+	@Key("widget.dataset.text.compound")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml compoundDatasetText();
+
+	@Key("widget.dataset.title.climate")
+	@DefaultMessage("Climate Data Export")
+	String climateDatasetHeader();
+
+	@Key("widget.dataset.text.climate")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml climateDatasetText();
 
 	@Key("page.acknowledgements.title")
 	String acknowledgementsTitle();
@@ -2057,10 +2089,6 @@ public interface Text extends Messages
 	@DefaultMessage("Synonyms")
 	String synonymsTitle();
 
-	@Key("page.compound.datasets.title")
-	@DefaultMessage("Compound datasets")
-	String compoundDatasetHeader();
-
 	@Key("page.compounds.title")
 	@DefaultMessage("Compounds")
 	String compoundsTitle();
@@ -2276,10 +2304,6 @@ public interface Text extends Messages
 	@Key("page.allelefreq.binning.title")
 	@DefaultMessage("Allele Frequency Binning")
 	String allelefreqBinningTitle();
-
-	@Key("page.climate.datasets.title")
-	@DefaultMessage("Climate Data Export")
-	String climateDatasetHeader();
 
 	@Key("page.compounds.scatter.first.compound")
 	@DefaultMessage("First compound")
@@ -2616,4 +2640,28 @@ public interface Text extends Messages
 	@Key("widget.dataset.user.tracking.explanation")
 	@DefaultMessage("Can you let us know what you intend to use this data for in your research?")
 	String userTrackingExplanation();
+
+	@Key("widget.dataset.user.tracking.explanation.option.basic.research")
+	@DefaultMessage("Basic research (molecular biology, QTL studies, GWAS, phylogenetics, molecular ecology, etc.)")
+	String userTrackingExplanationOptionBasic();
+
+	@Key("widget.dataset.user.tracking.explanation.option.prebreeding")
+	@DefaultMessage("Pre-breeding (introgression line development, germplasm evaluation etc.)")
+	String userTrackingExplanationOptionPreBreeding();
+
+	@Key("widget.dataset.user.tracking.explanation.option.breeding.cultivar")
+	@DefaultMessage("Breeding and cultivar development")
+	String userTrackingExplanationOptionBreedingCultivar();
+
+	@Key("widget.dataset.user.tracking.explanation.option.education")
+	@DefaultMessage("Education")
+	String userTrackingExplanationOptionEducation();
+
+	@Key("widget.dataset.user.tracking.explanation.option.direct.use")
+	@DefaultMessage("Direct use of germplasm for production")
+	String userTrackingExplanationOptionDirectUse();
+
+	@Key("widget.dataset.user.tracking.explanation.option.other")
+	@DefaultMessage("Other (please specify)")
+	String userTrackingExplanationOptionOther();
 }

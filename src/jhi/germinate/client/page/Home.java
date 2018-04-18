@@ -41,7 +41,6 @@ import jhi.germinate.shared.datastructure.database.*;
  */
 public class Home extends GerminateComposite implements HasHelp
 {
-
 	private NewsWidget newsWidget = new NewsWidget();
 
 	@Override
@@ -72,8 +71,10 @@ public class Home extends GerminateComposite implements HasHelp
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSION_OVERVIEW))
 				{
-					String value = NumberUtils.INTEGER_FORMAT.format(result.getServerResult().get(Accession.class.getName()));
-					accessionColumn.getElement().appendChild(new InfoPanel(value, Text.LANG.searchAccessions(), Style.MDI_FLOWER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.ACCESSION_OVERVIEW).getElement());
+					long number = result.getServerResult().get(Accession.class.getName());
+					String value = NumberUtils.format(number);
+					String tooltip = NumberUtils.INTEGER_FORMAT.format(number);
+					accessionColumn.getElement().appendChild(new InfoPanel(value, tooltip, Text.LANG.searchAccessions(), Style.MDI_FLOWER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.ACCESSION_OVERVIEW).getElement());
 					row.add(accessionColumn);
 				}
 
@@ -82,8 +83,10 @@ public class Home extends GerminateComposite implements HasHelp
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.MAP_DETAILS))
 				{
-					String value = NumberUtils.INTEGER_FORMAT.format(result.getServerResult().get(Marker.class.getName()));
-					markerColumn.getElement().appendChild(new InfoPanel(value, Text.LANG.searchMarkers(), Style.MDI_DNA, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.MAP_DETAILS).getElement());
+					long number = result.getServerResult().get(Marker.class.getName());
+					String value = NumberUtils.format(number);
+					String tooltip = NumberUtils.INTEGER_FORMAT.format(number);
+					markerColumn.getElement().appendChild(new InfoPanel(value, tooltip, Text.LANG.searchMarkers(), Style.MDI_DNA, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.MAP_DETAILS).getElement());
 					row.add(markerColumn);
 				}
 
@@ -92,8 +95,10 @@ public class Home extends GerminateComposite implements HasHelp
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.LOCATIONS))
 				{
-					String value = NumberUtils.INTEGER_FORMAT.format(result.getServerResult().get(Location.class.getName()));
-					locationColumn.getElement().appendChild(new InfoPanel(value, Text.LANG.searchCollectingsites(), Style.MDI_MAP_MARKER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.LOCATIONS).getElement());
+					long number = result.getServerResult().get(Location.class.getName());
+					String value = NumberUtils.format(number);
+					String tooltip = NumberUtils.INTEGER_FORMAT.format(number);
+					locationColumn.getElement().appendChild(new InfoPanel(value, tooltip, Text.LANG.searchCollectingsites(), Style.MDI_MAP_MARKER, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.LOCATIONS).getElement());
 					row.add(locationColumn);
 				}
 
@@ -102,8 +107,10 @@ public class Home extends GerminateComposite implements HasHelp
 
 				if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
 				{
-					String value = NumberUtils.INTEGER_FORMAT.format(result.getServerResult().get(Group.class.getName()));
-					groupColumn.getElement().appendChild(new InfoPanel(value, Text.LANG.searchGroup(), Style.MDI_GROUP, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.GROUPS).getElement());
+					long number = result.getServerResult().get(Group.class.getName());
+					String value = NumberUtils.format(number);
+					String tooltip = NumberUtils.INTEGER_FORMAT.format(number);
+					groupColumn.getElement().appendChild(new InfoPanel(value, tooltip, Text.LANG.searchGroup(), Style.MDI_GROUP, Text.LANG.generalContinue(), GerminateSettingsHolder.getCategoricalColor(i++), Page.GROUPS).getElement());
 					row.add(groupColumn);
 				}
 

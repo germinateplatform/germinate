@@ -64,7 +64,7 @@ public interface IDataReader extends AutoCloseable
 			else
 			{
 				// Replace all hyphens with zeros so that we only have one case to handle.
-				value.replace("-", "0");
+				value = value.replace("-", "0");
 
 				try
 				{

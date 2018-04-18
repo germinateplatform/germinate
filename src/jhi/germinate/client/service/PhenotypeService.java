@@ -44,6 +44,19 @@ public interface PhenotypeService extends RemoteService
 
 	String[] COLUMNS_DATA_SORTABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Dataset.DESCRIPTION, ExperimentType.DESCRIPTION, Phenotype.NAME, Phenotype.SHORT_NAME, Unit.NAME, PhenotypeData.PHENOTYPE_VALUE, PhenotypeData.RECORDING_DATE};
 
+	final class Inst
+	{
+		public static PhenotypeServiceAsync get()
+		{
+			return InstanceHolder.INSTANCE;
+		}
+
+		private static final class InstanceHolder
+		{
+			private static final PhenotypeServiceAsync INSTANCE = GWT.create(PhenotypeService.class);
+		}
+	}
+
 	/**
 	 * Returns a paginated list of {@link PhenotypeData}s that match the given {@link PartialSearchQuery}.
 	 *
@@ -58,17 +71,6 @@ public interface PhenotypeService extends RemoteService
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
 	PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, List<Long> datasetIds, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
-
-	/**
-	 * Returns the {@link Phenotype} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param id         The id of the accession
-	 * @return The {@link Phenotype} for the given id
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Returns a list of {@link Phenotype}s for the given {@link Dataset} ids, {@link ExperimentType} and numeric setting.
@@ -105,26 +107,6 @@ public interface PhenotypeService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	ServerResult<List<DataStats>> getOverviewStats(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException;
-
-	final class Inst
-	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
-		private static final class InstanceHolder
-		{
-			private static final PhenotypeServiceAsync INSTANCE = GWT.create(PhenotypeService.class);
-		}
-
-		public static PhenotypeServiceAsync get()
-		{
-			return InstanceHolder.INSTANCE;
-		}
-	}
 
 	/**
 	 * Exports all the data associated with {@link PhenotypeData}s mathing the given {@link PartialSearchQuery}.

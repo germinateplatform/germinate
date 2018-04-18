@@ -97,7 +97,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	}
 
 	@Override
-	public ServerResult<String> convertHdf5ToFlapjack(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, jhi.germinate.shared.exception.IOException, FlapjackException, InvalidArgumentException
+	public ServerResult<String> convertHdf5ToText(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, jhi.germinate.shared.exception.IOException, FlapjackException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);

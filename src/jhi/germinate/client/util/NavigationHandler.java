@@ -150,7 +150,8 @@ public class NavigationHandler
 				};
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
-				widget.setHeaderText(Text.LANG.climateDatasetHeader());
+				widget.setTitle(Text.LANG.climateDatasetHeader());
+				widget.setText(Text.LANG.climateDatasetText());
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});
@@ -186,10 +187,18 @@ public class NavigationHandler
 						{
 							History.newItem(Page.GENOTYPE_EXPORT.name());
 						}
-					}, ExperimentType.genotype, true);
+					}, ExperimentType.genotype, true)
+					{
+						@Override
+						public String getParallaxStyle()
+						{
+							return ParallaxResource.INSTANCE.css().parallaxGenotype();
+						}
+					};
 					widget.setShowMap(true);
 					widget.setLinkToExportPage(false);
-					widget.setHeaderText(Text.LANG.genotypeDatasetHeader());
+					widget.setTitle(Text.LANG.genotypeDatasetHeader());
+					widget.setText(Text.LANG.genotypeDatasetText());
 					widget.setShowDownload(true, new SimpleCallback<Dataset>()
 					{
 						@Override
@@ -201,7 +210,7 @@ public class NavigationHandler
 								if (result.getSourceFile().endsWith(".hdf5"))
 								{
 									/* Start the export process */
-									GenotypeService.Inst.get().convertHdf5ToFlapjack(Cookie.getRequestProperties(), result.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
+									GenotypeService.Inst.get().convertHdf5ToText(Cookie.getRequestProperties(), result.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
 									{
 										@Override
 										protected void onFailureImpl(Throwable caught)
@@ -338,7 +347,8 @@ public class NavigationHandler
 				};
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
-				widget.setHeaderText(Text.LANG.trialsDatasetHeader());
+				widget.setTitle(Text.LANG.trialsDatasetHeader());
+				widget.setText(Text.LANG.trialsDatasetText());
 				widget.setShowDownload(true, new SimpleCallback<Dataset>()
 				{
 					@Override
@@ -382,9 +392,10 @@ public class NavigationHandler
 						History.newItem(Page.ALLELE_FREQUENCY_EXPORT.name());
 					}
 				}, ExperimentType.allelefreq, true);
+				widget.setTitle(Text.LANG.allelefreqDatasetHeader());
+				widget.setText(Text.LANG.allelefreqDatasetText());
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
-				widget.setHeaderText(Text.LANG.allelefreqDatasetHeader());
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});
@@ -439,7 +450,7 @@ public class NavigationHandler
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.COMPOUNDS, new CompoundDetailsPage()));
 		}
-		// TRIALS DATASETS
+		// COMPOUND DATASETS
 		else if (Page.COMPOUND_DATASETS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () ->
@@ -461,6 +472,7 @@ public class NavigationHandler
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
 				widget.setTitle(Text.LANG.compoundDatasetHeader());
+				widget.setText(Text.LANG.compoundDatasetText());
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});

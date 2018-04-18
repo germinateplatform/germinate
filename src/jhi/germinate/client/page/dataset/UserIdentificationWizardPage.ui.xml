@@ -17,6 +17,7 @@
 
 <ui:UiBinder xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:lb='urn:import:jhi.germinate.client.widget.listbox'
 			 xmlns:ui='urn:ui:com.google.gwt.uibinder'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
@@ -47,19 +48,20 @@
 		<b:Form action="javascript:void(0);" addStyleNames="{style.height}" submitOnEnter="false" ui:field="form">
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formName" text="{msg.userTrackingName}" />
-				<b:TextBox b:id="formName" ui:field="name"/>
+				<b:TextBox name="name" b:id="formName" ui:field="name"/>
 			</b:FormGroup>
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formEmail" text="{msg.userTrackingEmail}" />
-				<b:TextBox b:id="formEmail" ui:field="email"/>
+				<b:TextBox name="email" b:id="formEmail" ui:field="email"/>
 			</b:FormGroup>
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formInstitution" text="{msg.userTrackingInstitution}" />
-				<b:TextBox b:id="formInstitution" ui:field="institution"/>
+				<b:TextBox name="address" b:id="formInstitution" ui:field="institution"/>
 			</b:FormGroup>
 			<b:FormGroup>
 				<b:FormLabel for="formExplanation" text="{msg.userTrackingExplanation}"/>
-				<b:TextArea visibleLines="3" b:id="formExplanation" ui:field="explanation"/>
+				<lb:DatasetUseListBox b:id="formExplanation" ui:field="selection" />
+				<b:TextArea visible="false" visibleLines="3" ui:field="explanation"/>
 			</b:FormGroup>
 		</b:Form>
 	</g:HTMLPanel>

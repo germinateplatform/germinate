@@ -68,21 +68,6 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	}
 
 	@Override
-	public ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		try
-		{
-			return new PhenotypeManager().getById(userAuth, id);
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			return new ServerResult<>(null, null);
-		}
-	}
-
-	@Override
 	public ServerResult<String> export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> phenotypeIds, boolean includeId) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);

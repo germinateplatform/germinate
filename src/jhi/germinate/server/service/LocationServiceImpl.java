@@ -325,12 +325,4 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 
 		return new ServerResult<>(sqlDebug, file.getName());
 	}
-
-	@Override
-	public ServerResult<List<Country>> getCountryValues(RequestProperties properties, List<Long> datasetIds, ExperimentType type, Long phenotypeId) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return LocationManager.getAllForPhenotype(userAuth, datasetIds, type, phenotypeId);
-	}
 }

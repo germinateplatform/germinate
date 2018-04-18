@@ -41,14 +41,6 @@ public interface MarkerService extends RemoteService
 
 	final class Inst
 	{
-
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 
@@ -62,6 +54,19 @@ public interface MarkerService extends RemoteService
 		}
 	}
 
+	/**
+	 * Returns a paginated list of {@link Marker}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @return A paginated list of {@link Marker}s that match the given {@link PartialSearchQuery}.
+	 * @throws InvalidSessionException     Thrown if the current session is invalid
+	 * @throws DatabaseException           Thrown if the query fails on the server
+	 * @throws InvalidColumnException      Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
+	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
+	 */
 	PaginatedServerResult<List<Marker>> getMarkerForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
 
 	/**

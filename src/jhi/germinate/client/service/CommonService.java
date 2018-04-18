@@ -31,7 +31,25 @@ import jhi.germinate.shared.exception.*;
 @RemoteServiceRelativePath("common")
 public interface CommonService extends RemoteService
 {
+	/**
+	 * Marks the files for the given {@link ExperimentType} publically available. The actual files are stored on the server in the session, so we don't need to pass them here.
+	 *
+	 * @param properties     The {@link RequestProperties}
+	 * @param experimentType The {@link ExperimentType} of the files that should be made publically available.
+	 * @return Nothing
+	 * @throws InvalidSessionException
+	 */
 	Void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType) throws InvalidSessionException;
+
+	/**
+	 * Returns statistics (counts) for the main data types within Germinate. {@link Accession}s, {@link Marker}s, {@link Group}s and {@link Location}s.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @return Statistics (counts) for the main data types within Germinate. {@link Accession}s, {@link Marker}s, {@link Group}s and {@link Location}s.
+	 * @throws InvalidSessionException Thrown if the session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	ServerResult<Map<String, Long>> getOverviewStats(RequestProperties properties) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Returns the columns of the {@link GerminateDatabaseTable}.
@@ -119,10 +137,13 @@ public interface CommonService extends RemoteService
 	 */
 	ServerResult<List<Country>> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException;
 
-	ServerResult<Map<String, Long>> getOverviewStats(RequestProperties properties) throws InvalidSessionException, DatabaseException;
-
 	final class Inst
 	{
+		public static CommonServiceAsync get()
+		{
+			return InstanceHolder.INSTANCE;
+		}
+
 		/**
 		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
 		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
@@ -133,11 +154,6 @@ public interface CommonService extends RemoteService
 		private static final class InstanceHolder
 		{
 			private static final CommonServiceAsync INSTANCE = GWT.create(CommonService.class);
-		}
-
-		public static CommonServiceAsync get()
-		{
-			return InstanceHolder.INSTANCE;
 		}
 	}
 }

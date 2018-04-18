@@ -63,7 +63,21 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		try
 		{
-			return new MapManager().getById(userAuth, mapId);
+			ServerResult<Map> result = new MapManager().getById(userAuth, mapId);
+
+			if (result.getServerResult() == null)
+			{
+				return result;
+			}
+			else
+			{
+				Map map = result.getServerResult();
+
+				if (map.isVisibility() || Objects.equals(map.getUserId(), userAuth.getId()))
+					return result;
+				else
+					return new ServerResult<>(null, null);
+			}
 		}
 		catch (InsufficientPermissionsException e)
 		{
@@ -397,8 +411,6 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 					writeStrudelFile(streamer, bw, mapName.getServerResult(), mapId, baseURL);
 					break;
 			}
-
-			bw.close();
 		}
 		catch (java.io.IOException e)
 		{

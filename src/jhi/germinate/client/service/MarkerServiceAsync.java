@@ -33,6 +33,14 @@ import jhi.germinate.shared.search.*;
  */
 public interface MarkerServiceAsync
 {
+	/**
+	 * Returns a paginated list of {@link Marker}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param callback   The {@link AsyncCallback}
+	 */
 	Request getMarkerForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Marker>>> callback);
 
 	/**

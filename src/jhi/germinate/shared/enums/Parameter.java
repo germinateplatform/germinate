@@ -73,7 +73,7 @@ public enum Parameter
 	groupPreviewFile(String.class, ParameterLifetime.TEMPORARY),
 	compoundId(Long.class, ParameterLifetime.TEMPORARY),
 	experimentId(Long.class, ParameterLifetime.TEMPORARY),
-	user(UnapprovedUser.class, ParameterLifetime.TEMPORARY),
+	user(UnapprovedUser.class, ParameterLifetime.VOLATILE),
 
 
 	tool_id(String.class, ParameterLifetime.TEMPORARY),
@@ -137,8 +137,11 @@ public enum Parameter
 
 	public enum ParameterLifetime
 	{
+		/** Volatile parameters are NOT saved as cookies/localstorage. They are only kept until the user leaves the page or refreshes. */
 		VOLATILE,
+		/** Temporary parameters are saved as cookies/localstorage, but expire */
 		TEMPORARY,
+		/** Persistent parameters are saved as cookies/localstorage and don't expire */
 		PERSISTENT
 	}
 }

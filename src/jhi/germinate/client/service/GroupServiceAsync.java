@@ -220,7 +220,23 @@ public interface GroupServiceAsync
 	 */
 	void getMarkerGroups(RequestProperties properties, List<Long> datasetIds, ExperimentType type, AsyncCallback<ServerResult<List<Group>>> callback);
 
+	/**
+	 * Returns a paginated list of {@link Group}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param callback   The {@link AsyncCallback}
+	 * @return The {@link Request}
+	 */
 	Request getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Group>>> callback);
 
+	/**
+	 * Renames the given {@link Group}
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param group      The {@link Group} with the new name and description
+	 * @param callback   The {@link AsyncCallback}
+	 */
 	void renameGroup(RequestProperties properties, Group group, AsyncCallback<ServerResult<Void>> callback);
 }

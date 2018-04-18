@@ -58,24 +58,21 @@ public class InfoPanel
 	@UiField
 	SpanElement detailsLabel;
 
-	public InfoPanel(String value, String category, String icon, String details, String color, Page link)
+	public InfoPanel(String value, String tooltip, String category, String icon, String details, String color, Page link)
 	{
 		if (GerminateSettingsHolder.isPageAvailable(link))
-			create(value, category, icon, details, color, "#" + link.name());
+			create(value, tooltip, category, icon, details, color, "#" + link.name());
 		else
-			create(value, category, icon, details, color, null);
+			create(value, tooltip, category, icon, details, color, null);
 	}
 
-	public InfoPanel(String value, String category, String icon, String details, String color, String link)
-	{
-		create(value, category, icon, details, color, link);
-	}
-
-	private void create(String value, String category, String icon, String details, String color, String link)
+	private void create(String value, String tooltip, String category, String icon, String details, String color, String link)
 	{
 		ourUiBinder.createAndBindUi(this);
 
 		this.label.setInnerText(value);
+		if (!StringUtils.areEmpty(tooltip, category))
+			this.label.setTitle(tooltip + " " + category);
 		this.category.setInnerText(category);
 		this.icon.addClassName(icon);
 		this.detailsLabel.setInnerText(details);

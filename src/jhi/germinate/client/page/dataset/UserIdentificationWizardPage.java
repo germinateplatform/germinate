@@ -34,6 +34,7 @@ import java.util.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
@@ -45,20 +46,24 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 {
 	private static LicenseWizardPageUiBinder ourUiBinder = GWT.create(LicenseWizardPageUiBinder.class);
 	@UiField
-	HTML     heading;
+	HTML              heading;
 	@UiField
-	Form     form;
+	Form              form;
 	@UiField
-	TextBox  name;
+	TextBox           name;
 	@UiField
-	TextBox  email;
+	TextBox           email;
 	@UiField
-	TextBox  institution;
+	TextBox           institution;
 	@UiField
-	TextArea explanation;
-	private Decision decision = Decision.UNKNOWN;
-	private OnDecisionChangeHandler handler;
+	DatasetUseListBox selection;
+	@UiField
+	TextArea          explanation;
+
+	private Decision                   decision      = Decision.UNKNOWN;
+	private OnDecisionChangeHandler    handler;
 	private ValueChangeHandler<String> changeHandler = e -> handler.onDecisionChanged(getDecision());
+
 	public UserIdentificationWizardPage(OnDecisionChangeHandler handler)
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
@@ -71,6 +76,9 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 		email.getElement().setPropertyBoolean("required", true);
 		institution.getElement().setPropertyBoolean("required", true);
 
+		name.getElement().setAttribute("autocomplete", "name");
+		email.getElement().setAttribute("autocomplete", "email");
+		institution.getElement().setAttribute("autocomplete", "street-address");
 		email.getElement().setAttribute("type", "email");
 
 		name.addValidator(this);
@@ -85,6 +93,15 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 		institution.addKeyUpHandler(event -> changeHandler.onValueChange(null));
 		explanation.addValueChangeHandler(changeHandler);
 		explanation.addKeyUpHandler(event -> changeHandler.onValueChange(null));
+		selection.addValueChangeHandler(event -> {
+			String s = selection.getSelection();
+
+			boolean isOther = Objects.equals(s, Text.LANG.userTrackingExplanationOptionOther());
+			explanation.setVisible(isOther);
+			explanation.setFocus(isOther);
+
+			changeHandler.onValueChange(null);
+		});
 
 		// Try and restore previous input
 		UnapprovedUser user = UnapprovedUserParameterStore.Inst.get().get(Parameter.user);
@@ -93,7 +110,15 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 			name.setText(user.userFullName);
 			email.setText(user.userEmailAddress);
 			institution.setText(user.institutionName);
-			explanation.setText(user.extra);
+
+			boolean selected = selection.selectItem(user.extra, false);
+
+			if(!selected)
+			{
+				explanation.setText(user.extra);
+				explanation.setVisible(true);
+				selection.selectItem(Text.LANG.userTrackingExplanationOptionOther(), false);
+			}
 		}
 	}
 
@@ -111,10 +136,18 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 			user.userFullName = name.getText();
 			user.userEmailAddress = email.getText();
 			user.institutionName = institution.getText();
-			user.extra = explanation.getValue();
+
+			String s = selection.getSelection();
+			boolean isOther = Objects.equals(s, Text.LANG.userTrackingExplanationOptionOther());
+
+			if (isOther)
+				user.extra = explanation.getValue();
+			else
+				user.extra = s;
 
 			UnapprovedUserParameterStore.Inst.get().put(Parameter.user, user);
 
+			// "Submit" the form so that the browser can re-use the information with auto-fill next time.
 			form.onFormSubmit();
 		}
 

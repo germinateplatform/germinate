@@ -45,8 +45,8 @@ public class LoginHandler implements LoginEvent.LoginEventHandler
 
 		ContentHolder.getInstance().initContent();
 
-		/* Track information using Google Analytics */
-		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGIN, "login", event.getUserAuthentication().getUsername());
+		/* Track login event using Google Analytics */
+		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGIN, "login");
 
 		/* Fire a page update */
 		String historyToken = History.getToken();

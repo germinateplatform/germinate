@@ -181,7 +181,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				return Date.class;
 			}
 		};
-		column.setDataStoreName("comments." + Comment.CREATED_ON);
+		column.setDataStoreName(Comment.CREATED_ON);
 		addColumn(column, Text.LANG.commentColumnCreatedOn(), sortingEnabled);
 
 		if (ModuleCore.getUseAuthentication())

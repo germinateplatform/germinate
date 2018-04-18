@@ -36,6 +36,7 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -45,7 +46,7 @@ import jhi.germinate.shared.exception.*;
 /**
  * @author Sebastian Raubach
  */
-public class GenotypeExportPage extends GerminateComposite implements HasHyperlinkButton
+public class GenotypeExportPage extends GerminateComposite implements HasHyperlinkButton, ParallaxBannerPage
 {
 	private FlowPanel resultPanel = new FlowPanel();
 
@@ -249,5 +250,11 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 		return new HyperlinkPopupOptions()
 				.setPage(Page.GENOTYPE_DATASETS)
 				.addParam(Parameter.genotypeDatasetIds);
+	}
+
+	@Override
+	public String getParallaxStyle()
+	{
+		return ParallaxResource.INSTANCE.css().parallaxGenotype();
 	}
 }
