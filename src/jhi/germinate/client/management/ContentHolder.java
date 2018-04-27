@@ -188,6 +188,7 @@ public class ContentHolder
 
 	private void navigateToPage(Page page, Page parentPage, Composite newContent)
 	{
+		contentPanel.setStyleName("");
 		MainMenu.removeActiveStateMenuItems();
 		boolean highlighted = MainMenu.highlightMenuItem(page);
 
@@ -209,6 +210,7 @@ public class ContentHolder
 						contentPanel.clear();
 						/* Add the new content */
 						contentPanel.add(newContent);
+						contentPanel.setStyleName(page.name());
 					}
 				}, libraries);
 			}
@@ -218,6 +220,7 @@ public class ContentHolder
 				contentPanel.clear();
 				/* Add the new content */
 				contentPanel.add(newContent);
+				contentPanel.setStyleName(page.name());
 			}
 		}
 

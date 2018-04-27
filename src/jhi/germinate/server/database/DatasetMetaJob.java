@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,30 +15,23 @@
  *  limitations under the License.
  */
 
-.hexagon {
-	fill: white;
-	pointer-events: all;
-}
+package jhi.germinate.server.database;
 
-.hexagon path {
-	-webkit-transition: fill 250ms linear;
-	transition: fill 250ms linear;
-}
+import jhi.germinate.server.database.query.*;
 
-.hexagon :hover {
-	fill: lightgray;
-}
-
-.mesh {
-	fill: none;
-	stroke: #000;
-	stroke-opacity: .2;
-	pointer-events: none;
-}
-
-.border {
-	fill: none;
-	stroke: #000;
-	stroke-width: 2px;
-	pointer-events: none;
+public class DatasetMetaJob implements Runnable
+{
+	@Override
+	public void run()
+	{
+		try
+		{
+			new ValueQuery("call " + StoredProcedureInitializer.DATASET_META + "()")
+					.execute();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

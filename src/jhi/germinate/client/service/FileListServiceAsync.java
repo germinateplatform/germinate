@@ -39,5 +39,5 @@ public interface FileListServiceAsync
 	 * @param folder     The {@link ReferenceFolder}
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void getForFolder(RequestProperties properties, FileLocation location, ReferenceFolder folder, AsyncCallback<List<String>> callback);
+	void getForFolder(RequestProperties properties, FileLocation location, ReferenceFolder folder, AsyncCallback<List<CreatedFile>> callback);
 }

@@ -69,6 +69,11 @@ a.mdi:before {
   content: " *";
 }
 
+.<%= Style.TABLE_PEITY_DONUT %> svg,
+.<%= Style.TABLE_PEITY_DONUT %> span {
+  vertical-align: middle;
+}
+
 .<%= Style.TABLE_BORDER %> {
   border: 1px solid #ddd;
 }

@@ -249,4 +249,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 */
 	@Template("<a href='mailto:{0}'>{0}</a>")
 	SafeHtml mailto(String email);
+
+	@Template("<span class=" + Style.TABLE_PEITY_DONUT + "><span class='donut'>{1}/{2}</span><span>&nbsp;{0}</span></span>")
+	SafeHtml peityDonut(String formatted, double value, int outOf);
 }

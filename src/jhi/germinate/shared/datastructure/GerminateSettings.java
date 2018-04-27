@@ -47,6 +47,7 @@ public class GerminateSettings implements Serializable
 	public ClientProperty<Boolean> showHomeOnLogin;
 	public ClientProperty<Boolean> serverLoggingEnabled;
 	public ClientProperty<Boolean> hideIdColumn;
+	public ClientProperty<Boolean> pdciEnabled;
 
 	public ClientProperty<Boolean> socialShowFacebook;
 	public ClientProperty<Boolean> socialShowTwitter;

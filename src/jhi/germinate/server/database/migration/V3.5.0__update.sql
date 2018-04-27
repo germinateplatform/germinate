@@ -112,3 +112,6 @@ CREATE TABLE `datasetaccesslogs` (
 
 ALTER TABLE `compounds`
 CHANGE COLUMN `class` `compound_class` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `average_mass`;
+
+ALTER TABLE `germinatebase`
+ADD COLUMN `pdci` float(64, 10) NULL COMMENT 'Passport Data Completeness Index. This is calculated by Germinate. Manual editing of this field will be overwritten.' AFTER `entityparent_id`;

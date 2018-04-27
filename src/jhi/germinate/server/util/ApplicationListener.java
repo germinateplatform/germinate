@@ -30,6 +30,7 @@ import javax.servlet.*;
 
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
+import jhi.germinate.shared.enums.*;
 
 /**
  * The {@link ApplicationListener} is the main {@link ServletContextListener} of the application. It's started when the application is loaded by
@@ -40,33 +41,58 @@ import jhi.germinate.server.database.*;
  */
 public class ApplicationListener implements ServletContextListener
 {
-	private ScheduledExecutorService scheduler;
+	private static ScheduledExecutorService scheduler;
+
+	private static ScheduledFuture<?> pdciFuture = null;
+
+	/**
+	 * Enabled/disables PDCI calculation depening on the setting of {@link ServerProperty#GERMINATE_PDCI_ENABLED}
+	 */
+	public static void togglePdciEnabled()
+	{
+		boolean enabled = PropertyReader.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED);
+
+		if (enabled && pdciFuture == null)
+			pdciFuture = scheduler.scheduleAtFixedRate(new PDCIRunnable(), 0, 4, TimeUnit.HOURS);
+
+		if (!enabled && pdciFuture != null)
+		{
+			pdciFuture.cancel(false);
+			pdciFuture = null;
+		}
+	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce)
 	{
-		/* Start reading the properties file and watch for changes */
+		// Start reading the properties file and watch for changes
 		PropertyReader.initialize();
-		/* Watch the image folder and resize images as required */
+		// Watch the image folder and resize images as required
 		ImageScaler.initialize();
 
 		Database.initialize();
 
-		/* Every hour, update the dataset sizes */
 		scheduler = Executors.newSingleThreadScheduledExecutor();
-		scheduler.scheduleAtFixedRate(new DataInitializer.DatasetMetaJob(), 0, 1, TimeUnit.HOURS);
+		// Every hour, update the dataset sizes
+		scheduler.scheduleAtFixedRate(new DatasetMetaJob(), 0, 1, TimeUnit.HOURS);
+
+		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED))
+		{
+			// Every foud hours, re-calculate the PDCI
+			pdciFuture = scheduler.scheduleAtFixedRate(new PDCIRunnable(), 0, 4, TimeUnit.HOURS);
+		}
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce)
 	{
-		/* Remember to stop the property and image file watcher */
+		// Remember to stop the property and image file watcher
 		PropertyReader.stopFileWatcher();
 		ImageScaler.stopFileWatcher();
 
 		try
 		{
-			/* Stop the schedular */
+			// Stop the schedular
 			scheduler.shutdownNow();
 		}
 		catch (Exception e)
@@ -74,7 +100,7 @@ public class ApplicationListener implements ServletContextListener
 			e.printStackTrace();
 		}
 
-        /* Remove temporary log files */
+		// Remove temporary log files
 		File file = new File(System.getProperty("java.io.tmpdir"), "logs");
 		String context = sce.getServletContext().getContextPath().replace("/", "");
 
@@ -86,17 +112,17 @@ public class ApplicationListener implements ServletContextListener
 				f.delete();
 		}
 
-        /* Now deregister JDBC drivers in this context's ClassLoader: Get the webapp's ClassLoader */
+		// Now deregister JDBC drivers in this context's ClassLoader: Get the webapp's ClassLoader
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
-        /* Loop through all drivers */
+		// Loop through all drivers
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
 		while (drivers.hasMoreElements())
 		{
 			Driver driver = drivers.nextElement();
 			if (driver.getClass().getClassLoader() == cl)
 			{
-				/* This driver was registered by the webapp's ClassLoader, so deregister it */
+				// This driver was registered by the webapp's ClassLoader, so deregister it
 				try
 				{
 					Logger.getLogger("").log(Level.INFO, "Deregistering JDBC driver '" + driver + "'");
@@ -109,12 +135,12 @@ public class ApplicationListener implements ServletContextListener
 			}
 			else
 			{
-				/* Driver was not registered by the webapp's ClassLoader and may be in use elsewhere */
+				// Driver was not registered by the webapp's ClassLoader and may be in use elsewhere
 				Logger.getLogger("").log(Level.INFO, "Not deregistering JDBC driver '" + driver + "' as it does not belong to this webapp's ClassLoader");
 			}
 		}
 
-        /* Finally, try to kill the AbandonedConnectionCleanupThread */
+		// Finally, try to kill the AbandonedConnectionCleanupThread
 		try
 		{
 			AbandonedConnectionCleanupThread.shutdown();

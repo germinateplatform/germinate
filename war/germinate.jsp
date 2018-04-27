@@ -65,6 +65,9 @@
 	<link type="text/css" rel="stylesheet" href="css/baguetteBox.css" media="screen"/>
 	<script type="text/javascript" src="js/baguetteBox.js"></script>
 
+	<!-- Peity -->
+	<script type="text/javascript" src="js/jquery.peity.js"></script>
+
 	<!-- Cookie policy notification -->
 	<script type="text/javascript" src="js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="js/jquery.cookiecuttr.js"></script>

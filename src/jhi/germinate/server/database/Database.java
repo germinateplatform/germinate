@@ -115,7 +115,7 @@ public final class Database
 	{
 		new StoredProcedureInitializer().initialize();
 		new ViewInitializer().initialize();
-		new DataInitializer().initialize();
+		new DatabaseUpdater().initialize();
 	}
 
 	private Database()

@@ -34,7 +34,7 @@ import jhi.germinate.shared.search.*;
  */
 public class AccessionManager extends AbstractManager<Accession>
 {
-	public static final String[] COLUMNS_TABLE = {Accession.ID, EntityType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, COUNT, LocationService.DISTANCE, Accession.SYNONYMS, Synonym.SYNONYM};
+	public static final String[] COLUMNS_TABLE = {Accession.ID, EntityType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, COUNT, LocationService.DISTANCE, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI};
 
 	private static final String COMMON_TABLES   = "germinatebase LEFT JOIN entitytypes ON germinatebase.entitytype_id = entitytypes.id LEFT JOIN subtaxa ON germinatebase.subtaxa_id = subtaxa.id LEFT JOIN taxonomies ON germinatebase.taxonomy_id = taxonomies.id LEFT JOIN locations ON germinatebase.location_id = locations.id LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN biologicalstatus ON biologicalstatus.id = germinatebase.biologicalstatus_id LEFT JOIN institutions ON institutions.id = germinatebase.institution_id LEFT JOIN collectingsources ON collectingsources.id = germinatebase.collsrc_id";
 	private static final String COMMOM_SYNONYMS = "LEFT JOIN synonyms ON (synonyms.foreign_id = germinatebase.id AND synonyms.synonymtype_id = " + SynonymType.germinatebase.getId() + ")";
@@ -45,8 +45,9 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_IDS_FOR_FILTER   = "SELECT DISTINCT germinatebase.id FROM " + COMMON_TABLES + " {{FILTER}}";
 	private static final String SELECT_NAMES_FOR_FILTER = "SELECT DISTINCT germinatebase.name FROM " + COMMON_TABLES + " {{FILTER}}";
 
-	private static final String SELECT_ALL_FOR_FILTER_EXPORT  = "SELECT germinatebase.id AS germinatebase_id, germinatebase.general_identifier AS germinatebase_gid, germinatebase.name AS germinatebase_name, germinatebase.number AS germinatebase_number, germinatebase.collnumb AS germinatebase_collnumb, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxomonies_species, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, locations.elevation AS locations_elevation, countries.country_name AS countries_country_name, germinatebase.colldate AS germinatebase_colldate, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms_synonym FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} GROUP BY germinatebase.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER_EXPORT  = "SELECT germinatebase.id AS germinatebase_id, germinatebase.general_identifier AS germinatebase_gid, germinatebase.name AS germinatebase_name, germinatebase.number AS germinatebase_number, germinatebase.collnumb AS germinatebase_collnumb, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxomonies_species, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, locations.elevation AS locations_elevation, countries.country_name AS countries_country_name, germinatebase.colldate AS germinatebase_colldate, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms_synonym, germinatebase.pdci AS pdci FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} GROUP BY germinatebase.id %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_FILTER         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} GROUP BY germinatebase.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_PDCI           = "SELECT *, ( SELECT 1 FROM pedigreedefinitions WHERE pedigreedefinitions.germinatebase_id = germinatebase.id LIMIT 1 ) AS has_pedigree_def, ( SELECT 1 FROM pedigrees WHERE pedigrees.germinatebase_id = germinatebase.id LIMIT 1 ) AS has_pedigree, ( SELECT 1 FROM storagedata WHERE storagedata.germinatebase_id = germinatebase.id LIMIT 1 ) as has_storage, ( SELECT 1 FROM links LEFT JOIN linktypes ON links.linktype_id = linktypes.id WHERE linktypes.target_table ='germinatebase' AND (links.foreign_id = germinatebase.id OR NOT ISNULL(linktypes.placeholder))) as has_url FROM " + COMMON_TABLES;
 	private static final String SELECT_BY_IDS                 = "SELECT * FROM " + COMMON_TABLES + " WHERE germinatebase.id IN (%s) %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_MEGA_ENV       = "SELECT DISTINCT(germinatebase.id) FROM " + COMMON_TABLES + " LEFT JOIN megaenvironmentdata ON megaenvironmentdata.location_id = locations.id LEFT JOIN megaenvironments ON megaenvironments.id = megaenvironmentdata.megaenvironment_id WHERE megaenvironments.id = ?";
 	private static final String SELECT_IDS_FOR_MEGA_ENV_UNK   = "SELECT DISTINCT(germinatebase.id) FROM " + COMMON_TABLES + " WHERE location_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM megaenvironmentdata WHERE megaenvironmentdata.location_id = locations.id)";
@@ -59,6 +60,8 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_ALL_IN_POLYGON         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN locationtypes ON locations.locationtype_id = locationtypes.id WHERE locationtypes.name = ? AND !ISNULL(locations.latitude) AND !ISNULL(locations.longitude) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', locations.longitude, ' ', locations.latitude, ')'))) GROUP BY germinatebase.id %s LIMIT ?, ?";
 	private static final String SELECT_IDS_DOWNLOAD           = "SELECT germinatebase.*, subtaxa.subtaxa_author AS subtaxa_author, subtaxa.taxonomic_identifier AS subtaxa_taxonomic_identifier, taxonomies.genus AS taxonomies_genus, taxonomies.species AS taxonomies_species, taxonomies.species_author AS taxonomies_species_author, taxonomies.cropname AS taxonomies_crop_name, taxonomies.ploidy AS taxonomies_ploidy, locations.state AS locations_state, locations.region AS locations_region, locations.site_name AS locations_site_name, locations.elevation AS locations_elevation, locations.latitude AS locations_latitude, locations.longitude AS locations_longitude, countries.country_name AS countries_country_name, institutions.code AS institutions_code, institutions.name AS institutions_name, institutions.acronym AS institutions_acronym, institutions.phone AS institutions_phone, institutions.email AS institutions_email, institutions.address AS institutions_address, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " WHERE germinatebase.id IN (%s) GROUP BY germinatebase.id";
 	private static final String SELECT_ENTITY_PAIRS           = "SELECT child.id, parent.id FROM germinatebase child LEFT JOIN germinatebase parent ON child.entityparent_id = parent.id WHERE ( child.id = ? OR parent.id = ? ) AND child.entitytype_id > 1 %s LIMIT ?, ?";
+
+	private static final String UPDATE_PDCI = "UPDATE germinatebase SET pdci = ? WHERE id = ?";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM germinatebase WHERE entitytype_id = 1 OR ISNULL(entitytype_id)";
 
@@ -181,6 +184,12 @@ public class AccessionManager extends AbstractManager<Accession>
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
+	}
+
+	public static DatabaseObjectStreamer getObjectStreamerForPDCI() throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	{
+		return AccessionManager.<Accession>getFilteredDatabaseObjectQuery(null, null, SELECT_ALL_FOR_PDCI, AccessionService.COLUMNS_SORTABLE, 0)
+				.getStreamer(Accession.PDCIParser.Inst.get(), null, true);
 	}
 
 	public static ServerResult<List<String>> getNamesForGroups(UserAuth userAuth, List<Long> groupIds) throws DatabaseException
@@ -388,5 +397,13 @@ public class AccessionManager extends AbstractManager<Accession>
 				.setInt(pagination.getLength())
 				.run()
 				.getObjectsPaginated(EntityPair.Parser.Inst.get(), false);
+	}
+
+	public static void updatePDCI(Long id, double value) throws DatabaseException
+	{
+		new ValueQuery(UPDATE_PDCI)
+				.setDouble(value)
+				.setLong(id)
+				.execute();
 	}
 }

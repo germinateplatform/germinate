@@ -44,6 +44,7 @@ public class NumberUtils
 	public static final NumberFormat INTEGER_FORMAT             = NumberFormat.getFormat("#,###").overrideFractionDigits(0, 0);
 
 	private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
+	private static final NavigableMap<Long, String> suffixesBit = new TreeMap<>();
 
 	static
 	{
@@ -53,16 +54,23 @@ public class NumberUtils
 		suffixes.put(      1000000000000L, "T");
 		suffixes.put(   1000000000000000L, "P");
 		suffixes.put(1000000000000000000L, "E");
+
+		suffixesBit.put(               1024L, "k");
+		suffixesBit.put(            1048576L, "M");
+		suffixesBit.put(         1073741824L, "G");
+		suffixesBit.put(      1099511627776L, "T");
+		suffixesBit.put(   1125899906842624L, "P");
+		suffixesBit.put(1152921504606846976L, "E");
 	}
 
-	public static String format(long value)
+	public static String format(long value, boolean bit)
 	{
 		//Long.MIN_VALUE == -Long.MIN_VALUE so we need an adjustment here
-		if (value == Long.MIN_VALUE) return format(Long.MIN_VALUE + 1);
-		if (value < 0) return "-" + format(-value);
-		if (value < 1000) return Long.toString(value); //deal with easy case
+		if (value == Long.MIN_VALUE) return format(Long.MIN_VALUE + 1, bit);
+		if (value < 0) return "-" + format(-value, bit);
+		if (value < (bit ? 1024 : 1000)) return Long.toString(value); //deal with easy case
 
-		Map.Entry<Long, String> e = suffixes.floorEntry(value);
+		Map.Entry<Long, String> e = (bit ? suffixesBit : suffixes).floorEntry(value);
 		Long divideBy = e.getKey();
 		String suffix = e.getValue();
 

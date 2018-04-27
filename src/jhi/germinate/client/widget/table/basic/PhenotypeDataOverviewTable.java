@@ -103,6 +103,24 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
+				return TableUtils.getCellValueAsString(Long.toString(object.getCount()));
+			}
+
+			@Override
+			public String getCellStyleNames(Cell.Context context, DataStats object)
+			{
+				return Style.TEXT_RIGHT_ALIGN;
+			}
+		};
+		column.setSortable(true);
+		addStringColumn(column, Text.LANG.generalCount());
+		getTable().getHeader(getTable().getColumnCount() - 1).setHeaderStyleNames(Style.TEXT_RIGHT_ALIGN);
+
+		column = new Column<DataStats, String>(new TextCell())
+		{
+			@Override
+			public String getValue(DataStats object)
+			{
 				return TableUtils.getCellValueAsString(Double.toString(object.getMin()));
 			}
 

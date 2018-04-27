@@ -152,6 +152,10 @@
 								<t:ToggleSwitch b:id="formIds" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="ids"/>
 							</b:FormGroup>
 							<b:FormGroup>
+								<b:FormLabel for="formPdci" ui:field="pdciLabel"/>
+								<t:ToggleSwitch offText="{msg.generalNo}" onText="{msg.generalYes}" b:id="formPdci" ui:field="pdci"/>
+							</b:FormGroup>
+							<b:FormGroup>
 								<b:FormLabel for="formLogging" ui:field="loggingLabel"/>
 								<t:ToggleSwitch b:id="formLogging" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="logging"/>
 							</b:FormGroup>

@@ -70,6 +70,14 @@ public class JavaScript
 			$wnd.$(selector).hide();
 	}-*/;
 
+	public static native String getLinkColor()/*-{
+		var a = $wnd.document.createElement("a");
+		$wnd.document.body.appendChild(a);
+		var fillColor = $(a).css("color");
+		$wnd.document.body.removeChild(a);
+		return fillColor;
+	}-*/;
+
 	/**
 	 * {@link D3} is a utility class containing constants and utility methods for D3
 	 *

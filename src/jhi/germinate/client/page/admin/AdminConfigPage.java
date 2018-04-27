@@ -148,8 +148,13 @@ public class AdminConfigPage extends Composite implements HasHelp
 	FormLabel    idsLabel;
 	@UiField
 	ToggleSwitch ids;
-	@UiField
 
+	@UiField
+	FormLabel    pdciLabel;
+	@UiField
+	ToggleSwitch pdci;
+
+	@UiField
 	FormLabel    loggingLabel;
 	@UiField
 	ToggleSwitch logging;
@@ -209,8 +214,8 @@ public class AdminConfigPage extends Composite implements HasHelp
 	@UiField
 	PanelCollapse target;
 
-	private AdvancedTable<Page> availablePages;
-	private GerminateSettings   settings;
+	private AdvancedTable<Page>      availablePages;
+	private GerminateSettings        settings;
 	private List<ColorPickerWrapper> templateCategoricalColors = new ArrayList<>();
 	private List<ColorPickerWrapper> templateGradientColors    = new ArrayList<>();
 
@@ -278,6 +283,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateBoolean(settings.templateShowParallaxBanner, parallax, parallaxLabel);
 
 		updateBoolean(settings.hideIdColumn, ids, idsLabel);
+		updateBoolean(settings.pdciEnabled, pdci, pdciLabel);
 		updateBoolean(settings.serverLoggingEnabled, logging, loggingLabel);
 		updateBoolean(settings.debug, debug, debugLabel);
 		updateBoolean(settings.isReadOnlyMode, readOnly, readOnlyLabel);
@@ -479,6 +485,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.templateGradientColors.setValue(colors);
 
 			settings.hideIdColumn.setValue(ids.getValue());
+			settings.pdciEnabled.setValue(pdci.getValue());
 			settings.serverLoggingEnabled.setValue(logging.getValue());
 			settings.debug.setValue(debug.getValue());
 			settings.isReadOnlyMode.setValue(readOnly.getValue());

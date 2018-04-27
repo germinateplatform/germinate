@@ -293,7 +293,7 @@ public class FilterRow extends Composite
 
 	public String getSearchConditionString()
 	{
-		return column.getSelection().displayName + " " + getOperatorString(operator.getSelection()) + " " + getFirst() + (secondInput.isVisible() || secondDate.isVisible() || secondEntity.isVisible() ? ", " + getSecond() : "");
+		return "'" + column.getSelection().displayName + "' " + getOperatorString(operator.getSelection()) + " '" + getFirst() + (secondInput.isVisible() || secondDate.isVisible() || secondEntity.isVisible() ? ", " + getSecond() : "") + "'";
 	}
 
 	public boolean isEmpty()

@@ -47,6 +47,8 @@ public class Style
 	public static final String LAYOUT_NO_BORDER_LEFT             = "gm8-no-border-left";
 	public static final String LAYOUT_SIDEBAR_TOGGLED            = "gm8-sidebar-toggled";
 
+	public static final String TABLE_PEITY_DONUT = "gm8-table-peity-donut";
+
 	public static final String FORM_REQUIRED = "form-required";
 
 	public static final String TAG_DUMMY_ANCHOR = "gm8-tag-dummy-anchor";
@@ -94,6 +96,7 @@ public class Style
 	public static final String MDI_FLOWER                          = "mdi-flower";
 	public static final String MDI_DATABASE                        = "mdi-database";
 	public static final String MDI_CHART_AREASPLINE                = "mdi-chart-areaspline";
+	public static final String MDI_CHART_DONUT                     = "mdi-chart-donut";
 	public static final String MDI_EARTH                           = "mdi-earth";
 	public static final String MDI_WEATHER_SNOWY_RAIN              = "mdi-weather-snowy-rainy";
 	public static final String MDI_GROUP                           = "mdi-group";

@@ -45,6 +45,7 @@
 
 	<g:HTMLPanel addStyleNames="{style.margin}">
 		<g:HTML ui:field="heading"/>
+		<g:HTML ui:field="privacyPolicy" />
 		<b:Form action="javascript:void(0);" addStyleNames="{style.height}" submitOnEnter="false" ui:field="form">
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formName" text="{msg.userTrackingName}" />

@@ -42,7 +42,7 @@ public class DownloadWidget extends GerminateComposite
 {
 	private ULPanel ulPanel;
 
-	private String heading;
+	private String           heading;
 	private List<FileConfig> files = new ArrayList<>();
 
 	public DownloadWidget()
@@ -81,70 +81,83 @@ public class DownloadWidget extends GerminateComposite
 	@Override
 	protected void setUpContent()
 	{
-		/* Create an unordered list */
+		// Create an unordered list
 		ulPanel = new ULPanel();
-		/* Style the list */
+		// Style the list
 		ulPanel.setStyleName(Style.WIDGET_UL_ICON_LIST);
 
 		for (FileConfig config : files)
 		{
-			Anchor anchor = new Anchor(config.getName());
-			anchor.addClickHandler(event -> {
-				onItemClicked(event, config, new DefaultAsyncCallback<ServerResult<String>>(config.longRunning)
+			String name = config.getName();
+
+			// If we know the filesize, append it so the user knows how big the file is
+			if (config.getPath() != null && config.getPath().getSize() != null)
+				name += " (" + NumberUtils.format(config.getPath().getSize(), true) + "B)";
+
+			Anchor anchor = new Anchor(name);
+			anchor.addClickHandler(event -> onItemClicked(event, config, new DefaultAsyncCallback<ServerResult<String>>(config.longRunning)
+			{
+				@Override
+				protected void onSuccessImpl(ServerResult<String> result)
 				{
-					@Override
-					protected void onSuccessImpl(ServerResult<String> result)
-					{
-						config.path = result.getServerResult();
-						String url = getLinkURL(config);
+					config.path = new CreatedFile(result.getServerResult(), null);
+					String url = getLinkURL(config);
 
-						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, config.getLocation().name(), config.getPath());
+					// Track the click event
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, config.getLocation().name(), config.getPath().getName());
 
-						/* Click it */
-						JavaScript.invokeDownload(url);
-					}
-				});
-			});
+					// Then, actually invoke the download
+					JavaScript.invokeDownload(url);
+				}
+			}));
 
 			ulPanel.add(anchor, config.getStyle(), config.getType(), config.longRunning);
 		}
 
 		if (!StringUtils.isEmpty(heading))
 			panel.add(new Heading(HeadingSize.H3, heading));
+
 		panel.add(ulPanel);
 	}
 
 	protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 	{
-		callback.onSuccess(new ServerResult<>(config.path));
+		callback.onSuccess(new ServerResult<>(config.path.getName()));
 	}
 
 	/**
-	 * Returns the link URL of the link at position <code>index</code>
+	 * Returns the link URL of the given {@link FileConfig}
 	 *
-	 * @param index The position of the link
-	 * @return The link URL
+	 * @param config The {@link FileConfig} of the file for which to return the URL
+	 * @return The link URL of the given {@link FileConfig}
 	 */
 	protected String getLinkURL(FileConfig config)
 	{
-		String url = config.getPath();
-		if (url.startsWith("http") || url.startsWith("ftp"))
-			return url;
+		String url = config.getPath().getName();
 
-		return new ServletConstants.Builder().setUrl(GWT.getModuleBaseURL())
-											 .setPath(ServletConstants.SERVLET_FILES)
-											 .setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-											 .setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-											 .setParam(ServletConstants.PARAM_FILE_LOCATION, config.getLocation().name())
-											 .setParam(ServletConstants.PARAM_FILE_PATH, url)
-											 .build();
+		// If it's an actual link, just return it
+		if (url.startsWith("http") || url.startsWith("ftp"))
+		{
+			return url;
+		}
+		// Otherwise, it's a link to one of our files. Do the magic necessary to get the actual link URL
+		else
+		{
+			return new ServletConstants.Builder().setUrl(GWT.getModuleBaseURL())
+												 .setPath(ServletConstants.SERVLET_FILES)
+												 .setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+												 .setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+												 .setParam(ServletConstants.PARAM_FILE_LOCATION, config.getLocation().name())
+												 .setParam(ServletConstants.PARAM_FILE_PATH, url)
+												 .build();
+		}
 	}
 
 	public static class FileConfig
 	{
-		private String   name;
-		private String   path;
-		private FileType type;
+		private String             name;
+		private CreatedFile        path;
+		private FileType           type;
 		private FileLocation       location    = FileLocation.temporary;
 		private FileType.IconStyle style       = FileType.IconStyle.MDI;
 		private boolean            longRunning = false;
@@ -171,14 +184,14 @@ public class DownloadWidget extends GerminateComposite
 			this.longRunning = longRunning;
 		}
 
-		public FileConfig(FileLocation location, String name, String path)
+		public FileConfig(FileLocation location, String name, CreatedFile path)
 		{
 			this.location = location;
 			this.name = name;
 			this.path = path;
 		}
 
-		public FileConfig(FileLocation location, String name, String path, FileType type, boolean longRunning)
+		public FileConfig(FileLocation location, String name, CreatedFile path, FileType type, boolean longRunning)
 		{
 			this.location = location;
 			this.name = name;
@@ -215,9 +228,9 @@ public class DownloadWidget extends GerminateComposite
 			{
 				return type;
 			}
-			else if (!StringUtils.isEmpty(path))
+			else if (path != null && !StringUtils.isEmpty(path.getName()))
 			{
-				String extension = path.substring(path.lastIndexOf(".") + 1);
+				String extension = path.getName().substring(path.getName().lastIndexOf(".") + 1);
 
 				try
 				{
@@ -264,12 +277,12 @@ public class DownloadWidget extends GerminateComposite
 			return this;
 		}
 
-		public String getPath()
+		public CreatedFile getPath()
 		{
 			return path;
 		}
 
-		public FileConfig setPath(String path)
+		public FileConfig setPath(CreatedFile path)
 		{
 			this.path = path;
 			return this;

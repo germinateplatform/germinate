@@ -104,12 +104,12 @@ public class MdiHeading extends Heading
 		{
 			Element i = Document.get().createElement("i");
 			i.addClassName(Style.combine(Style.MDI, Style.FA_FIXED_WIDTH, mdi));
-			i.getStyle().setMarginLeft(6, com.google.gwt.dom.client.Style.Unit.PX);
+//			i.getStyle().setMarginLeft(6, com.google.gwt.dom.client.Style.Unit.PX);
 			i.getStyle().setMarginRight(6, com.google.gwt.dom.client.Style.Unit.PX);
 			i.addClassName(Style.LAYOUT_V_ALIGN_MIDDLE);
 			i.addClassName(Emphasis.PRIMARY.getCssName());
 			text.getElement().addClassName(Style.LAYOUT_V_ALIGN_MIDDLE);
-			getElement().insertAfter(i, text.getElement());
+			getElement().insertBefore(i, text.getElement());
 		}
 	}
 }

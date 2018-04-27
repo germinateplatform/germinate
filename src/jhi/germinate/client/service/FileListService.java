@@ -56,5 +56,5 @@ public interface FileListService extends RemoteService
 	 * @return A the list of files contained in the reference folder in the reference location
 	 * @throws InvalidSessionException Thrown if the current session id is invalid
 	 */
-	List<String> getForFolder(RequestProperties properties, FileLocation location, ReferenceFolder folder) throws InvalidSessionException;
+	List<CreatedFile> getForFolder(RequestProperties properties, FileLocation location, ReferenceFolder folder) throws InvalidSessionException;
 }

@@ -28,9 +28,9 @@ public class FlapjackProjectCreationResult implements Serializable
 	private static final long serialVersionUID = 928555372594183865L;
 
 	private String      debugOutput;
-	private String      projectFile;
-	private String      mapFile;
-	private String      rawDataFile;
+	private CreatedFile projectFile;
+	private CreatedFile mapFile;
+	private CreatedFile rawDataFile;
 	private Set<String> deletedMarkers;
 
 	public FlapjackProjectCreationResult()
@@ -49,34 +49,34 @@ public class FlapjackProjectCreationResult implements Serializable
 		return this;
 	}
 
-	public String getProjectFile()
+	public CreatedFile getProjectFile()
 	{
 		return projectFile;
 	}
 
-	public FlapjackProjectCreationResult setProjectFile(String projectFile)
+	public FlapjackProjectCreationResult setProjectFile(CreatedFile projectFile)
 	{
 		this.projectFile = projectFile;
 		return this;
 	}
 
-	public String getMapFile()
+	public CreatedFile getMapFile()
 	{
 		return mapFile;
 	}
 
-	public FlapjackProjectCreationResult setMapFile(String mapFile)
+	public FlapjackProjectCreationResult setMapFile(CreatedFile mapFile)
 	{
 		this.mapFile = mapFile;
 		return this;
 	}
 
-	public String getRawDataFile()
+	public CreatedFile getRawDataFile()
 	{
 		return rawDataFile;
 	}
 
-	public FlapjackProjectCreationResult setRawDataFile(String rawDataFile)
+	public FlapjackProjectCreationResult setRawDataFile(CreatedFile rawDataFile)
 	{
 		this.rawDataFile = rawDataFile;
 		return this;

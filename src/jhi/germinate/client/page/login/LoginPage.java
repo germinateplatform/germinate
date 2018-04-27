@@ -56,7 +56,7 @@ public class LoginPage extends GerminateComposite implements HasHelp
 	private void doLogin()
 	{
 		// Wait for the previous one to finish
-		if(currentRequest != null && currentRequest.isPending())
+		if (currentRequest != null && currentRequest.isPending())
 			return;
 
 		final String username = form.getUsername();
@@ -162,7 +162,7 @@ public class LoginPage extends GerminateComposite implements HasHelp
 	@Override
 	public Library[] getLibraryList()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOPOJSON};
+		return new Library[]{Library.D3_V3, Library.D3_TOPOJSON, Library.ZXCVBN};
 	}
 
 	@Override

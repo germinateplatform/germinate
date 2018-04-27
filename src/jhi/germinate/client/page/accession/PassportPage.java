@@ -74,6 +74,12 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	PageHeader pageHeader;
 	@UiField
 	HTML       html;
+	@UiField
+	FlowPanel  pdciWrapper;
+	@UiField
+	HTML       pdci;
+	@UiField
+	Anchor     pdciInfo;
 
 	@UiField
 	Row topWrapper;
@@ -242,20 +248,24 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 	protected void updateDownloads()
 	{
-		FileListService.Inst.get().getForFolder(Cookie.getRequestProperties(), FileLocation.download, ReferenceFolder.passport, new DefaultAsyncCallback<List<String>>()
+		FileListService.Inst.get().getForFolder(Cookie.getRequestProperties(), FileLocation.download, ReferenceFolder.passport, new DefaultAsyncCallback<List<CreatedFile>>()
 		{
 			@Override
-			public void onSuccessImpl(List<String> files)
+			public void onSuccessImpl(List<CreatedFile> files)
 			{
 				if (!CollectionUtils.isEmpty(files))
 				{
 					downloadWrapper.setVisible(true);
 
 					List<DownloadWidget.FileConfig> conf = files.stream()
-																.map(s -> new DownloadWidget.FileConfig()
-																		.setLocation(FileLocation.download)
-																		.setName(s)
-																		.setPath(ReferenceFolder.passport.name() + "/" + s))
+																.map(s -> {
+																	String orig = s.getName();
+																	s.setName(ReferenceFolder.passport.name() + "/" + orig);
+																	return new DownloadWidget.FileConfig()
+																			.setLocation(FileLocation.download)
+																			.setName(orig)
+																			.setPath(s);
+																})
 																.collect(Collectors.toList());
 
 					downloadPanel.add(new DownloadWidget().addAll(conf));
@@ -545,6 +555,16 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 		pageHeader.setText(toDisplay);
 		pageHeader.setSubText(accession.getEntityType().getName());
+
+		if (!GerminateSettingsHolder.get().pdciEnabled.getValue() || accession.getPdci() == null)
+		{
+			pdciWrapper.removeFromParent();
+		}
+		else
+		{
+			pdciWrapper.setVisible(true);
+			pdci.setHTML(Text.LANG.passportPDCIScore(NumberUtils.DECIMAL_FORMAT_TWO_PLACES.format(accession.getPdci())));
+		}
 	}
 
 	private void updateMcpd()
@@ -643,6 +663,14 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				}
 			}
 		});
+	}
+
+	@UiHandler("pdciInfo")
+	void onPdcdiInfoClicked(ClickEvent e)
+	{
+		new AlertDialog(Text.LANG.passportPDCITitle(), new HTML(Text.LANG.passportPDCIExplanation()))
+				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, null))
+				.open();
 	}
 
 	@Override

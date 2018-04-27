@@ -76,7 +76,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 		Long mapToUse = maps.size() > 0 ? maps.get(0) : null;
 
 		GenotypeService.Inst.get().computeExportDataset(Cookie.getRequestProperties(), accessionGroups, markerGroups, datasets.get(0), heterozygousOn, missingOn, mapToUse,
-				new DefaultAsyncCallback<ServerResult<List<String>>>(true)
+				new DefaultAsyncCallback<ServerResult<List<CreatedFile>>>(true)
 				{
 					@Override
 					public void onFailureImpl(Throwable caught)
@@ -88,16 +88,16 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 					}
 
 					@Override
-					public void onSuccessImpl(ServerResult<List<String>> result)
+					public void onSuccessImpl(ServerResult<List<CreatedFile>> result)
 					{
 						if (result.getServerResult() != null)
 						{
 							resultPanel.clear();
 
-							if (!CollectionUtils.isEmpty(result.getServerResult()) && !StringUtils.isEmpty(result.getServerResult().get(0), result.getServerResult().get(1)))
+							if (!CollectionUtils.isEmpty(result.getServerResult()) && result.getServerResult().get(0) != null && result.getServerResult().get(1) != null)
 							{
-								final String mapFile = result.getServerResult().get(0);
-								final String genotypeFile = result.getServerResult().get(1);
+								final CreatedFile mapFile = result.getServerResult().get(0);
+								final CreatedFile genotypeFile = result.getServerResult().get(1);
 
 								resultPanel.add(new Heading(HeadingSize.H2, Text.LANG.genotypeResultTitleResult()));
 
@@ -115,7 +115,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 								files.add(new DownloadWidget.FileConfig(Text.LANG.genotypeResultDownloadFlapjack()).setType(FileType.flapjack).setStyle(FileType.IconStyle.IMAGE));
 
 								if (!StringUtils.isEmpty(linkToGalaxy))
-									files.add(new DownloadWidget.FileConfig(FileLocation.temporary, "Send to Galaxy", linkToGalaxy).setStyle(FileType.IconStyle.IMAGE)); // TODO: i18n
+									files.add(new DownloadWidget.FileConfig(FileLocation.temporary, "Send to Galaxy", new CreatedFile(linkToGalaxy, null)).setStyle(FileType.IconStyle.IMAGE)); // TODO: i18n
 
 								final String galaxyUrl = linkToGalaxy;
 
@@ -126,7 +126,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 									{
 										if (config.getName().equals(Text.LANG.genotypeResultDownloadFlapjack()))
 										{
-											exportToFlapjack(mapFile, genotypeFile, callback);
+											exportToFlapjack(mapFile.getName(), genotypeFile.getName(), callback);
 										}
 										else if (config.getPath().equals(galaxyUrl))
 										{
@@ -135,13 +135,13 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 											String map = new ServletConstants.Builder()
 													.setUrl(GWT.getModuleBaseURL())
 													.setPath(ServletConstants.SERVLET_FILES)
-													.setParam(ServletConstants.PARAM_FILE_PATH, mapFile)
+													.setParam(ServletConstants.PARAM_FILE_PATH, mapFile.getName())
 													.build();
 
 											String data = new ServletConstants.Builder()
 													.setUrl(GWT.getModuleBaseURL())
 													.setPath(ServletConstants.SERVLET_FILES)
-													.setParam(ServletConstants.PARAM_FILE_PATH, genotypeFile)
+													.setParam(ServletConstants.PARAM_FILE_PATH, genotypeFile.getName())
 													.build();
 
 											FlowPanel formPanel = new FlowPanel();
@@ -204,7 +204,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 			@Override
 			protected void onSuccessImpl(ServerResult<FlapjackProjectCreationResult> result)
 			{
-				callback.onSuccess(new ServerResult<>(result.getServerResult().getProjectFile()));
+				callback.onSuccess(new ServerResult<>(result.getServerResult().getProjectFile().getName()));
 
 				/* Show the deleted markers in a list */
 				if (!CollectionUtils.isEmpty(result.getServerResult().getDeletedMarkers()))

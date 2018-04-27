@@ -88,9 +88,9 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		/* Create a list of newly created files */
 		FlapjackProjectCreationResult fjExport = new FlapjackProjectCreationResult()
 				.setDebugOutput(debugOutput)
-				.setProjectFile(flapjackResultFile.getName())
-				.setRawDataFile(genotypeFile.getName())
-				.setMapFile(mapFile.getName())
+				.setProjectFile(new CreatedFile(flapjackResultFile))
+				.setRawDataFile(new CreatedFile(genotypeFile))
+				.setMapFile(new CreatedFile(mapFile))
 				.setDeletedMarkers(deletedMarkers);
 
 		return new ServerResult<>(fjExport);
@@ -116,8 +116,8 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	}
 
 	@Override
-	public ServerResult<List<String>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId,
-														   boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, FlapjackException,
+	public ServerResult<List<CreatedFile>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId,
+																boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, FlapjackException,
 			MissingPropertyException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
@@ -153,9 +153,9 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 			throw new IOException(e);
 		}
 
-		List<String> list = new ArrayList<>();
-		list.add(mapFile.getName());
-		list.add(result.subsetWithFlapjackLinks.getName());
+		List<CreatedFile> list = new ArrayList<>();
+		list.add(new CreatedFile(mapFile));
+		list.add(new CreatedFile(result.subsetWithFlapjackLinks));
 
 		/* Remember the files */
 		getRequest().getSession().setAttribute(Session.GENOTYPE_MAP, mapFile.getName());

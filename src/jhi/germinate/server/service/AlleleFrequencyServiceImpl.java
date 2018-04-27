@@ -150,7 +150,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 
 		String debugOutput = FlapjackUtils.createBinnedFile(params, subsetForFlapjack.getAbsolutePath(), binnedFile.getAbsolutePath(), histogramFile.getAbsolutePath());
 
-        /* Now we call Flapjack to create the project file for us */
+		/* Now we call Flapjack to create the project file for us */
 		File flapjackResultFile = createTemporaryFile("genotype", params.datasetIds, "flapjack");
 
 		FlapjackParams flapjackParams = new FlapjackParams()
@@ -160,9 +160,9 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		debugOutput += "     " + FlapjackUtils.createProject(flapjackParams);
 
 		FlapjackProjectCreationResult fjExportResult = new FlapjackProjectCreationResult()
-				.setMapFile(mapFile.getName())
-				.setRawDataFile(binnedFile.getName())
-				.setProjectFile(flapjackResultFile.getName());
+				.setMapFile(new CreatedFile(mapFile))
+				.setRawDataFile(new CreatedFile(binnedFile))
+				.setProjectFile(new CreatedFile(flapjackResultFile));
 
 		return new Pair<>(debugOutput, fjExportResult);
 	}
@@ -179,7 +179,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.allelefreq, accessionGroups, markerGroups, datasetId, mapId, false, missingOn);
 		CommonServiceImpl.ExportResult exportResult = getExportResult(datasetId, ExperimentType.allelefreq, this);
 
-        /* Kick off the extraction process, because we need the exported data before we can start with the histogram */
+		/* Kick off the extraction process, because we need the exported data before we can start with the histogram */
 		try
 		{
 			AlleleFrequencyDataExporter exporter = new AlleleFrequencyDataExporter(settings);
@@ -193,7 +193,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 			storeInSession(SESSION_PARAM_HISTOGRAM, histogramFile.getAbsolutePath());
 			storeInSession(SESSION_PARAM_ALLELE_DATA_FILE, exportResult.subsetWithFlapjackLinks.getAbsolutePath());
 
-            /* Get the map */
+			/* Get the map */
 			DefaultStreamer mapData = GenotypeServiceImpl.getMap(userAuth, sqlDebug, mapId);
 
 			if (mapData == null || !mapData.hasData())

@@ -71,6 +71,7 @@ public class Accession extends DatabaseObject
 	public static final String LOCATION_ID         = "germinatebase.location_id";
 	public static final String ENTITYTYPE_ID       = "germinatebase.entitytype_id";
 	public static final String ENTITYPARENT_ID     = "germinatebase.entityparent_id";
+	public static final String PDCI                = "germinatebase.pdci";
 	public static final String CREATED_ON          = "germinatebase.created_on";
 	public static final String UPDATED_ON          = "germinatebase.updated_on";
 
@@ -106,6 +107,7 @@ public class Accession extends DatabaseObject
 	private String           synonyms;
 	private EntityType       entityType;
 	private Long             entityParentId;
+	private Double           pdci;
 	private Long             createdOn;
 	private Long             updatedOn;
 
@@ -458,6 +460,17 @@ public class Accession extends DatabaseObject
 		return this;
 	}
 
+	public Double getPdci()
+	{
+		return pdci;
+	}
+
+	public Accession setPdci(Double pdci)
+	{
+		this.pdci = pdci;
+		return this;
+	}
+
 	public Long getCreatedOn()
 	{
 		return createdOn;
@@ -553,6 +566,7 @@ public class Accession extends DatabaseObject
 							.setSynonyms(row.getString(SYNONYMS))
 							.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
 							.setEntityParentId(row.getLong(ENTITYPARENT_ID))
+							.setPdci(row.getDouble(PDCI))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
@@ -580,17 +594,42 @@ public class Accession extends DatabaseObject
 				return InstanceHolder.INSTANCE;
 			}
 
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
-			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
-			 * holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
-			 * <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
 			private static final class InstanceHolder
 			{
 				private static final Parser INSTANCE = new Parser();
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class PDCIParser extends Parser
+	{
+		@Override
+		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			Accession acc = super.parse(row, user, foreignsFromResultSet);
+
+			if (acc != null)
+			{
+				acc.setExtra(PDCIRunnable.HAS_PEDIGREE, row.getString(PDCIRunnable.HAS_PEDIGREE));
+				acc.setExtra(PDCIRunnable.HAS_PEDIGREE_DEF, row.getString(PDCIRunnable.HAS_PEDIGREE_DEF));
+				acc.setExtra(PDCIRunnable.HAS_STORAGE, row.getString(PDCIRunnable.HAS_STORAGE));
+				acc.setExtra(PDCIRunnable.HAS_URL, row.getString(PDCIRunnable.HAS_URL));
+			}
+
+			return acc;
+		}
+
+		public static final class Inst
+		{
+			public static PDCIParser get()
+			{
+				return PDCIParser.Inst.InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final PDCIParser INSTANCE = new PDCIParser();
 			}
 		}
 	}
@@ -658,6 +697,7 @@ public class Accession extends DatabaseObject
 							.setSynonyms(row.getString(SYNONYMS))
 							.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
 							.setEntityParentId(row.getLong(ENTITYPARENT_ID))
+							.setPdci(row.getDouble(PDCI))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
@@ -728,6 +768,7 @@ public class Accession extends DatabaseObject
 						.setSynonyms(row.getString(SYNONYMS))
 						.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
 						.setEntityParentId(row.getLong(ENTITYPARENT_ID))
+						.setPdci(row.getDouble(PDCI))
 						.setCreatedOn(row.getTimestamp(CREATED_ON))
 						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 		}

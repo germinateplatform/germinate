@@ -45,8 +45,11 @@ import jhi.germinate.shared.enums.*;
 public class UserIdentificationWizardPage extends ModalWizardPage implements Validator<String>
 {
 	private static LicenseWizardPageUiBinder ourUiBinder = GWT.create(LicenseWizardPageUiBinder.class);
+
 	@UiField
 	HTML              heading;
+	@UiField
+	HTML              privacyPolicy;
 	@UiField
 	Form              form;
 	@UiField
@@ -71,6 +74,8 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 		this.handler = handler;
 
 		heading.setHTML(Text.LANG.userTrackingHeading());
+
+		privacyPolicy.setHTML(Text.LANG.privacyPolicyInformation());
 
 		name.getElement().setPropertyBoolean("required", true);
 		email.getElement().setPropertyBoolean("required", true);
@@ -113,7 +118,7 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 
 			boolean selected = selection.selectItem(user.extra, false);
 
-			if(!selected)
+			if (!selected)
 			{
 				explanation.setText(user.extra);
 				explanation.setVisible(true);

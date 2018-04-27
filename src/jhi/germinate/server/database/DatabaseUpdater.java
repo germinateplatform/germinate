@@ -23,68 +23,18 @@ import org.flywaydb.core.api.*;
 import java.util.logging.*;
 
 import jhi.germinate.server.config.*;
-import jhi.germinate.server.database.query.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
 /**
- * {@link DataInitializer} contains methods to drop and create views.
+ * {@link DatabaseUpdater} takes care of updating the database to the latest schema
  *
  * @author Sebastian Raubach
  */
-public class DataInitializer
+public class DatabaseUpdater
 {
-	private static final String INSERT_IGNORE_EXPERIMENTTYPE   = "INSERT IGNORE INTO `experimenttypes` SET `id` = ?, `description` = ?";
-	private static final String RENAME_TABLE_PEDIGREENOTATIONS = "RENAME TABLE `pedigreenotation` TO `pedigreenotations`;"; //Fixes a naming issue
-
-	private static final String INSERT_IGNORE_NEWS_TYPES = "INSERT IGNORE INTO `newstypes` SET `id` = ?, `name` = ?, `description` = ?";
-
 	public void initialize()
 	{
-		for (ExperimentType type : ExperimentType.values())
-		{
-			try
-			{
-				new ValueQuery(INSERT_IGNORE_EXPERIMENTTYPE)
-						.setLong(type.getId())
-						.setString(type.name())
-						.execute();
-			}
-			catch (Exception e)
-			{
-				/* Do nothing here */
-				e.printStackTrace();
-			}
-		}
-
-		for (NewsType type : NewsType.values())
-		{
-			try
-			{
-				new ValueQuery(INSERT_IGNORE_NEWS_TYPES)
-						.setLong(type.getId())
-						.setString(type.getName())
-						.setString(type.getDescription())
-						.execute();
-			}
-			catch (Exception e)
-			{
-				/* Do nothing here */
-				e.printStackTrace();
-			}
-		}
-
-		try
-		{
-			new ValueQuery(RENAME_TABLE_PEDIGREENOTATIONS)
-					.execute();
-		}
-		catch (Exception e)
-		{
-			/* Do nothing here */
-		}
-
 		/* Automatically update the database if this is enabled */
 		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_AUTO_UPDATE_DATABASE))
 		{
@@ -100,23 +50,6 @@ public class DataInitializer
 				flyway.migrate();
 			}
 			catch (InvalidDatabaseTypeException | FlywayException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public static class DatasetMetaJob implements Runnable
-	{
-		@Override
-		public void run()
-		{
-			try
-			{
-				new ValueQuery("call " + StoredProcedureInitializer.DATASET_META + "()")
-						.execute();
-			}
-			catch (Exception e)
 			{
 				e.printStackTrace();
 			}

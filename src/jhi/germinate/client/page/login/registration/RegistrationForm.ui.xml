@@ -29,9 +29,20 @@
 		.select select {
 			padding: 7px 12px;
 		}
+
+		.progress {
+			height: 5px;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+		.password {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
 	</ui:style>
 
 	<g:FlowPanel>
+		<g:HTML ui:field="privacyPolicy" />
 		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formGatekeeper" text="{msg.registrationAlreadyHaveAccount}"/>
 			<t:ToggleSwitch b:id="formGatekeeper" onText="{msg.generalYes}" offText="{msg.generalNo}" value="true" ui:field="accountToggle"/>
@@ -43,12 +54,17 @@
 		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formPassword" text="{msg.registrationPassword}"/>
 			<b:Input type="PASSWORD" b:id="formPassword" ui:field="password"/>
+			<b:Tooltip placement="BOTTOM" ui:field="tooltip">
+				<b:Progress addStyleNames="{style.progress}" visible="false" ui:field="progress">
+					<b:ProgressBar addStyleNames="{style.progress}" percent="1" type="DANGER" ui:field="progressBar"/>
+				</b:Progress>
+			</b:Tooltip>
 		</b:FormGroup>
 
 		<g:FlowPanel visible="false" ui:field="newAccountPanel">
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formPasswordConfirm" text="{msg.registrationConfirmPassword}"/>
-				<b:Input type="PASSWORD" b:id="formPasswordConfirm" ui:field="passwordConfirm"/>
+				<b:Input addStyleNames="{style.password}" type="PASSWORD" b:id="formPasswordConfirm"  ui:field="passwordConfirm"/>
 			</b:FormGroup>
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formName" text="{msg.registrationFullName}"/>

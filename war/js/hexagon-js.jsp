@@ -38,6 +38,12 @@
 		var path = d3.geo.path()
 			.projection(projection);
 
+		// Get the link color
+		var a = document.createElement("a");
+		document.body.appendChild(a);
+		var fillColor = $(a).css("color");
+		document.body.removeChild(a);
+
 		var svg = d3.select("#<%= Id.STRUCTURE_LOGIN %>").append("svg")
 			.attr("viewBox", "0 0 " + width + " " + height)
 			.attr("id", "<%= Id.STRUCTURE_LOGIN_BACKGROUND_SVG %>")
@@ -52,8 +58,11 @@
 			.attr("d", function (d) {
 				return path(topojson.feature(topology, d));
 			})
-			.attr("class", function (d) {
-				return d.fill ? "fill" : null;
+			<%--.attr("class", function (d) {--%>
+				<%--return d.fill ? "fill" : null;--%>
+			<%--})--%>
+			.style("fill", function (d) {
+				return d.fill ? fillColor : null;
 			})
 			.on("mousedown", mousedown)
 			.on("mousemove", mousemove)
@@ -77,7 +86,10 @@
 
 		function mousemove(d) {
 			if (mousing) {
-				d3.select(this).classed("fill", d.fill = mousing > 0);
+				d3.select(this).classed("fill", d.fill = mousing > 0)
+					.style("fill", function (d) {
+						return d.fill ? fillColor : null;
+					});
 				border.call(redraw);
 			}
 		}

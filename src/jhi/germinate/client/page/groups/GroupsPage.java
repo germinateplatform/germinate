@@ -180,7 +180,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					public SafeHtml getValue(Group row)
 					{
 						if (canEdit(row))
-							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_DELETE, Text.LANG.generalDelete(), UriUtils.fromString(""), "");
+							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.combine(Style.MDI_DELETE, Emphasis.DANGER.getCssName()), Text.LANG.generalDelete(), UriUtils.fromString(""), "");
 						else
 							return SimpleHtmlTemplate.INSTANCE.empty();
 					}

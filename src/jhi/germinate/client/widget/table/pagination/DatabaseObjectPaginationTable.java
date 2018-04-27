@@ -682,6 +682,8 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
                         		/* Update table */
 								updateRowData(rangeStart, data);
+
+								onDataChanged();
 							}
 						}
 					});
@@ -696,6 +698,11 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		{
 			dataProvider.refresh(table);
 		}
+	}
+
+	protected void onDataChanged()
+	{
+
 	}
 
 	private void displayFilter(FlowPanel filterObject)

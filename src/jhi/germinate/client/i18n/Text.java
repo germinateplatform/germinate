@@ -720,8 +720,24 @@ public interface Text extends Messages
 	@Key("page.passport.datasets.text")
 	SafeHtml passportDatasetsOverviewText();
 
+	@Key("page.passport.pdci.title")
+	@DefaultMessage("Passport Data Completeness Index")
+	String passportPDCITitle();
+
+	@Key("page.passport.pdci.score")
+	@DefaultMessage("<b>The score for this item is: {0}/10</b>")
+	SafeHtml passportPDCIScore(String score);
+
+	@Key("page.passport.pdci.explanation")
+	@DefaultMessage("<p>This passport data completeness index (PDCI) uses the presence or absence of data points in the documentation of a genebank accession, taking into account the presence or value of other data points. For example, a wild accession should have a well-defined collection site but no variety name. Any type of accession, wild, landrace, breeding material or modern variety, can attain a maximal score of ten for this index.</p><p>Theo van Hintum, Frank Menting and Elisabeth van Strien (2011). <b>Quality indicators for passport data in ex situ genebanks.</b> Plant Genetic Resources, 9, pp 478-485. doi: <a href='https://dx.doi.org/10.1017/S1479262111000682' target='_blank'>10.1017/S1479262111000682</a></p>")
+	SafeHtml passportPDCIExplanation();
+
 	@Key("column.passport.collection.date")
 	String passportColumnColldate();
+
+	@Key("column.passport.pdci")
+	@DefaultMessage("PDCI")
+	String passportColumnPDCI();
 
 	@Key("column.passport.country")
 	String passportColumnCountry();
@@ -1715,6 +1731,10 @@ public interface Text extends Messages
 	@Key("notification.registration.passwords.no.match")
 	String notificationRegistrationPasswordsDontMatch();
 
+	@Key("notification.registration.password.weak")
+	@DefaultMessage("Your password is too weak.")
+	String notificationRegistrationPasswordsWeakPassword();
+
 	@Key("notification.registration.gatekeeper.unavailable")
 	String notificationRegistrationGatekeeperUnavailable();
 
@@ -2664,4 +2684,28 @@ public interface Text extends Messages
 	@Key("widget.dataset.user.tracking.explanation.option.other")
 	@DefaultMessage("Other (please specify)")
 	String userTrackingExplanationOptionOther();
+
+	@Key("widget.privacy.policy.information")
+	@DefaultMessage("")
+	SafeHtml privacyPolicyInformation();
+
+	@Key("widget.password.strength.zero")
+	@DefaultMessage("Your password is too guessable.")
+	String passwordStrengthZero();
+
+	@Key("widget.password.strength.one")
+	@DefaultMessage("Your password is very guessable.")
+	String passwordStrengthOne();
+
+	@Key("widget.password.strength.two")
+	@DefaultMessage("Your password is somewhat guessable.")
+	String passwordStrengthTwo();
+
+	@Key("widget.password.strength.three")
+	@DefaultMessage("Your password is safely unguessable.")
+	String passwordStrengthThree();
+
+	@Key("widget.password.strength.four")
+	@DefaultMessage("Your password is very unguessable.")
+	String passwordStrengthFour();
 }

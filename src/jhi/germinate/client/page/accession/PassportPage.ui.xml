@@ -24,13 +24,35 @@
 	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
 
+	<ui:style>
+		.inlineBlock {
+			display: inline-block;
+		}
+		.help {
+			margin-left: 5px;
+		}
+		.help:hover {
+			cursor: pointer;
+		}
+	</ui:style>
+
 	<g:HTMLPanel>
 		<b:PageHeader ui:field="pageHeader"/>
 		<g:HTML ui:field="html"/>
 
+		<g:FlowPanel visible="false" ui:field="pdciWrapper">
+			<g8:MdiHeading mdi="{MDI_CHART_DONUT}" size="H3" text="{msg.passportPDCITitle}"/>
+			<g:HTML addStyleNames="{style.inlineBlock}" ui:field="pdci"/>
+			<g:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_HELP_CIRCLE_OUTLINE} {style.inlineBlock} {style.help}" ui:field="pdciInfo"/>
+
+			<g:HTMLPanel>
+				<hr/>
+			</g:HTMLPanel>
+		</g:FlowPanel>
+
 		<b:Row ui:field="topWrapper" visible="false">
 			<b:Column size="XS_12,LG_6">
-				<g8:MdiHeading mdi="{MDI_PASSPORT}" size="H3" text="{msg.passportPassportData}" />
+				<g8:MdiHeading mdi="{MDI_PASSPORT}" size="H3" text="{msg.passportPassportData}"/>
 				<g:FlowPanel ui:field="mcpdPanel"/>
 			</b:Column>
 			<b:Column size="XS_12,LG_6">
