@@ -71,6 +71,8 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 		header.setText(Text.LANG.dataStatisticsTitle());
 
 		panel.add(new TaxonomyPieChart());
+		if(GerminateSettingsHolder.get().pdciEnabled.getValue())
+			panel.add(new PDCIStatsChart());
 
 		final FlowPanel geoChartPanel = new FlowPanel();
 		panel.add(geoChartPanel);

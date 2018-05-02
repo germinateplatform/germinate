@@ -268,4 +268,15 @@ public interface AccessionService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	PaginatedServerResult<List<EntityPair>> getEntityPairs(RequestProperties properties, Long id, Pagination pagination) throws InvalidSessionException, DatabaseException;
+
+	/**
+	 * Exports statistics about all the accession pdci scores and returns the name of the result file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @return The name of the result file.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 * @throws IOException             Thrown if the file creation fails
+	 */
+	ServerResult<String> getPDCIStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException;
 }

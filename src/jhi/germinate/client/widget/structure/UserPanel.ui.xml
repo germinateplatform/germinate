@@ -31,6 +31,11 @@
 			padding-bottom: 0px;
 		}
 
+		.username {
+			word-wrap: break-word;
+			font-weight: bold;
+		}
+
 		.userdetails button {
 			text-transform: capitalize;
 		}
@@ -50,7 +55,7 @@
 						</p>
 					</div>
 					<div class="col-lg-8">
-						<p class="strong" ui:field="username"/>
+						<p class="{style.username}" ui:field="username"/>
 						<!--<p ui:field="email" />-->
 						<a class="{BTN} btn-default {BTN_BLOCK} {MDI} {MDI_LG} {MDI_SETTINGS}" target="_blank" ui:field="gatekeeperLink">
 							<ui:text from='{i18n.menuSettings}'/>
