@@ -37,41 +37,12 @@ public final class Database
 {
 	private Connection connection;
 
-	/**
-	 * The set of database types supported by Germinate
-	 *
-	 * @author Sebastian Raubach
-	 */
-	public enum DatabaseType
+	/* Initialize the stored procedures and views */
+	public static void initialize()
 	{
-		MYSQL("com.mysql.jdbc.Driver", "jdbc:mysql://", null);
-//		MYSQL_BATCH_ENABLED("com.mysql.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
-
-		private final String classForName;
-		private final String connectionString;
-		private final String optionalParameters;
-
-		DatabaseType(String classForName, String connectionString, String optionalParameters)
-		{
-			this.classForName = classForName;
-			this.connectionString = connectionString;
-			this.optionalParameters = optionalParameters;
-		}
-
-		public String getClassForName()
-		{
-			return classForName;
-		}
-
-		public String getConnectionString()
-		{
-			return connectionString;
-		}
-
-		public String getOptionalParameters()
-		{
-			return optionalParameters;
-		}
+		new DatabaseUpdater().initialize();
+		new StoredProcedureInitializer().initialize();
+		new ViewInitializer().initialize();
 	}
 
 	public void setAutoCommit(boolean autoCommit) throws DatabaseException
@@ -110,12 +81,41 @@ public final class Database
 		DATA
 	}
 
-	/* Initialize the stored procedures and views */
-	public static void initialize()
+	/**
+	 * The set of database types supported by Germinate
+	 *
+	 * @author Sebastian Raubach
+	 */
+	public enum DatabaseType
 	{
-		new StoredProcedureInitializer().initialize();
-		new ViewInitializer().initialize();
-		new DatabaseUpdater().initialize();
+		MYSQL("com.mysql.jdbc.Driver", "jdbc:mysql://", "?useSSL=false");
+//		MYSQL_BATCH_ENABLED("com.mysql.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
+
+		private final String classForName;
+		private final String connectionString;
+		private final String optionalParameters;
+
+		DatabaseType(String classForName, String connectionString, String optionalParameters)
+		{
+			this.classForName = classForName;
+			this.connectionString = connectionString;
+			this.optionalParameters = optionalParameters;
+		}
+
+		public String getClassForName()
+		{
+			return classForName;
+		}
+
+		public String getConnectionString()
+		{
+			return connectionString;
+		}
+
+		public String getOptionalParameters()
+		{
+			return optionalParameters;
+		}
 	}
 
 	private Database()

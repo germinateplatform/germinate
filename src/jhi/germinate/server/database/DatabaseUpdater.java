@@ -44,10 +44,12 @@ public class DatabaseUpdater
 				Logger.getLogger("").log(Level.INFO, "RUNNING FLYWAY on: " + database);
 				Flyway flyway = new Flyway();
 				flyway.setTable("schema_version");
+				flyway.setValidateOnMigrate(false);
 				flyway.setDataSource(Database.DatabaseType.MYSQL.getConnectionString() + PropertyReader.getServerString(Database.DatabaseType.MYSQL), PropertyReader.get(ServerProperty.DATABASE_USERNAME), PropertyReader.get(ServerProperty.DATABASE_PASSWORD));
 				flyway.setLocations("classpath:jhi.germinate.server.database.migration");
 				flyway.setBaselineOnMigrate(true);
 				flyway.migrate();
+				flyway.repair();
 			}
 			catch (InvalidDatabaseTypeException | FlywayException e)
 			{

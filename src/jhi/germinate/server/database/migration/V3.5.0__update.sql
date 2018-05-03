@@ -4,6 +4,43 @@
 /*              v3.4.0 -> v3.5.0                  */
 /**************************************************/
 
+/* Create a stored procedure that we use to drop foreign keys */
+DELIMITER //
+
+CREATE PROCEDURE drop_all_indexes()
+
+BEGIN
+
+    DECLARE index_name TEXT DEFAULT NULL;
+    DECLARE done TINYINT DEFAULT FALSE;
+
+		DECLARE cursor1 CURSOR FOR SELECT constraint_name FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = "germinatebase" AND CONSTRAINT_TYPE = "FOREIGN KEY";
+
+		DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+		OPEN cursor1;
+
+		my_loop:
+		LOOP
+
+		    FETCH NEXT FROM cursor1 INTO index_name;
+
+				IF done THEN
+				    LEAVE my_loop;
+				ELSE
+				    SET @query =CONCAT('ALTER TABLE `germinatebase` DROP FOREIGN KEY ', index_name );
+						PREPARE stmt FROM @query;
+						EXECUTE stmt;
+						DEALLOCATE PREPARE stmt;
+
+				END IF;
+		END LOOP;
+
+END;
+//
+
+DELIMITER ;
+
 /* Create the new tables used for different levels of material/entities */
 CREATE TABLE `entitytypes`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
@@ -25,12 +62,7 @@ ADD COLUMN `entitytype_id` int(11) NULL DEFAULT 1 COMMENT 'Foreign key to entity
 ADD COLUMN `entityparent_id` int(11) NULL COMMENT 'Foreign key to germinatebase (germinatebase.id).' AFTER `entitytype_id`;
 
 /* Update some foreign keys. This forces the columns to be set to NULL when referenced items are deleted. */
-ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_1`;
-ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_2`;
-ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_3`;
-ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_4`;
-ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_5`;
-ALTER TABLE `germinatebase` DROP FOREIGN KEY `germinatebase_ibfk_6`;
+call drop_all_indexes();
 
 ALTER TABLE `germinatebase`
 ADD CONSTRAINT `germinatebase_ibfk_subtaxa` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -115,3 +147,5 @@ CHANGE COLUMN `class` `compound_class` varchar(255) CHARACTER SET latin1 COLLATE
 
 ALTER TABLE `germinatebase`
 ADD COLUMN `pdci` float(64, 10) NULL COMMENT 'Passport Data Completeness Index. This is calculated by Germinate. Manual editing of this field will be overwritten.' AFTER `entityparent_id`;
+
+DROP PROCEDURE drop_all_indexes;
