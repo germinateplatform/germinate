@@ -101,11 +101,6 @@ public class ModuleCore implements EntryPoint
 		/* Set up the exception handling system */
 		ExceptionHandler.init();
 
-		initContent();
-	}
-
-	private void initContent()
-	{
 		// Take care of page navigation changes
 		History.addValueChangeHandler(new HistoryChangeHandler());
 

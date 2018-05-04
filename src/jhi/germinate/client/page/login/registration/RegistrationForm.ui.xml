@@ -39,12 +39,24 @@
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
 		}
+		.inlineBlock {
+			display: inline-block;
+		}
+		.help {
+			margin-left: 5px;
+		}
+		.help:hover {
+			cursor: default;
+		}
 	</ui:style>
 
 	<g:FlowPanel>
 		<g:HTML ui:field="privacyPolicy" />
 		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formGatekeeper" text="{msg.registrationAlreadyHaveAccount}"/>
+			<b:Tooltip placement="BOTTOM" text="{msg.registrationGatekeeperInfo}">
+				<g:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_HELP_CIRCLE_OUTLINE} {style.inlineBlock} {style.help}"/>
+			</b:Tooltip>
 			<t:ToggleSwitch b:id="formGatekeeper" onText="{msg.generalYes}" offText="{msg.generalNo}" value="true" ui:field="accountToggle"/>
 		</b:FormGroup>
 		<b:FormGroup addStyleNames="{FORM_REQUIRED}">

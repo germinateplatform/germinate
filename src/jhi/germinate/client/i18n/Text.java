@@ -1716,6 +1716,10 @@ public interface Text extends Messages
 	@Key("page.registration.account.exists")
 	String registrationAlreadyHaveAccount();
 
+	@Key("page.registration.gatekeeper.info")
+	@DefaultMessage("Gatekeeper is Germinate''s user management system.")
+	String registrationGatekeeperInfo();
+
 	@Key("notification.registration.successful")
 	String notificationRegistrationSuccess();
 
