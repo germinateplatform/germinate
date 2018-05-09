@@ -211,15 +211,6 @@ td span.mdi:nth-child(2) {
 	border-left: 0;
 }
 
-.<%= Style.COUNTRY_FLAG %> {
-	background: url(../img/flags24.png) no-repeat 50% 50%;
-	height: 24px;
-	width: 24px;
-	display: inline-block;
-	vertical-align: middle;
-	margin: 0 5px;
-}
-
 .<%= Style.TABLE_CONTROL_PANEL %> .badge {
 	background-color: #777;
 }
@@ -391,6 +382,15 @@ th {
 }
 
 /* Flags */
+
+.<%= Style.COUNTRY_FLAG %> {
+	background: url(../img/flags24.png) no-repeat 50% 50%;
+	height: 24px;
+	width: 24px;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 5px;
+}
 
 .<%= Style.COUNTRY_FLAG %>.su,
 .<%= Style.COUNTRY_FLAG %>.unknown,

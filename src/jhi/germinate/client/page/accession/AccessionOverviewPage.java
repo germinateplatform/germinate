@@ -143,7 +143,7 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 			}
 		};
 
-		/* Start them both in parallel */
+		/* Start them all in parallel */
 		new ParallelParentAsyncCallback(columnCallback, groupCallback, hasPedigreeCallback)
 		{
 			@Override

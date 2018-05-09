@@ -123,23 +123,23 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 	// CURRENT STATE
 	//	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
-	private List<FilterRow.Column> columns       = new ArrayList<>();
+	private List<FilterRow.Column>          columns                  = new ArrayList<>();
 	private RefreshableAsyncDataProvider<T> dataProvider;
-	private Map<String, ClickHandler> columnVisibilityHandlers = new HashMap<>();
-	private ContextMenuHandler<T>  contextMenuHandler;
-	private SelectionModel<T>      selectionModel;
-	private MultiPageBooleanHeader selectPageHeader;
-	private HandlerRegistration    tableColumnVisibilityHandler;
-	private HandlerRegistration    tableRowCountChangeHandler;
-	private int rangeStart = 0;
+	private Map<String, ClickHandler>       columnVisibilityHandlers = new HashMap<>();
+	private ContextMenuHandler<T>           contextMenuHandler;
+	private SelectionModel<T>               selectionModel;
+	private MultiPageBooleanHeader          selectPageHeader;
+	private HandlerRegistration             tableColumnVisibilityHandler;
+	private HandlerRegistration             tableRowCountChangeHandler;
+	private int                             rangeStart               = 0;
 
 	// SERVER COMMUNICATION
-	private Request currentRequest;
+	private Request    currentRequest;
 	private Pagination pagination = new Pagination(0, Integer.MAX_VALUE);
 
 	// OTHER THINGS
 	private FilterPanel filterPanel = new FilterPanel();
-	private PopupPanel tooltipPanel;
+	private PopupPanel  tooltipPanel;
 
 	public DatabaseObjectPaginationTable()
 	{
@@ -451,12 +451,10 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		};
 
 		if (selectionMode == SelectionMode.SINGLE)
-
 		{
 			addColumn(checkboxColumn, "", false);
 		}
 		else
-
 		{
 			/* Create a checkbox header to select all items */
 			selectPageHeader = new MultiPageBooleanHeader(cell)
@@ -476,10 +474,10 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				}
 			};
 
-            /*
+			/*
 			 * Add an updater that changes the selection state of the table
-             * items
-             */
+			 * items
+			 */
 			selectPageHeader.setUpdater(value ->
 			{
 				/*
@@ -513,7 +511,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				});
 			});
 
-            /* Add the new column */
+			/* Add the new column */
 			addColumn(checkboxColumn, selectPageHeader);
 		}
 	}
@@ -629,7 +627,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 					table.setVisibleRangeAndClearData(table.getVisibleRange(), false);
 
-                	/* Set up the callback object */
+					/* Set up the callback object */
 					currentRequest = getData(pagination.update(rangeStart, length, sortColumnName, ascending), filterObject, new DefaultAsyncCallback<PaginatedServerResult<List<T>>>()
 					{
 						@Override
@@ -680,7 +678,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 								table.setRowCount(pagination.getResultSize(), true);
 								/* Show debug information */
 
-                        		/* Update table */
+								/* Update table */
 								updateRowData(rangeStart, data);
 
 								onDataChanged();
@@ -690,7 +688,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				}
 			};
 
-        	/* Connect the table to the data provider */
+			/* Connect the table to the data provider */
 			dataProvider.addDataDisplay(table);
 
 		}

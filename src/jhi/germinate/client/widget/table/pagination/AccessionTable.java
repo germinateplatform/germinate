@@ -452,6 +452,20 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 				}
 
 				@Override
+				public void render(Cell.Context context, Accession object, SafeHtmlBuilder sb)
+				{
+					super.render(context, object, sb);
+
+					if (GerminateSettingsHolder.get().pdciEnabled.getValue())
+					{
+						Scheduler.get().scheduleDeferred(() -> {
+							TableRowElement row = getTable().getRowElement(context.getIndex() - getTable().getPageStart());
+							jsniPeity(row, GerminateSettingsHolder.getCategoricalColor(0));
+						});
+					}
+				}
+
+				@Override
 				public Class getType()
 				{
 					return Double.class;
@@ -462,16 +476,8 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		}
 	}
 
-	@Override
-	protected void onDataChanged()
-	{
-		// Create the peity svgs from the spans
-		if (GerminateSettingsHolder.get().pdciEnabled.getValue())
-			Scheduler.get().scheduleDeferred(() -> jsniPeity(getId(), GerminateSettingsHolder.getCategoricalColor(0)));
-	}
-
-	private native void jsniPeity(String id, String color) /*-{
-		$wnd.$('#' + id + ' .donut').peity('donut', {
+	private native void jsniPeity(Element element, String color)/*-{
+		$wnd.$(element).find('.donut').peity('donut', {
 			fill: [color, "#cccccc"],
 			radius: 9
 		});
