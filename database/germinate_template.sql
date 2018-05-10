@@ -132,10 +132,10 @@ CREATE TABLE `climateoverlays`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
   `climate_id` int(11) NOT NULL COMMENT 'Foreign key to climates (climates.id).',
   `path` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'This is the path for holding images which can be used as overlays for the Google Maps representation in Germinate. The path is relative.',
-  `bottom_left_longitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against Google Maps API.',
-  `bottom_left_latitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against Google Maps API.',
-  `top_right_longitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against Google Maps API.',
-  `top_right_latitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against Google Maps API.',
+  `bottom_left_longitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.',
+  `bottom_left_latitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.',
+  `top_right_longitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.',
+  `top_right_latitude` double(64, 10) NULL DEFAULT NULL COMMENT 'Allows the allignment of images against OpenStreetMap API.',
   `is_legend` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'The legend for the image. What colours represent in the overlays. This is not required but used if present. ',
   `description` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Describes the climate overlay if additional explanation of  the overlay image is required.',
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
@@ -144,7 +144,7 @@ CREATE TABLE `climateoverlays`  (
   INDEX `climateoverlays_climate_id`(`climate_id`) USING BTREE,
   INDEX `climateoverlays_description`(`description`) USING BTREE,
   CONSTRAINT `climateoverlays_ibfk_1` FOREIGN KEY (`climate_id`) REFERENCES `climates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci COMMENT = 'Climate overlays can be used in conjunction with Google Maps in order to visualize climate data in a geographic context.' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci COMMENT = 'Climate overlays can be used in conjunction with OpenStreetMap in order to visualize climate data in a geographic context.' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for climates
@@ -295,7 +295,7 @@ CREATE TABLE `compounds`  (
   `molecular_formula` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'The molecular formula of the compound.',
   `monoisotopic_mass` decimal(64, 10) NULL DEFAULT NULL COMMENT 'The monoisotopic mass of the compound.',
   `average_mass` decimal(64, 10) NULL DEFAULT NULL COMMENT 'The average mass of the compound.',
-  `class` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'A classification of the compound.',
+  `compound_class` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'A classification of the compound.',
   `unit_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign Key to units (units.id).',
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
   `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
@@ -573,6 +573,25 @@ INSERT INTO `countries` VALUES (248, 'ZM', 'ZMB', 'Zambia', NULL, NULL);
 INSERT INTO `countries` VALUES (249, 'ZW', 'ZWE', 'Zimbabwe', NULL, NULL);
 
 -- ----------------------------
+-- Table structure for datasetaccesslogs
+-- ----------------------------
+DROP TABLE IF EXISTS `datasetaccesslogs`;
+CREATE TABLE `datasetaccesslogs`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
+  `user_id` int(11) NULL DEFAULT NULL,
+  `user_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `user_email` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `user_institution` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `dataset_id` int(11) NOT NULL,
+  `reason` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
+  `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
+  `updated_on` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `dataset_id`(`dataset_id`) USING BTREE,
+  CONSTRAINT `datasetaccesslogs_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci COMMENT = 'If enabled, tracks which user accessed which datasets.' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for datasetcollaborators
 -- ----------------------------
 DROP TABLE IF EXISTS `datasetcollaborators`;
@@ -622,8 +641,8 @@ CREATE TABLE `datasetmembertypes`  (
 -- ----------------------------
 -- Records of datasetmembertypes
 -- ----------------------------
-INSERT INTO `datasetmembertypes` VALUES (1, 'markers', '2018-02-16 08:07:34', '2018-02-16 08:07:34');
-INSERT INTO `datasetmembertypes` VALUES (2, 'germinatebase', '2018-02-16 08:07:34', '2018-02-16 08:07:34');
+INSERT INTO `datasetmembertypes` VALUES (1, 'markers', '2018-03-27 14:26:16', '2018-03-27 14:26:16');
+INSERT INTO `datasetmembertypes` VALUES (2, 'germinatebase', '2018-03-27 14:26:16', '2018-03-27 14:26:16');
 
 -- ----------------------------
 -- Table structure for datasetmeta
@@ -730,9 +749,9 @@ CREATE TABLE `entitytypes`  (
 -- ----------------------------
 -- Records of entitytypes
 -- ----------------------------
-INSERT INTO `entitytypes` VALUES (1, 'Accession', 'The basic working unit of conservation in the genebanks.', '2017-11-07 11:54:59', '2017-11-07 11:54:59');
-INSERT INTO `entitytypes` VALUES (2, 'Plant/Plot', 'An individual grown from an accession OR a plot of individuals from the same accession.', '2017-11-07 11:54:59', '2017-11-07 11:54:59');
-INSERT INTO `entitytypes` VALUES (3, 'Sample', 'A sample from a plant. An example would be taking multiple readings for the same phenotype from a plant.', '2017-11-07 11:54:59', '2017-11-07 11:54:59');
+INSERT INTO `entitytypes` VALUES (1, 'Accession', 'The basic working unit of conservation in the genebanks.', '2018-03-27 14:26:06', '2018-03-27 14:26:06');
+INSERT INTO `entitytypes` VALUES (2, 'Plant/Plot', 'An individual grown from an accession OR a plot of individuals from the same accession.', '2018-03-27 14:26:06', '2018-03-27 14:26:06');
+INSERT INTO `entitytypes` VALUES (3, 'Sample', 'A sample from a plant. An example would be taking multiple readings for the same phenotype from a plant.', '2018-03-27 14:26:06', '2018-03-27 14:26:06');
 
 -- ----------------------------
 -- Table structure for experiments
@@ -808,6 +827,7 @@ CREATE TABLE `germinatebase`  (
   `location_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to locations (locations.id).',
   `entitytype_id` int(11) NULL DEFAULT 1 COMMENT 'Foreign key to entitytypes (entitytypes.id).',
   `entityparent_id` int(11) NULL DEFAULT NULL COMMENT 'Foreign key to germinatebase (germinatebase.id).',
+  `pdci` float(64, 10) NULL DEFAULT NULL COMMENT 'Passport Data Completeness Index. This is calculated by Germinate. Manual editing of this field will be overwritten.',
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was created.',
   `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
   PRIMARY KEY (`id`) USING BTREE,
@@ -819,17 +839,17 @@ CREATE TABLE `germinatebase`  (
   INDEX `germinatebase_ibfk_biologicalstatus`(`biologicalstatus_id`) USING BTREE,
   INDEX `germinatebase_ibfk_collectingsource`(`collsrc_id`) USING BTREE,
   INDEX `germinatebase_ibfk_8`(`mlsstatus_id`) USING BTREE,
-  INDEX `germinatebase_ibfk_9`(`entitytype_id`) USING BTREE,
-  INDEX `germinatebase_ibfk_10`(`entityparent_id`) USING BTREE,
-  CONSTRAINT `germinatebase_ibfk_1` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_10` FOREIGN KEY (`entityparent_id`) REFERENCES `germinatebase` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_2` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_3` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomies` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_4` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_5` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_6` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_8` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `germinatebase_ibfk_9` FOREIGN KEY (`entitytype_id`) REFERENCES `entitytypes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  INDEX `germinatebase_ibfk_entitytype`(`entitytype_id`) USING BTREE,
+  INDEX `germinatebase_ibfk_entityparent`(`entityparent_id`) USING BTREE,
+  CONSTRAINT `germinatebase_ibfk_biologicalstatus` FOREIGN KEY (`biologicalstatus_id`) REFERENCES `biologicalstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_collsrc` FOREIGN KEY (`collsrc_id`) REFERENCES `collectingsources` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_entityparent` FOREIGN KEY (`entityparent_id`) REFERENCES `germinatebase` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_entitytype` FOREIGN KEY (`entitytype_id`) REFERENCES `entitytypes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_institution` FOREIGN KEY (`institution_id`) REFERENCES `institutions` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_location` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_mlsstatus` FOREIGN KEY (`mlsstatus_id`) REFERENCES `mlsstatus` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_subtaxa` FOREIGN KEY (`subtaxa_id`) REFERENCES `subtaxa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `germinatebase_ibfk_taxonomy` FOREIGN KEY (`taxonomy_id`) REFERENCES `taxonomies` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci COMMENT = 'Germinatebase is the Germinate base table which contains passport and other germplasm definition data.' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -1423,8 +1443,8 @@ INSERT INTO `schema_version` VALUES (2, '3.3.2', 'update', 'SQL', 'V3.3.2__updat
 INSERT INTO `schema_version` VALUES (3, '3.3.2.1', 'update', 'SQL', 'V3.3.2.1__update.sql', -256506759, 'germinate3', '2016-11-03 15:46:40', 123, 1);
 INSERT INTO `schema_version` VALUES (4, '3.3.2.2', 'update', 'SQL', 'V3.3.2.2__update.sql', 508407614, 'germinate3', '2016-11-04 10:31:18', 9, 1);
 INSERT INTO `schema_version` VALUES (5, '3.4.0', 'update', 'SQL', 'V3.4.0__update.sql', 1635546146, 'germinate3', '2017-01-10 14:23:11', 198, 1);
-INSERT INTO `schema_version` VALUES (6, '3.4.0.1', 'update', 'SQL', 'V3.4.0.1__update.sql', 278320740, 'germinate3', '2017-09-28 15:58:00', 161, 1);
-INSERT INTO `schema_version` VALUES (7, '3.5.0', 'update', 'SQL', 'V3.5.0__update.sql', 1031750692, 'germiante3', '2018-02-16 08:09:05', 123, 1);
+INSERT INTO `schema_version` VALUES (6, '3.4.0.1', 'update', 'SQL', 'V3.4.0.1__update.sql', -1497522993, 'germinate3', '2017-09-28 15:58:00', 161, 1);
+INSERT INTO `schema_version` VALUES (7, '3.5.0', 'update', 'SQL', 'V3.5.0__update.sql', -1815868359, 'germinate3', '2018-03-27 14:29:38', 132, 1);
 
 -- ----------------------------
 -- Table structure for storage
