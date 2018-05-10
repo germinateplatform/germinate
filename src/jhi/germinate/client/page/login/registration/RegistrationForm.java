@@ -106,12 +106,12 @@ public class RegistrationForm extends Composite implements Validator<String>
 				break;
 			case 2:
 				progressBar.setPercent(50);
-				progressBar.setType(ProgressBarType.DANGER);
+				progressBar.setType(ProgressBarType.WARNING);
 				tooltip.setTitle(Text.LANG.passwordStrengthTwo());
 				break;
 			case 3:
 				progressBar.setPercent(75);
-				progressBar.setType(ProgressBarType.WARNING);
+				progressBar.setType(ProgressBarType.SUCCESS);
 				tooltip.setTitle(Text.LANG.passwordStrengthThree());
 				break;
 			case 4:
