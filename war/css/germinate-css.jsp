@@ -384,1089 +384,1098 @@ th {
 /* Flags */
 
 .<%= Style.COUNTRY_FLAG %> {
-	background: url(../img/flags24.png) no-repeat 50% 50%;
-	height: 24px;
-	width: 24px;
+	background-size: contain;
+	background-position: 50%;
+	background-repeat: no-repeat;
+	position: relative;
 	display: inline-block;
-	vertical-align: middle;
-	margin: 0 5px;
+	width: 1.733333em;
+	line-height: 1.3em;
+	margin-right: 5px;
+	box-shadow: 1px 1px 3px 0px #cccccc;
+}
+.<%= Style.COUNTRY_FLAG %>:before {
+	content: "\00a0";
+}
+.flag-icon.flag-icon-squared {
+	width: 1em;
 }
 
 .<%= Style.COUNTRY_FLAG %>.su,
 .<%= Style.COUNTRY_FLAG %>.unknown,
 .<%= Style.COUNTRY_FLAG %>.un {
-	background-position: 0 -408px;
+	background-image: url(../img/flags/un.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ad {
-	background-position: 0 -456px;
+	background-image: url(../img/flags/ad.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_AE,
 .<%= Style.COUNTRY_FLAG %>.ae {
-	background-position: 0 -480px;
+	background-image: url(../img/flags/ae.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.af {
-	background-position: 0 -504px;
+	background-image: url(../img/flags/af.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ag {
-	background-position: 0 -528px;
+	background-image: url(../img/flags/ag.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ai {
-	background-position: 0 -552px;
+	background-image: url(../img/flags/ai.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sq_AL,
 .<%= Style.COUNTRY_FLAG %>.al {
-	background-position: 0 -576px;
+	background-image: url(../img/flags/al.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.am {
-	background-position: 0 -600px;
+	background-image: url(../img/flags/am.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.an {
-	background-position: 0 -624px;
+	background-image: url(../img/flags/an.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ao {
-	background-position: 0 -648px;
+	background-image: url(../img/flags/ao.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.aq {
-	background-position: 0 -672px;
+	background-image: url(../img/flags/aq.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_AR,
 .<%= Style.COUNTRY_FLAG %>.ar {
-	background-position: 0 -696px;
+	background-image: url(../img/flags/ar.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.as {
-	background-position: 0 -720px;
+	background-image: url(../img/flags/as.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.de_AT,
 .<%= Style.COUNTRY_FLAG %>.at {
-	background-position: 0 -744px;
+	background-image: url(../img/flags/at.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_AU,
 .<%= Style.COUNTRY_FLAG %>.au {
-	background-position: 0 -768px;
+	background-image: url(../img/flags/au.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.aw {
-	background-position: 0 -792px;
+	background-image: url(../img/flags/aw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ax {
-	background-position: 0 -816px;
+	background-image: url(../img/flags/ax.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.az {
-	background-position: 0 -840px;
+	background-image: url(../img/flags/az.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sr_BA,
 .<%= Style.COUNTRY_FLAG %>.ba {
-	background-position: 0 -864px;
+	background-image: url(../img/flags/ba.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bb {
-	background-position: 0 -888px;
+	background-image: url(../img/flags/bb.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bd {
-	background-position: 0 -912px;
+	background-image: url(../img/flags/bd.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.nl_BE,
 .<%= Style.COUNTRY_FLAG %>.fr_BE,
 .<%= Style.COUNTRY_FLAG %>.be {
-	background-position: 0 -936px;
+	background-image: url(../img/flags/be.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bf {
-	background-position: 0 -960px;
+	background-image: url(../img/flags/bf.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bg_BG,
 .<%= Style.COUNTRY_FLAG %>.bg {
-	background-position: 0 -984px;
+	background-image: url(../img/flags/bg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_BH,
 .<%= Style.COUNTRY_FLAG %>.bh {
-	background-position: 0 -1008px;
+	background-image: url(../img/flags/bh.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bi {
-	background-position: 0 -1032px;
+	background-image: url(../img/flags/bi.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bj {
-	background-position: 0 -1056px;
+	background-image: url(../img/flags/bj.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bl {
-	background-position: 0 -1080px;
+	background-image: url(../img/flags/bl.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bm {
-	background-position: 0 -1104px;
+	background-image: url(../img/flags/mb.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bn {
-	background-position: 0 -1128px;
+	background-image: url(../img/flags/bn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_BO,
 .<%= Style.COUNTRY_FLAG %>.bo {
-	background-position: 0 -1152px;
+	background-image: url(../img/flags/bo.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pt_BR,
 .<%= Style.COUNTRY_FLAG %>.br {
-	background-position: 0 -1176px;
+	background-image: url(../img/flags/br.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bs {
-	background-position: 0 -1200px;
+	background-image: url(../img/flags/bs.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bt {
-	background-position: 0 -1224px;
+	background-image: url(../img/flags/bt.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bw {
-	background-position: 0 -1248px;
+	background-image: url(../img/flags/bw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.be_BY,
 .<%= Style.COUNTRY_FLAG %>.by {
-	background-position: 0 -1272px;
+	background-image: url(../img/flags/by.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.bz {
-	background-position: 0 -1296px;
+	background-image: url(../img/flags/bz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_CA,
 .<%= Style.COUNTRY_FLAG %>.fr_CA,
 .<%= Style.COUNTRY_FLAG %>.ca {
-	background-position: 0 -1320px;
+	background-image: url(../img/flags/ca.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cc {
-	background-position: 0 -1344px;
+	background-image: url(../img/flags/cc.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cd {
-	background-position: 0 -1368px;
+	background-image: url(../img/flags/cd.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cf {
-	background-position: 0 -1392px;
+	background-image: url(../img/flags/cf.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cg {
-	background-position: 0 -1416px;
+	background-image: url(../img/flags/cg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fr_CH,
 .<%= Style.COUNTRY_FLAG %>.de_CH,
 .<%= Style.COUNTRY_FLAG %>.it_CH,
 .<%= Style.COUNTRY_FLAG %>.ch {
-	background-position: 0 -1440px;
+	background-image: url(../img/flags/ch.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ci {
-	background-position: 0 -1464px;
+	background-image: url(../img/flags/ci.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ck {
-	background-position: 0 -1488px;
+	background-image: url(../img/flags/ck.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_CL,
 .<%= Style.COUNTRY_FLAG %>.cl {
-	background-position: 0 -1512px;
+	background-image: url(../img/flags/cl.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cm {
-	background-position: 0 -1536px;
+	background-image: url(../img/flags/cm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.zh_CN,
 .<%= Style.COUNTRY_FLAG %>.cn {
-	background-position: 0 -1560px;
+	background-image: url(../img/flags/cn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_CO,
 .<%= Style.COUNTRY_FLAG %>.co {
-	background-position: 0 -1584px;
+	background-image: url(../img/flags/co.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_CR,
 .<%= Style.COUNTRY_FLAG %>.cr {
-	background-position: 0 -1608px;
+	background-image: url(../img/flags/cr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cu {
-	background-position: 0 -1632px;
+	background-image: url(../img/flags/cu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cv {
-	background-position: 0 -1656px;
+	background-image: url(../img/flags/cv.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cw {
-	background-position: 0 -1680px;
+	background-image: url(../img/flags/cw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cx {
-	background-position: 0 -1704px;
+	background-image: url(../img/flags/cx.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.el_CY,
 .<%= Style.COUNTRY_FLAG %>.cy {
-	background-position: 0 -1728px;
+	background-image: url(../img/flags/cy.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.cs_CZ,
 .<%= Style.COUNTRY_FLAG %>.cz {
-	background-position: 0 -1752px;
+	background-image: url(../img/flags/cz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.de_DE,
 .<%= Style.COUNTRY_FLAG %>.de {
-	background-position: 0 -1776px;
+	background-image: url(../img/flags/de.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.dj {
-	background-position: 0 -1800px;
+	background-image: url(../img/flags/dj.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.da_DK,
 .<%= Style.COUNTRY_FLAG %>.dk {
-	background-position: 0 -1824px;
+	background-image: url(../img/flags/dk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.dm {
-	background-position: 0 -1848px;
+	background-image: url(../img/flags/dm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_DO,
 .<%= Style.COUNTRY_FLAG %>.do {
-	background-position: 0 -1872px;
+	background-image: url(../img/flags/do.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_DZ,
 .<%= Style.COUNTRY_FLAG %>.dz {
-	background-position: 0 -1896px;
+	background-image: url(../img/flags/dz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_EC,
 .<%= Style.COUNTRY_FLAG %>.ec {
-	background-position: 0 -1920px;
+	background-image: url(../img/flags/ec.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.et_EE,
 .<%= Style.COUNTRY_FLAG %>.ee {
-	background-position: 0 -1944px;
+	background-image: url(../img/flags/ee.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_EG,
 .<%= Style.COUNTRY_FLAG %>.eg {
-	background-position: 0 -1968px;
+	background-image: url(../img/flags/eg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.eh {
-	background-position: 0 -1992px;
+	background-image: url(../img/flags/eh.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.er {
-	background-position: 0 -2016px;
+	background-image: url(../img/flags/er.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ca_ES,
 .<%= Style.COUNTRY_FLAG %>.es_ES,
 .<%= Style.COUNTRY_FLAG %>.es {
-	background-position: 0 -2040px;
+	background-image: url(../img/flags/es.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.et {
-	background-position: 0 -2064px;
+	background-image: url(../img/flags/et.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.eu {
-	background-position: 0 -2088px;
+	background-image: url(../img/flags/eu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fi_FI,
 .<%= Style.COUNTRY_FLAG %>.fi {
-	background-position: 0 -2112px;
+	background-image: url(../img/flags/fi.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fj {
-	background-position: 0 -2136px;
+	background-image: url(../img/flags/fj.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fk {
-	background-position: 0 -2160px;
+	background-image: url(../img/flags/fk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fm {
-	background-position: 0 -2184px;
+	background-image: url(../img/flags/fm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fo {
-	background-position: 0 -2208px;
+	background-image: url(../img/flags/fo.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fr_FR,
 .<%= Style.COUNTRY_FLAG %>.fr {
-	background-position: 0 -2232px;
+	background-image: url(../img/flags/fr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ga {
-	background-position: 0 -2256px;
+	background-image: url(../img/flags/ga.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_GB,
 .<%= Style.COUNTRY_FLAG %>.en,
 .<%= Style.COUNTRY_FLAG %>.gb {
-	background-position: 0 -2280px;
+	background-image: url(../img/flags/gb.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gd {
-	background-position: 0 -2304px;
+	background-image: url(../img/flags/gd.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ge {
-	background-position: 0 -2328px;
+	background-image: url(../img/flags/ge.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gg {
-	background-position: 0 -2352px;
+	background-image: url(../img/flags/gg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gh {
-	background-position: 0 -2376px;
+	background-image: url(../img/flags/gh.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gi {
-	background-position: 0 -2400px;
+	background-image: url(../img/flags/gi.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gl {
-	background-position: 0 -2424px;
+	background-image: url(../img/flags/gl.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gm {
-	background-position: 0 -2448px;
+	background-image: url(../img/flags/gm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gn {
-	background-position: 0 -2472px;
+	background-image: url(../img/flags/gn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gq {
-	background-position: 0 -2496px;
+	background-image: url(../img/flags/gq.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.el_GR,
 .<%= Style.COUNTRY_FLAG %>.gr {
-	background-position: 0 -2520px;
+	background-image: url(../img/flags/gr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gs {
-	background-position: 0 -2544px;
+	background-image: url(../img/flags/gs.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_GT,
 .<%= Style.COUNTRY_FLAG %>.gt {
-	background-position: 0 -2568px;
+	background-image: url(../img/flags/gt.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gu {
-	background-position: 0 -2592px;
+	background-image: url(../img/flags/gu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gw {
-	background-position: 0 -2616px;
+	background-image: url(../img/flags/gw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.gy {
-	background-position: 0 -2640px;
+	background-image: url(../img/flags/gy.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.zh_HK,
 .<%= Style.COUNTRY_FLAG %>.hk {
-	background-position: 0 -2664px;
+	background-image: url(../img/flags/hk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_HN,
 .<%= Style.COUNTRY_FLAG %>.hn {
-	background-position: 0 -2688px;
+	background-image: url(../img/flags/hn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.hr_HR,
 .<%= Style.COUNTRY_FLAG %>.hr {
-	background-position: 0 -2712px;
+	background-image: url(../img/flags/hr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ht {
-	background-position: 0 -2736px;
+	background-image: url(../img/flags/ht.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.hu_HU,
 .<%= Style.COUNTRY_FLAG %>.hu {
-	background-position: 0 -2760px;
+	background-image: url(../img/flags/hu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ic {
-	background-position: 0 -2784px;
+	background-image: url(../img/flags/ic.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.in_ID,
 .<%= Style.COUNTRY_FLAG %>.id {
-	background-position: 0 -2808px;
+	background-image: url(../img/flags/id.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_IE,
 .<%= Style.COUNTRY_FLAG %>.ga_IE,
 .<%= Style.COUNTRY_FLAG %>.ie {
-	background-position: 0 -2832px;
+	background-image: url(../img/flags/ie.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.iw_IL,
 .<%= Style.COUNTRY_FLAG %>.il {
-	background-position: 0 -2856px;
+	background-image: url(../img/flags/il.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.im {
-	background-position: 0 -2880px;
+	background-image: url(../img/flags/im.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_IN,
 .<%= Style.COUNTRY_FLAG %>.hi_IN,
 .<%= Style.COUNTRY_FLAG %>.in {
-	background-position: 0 -2904px;
+	background-image: url(../img/flags/in.svg);
 }
 .<%= Style.COUNTRY_FLAG %>.ar_IQ,
 .<%= Style.COUNTRY_FLAG %>.iq {
-	background-position: 0 -2928px;
+	background-image: url(../img/flags/iq.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ir {
-	background-position: 0 -2952px;
+	background-image: url(../img/flags/ir.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.is_IS,
 .<%= Style.COUNTRY_FLAG %>.is {
-	background-position: 0 -2976px;
+	background-image: url(../img/flags/is.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.it_IT,
 .<%= Style.COUNTRY_FLAG %>.it {
-	background-position: 0 -3000px;
+	background-image: url(../img/flags/it.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.je {
-	background-position: 0 -3024px;
+	background-image: url(../img/flags/je.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.jm {
-	background-position: 0 -3048px;
+	background-image: url(../img/flags/jm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_JO,
 .<%= Style.COUNTRY_FLAG %>.jo {
-	background-position: 0 -3072px;
+	background-image: url(../img/flags/jo.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ja_JP,
 .<%= Style.COUNTRY_FLAG %>.jp {
-	background-position: 0 -3096px;
+	background-image: url(../img/flags/jp.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ke {
-	background-position: 0 -3120px;
+	background-image: url(../img/flags/ke.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.kg {
-	background-position: 0 -3144px;
+	background-image: url(../img/flags/kg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.kh {
-	background-position: 0 -3168px;
+	background-image: url(../img/flags/kh.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ki {
-	background-position: 0 -3192px;
+	background-image: url(../img/flags/ki.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.km {
-	background-position: 0 -3216px;
+	background-image: url(../img/flags/km.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.kn {
-	background-position: 0 -3240px;
+	background-image: url(../img/flags/kn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.kp {
-	background-position: 0 -3264px;
+	background-image: url(../img/flags/kp.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ko_KR,
 .<%= Style.COUNTRY_FLAG %>.kr {
-	background-position: 0 -3288px;
+	background-image: url(../img/flags/kr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_KW,
 .<%= Style.COUNTRY_FLAG %>.kw {
-	background-position: 0 -3312px;
+	background-image: url(../img/flags/kw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ky {
-	background-position: 0 -3336px;
+	background-image: url(../img/flags/ky.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.kz {
-	background-position: 0 -3360px;
+	background-image: url(../img/flags/kz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.la {
-	background-position: 0 -3384px;
+	background-image: url(../img/flags/la.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_LB,
 .<%= Style.COUNTRY_FLAG %>.lb {
-	background-position: 0 -3408px;
+	background-image: url(../img/flags/lb.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.lc {
-	background-position: 0 -3432px;
+	background-image: url(../img/flags/lc.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.li {
-	background-position: 0 -3456px;
+	background-image: url(../img/flags/li.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.lk {
-	background-position: 0 -3480px;
+	background-image: url(../img/flags/lk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.lr {
-	background-position: 0 -3504px;
+	background-image: url(../img/flags/lr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ls {
-	background-position: 0 -3528px;
+	background-image: url(../img/flags/ls.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.lt_LT,
 .<%= Style.COUNTRY_FLAG %>.lt {
-	background-position: 0 -3552px;
+	background-image: url(../img/flags/lt.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.fr_LU,
 .<%= Style.COUNTRY_FLAG %>.de_LU,
 .<%= Style.COUNTRY_FLAG %>.lu {
-	background-position: 0 -3576px;
+	background-image: url(../img/flags/lu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.lv_LV,
 .<%= Style.COUNTRY_FLAG %>.lv {
-	background-position: 0 -3600px;
+	background-image: url(../img/flags/lv.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_LY,
 .<%= Style.COUNTRY_FLAG %>.ly {
-	background-position: 0 -3624px;
+	background-image: url(../img/flags/ly.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_MA,
 .<%= Style.COUNTRY_FLAG %>.ma {
-	background-position: 0 -3648px;
+	background-image: url(../img/flags/ma.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mc {
-	background-position: 0 -3672px;
+	background-image: url(../img/flags/mc.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.md {
-	background-position: 0 -3696px;
+	background-image: url(../img/flags/md.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sr_ME,
 .<%= Style.COUNTRY_FLAG %>.me {
-	background-position: 0 -3720px;
+	background-image: url(../img/flags/me.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mf {
-	background-position: 0 -3744px;
+	background-image: url(../img/flags/mf.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mg {
-	background-position: 0 -3768px;
+	background-image: url(../img/flags/mg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mh {
-	background-position: 0 -3792px;
+	background-image: url(../img/flags/mh.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mk_MK,
 .<%= Style.COUNTRY_FLAG %>.mk {
-	background-position: 0 -3816px;
+	background-image: url(../img/flags/mk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ml {
-	background-position: 0 -3840px;
+	background-image: url(../img/flags/ml.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mm {
-	background-position: 0 -3864px;
+	background-image: url(../img/flags/mm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mn {
-	background-position: 0 -3888px;
+	background-image: url(../img/flags/mn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mo {
-	background-position: 0 -3912px;
+	background-image: url(../img/flags/mo.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mp {
-	background-position: 0 -3936px;
+	background-image: url(../img/flags/mp.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mq {
-	background-position: 0 -3960px;
+	background-image: url(../img/flags/mq.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mr {
-	background-position: 0 -3984px;
+	background-image: url(../img/flags/mr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ms {
-	background-position: 0 -4008px;
+	background-image: url(../img/flags/ms.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_MT,
 .<%= Style.COUNTRY_FLAG %>.mt_MT,
 .<%= Style.COUNTRY_FLAG %>.mt {
-	background-position: 0 -4032px;
+	background-image: url(../img/flags/mt.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mu {
-	background-position: 0 -4056px;
+	background-image: url(../img/flags/mu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mv {
-	background-position: 0 -4080px;
+	background-image: url(../img/flags/mv.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mw {
-	background-position: 0 -4104px;
+	background-image: url(../img/flags/mw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_MX,
 .<%= Style.COUNTRY_FLAG %>.mx {
-	background-position: 0 -4128px;
+	background-image: url(../img/flags/mx.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ms_MY,
 .<%= Style.COUNTRY_FLAG %>.my {
-	background-position: 0 -4152px;
+	background-image: url(../img/flags/my.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.mz {
-	background-position: 0 -4176px;
+	background-image: url(../img/flags/mz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.na {
-	background-position: 0 -4200px;
+	background-image: url(../img/flags/na.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.nc {
-	background-position: 0 -4224px;
+	background-image: url(../img/flags/nc.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ne {
-	background-position: 0 -4248px;
+	background-image: url(../img/flags/ne.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.nf {
-	background-position: 0 -4272px;
+	background-image: url(../img/flags/nf.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ng {
-	background-position: 0 -4296px;
+	background-image: url(../img/flags/ng.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_NI,
 .<%= Style.COUNTRY_FLAG %>.ni {
-	background-position: 0 -4320px;
+	background-image: url(../img/flags/ni.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.nl_NL,
 .<%= Style.COUNTRY_FLAG %>.nl {
-	background-position: 0 -4344px;
+	background-image: url(../img/flags/nl.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.no_NO,
 .<%= Style.COUNTRY_FLAG %>.nb_NO,
 .<%= Style.COUNTRY_FLAG %>.nn_NO,
 .<%= Style.COUNTRY_FLAG %>.no {
-	background-position: 0 -4368px;
+	background-image: url(../img/flags/no.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.np {
-	background-position: 0 -4392px;
+	background-image: url(../img/flags/np.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.nr {
-	background-position: 0 -4416px;
+	background-image: url(../img/flags/nr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.nu {
-	background-position: 0 -4440px;
+	background-image: url(../img/flags/nu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_NZ,
 .<%= Style.COUNTRY_FLAG %>.nz {
-	background-position: 0 -4464px;
+	background-image: url(../img/flags/nz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_OM,
 .<%= Style.COUNTRY_FLAG %>.om {
-	background-position: 0 -4488px;
+	background-image: url(../img/flags/om.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_PA,
 .<%= Style.COUNTRY_FLAG %>.pa {
-	background-position: 0 -4512px;
+	background-image: url(../img/flags/pa.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_PE,
 .<%= Style.COUNTRY_FLAG %>.pe {
-	background-position: 0 -4536px;
+	background-image: url(../img/flags/pe.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pf {
-	background-position: 0 -4560px;
+	background-image: url(../img/flags/pf.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pg {
-	background-position: 0 -4584px;
+	background-image: url(../img/flags/pg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_PH,
 .<%= Style.COUNTRY_FLAG %>.ph {
-	background-position: 0 -4608px;
+	background-image: url(../img/flags/ph.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pk {
-	background-position: 0 -4632px;
+	background-image: url(../img/flags/pk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pl_PL,
 .<%= Style.COUNTRY_FLAG %>.pl {
-	background-position: 0 -4656px;
+	background-image: url(../img/flags/pl.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pn {
-	background-position: 0 -4680px;
+	background-image: url(../img/flags/pn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_PR,
 .<%= Style.COUNTRY_FLAG %>.pr {
-	background-position: 0 -4704px;
+	background-image: url(../img/flags/pr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ps {
-	background-position: 0 -4728px;
+	background-image: url(../img/flags/ps.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pt_PT,
 .<%= Style.COUNTRY_FLAG %>.pt {
-	background-position: 0 -4752px;
+	background-image: url(../img/flags/pt.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.pw {
-	background-position: 0 -4776px;
+	background-image: url(../img/flags/pw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_PY,
 .<%= Style.COUNTRY_FLAG %>.py {
-	background-position: 0 -4800px;
+	background-image: url(../img/flags/py.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_QA,
 .<%= Style.COUNTRY_FLAG %>.qa {
-	background-position: 0 -4824px;
+	background-image: url(../img/flags/qa.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ro_RO,
 .<%= Style.COUNTRY_FLAG %>.ro {
-	background-position: 0 -4848px;
+	background-image: url(../img/flags/ro.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sr_RS,
 .<%= Style.COUNTRY_FLAG %>.rs {
-	background-position: 0 -4872px;
+	background-image: url(../img/flags/rs.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ru_RU,
 .<%= Style.COUNTRY_FLAG %>.ru {
-	background-position: 0 -4896px;
+	background-image: url(../img/flags/ru.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.rw {
-	background-position: 0 -4920px;
+	background-image: url(../img/flags/rw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_SA,
 .<%= Style.COUNTRY_FLAG %>.sa {
-	background-position: 0 -4944px;
+	background-image: url(../img/flags/sa.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sb {
-	background-position: 0 -4968px;
+	background-image: url(../img/flags/sb.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sc {
-	background-position: 0 -4992px;
+	background-image: url(../img/flags/sc.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_SD,
 .<%= Style.COUNTRY_FLAG %>.sd {
-	background-position: 0 -5016px;
+	background-image: url(../img/flags/sd.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sv_SE,
 .<%= Style.COUNTRY_FLAG %>.se {
-	background-position: 0 -5040px;
+	background-image: url(../img/flags/se.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.zh_SG,
 .<%= Style.COUNTRY_FLAG %>.en_SG,
 .<%= Style.COUNTRY_FLAG %>.sg {
-	background-position: 0 -5064px;
+	background-image: url(../img/flags/sg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sh {
-	background-position: 0 -5088px;
+	background-image: url(../img/flags/sh.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sl_SI,
 .<%= Style.COUNTRY_FLAG %>.si {
-	background-position: 0 -5112px;
+	background-image: url(../img/flags/si.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sk_SK,
 .<%= Style.COUNTRY_FLAG %>.sk {
-	background-position: 0 -5136px;
+	background-image: url(../img/flags/sk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sl {
-	background-position: 0 -5160px;
+	background-image: url(../img/flags/sl.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sm {
-	background-position: 0 -5184px;
+	background-image: url(../img/flags/sm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sn {
-	background-position: 0 -5208px;
+	background-image: url(../img/flags/sn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.so {
-	background-position: 0 -5232px;
+	background-image: url(../img/flags/so.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sr {
-	background-position: 0 -5256px;
+	background-image: url(../img/flags/sr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ss {
-	background-position: 0 -5280px;
+	background-image: url(../img/flags/ss.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.st {
-	background-position: 0 -5304px;
+	background-image: url(../img/flags/st.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_SV,
 .<%= Style.COUNTRY_FLAG %>.sv {
-	background-position: 0 -5328px;
+	background-image: url(../img/flags/sv.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_SY,
 .<%= Style.COUNTRY_FLAG %>.sy {
-	background-position: 0 -5352px;
+	background-image: url(../img/flags/sy.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.sz {
-	background-position: 0 -5376px;
+	background-image: url(../img/flags/sz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tc {
-	background-position: 0 -5400px;
+	background-image: url(../img/flags/tc.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.td {
-	background-position: 0 -5424px;
+	background-image: url(../img/flags/td.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tf {
-	background-position: 0 -5448px;
+	background-image: url(../img/flags/tf.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tg {
-	background-position: 0 -5472px;
+	background-image: url(../img/flags/tg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.th_TH,
 .<%= Style.COUNTRY_FLAG %>.th {
-	background-position: 0 -5496px;
+	background-image: url(../img/flags/th.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tj {
-	background-position: 0 -5520px;
+	background-image: url(../img/flags/tj.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tk {
-	background-position: 0 -5544px;
+	background-image: url(../img/flags/tk.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tl {
-	background-position: 0 -5568px;
+	background-image: url(../img/flags/tl.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tm {
-	background-position: 0 -5592px;
+	background-image: url(../img/flags/tm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_TN,
 .<%= Style.COUNTRY_FLAG %>.tn {
-	background-position: 0 -5616px;
+	background-image: url(../img/flags/tn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.to {
-	background-position: 0 -5640px;
+	background-image: url(../img/flags/to.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tr_TR,
 .<%= Style.COUNTRY_FLAG %>.tr {
-	background-position: 0 -5664px;
+	background-image: url(../img/flags/tr.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tt {
-	background-position: 0 -5688px;
+	background-image: url(../img/flags/tt.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tv {
-	background-position: 0 -5712px;
+	background-image: url(../img/flags/tv.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.zh_TW,
 .<%= Style.COUNTRY_FLAG %>.tw {
-	background-position: 0 -5736px;
+	background-image: url(../img/flags/tw.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.tz {
-	background-position: 0 -5760px;
+	background-image: url(../img/flags/tz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.uk_UA,
 .<%= Style.COUNTRY_FLAG %>.ua {
-	background-position: 0 -5784px;
+	background-image: url(../img/flags/ua.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ug {
-	background-position: 0 -5808px;
+	background-image: url(../img/flags/ug.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_US,
 .<%= Style.COUNTRY_FLAG %>.es_US,
 .<%= Style.COUNTRY_FLAG %>.us {
-	background-position: 0 -5832px;
+	background-image: url(../img/flags/us.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_UY,
 .<%= Style.COUNTRY_FLAG %>.uy {
-	background-position: 0 -5856px;
+	background-image: url(../img/flags/uy.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.uz {
-	background-position: 0 -5880px;
+	background-image: url(../img/flags/uz.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.va {
-	background-position: 0 -5904px;
+	background-image: url(../img/flags/va.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.vc {
-	background-position: 0 -5928px;
+	background-image: url(../img/flags/vc.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.es_VE,
 .<%= Style.COUNTRY_FLAG %>.ve {
-	background-position: 0 -5952px;
+	background-image: url(../img/flags/ve.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.vg {
-	background-position: 0 -5976px;
+	background-image: url(../img/flags/vg.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.vi {
-	background-position: 0 -6000px;
+	background-image: url(../img/flags/vi.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.vi_VN,
 .<%= Style.COUNTRY_FLAG %>.vn {
-	background-position: 0 -6024px;
+	background-image: url(../img/flags/vn.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.vu {
-	background-position: 0 -6048px;
+	background-image: url(../img/flags/vu.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.wf {
-	background-position: 0 -6072px;
+	background-image: url(../img/flags/wf.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ws {
-	background-position: 0 -6096px;
+	background-image: url(../img/flags/ws.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.ar_YE,
 .<%= Style.COUNTRY_FLAG %>.ye {
-	background-position: 0 -6120px;
+	background-image: url(../img/flags/ye.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.yt {
-	background-position: 0 -6144px;
+	background-image: url(../img/flags/yt.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.en_ZA,
 .<%= Style.COUNTRY_FLAG %>.za {
-	background-position: 0 -6168px;
+	background-image: url(../img/flags/za.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.zm {
-	background-position: 0 -6192px;
+	background-image: url(../img/flags/zm.svg);
 }
 
 .<%= Style.COUNTRY_FLAG %>.zw {
-	background-position: 0 -6216px;
+	background-image: url(../img/flags/zw.svg);
 }
 
 /* Leaflet customization */
