@@ -152,7 +152,7 @@ public abstract class DataImporter<T>
 			try
 			{
 				// Connect to the database
-				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database + "?useSSL=false", username, password);
+				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
 
 				// Now check which reader type we're using
 				if (reader instanceof IStreamableReader)
