@@ -17,6 +17,7 @@
 
 package jhi.germinate.client.page.about;
 
+import com.google.gwt.dom.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -25,13 +26,12 @@ import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 
-import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.map.*;
-import jhi.germinate.client.widget.structure.resource.*;
-import jhi.germinate.shared.*;
+import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.gwt.leaflet.client.basic.*;
@@ -42,17 +42,21 @@ import jhi.gwt.leaflet.client.basic.*;
  *
  * @author Sebastian Raubach
  */
-public class AboutGerminatePage extends GerminateComposite implements ParallaxBannerPage
+public class AboutGerminatePage extends GerminateComposite
 {
 	@Override
 	public Library[] getLibraryList()
 	{
-		return new Library[]{Library.LEAFLET, Library.LEAFLET_MINIMAP};
+		return new Library[]{Library.LEAFLET, Library.LEAFLET_MINIMAP, Library.HUTTON_BANNER};
 	}
 
 	@Override
 	protected void setUpContent()
 	{
+		SimplePanel banner = new SimplePanel();
+		panel.add(banner);
+		jsniBanner(banner.getElement());
+
 		PageHeader header = new PageHeader();
 		header.setText(Text.LANG.aboutTitle());
 		panel.add(header);
@@ -115,9 +119,7 @@ public class AboutGerminatePage extends GerminateComposite implements ParallaxBa
 		new LeafletUtils.IndividualMarkerCreator(panel, Collections.singletonList(l), (mapPanel, map) -> map.setView(LeafletLatLng.newInstance(56.4567, -3.0695), 5));
 	}
 
-	@Override
-	public String getParallaxStyle()
-	{
-		return ParallaxResource.INSTANCE.css().parallaxAboutGerminate();
-	}
+	private native void jsniBanner(Element element)/*-{
+		$wnd.$(element).huttonBanner();
+	}-*/;
 }

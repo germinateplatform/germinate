@@ -122,6 +122,8 @@ public abstract class DataImporter<T>
 		this.password = password;
 		this.port = port;
 
+		BaseException.printExceptions = true;
+
 		Constructor<?> constructor = null;
 
 		if (readerName != null)

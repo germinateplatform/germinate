@@ -45,6 +45,7 @@ public enum Library
 	LEAFLET_SYNC("./js/leaflet/leaflet-sync.js"),
 	LEAFLET_GEODESIC("./js/leaflet/leaflet-geodesic.js"),
 
+	HUTTON_BANNER("./js/hutton-banner.js", "./css/hutton-banner.css"),
 	GOOGLE_CHARTS(ChartPackage.GEOCHART.name()),
 	HTML_2_CANVAS("./js/html2canvas.js"),
 	ZXCVBN("./js/zxcvbn.js"),

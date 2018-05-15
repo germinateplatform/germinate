@@ -163,7 +163,9 @@ public class FlapjackUtils
 //				File map = new File(params.getParam(FlapjackParams.Param.map));
 //				File genotypes = new File(params.getParam(FlapjackParams.Param.genotypes));
 //				FlapjackFile project = new FlapjackFile(params.getParam(FlapjackParams.Param.project));
-//				CreateProject cp = new CreateProject(map, genotypes, null, null, project, true);
+//				CreateProjectSettings cps = new CreateProjectSettings(genotypes, map, null, null, project, null);
+//				DataImportSettings dis = new DataImportSettings();
+//				CreateProject cp = new CreateProject(cps, dis);
 //
 //				return handleOutput(cp.doProjectCreation());
 //

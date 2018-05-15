@@ -460,7 +460,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 					{
 						Scheduler.get().scheduleDeferred(() -> {
 							TableRowElement row = getTable().getRowElement(context.getIndex() - getTable().getPageStart());
-							jsniPeity(row, GerminateSettingsHolder.getCategoricalColor(0));
+							jsniPeity(row);
 						});
 					}
 				}
@@ -476,7 +476,8 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		}
 	}
 
-	private native void jsniPeity(Element element, String color)/*-{
+	private native void jsniPeity(Element element)/*-{
+		var color = @jhi.germinate.client.util.GerminateSettingsHolder::getCategoricalColor(*)(0);
 		$wnd.$(element).find('.donut').peity('donut', {
 			fill: [color, "#cccccc"],
 			radius: 9
