@@ -24,13 +24,13 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
-import java.util.Map;
 
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -87,7 +87,7 @@ public class InstitutionsPage extends Composite
 					public void onCountySelected(Country country)
 					{
 						/* When a country is selected by the user, force filter the table with the country name */
-						Map<String, String> mapping = new HashMap<>();
+						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Country.COUNTRY_NAME, country.getName());
 						try
 						{
@@ -102,8 +102,8 @@ public class InstitutionsPage extends Composite
 					public void onSelectionCleared()
 					{
 						/* If something is de-selected in the chart, clear the table filtering (if available) */
-						if (institutionsTable.isFilterVisible())
-							institutionsTable.toggleFilter();
+						if (institutionsTable.isFiltered())
+							institutionsTable.clearFilter();
 					}
 				});
 				map.add(chart);

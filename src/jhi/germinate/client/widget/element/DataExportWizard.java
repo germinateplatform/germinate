@@ -38,7 +38,6 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.enums.*;
@@ -55,19 +54,23 @@ public abstract class DataExportWizard extends Composite
 	}
 
 	@UiField
-	FlowPanel    overallPanel;
+	PageHeader        pageHeader;
 	@UiField
-	HTML         accessionText;
+	DatasetListWidget selectedDatasetPanel;
 	@UiField
-	GroupListBox accessionGroupsList;
+	FlowPanel         overallPanel;
 	@UiField
-	HTML         markerText;
+	HTML              accessionText;
 	@UiField
-	GroupListBox markerGroupsList;
+	GroupListBox      accessionGroupsList;
 	@UiField
-	MapListBox   mapsList;
+	HTML              markerText;
 	@UiField
-	Button       continueButton;
+	GroupListBox      markerGroupsList;
+	@UiField
+	MapListBox        mapsList;
+	@UiField
+	Button            continueButton;
 
 	@UiField
 	LIElement    genotypeMessage;
@@ -76,7 +79,7 @@ public abstract class DataExportWizard extends Composite
 	@UiField
 	ToggleSwitch mdfToggle;
 
-	private List<Long> selectedDatasets;
+	private List<Dataset> selectedDatasets;
 
 	public DataExportWizard(final ExportType type)
 	{
@@ -85,10 +88,12 @@ public abstract class DataExportWizard extends Composite
 		switch (type)
 		{
 			case allelefreq:
-				selectedDatasets = LongListParameterStore.Inst.get().get(Parameter.allelefreqDatasetIds);
+				selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.allelefreqDatasets);
+				pageHeader.setText(Text.LANG.allelefreqPageTitle());
 				break;
 			case genotype:
-				selectedDatasets = LongListParameterStore.Inst.get().get(Parameter.genotypeDatasetIds);
+				selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.genotypeDatasets);
+				pageHeader.setText(Text.LANG.genotypePageTitle());
 				break;
 		}
 
@@ -103,18 +108,22 @@ public abstract class DataExportWizard extends Composite
 			return;
 		}
 
+		selectedDatasetPanel.setType(type.type);
+
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
+
 		accessionText.setHTML(Text.LANG.genotypeExportSubtitleAccessionGroups());
 		markerText.setHTML(Text.LANG.genotypeExportSubtitleMarkerGroups());
 
-		accessionGroupsList.setGroupCreationInterface(callback -> GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), selectedDatasets, type.type, callback));
-		markerGroupsList.setGroupCreationInterface(callback -> GroupService.Inst.get().getMarkerGroups(Cookie.getRequestProperties(), selectedDatasets, type.type, callback));
+		accessionGroupsList.setGroupCreationInterface(callback -> GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), ids, type.type, callback));
+		markerGroupsList.setGroupCreationInterface(callback -> GroupService.Inst.get().getMarkerGroups(Cookie.getRequestProperties(), ids, type.type, callback));
 
 		ParallelAsyncCallback<ServerResult<List<Group>>> accessionGroupsCallback = new ParallelAsyncCallback<ServerResult<List<Group>>>()
 		{
 			@Override
 			protected void start()
 			{
-				GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), selectedDatasets, type.type, this);
+				GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), ids, type.type, this);
 			}
 		};
 		ParallelAsyncCallback<ServerResult<List<Group>>> markerGroupsCallback = new ParallelAsyncCallback<ServerResult<List<Group>>>()
@@ -122,15 +131,15 @@ public abstract class DataExportWizard extends Composite
 			@Override
 			protected void start()
 			{
-				GroupService.Inst.get().getMarkerGroups(Cookie.getRequestProperties(), selectedDatasets, type.type, this);
+				GroupService.Inst.get().getMarkerGroups(Cookie.getRequestProperties(), ids, type.type, this);
 			}
 		};
-		ParallelAsyncCallback<PaginatedServerResult<List<Map>>> mapsCallback = new ParallelAsyncCallback<PaginatedServerResult<List<Map>>>()
+		ParallelAsyncCallback<ServerResult<List<Map>>> mapsCallback = new ParallelAsyncCallback<ServerResult<List<Map>>>()
 		{
 			@Override
 			protected void start()
 			{
-				MapService.Inst.get().get(Cookie.getRequestProperties(), type.type, Pagination.getDefault(), this);
+				MapService.Inst.get().getForDatasets(Cookie.getRequestProperties(), ids, this);
 			}
 		};
 
@@ -141,28 +150,20 @@ public abstract class DataExportWizard extends Composite
 			{
 				ServerResult<List<Group>> accessionGroups = getCallbackData(0);
 				ServerResult<List<Group>> markerGroups = getCallbackData(1);
-				PaginatedServerResult<List<Map>> mapsData = getCallbackData(2);
+				ServerResult<List<Map>> mapsData = getCallbackData(2);
 
-				if (CollectionUtils.isEmpty(accessionGroups.getServerResult()))
-				{
-					handleFailure(new RuntimeException(Text.LANG.notificationGenotypeExportNoAccessionGroupsForDataset()));
-					return;
-				}
-				if (CollectionUtils.isEmpty(markerGroups.getServerResult()))
-				{
-					handleFailure(new RuntimeException(Text.LANG.notificationGenotypeExportNoMarkerGroupsForDataset()));
-					return;
-				}
 				if (CollectionUtils.isEmpty(mapsData.getServerResult()))
 				{
 					handleFailure(new RuntimeException(Text.LANG.notificationGenotypeExportNoMap()));
 					return;
 				}
 
-				accessionGroupsList.setValue(accessionGroups.getServerResult().get(0), false);
+				if (!CollectionUtils.isEmpty(accessionGroups.getServerResult()))
+					accessionGroupsList.setValue(accessionGroups.getServerResult().get(0), false);
 				accessionGroupsList.setAcceptableValues(accessionGroups.getServerResult());
 
-				markerGroupsList.setValue(markerGroups.getServerResult().get(0), false);
+				if (!CollectionUtils.isEmpty(markerGroups.getServerResult()))
+					markerGroupsList.setValue(markerGroups.getServerResult().get(0), false);
 				markerGroupsList.setAcceptableValues(markerGroups.getServerResult());
 
 				mapsList.setValue(mapsData.getServerResult().get(0), false);
@@ -195,6 +196,7 @@ public abstract class DataExportWizard extends Composite
 	{
 		/* Get all the user selection */
 		List<Long> accessionGroups, markerGroups, maps;
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 
 		accessionGroups = DatabaseObject.getIds(accessionGroupsList.getSelections());
 		markerGroups = DatabaseObject.getIds(markerGroupsList.getSelections());
@@ -203,7 +205,7 @@ public abstract class DataExportWizard extends Composite
 		if (CollectionUtils.isEmpty(accessionGroups, markerGroups, maps))
 			Notification.notify(Notification.Type.WARNING, Text.LANG.notificationGenotypeExportSelectAtLeastOne());
 		else
-			onContinuePressed(selectedDatasets, accessionGroups, markerGroups, maps, mdfToggle.getValue(), false);
+			onContinuePressed(ids, accessionGroups, markerGroups, maps, mdfToggle.getValue(), false);
 	}
 
 	/**

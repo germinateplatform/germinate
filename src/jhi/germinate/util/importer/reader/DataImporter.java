@@ -18,6 +18,7 @@
 package jhi.germinate.util.importer.reader;
 
 import org.apache.commons.cli.*;
+import org.apache.poi.openxml4j.util.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -25,7 +26,6 @@ import java.util.*;
 
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
-import jhi.germinate.server.util.Util;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 
@@ -98,6 +98,11 @@ public abstract class DataImporter<T>
 		}
 	}
 
+	protected void prepareReader(IDataReader reader)
+	{
+
+	}
+
 	/**
 	 * Starts the import process using the given database access parameters and the name of the {@link IDataReader}.
 	 *
@@ -117,6 +122,8 @@ public abstract class DataImporter<T>
 		this.password = password;
 		this.port = port;
 
+		BaseException.printExceptions = true;
+
 		Constructor<?> constructor = null;
 
 		if (readerName != null)
@@ -134,11 +141,15 @@ public abstract class DataImporter<T>
 			}
 		}
 
+		// We're going to assume that the files that are being imported are not Zip bombs, so we reduce the threshold.
+		ZipSecureFile.setMinInflateRatio(0.001);
+
 		// If we've got a reflection constructor, use it. Otherwise use the #getFallbackReader() as a fallback.
 		try (IDataReader reader = constructor == null ? getFallbackReader() : (IDataReader) constructor.newInstance())
 		{
 			// Pass the InputStream to it
 			reader.init(input);
+			prepareReader(reader);
 
 			try
 			{
@@ -197,6 +208,7 @@ public abstract class DataImporter<T>
 			return;
 
 		System.out.println("Deleting inserted items for table: '" + table + "'");
+		System.out.println("Deleting items: " + ids.size());
 
 		try
 		{
@@ -205,7 +217,7 @@ public abstract class DataImporter<T>
 				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
 
 			// Delete all items with the given ids
-			new ValueQuery(databaseConnection, "DELETE FROM " + table + " WHERE id IN (" + Util.generateSqlPlaceholderString(ids.size()) + ")")
+			new ValueQuery(databaseConnection, "DELETE FROM " + table + " WHERE id IN (" + StringUtils.generateSqlPlaceholderString(ids.size()) + ")")
 					.setLongs(ids)
 					.execute(false);
 
@@ -228,5 +240,11 @@ public abstract class DataImporter<T>
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args)
+	{
+		System.err.println("You're not supposed to be here...");
+		System.err.println("Please run `java -cp germinate-importer.jar` instead...");
 	}
 }

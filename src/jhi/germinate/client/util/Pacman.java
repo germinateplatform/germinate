@@ -37,7 +37,7 @@ public class Pacman
 	private static final int DIV_WIDTH  = 31;
 	private static final int DIV_HEIGHT = 31;
 
-	private static final String STYLE        = ".pacman-point-counter { padding: 10px; z-index: 99999999; position: absolute; height: 20px; width: 100%; bottom: 0px; left: 0px; background-color: black; opacity: 0.75; color: white; font-size: 20px; text-align: center; } .pacman { z-index: 99999999; position: absolute; background: url(" + URI_OPENED + ") no-repeat left top; width: " + DIV_WIDTH + "px; height: " + DIV_HEIGHT + "px; }";
+	private static final String STYLE        = ".pacman-point-counter { padding: 10px; z-index: 99999999; position: fixed; height: 50px; width: 100%; bottom: 0px; left: 0px; background-color: black; opacity: 0.75; color: white; font-size: 20px; text-align: center; } .pacman { z-index: 99999999; position: absolute; background: url(" + URI_OPENED + ") no-repeat left top; width: " + DIV_WIDTH + "px; height: " + DIV_HEIGHT + "px; }";
 	private static final String STYLE_CLOSED = ".pacman-closed { background: url(" + URI_CLOSED + ") no-repeat left top !important; }";
 
 	private static boolean cssInjected  = false;
@@ -217,7 +217,6 @@ public class Pacman
 			if (!injected)
 			{
 				style = Css.INST.style(degree);
-				JavaScript.consoleLog(style);
 				StyleInjector.injectAtStart(style, true);
 				injected = true;
 			}

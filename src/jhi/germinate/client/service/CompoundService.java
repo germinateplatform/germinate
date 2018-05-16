@@ -35,18 +35,11 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("compound")
 public interface CompoundService extends RemoteService
 {
-	String[] COLUMNS_SORTABLE      = {Compound.ID, Compound.NAME, Compound.DESCRIPTION, Compound.MOLECULAR_FORMULA, Compound.AVERAGE_MASS, Compound.MONOISOTOPIC_MASS, Compound.CLASS, Compound.CREATED_ON, Compound.UPDATED_ON, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION};
+	String[] COLUMNS_SORTABLE      = {Compound.ID, Compound.NAME, Compound.DESCRIPTION, Compound.MOLECULAR_FORMULA, Compound.AVERAGE_MASS, Compound.MONOISOTOPIC_MASS, Compound.COMPOUND_CLASS, Compound.CREATED_ON, Compound.UPDATED_ON, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION};
 	String[] COLUMNS_DATA_SORTABLE = {CompoundData.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Compound.NAME, Dataset.DESCRIPTION, AnalysisMethod.NAME, Unit.NAME, CompoundData.COMPOUND_VALUE};
 
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final CompoundServiceAsync INSTANCE = GWT.create(CompoundService.class);
@@ -57,7 +50,6 @@ public interface CompoundService extends RemoteService
 		{
 			return InstanceHolder.INSTANCE;
 		}
-
 	}
 
 	/**
@@ -136,21 +128,6 @@ public interface CompoundService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	ServerResult<List<DataStats>> getDataStatsForDatasets(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException;
-
-	/**
-	 * Retrieves the compound by compound chart file for d3.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param datasetIds The selected {@link Dataset} ids
-	 * @param firstId    The id of the first {@link Compound}
-	 * @param secondId   The id of the second {@link Compound}
-	 * @return The relative path to the generated file or <code>null</code> if there is not data for the query
-	 * @throws InvalidSessionException          Thrown if the current session is invalid
-	 * @throws DatabaseException                Thrown if the database interaction fails
-	 * @throws IOException                      Thrown if the file creation fails
-	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
-	 */
-	ServerResult<String> getCompoundByCompoundFile(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InsufficientPermissionsException;
 
 	/**
 	 * Exports the {@link Compound} information to a file and returns the name of the result file.

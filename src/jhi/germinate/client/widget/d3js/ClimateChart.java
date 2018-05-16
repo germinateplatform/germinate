@@ -21,14 +21,18 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import java.util.*;
+
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 
 /**
  * {@link ClimateChart} visualizes the climate data in a line graph.
@@ -43,6 +47,8 @@ public class ClimateChart extends AbstractChart
 	private Climate climate;
 	private Group   group;
 
+	private List<Dataset> selectedDatasets;
+
 	public void update(Climate climate, Group group)
 	{
 		this.climate = climate;
@@ -54,8 +60,9 @@ public class ClimateChart extends AbstractChart
 
 	private void getData()
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		/* Set up the callback object for the min max avg data */
-		ClimateService.Inst.get().getMinAvgMaxFile(Cookie.getRequestProperties(), climate.getId(), (group == null || group.getId() == -1) ? null : group.getId(), new DefaultAsyncCallback<ServerResult<Tuple.Pair<String, String>>>(true)
+		ClimateService.Inst.get().getMinAvgMaxFile(Cookie.getRequestProperties(), ids, climate.getId(), (group == null || group.getId() == -1) ? null : group.getId(), new DefaultAsyncCallback<ServerResult<Tuple.Pair<String, String>>>(true)
 		{
 			@Override
 			public void onSuccessImpl(ServerResult<Tuple.Pair<String, String>> result)
@@ -93,6 +100,8 @@ public class ClimateChart extends AbstractChart
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
+		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.climateDatasets);
+
 		this.chartPanel = chartPanel;
 		panel.add(chartPanel);
 

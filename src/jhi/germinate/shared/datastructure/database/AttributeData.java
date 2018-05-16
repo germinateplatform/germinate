@@ -19,6 +19,8 @@ package jhi.germinate.shared.datastructure.database;
 
 import com.google.gwt.core.shared.*;
 
+import java.sql.*;
+import java.util.Date;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
@@ -42,10 +44,14 @@ public class AttributeData extends DatabaseObject
 	public static final String ATTRIBUTE_ID = "attributedata.attribute_id";
 	public static final String FOREIGN_ID   = "attributedata.foreign_id";
 	public static final String VALUE        = "attributedata.value";
+	public static final String CREATED_ON   = "attributedata.created_on";
+	public static final String UPDATED_ON   = "attributedata.updated_on";
 
 	private Attribute      attribute;
 	private DatabaseObject foreign;
 	private String         value;
+	private Long           createdOn;
+	private Long           updatedOn;
 
 	public AttributeData()
 	{
@@ -86,6 +92,34 @@ public class AttributeData extends DatabaseObject
 	public AttributeData setValue(String value)
 	{
 		this.value = value;
+		return this;
+	}
+
+	public Long getCreatedOn()
+	{
+		return createdOn;
+	}
+
+	public AttributeData setCreatedOn(Date createdOn)
+	{
+		if (createdOn == null)
+			this.createdOn = null;
+		else
+			this.createdOn = createdOn.getTime();
+		return this;
+	}
+
+	public Long getUpdatedOn()
+	{
+		return updatedOn;
+	}
+
+	public AttributeData setUpdatedOn(Date updatedOn)
+	{
+		if (updatedOn == null)
+			this.updatedOn = null;
+		else
+			this.updatedOn = updatedOn.getTime();
 		return this;
 	}
 
@@ -153,7 +187,9 @@ public class AttributeData extends DatabaseObject
 					return new AttributeData(id)
 							.setAttribute(ATTRIBUTE_CACHE.get(user, row.getLong(ATTRIBUTE_ID), row, foreignsFromResultSet))
 							.setForeign(ACCESSION_CACHE.get(user, row.getLong(FOREIGN_ID), row, foreignsFromResultSet))
-							.setValue(row.getString(VALUE));
+							.setValue(row.getString(VALUE))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
 			catch (InsufficientPermissionsException e)
 			{
@@ -209,7 +245,9 @@ public class AttributeData extends DatabaseObject
 					return new AttributeData(id)
 							.setAttribute(ATTRIBUTE_CACHE.get(user, row.getLong(ATTRIBUTE_ID), row, foreignsFromResultSet))
 							.setForeign(DATASET_CACHE.get(user, row.getLong(FOREIGN_ID), row, foreignsFromResultSet))
-							.setValue(row.getString(VALUE));
+							.setValue(row.getString(VALUE))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
 			catch (InsufficientPermissionsException e)
 			{
@@ -256,7 +294,9 @@ public class AttributeData extends DatabaseObject
 					return new AttributeData(id)
 							.setAttribute(ATTRIBUTE_CACHE.get(user, row.getLong(ATTRIBUTE_ID), row, foreignsFromResultSet))
 							.setForeign(new Dataset(row.getLong(FOREIGN_ID)))
-							.setValue(row.getString(VALUE));
+							.setValue(row.getString(VALUE))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
 			catch (InsufficientPermissionsException e)
 			{
@@ -284,10 +324,19 @@ public class AttributeData extends DatabaseObject
 		@Override
 		public void write(Database database, AttributeData object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO attributedata (" + ATTRIBUTE_ID + ", " + FOREIGN_ID + ", " + VALUE + ") VALUES (?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO attributedata (" + ATTRIBUTE_ID + ", " + FOREIGN_ID + ", " + VALUE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setLong(object.getAttribute().getId())
 					.setLong(object.getForeign().getId())
 					.setString(object.getValue());
+
+			if (object.getCreatedOn() != null)
+				query.setTimestamp(new Date(object.getCreatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				query.setTimestamp(new Date(object.getUpdatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
 
 			ServerResult<List<Long>> ids = query.execute(false);
 

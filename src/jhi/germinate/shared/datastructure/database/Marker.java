@@ -43,6 +43,8 @@ public class Marker extends DatabaseObject
 	public static final String ID            = "markers.id";
 	public static final String MARKERTYPE_ID = "markers.markertype_id";
 	public static final String MARKER_NAME   = "markers.marker_name";
+	public static final String CREATED_ON    = "markers.created_on";
+	public static final String UPDATED_ON    = "markers.updated_on";
 
 	public static final String SYNONYMS = "synonyms";
 

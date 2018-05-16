@@ -17,52 +17,42 @@
 
 package jhi.germinate.shared.datastructure.database;
 
-import com.google.gwt.core.shared.*;
-
-import java.util.*;
-
-import jhi.germinate.server.database.*;
-import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class SynonymType extends DatabaseObject
+public enum SynonymType
 {
-	private static final long serialVersionUID = 4591661116753716031L;
+	germinatebase(1L, "germinatebase", "Accessions", "Accession synonyms"),
+	markers(2L, "markers", "Markers", "Marker synonyms"),
+	compounds(3L, "compounds", "Compounds", "Compound synonyms");
 
-	public static final String ID              = "synonymtypes.id";
-	public static final String REFERENCE_TABLE = "synonymtypes.target_table";
-	public static final String NAME            = "synonymtypes.name";
-	public static final String DESCRIPTION     = "synonymtypes.description";
+	private final Long   id;
+	private final String targetTable;
+	private final String name;
+	private final String description;
 
-	private GerminateDatabaseTable targetTable;
-	private String                 name;
-	private String                 description;
-	private Long                   createdOn;
-	private Long                   updatedOn;
-
-	public SynonymType()
+	SynonymType(Long id, String targetTable, String name, String description)
 	{
-	}
-
-	public SynonymType(Long id)
-	{
-		super(id);
-	}
-
-	public GerminateDatabaseTable getTargetTable()
-	{
-		return targetTable;
-	}
-
-	public SynonymType setTargetTable(GerminateDatabaseTable targetTable)
-	{
+		this.id = id;
 		this.targetTable = targetTable;
-		return this;
+		this.name = name;
+		this.description = description;
+	}
+
+	public static SynonymType getById(Long id)
+	{
+		if (id != null)
+		{
+			for (SynonymType type : values())
+			{
+				if (type.id == id.longValue())
+					return type;
+			}
+		}
+
+		return null;
 	}
 
 	public String getName()
@@ -70,108 +60,24 @@ public class SynonymType extends DatabaseObject
 		return name;
 	}
 
-	public SynonymType setName(String name)
-	{
-		this.name = name;
-		return this;
-	}
-
 	public String getDescription()
 	{
 		return description;
 	}
 
-	public SynonymType setDescription(String description)
+	public static SynonymType getForTable(GerminateDatabaseTable table)
 	{
-		this.description = description;
-		return this;
-	}
-
-	public Long getCreatedOn()
-	{
-		return createdOn;
-	}
-
-	public SynonymType setCreatedOn(Date createdOn)
-	{
-		if (createdOn == null)
-			this.createdOn = null;
-		else
-			this.createdOn = createdOn.getTime();
-		return this;
-	}
-
-	public Long getUpdatedOn()
-	{
-		return updatedOn;
-	}
-
-	public SynonymType setUpdatedOn(Date updatedOn)
-	{
-		if (updatedOn == null)
-			this.updatedOn = null;
-		else
-			this.updatedOn = updatedOn.getTime();
-		return this;
-	}
-
-	@Override
-	@GwtIncompatible
-	public DatabaseObjectParser<? extends DatabaseObject> getDefaultParser()
-	{
-		return Parser.Inst.get();
-	}
-
-	@GwtIncompatible
-	public static class Parser extends DatabaseObjectParser<SynonymType>
-	{
-		public static final class Inst
+		for (SynonymType type : values())
 		{
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
-			 * not before.
-			 * <p/>
-			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
-			private static final class InstanceHolder
-			{
-				private static final Parser INSTANCE = new Parser();
-			}
-
-			public static Parser get()
-			{
-				return InstanceHolder.INSTANCE;
-			}
+			if (type.targetTable.equals(table.name()))
+				return type;
 		}
 
-		private Parser()
-		{
-		}
+		return null;
+	}
 
-		@Override
-		public SynonymType parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
-		{
-			try
-			{
-				Long id = row.getLong(ID);
-
-				if (id == null)
-					return null;
-				else
-					return new SynonymType(id)
-							.setTargetTable(GerminateDatabaseTable.valueOf(row.getString(REFERENCE_TABLE)))
-							.setName(row.getString(NAME))
-							.setDescription(row.getString(DESCRIPTION))
-							.setCreatedOn(row.getTimestamp(CREATED_ON))
-							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
-			}
-			catch (IllegalArgumentException e)
-			{
-				return null;
-			}
-		}
+	public Long getId()
+	{
+		return id;
 	}
 }

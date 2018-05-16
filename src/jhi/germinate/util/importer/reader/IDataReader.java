@@ -32,6 +32,7 @@ import jhi.germinate.shared.*;
  */
 public interface IDataReader extends AutoCloseable
 {
+	public static final SimpleDateFormat SDF_FULL_DASH  = new SimpleDateFormat("yyyy-MM-dd");
 	public static final SimpleDateFormat SDF_FULL       = new SimpleDateFormat("yyyyMMdd");
 	public static final SimpleDateFormat SDF_YEAR_MONTH = new SimpleDateFormat("yyyyMM");
 	public static final SimpleDateFormat SDF_YEAR_DAY   = new SimpleDateFormat("yyyydd");
@@ -50,25 +51,38 @@ public interface IDataReader extends AutoCloseable
 		Date date = null;
 		if (!StringUtils.isEmpty(value))
 		{
-			// Replace all hyphens with zeros so that we only have one case to handle.
-			value.replace("-", "0");
-
-			try
+			if (value.length() == 10)
 			{
-				boolean noMonth = value.substring(4, 6).equals("00");
-				boolean noDay = value.substring(6, 8).equals("00");
-
-				if (noDay && noMonth)
-					date = SDF_YEAR.parse(value.substring(0, 4));
-				else if (noDay)
-					date = SDF_YEAR_MONTH.parse(value.substring(0, 6));
-				else if (noMonth)
-					date = SDF_YEAR_DAY.parse(value.substring(0, 4) + value.substring(6, 8));
-				else
-					date = SDF_FULL.parse(value);
+				try
+				{
+					date = SDF_FULL_DASH.parse(value);
+				}
+				catch (Exception e)
+				{
+				}
 			}
-			catch (Exception e)
+			else
 			{
+				// Replace all hyphens with zeros so that we only have one case to handle.
+				value = value.replace("-", "0");
+
+				try
+				{
+					boolean noMonth = value.substring(4, 6).equals("00");
+					boolean noDay = value.substring(6, 8).equals("00");
+
+					if (noDay && noMonth)
+						date = SDF_YEAR.parse(value.substring(0, 4));
+					else if (noDay)
+						date = SDF_YEAR_MONTH.parse(value.substring(0, 6));
+					else if (noMonth)
+						date = SDF_YEAR_DAY.parse(value.substring(0, 4) + value.substring(6, 8));
+					else
+						date = SDF_FULL.parse(value);
+				}
+				catch (Exception e)
+				{
+				}
 			}
 		}
 

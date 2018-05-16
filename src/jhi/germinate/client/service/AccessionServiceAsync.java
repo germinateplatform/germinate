@@ -187,4 +187,22 @@ public interface AccessionServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	void getMcpd(RequestProperties properties, Long id, AsyncCallback<ServerResult<Mcpd>> callback);
+
+	/**
+	 * Returns the {@link EntityPair}s (entity parents and entity children) related to the {@link Accession} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param id         The {@link Accession} id
+	 * @param pagination The {@link Pagination}
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	Request getEntityPairs(RequestProperties properties, Long id, Pagination pagination, AsyncCallback<PaginatedServerResult<List<EntityPair>>> callback);
+
+	/**
+	 * Exports statistics about the accession pdci scores and returns the name of the result file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void getPDCIStats(RequestProperties properties, AsyncCallback<ServerResult<String>> callback);
 }

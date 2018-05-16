@@ -70,16 +70,21 @@ public abstract class DropdownInputButton<T> extends Composite
 		}
 
 		if (selectFirst && data.size() > 0)
-		{
-			selection = this.data.get(0);
-			button.setText(getLabel(selection));
-		}
+			setSelection(data.get(0), true);
 	}
 
 	public void setSelection(T selection)
 	{
+		setSelection(selection, false);
+	}
+
+	public void setSelection(T selection, boolean trigger)
+	{
 		this.selection = selection;
 		button.setText(getLabel(selection));
+
+		if (trigger)
+			onValueChange(getSelection());
 	}
 
 	public T getSelection()

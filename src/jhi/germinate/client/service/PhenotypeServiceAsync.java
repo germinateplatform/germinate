@@ -34,15 +34,6 @@ import jhi.germinate.shared.search.*;
 public interface PhenotypeServiceAsync
 {
 	/**
-	 * Returns the {@link Phenotype} with the given id.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param id         The id of the accession
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getById(RequestProperties properties, Long id, AsyncCallback<ServerResult<Phenotype>> callback);
-
-	/**
 	 * Returns a list of {@link Phenotype}s for the given {@link Dataset} ids, {@link ExperimentType} and numeric setting.
 	 *
 	 * @param properties  The {@link RequestProperties}

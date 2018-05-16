@@ -42,6 +42,8 @@ public class PedigreeNotation extends DatabaseObject
 	public static final String NAME          = "pedigreenotations.name";
 	public static final String DESCRIPTION   = "pedigreenotations.description";
 	public static final String REFERENCE_URL = "pedigreenotations.reference_url";
+	public static final String CREATED_ON    = "pedigreenotations.created_on";
+	public static final String UPDATED_ON    = "pedigreenotations.updated_on";
 
 	private String name;
 	private String description;

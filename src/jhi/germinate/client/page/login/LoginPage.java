@@ -18,6 +18,7 @@
 package jhi.germinate.client.page.login;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -39,6 +40,7 @@ import jhi.germinate.shared.exception.*;
 public class LoginPage extends GerminateComposite implements HasHelp
 {
 	private LoginForm form;
+	private Request   currentRequest;
 
 	/**
 	 * Creates a new instance of the login page
@@ -53,6 +55,10 @@ public class LoginPage extends GerminateComposite implements HasHelp
 	 */
 	private void doLogin()
 	{
+		// Wait for the previous one to finish
+		if (currentRequest != null && currentRequest.isPending())
+			return;
+
 		final String username = form.getUsername();
 		String password = form.getPassword();
 
@@ -62,8 +68,8 @@ public class LoginPage extends GerminateComposite implements HasHelp
 			return;
 		}
 
-        /* Set up the callback object for login */
-		UserService.Inst.get().login(Cookie.getRequestProperties(), new UserCredentials(username, password), new AsyncCallback<UserAuth>()
+		/* Set up the callback object for login */
+		currentRequest = UserService.Inst.get().login(Cookie.getRequestProperties(), new UserCredentials(username, password), new AsyncCallback<UserAuth>()
 		{
 			@Override
 			public void onFailure(Throwable caught)
@@ -102,12 +108,15 @@ public class LoginPage extends GerminateComposite implements HasHelp
 					form.highlightUsername();
 				if (highlightPassword)
 					form.highlightPassword();
+
+				currentRequest = null;
 			}
 
 			@Override
 			public void onSuccess(UserAuth result)
 			{
 				GerminateEventBus.BUS.fireEvent(new LoginEvent(result, false));
+				currentRequest = null;
 			}
 		});
 	}
@@ -125,7 +134,7 @@ public class LoginPage extends GerminateComposite implements HasHelp
 		panel.getElement().appendChild(form.getElement());
 		panel.addStyleName(Style.NO_POINTER_EVENTS);
 
-        /* Set the focus to the username box */
+		/* Set the focus to the username box */
 		Scheduler.get().scheduleDeferred(() -> form.forceFocus());
 		Scheduler.get().scheduleDeferred(() -> jsniOnLoginShown(Window.getClientWidth(), Window.getClientHeight()));
 	}
@@ -153,7 +162,7 @@ public class LoginPage extends GerminateComposite implements HasHelp
 	@Override
 	public Library[] getLibraryList()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOPOJSON};
+		return new Library[]{Library.D3_V3, Library.D3_TOPOJSON, Library.ZXCVBN};
 	}
 
 	@Override

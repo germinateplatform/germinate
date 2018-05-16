@@ -51,19 +51,19 @@ public class SynonymManager extends AbstractManager<Synonym>
 
 	public static ServerResult<List<Synonym>> getAllForTable(UserAuth userAuth, GerminateDatabaseTable table, Long id) throws DatabaseException
 	{
-		ServerResult<SynonymType> type = SynonymTypeManager.getForTable(userAuth, table);
+		SynonymType type = SynonymType.getForTable(table);
 
-		if (type.getServerResult() != null)
+		if (type != null)
 		{
 			return new DatabaseObjectQuery<Synonym>(SELECT_ALL_FOR_TABLE, userAuth)
-					.setLong(type.getServerResult().getId())
+					.setLong(type.getId())
 					.setLong(id)
 					.run()
 					.getObjects(Synonym.Parser.Inst.get(), true);
 		}
 		else
 		{
-			return new ServerResult<>(type.getDebugInfo(), null);
+			return new ServerResult<>(null, null);
 		}
 	}
 }

@@ -50,7 +50,6 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	private static final String QUERY_COMPOUND_DATA = "SELECT germinatebase.`name` AS name, compounddata.compound_value AS value FROM compounddata INNER JOIN compounds ON compounddata.compound_id = compounds.id INNER JOIN germinatebase ON compounddata.germinatebase_id = germinatebase.id WHERE compounds.id = ? AND compounddata.dataset_id = ? ORDER BY germinatebase.name";
 
 	private static final String QUERY_PHENOTYPE_STATS      = "SELECT compounds.id, compounds.`name`, compounds.description, units.*, MIN( cast( compound_value AS DECIMAL (30, 2) ) ) AS min, MAX( cast( compound_value AS DECIMAL (30, 2) ) ) AS max, AVG( cast( compound_value AS DECIMAL (30, 2) ) ) AS avg, STD( cast( compound_value AS DECIMAL (30, 2) ) ) AS std, datasets.description AS dataset_description FROM datasets LEFT JOIN compounddata ON datasets.id = compounddata.dataset_id LEFT JOIN compounds ON compounds.id = compounddata.compound_id LEFT JOIN units ON units.id = compounds.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND datasets.id IN (%s) GROUP BY compounds.id, datasets.id";
-	private static final String QUERY_COMPOUND_BY_COMPOUND = "SELECT DATE_FORMAT(a.recording_date, '%%Y') AS recording_date, datasets.description AS dataset, %s AS name, a.germinatebase_id AS id, TRUNCATE(a.compound_value, 2) AS x, TRUNCATE(b.compound_value, 2) AS y FROM compounddata AS a JOIN compounddata AS b ON a.germinatebase_id = b.germinatebase_id AND a.recording_date <=> b.recording_date AND a.dataset_id = b.dataset_id AND a.dataset_id IN (%s) LEFT JOIN germinatebase ON germinatebase.id = a.germinatebase_id LEFT JOIN groupmembers ON groupmembers.foreign_id = a.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN datasets ON datasets.id = a.dataset_id WHERE groups.id LIKE ? AND a.compound_id = ? AND b.compound_id = ? GROUP BY id, x, y, recording_date, datasets.id";
 
 	private static final String QUERY_COMPOUND_NAMES          = "SELECT CONCAT(name, IF(ISNULL(compounds.unit_id), '', CONCAT(' [', units.unit_abbreviation, ']'))) AS name FROM compounds LEFT JOIN units ON units.id = compounds.unit_id WHERE compounds.id IN (%s)";
 	private static final String QUERY_COMPOUND_NAMES_COMPLETE = "SELECT CONCAT(name, IF(ISNULL(compounds.unit_id), '', CONCAT(' [', units.unit_abbreviation, ']'))) AS name FROM compounds LEFT JOIN units ON units.id = compounds.unit_id WHERE EXISTS ( SELECT 1 FROM compounddata LEFT JOIN datasets ON datasets.id = compounddata.dataset_id WHERE compounddata.compound_id = compounds.id AND datasets.id IN (%s))";
@@ -121,90 +120,12 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	{
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
-		String formatted = String.format(QUERY_PHENOTYPE_STATS, Util.generateSqlPlaceholderString(datasetIds.size()));
+		String formatted = String.format(QUERY_PHENOTYPE_STATS, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		return new DatabaseObjectQuery<DataStats>(formatted, userAuth)
 				.setLongs(datasetIds)
 				.run()
 				.getObjects(DataStats.Parser.Inst.get(), true);
-	}
-
-	@Override
-	public ServerResult<String> getCompoundByCompoundFile(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId) throws InvalidSessionException, DatabaseException,
-			IOException, InsufficientPermissionsException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
-
-		String nameColumn = Accession.NAME;
-
-		String formatted = String.format(QUERY_COMPOUND_BY_COMPOUND, nameColumn, Util.generateSqlPlaceholderString(datasetIds.size()));
-
-		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
-				.setLongs(datasetIds)
-				.setString((groupId == null || groupId == -1) ? "%" : Long.toString(groupId))
-				.setLong(firstId)
-				.setLong(secondId)
-				.getStreamer();
-
-		CompoundManager manager = new CompoundManager();
-
-		Compound one = manager.getById(userAuth, firstId).getServerResult();
-		Compound two = manager.getById(userAuth, secondId).getServerResult();
-
-		File tempFile = createTemporaryFile("c_by_c", FileType.txt.name());
-		File finalFile = createTemporaryFile("c_by_c", FileType.txt.name());
-
-		try
-		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, tempFile);
-		}
-		catch (java.io.IOException e)
-		{
-			throw new IOException(e);
-		}
-
-        /* Check if there are at least two rows. Also, replace the "x" and "y" headers with the actual phenotype names and units. */
-		try (BufferedReader br = new BufferedReader(new FileReader(tempFile));
-			 BufferedWriter bw = new BufferedWriter(new FileWriter(finalFile)))
-		{
-			int counter = 0;
-
-			for (String line; (line = br.readLine()) != null; counter++)
-			{
-				/* If it's the header row, replace "x" and "y" column headers with the phenotype names and units */
-				if (counter == 0)
-				{
-					String firstUnit = one.getUnit() != null ? one.getUnit().getAbbreviation() : null;
-					String secondUnit = two.getUnit() != null ? two.getUnit().getAbbreviation() : null;
-					String firstHeader = one.getName() + (StringUtils.isEmpty(firstUnit) ? "" : " [" + one.getUnit().getAbbreviation() + "]");
-					String secondHeader = two.getName() + (StringUtils.isEmpty(secondUnit) ? "" : " [" + two.getUnit().getAbbreviation() + "]");
-					line = line.replace("\tx\ty", "\t" + firstHeader + "\t" + secondHeader);
-				}
-
-				/* Then write to the final file */
-				bw.write(line);
-				bw.newLine();
-			}
-
-			tempFile.delete();
-
-			if (counter < 2)
-			{
-				finalFile.delete();
-				return new ServerResult<>(streamer.getDebugInfo(), null);
-			}
-
-		}
-		catch (java.io.IOException e)
-		{
-			throw new IOException(e);
-		}
-
-        /* If we get here, the file was successfully generated and contains data */
-		return new ServerResult<>(streamer.getDebugInfo(), finalFile.getName());
 	}
 
 	@Override
@@ -242,7 +163,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		/* If both are empty, return everything */
 		if (CollectionUtils.isEmpty(groupIds) && CollectionUtils.isEmpty(compoundIds))
 		{
-			String formatted = String.format(QUERY_COMPOUND_NAMES_COMPLETE, Util.generateSqlPlaceholderString(datasetIds.size()));
+			String formatted = String.format(QUERY_COMPOUND_NAMES_COMPLETE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(datasetIds)
@@ -267,7 +188,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 			String groups = Util.joinCollection(groupIds, ", ", true);
 			String phenotypes = Util.joinCollection(compoundIds, ", ", true);
 
-			String formatted = String.format(QUERY_COMPOUND_NAMES, Util.generateSqlPlaceholderString(compoundIds.size()));
+			String formatted = String.format(QUERY_COMPOUND_NAMES, StringUtils.generateSqlPlaceholderString(compoundIds.size()));
 
 			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(compoundIds)
@@ -323,7 +244,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		String filePath;
 
 		/* Export the data to a temporary file */
-		File file = createTemporaryFile("phenotype", FileType.txt.name());
+		File file = createTemporaryFile("phenotype", datasetIds, FileType.txt.name());
 		filePath = file.getName();
 
 		try
@@ -355,7 +276,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 				.setLong(datasetId)
 				.getStreamer();
 
-		File result = createTemporaryFile("compounds-data", FileType.txt.name());
+		File result = createTemporaryFile("compounds-data", datasetId, FileType.txt.name());
 
 		try
 		{

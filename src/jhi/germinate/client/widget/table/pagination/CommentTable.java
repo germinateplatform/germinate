@@ -24,6 +24,8 @@ import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
 
+import org.gwtbootstrap3.client.ui.constants.*;
+
 import java.util.*;
 
 import jhi.germinate.client.*;
@@ -181,12 +183,12 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				return Date.class;
 			}
 		};
-		column.setDataStoreName("comments." + Comment.CREATED_ON);
+		column.setDataStoreName(Comment.CREATED_ON);
 		addColumn(column, Text.LANG.commentColumnCreatedOn(), sortingEnabled);
 
 		if (ModuleCore.getUseAuthentication())
 		{
-			ButtonCell buttonCell = new ButtonCell(Style.MDI_DELETE)
+			ButtonCell buttonCell = new ButtonCell(ButtonType.DANGER, Style.MDI_DELETE)
 			{
 				@Override
 				public void render(Context context, SafeHtml data, SafeHtmlBuilder sb)

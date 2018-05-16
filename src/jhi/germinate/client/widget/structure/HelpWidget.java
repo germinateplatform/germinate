@@ -55,7 +55,7 @@ public class HelpWidget
 				Anchor contactAnchor = Anchor.wrap(Document.get().getElementById(Id.STRUCTURE_CONTACT_A));
 				contactAnchor.setTitle(Text.LANG.contact());
 			}
-			catch (Exception e)
+			catch (Exception | Error e)
 			{
 			}
 
@@ -100,8 +100,13 @@ public class HelpWidget
 	public static void show()
 	{
 		if (helpContent != null)
+		{
 			HelpModal.show(helpContent);
+		}
 		else
+		{
+			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.HELP, History.getToken());
 			Notification.notify(Notification.Type.INFO, Text.LANG.notificationHelpNotAvailable());
+		}
 	}
 }

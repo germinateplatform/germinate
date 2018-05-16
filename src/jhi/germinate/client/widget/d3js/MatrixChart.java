@@ -50,13 +50,12 @@ import jhi.germinate.shared.enums.*;
  */
 public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 {
-	private List<Long>     datasetIds;
+	private List<Dataset>  selectedDatasets;
 	private List<Group>    groups;
 	private List<T>        objects;
 	private ExperimentType experimentType;
 
-	private FlowPanel chartPanel;
-	private int maxNrOfPhenotypes = 5;
+	private FlowPanel               chartPanel;
 	private MatrixChartSelection<T> parameterSelection;
 	private Button                  deleteButton;
 	private Button                  badgeButton;
@@ -107,9 +106,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 			ButtonGroup group = new ButtonGroup();
 			group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
 			// Add the button
-			deleteButton = new Button("", e -> {
-				AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null);
-			});
+			deleteButton = new Button("", e -> AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null));
 			deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 			deleteButton.setTitle(Text.LANG.generalClear());
 
@@ -137,10 +134,10 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 			switch (experimentType)
 			{
 				case trials:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 					break;
 				case compound:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
 					break;
 			}
 
@@ -155,9 +152,9 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 					return;
 				}
 
-				if (objectIds.size() > maxNrOfPhenotypes)
+				if (objectIds.size() > MatrixChartSelection.MAX_NR_OF_OBJECTS)
 				{
-					Notification.notify(Notification.Type.ERROR, Text.LANG.phenotypeMatrixAtMost(maxNrOfPhenotypes));
+					Notification.notify(Notification.Type.ERROR, Text.LANG.phenotypeMatrixAtMost(MatrixChartSelection.MAX_NR_OF_OBJECTS));
 					return;
 				}
 
@@ -204,14 +201,15 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 
 	private void getData(List<Long> groupIds, List<Long> objectIds, AsyncCallback<ServerResult<String>> callback)
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		switch (experimentType)
 		{
 			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
+				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, groupIds, objectIds, true, callback);
 				break;
 
 			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
+				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, groupIds, objectIds, true, callback);
 				break;
 		}
 

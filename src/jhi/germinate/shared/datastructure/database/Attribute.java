@@ -44,6 +44,8 @@ public class Attribute extends DatabaseObject
 	public static final String DESCRIPTION  = "attributes.description";
 	public static final String DATA_TYPE    = "attributes.datatype";
 	public static final String TARGET_TABLE = "attributes.target_table";
+	public static final String CREATED_ON   = "attributes.created_on";
+	public static final String UPDATED_ON   = "attributes.updated_on";
 
 	private String name;
 	private String description;
@@ -197,7 +199,7 @@ public class Attribute extends DatabaseObject
 		@Override
 		public void write(Database database, Attribute object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO attributes (" + NAME + ", " + DESCRIPTION + ", " + DATA_TYPE + ", " + DATA_TYPE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO attributes (" + NAME + ", " + DESCRIPTION + ", " + DATA_TYPE + ", " + TARGET_TABLE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?)")
 					.setString(object.getName())
 					.setString(object.getDescription())
 					.setString(object.getDataType())

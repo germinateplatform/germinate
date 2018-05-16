@@ -36,15 +36,6 @@ public interface UserService extends RemoteService
 {
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before.
-		 * <p/>
-		 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder idiom</a>) is
-		 * thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final UserServiceAsync INSTANCE = GWT.create(UserService.class);
@@ -70,6 +61,13 @@ public interface UserService extends RemoteService
 	 */
 	UserAuth login(RequestProperties properties, UserCredentials credentials) throws LoginRegistrationException, DatabaseException;
 
+	/**
+	 * Logs the current user out.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @throws InvalidSessionException    Thrown if the current session is invalid
+	 * @throws LoginRegistrationException Thrown if the logout failed. Check {@link LoginRegistrationException#getReason()} for the reason.
+	 */
 	void logout(RequestProperties properties) throws InvalidSessionException, LoginRegistrationException;
 
 	/**
@@ -92,5 +90,12 @@ public interface UserService extends RemoteService
 	 */
 	List<Institution> getInstitutions() throws DatabaseException;
 
-	void addInstitution(Institution institution) throws DatabaseException;
+	/**
+	 * Adds a new institution to the database.
+	 *
+	 * @param institution The {@link Institution} to add
+	 * @throws DatabaseException             Thrown if the interaction with the database fails
+	 * @throws SystemInReadOnlyModeException Thrown if the system is currently operating in readAll-only mode
+	 */
+	void addInstitution(Institution institution) throws DatabaseException, SystemInReadOnlyModeException;
 }

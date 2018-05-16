@@ -149,7 +149,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 			if (userAuth.isAdmin() || group.getVisibility() || (group.getCreatedBy() != null && Objects.equals(group.getCreatedBy(), properties.getUserId())))
 			{
 				/* If we get here, the user either has permissions to edit the group
-			 	 * or the group is public */
+				 * or the group is public */
 				query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_GROUP_DATA + "(?, ?)", userAuth, null)
 						.setBoolean(includeAttributes)
 						.setLong(groupId);
@@ -193,7 +193,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 
 			bw.newLine();
 
-            /* Write the actual data */
+			/* Write the actual data */
 			GerminateRow row;
 			String cellValue;
 			while ((row = streamer.next()) != null)
@@ -360,7 +360,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 				Long id = it.next().getId();
 				if (ids.contains(id))
 				{
-				/* Remove the ones in question */
+					/* Remove the ones in question */
 					it.remove();
 				}
 			}
@@ -418,5 +418,28 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		return AccessionManager.getMcpd(userAuth, id);
+	}
+
+	@Override
+	public PaginatedServerResult<List<EntityPair>> getEntityPairs(RequestProperties properties, Long id, Pagination pagination) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		return AccessionManager.getEntityPairsForAccession(userAuth, id, pagination);
+	}
+
+	@Override
+	public ServerResult<String> getPDCIStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+
+		try
+		{
+			return new ServerResult<>(null, StatisticsServlet.getStatistics(getThreadLocalRequest(), ViewInitializer.View.PDCI_DISTRIBUTION).getName());
+		}
+		catch (java.io.IOException e)
+		{
+			throw new IOException(e);
+		}
 	}
 }

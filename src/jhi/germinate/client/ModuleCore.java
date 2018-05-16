@@ -67,9 +67,9 @@ public class ModuleCore implements EntryPoint
 			});
 		}
 
-        /* Second, move the other code to a separate method, since the
+		/* Second, move the other code to a separate method, since the
 		 * UncaughtExceptionHandler only works if onModuleLoad() returns
-         * successfully. By doing this, we ensure that all exceptions are caught */
+		 * successfully. By doing this, we ensure that all exceptions are caught */
 		Scheduler.get().scheduleDeferred(this::onModuleLoadForReal);
 	}
 
@@ -101,11 +101,6 @@ public class ModuleCore implements EntryPoint
 		/* Set up the exception handling system */
 		ExceptionHandler.init();
 
-		initContent();
-	}
-
-	private void initContent()
-	{
 		// Take care of page navigation changes
 		History.addValueChangeHandler(new HistoryChangeHandler());
 
@@ -173,16 +168,19 @@ public class ModuleCore implements EntryPoint
 		/* Listen for PageNavigationEvents */
 		GerminateEventBus.BUS.addHandler(PageNavigationEvent.TYPE, new PageNavigationHandler());
 
-        /* Listen for LogoutEvents */
+		/* Listen for LogoutEvents */
 		GerminateEventBus.BUS.addHandler(LogoutEvent.TYPE, new LogoutHandler());
 
-        /* Listen for LoginEvents */
+		/* Listen for LoginEvents */
 		GerminateEventBus.BUS.addHandler(LoginEvent.TYPE, new LoginHandler());
 
-        /* This is the first login attempt when the page is loaded for the first
+		// Listen for DatasetSelectionEvents
+		GerminateEventBus.BUS.addHandler(DatasetSelectionEvent.TYPE, new DatasetSelectionHandler());
+
+		/* This is the first login attempt when the page is loaded for the first
 		 * time or when refresh is pressed. Set up the callback object for first
-         * authentication. Try to log in without user credentials. This will
-         * succeed if the session is valid and fail if it's not */
+		 * authentication. Try to log in without user credentials. This will
+		 * succeed if the session is valid and fail if it's not */
 		UserService.Inst.get().login(Cookie.getRequestProperties(), new UserCredentials("", ""), new AsyncCallback<UserAuth>()
 		{
 			@Override
@@ -199,7 +197,7 @@ public class ModuleCore implements EntryPoint
 							isLoggedIn = false;
 							useAuthentication = false;
 
-                    		/* Remove all cookies, because there might still be cookies from the time the page was not public and then the user might see things that s/he shouldn't */
+							/* Remove all cookies, because there might still be cookies from the time the page was not public and then the user might see things that s/he shouldn't */
 							Cookie.removeAll();
 
 							UserAuth auth = e.getUserAuth();
@@ -208,7 +206,7 @@ public class ModuleCore implements EntryPoint
 							ContentHolder.getInstance().initContent();
 							MarkedItemList.init();
 
-                    		/* Read the URL parameters and save them in the parameter store */
+							/* Read the URL parameters and save them in the parameter store */
 							UrlParameterReader.readUrlParameters();
 
 							updatePage();

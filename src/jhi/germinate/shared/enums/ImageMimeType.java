@@ -48,6 +48,6 @@ public enum ImageMimeType
 	{
 		return Arrays.stream(ImageMimeType.values())
 					 .map(ImageMimeType::name)
-					 .toArray(size -> new String[size]);
+					 .toArray(String[]::new);
 	}
 }

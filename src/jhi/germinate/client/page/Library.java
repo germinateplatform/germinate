@@ -45,8 +45,10 @@ public enum Library
 	LEAFLET_SYNC("./js/leaflet/leaflet-sync.js"),
 	LEAFLET_GEODESIC("./js/leaflet/leaflet-geodesic.js"),
 
+	HUTTON_BANNER("./js/hutton-banner.js", "./css/hutton-banner.css"),
 	GOOGLE_CHARTS(ChartPackage.GEOCHART.name()),
 	HTML_2_CANVAS("./js/html2canvas.js"),
+	ZXCVBN("./js/zxcvbn.js"),
 	D3_V3("./js/d3/d3.v3.min.js"),
 	D3_TOPOJSON("./js/d3/d3-topojson.js"),
 	D3_SAVE_AS("./js/d3/d3-save-as-png.js"),

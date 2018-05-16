@@ -35,6 +35,8 @@ public class Trialseries extends DatabaseObject
 
 	public static final String ID         = "trialseries.id";
 	public static final String SERIESNAME = "trialseries.seriesname";
+	public static final String CREATED_ON = "trialseries.created_on";
+	public static final String UPDATED_ON = "trialseries.updated_on";
 
 	private String name;
 	private Long   createdOn;

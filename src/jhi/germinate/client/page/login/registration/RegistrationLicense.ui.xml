@@ -21,6 +21,7 @@
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
 
 	<ui:style>
@@ -39,7 +40,7 @@
 			<g:HTML addStyleNames="{style.height}" ui:field="license"/>
 		</b:Well>
 		<b:Button addStyleNames="{style.margin}" text="{msg.registrationDisclaimerFull}" visible="false" ui:field="fullLicenseButton"/>
-		<b:FormGroup>
+		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formAccept" text="{msg.registrationDisclaimer}"/>
 			<t:ToggleSwitch b:id="formAccept" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="acceptToggle"/>
 		</b:FormGroup>

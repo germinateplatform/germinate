@@ -26,6 +26,7 @@ import java.util.stream.*;
 import jhi.flapjack.io.binning.*;
 import jhi.germinate.client.service.AlleleFrequencyService.*;
 import jhi.germinate.server.config.*;
+import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -109,20 +110,22 @@ public class FlapjackUtils
 	 * @return The created file
 	 * @throws IOException Thrown if the file interaction fails
 	 */
-	public static File writeTemporaryMapFile(File filename, GerminateTableStreamer mapData, Collection<String> keptMarkers, Collection<String> deletedMarkers) throws IOException, DatabaseException
+	public static File writeTemporaryMapFile(File filename, DefaultStreamer mapData, Collection<String> keptMarkers, Collection<String> deletedMarkers) throws IOException, DatabaseException
 	{
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")))
 		{
 			bw.write("# fjFile = MAP");
 			bw.newLine();
 
-			for (GerminateRow row; (row = mapData.next()) != null; )
+			boolean acceptAll = keptMarkers == null;
+			for (DatabaseResult row; (row = mapData.next()) != null; )
 			{
-				String markerName = row.get(Marker.MARKER_NAME);
-				String chromosome = row.get(MapDefinition.CHROMOSOME);
-				String definitionStart = row.get(MapDefinition.DEFINITION_START);
+				String markerName = row.getString(Marker.MARKER_NAME);
+				String chromosome = row.getString(MapDefinition.CHROMOSOME);
+				String definitionStart = row.getString(MapDefinition.DEFINITION_START);
 
-				if (keptMarkers.contains(markerName))
+				// TODO: Add this back in once the HDF5 format supports filtering
+				if (acceptAll || keptMarkers.contains(markerName))
 				{
 					if (StringUtils.isEmpty(chromosome))
 						chromosome = "";
@@ -145,46 +148,6 @@ public class FlapjackUtils
 	}
 
 	/**
-	 * Writes the given map data to a file
-	 *
-	 * @param mapData        The map data
-	 * @param deletedMarkers Optional set of markers to ignore
-	 * @throws IOException Thrown if the file interaction fails
-	 */
-	public static void writeTemporaryMapFile(File filename, GerminateTable mapData, Collection<String> keptMarkers, Collection<String> deletedMarkers) throws IOException
-	{
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")))
-		{
-			bw.write("# fjFile = MAP");
-			bw.newLine();
-
-			for (GerminateRow row : mapData)
-			{
-				String markerName = row.get(Marker.MARKER_NAME);
-				String chromosome = row.get(MapDefinition.CHROMOSOME);
-				String definitionStart = row.get(MapDefinition.DEFINITION_START);
-
-				if (keptMarkers.contains(markerName))
-				{
-					if (StringUtils.isEmpty(chromosome))
-						chromosome = "";
-					if (StringUtils.isEmpty(definitionStart))
-						definitionStart = "0";
-
-					bw.write(markerName + "\t");
-					bw.write(chromosome + "\t");
-					bw.write(definitionStart);
-					bw.newLine();
-				}
-				else if (deletedMarkers != null)
-				{
-					deletedMarkers.add(markerName);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Runs flapjack to create a new project file
 	 *
 	 * @param params The {@link FlapjackParams}
@@ -200,7 +163,9 @@ public class FlapjackUtils
 //				File map = new File(params.getParam(FlapjackParams.Param.map));
 //				File genotypes = new File(params.getParam(FlapjackParams.Param.genotypes));
 //				FlapjackFile project = new FlapjackFile(params.getParam(FlapjackParams.Param.project));
-//				CreateProject cp = new CreateProject(map, genotypes, null, null, project, true);
+//				CreateProjectSettings cps = new CreateProjectSettings(genotypes, map, null, null, project, null);
+//				DataImportSettings dis = new DataImportSettings();
+//				CreateProject cp = new CreateProject(cps, dis);
 //
 //				return handleOutput(cp.doProjectCreation());
 //

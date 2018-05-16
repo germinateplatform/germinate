@@ -37,6 +37,8 @@ public class GroupType extends DatabaseObject
 	public static final String ID           = "grouptypes.id";
 	public static final String DESCRIPTION  = "grouptypes.description";
 	public static final String TARGET_TABLE = "grouptypes.target_table";
+	public static final String CREATED_ON   = "grouptypes.created_on";
+	public static final String UPDATED_ON   = "grouptypes.updated_on";
 
 	private String                 description;
 	private GerminateDatabaseTable targetTable;

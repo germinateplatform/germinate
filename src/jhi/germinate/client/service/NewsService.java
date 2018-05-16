@@ -36,15 +36,6 @@ public interface NewsService extends RemoteService
 {
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before.
-		 * <p/>
-		 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder idiom</a>) is
-		 * thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final NewsServiceAsync INSTANCE = GWT.create(NewsService.class);

@@ -24,7 +24,6 @@ import java.util.stream.*;
 
 import javax.servlet.annotation.*;
 
-import jhi.flapjack.io.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
@@ -108,10 +107,10 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		if (userAuth != null)
 			details = GatekeeperUserManager.getByIdWithPasswordForSystem(null, userAuth.getId());
 
-        /*
+		/*
 		 * If login is required, but the given user id is either invalid or
-         * there is no password set, fail
-         */
+		 * there is no password set, fail
+		 */
 		if (isPrivate && (details == null || StringUtils.isEmpty(details.getPassword())))
 			return new ServerResult<>(null, null);
 
@@ -119,8 +118,8 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		/*
 		 * We restrict the list of visible datasets, if login is required AND
-         * the user isn't an admin
-         */
+		 * the user isn't an admin
+		 */
 		if (isPrivate)
 		{
 			/* Admins can see everything */
@@ -130,8 +129,8 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 			}
 			/*
 			 * Regular users can see public datasets and private ones they
-             * created themselves
-             */
+			 * created themselves
+			 */
 			else
 			{
 				formatted = String.format(QUERY_DATASET_STATS, DatasetManager.BITS_PRIVATE_REGULAR);
@@ -224,62 +223,10 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	@Override
 	public PaginatedServerResult<List<Dataset>> getForMarker(RequestProperties properties, Pagination pagination, Long markerId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidArgumentException
 	{
-		if (pagination == null)
-			pagination = Pagination.getDefault();
-
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		List<Dataset> availableDatasets = DatasetManager.getForUser(userAuth).getServerResult();
-
-		Marker m = null;
-
-		MarkerManager manager = new MarkerManager();
-
-		/* Iterate over the available datasets */
-		for (Iterator<Dataset> it = availableDatasets.iterator(); it.hasNext(); )
-		{
-			Dataset d = it.next();
-
-			/* Check if the dataset comes from a source hdf5 file and if it's a genotype file */
-			if (!StringUtils.isEmpty(d.getSourceFile()) && d.getSourceFile().endsWith(".hdf5") && d.getExperiment().getType() == ExperimentType.genotype)
-			{
-				try
-				{
-					/* Get the marker information */
-					if (m == null)
-						m = manager.getById(userAuth, markerId).getServerResult();
-
-					/* Create a list with just one element (the marker name) */
-					List<String> markers = new ArrayList<>();
-					markers.add(m.getName());
-
-					/* Get the genotype resource file (hdf5) */
-					File file = getFile(FileLocation.data, null, ReferenceFolder.genotype, d.getSourceFile());
-
-					/* Check if the marker is part of this dataset */
-					boolean contains = Hdf5Utils.retainMarkersFrom(file, markers)
-												.contains(m.getName());
-
-					/* If not, remove it */
-					if (!contains)
-						it.remove();
-				}
-				catch (InsufficientPermissionsException e)
-				{
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				it.remove();
-			}
-		}
-
-		List<Long> ids = DatabaseObject.getIds(availableDatasets);
-
-		/* Get the data based on the dataset ids of the datasets containing the marker */
-		return DatasetManager.getByIdsPaginated(userAuth, ids, pagination);
+		return DatasetManager.getAllForMarkerId(userAuth, markerId, pagination);
 	}
 
 	@Override
@@ -311,9 +258,26 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	}
 
 	@Override
-	public String getJson()
+	public ServerResult<Boolean> trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException
 	{
-		return "{  \"creator\": [\"Creator1\", \"Creator2\"],  \"subject\": [\"Subject1\", \"Subject2\"],  \"description\": [\"Description1\", \"Description2\"],  \"publisher\": [\"Publisher1\", \"Publisher2\"],  \"contributor\": [\"Contributor1\", \"Contributor2\"],  \"date\": [\"2017-01-01\", \"2017-01-02\"],  \"type\": [\"Type1\", \"Type2\"],  \"format\": [\"Format1\", \"Format2\"],  \"identifier\": [\"identifier1\", \"identifier2\"],  \"source\": [\"source1\", \"source2\"],  \"language\": [\"English\", \"German\"],  \"relation\": [\"relation1\", \"relation2\"],  \"coverage\": [\"coverage1\", \"coverage2\"],  \"rights\": [\"rights1\", \"rights2\"] }";
+		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED) && !PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
+		{
+			boolean worked = true;
+			for (Long dataset : datasetIds)
+				worked |= DatasetManager.addTracking(userAuth, dataset, user);
+
+			return new ServerResult<>(worked);
+		}
+		else
+		{
+			return new ServerResult<>(false);
+		}
 	}
 
 	private static class DatasetStats

@@ -145,11 +145,14 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			PropertyReader.setBoolean(settings.googleAnalyticsEnabled.getServerProperty(), settings.googleAnalyticsEnabled.getValue());
 			PropertyReader.set(settings.googleAnalyticsTrackingId.getServerProperty(), settings.googleAnalyticsTrackingId.getValue());
 
+			PropertyReader.setBoolean(settings.downloadTrackingEnabled.getServerProperty(), settings.downloadTrackingEnabled.getValue());
+
 			PropertyReader.setBoolean(settings.socialShowFacebook.getServerProperty(), settings.socialShowFacebook.getValue());
 			PropertyReader.setBoolean(settings.socialShowTwitter.getServerProperty(), settings.socialShowTwitter.getValue());
 			PropertyReader.setBoolean(settings.socialShowGooglePlus.getServerProperty(), settings.socialShowGooglePlus.getValue());
 
 			PropertyReader.setBoolean(settings.hideIdColumn.getServerProperty(), settings.hideIdColumn.getValue());
+			PropertyReader.setBoolean(settings.pdciEnabled.getServerProperty(), settings.pdciEnabled.getValue());
 			PropertyReader.setBoolean(settings.serverLoggingEnabled.getServerProperty(), settings.serverLoggingEnabled.getValue());
 			PropertyReader.setBoolean(settings.debug.getServerProperty(), settings.debug.getValue());
 			PropertyReader.setBoolean(settings.isReadOnlyMode.getServerProperty(), settings.isReadOnlyMode.getValue());
@@ -170,6 +173,8 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			{
 				throw new IOException(e);
 			}
+
+			ApplicationListener.togglePdciEnabled();
 		}
 		catch (NullPointerException | NumberFormatException e)
 		{
@@ -200,12 +205,14 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		settings.socialShowTwitter = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER));
 		settings.socialShowGooglePlus = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS));
 		settings.hideIdColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDE_ID_COLUMNS, PropertyReader.getBoolean(ServerProperty.GERMINATE_HIDE_ID_COLUMNS));
+		settings.pdciEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_PDCI_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED));
 		settings.isReadOnlyMode = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_IS_READ_ONLY, PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY));
 		settings.templateContactEmail = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS));
 		settings.templateLogoContainsLink = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK));
 		settings.galleryImagesPerPage = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE, PropertyReader.getInteger(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE));
 		settings.templateShowParallaxBanner = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER));
 		settings.templateTitle = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TITLE, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TITLE));
+		settings.downloadTrackingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED));
 
 		settings.supportsAdvancedGeography = checkDatabaseVersion();
 

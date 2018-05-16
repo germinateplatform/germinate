@@ -17,7 +17,10 @@
 
 package jhi.germinate.util.importer.reader;
 
+import com.eclipsesource.json.*;
+
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.*;
 
 import jhi.germinate.shared.*;
 
@@ -61,5 +64,27 @@ public interface IExcelReader
 				return value;
 			}
 		}
+	}
+
+	static Double getCellValueAsDouble(Workbook wb, Row row, int column)
+	{
+		try
+		{
+			return Double.parseDouble(getCellValue(wb, row, column));
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+	}
+
+	static JsonValue getJson(XSSFWorkbook wb, XSSFRow row, int i)
+	{
+		String value = IExcelReader.getCellValue(wb, row, i);
+
+		if (StringUtils.isEmpty(value))
+			return null;
+		else
+			return Json.array(value);
 	}
 }

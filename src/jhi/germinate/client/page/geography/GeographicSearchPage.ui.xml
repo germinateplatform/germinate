@@ -34,8 +34,10 @@
 		<b:PageHeader text="{msg.geographicSearchTitle}"/>
 
 		<b:NavTabs>
-			<g8:MdiTabListItem active="true" dataTarget="#pointSearch" mdi="{MDI_CROSSHAIRS_GPS} {MDI_LG}" text="{msg.geographicSearchTabPoint}" ui:field="pointTab"/>
-			<g8:MdiTabListItem dataTarget="#polygonSearch" mdi="{MDI_VECTOR_POLYGON} {MDI_LG}" text="{msg.geographicSearchTabPolygon}" ui:field="polygonTab"/>
+			<g8:MdiTabListItem active="true" dataTarget="#pointSearch" mdi="{MDI_CROSSHAIRS_GPS} {MDI_LG}" text="{msg.geographicSearchTabPoint}"
+							   ui:field="pointTab"/>
+			<g8:MdiTabListItem dataTarget="#polygonSearch" mdi="{MDI_VECTOR_POLYGON} {MDI_LG}" text="{msg.geographicSearchTabPolygon}"
+							   ui:field="polygonTab"/>
 		</b:NavTabs>
 		<b:TabContent>
 			<b:TabPane active="true" b:id="pointSearch" ui:field="pointTabContent">

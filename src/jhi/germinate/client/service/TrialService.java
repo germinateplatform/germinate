@@ -38,13 +38,6 @@ public interface TrialService extends RemoteService
 {
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final TrialServiceAsync INSTANCE = GWT.create(TrialService.class);
@@ -55,21 +48,6 @@ public interface TrialService extends RemoteService
 			return InstanceHolder.INSTANCE;
 		}
 	}
-
-	/**
-	 * Exports the data for a list of {@link Dataset}s, two {@link Phenotype}s and a {@link Group}.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param datasetIds The selected dataset ids
-	 * @param firstId    The id of the first phenotype
-	 * @param secondId   The id of the second phenotype
-	 * @return The data for a list of {@link Dataset}s, two {@link Phenotype}s and a {@link Group}
-	 * @throws InvalidSessionException          Thrown if the current session is invalid
-	 * @throws DatabaseException                Thrown if the database interaction fails
-	 * @throws IOException                      Thrown if the file creation fails
-	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to access the group
-	 */
-	ServerResult<String> exportPhenotypeScatter(RequestProperties properties, List<Long> datasetIds, Long firstId, Long secondId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InsufficientPermissionsException;
 
 	/**
 	 * Returns the list of years, the table data and the mapping between {@link TrialsRow.TrialsAttribute} and the associated d3 chart file.

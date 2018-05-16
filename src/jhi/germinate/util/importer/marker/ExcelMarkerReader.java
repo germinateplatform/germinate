@@ -22,6 +22,7 @@ import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
@@ -32,23 +33,26 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
 {
+	private static final String CHROMOSOME_UNKNOWN = "UNK";
+
 	private XSSFSheet dataSheet;
 
-	private int rowCount   = 0;
-	private int currentRow = 0;
-	private XSSFRow      row;
+	private int colCount   = 0;
+	private int currentCol = 0;
 	private XSSFWorkbook wb;
+	private XSSFRow      chromosomes;
+	private XSSFRow      positions;
+	private XSSFRow      markerNames;
 
 	@Override
 	public boolean hasNext() throws IOException
 	{
-		return ++currentRow <= rowCount;
+		return ++currentCol <= colCount;
 	}
 
 	@Override
 	public MapDefinition next() throws IOException
 	{
-		row = dataSheet.getRow(currentRow);
 		return parse();
 	}
 
@@ -59,7 +63,11 @@ public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
 
 		dataSheet = wb.getSheet("DATA");
 
-		rowCount = dataSheet.getLastRowNum();
+		chromosomes = dataSheet.getRow(0);
+		positions = dataSheet.getRow(1);
+		markerNames = dataSheet.getRow(2);
+
+		colCount = markerNames.getPhysicalNumberOfCells();
 	}
 
 	@Override
@@ -71,22 +79,19 @@ public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
 
 	private MapDefinition parse()
 	{
-		return new MapDefinition()
-				.setMarker(new Marker().setName(IExcelReader.getCellValue(wb, row, 0)).setType(new MarkerType().setDescription(IExcelReader.getCellValue(wb, row, 2))))
-				.setChromosome(IExcelReader.getCellValue(wb, row, 1))
-				.setDefinitionStart(getDouble(IExcelReader.getCellValue(wb, row, 3)))
-				.setDefinitionEnd(getDouble(IExcelReader.getCellValue(wb, row, 4)));
-	}
+		String chromosome = IExcelReader.getCellValue(wb, chromosomes, currentCol);
+		String position = IExcelReader.getCellValue(wb, positions, currentCol);
 
-	private Double getDouble(String value)
-	{
-		try
-		{
-			return Double.parseDouble(value);
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
+		if (StringUtils.isEmpty(chromosome))
+			chromosome = CHROMOSOME_UNKNOWN;
+		if (StringUtils.isEmpty(position))
+			position = currentCol + "";
+
+		return new MapDefinition()
+				.setChromosome(chromosome)
+				.setDefinitionStart(position)
+				.setDefinitionEnd(position)
+				.setMarker(new Marker()
+						.setName(IExcelReader.getCellValue(wb, markerNames, currentCol)));
 	}
 }

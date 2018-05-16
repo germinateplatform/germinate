@@ -42,13 +42,6 @@ public interface ImageService extends RemoteService
 
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final ImageServiceAsync INSTANCE = GWT.create(ImageService.class);
@@ -81,5 +74,15 @@ public interface ImageService extends RemoteService
 	 */
 	ServerResult<List<ImageType>> getTypes(RequestProperties properties) throws InvalidSessionException, DatabaseException;
 
+	/**
+	 * Returns all {@link Image}s of the given {@link ImageType}.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param imageType  The {@link ImageType}
+	 * @param pagination The {@link Pagination}
+	 * @return All {@link Image}s of the given {@link ImageType}.
+	 * @throws InvalidSessionException Thrown if the session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
 	PaginatedServerResult<List<Image>> getForType(RequestProperties properties, ImageType imageType, Pagination pagination) throws InvalidSessionException, DatabaseException;
 }

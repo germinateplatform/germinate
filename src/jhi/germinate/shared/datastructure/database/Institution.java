@@ -49,6 +49,8 @@ public class Institution extends DatabaseObject
 	public static final String PHONE      = "institutions.phone";
 	public static final String EMAIL      = "institutions.email";
 	public static final String ADDRESS    = "institutions.address";
+	public static final String CREATED_ON = "institutions.created_on";
+	public static final String UPDATED_ON = "institutions.updated_on";
 
 	private String  code;
 	private String  name;
@@ -277,7 +279,7 @@ public class Institution extends DatabaseObject
 					.setString(object.getCode())
 					.setString(object.getName())
 					.setString(object.getAcronym())
-					.setLong(object.getCountry() != null ? object.getCountry().getId() : null)
+					.setLong((object.getCountry() != null && object.getCountry().getId() > 0) ? object.getCountry().getId() : null)
 					.setString(object.getContact())
 					.setString(object.getPhone())
 					.setString(object.getAddress());

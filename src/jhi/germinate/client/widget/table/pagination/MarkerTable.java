@@ -164,7 +164,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 			}
 		};
 		column.setDataStoreName(MarkerType.DESCRIPTION);
-		addColumn(column, Text.LANG.markersColumnFeatureDescription(), sortingEnabled);
+		addColumn(column, Text.LANG.markersColumnTypeDescription(), sortingEnabled);
 	}
 
 	@Override

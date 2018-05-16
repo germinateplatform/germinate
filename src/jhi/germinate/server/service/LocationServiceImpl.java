@@ -33,7 +33,6 @@ import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.enums.LocationType;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
 import jhi.germinate.shared.search.*;
@@ -202,7 +201,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		String formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
 		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
 				.setStrings(ids)
 				.getStreamer();
@@ -325,13 +324,5 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 		}
 
 		return new ServerResult<>(sqlDebug, file.getName());
-	}
-
-	@Override
-	public ServerResult<List<Country>> getCountryValues(RequestProperties properties, List<Long> datasetIds, ExperimentType type, Long phenotypeId) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return LocationManager.getAllForPhenotype(userAuth, datasetIds, type, phenotypeId);
 	}
 }

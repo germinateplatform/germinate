@@ -82,6 +82,32 @@ public final class DatabaseResult
 	}
 
 	/**
+	 * Retrieves whether the cursor is before the first row in
+	 * this <code>ResultSet</code> object.
+	 * <p>
+	 * <strong>Note:</strong>Support for the <code>isBeforeFirst</code> method
+	 * is optional for <code>ResultSet</code>s with a result
+	 * set type of <code>TYPE_FORWARD_ONLY</code>
+	 *
+	 * @return <code>true</code> if the cursor is before the first row;
+	 * <code>false</code> if the cursor is at any other position or the
+	 * result set contains no rows
+	 * @throws DatabaseException Thrown if {@link ResultSet#isBeforeFirst()} ()} fails
+	 */
+	public boolean isBeforeFirst() throws DatabaseException
+	{
+		try
+		{
+			return this.rs.isBeforeFirst();
+		}
+		catch (SQLException e)
+		{
+			database.close();
+			throw new DatabaseException(e);
+		}
+	}
+
+	/**
 	 * Retrieves the value of the designated column in the current row of this {@link DatabaseResult} object as an int in the Java programming
 	 * language.
 	 *

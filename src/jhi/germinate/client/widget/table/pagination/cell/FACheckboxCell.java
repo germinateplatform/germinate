@@ -31,7 +31,7 @@ import jhi.germinate.shared.datastructure.database.*;
 
 /**
  * FACheckboxCell extends AbstractEditableCell. The idea is that it's used as a table header that shows a checkbox representing the state of the table
- * items. It can be clicked to change the table item state. It will use a FontAwesome style icon to represent the state.
+ * items. It can be clicked to change the table item state. It will use a Material Design Icon style icon to represent the state.
  *
  * @author Sebastian Raubach
  */

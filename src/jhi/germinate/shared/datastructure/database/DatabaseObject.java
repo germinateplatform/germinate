@@ -34,9 +34,7 @@ public abstract class DatabaseObject implements Serializable
 {
 	private static final long serialVersionUID = 1226813007200682358L;
 
-	public static final String COUNT      = "count";
-	public static final String CREATED_ON = "created_on";
-	public static final String UPDATED_ON = "updated_on";
+	public static final String COUNT = "count";
 
 	protected Long                id;
 	protected Map<String, String> extra;
@@ -76,15 +74,6 @@ public abstract class DatabaseObject implements Serializable
 			extra = new HashMap<>();
 
 		extra.put(key, value);
-	}
-
-	@GwtIncompatible
-	protected static String getDoubleAsString(Double value)
-	{
-		if (value == null)
-			return null;
-		else
-			return fmt(value);
 	}
 
 	@GwtIncompatible
@@ -173,15 +162,6 @@ public abstract class DatabaseObject implements Serializable
 						 .map(DatabaseObject::getGroupSpecificId)
 						 .collect(Collectors.toList());
 		}
-
-		return ids;
-	}
-
-	public static List<String> getIdsAsStrings(List<? extends DatabaseObject> objects)
-	{
-		List<String> ids = new ArrayList<>();
-
-		objects.forEach(o -> ids.add(Long.toString(o.getId())));
 
 		return ids;
 	}

@@ -100,9 +100,7 @@ public class PhenotypeImporter extends DataImporter<Phenotype>
 	 */
 	private void createOrGetUnit(Phenotype entry) throws DatabaseException
 	{
-		String name = entry.getUnit().getName();
-
-		if (StringUtils.isEmpty(name))
+		if (entry.getUnit() == null || StringUtils.isEmpty(entry.getUnit().getName()))
 			return;
 
 		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM units WHERE unit_name = ? AND unit_abbreviation = ?");

@@ -62,7 +62,8 @@
 			<g:FlowPanel addStyleNames="{PULL_LEFT}">
 				<g:FlowPanel addStyleNames="{TABLE_CONTROL_PANEL_TOP} {BTN_GROUP}">
 					<b:ButtonGroup ui:field="columnSelectorButton">
-						<b:Button addStyleNames="{MDI} {MDI_VIEW_COLUMN} {MDI_LG}" dataToggle="DROPDOWN" title="{msg.columnSelectorButtonTitle}" toggleCaret="true" type="DEFAULT"/>
+						<b:Button addStyleNames="{MDI} {MDI_VIEW_COLUMN} {MDI_LG}" dataToggle="DROPDOWN" title="{msg.columnSelectorButtonTitle}"
+								  toggleCaret="true" type="DEFAULT"/>
 						<g8:NonAutoCloseDropDownMenu ui:field="columnSelectorMenu"/>
 					</b:ButtonGroup>
 					<b:ButtonGroup addStyleNames="{style.inlineBlock}" visible="false" ui:field="filterPlaceholder">

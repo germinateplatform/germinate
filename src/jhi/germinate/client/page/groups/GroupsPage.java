@@ -180,7 +180,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					public SafeHtml getValue(Group row)
 					{
 						if (canEdit(row))
-							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_DELETE, Text.LANG.generalDelete(), UriUtils.fromString(""), "");
+							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.combine(Style.MDI_DELETE, Emphasis.DANGER.getCssName()), Text.LANG.generalDelete(), UriUtils.fromString(""), "");
 						else
 							return SimpleHtmlTemplate.INSTANCE.empty();
 					}
@@ -263,8 +263,9 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 	private void updateIsPublic()
 	{
-		isPublic.setEnabled(canEdit(group));
+		isPublic.setEnabled(true);
 		isPublic.setValue(group != null && group.getVisibility());
+		isPublic.setEnabled(canEdit(group));
 	}
 
 	private void updateGroupMembers()
@@ -441,7 +442,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				}
 				uploadAlertDialog.open();
 			});
-			uploadGroupMember.addStyleName(Style.mdi(Style.MDI_UPLOAD));
+			uploadGroupMember.addStyleName(Style.mdiLg(Style.MDI_UPLOAD));
 
 			buttonGroup.add(deleteGroupMember);
 			buttonGroup.add(uploadGroupMember);

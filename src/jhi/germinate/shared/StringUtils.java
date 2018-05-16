@@ -18,6 +18,7 @@
 package jhi.germinate.shared;
 
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * {@link StringUtils} contains methods to manipulate/check {@link String}s.
@@ -269,5 +270,21 @@ public class StringUtils
 			return "";
 		else
 			return input;
+	}
+
+	/**
+	 * Generates a SQL placeholder String of the form: "?,?,?,?" for the given size.
+	 *
+	 * @param size The number of placeholders to generate
+	 * @return The generated String
+	 */
+	public static String generateSqlPlaceholderString(int size)
+	{
+		if (size < 1)
+			return "";
+
+		return IntStream.range(0, size)
+						.mapToObj(value -> "?")
+						.collect(Collectors.joining(","));
 	}
 }

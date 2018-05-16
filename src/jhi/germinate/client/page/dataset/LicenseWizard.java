@@ -22,7 +22,9 @@ import com.google.gwt.i18n.client.*;
 import java.util.*;
 import java.util.stream.*;
 
+import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.datastructure.database.*;
 
@@ -31,14 +33,21 @@ import jhi.germinate.shared.datastructure.database.*;
  */
 public class LicenseWizard extends ModalWizard
 {
-	private List<License>           licenses = new ArrayList<>();
-	private List<LicenseWizardPage> pages    = new ArrayList<>();
-	private NavigationStatus        status   = new NavigationStatus(false, true, null);
+	private List<License>         licenses = new ArrayList<>();
+	private List<ModalWizardPage> pages    = new ArrayList<>();
+	private NavigationStatus      status   = new NavigationStatus(false, true, null);
 
 	public LicenseWizard(Set<License> l)
 	{
 		setTitle(Text.LANG.licenseWizardTitle());
-		LicenseWizardPage page;
+		ModalWizardPage page;
+
+		if (!ModuleCore.getUseAuthentication() && GerminateSettingsHolder.get().downloadTrackingEnabled.getValue())
+		{
+			page = new UserIdentificationWizardPage(decision -> updateControls());
+			pages.add(page);
+			add(page);
+		}
 
 		for (License license : l)
 		{
@@ -59,7 +68,7 @@ public class LicenseWizard extends ModalWizard
 	{
 		int position = getCurrentPage();
 
-		status.setCanGoForward(pages.get(position).getDecision() != LicenseWizardPage.Decision.UNKNOWN);
+		status.setCanGoForward(pages.get(position).getDecision() != ModalWizardPage.Decision.UNKNOWN);
 
 		return status;
 	}

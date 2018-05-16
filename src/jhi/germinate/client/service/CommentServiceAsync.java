@@ -63,5 +63,14 @@ public interface CommentServiceAsync
 	 */
 	void disable(RequestProperties properties, Comment comment, AsyncCallback<Void> callback);
 
+	/**
+	 * Returns a paginated list of {@link Comment}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param callback   The {@link AsyncCallback}
+	 * @return The {@link Request}
+	 */
 	Request getForFilter(RequestProperties properties, PartialSearchQuery filter, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Comment>>> callback);
 }

@@ -17,6 +17,7 @@
 
 package jhi.germinate.client.widget.element;
 
+import com.google.gwt.core.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.rpc.*;
@@ -37,14 +38,17 @@ import jhi.germinate.client.page.dataset.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -58,32 +62,27 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	private ExperimentType  experimentType  = null;
 	private boolean         singleSelection = false;
 
-	private FlowPanel   tablePanel;
-	private SimplePanel mapPanel;
-	private FlowPanel   buttonPanel;
-
+	private FlowPanel    tablePanel;
+	private SimplePanel  mapPanel;
+	private FlowPanel    buttonPanel;
 	private DatasetTable table;
+	private PageHeader   header;
+	private String       headerText;
+	private SafeHtml     text                   = null;
+	private List<Long>   urlParameterDatasetIds = null;
 
-	private SafeHtml headerText = null;
-
-	private String titleText;
-
-	private boolean internal = true;
-
+	private boolean internal             = true;
 	private boolean showLoadingIndicator = false;
-
-	private boolean linkToExportPage = false;
-
-	private boolean showDownload = false;
-
-	private boolean showMap = false;
+	private boolean linkToExportPage     = false;
+	private boolean showDownload         = false;
+	private boolean showMap              = false;
 
 	private ReferenceFolder         referenceFolder  = null;
 	private SimpleCallback<Dataset> downloadCallback = null;
 
-	private DatasetTable.SelectionMode selectionMode = null;
-	private Button continueButton;
-	private boolean alreadyAskedUserAboutLicenses = false;
+	private DatasetTable.SelectionMode selectionMode                 = null;
+	private Button                     continueButton;
+	private boolean                    alreadyAskedUserAboutLicenses = false;
 
 	/**
 	 * Creates a new dataset table. This table will either show the internal or external datasets based on the selection ({@link
@@ -121,8 +120,17 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		panel.add(buttonPanel);
 		panel.add(mapPanel);
 
-		if (!StringUtils.isEmpty(titleText))
-			tablePanel.add(new Heading(HeadingSize.H3, titleText));
+		if (!StringUtils.isEmpty(headerText))
+		{
+			PageHeader header = new PageHeader();
+			header.setText(headerText);
+			tablePanel.add(header);
+		}
+
+		if (text != null)
+		{
+			tablePanel.add(new HTML(text));
+		}
 
 		if (showMap)
 		{
@@ -156,14 +164,23 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	 */
 	private void createMap(List<Dataset> datasets)
 	{
-		final Map<Location, Dataset> mapping = new HashMap<>();
+		final Map<Location, List<Dataset>> mapping = new HashMap<>();
 
 		for (Dataset dataset : datasets)
 		{
 			Location location = dataset.getLocation();
 
 			if (location != null)
-				mapping.put(location, dataset);
+			{
+				List<Dataset> mappedDatasets = mapping.get(location);
+
+				if (mappedDatasets == null)
+					mappedDatasets = new ArrayList<>();
+
+				mappedDatasets.add(dataset);
+
+				mapping.put(location, mappedDatasets);
+			}
 		}
 
 		if (mapping.size() < 1)
@@ -184,138 +201,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		};
 	}
 
-	/**
-	 * Creates the actual table from the {@link List} of {@link Dataset}s
-	 */
-	private void createTable()
-	{
-		/* Set an initial value */
-		selectionMode = DatabaseObjectPaginationTable.SelectionMode.NONE;
-
-		if (datasetCallback != null)
-		{
-			/* If the continue button is available -> multi */
-			if (datasetCallback.isContinueButtonAvailable())
-				selectionMode = DatasetTable.SelectionMode.MULTI;
-			/* If not -> none */
-			else
-				selectionMode = DatasetTable.SelectionMode.NONE;
-		}
-
-		/* If it wasn't none before, we can restrict it to single if required */
-		if (selectionMode != DatabaseObjectPaginationTable.SelectionMode.NONE && singleSelection)
-			selectionMode = DatasetTable.SelectionMode.SINGLE;
-
-		table = new DatasetTable(selectionMode, true, linkToExportPage)
-		{
-			@Override
-			protected boolean supportsFiltering()
-			{
-				return true;
-			}
-
-			@Override
-			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
-			{
-				return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, experimentType, internal, pagination, callback);
-			}
-		};
-
-		if (showDownload)
-		{
-			if (downloadCallback != null)
-				table.setShowDownload(showDownload, downloadCallback);
-			else if (referenceFolder != null)
-				table.setShowDownload(showDownload, referenceFolder);
-		}
-
-		tablePanel.add(table);
-	}
-
-	private void addContinueButton()
-	{
-		/* If we have checkboxes, add the "continue" button */
-		if (selectionMode != DatasetTable.SelectionMode.NONE && datasetCallback != null && datasetCallback.isContinueButtonAvailable())
-		{
-			/* Handle "continue" click events */
-			/* Get the selected items *//* Get their ids *//* Save the ids to the parameter store *//* Notify the callback */
-			continueButton = new Button(Text.LANG.generalContinue(), event ->
-			{
-				/* Get the selected items */
-				Set<Dataset> selectedItems = table.getSelection();
-
-				Set<License> licensesToAgreeTo = selectedItems.stream()
-															  .filter(d -> !d.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
-															  .map(Dataset::getLicense)
-															  .collect(Collectors.toCollection(HashSet::new));
-
-				if (!CollectionUtils.isEmpty(licensesToAgreeTo) && !alreadyAskedUserAboutLicenses)
-				{
-					showLicenseAcceptWizard(table, licensesToAgreeTo, new DefaultAsyncCallback<Set<Dataset>>()
-					{
-						@Override
-						protected void onSuccessImpl(Set<Dataset> result)
-						{
-							// Refresh the table
-							table.refreshTable();
-							// Then "hit" continue
-							continueWithDatasets(result);
-						}
-					});
-					return;
-				}
-				else
-				{
-					continueWithDatasets(selectedItems);
-				}
-			});
-			continueButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
-			continueButton.setType(ButtonType.PRIMARY);
-			continueButton.addStyleName(Style.LAYOUT_BUTTON_MARGIN);
-
-			buttonPanel.add(continueButton);
-		}
-	}
-
-	private void continueWithDatasets(Set<Dataset> selectedItems)
-	{
-		/* Get their ids */
-		List<Long> ids = selectedItems.stream()
-									  .map(DatabaseObject::getId)
-									  .collect(Collectors.toList());
-
-		if (ids.size() > 0)
-		{
-					/* Save the ids to the parameter store */
-			switch (experimentType)
-			{
-				case allelefreq:
-					LongListParameterStore.Inst.get().put(Parameter.allelefreqDatasetIds, ids);
-					break;
-				case climate:
-					LongListParameterStore.Inst.get().put(Parameter.climateDatasetIds, ids);
-					break;
-				case compound:
-					LongListParameterStore.Inst.get().put(Parameter.compoundDatasetIds, ids);
-					break;
-				case genotype:
-					LongListParameterStore.Inst.get().put(Parameter.genotypeDatasetIds, ids);
-					break;
-				case trials:
-					LongListParameterStore.Inst.get().put(Parameter.trialsDatasetIds, ids);
-					break;
-			}
-
-					/* Notify the callback */
-			datasetCallback.onContinuePressed();
-		}
-		else
-		{
-			Notification.notify(Notification.Type.WARNING, Text.LANG.notificationDatasetsSelectAtLeastOne());
-		}
-	}
-
-	public static void showLicenseAcceptWizard(DatasetTable table, Set<License> licenses, DefaultAsyncCallback<Set<Dataset>> callback)
+	public static void showLicenseAcceptWizard(DatasetTable table, Set<License> licenses, DefaultAsyncCallback<List<Dataset>> callback)
 	{
 		new LicenseWizard(licenses)
 		{
@@ -328,7 +214,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 				// Get all the currently selected datasets
 				Set<Dataset> datasets = table.getSelection();
 				// Which ones should still be selected?
-				Set<Dataset> toSelect = new HashSet<>();
+				List<Dataset> toSelect = new ArrayList<>();
 
 				// For each of them, check if its license has been accepted
 				for (Dataset d : datasets)
@@ -379,6 +265,187 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	}
 
 	/**
+	 * Creates the actual table from the {@link List} of {@link Dataset}s
+	 */
+	private void createTable()
+	{
+		/* Set an initial value */
+		selectionMode = DatabaseObjectPaginationTable.SelectionMode.NONE;
+
+		if (datasetCallback != null)
+		{
+			/* If the continue button is available -> multi */
+			if (datasetCallback.isContinueButtonAvailable())
+				selectionMode = DatasetTable.SelectionMode.MULTI;
+				/* If not -> none */
+			else
+				selectionMode = DatasetTable.SelectionMode.NONE;
+		}
+
+		/* If it wasn't none before, we can restrict it to single if required */
+		if (selectionMode != DatabaseObjectPaginationTable.SelectionMode.NONE && singleSelection)
+			selectionMode = DatasetTable.SelectionMode.SINGLE;
+
+
+		if (experimentType != null)
+		{
+			switch (experimentType)
+			{
+				case allelefreq:
+					urlParameterDatasetIds = LongListParameterStore.Inst.get().get(Parameter.allelefreqDatasetIds);
+					LongListParameterStore.Inst.get().remove(Parameter.allelefreqDatasetIds);
+					break;
+				case climate:
+					urlParameterDatasetIds = LongListParameterStore.Inst.get().get(Parameter.climateDatasetIds);
+					LongListParameterStore.Inst.get().remove(Parameter.climateDatasetIds);
+					break;
+				case compound:
+					urlParameterDatasetIds = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
+					LongListParameterStore.Inst.get().remove(Parameter.compoundDatasetIds);
+					break;
+				case genotype:
+					urlParameterDatasetIds = LongListParameterStore.Inst.get().get(Parameter.genotypeDatasetIds);
+					LongListParameterStore.Inst.get().remove(Parameter.genotypeDatasetIds);
+					break;
+				case trials:
+					urlParameterDatasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
+					LongListParameterStore.Inst.get().remove(Parameter.trialsDatasetIds);
+					break;
+			}
+		}
+
+		table = new DatasetTable(selectionMode, true, linkToExportPage)
+		{
+			{
+				preventInitialDataLoad = !CollectionUtils.isEmpty(urlParameterDatasetIds);
+			}
+
+			@Override
+			protected boolean supportsFiltering()
+			{
+				return true;
+			}
+
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
+			{
+				return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, experimentType, internal, pagination, callback);
+			}
+		};
+
+		// Pre-filter the table with the dataset ids that have been passed to Germinate in the URL
+		if (!CollectionUtils.isEmpty(urlParameterDatasetIds))
+		{
+			FilterPanel.FilterMapping values = new FilterPanel.FilterMapping();
+			for (Long id : urlParameterDatasetIds)
+				values.put(Dataset.ID, Long.toString(id));
+
+			Scheduler.get().scheduleDeferred(() -> {
+						try
+						{
+							table.forceFilter(values, false);
+						}
+						catch (InvalidArgumentException ex)
+						{
+							ex.printStackTrace();
+						}
+					}
+			);
+		}
+
+		if (showDownload)
+		{
+			if (downloadCallback != null)
+				table.setShowDownload(showDownload, downloadCallback);
+			else if (referenceFolder != null)
+				table.setShowDownload(showDownload, referenceFolder);
+		}
+
+		tablePanel.add(table);
+	}
+
+	private void addContinueButton()
+	{
+		/* If we have checkboxes, add the "continue" button */
+		if (selectionMode != DatasetTable.SelectionMode.NONE && datasetCallback != null && datasetCallback.isContinueButtonAvailable())
+		{
+			/* Handle "continue" click events */
+			/* Get the selected items *//* Get their ids *//* Save the ids to the parameter store *//* Notify the callback */
+			continueButton = new Button(Text.LANG.generalContinue(), event ->
+			{
+				/* Get the selected items */
+				Set<Dataset> selectedItems = table.getSelection();
+
+				Set<License> licensesToAgreeTo = selectedItems.stream()
+															  .filter(d -> d.getLicense() != null && (!ModuleCore.getUseAuthentication() || !d.hasLicenseBeenAccepted(ModuleCore.getUserAuth())))
+															  .map(Dataset::getLicense)
+															  .collect(Collectors.toCollection(HashSet::new));
+
+				if (!CollectionUtils.isEmpty(licensesToAgreeTo) && !alreadyAskedUserAboutLicenses)
+				{
+					showLicenseAcceptWizard(table, licensesToAgreeTo, new DefaultAsyncCallback<List<Dataset>>()
+					{
+						@Override
+						protected void onSuccessImpl(List<Dataset> result)
+						{
+							// Refresh the table
+							table.refreshTable();
+							// Then "hit" continue
+							continueWithDatasets(result);
+						}
+					});
+					return;
+				}
+				else
+				{
+					if (!CollectionUtils.isEmpty(selectedItems))
+						continueWithDatasets(new ArrayList<>(selectedItems));
+				}
+			});
+			continueButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
+			continueButton.setType(ButtonType.PRIMARY);
+			continueButton.addStyleName(Style.LAYOUT_BUTTON_MARGIN);
+
+			buttonPanel.add(continueButton);
+		}
+	}
+
+	private void continueWithDatasets(List<Dataset> selectedItems)
+	{
+		if (!CollectionUtils.isEmpty(selectedItems))
+		{
+			/* Save the ids to the parameter store */
+			switch (experimentType)
+			{
+				case allelefreq:
+					DatasetListParameterStore.Inst.get().put(Parameter.allelefreqDatasets, selectedItems);
+					break;
+				case climate:
+					DatasetListParameterStore.Inst.get().put(Parameter.climateDatasets, selectedItems);
+					break;
+				case compound:
+					DatasetListParameterStore.Inst.get().put(Parameter.compoundDatasets, selectedItems);
+					break;
+				case genotype:
+					DatasetListParameterStore.Inst.get().put(Parameter.genotypeDatasets, selectedItems);
+					break;
+				case trials:
+					DatasetListParameterStore.Inst.get().put(Parameter.trialsDatasets, selectedItems);
+					break;
+			}
+
+			GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(selectedItems));
+
+			/* Notify the callback */
+			datasetCallback.onContinuePressed();
+		}
+		else
+		{
+			Notification.notify(Notification.Type.WARNING, Text.LANG.notificationDatasetsSelectAtLeastOne());
+		}
+	}
+
+	/**
 	 * Gets the html cell value
 	 *
 	 * @param dataset The {@link Dataset}
@@ -404,7 +471,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 
 	public void setTitle(String title)
 	{
-		this.titleText = title;
+		this.headerText = title;
 	}
 
 	/**
@@ -412,14 +479,14 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	 *
 	 * @param headerText The text to display above the dataset table)
 	 */
-	public void setHeaderText(SafeHtml headerText)
+	public void setText(SafeHtml headerText)
 	{
-		this.headerText = headerText;
+		this.text = headerText;
 	}
 
-	public void setHeaderText(String headerText)
+	public void setText(String headerText)
 	{
-		this.setHeaderText(SafeHtmlUtils.fromTrustedString(new Heading(HeadingSize.H3, headerText).toString()));
+		this.setText(SafeHtmlUtils.fromTrustedString(new Heading(HeadingSize.H3, headerText).toString()));
 	}
 
 	public boolean isInternal()
@@ -447,15 +514,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		this.showLoadingIndicator = showLoadingIndicator;
 	}
 
-	public void setShowDownload(boolean showDownload, ReferenceFolder refrenceFolder)
-	{
-		this.showDownload = showDownload;
-		this.referenceFolder = refrenceFolder;
-
-		if (table != null)
-			table.setShowDownload(showDownload, referenceFolder);
-	}
-
 	public void setShowDownload(boolean showDownload, SimpleCallback<Dataset> downloadCallback)
 	{
 		this.showDownload = showDownload;
@@ -480,10 +538,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	@Override
 	protected void setUpContent()
 	{
-		if (headerText != null)
-		{
-			panel.add(new HTML(headerText));
-		}
 		requestData();
 	}
 

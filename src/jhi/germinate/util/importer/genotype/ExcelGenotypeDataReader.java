@@ -22,11 +22,10 @@ import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
 
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
- * {@link ExcelGenotypeDataReader} implements {@link IStreamableReader} and reads and streams one {@link PhenotypeData} object at a time (one cell of
+ * {@link ExcelGenotypeDataReader} implements {@link IStreamableReader} and reads and streams one {@link String}[] object at a time (one row of
  * the data matrix).
  *
  * @author Sebastian Raubach
@@ -37,7 +36,7 @@ public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
 
 	private int rowCount   = 0;
 	private int colCount   = 0;
-	private int currentRow = -1;
+	private int currentRow = 1;
 	private XSSFRow      row;
 	private XSSFWorkbook wb;
 
@@ -62,7 +61,7 @@ public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
 		dataSheet = wb.getSheet("DATA");
 
 		rowCount = dataSheet.getPhysicalNumberOfRows();
-		colCount = dataSheet.getRow(0).getPhysicalNumberOfCells();
+		colCount = dataSheet.getRow(2).getPhysicalNumberOfCells();
 	}
 
 	@Override

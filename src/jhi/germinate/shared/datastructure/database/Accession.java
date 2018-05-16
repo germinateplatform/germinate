@@ -69,6 +69,11 @@ public class Accession extends DatabaseObject
 	public static final String BIOLOGICALSTATUS_ID = "germinatebase.biologicalstatus_id";
 	public static final String COLLSRC_ID          = "germinatebase.collsrc_id";
 	public static final String LOCATION_ID         = "germinatebase.location_id";
+	public static final String ENTITYTYPE_ID       = "germinatebase.entitytype_id";
+	public static final String ENTITYPARENT_ID     = "germinatebase.entityparent_id";
+	public static final String PDCI                = "germinatebase.pdci";
+	public static final String CREATED_ON          = "germinatebase.created_on";
+	public static final String UPDATED_ON          = "germinatebase.updated_on";
 
 	public static final String SYNONYMS = "synonyms";
 
@@ -100,6 +105,9 @@ public class Accession extends DatabaseObject
 	private Location         location;
 	private MlsStatus        mlsStatus;
 	private String           synonyms;
+	private EntityType       entityType;
+	private Long             entityParentId;
+	private Double           pdci;
 	private Long             createdOn;
 	private Long             updatedOn;
 
@@ -375,6 +383,17 @@ public class Accession extends DatabaseObject
 		return this;
 	}
 
+	public Long getEntityParentId()
+	{
+		return entityParentId;
+	}
+
+	public Accession setEntityParentId(Long entityParentId)
+	{
+		this.entityParentId = entityParentId;
+		return this;
+	}
+
 	public BiologicalStatus getBiologicalStatus()
 	{
 		return biologicalStatus;
@@ -430,6 +449,28 @@ public class Accession extends DatabaseObject
 		return this;
 	}
 
+	public EntityType getEntityType()
+	{
+		return entityType;
+	}
+
+	public Accession setEntityType(EntityType entityType)
+	{
+		this.entityType = entityType;
+		return this;
+	}
+
+	public Double getPdci()
+	{
+		return pdci;
+	}
+
+	public Accession setPdci(Double pdci)
+	{
+		this.pdci = pdci;
+		return this;
+	}
+
 	public Long getCreatedOn()
 	{
 		return createdOn;
@@ -476,6 +517,14 @@ public class Accession extends DatabaseObject
 	@GwtIncompatible
 	public static class Parser extends DatabaseObjectParser<Accession>
 	{
+		protected static DatabaseObjectCache<Subtaxa>          SUBTAXA_CACHE;
+		protected static DatabaseObjectCache<Taxonomy>         TAXONOMY_CACHE;
+		protected static DatabaseObjectCache<Institution>      INSTITUTION_CACHE;
+		protected static DatabaseObjectCache<BiologicalStatus> BIOLOGICALSTATUS_CACHE;
+		protected static DatabaseObjectCache<CollectingSource> COLLECTINGSOURCE_CACHE;
+		protected static DatabaseObjectCache<Location>         LOCATION_CACHE;
+		protected static DatabaseObjectCache<MlsStatus>        MLSSTATUS_CACHE;
+
 		@Override
 		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
 		{
@@ -515,6 +564,9 @@ public class Accession extends DatabaseObject
 							.setCollSrc(COLLECTINGSOURCE_CACHE.get(user, row.getLong(COLLSRC_ID), row, foreignsFromResultSet))
 							.setLocation(LOCATION_CACHE.get(user, row.getLong(LOCATION_ID), row, foreignsFromResultSet))
 							.setSynonyms(row.getString(SYNONYMS))
+							.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
+							.setEntityParentId(row.getLong(ENTITYPARENT_ID))
+							.setPdci(row.getDouble(PDCI))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 			}
@@ -523,14 +575,6 @@ public class Accession extends DatabaseObject
 				return null;
 			}
 		}
-
-		private static DatabaseObjectCache<Subtaxa>          SUBTAXA_CACHE;
-		private static DatabaseObjectCache<Taxonomy>         TAXONOMY_CACHE;
-		private static DatabaseObjectCache<Institution>      INSTITUTION_CACHE;
-		private static DatabaseObjectCache<BiologicalStatus> BIOLOGICALSTATUS_CACHE;
-		private static DatabaseObjectCache<CollectingSource> COLLECTINGSOURCE_CACHE;
-		private static DatabaseObjectCache<Location>         LOCATION_CACHE;
-		private static DatabaseObjectCache<MlsStatus>        MLSSTATUS_CACHE;
 
 		private Parser()
 		{
@@ -541,6 +585,192 @@ public class Accession extends DatabaseObject
 			COLLECTINGSOURCE_CACHE = createCache(CollectingSource.class, CollectingSourceManager.class);
 			LOCATION_CACHE = createCache(Location.class, LocationManager.class);
 			MLSSTATUS_CACHE = createCache(MlsStatus.class, MlsStatusManager.class);
+		}
+
+		public static final class Inst
+		{
+			public static Parser get()
+			{
+				return InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final Parser INSTANCE = new Parser();
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class PDCIParser extends Parser
+	{
+		@Override
+		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			Accession acc = super.parse(row, user, foreignsFromResultSet);
+
+			if (acc != null)
+			{
+				acc.setExtra(PDCIRunnable.HAS_PEDIGREE, row.getString(PDCIRunnable.HAS_PEDIGREE));
+				acc.setExtra(PDCIRunnable.HAS_PEDIGREE_DEF, row.getString(PDCIRunnable.HAS_PEDIGREE_DEF));
+				acc.setExtra(PDCIRunnable.HAS_STORAGE, row.getString(PDCIRunnable.HAS_STORAGE));
+				acc.setExtra(PDCIRunnable.HAS_URL, row.getString(PDCIRunnable.HAS_URL));
+			}
+
+			return acc;
+		}
+
+		public static final class Inst
+		{
+			public static PDCIParser get()
+			{
+				return PDCIParser.Inst.InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final PDCIParser INSTANCE = new PDCIParser();
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class ImportParser extends DatabaseObjectParser<Accession>
+	{
+		protected static DatabaseObjectCache<Subtaxa>          SUBTAXA_CACHE;
+		protected static DatabaseObjectCache<Taxonomy>         TAXONOMY_CACHE;
+		protected static DatabaseObjectCache<Institution>      INSTITUTION_CACHE;
+		protected static DatabaseObjectCache<BiologicalStatus> BIOLOGICALSTATUS_CACHE;
+		protected static DatabaseObjectCache<CollectingSource> COLLECTINGSOURCE_CACHE;
+		protected static DatabaseObjectCache<Location>         LOCATION_CACHE;
+		protected static DatabaseObjectCache<MlsStatus>        MLSSTATUS_CACHE;
+
+		private ImportParser()
+		{
+			SUBTAXA_CACHE = createCache(Subtaxa.class, SubtaxaManager.class);
+			TAXONOMY_CACHE = createCache(Taxonomy.class, TaxonomyManager.class);
+			INSTITUTION_CACHE = createCache(Institution.class, InstitutionManager.class);
+			BIOLOGICALSTATUS_CACHE = createCache(BiologicalStatus.class, BiologicalStatusManager.class);
+			COLLECTINGSOURCE_CACHE = createCache(CollectingSource.class, CollectingSourceManager.class);
+			LOCATION_CACHE = createCache(Location.class, LocationManager.class);
+			MLSSTATUS_CACHE = createCache(MlsStatus.class, MlsStatusManager.class);
+		}
+
+		@Override
+		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			try
+			{
+				Long id = row.getLong(ID);
+
+				if (id == null)
+					return null;
+				else
+					return new Accession(id)
+							.setGeneralIdentifier(row.getString(GENERAL_IDENTIFIER))
+							.setNumber(row.getString(NUMBER))
+							.setName(row.getString(NAME))
+							.setBankNumber(row.getString(BANK_NUMBER))
+							.setBreedersCode(row.getString(BREEDERS_CODE))
+							.setBreedersName(row.getString(BREEDERS_NAME))
+							.setPuid(row.getString(PUID))
+							.setSubtaxa(SUBTAXA_CACHE.get(user, row.getLong(SUBTAXA_ID), row, foreignsFromResultSet))
+							.setTaxonomy(TAXONOMY_CACHE.get(user, row.getLong(TAXONOMY_ID), row, foreignsFromResultSet))
+							.setInstitution(INSTITUTION_CACHE.get(user, row.getLong(INSTITUTION_ID), row, foreignsFromResultSet))
+							.setPlantPassport(row.getString(PLANT_PASSPORT))
+							.setDonorCode(row.getString(DONOR_CODE))
+							.setDonorName(row.getString(DONOR_NAME))
+							.setDonorNumber(row.getString(DONOR_NUMBER))
+							.setAcqDate(row.getString(ACQDATE))
+							.setCollNumb(row.getString(COLLNUMB))
+							.setCollDate(row.getDate(COLLDATE))
+							.setCollName(row.getString(COLLNAME))
+							.setCollCode(row.getString(COLLCODE))
+							.setOtherNumb(row.getString(OTHERNUMB))
+							.setCollMissId(row.getString(COLLMISSID))
+							.setDuplSite(row.getString(DUPLSITE))
+							.setDuplInstName(row.getString(DUPLINSTNAME))
+							.setMlsStatus(MLSSTATUS_CACHE.get(user, row.getLong(MLSSTATUS), row, foreignsFromResultSet))
+							.setBiologicalStatus(BIOLOGICALSTATUS_CACHE.get(user, row.getLong(BIOLOGICALSTATUS_ID), row, foreignsFromResultSet))
+							.setCollSrc(COLLECTINGSOURCE_CACHE.get(user, row.getLong(COLLSRC_ID), row, foreignsFromResultSet))
+							.setLocation(LOCATION_CACHE.get(user, row.getLong(LOCATION_ID), row, foreignsFromResultSet))
+							.setSynonyms(row.getString(SYNONYMS))
+							.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
+							.setEntityParentId(row.getLong(ENTITYPARENT_ID))
+							.setPdci(row.getDouble(PDCI))
+							.setCreatedOn(row.getTimestamp(CREATED_ON))
+							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+			}
+			catch (InsufficientPermissionsException e)
+			{
+				return null;
+			}
+		}
+
+		public static final class Inst
+		{
+			public static ImportParser get()
+			{
+				return ImportParser.Inst.InstanceHolder.INSTANCE;
+			}
+
+			/**
+			 * {@link Parser.Inst.InstanceHolder} is loaded on the first execution of {@link Parser.Inst#get()} or the first access to {@link
+			 * Parser.Inst.InstanceHolder#INSTANCE}, not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom"
+			 * >Initialization-on-demand holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
+			 * <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final ImportParser INSTANCE = new ImportParser();
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class MinimalParser extends DatabaseObjectParser<Accession>
+	{
+		private MinimalParser()
+		{
+		}
+
+		@Override
+		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			Long id = row.getLong(ID);
+
+			if (id == null)
+				return null;
+			else
+				return new Accession(id)
+						.setGeneralIdentifier(row.getString(GENERAL_IDENTIFIER))
+						.setNumber(row.getString(NUMBER))
+						.setName(row.getString(NAME))
+						.setBankNumber(row.getString(BANK_NUMBER))
+						.setBreedersCode(row.getString(BREEDERS_CODE))
+						.setBreedersName(row.getString(BREEDERS_NAME))
+						.setPuid(row.getString(PUID))
+						.setPlantPassport(row.getString(PLANT_PASSPORT))
+						.setDonorCode(row.getString(DONOR_CODE))
+						.setDonorName(row.getString(DONOR_NAME))
+						.setDonorNumber(row.getString(DONOR_NUMBER))
+						.setAcqDate(row.getString(ACQDATE))
+						.setCollNumb(row.getString(COLLNUMB))
+						.setCollDate(row.getDate(COLLDATE))
+						.setCollName(row.getString(COLLNAME))
+						.setCollCode(row.getString(COLLCODE))
+						.setOtherNumb(row.getString(OTHERNUMB))
+						.setCollMissId(row.getString(COLLMISSID))
+						.setDuplSite(row.getString(DUPLSITE))
+						.setDuplInstName(row.getString(DUPLINSTNAME))
+						.setSynonyms(row.getString(SYNONYMS))
+						.setEntityType(EntityType.getById(row.getLong(ENTITYTYPE_ID)))
+						.setEntityParentId(row.getLong(ENTITYPARENT_ID))
+						.setPdci(row.getDouble(PDCI))
+						.setCreatedOn(row.getTimestamp(CREATED_ON))
+						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 		}
 
 		public static final class Inst
@@ -620,7 +850,7 @@ public class Accession extends DatabaseObject
 		@Override
 		public void write(Database database, Accession object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO germinatebase (" + GENERAL_IDENTIFIER + ", " + NUMBER + ", " + NAME + ", " + BANK_NUMBER + ", " + BREEDERS_CODE + ", " + BREEDERS_NAME + ", " + SUBTAXA_ID + ", " + TAXONOMY_ID + ", " + INSTITUTION_ID + ", " + PLANT_PASSPORT + ", " + DONOR_CODE + ", " + DONOR_NAME + ", " + DONOR_NUMBER + ", " + ACQDATE + ", " + COLLNUMB + ", " + COLLDATE + ", " + COLLCODE + ", " + COLLNAME + ", " + COLLMISSID + ", " + OTHERNUMB + ", " + DUPLSITE + ", " + DUPLINSTNAME + ", " + MLSSTATUS + ", " + PUID + ", " + BIOLOGICALSTATUS_ID + ", " + COLLSRC_ID + ", " + LOCATION_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO germinatebase (" + GENERAL_IDENTIFIER + ", " + NUMBER + ", " + NAME + ", " + BANK_NUMBER + ", " + BREEDERS_CODE + ", " + BREEDERS_NAME + ", " + SUBTAXA_ID + ", " + TAXONOMY_ID + ", " + INSTITUTION_ID + ", " + PLANT_PASSPORT + ", " + DONOR_CODE + ", " + DONOR_NAME + ", " + DONOR_NUMBER + ", " + ACQDATE + ", " + COLLNUMB + ", " + COLLDATE + ", " + COLLCODE + ", " + COLLNAME + ", " + COLLMISSID + ", " + OTHERNUMB + ", " + DUPLSITE + ", " + DUPLINSTNAME + ", " + MLSSTATUS + ", " + PUID + ", " + BIOLOGICALSTATUS_ID + ", " + COLLSRC_ID + ", " + LOCATION_ID + ", " + ENTITYTYPE_ID + ", " + ENTITYPARENT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getGeneralIdentifier())
 					.setString(object.getNumber())
 					.setString(object.getName())
@@ -647,7 +877,9 @@ public class Accession extends DatabaseObject
 					.setString(object.getPuid())
 					.setLong(object.getBiologicalStatus() != null ? object.getBiologicalStatus().getId() : null)
 					.setLong(object.getCollSrc() != null ? object.getCollSrc().getId() : null)
-					.setLong(object.getLocation() != null ? object.getLocation().getId() : null);
+					.setLong(object.getLocation() != null ? object.getLocation().getId() : null)
+					.setLong(object.getEntityType() != null ? object.getEntityType().getId() : null)
+					.setLong(object.getEntityParentId());
 
 			if (object.getCreatedOn() != null)
 				query.setTimestamp(new Date(object.getCreatedOn()));

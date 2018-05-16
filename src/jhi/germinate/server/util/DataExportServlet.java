@@ -18,21 +18,19 @@
 package jhi.germinate.server.util;
 
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.server.config.*;
-import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.service.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
-
-import static jhi.germinate.server.util.DataExporter.Type.*;
 
 /**
  * @author Sebastian Raubach
@@ -47,12 +45,97 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	private static final int QUALITY_HETERO  = 25;
 	private static final int QUALITY_MISSING = 50;
 
-	public CommonServiceImpl.ExportResult getExportResult(DataExporter.Type type, BaseRemoteServiceServlet servlet)
+	/**
+	 * Retrieves the marker names
+	 *
+	 * @param type         The {@link DataExporter.Type} of data export
+	 * @param sqlDebug     The {@link DebugInfo} to use
+	 * @param markerGroups The marker groups
+	 * @param mapToUse     The map id to use
+	 * @return The marker names
+	 * @throws DatabaseException Thrown if the database interaction fails
+	 */
+	private static List<String> getColumnNames(DebugInfo sqlDebug, List<Long> markerGroups, Long mapToUse, UserAuth userAuth) throws DatabaseException
+	{
+		// If no groups are selected
+		if (CollectionUtils.isEmpty(markerGroups))
+			return null;
+			// If it contains the "All items group"
+		else if (containsAllItemsGroup(markerGroups))
+		{
+
+			try
+			{
+				PartialSearchQuery q = new PartialSearchQuery();
+				SearchCondition c = new SearchCondition();
+				c.setColumnName(Map.ID);
+				c.setComp(new Equal());
+				c.addConditionValue(Long.toString(mapToUse));
+				q.add(c);
+				ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
+				sqlDebug.addAll(result.getDebugInfo());
+				return result.getServerResult();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		try
+		{
+			List<String> groupIds = markerGroups.stream()
+												.map(g -> Long.toString(g))
+												.collect(Collectors.toList());
+
+			if (CollectionUtils.isEmpty(groupIds))
+				return null;
+
+			PartialSearchQuery q = new PartialSearchQuery();
+			q.add(new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class.getSimpleName()));
+			q.addLogicalOperator(new And());
+			q.add(new SearchCondition(Group.ID, new InSet(), groupIds, Long.class.getSimpleName()));
+
+			ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
+			sqlDebug.addAll(result.getDebugInfo());
+			return result.getServerResult();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Retrieves the line/accession names
+	 *
+	 * @param userAuth        The {@link UserAuth} of the current user
+	 * @param sqlDebug        The {@link DebugInfo} to use
+	 * @param accessionGroups The accession group ids
+	 * @return The line names (name, afp_number)
+	 * @throws DatabaseException Thrown if the database interaction fails
+	 */
+	private static List<String> getRowNames(UserAuth userAuth, DebugInfo sqlDebug, List<Long> accessionGroups) throws DatabaseException
+	{
+		// If no groups are selected or if it contains the "All items group"
+		if (CollectionUtils.isEmpty(accessionGroups) || containsAllItemsGroup(accessionGroups))
+			return null;
+
+		ServerResult<List<String>> names = AccessionManager.getNamesForGroups(userAuth, accessionGroups);
+
+		sqlDebug.addAll(names.getDebugInfo());
+
+		return names.getServerResult();
+	}
+
+	public CommonServiceImpl.ExportResult getExportResult(Long datasetId, ExperimentType type, BaseRemoteServiceServlet servlet)
 	{
 		CommonServiceImpl.ExportResult exportResult = new CommonServiceImpl.ExportResult();
 
-        /* Set up the temporary file and make sure the output folder exists */
-		exportResult.subsetWithFlapjackLinks = createTemporaryFile(type.name() + "_links", FileType.txt.name());
+		/* Set up the temporary file and make sure the output folder exists */
+		exportResult.subsetWithFlapjackLinks = createTemporaryFile(type.name() + "_links", datasetId, FileType.txt.name());
 
 		/* Check which Germinate pages are available. We do this to only add links to those pages that are actually available */
 		Set<Page> availablePages = PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
@@ -64,7 +147,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		exportResult.flapjackLinks = "";
 
 		/* For genotypic files, add a link to the accession page */
-		if (type == GENOTYPE)
+		if (type == ExperimentType.genotype)
 		{
 			if (availablePages.contains(Page.PASSPORT))
 				exportResult.flapjackLinks += "# fjDatabaseLineSearch = " + serverBase + "/?" + Parameter.accessionName + "=$LINE#" + Page.PASSPORT + "\n";
@@ -82,15 +165,15 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		return exportResult;
 	}
 
-	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, DataExporter.Type type, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException, InvalidArgumentException
+	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, ExperimentType type, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException, InvalidArgumentException
 	{
 		/* Get the datasets the user is allowed to use */
 		Boolean isAllowedToUse = DatasetManager.userHasAccessToDataset(userAuth, datasetId).getServerResult();
 
-        /* Get the line names to extract */
-		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, type, sqlDebug, accessionGroups, datasetId) : new ArrayList<>();
+		/* Get the line names to extract */
+		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, sqlDebug, accessionGroups) : new ArrayList<>();
 		/* Get the marker names to extract */
-		List<String> colNames = getColumnNames(type, sqlDebug, markerGroups, mapId, userAuth);
+		List<String> colNames = getColumnNames(sqlDebug, markerGroups, mapId, userAuth);
 
 		/* If we specified accession and marker groups, but one of them is empty, then there is no data */
 //		if (!CollectionUtils.isEmpty(accessionGroups, markerGroups) && CollectionUtils.isEmpty(rowNames, colNames))
@@ -112,7 +195,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		}
 
 		DataExporter.DataExporterParameters parameters = new DataExporter.DataExporterParameters();
-		parameters.inputFile = getFile(FileLocation.data, null, type.getReferenceFolder(), dataFileToUse);
+		parameters.inputFile = getFile(FileLocation.data, null, ReferenceFolder.valueOf(type.name()), dataFileToUse);
 		parameters.delimiter = "\t";
 		parameters.rowNames = rowNames;
 		parameters.colNames = colNames;
@@ -120,146 +203,5 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		parameters.qualityMissingValue = qualityMissing;
 
 		return parameters;
-	}
-
-	/**
-	 * Retrieves the marker names
-	 *
-	 * @param type         The {@link DataExporter.Type} of data export
-	 * @param sqlDebug     The {@link DebugInfo} to use
-	 * @param markerGroups The marker groups
-	 * @param mapToUse     The map id to use
-	 * @return The marker names
-	 * @throws DatabaseException Thrown if the database interaction fails
-	 */
-	private static List<String> getColumnNames(DataExporter.Type type, DebugInfo sqlDebug, List<Long> markerGroups, Long mapToUse, UserAuth userAuth) throws DatabaseException
-	{
-		// If no groups are selected
-		if (CollectionUtils.isEmpty(markerGroups))
-			return null;
-			// If it contains the "All items group"
-		else if (containsAllItemsGroup(markerGroups))
-		{
-			if (type == GENOTYPE)
-				return null;
-			else
-			{
-				try
-				{
-					PartialSearchQuery q = new PartialSearchQuery();
-					SearchCondition c = new SearchCondition();
-					c.setColumnName(Map.ID);
-					c.setComp(new Equal());
-					c.addConditionValue(Long.toString(mapToUse));
-					q.add(c);
-					return MarkerManager.getNamesForFilter(userAuth, q).getServerResult();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					return null;
-				}
-			}
-		}
-
-		if (CollectionUtils.isEmpty(markerGroups))
-			return null;
-
-		String formatted = String.format(type.getQueryColumns(), Util.generateSqlPlaceholderString(markerGroups.size()));
-		ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
-				.setLongs(markerGroups)
-				.setLong(mapToUse)
-				.run(Marker.MARKER_NAME)
-				.getStrings();
-
-		sqlDebug.addAll(temp.getDebugInfo());
-
-		return temp.getServerResult();
-	}
-
-	/**
-	 * Retrieves the line/accession names
-	 *
-	 * @param userAuth        The {@link UserAuth} of the current user
-	 * @param type            The {@link DataExporter.Type} of data export
-	 * @param sqlDebug        The {@link DebugInfo} to use
-	 * @param accessionGroups The accession group ids
-	 * @param datasetIds      The dataset ids
-	 * @return The line names (name, afp_number)
-	 * @throws DatabaseException Thrown if the database interaction fails
-	 */
-	private static List<String> getRowNames(UserAuth userAuth, DataExporter.Type type, DebugInfo sqlDebug, List<Long> accessionGroups, Long datasetId) throws DatabaseException
-	{
-		// If no groups are selected
-		if (CollectionUtils.isEmpty(accessionGroups))
-			return null;
-			// If it contains the "All items group"
-		else if (containsAllItemsGroup(accessionGroups))
-		{
-			if (type == GENOTYPE)
-				return null;
-			else
-			{
-				try
-				{
-					return new ValueQuery("SELECT DISTINCT sample_id FROM allelefrequencydata WHERE dataset_id = ?")
-							.setLong(datasetId)
-							.run("sample_id")
-							.getStrings()
-							.getServerResult();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					return null;
-				}
-			}
-		}
-
-		try
-		{
-			ServerResult<Boolean> hasLocalResourceFile = DatasetManager.hasSourceFile(userAuth, Collections.singletonList(datasetId));
-
-			if (!hasLocalResourceFile.getServerResult())
-			{
-				/* Build up the query */
-				String formatted = String.format(type.getQueryRowsInternal(), Util.generateSqlPlaceholderString(accessionGroups.size()));
-
-        		/* Run the query */
-				ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
-						.setLongs(accessionGroups)
-						.setLong(datasetId)
-						.run(type.getColumnName())
-						.getStrings();
-				sqlDebug.addAll(temp.getDebugInfo());
-
-				return temp.getServerResult();
-			}
-			else
-			{
-				/* Build up the query */
-				String formatted = String.format(type.getQueryRowsExternal(), Util.generateSqlPlaceholderString(accessionGroups.size()));
-
-        		/* Run the query */
-				ValueQuery query = new ValueQuery(formatted, userAuth)
-						.setLongs(accessionGroups);
-
-				// TODO: Fix this for allelefreq data
-				if (type == DataExporter.Type.ALLELEFREQ)
-					query.setLong(datasetId);
-
-				ServerResult<List<String>> temp = query.run(type.getColumnName())
-													   .getStrings();
-				sqlDebug.addAll(temp.getDebugInfo());
-
-				return temp.getServerResult();
-			}
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 }

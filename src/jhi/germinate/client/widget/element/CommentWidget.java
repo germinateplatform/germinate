@@ -24,6 +24,7 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.TextArea;
 
 import java.util.*;
@@ -57,6 +58,8 @@ public class CommentWidget extends Composite
 
 	@UiField
 	HTML               html;
+	@UiField
+	Heading            heading;
 	@UiField
 	SimplePanel        commentTablePanel;
 	@UiField
@@ -176,6 +179,16 @@ public class CommentWidget extends Composite
 		{
 			commentTable.refreshTable();
 		}
+	}
+
+	public boolean getHeadingVisible()
+	{
+		return heading.isVisible();
+	}
+
+	public void setHeadingVisible(boolean headingVisible)
+	{
+		heading.setVisible(false);
 	}
 
 	@UiHandler("submitButton")

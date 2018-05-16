@@ -52,5 +52,13 @@ public interface ImageServiceAsync
 	 */
 	void getTypes(RequestProperties properties, AsyncCallback<ServerResult<List<ImageType>>> callback);
 
+	/**
+	 * Returns all {@link Image}s of the given {@link ImageType}.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param imageType  The {@link ImageType}
+	 * @param pagination The {@link Pagination}
+	 * @param callback   The {@link AsyncCallback}
+	 */
 	void getForType(RequestProperties properties, ImageType imageType, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Image>>> callback);
 }

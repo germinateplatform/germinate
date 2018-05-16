@@ -70,6 +70,14 @@ public class JavaScript
 			$wnd.$(selector).hide();
 	}-*/;
 
+	public static native String getLinkColor()/*-{
+		var a = $wnd.document.createElement("a");
+		$wnd.document.body.appendChild(a);
+		var fillColor = $(a).css("color");
+		$wnd.document.body.removeChild(a);
+		return fillColor;
+	}-*/;
+
 	/**
 	 * {@link D3} is a utility class containing constants and utility methods for D3
 	 *
@@ -294,33 +302,6 @@ public class JavaScript
 	 */
 	public static native void consoleLog(Element element) /*-{
 		console.log(element);
-	}-*/;
-
-	/**
-	 * Applies sticky headers to the table with the given id
-	 *
-	 * @param id The id of the table
-	 */
-	public static native void makeHeaderSticky(String id)/*-{
-		$wnd.$("#" + id).freezeHeader();
-	}-*/;
-
-	/**
-	 * Checks if the freeze header library has successfully been loaded
-	 *
-	 * @return <code>true</code> if it has been successfully loaded
-	 */
-	public static native boolean isFreezeHeaderLoaded()/*-{
-		return typeof ($wnd.$('').freezeHeader) === 'function';
-	}-*/;
-
-	/**
-	 * Checks if the GoogleMaps API was loaded and initialized successfully by trying to access it in JavaScript
-	 *
-	 * @return <code>true</code> if the GoogleMaps API was loaded and initialized successfully
-	 */
-	public static native boolean isGoogleMapsLoaded()/*-{
-		return $wnd['google'].maps !== 'undefined';
 	}-*/;
 
 	/**

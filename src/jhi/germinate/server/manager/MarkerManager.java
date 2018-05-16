@@ -22,7 +22,7 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -36,18 +36,16 @@ import jhi.germinate.shared.search.*;
  */
 public class MarkerManager extends AbstractManager<Marker>
 {
-	public static final  String COMMOM_SYNONYMS             = "LEFT JOIN synonyms ON synonyms.foreign_id = markers.id LEFT JOIN synonymtypes ON synonymtypes.id = synonyms.synonymtype_id";
+	public static final  String COMMOM_SYNONYMS             = "LEFT JOIN synonyms ON (synonyms.foreign_id = markers.id AND synonyms.synonymtype_id = " + SynonymType.markers.getId() + " )";
 	public static final  String SELECT_SYNONYMS             = "mapdefinitions.*, mapfeaturetypes.*, maps.*, markers.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms";
-	public static final  String WHERE_SYNONYMS              = "(ISNULL(synonymtypes.id) OR synonymtypes.target_table = 'markers')";
 	private static final String COMMON_TABLES               = "mapdefinitions LEFT JOIN mapfeaturetypes ON mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
 	private static final String SELECT_BY_IDS               = "SELECT markers.* FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id WHERE markers.id IN (%s) %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_GROUP        = "SELECT markers.*, markertypes.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id " + COMMOM_SYNONYMS + " WHERE " + WHERE_SYNONYMS + " AND groups.id = ? GROUP BY markers.id, groupmembers.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_GROUP        = "SELECT markers.*, markertypes.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id " + COMMOM_SYNONYMS + " WHERE groups.id = ? GROUP BY markers.id, groupmembers.id %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_GROUP        = "SELECT markers.id FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id";
-	private static final String SELECT_FOR_FILTER           = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} AND " + WHERE_SYNONYMS + " GROUP BY markers.id, mapdefinitions.id %s LIMIT ?, ?";
+	private static final String SELECT_FOR_FILTER           = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} GROUP BY markers.id, mapdefinitions.id %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_FILTER_MAP   = "SELECT DISTINCT(markers.id) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
-	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(markers.marker_name) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
+	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(markers.marker_name) FROM " + COMMON_TABLES + " LEFT JOIN groupmembers ON groupmembers.foreign_id = markers.id LEFT JOIN groups ON groups.id = groupmembers.group_id {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
 	private static final String SELECT_COUNT                = "SELECT COUNT(1) AS count FROM markers";
-	private static final String SELECT_GROUP_AS_QTL         = "SELECT groups.description AS \"Name\", mapdefinitions.chromosome AS \"Chromosome\", FLOOR(AVG( mapdefinitions.definition_start )) AS \"Position\", FLOOR(MIN( mapdefinitions.definition_start )) AS \"Pos-Min\", FLOOR(MAX( mapdefinitions.definition_start )) AS \"Pos-Max\", null AS \"Trait\", null AS \"Experiment\" FROM mapdefinitions LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN groupmembers ON groupmembers.foreign_id = markers.id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY groups.id, mapdefinitions.chromosome";
 
 	@Override
 	protected String getTable()
@@ -93,7 +91,7 @@ public class MarkerManager extends AbstractManager<Marker>
 	{
 		pagination.updateSortColumn(MarkerService.COLUMNS_MARKER_TABLE, Marker.ID);
 
-		String formatted = String.format(SELECT_BY_IDS, Util.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
+		String formatted = String.format(SELECT_BY_IDS, StringUtils.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
 		return new DatabaseObjectQuery<Marker>(formatted, userAuth)
 				.setStrings(ids)
 				.setInt(pagination.getStart())
@@ -135,12 +133,5 @@ public class MarkerManager extends AbstractManager<Marker>
 		return new ValueQuery(SELECT_COUNT, user)
 				.run(COUNT)
 				.getLong(0L);
-	}
-
-	public static GerminateTableStreamer getMarkerGroupAsQtl(UserAuth user, Long groupId) throws DatabaseException
-	{
-		return new GerminateTableQuery(SELECT_GROUP_AS_QTL, user, null)
-				.setLong(groupId)
-				.getStreamer();
 	}
 }

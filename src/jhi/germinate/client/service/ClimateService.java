@@ -37,14 +37,6 @@ public interface ClimateService extends RemoteService
 {
 	final class Inst
 	{
-
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final ClimateServiceAsync INSTANCE = GWT.create(ClimateService.class);
@@ -54,7 +46,6 @@ public interface ClimateService extends RemoteService
 		{
 			return InstanceHolder.INSTANCE;
 		}
-
 	}
 
 	/**
@@ -82,6 +73,7 @@ public interface ClimateService extends RemoteService
 	 * Exports the min/avg/max data for the given {@link Climate} and {@link Group} ids and returns the name of the result file.
 	 *
 	 * @param properties The {@link RequestProperties}
+	 * @param datasetIds a {@link List} of {@link Dataset} ids.
 	 * @param climateId  The {@link Climate} id
 	 * @param groupId    The {@link Group} id (can be <code>null</code> to get the overall values of the whole dataset)
 	 * @return The name of the result file.
@@ -90,7 +82,7 @@ public interface ClimateService extends RemoteService
 	 * @throws IOException               Thrown if the file interaction fails
 	 * @throws InvalidSelectionException Thrown if there is no data for the given selection
 	 */
-	ServerResult<Pair<String, String>> getMinAvgMaxFile(RequestProperties properties, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException;
+	ServerResult<Pair<String, String>> getMinAvgMaxFile(RequestProperties properties, List<Long> datasetIds, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException;
 
 	/**
 	 * Returns a paginated list of {@link ClimateYearData} for the given {@link Climate} and {@link Group} ids.

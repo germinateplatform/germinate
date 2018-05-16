@@ -66,7 +66,7 @@ public class DublinCoreWidget extends Composite
 		if (!CollectionUtils.isEmpty(values))
 		{
 			for (String value : values)
-				panel.add(new DescriptionWidget(panel, title, value));
+				panel.add(new DescriptionWidget(panel, title, value, true));
 		}
 	}
 }

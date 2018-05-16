@@ -22,8 +22,6 @@ import java.util.*;
 
 import jhi.flapjack.io.cmd.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.enums.*;
 
 /**
  * {@link DataExporter} is a class taking lines and markers and extracting these subsets from a file on the filesystem.
@@ -32,63 +30,6 @@ import jhi.germinate.shared.enums.*;
  */
 public class DataExporter
 {
-	private static final String QUERY_EXPORT_ROWS_GENOTYPE_INTERNAL   = "SELECT null AS name";
-	private static final String QUERY_EXPORT_ROWS_GENOTYPE_EXTERNAL   = "SELECT DISTINCT germinatebase.name FROM germinatebase LEFT JOIN groupmembers ON groupmembers.foreign_id = germinatebase.id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id WHERE groups.id IN (%s)";
-	private static final String QUERY_EXPORT_COLS_GENOTYPE            = "SELECT mapdefinitions.*, mapfeaturetypes.description as mapfeature_description, markers.marker_name FROM mapdefinitions, mapfeaturetypes, markers, groupmembers WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND groupmembers.foreign_id = markers.id AND groupmembers.group_id IN (%s) AND mapdefinitions.map_id = ? ORDER BY chromosome, definition_start";
-	private static final String QUERY_EXPORT_ROWS_ALLELEFREQ_INTERNAL = "SELECT DISTINCT (allelefrequencydata.sample_id) FROM allelefrequencydata LEFT JOIN groupmembers ON groupmembers.foreign_id = allelefrequencydata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN datasets ON datasets.id = allelefrequencydata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE groups.id IN (%s) AND datasets.id = ?";
-	// TODO: FIX
-	private static final String QUERY_EXPORT_ROWS_ALLELEFREQ_EXTERNAL = "SELECT DISTINCT (allelefrequencydata.sample_id) FROM allelefrequencydata LEFT JOIN groupmembers ON groupmembers.foreign_id = allelefrequencydata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN datasets ON datasets.id = allelefrequencydata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE groups.id IN (%s) AND datasets.id = ?";
-	private static final String QUERY_EXPORT_COLS_ALLELEFREQ          = "SELECT mapdefinitions.*, mapfeaturetypes.description as mapfeature_description, markers.marker_name FROM mapdefinitions, mapfeaturetypes, markers, groupmembers WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND groupmembers.foreign_id = markers.id AND groupmembers.group_id IN (%s) AND mapdefinitions.map_id = ? ORDER BY chromosome, definition_start";
-
-
-	public enum Type
-	{
-		GENOTYPE(QUERY_EXPORT_ROWS_GENOTYPE_INTERNAL, QUERY_EXPORT_ROWS_GENOTYPE_EXTERNAL, QUERY_EXPORT_COLS_GENOTYPE, Accession.NAME, ReferenceFolder.genotype),
-
-		// TODO: change column name
-		ALLELEFREQ(QUERY_EXPORT_ROWS_ALLELEFREQ_INTERNAL, QUERY_EXPORT_ROWS_ALLELEFREQ_EXTERNAL, QUERY_EXPORT_COLS_ALLELEFREQ, "sample_id", ReferenceFolder.allelefreq);
-
-		private String          queryRowsInternal;
-		private String          queryRowsExternal;
-		private String          queryColumns;
-		private String          columnName;
-		private ReferenceFolder referenceFolder;
-
-		Type(String queryRowsInternal, String queryRowsExternal, String queryColumns, String columnName, ReferenceFolder referenceFolder)
-		{
-			this.queryRowsInternal = queryRowsInternal;
-			this.queryRowsExternal = queryRowsExternal;
-			this.queryColumns = queryColumns;
-			this.columnName = columnName;
-			this.referenceFolder = referenceFolder;
-		}
-
-		public String getQueryRowsInternal()
-		{
-			return queryRowsInternal;
-		}
-
-		public String getQueryRowsExternal()
-		{
-			return queryRowsExternal;
-		}
-
-		public String getQueryColumns()
-		{
-			return queryColumns;
-		}
-
-		public String getColumnName()
-		{
-			return columnName;
-		}
-
-		public ReferenceFolder getReferenceFolder()
-		{
-			return referenceFolder;
-		}
-	}
-
 	public static class DataExporterParameters
 	{
 		/** The percentage of allowed heterozygous values per column */

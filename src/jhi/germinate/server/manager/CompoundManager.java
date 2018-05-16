@@ -22,7 +22,7 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -85,7 +85,7 @@ public class CompoundManager extends AbstractManager<Compound>
 	 */
 	public static ServerResult<List<Compound>> getAllForDataset(UserAuth userAuth, List<Long> datasetIds) throws DatabaseException
 	{
-		String formatted = String.format(SELECT_ALL_FOR_DATASET, Util.generateSqlPlaceholderString(datasetIds.size()));
+		String formatted = String.format(SELECT_ALL_FOR_DATASET, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		return new DatabaseObjectQuery<Compound>(formatted, userAuth)
 				.setLongs(datasetIds)

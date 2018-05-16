@@ -138,9 +138,9 @@ public class FileServlet extends BaseHttpServlet
         /* Set the filename that will be used for file download */
 		String filename;
 
-		if (location == FileLocation.temporary)
-			filename = Util.getDateTime() + "." + extension;
-		else
+//		if (location == FileLocation.temporary)
+//			filename = Util.getDateTime() + "." + extension;
+//		else
 			filename = file.getName();
 
         /* Set the header */

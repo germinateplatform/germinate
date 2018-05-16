@@ -20,6 +20,7 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:lb="urn:import:jhi.germinate.client.widget.listbox"
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
 			 xmlns:t='urn:import:org.gwtbootstrap3.extras.toggleswitch.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
@@ -31,23 +32,25 @@
 
 	<g:FlowPanel ui:field="overallPanel">
 
-		<b:PageHeader text="{msg.genotypePageTitle}"/>
+		<b:PageHeader ui:field="pageHeader"/>
+
+		<g8:DatasetListWidget ui:field="selectedDatasetPanel" />
 
 		<b:Row>
 			<b:Column size="XS_12,MD_6">
-				<b:Heading size="H4" text="{msg.genotypeExportHeadingAccessionGroups}"/>
+				<b:Heading size="H3" text="{msg.genotypeExportHeadingAccessionGroups}"/>
 				<g:HTML ui:field="accessionText"/>
 				<lb:GroupListBox multipleSelect="true" type="ACCESSION" ui:field="accessionGroupsList"/>
 			</b:Column>
 			<b:Column size="XS_12,MD_6">
-				<b:Heading size="H4" text="{msg.genotypeExportHeadingMarkerGroups}"/>
+				<b:Heading size="H3" text="{msg.genotypeExportHeadingMarkerGroups}"/>
 				<g:HTML ui:field="markerText"/>
 				<lb:GroupListBox multipleSelect="true" type="MARKER" ui:field="markerGroupsList"/>
 			</b:Column>
 		</b:Row>
 
-		<g:HTMLPanel>
-			<b:Heading size="H4" text="{msg.genotypeExportHeadingCDF}"/>
+		<g:HTMLPanel visible="false">
+			<b:Heading size="H3" text="{msg.genotypeExportHeadingCDF}"/>
 			<ul>
 				<li>
 					<ui:text from='{msg.genotypeExportSubtitleCDFOne}'/>
@@ -70,7 +73,7 @@
 		</g:HTMLPanel>
 
 		<g:FlowPanel>
-			<b:Heading size="H4" text="{msg.genotypeExportHeadingMap}"/>
+			<b:Heading size="H3" text="{msg.genotypeExportHeadingMap}"/>
 			<lb:MapListBox ui:field="mapsList"/>
 		</g:FlowPanel>
 		<g:HTML>

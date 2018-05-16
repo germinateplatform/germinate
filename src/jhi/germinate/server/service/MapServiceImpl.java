@@ -28,9 +28,10 @@ import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
@@ -62,7 +63,21 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		try
 		{
-			return new MapManager().getById(userAuth, mapId);
+			ServerResult<Map> result = new MapManager().getById(userAuth, mapId);
+
+			if (result.getServerResult() == null)
+			{
+				return result;
+			}
+			else
+			{
+				Map map = result.getServerResult();
+
+				if (map.isVisibility() || Objects.equals(map.getUserId(), userAuth.getId()))
+					return result;
+				else
+					return new ServerResult<>(null, null);
+			}
 		}
 		catch (InsufficientPermissionsException e)
 		{
@@ -71,7 +86,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	}
 
 	@Override
-	public PaginatedServerResult<List<Map>> get(RequestProperties properties, ExperimentType experimentType, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException
+	public PaginatedServerResult<List<Map>> get(RequestProperties properties, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		if (pagination == null)
 			pagination = Pagination.getDefault();
@@ -79,17 +94,16 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		if (experimentType == null)
-			return MapManager.getAll(userAuth, pagination);
-		switch (experimentType)
-		{
-			case allelefreq:
-				return MapManager.getAllHavingAlleleFreqData(userAuth, pagination);
-			case genotype:
-				return MapManager.getAll(userAuth, pagination);
-			default:
-				return new PaginatedServerResult<>(null, null, 0);
-		}
+		return MapManager.getAll(userAuth, pagination);
+	}
+
+	@Override
+	public ServerResult<List<Map>> getForDatasets(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return MapManager.getAllForDatasets(userAuth, datasetIds);
 	}
 
 	/**
@@ -286,7 +300,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 				List<String> chromosomes = options.getChromosomes();
 				/* Create the query for the actual data */
 				String dataString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_CHROMOSOMES_APPENDIX);
-				dataString = String.format(dataString, Util.generateSqlPlaceholderString(chromosomes.size()));
+				dataString = String.format(dataString, StringUtils.generateSqlPlaceholderString(chromosomes.size()));
 				dataQuery = new GerminateTableQuery(dataString, userAuth, COLUMNS_MAP_EXPORT)
 						.setLong(mapId);
 
@@ -397,8 +411,6 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 					writeStrudelFile(streamer, bw, mapName.getServerResult(), mapId, baseURL);
 					break;
 			}
-
-			bw.close();
 		}
 		catch (java.io.IOException e)
 		{

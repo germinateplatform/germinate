@@ -1,4 +1,4 @@
-<%@ page language ="java" contentType ="text/javascript; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page  contentType ="text/javascript; charset=UTF-8" pageEncoding="UTF-8"%>
 	<%@ page import="jhi.germinate.shared.*"%>
 
 //Loads the correct sidebar on window load,

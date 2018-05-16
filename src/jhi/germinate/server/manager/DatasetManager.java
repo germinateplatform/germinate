@@ -21,9 +21,9 @@ import java.util.*;
 import java.util.stream.*;
 
 import jhi.germinate.server.config.*;
+import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -44,15 +44,15 @@ public class DatasetManager extends AbstractManager<Dataset>
 	private static final String SELECT_ALL                 = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 	private static final String SELECT_ALL_WITHOUT_LICENSE = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND !ISNULL(licenses.id) AND NOT EXISTS (SELECT 1 FROM licenselogs WHERE licenselogs.license_id = licenses.id AND licenselogs.user_id = ?) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 	private static final String SELECT_ALL_EXPORT          = "SELECT datasets.id AS datasets_id, experimenttypes.description AS experimenttypes_description, experiments.description AS experiments_description, datasets.description AS datasets_description, licenses.name AS licenses_name, licenses.description AS licenses_description, datasets.contact AS datasets_contact, datasets.date_start AS datasets_date_start, datasets.date_end AS datasets_date_end, datasetmeta.nr_of_data_objects AS datasetmeta_nr_of_data_objects, datasetmeta.nr_of_data_points AS datasets_nr_of_data_points FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_ACCESSION   = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " WHERE %s %s AND (EXISTS (SELECT 1 FROM phenotypedata WHERE phenotypedata.dataset_id = datasets.id AND phenotypedata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM allelefrequencydata WHERE allelefrequencydata.dataset_id = datasets.id AND allelefrequencydata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM compounddata WHERE compounddata.dataset_id = datasets.id AND compounddata.germinatebase_id = ?)) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_ACCESSION   = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " WHERE %s %s AND (EXISTS (SELECT 1 FROM phenotypedata WHERE phenotypedata.dataset_id = datasets.id AND phenotypedata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM compounddata WHERE compounddata.dataset_id = datasets.id AND compounddata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM datasetmembers WHERE datasetmembers.dataset_id = datasets.id AND datasetmembers.datasetmembertype_id = 2 AND datasetmembers.foreign_id = ? )) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_MARKER      = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " WHERE %s %s AND EXISTS (SELECT 1 FROM datasetmembers WHERE datasetmembers.dataset_id = datasets.id AND datasetmembers.datasetmembertype_id = 1 AND datasetmembers.foreign_id = ? ) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 
+	public static final  String BITS_PRIVATE_REGULAR    = " (datasetstates.name = '" + DatasetState.PUBLIC.getName() + "' OR (datasetstates.name = '" + DatasetState.PRIVATE.getName() + "' AND datasets.created_by = ?) OR EXISTS (SELECT 1 FROM datasetpermissions WHERE datasetpermissions.user_id = ? AND datasetpermissions.dataset_id = datasets.id) OR EXISTS (SELECT 1 FROM datasetpermissions LEFT JOIN usergroups ON usergroups.id = datasetpermissions.group_id LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id WHERE usergroupmembers.user_id = ? AND datasetpermissions.dataset_id = datasets.id))";
+	public static final  String BITS_PRIVATE_ADMIN      = " 1=1";
+	public static final  String BITS_PUBLIC             = " (datasetstates.name = '" + DatasetState.PUBLIC.getName() + "')";
 	private static final String SELECT_FOR_USER_ADMIN   = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0";
-	private static final String SELECT_FOR_USER_REGULAR = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "' OR (datasetstates.name = '" + DatasetState.PRIVATE + "' AND datasets.created_by = ?) OR EXISTS (SELECT 1 FROM datasetpermissions WHERE datasetpermissions.user_id = ? AND datasetpermissions.dataset_id = datasets.id) OR EXISTS (SELECT 1 FROM datasetpermissions LEFT JOIN usergroups ON usergroups.id = datasetpermissions.group_id LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id WHERE usergroupmembers.user_id = ?))";
+	private static final String SELECT_FOR_USER_REGULAR = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "' OR (datasetstates.name = '" + DatasetState.PRIVATE + "' AND datasets.created_by = ?) OR EXISTS (SELECT 1 FROM datasetpermissions WHERE datasetpermissions.user_id = ? AND datasetpermissions.dataset_id = datasets.id) OR EXISTS (SELECT 1 FROM datasetpermissions LEFT JOIN usergroups ON usergroups.id = datasetpermissions.group_id LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id WHERE usergroupmembers.user_id = ? AND datasetpermissions.dataset_id = datasets.id))";
 	private static final String SELECT_FOR_USER_PUBLIC  = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "')";
-
-	public static final String BITS_PRIVATE_ADMIN   = " 1=1";
-	public static final String BITS_PRIVATE_REGULAR = " (datasetstates.name = '" + DatasetState.PUBLIC.getName() + "' OR (datasetstates.name = '" + DatasetState.PRIVATE.getName() + "' AND datasets.created_by = ?))";
-	public static final String BITS_PUBLIC          = " (datasetstates.name = '" + DatasetState.PUBLIC.getName() + "')";
 
 	private static final String[] COLUMNS_DATASET_DATA_EXPORT = {"datasets_id", "experimenttypes_description", "experiments_description", "datasets_description", "datasets_contact", "datasets_date_start", "datasets_date_end", "datasetmeta_nr_of_data_objects", "datasets_nr_of_data_points"};
 
@@ -99,7 +99,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 
 		try
 		{
-			String formatted = SELECT_BY_ID.replace("{{DATASET_IDS}}", Util.generateSqlPlaceholderString(ids.size()));
+			String formatted = SELECT_BY_ID.replace("{{DATASET_IDS}}", StringUtils.generateSqlPlaceholderString(ids.size()));
 
 			return getDatabaseObjectQuery(formatted, user, null, (ExperimentType) null, null)
 					.setLongs(ids)
@@ -112,39 +112,6 @@ public class DatasetManager extends AbstractManager<Dataset>
 		{
 			e.printStackTrace();
 			return new ServerResult<>(null, null);
-		}
-	}
-
-	/**
-	 * Returns the {@link Dataset}s matching the requested ids in a paginated fashion
-	 *
-	 * @param user       The user requesting the data
-	 * @param ids        The ids of the datasets
-	 * @param pagination The {@link Pagination} object defining the current chunk of data
-	 * @return The {@link Dataset}s matching the requested ids in a paginated fashion
-	 * @throws DatabaseException                Thrown if the interaction with the database failed
-	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to access the data
-	 */
-	public static PaginatedServerResult<List<Dataset>> getByIdsPaginated(UserAuth user, List<Long> ids, Pagination pagination) throws DatabaseException, InsufficientPermissionsException
-	{
-		if (CollectionUtils.isEmpty(ids))
-			return new PaginatedServerResult<>(null, null, 0);
-
-		try
-		{
-			String formatted = SELECT_BY_ID.replace("{{DATASET_IDS}}", Util.generateSqlPlaceholderString(ids.size()));
-
-			return getDatabaseObjectQuery(formatted, user, null, (ExperimentType) null, pagination.getResultSize())
-					.setLongs(ids)
-					.setInt(pagination.getStart())
-					.setInt(pagination.getLength())
-					.run()
-					.getObjectsPaginated(Dataset.Parser.Inst.get());
-		}
-		catch (InvalidArgumentException | InvalidSearchQueryException | InvalidColumnException e)
-		{
-			e.printStackTrace();
-			return new PaginatedServerResult<>(null, null, 0);
 		}
 	}
 
@@ -186,6 +153,39 @@ public class DatasetManager extends AbstractManager<Dataset>
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
+	}
+
+	/**
+	 * Returns the paginated {@link Dataset}s the marker is part of
+	 *
+	 * @param user        The user requesting the data
+	 * @param accessionId The id of the {@link Marker}
+	 * @param pagination  The {@link Pagination} object defining the current chunk of data
+	 * @return The paginated {@link Dataset}s the marker is part of
+	 * @throws DatabaseException                Thrown if the interaction with the database failed
+	 * @throws InvalidColumnException           Thrown if the sort column is invalid
+	 * @throws InsufficientPermissionsException Thrown if the use doesn't have sufficient permissions to access the data
+	 */
+	public static PaginatedServerResult<List<Dataset>> getAllForMarkerId(UserAuth user, Long markerId, Pagination pagination) throws DatabaseException, InsufficientPermissionsException, InvalidColumnException
+	{
+		pagination.updateSortColumn(COLUMNS_TABLE, Dataset.ID);
+
+		String formatted = SELECT_ALL_FOR_MARKER.replace("{{SORT_BITS}}", pagination.getSortQuery());
+		try
+		{
+			return getDatabaseObjectQuery(formatted, user, null, (ExperimentType) null, pagination.getResultSize())
+					.setLong(markerId)
+					.setBoolean(false)
+					.setInt(pagination.getStart())
+					.setInt(pagination.getLength())
+					.run()
+					.getObjectsPaginated(Dataset.Parser.Inst.get());
+		}
+		catch (InvalidArgumentException | InvalidSearchQueryException e)
+		{
+			e.printStackTrace();
+			return new PaginatedServerResult<>(null, new ArrayList<>(), 0);
+		}
 	}
 
 	/**
@@ -300,7 +300,11 @@ public class DatasetManager extends AbstractManager<Dataset>
 		if (isPrivate)
 		{
 			if (!details.isAdmin())
-				query.setLong(user.getId());
+			{
+				query.setLong(user.getId())
+					 .setLong(user.getId())
+					 .setLong(user.getId());
+			}
 		}
 	}
 
@@ -318,8 +322,8 @@ public class DatasetManager extends AbstractManager<Dataset>
 	{
 		/*
 		 * If login is required, but the given user id is either invalid or
-         * there is no password set, fail
-         */
+		 * there is no password set, fail
+		 */
 		if (isPrivate && (details == null || StringUtils.isEmpty(details.getPassword())))
 			throw new InsufficientPermissionsException();
 
@@ -378,7 +382,10 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 */
 	public static DebugInfo restrictToAvailableDatasets(UserAuth userAuth, List<Long> datasetIds) throws DatabaseException
 	{
-		ServerResult<List<Dataset>> availableDatasets = getForUser(userAuth);
+		if (CollectionUtils.isEmpty(datasetIds))
+			return DebugInfo.create(userAuth);
+
+		ServerResult<List<Dataset>> availableDatasets = getForUser(userAuth, PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION));
 
 		if (CollectionUtils.isEmpty(availableDatasets.getServerResult()))
 		{
@@ -404,7 +411,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 * @return The list of {@link Dataset}s the given user has access to
 	 * @throws DatabaseException Thrown if the communication with the database fails
 	 */
-	public static ServerResult<List<Dataset>> getForUser(UserAuth userAuth) throws DatabaseException
+	public static ServerResult<List<Dataset>> getForUser(UserAuth userAuth, boolean checkLicense) throws DatabaseException
 	{
 		boolean isPrivate = PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
 
@@ -446,14 +453,22 @@ public class DatasetManager extends AbstractManager<Dataset>
 					.getObjects(Dataset.Parser.Inst.get());
 		}
 
-		if (isPrivate)
+		if (checkLicense)
 		{
 			if (!CollectionUtils.isEmpty(result.getServerResult()))
 			{
 				// Filter the datasets to make sure only the ones where the user accepted the license are included
+				// This also means that datasets that have a license in a public environment won't be shown, because we just don't know if the user accepted the license
 				List<Dataset> datasets = result.getServerResult()
 											   .parallelStream()
-											   .filter(d -> d.getLicense() == null || d.hasLicenseBeenAccepted(userAuth.getId()))
+											   .filter(d -> {
+												   if (d.getLicense() == null)
+													   return true;
+												   else if (!isPrivate)
+													   return false;
+												   else
+													   return d.hasLicenseBeenAccepted(userAuth);
+											   })
 											   .collect(Collectors.toList());
 
 				result.setServerResult(datasets);
@@ -463,7 +478,6 @@ public class DatasetManager extends AbstractManager<Dataset>
 				result.setServerResult(new ArrayList<>());
 			}
 		}
-
 
 		return result;
 	}
@@ -482,32 +496,19 @@ public class DatasetManager extends AbstractManager<Dataset>
 				.getObjectsPaginated(Dataset.Parser.Inst.get(), true);
 	}
 
-	/**
-	 * Returns <code>true</code> if at least one of the {@link Dataset}s with the given ids has a source file, i.e. {@link Dataset#SOURCE_FILE} isn't
-	 * empty.
-	 *
-	 * @param userAuth   The user requesting the data
-	 * @param datasetIds The ids of the datasets
-	 * @return <code>true</code> if at least one of the {@link Dataset}s with the given ids has a source file, i.e. {@link Dataset#SOURCE_FILE} isn't
-	 * empty.
-	 * @throws DatabaseException                Thrown if the communication with the database fails
-	 * @throws InsufficientPermissionsException Thrown if the use doesn't have sufficient permissions to access the data
-	 */
-	public static ServerResult<Boolean> hasSourceFile(UserAuth userAuth, List<Long> datasetIds) throws DatabaseException, InsufficientPermissionsException
+	public static boolean addTracking(UserAuth userAuth, Long dataset, UnapprovedUser user) throws DatabaseException
 	{
-		ServerResult<List<Dataset>> datasets = getByIds(userAuth, datasetIds);
+		Database database = Database.connect(Database.DatabaseType.MYSQL);
 
-		boolean hasDataFile = false;
+		DatasetAccessLog log = new DatasetAccessLog()
+				.setDataset(new Dataset(dataset))
+				.setUser(user)
+				.setReason(user.extra)
+				.setCreatedOn(new Date())
+				.setUpdatedOn(new Date());
 
-		for (Dataset dataset : datasets.getServerResult())
-		{
-			if (!StringUtils.isEmpty(dataset.getSourceFile()))
-			{
-				hasDataFile = true;
-				break;
-			}
-		}
+		DatasetAccessLog.Writer.Inst.get().write(database, log);
 
-		return new ServerResult<>(datasets.getDebugInfo(), hasDataFile);
+		return log.getId() != null;
 	}
 }

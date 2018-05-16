@@ -41,7 +41,8 @@
 			</b:Column>
 		</b:Row>
 
-		<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_ARROW_RIGHT_BOLD}" text="{msg.generalContinue}" type="PRIMARY" ui:field="continueButton"/>
+		<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_ARROW_RIGHT_BOLD}" text="{msg.generalContinue}" type="PRIMARY"
+				  ui:field="continueButton"/>
 
 		<g:FlowPanel addStyleNames="{style.margin}" ui:field="results" visible="false">
 			<b:FormGroup>

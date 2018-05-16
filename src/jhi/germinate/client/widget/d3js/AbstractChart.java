@@ -368,6 +368,7 @@ public abstract class AbstractChart extends GerminateComposite
 	private void handleEvent(DomEvent event, Widget relativeTo, PopupPanel popup)
 	{
 		event.preventDefault();
+		event.stopPropagation();
 
 		popup.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
 		{
@@ -411,7 +412,7 @@ public abstract class AbstractChart extends GerminateComposite
 		body.add(textBox);
 
 		final AlertDialog dialog = new AlertDialog(Text.LANG.generalFilename(), body)
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalContinue(), Style.MDI_ARROW_RIGHT_BOLD, (e) -> callback.onSuccess(textBox.getValue())))
+				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalContinue(), Style.MDI_ARROW_RIGHT_BOLD, ButtonType.PRIMARY, (e) -> callback.onSuccess(textBox.getValue())))
 				.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalCancel(), Style.MDI_CANCEL, (e) -> callback.onFailure(null)));
 
 		// Add an enter key listener
@@ -419,9 +420,7 @@ public abstract class AbstractChart extends GerminateComposite
 		{
 			// If enter is pressed, invoke the positive button click
 			if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
-			{
 				dialog.positiveClick();
-			}
 		});
 
 		dialog.open();
@@ -448,7 +447,7 @@ public abstract class AbstractChart extends GerminateComposite
 	 */
 	private native void downloadImage(Element svg, String filename)/*-{
 		if ($wnd.saveSvgAsPng)
-			$wnd.saveSvgAsPng(svg, filename, 2);
+			$wnd.saveSvgAsPng(svg, filename, 1);
 		else
 			console.error("Load D3_DOWNLOAD library to download d3 charts");
 	}-*/;

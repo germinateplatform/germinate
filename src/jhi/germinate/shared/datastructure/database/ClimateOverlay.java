@@ -44,6 +44,8 @@ public class ClimateOverlay extends DatabaseObject
 	public static final String TOP_RIGHT_LATITUDE    = "climateoverlays.top_right_latitude";
 	public static final String IS_LEGEND             = "climateoverlays.is_legend";
 	public static final String DESCCRIPTION          = "climateoverlays.description";
+	public static final String CREATED_ON            = "climateoverlays.created_on";
+	public static final String UPDATED_ON            = "climateoverlays.updated_on";
 
 	private String  name;
 	private Climate climate;

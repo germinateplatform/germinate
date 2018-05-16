@@ -38,6 +38,7 @@ import jhi.germinate.client.page.dataset.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.*;
@@ -55,6 +56,8 @@ import jhi.germinate.shared.search.*;
  */
 public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset>
 {
+	private static final int TRUNCATION_LIMIT = 150;
+
 	private boolean linkToExportPage = false;
 	private boolean showDownload     = false;
 	private ReferenceFolder         referenceFolder;
@@ -88,6 +91,95 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 	protected String getClassName()
 	{
 		return DatasetTable.class.getSimpleName();
+	}
+
+	public static String getTextTruncated(String text)
+	{
+		if (StringUtils.isEmpty(text))
+			return "";
+		else
+			return StringUtils.getWordsUntil(text, TRUNCATION_LIMIT);
+	}
+
+	public void setShowDownload(boolean showDownload, ReferenceFolder referenceFolder)
+	{
+		this.showDownload = showDownload;
+		this.referenceFolder = referenceFolder;
+	}
+
+	public void setShowDownload(boolean showDownload, SimpleCallback<Dataset> downloadCallback)
+	{
+		this.showDownload = showDownload;
+		this.downloadCallback = downloadCallback;
+	}
+
+	protected void onItemSelected(NativeEvent event, Dataset object, int column)
+	{
+		if (Objects.equals(table.getColumn(column).getDataStoreName(), Experiment.EXPERIMENT_NAME))
+		{
+			LongParameterStore.Inst.get().put(Parameter.experimentId, object.getExperiment().getId());
+		}
+		else
+		{
+			/* Get their ids */
+			List<Dataset> ids = new ArrayList<>();
+			ids.add(object);
+
+			Parameter parameter = null;
+
+			switch (object.getExperiment().getType())
+			{
+				case allelefreq:
+					parameter = Parameter.allelefreqDatasets;
+					break;
+				case climate:
+					parameter = Parameter.climateDatasets;
+					break;
+				case compound:
+					parameter = Parameter.compoundDatasets;
+					break;
+				case genotype:
+					parameter = Parameter.genotypeDatasets;
+					break;
+				case trials:
+					parameter = Parameter.trialsDatasets;
+					break;
+			}
+
+			if (parameter != null)
+				DatasetListParameterStore.Inst.get().put(parameter, ids);
+
+			GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(ids));
+		}
+	}
+
+	/**
+	 * Gets the html cell value
+	 *
+	 * @param dataset The {@link Dataset}
+	 * @param text    The text to display
+	 * @return The generated {@link SafeHtml}
+	 */
+	public static SafeHtml getValueTruncated(Dataset dataset, String text)
+	{
+		if (StringUtils.isEmpty(text))
+		{
+			return SimpleHtmlTemplate.INSTANCE.text("");
+		}
+		else
+		{
+			String truncated = StringUtils.getWordsUntil(text, TRUNCATION_LIMIT);
+
+			if (StringUtils.isEmpty(dataset.getHyperlink()))
+			{
+				return SimpleHtmlTemplate.INSTANCE.textTruncated(text, truncated);
+			}
+			else
+			{
+				SafeUri href = UriUtils.fromString(dataset.getHyperlink());
+				return SimpleHtmlTemplate.INSTANCE.anchorNewTabTruncated(href, text, truncated);
+			}
+		}
 	}
 
 	@Override
@@ -138,10 +230,10 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			public SafeHtml getValue(Dataset object)
 			{
 				/* Check if we want to link to the export page */
-				if (linkToExportPage && object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
-					return getExportPageLink(object, object.getDescription());
+				if(linkToExportPage && canAccess(object))
+					return getExportPageLinkTruncated(object, object.getDescription());
 				else
-					return DatasetTable.this.getValue(object, object.getDescription());
+					return DatasetTable.getValueTruncated(object, object.getDescription());
 			}
 
 			@Override
@@ -185,7 +277,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					if (GerminateSettingsHolder.isPageAvailable(Page.EXPERIMENT_DETAILS))
 						return TableUtils.getHyperlinkValue(object.getExperiment().getName(), "#" + Page.EXPERIMENT_DETAILS);
 					else
-						return DatasetTable.this.getValue(object, object.getExperiment().getName());
+						return DatasetTable.this.getValueTruncated(object, object.getExperiment().getName());
 				}
 
 				return null;
@@ -206,7 +298,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			@Override
 			public SafeHtml getValue(Dataset object)
 			{
-				return DatasetTable.this.getValue(object, object.getDatatype());
+				return DatasetTable.this.getValueTruncated(object, object.getDatatype());
 			}
 
 			@Override
@@ -238,7 +330,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 					String icon = Style.MDI_NEW_BOX;
 
-					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (canAccess(object))
 						icon = Style.MDI_CHECK;
 
 					if (data != null)
@@ -263,7 +355,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				{
 					event.preventDefault();
 
-					if (object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (!ModuleCore.getUseAuthentication() || object.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
 					{
 						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
@@ -389,7 +481,12 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				if (count == null || count == 0L)
 					return null;
 				else
-					return Long.toString(count);
+				{
+					if (object.getExperiment().getType() == ExperimentType.genotype || object.getExperiment().getType() == ExperimentType.allelefreq)
+						return "≤" + Long.toString(count);
+					else
+						return Long.toString(count);
+				}
 			}
 
 			@Override
@@ -534,10 +631,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 		if (showDownload)
 		{
-			/*
-			 * Add the style for the dataset download column and the column
-             * itself
-             */
+			// Add the style for the dataset download column and the column itself
 			Column<Dataset, SafeHtml> downloadColumn = new Column<Dataset, SafeHtml>(clickCell)
 			{
 				@Override
@@ -549,7 +643,8 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				@Override
 				public SafeHtml getValue(Dataset row)
 				{
-					if (ModuleCore.getUseAuthentication() && !row.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					// If no authentication, but license available OR authentication but user hasn't accepted
+					if(!canAccess(row))
 					{
 						return SimpleHtmlTemplate.INSTANCE.text("");
 					}
@@ -588,7 +683,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				@Override
 				public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
 				{
-					if (ModuleCore.getUseAuthentication() && !object.hasLicenseBeenAccepted(ModuleCore.getUserAuth().getId()))
+					if (!canAccess(object))
 					{
 						event.preventDefault();
 						return;
@@ -597,6 +692,8 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					if (BrowserEvents.CLICK.equals(event.getType()) && downloadCallback != null)
 					{
 						event.preventDefault();
+						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "dataset", Long.toString(object.getId()));
+						GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(object)));
 						downloadCallback.onSuccess(object);
 					}
 					else
@@ -610,54 +707,14 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		}
 	}
 
-	public void setShowDownload(boolean showDownload, ReferenceFolder referenceFolder)
+	private boolean canAccess(Dataset dataset)
 	{
-		this.showDownload = showDownload;
-		this.referenceFolder = referenceFolder;
-	}
-
-	public void setShowDownload(boolean showDownload, SimpleCallback<Dataset> downloadCallback)
-	{
-		this.showDownload = showDownload;
-		this.downloadCallback = downloadCallback;
-	}
-
-	protected void onItemSelected(NativeEvent event, Dataset object, int column)
-	{
-		if (Objects.equals(table.getColumn(column).getDataStoreName(), Experiment.EXPERIMENT_NAME))
-		{
-			LongParameterStore.Inst.get().put(Parameter.experimentId, object.getExperiment().getId());
-		}
+		if (ModuleCore.getUseAuthentication() && !dataset.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
+			return false;
+		else if (!ModuleCore.getUseAuthentication() && dataset.getLicense() != null)
+			return false;
 		else
-		{
-			/* Get their ids */
-			List<Long> ids = new ArrayList<>();
-			ids.add(object.getId());
-
-			Parameter parameter = null;
-
-			switch (object.getExperiment().getType())
-			{
-				case allelefreq:
-					parameter = Parameter.allelefreqDatasetIds;
-					break;
-				case climate:
-					parameter = Parameter.climateDatasetIds;
-					break;
-				case compound:
-					parameter = Parameter.compoundDatasetIds;
-					break;
-				case genotype:
-					parameter = Parameter.genotypeDatasetIds;
-					break;
-				case trials:
-					parameter = Parameter.trialsDatasetIds;
-					break;
-			}
-
-			if (parameter != null)
-				LongListParameterStore.Inst.get().put(parameter, ids);
-		}
+			return true;
 	}
 
 	/**
@@ -667,7 +724,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 	 * @param text    The text to display
 	 * @return The {@link SafeHtml} instance representing the link to the export page of the {@link ExperimentType} of this {@link Dataset}
 	 */
-	public SafeHtml getExportPageLink(Dataset dataset, String text)
+	public SafeHtml getExportPageLinkTruncated(Dataset dataset, String text)
 	{
 		/* If there's not text to display, just return */
 		if (dataset.getExperiment() == null || dataset.getExperiment().getType() == null)
@@ -702,38 +759,16 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				break;
 		}
 
+		String truncated = StringUtils.getWordsUntil(text, TRUNCATION_LIMIT);
+
 		/* If we found a Page, link to it */
 		if (page != null)
 		{
 			SafeUri uri = UriUtils.fromString("#" + page.name());
-			return SimpleHtmlTemplate.INSTANCE.anchor(uri, text);
+			return SimpleHtmlTemplate.INSTANCE.anchorTruncated(uri, text, truncated);
 		}
 		/* Otherwise just show the text */
 		else
-			return SimpleHtmlTemplate.INSTANCE.text(text);
-	}
-
-	/**
-	 * Gets the html cell value
-	 *
-	 * @param dataset The {@link Dataset}
-	 * @param text    The text to display
-	 * @return The generated {@link SafeHtml}
-	 */
-	public SafeHtml getValue(Dataset dataset, String text)
-	{
-		if (StringUtils.isEmpty(text))
-		{
-			return SimpleHtmlTemplate.INSTANCE.text("");
-		}
-		else if (StringUtils.isEmpty(dataset.getHyperlink()))
-		{
-			return SimpleHtmlTemplate.INSTANCE.text(text);
-		}
-		else
-		{
-			SafeUri href = UriUtils.fromString(dataset.getHyperlink());
-			return SimpleHtmlTemplate.INSTANCE.anchorNewTab(href, text);
-		}
+			return SimpleHtmlTemplate.INSTANCE.textTruncated(text, truncated);
 	}
 }

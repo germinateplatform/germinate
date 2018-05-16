@@ -34,7 +34,7 @@ import jhi.germinate.shared.*;
 public abstract class GerminateComposite extends Composite
 {
 	protected final FlowPanel panel;
-	private int width = 0;
+	private         int       width = 0;
 
 	/**
 	 * Creates a new instance of {@link GerminateComposite}. Child classes mustn't call {@link #initWidget(Widget)}!

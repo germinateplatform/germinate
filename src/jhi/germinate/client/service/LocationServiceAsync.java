@@ -25,7 +25,6 @@ import java.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.enums.LocationType;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -187,16 +186,4 @@ public interface LocationServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	void exportToKml(RequestProperties properties, KmlType type, Long id, AsyncCallback<ServerResult<String>> callback);
-
-	/**
-	 * Returns a list of {@link Country} objects with either {@link DatabaseObject#COUNT} or {@link Country#AVERAGE} set to the {@link Phenotype}
-	 * value for this {@link ExperimentType} and {@link Dataset} ids.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @param type        The {@link ExperimentType}
-	 * @param phenotypeId The {@link Phenotype} id
-	 * @param callback    The {@link AsyncCallback}
-	 */
-	void getCountryValues(RequestProperties properties, List<Long> datasetIds, ExperimentType type, Long phenotypeId, AsyncCallback<ServerResult<List<Country>>> callback);
 }

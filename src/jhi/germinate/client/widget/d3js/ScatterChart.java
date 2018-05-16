@@ -61,9 +61,9 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	private JsArrayInteger size       = null;
 	private ExperimentType experimentType;
 
-	private List<Long>  datasetIds;
-	private List<T>     objects;
-	private List<Group> groups;
+	private List<Dataset> selectedDatasets;
+	private List<T>       objects;
+	private List<Group>   groups;
 
 	private FlowPanel                chartPanel;
 	private ScatterChartSelection<T> parameterSelection;
@@ -72,16 +72,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 	public ScatterChart()
 	{
-	}
-
-	public ScatterChart(List<T> objects, List<Group> groups, ExperimentType experimentType, String title, SafeHtml message)
-	{
-		super(title, message);
-		this.experimentType = experimentType;
-		if (objects != null)
-			this.objects = new ArrayList<>(objects);
-		if (groups != null)
-			this.groups = new ArrayList<>(groups);
 	}
 
 	public void update(ExperimentType expertimentType, List<T> objects, List<Group> groups, SafeHtml message)
@@ -120,9 +110,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			ButtonGroup group = new ButtonGroup();
 			group.addStyleName(Style.LAYOUT_FLOAT_INITIAL);
 			// Add the button
-			deleteButton = new Button("", e -> {
-				AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null);
-			});
+			deleteButton = new Button("", e -> AlertDialog.createYesNoDialog(Text.LANG.generalClear(), Text.LANG.markedItemListClearConfirm(), false, ev -> MarkedItemList.clear(MarkedItemList.ItemType.ACCESSION), null));
 			deleteButton.addStyleName(Style.mdiLg(Style.MDI_DELETE));
 			deleteButton.setTitle(Text.LANG.generalClear());
 
@@ -155,7 +143,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			Long secondId = second.getId();
 
 			setNames(first, second);
-
 
 			LongParameterStore.Inst.get().put(Parameter.trialsPhenotypeOne, firstId);
 			LongParameterStore.Inst.get().put(Parameter.trialsPhenotypeTwo, secondId);
@@ -228,13 +215,14 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 	private void getData(Long groupId, Long firstId, Long secondId, AsyncCallback<ServerResult<String>> callback)
 	{
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		switch (experimentType)
 		{
 			case trials:
-				TrialService.Inst.get().exportPhenotypeScatter(Cookie.getRequestProperties(), datasetIds, firstId, secondId, groupId, callback);
+				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
 				break;
 			case compound:
-				CompoundService.Inst.get().getCompoundByCompoundFile(Cookie.getRequestProperties(), datasetIds, firstId, secondId, groupId, callback);
+				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
 				break;
 		}
 
@@ -247,10 +235,10 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			switch (experimentType)
 			{
 				case trials:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 					break;
 				case compound:
-					datasetIds = LongListParameterStore.Inst.get().get(Parameter.compoundDatasetIds);
+					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
 					break;
 			}
 
@@ -323,9 +311,13 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
 
-		$wnd.d3.tsv(filePath, function (data) {
+		$wnd.d3.xhr(filePath).get(function (err, response) {
+			var dirtyTsv = response.responseText;
+			var firstEOL = dirtyTsv.indexOf('\n');
+			var parsedTsv = $wnd.d3.tsv.parse(dirtyTsv.substring(firstEOL + 1)); // Remove the first row (Helium header)
+
 			$wnd.d3.select("#" + panelId)
-				.datum(data)
+				.datum(parsedTsv)
 				.call($wnd.scatterPlot()
 					.margin(margin)
 					.width(width)
@@ -338,30 +330,33 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 					})
 					.colorKey(function (d) {
 						if (colorByTreatment)
-							return d.treatment;
+							return d.treatments_description;
 						else if (colorByDataset)
-							return d.dataset;
+							return d.dataset_name;
 						else if (colorByYear)
-							return d.recording_date;
+							return d.year;
 						else
 							return null;
+					})
+					.id(function (d) {
+						return d.dbId;
 					})
 					.itemName(function (d) {
 						return d.name;
 					})
 					.highlightColor(highlightColor)
 					.tooltip(function (d) {
-						if (colorByTreatment && d.treatment)
-							return d.name + "<br/>" + d.treatment + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
-						else if (colorByDataset && d.dataset)
-							return d.name + "<br/>" + d.dataset + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
-						else if (colorByYear && d.recording_date)
-							return d.name + "<br/>" + d.recording_date + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
+						if (colorByTreatment && d.treatments_description)
+							return d.name + "<br/>" + d.treatments_description + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
+						else if (colorByDataset && d.dataset_name)
+							return d.name + "<br/>" + d.dataset_name + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
+						else if (colorByYear && d.year)
+							return d.name + "<br/>" + d.year + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
 						else
 							return d.name + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
 					})
 					.onClick(function (d) {
-						@jhi.germinate.client.widget.d3js.ScatterChart::onDataPointClicked(Ljava/lang/String;)(d.id);
+						@jhi.germinate.client.widget.d3js.ScatterChart::onDataPointClicked(Ljava/lang/String;)(d.dbId);
 					})
 					.color(color)
 					.tooltipStyle(tooltipStyle)

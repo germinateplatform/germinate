@@ -51,21 +51,20 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	private static final String QUERY_DATA                     = "call " + StoredProcedureInitializer.PHENOTYPE_DATA + "(?, ?, ?)";
 	private static final String QUERY_DATA_PHENOTYPES          = "call " + StoredProcedureInitializer.PHENOTYPE_DATA_PHENOTYPE + "(?, ?)";
 	private static final String QUERY_DATA_COMPLETE            = "call " + StoredProcedureInitializer.PHENOTYPE_DATA_COMPLETE + "(?)";
-	private static final String QUERY_PHENOTYPE_STATS          = "SELECT phenotypes.id , phenotypes.`name`, phenotypes.description, units.*, MIN(cast(phenotype_value AS DECIMAL(30,2))) as min, MAX(cast(phenotype_value AS DECIMAL(30,2))) as max, AVG(cast(phenotype_value AS DECIMAL(30,2))) as avg, STD(cast(phenotype_value AS DECIMAL(30,2))) as std, datasets.description as dataset_description FROM datasets LEFT JOIN phenotypedata ON datasets.id = phenotypedata.dataset_id LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE phenotypes.datatype != 'char' AND datasets.id in (%s) GROUP by phenotypes.id, datasets.id";
+	private static final String QUERY_PHENOTYPE_STATS          = "SELECT phenotypes.id , phenotypes.`name`, phenotypes.description, units.*, COUNT( 1 ) AS count, MIN(cast(phenotype_value AS DECIMAL(30,2))) as min, MAX(cast(phenotype_value AS DECIMAL(30,2))) as max, AVG(cast(phenotype_value AS DECIMAL(30,2))) as avg, STD(cast(phenotype_value AS DECIMAL(30,2))) as std, datasets.description as dataset_description FROM datasets LEFT JOIN phenotypedata ON datasets.id = phenotypedata.dataset_id LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE phenotypes.datatype != 'char' AND datasets.id in (%s) GROUP by phenotypes.id, datasets.id";
 
 	@Override
-	public ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
+	public ServerResult<List<DataStats>> getOverviewStats(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		try
-		{
-			return new PhenotypeManager().getById(userAuth, id);
-		}
-		catch (InsufficientPermissionsException e)
-		{
-			return new ServerResult<>(null, null);
-		}
+		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
+		String formatted = String.format(QUERY_PHENOTYPE_STATS, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
+
+		return new DatabaseObjectQuery<DataStats>(formatted, userAuth)
+				.setLongs(datasetIds)
+				.run()
+				.getObjects(DataStats.Parser.Inst.get(), true);
 	}
 
 	@Override
@@ -107,7 +106,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		/* If both are empty, return everything */
 		if (CollectionUtils.isEmpty(groupIds) && CollectionUtils.isEmpty(phenotypeIds))
 		{
-			String formatted = String.format(QUERY_PHENOTYPE_NAMES_COMPLETE, Util.generateSqlPlaceholderString(datasetIds.size()));
+			String formatted = String.format(QUERY_PHENOTYPE_NAMES_COMPLETE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(datasetIds)
@@ -133,7 +132,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 			String groups = Util.joinCollection(groupIds, ", ", true);
 			String phenotypes = Util.joinCollection(phenotypeIds, ", ", true);
 
-			String formatted = String.format(QUERY_PHENOTYPE_NAMES, Util.generateSqlPlaceholderString(phenotypeIds.size()));
+			String formatted = String.format(QUERY_PHENOTYPE_NAMES, StringUtils.generateSqlPlaceholderString(phenotypeIds.size()));
 
 			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
 					.setLongs(phenotypeIds)
@@ -189,7 +188,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		String filePath;
 
 		/* Export the data to a temporary file */
-		File file = createTemporaryFile("phenotype", FileType.txt.name());
+		File file = createTemporaryFile("phenotype", datasetIds, FileType.txt.name());
 		filePath = file.getName();
 
 		try
@@ -208,20 +207,6 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		 * and the resulting GerminateTable
 		 */
 		return new ServerResult<>(sqlDebug, filePath);
-	}
-
-	@Override
-	public ServerResult<List<DataStats>> getOverviewStats(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
-		String formatted = String.format(QUERY_PHENOTYPE_STATS, Util.generateSqlPlaceholderString(datasetIds.size()));
-
-		return new DatabaseObjectQuery<DataStats>(formatted, userAuth)
-				.setLongs(datasetIds)
-				.run()
-				.getObjects(DataStats.Parser.Inst.get(), true);
 	}
 
 	@Override

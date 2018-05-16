@@ -335,6 +335,10 @@ public interface Text extends Messages
 	@Key("menu.logout")
 	String menuLogout();
 
+	@Key("menu.settings")
+	@DefaultMessage("Settings")
+	String menuSettings();
+
 	@Key("menu.genotype.maps")
 	String menuMaps();
 
@@ -626,7 +630,7 @@ public interface Text extends Messages
 	String aboutTitle();
 
 	@Key("page.about.text")
-	@DefaultMessage("page.about.text=<p><strong>&copy; 2006-{1} Information & Computational Sciences, The James Hutton Institute.</strong></p><p><a target=\"_blank\" href=\"http://ics.hutton.ac.uk/germinate\">Germinate 3</a> is written, designed and developed by <strong>Paul Shaw and Sebastian Raubach</strong></p><p>Iain Milne, Gordon Stephen and David Marshall are involved in various aspects of its development such as integration of Germinate with other <a href=\"https://ics.hutton.ac.uk/software/\">Software Development Group visualization tools</a>.</p><p>In addition the following people have been instrumental in the development of Germinate. Linda Milne, Runxuan Zhang, Bill Thomas, Luke Ramsay, Robbie Waugh, Jordi Comadran, Joanne Russell and Andy Flavell.</p><p>Previous Members of the Germinate Team have included: Jennifer Lee, Jacek Grzebyta, Toby Philp and Nelo Onyiah.</p><p>We take privacy seriously. Your username is available to the Germinate 3 system but passwords are encrypted using the BCrypt algorithm and therefore cannot be viewed by us. If you forget your password please log in to the <a href=\"{0}\" target=\"_blank\">Germinate Gatekeeper website</a> to change it.</p><p>The Germinate system knows who you are based on your username. Groups you create using Germinate are unique to you and are not available to other users of the system. Adding notes to individual plant lines are available to other users and are tagged with your username. While this is important in gaining information please do not enter anything in notes fields on this site that you want to be kept private.</p><p>This particular implementation of Germinate 3 does not actively track your IP address or your operating system but it may detect your web browser. This is done solely for the purpose of tailoring features that may not be compatible with all browsers and is integral to the GWT (GWT Web Toolkit) tools that are used to develop this resource.</p><br/><p>For further information on the tools and databases that we produce visit our website at <a href=\"http://ics.hutton.ac.uk\" target=\"_blank\">http://ics.hutton.ac.uk</a> and follow our updates on Twitter <a href=\"https://twitter.com/cropgeeks\" target=\"_blank\"><span class=\"fa fa-twitter fa-lg font-awesome\"></span> @cropgeeks</a></p><br/><h4>Contact Details:</h4><p>You can contact us by email at <a href=\"mailto:germinate@hutton.ac.uk\">germinate@hutton.ac.uk</a> or you can write to us at:</p>")
+	@DefaultMessage("page.about.text=<p><strong>&copy; 2006-{1} Information & Computational Sciences, The James Hutton Institute.</strong></p><p><a target=\"_blank\" href=\"http://ics.hutton.ac.uk/germinate\">Germinate 3</a> is written, designed and developed by <strong>Paul Shaw and Sebastian Raubach</strong></p><p>Iain Milne, Gordon Stephen and David Marshall are involved in various aspects of its development such as integration of Germinate with other <a href=\"https://ics.hutton.ac.uk/software/\">Software Development Group visualization tools</a>.</p><p>In addition the following people have been instrumental in the development of Germinate. Linda Milne, Runxuan Zhang, Bill Thomas, Luke Ramsay, Robbie Waugh, Jordi Comadran, Joanne Russell and Andy Flavell.</p><p>Previous Members of the Germinate Team have included: Jennifer Lee, Jacek Grzebyta, Toby Philp and Nelo Onyiah.</p><p>We take privacy seriously. Your username is available to the Germinate 3 system but passwords are encrypted using the BCrypt algorithm and therefore cannot be viewed by us. If you forget your password please log in to the <a href=\"{0}\" target=\"_blank\">Germinate Gatekeeper website</a> to change it.</p><p>The Germinate system knows who you are based on your username. Groups you create using Germinate are unique to you and are not available to other users of the system. Adding notes to individual plant lines are available to other users and are tagged with your username. While this is important in gaining information please do not enter anything in notes fields on this site that you want to be kept private.</p><p>This particular implementation of Germinate 3 does not actively track your IP address or your operating system but it may detect your web browser. This is done solely for the purpose of tailoring features that may not be compatible with all browsers and is integral to the GWT (GWT Web Toolkit) tools that are used to develop this resource.</p><br/><p>For further information on the tools and databases that we produce visit our website at <a href=\"http://ics.hutton.ac.uk\" target=\"_blank\">http://ics.hutton.ac.uk</a> and follow our updates on Twitter <a href=\"https://twitter.com/cropgeeks\" target=\"_blank\">@cropgeeks</a></p><br/><h4>Contact Details:</h4><p>You can contact us by email at <a href=\"mailto:germinate@hutton.ac.uk\">germinate@hutton.ac.uk</a> or you can write to us at:</p>")
 	String aboutText(String gatekeeperUrl, int year);
 
 	@Key("page.about.address")
@@ -681,6 +685,10 @@ public interface Text extends Messages
 	@DefaultMessage("Pedigree")
 	String passportPedigreeData();
 
+	@Key("page.passport.entity.title")
+	@DefaultMessage("Entity data")
+	String passportEntityData();
+
 	@Key("page.passport.institutions.title")
 	String passportInstitutionsData();
 
@@ -712,8 +720,24 @@ public interface Text extends Messages
 	@Key("page.passport.datasets.text")
 	SafeHtml passportDatasetsOverviewText();
 
+	@Key("page.passport.pdci.title")
+	@DefaultMessage("Passport Data Completeness Index")
+	String passportPDCITitle();
+
+	@Key("page.passport.pdci.score")
+	@DefaultMessage("<b>The score for this item is: {0}/10</b>")
+	SafeHtml passportPDCIScore(String score);
+
+	@Key("page.passport.pdci.explanation")
+	@DefaultMessage("<p>This passport data completeness index (PDCI) uses the presence or absence of data points in the documentation of a genebank accession, taking into account the presence or value of other data points. For example, a wild accession should have a well-defined collection site but no variety name. Any type of accession, wild, landrace, breeding material or modern variety, can attain a maximal score of ten for this index.</p><p>Theo van Hintum, Frank Menting and Elisabeth van Strien (2011). <b>Quality indicators for passport data in ex situ genebanks.</b> Plant Genetic Resources, 9, pp 478-485. doi: <a href='https://dx.doi.org/10.1017/S1479262111000682' target='_blank'>10.1017/S1479262111000682</a></p>")
+	SafeHtml passportPDCIExplanation();
+
 	@Key("column.passport.collection.date")
 	String passportColumnColldate();
+
+	@Key("column.passport.pdci")
+	@DefaultMessage("PDCI")
+	String passportColumnPDCI();
 
 	@Key("column.passport.country")
 	String passportColumnCountry();
@@ -777,6 +801,10 @@ public interface Text extends Messages
 
 	@Key("column.accessions.number")
 	String accessionsColumnNumber();
+
+	@Key("column.accessions.entity.type")
+	@DefaultMessage("Entity type")
+	String accessionsColumnEntityType();
 
 	@Key("column.accessions.synonym")
 	@DefaultMessage("Synonyms")
@@ -1194,6 +1222,10 @@ public interface Text extends Messages
 	@DefaultMessage("Between")
 	String operatorsBetween();
 
+	@Key("operators.in.set")
+	@DefaultMessage("In set")
+	String operatorsInSet();
+
 	@Key("operators.and")
 	String operatorsAnd();
 
@@ -1288,6 +1320,10 @@ public interface Text extends Messages
 
 	@Key("column.markers.feature.description")
 	String markersColumnFeatureDescription();
+
+	@Key("column.markers.type.description")
+	@DefaultMessage("Marker Type")
+	String markersColumnTypeDescription();
 
 	@Key("column.markers.chromosome")
 	String markersColumnChromosome();
@@ -1508,6 +1544,7 @@ public interface Text extends Messages
 	String introductionTourMessageLanguage();
 
 	@Key("tour.introduction.share.text")
+	@DefaultMessage("Click on this to reveal the supported ways of sharing this page with your colleagues/friends/...")
 	String introductionTourMessageShare();
 
 	@Key("tour.introduction.help.text")
@@ -1679,6 +1716,10 @@ public interface Text extends Messages
 	@Key("page.registration.account.exists")
 	String registrationAlreadyHaveAccount();
 
+	@Key("page.registration.gatekeeper.info")
+	@DefaultMessage("Gatekeeper is Germinate''s user management system.")
+	String registrationGatekeeperInfo();
+
 	@Key("notification.registration.successful")
 	String notificationRegistrationSuccess();
 
@@ -1693,6 +1734,10 @@ public interface Text extends Messages
 
 	@Key("notification.registration.passwords.no.match")
 	String notificationRegistrationPasswordsDontMatch();
+
+	@Key("notification.registration.password.weak")
+	@DefaultMessage("Your password is too weak.")
+	String notificationRegistrationPasswordsWeakPassword();
 
 	@Key("notification.registration.gatekeeper.unavailable")
 	String notificationRegistrationGatekeeperUnavailable();
@@ -1774,13 +1819,44 @@ public interface Text extends Messages
 	String readOnlyBanner();
 
 	@Key("widget.dataset.title.allelefreq")
-	SafeHtml allelefreqDatasetHeader();
+	@DefaultMessage("Allele Frequency Data Export")
+	String allelefreqDatasetHeader();
+
+	@Key("widget.dataset.text.allelefreq")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml allelefreqDatasetText();
 
 	@Key("widget.dataset.title.trials")
-	SafeHtml trialsDatasetHeader();
+	@DefaultMessage("Trials Data Export")
+	String trialsDatasetHeader();
+
+	@Key("widget.dataset.text.trials")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml trialsDatasetText();
 
 	@Key("widget.dataset.title.genotypes")
-	SafeHtml genotypeDatasetHeader();
+	@DefaultMessage("Genotypic Data Export")
+	String genotypeDatasetHeader();
+
+	@Key("widget.dataset.text.genotypes")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml genotypeDatasetText();
+
+	@Key("widget.dataset.title.compounds")
+	@DefaultMessage("Compound Data Export")
+	String compoundDatasetHeader();
+
+	@Key("widget.dataset.text.compound")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml compoundDatasetText();
+
+	@Key("widget.dataset.title.climate")
+	@DefaultMessage("Climate Data Export")
+	String climateDatasetHeader();
+
+	@Key("widget.dataset.text.climate")
+	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
+	SafeHtml climateDatasetText();
 
 	@Key("page.acknowledgements.title")
 	String acknowledgementsTitle();
@@ -2037,10 +2113,6 @@ public interface Text extends Messages
 	@DefaultMessage("Synonyms")
 	String synonymsTitle();
 
-	@Key("page.compound.datasets.title")
-	@DefaultMessage("Compound datasets")
-	String compoundDatasetHeader();
-
 	@Key("page.compounds.title")
 	@DefaultMessage("Compounds")
 	String compoundsTitle();
@@ -2218,7 +2290,7 @@ public interface Text extends Messages
 	String mcpdRemarks();
 
 	@Key("button.group.from.cart")
-	@DefaultMessage("Create group from cart")
+	@DefaultMessage("Create group from list")
 	String buttonCreateGroupFromCart();
 
 	@Key("button.group.from.selection")
@@ -2249,13 +2321,13 @@ public interface Text extends Messages
 	@DefaultMessage("Genotype data")
 	String genotypePageTitle();
 
+	@Key("page.allelefreq.title")
+	@DefaultMessage("Allele frequency data")
+	String allelefreqPageTitle();
+
 	@Key("page.allelefreq.binning.title")
 	@DefaultMessage("Allele Frequency Binning")
 	String allelefreqBinningTitle();
-
-	@Key("page.climate.datasets.title")
-	@DefaultMessage("Climate Data Export")
-	String climateDatasetHeader();
 
 	@Key("page.compounds.scatter.first.compound")
 	@DefaultMessage("First compound")
@@ -2568,4 +2640,76 @@ public interface Text extends Messages
 	@Key("page.about.buttons.documentation.url")
 	@DefaultMessage("https://github.com/germinateplatform/germinate/wiki")
 	String aboutButtonsDocumentationUrl();
+
+	@Key("widget.user.tracking.heading")
+	@DefaultMessage("")
+	SafeHtml userTrackingHeading();
+
+	@Key("widget.dataset.selected")
+	@DefaultMessage("Selected datasets")
+	String selectedDatasets();
+
+	@Key("widget.dataset.user.tracking.name")
+	@DefaultMessage("Full name")
+	String userTrackingName();
+
+	@Key("widget.dataset.user.tracking.email")
+	@DefaultMessage("Email address")
+	String userTrackingEmail();
+
+	@Key("widget.dataset.user.tracking.institution")
+	@DefaultMessage("Institution")
+	String userTrackingInstitution();
+
+	@Key("widget.dataset.user.tracking.explanation")
+	@DefaultMessage("Can you let us know what you intend to use this data for in your research?")
+	String userTrackingExplanation();
+
+	@Key("widget.dataset.user.tracking.explanation.option.basic.research")
+	@DefaultMessage("Basic research (molecular biology, QTL studies, GWAS, phylogenetics, molecular ecology, etc.)")
+	String userTrackingExplanationOptionBasic();
+
+	@Key("widget.dataset.user.tracking.explanation.option.prebreeding")
+	@DefaultMessage("Pre-breeding (introgression line development, germplasm evaluation etc.)")
+	String userTrackingExplanationOptionPreBreeding();
+
+	@Key("widget.dataset.user.tracking.explanation.option.breeding.cultivar")
+	@DefaultMessage("Breeding and cultivar development")
+	String userTrackingExplanationOptionBreedingCultivar();
+
+	@Key("widget.dataset.user.tracking.explanation.option.education")
+	@DefaultMessage("Education")
+	String userTrackingExplanationOptionEducation();
+
+	@Key("widget.dataset.user.tracking.explanation.option.direct.use")
+	@DefaultMessage("Direct use of germplasm for production")
+	String userTrackingExplanationOptionDirectUse();
+
+	@Key("widget.dataset.user.tracking.explanation.option.other")
+	@DefaultMessage("Other (please specify)")
+	String userTrackingExplanationOptionOther();
+
+	@Key("widget.privacy.policy.information")
+	@DefaultMessage("")
+	SafeHtml privacyPolicyInformation();
+
+	@Key("widget.password.strength.zero")
+	@DefaultMessage("Your password is too guessable.")
+	String passwordStrengthZero();
+
+	@Key("widget.password.strength.one")
+	@DefaultMessage("Your password is very guessable.")
+	String passwordStrengthOne();
+
+	@Key("widget.password.strength.two")
+	@DefaultMessage("Your password is somewhat guessable.")
+	String passwordStrengthTwo();
+
+	@Key("widget.password.strength.three")
+	@DefaultMessage("Your password is safely unguessable.")
+	String passwordStrengthThree();
+
+	@Key("widget.password.strength.four")
+	@DefaultMessage("Your password is very unguessable.")
+	String passwordStrengthFour();
 }

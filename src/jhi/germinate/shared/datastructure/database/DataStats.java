@@ -34,6 +34,7 @@ public class DataStats extends DatabaseObject
 	private String name;
 	private String description;
 	private Unit   unit;
+	private Long   count;
 	private Double min;
 	private Double max;
 	private Double avg;
@@ -79,6 +80,17 @@ public class DataStats extends DatabaseObject
 	public DataStats setUnit(Unit unit)
 	{
 		this.unit = unit;
+		return this;
+	}
+
+	public Long getCount()
+	{
+		return count;
+	}
+
+	public DataStats setCount(Long count)
+	{
+		this.count = count;
 		return this;
 	}
 
@@ -169,6 +181,7 @@ public class DataStats extends DatabaseObject
 							.setName(row.getString("name"))
 							.setDescription(row.getString("description"))
 							.setUnit(UNIT_CACHE.get(user, row.getLong("units.id"), row, foreignsFromResultSet))
+							.setCount(row.getLong("count"))
 							.setMin(row.getDouble("min"))
 							.setAvg(row.getDouble("avg"))
 							.setMax(row.getDouble("max"))

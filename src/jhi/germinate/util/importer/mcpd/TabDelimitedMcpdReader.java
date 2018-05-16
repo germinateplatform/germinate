@@ -114,6 +114,7 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 				.setLocation(parseLocation())
 				.setBiologicalStatus(new BiologicalStatus(getLong(McpdField.SAMPSTAT)))
 				.setCollSrc(new CollectingSource(getLong(McpdField.COLLSRC)))
+				.setEntityType(EntityType.ACCESSION)
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
 		accession.setExtra(McpdField.REMARKS.name(), getPart(McpdField.REMARKS));
@@ -126,7 +127,7 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	private Location parseLocation()
 	{
 		return new Location()
-				.setType(new LocationType(1L))
+				.setType(LocationType.collectingsites)
 				.setName(getPart(McpdField.COLLSITE))
 				.setLatitude(getLatitudeLongitude(getDouble(McpdField.DECLATITUDE), getPart(McpdField.LATITUDE)))
 				.setLongitude(getLatitudeLongitude(getDouble(McpdField.DECLONGITUDE), getPart(McpdField.LONGITUDE)))

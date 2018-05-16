@@ -44,6 +44,8 @@ public class Subtaxa extends DatabaseObject
 	public static final String TAXONOMY_ID         = "subtaxa.taxonomy_id";
 	public static final String AUTHOR              = "subtaxa.subtaxa_author";
 	public static final String TAXONOMY_IDENTIFIER = "subtaxa.taxonomic_identifier";
+	public static final String CREATED_ON          = "subtaxa.created_on";
+	public static final String UPDATED_ON          = "subtaxa.updated_on";
 
 	private Taxonomy taxonomy;
 	private String   author;

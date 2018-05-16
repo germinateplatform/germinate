@@ -20,6 +20,7 @@ package jhi.germinate.shared;
 import java.util.*;
 import java.util.stream.*;
 
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.exception.*;
 
 /**
@@ -167,10 +168,10 @@ public class CollectionUtils
 		return longs;
 	}
 
-	public static Map<String, String> parseStringMap(String value, String innerSeparator, String outerSeparator)
+	public static FilterPanel.FilterMapping parseFilterMapping(String value, String innerSeparator, String outerSeparator)
 	{
 		List<String> pairs = parseStringList(value, outerSeparator);
-		Map<String, String> result = new HashMap<>();
+		FilterPanel.FilterMapping result = new FilterPanel.FilterMapping();
 
 		for (String pair : pairs)
 		{
@@ -185,26 +186,14 @@ public class CollectionUtils
 		return result;
 	}
 
-	public static String joinMap(Map<String, String> map, String innerSeparator, String outerSeparator)
+	public static String joinFilterMapping(FilterPanel.FilterMapping map, String innerSeparator, String outerSeparator)
 	{
-		List<String> pairs = map.entrySet()
+		List<String> pairs = map.getMapping()
 								.stream()
-								.map(entry -> entry.getKey() + innerSeparator + entry.getValue())
+								.map(entry -> entry.getColumn() + innerSeparator + entry.getValue())
 								.collect(Collectors.toList());
 
 		return join(pairs, outerSeparator);
-	}
-
-	public static <T> Set<T> combineSet(Collection<T> first, Collection<T> second)
-	{
-		Set<T> result = new HashSet<>();
-
-		if (!isEmpty(first))
-			result.addAll(first);
-		if (!isEmpty(second))
-			result.addAll(second);
-
-		return result;
 	}
 
 	public static <T> List<T> combineList(Collection<T> first, Collection<T> second)

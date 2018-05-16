@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.*;
 import org.gwtbootstrap3.client.ui.*;
 
 import java.util.*;
-import java.util.Map;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
@@ -37,6 +36,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -96,22 +96,26 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 		panel.add(table);
 
 		/* Apply any filtering that another page requested before redirecting here */
-		final Map<String, String> mapping = StringStringMapParameterStore.Inst.get().get(Parameter.tableFilterMapping);
-		if (mapping != null)
-		{
-			StringStringMapParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
+		FilterPanel.FilterMapping mapping = FilterMappingParameterStore.Inst.get().get(Parameter.tableFilterMapping);
 
-			Scheduler.get().scheduleDeferred(() ->
+		if (mapping == null)
+			mapping = new FilterPanel.FilterMapping();
+
+		/* By default, filter down to accessions only */
+		mapping.put(EntityType.NAME, EntityType.ACCESSION.getName());
+		FilterMappingParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
+
+		final FilterPanel.FilterMapping m = mapping;
+		Scheduler.get().scheduleDeferred(() ->
+		{
+			try
 			{
-				try
-				{
-					table.forceFilter(mapping, true);
-				}
-				catch (InvalidArgumentException e)
-				{
-				}
-			});
-		}
+				table.forceFilter(m, true);
+			}
+			catch (InvalidArgumentException e)
+			{
+			}
+		});
 
 		/* Set up callbacks for column names and groups */
 		ParallelAsyncCallback<ServerResult<List<String>>> columnCallback = new ParallelAsyncCallback<ServerResult<List<String>>>()
@@ -139,7 +143,7 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 			}
 		};
 
-        /* Start them both in parallel */
+		/* Start them all in parallel */
 		new ParallelParentAsyncCallback(columnCallback, groupCallback, hasPedigreeCallback)
 		{
 			@Override

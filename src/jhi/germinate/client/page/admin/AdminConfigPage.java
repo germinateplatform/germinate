@@ -102,6 +102,11 @@ public class AdminConfigPage extends Composite implements HasHelp
 	TextBox   analyticsId;
 
 	@UiField
+	FormLabel    downloadTrackingLabel;
+	@UiField
+	ToggleSwitch downloadTracking;
+
+	@UiField
 	FormLabel templateTitleLabel;
 	@UiField
 	TextBox   templateTitle;
@@ -143,8 +148,13 @@ public class AdminConfigPage extends Composite implements HasHelp
 	FormLabel    idsLabel;
 	@UiField
 	ToggleSwitch ids;
-	@UiField
 
+	@UiField
+	FormLabel    pdciLabel;
+	@UiField
+	ToggleSwitch pdci;
+
+	@UiField
 	FormLabel    loggingLabel;
 	@UiField
 	ToggleSwitch logging;
@@ -204,8 +214,8 @@ public class AdminConfigPage extends Composite implements HasHelp
 	@UiField
 	PanelCollapse target;
 
-	private AdvancedTable<Page> availablePages;
-	private GerminateSettings   settings;
+	private AdvancedTable<Page>      availablePages;
+	private GerminateSettings        settings;
 	private List<ColorPickerWrapper> templateCategoricalColors = new ArrayList<>();
 	private List<ColorPickerWrapper> templateGradientColors    = new ArrayList<>();
 
@@ -259,6 +269,8 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateBoolean(settings.googleAnalyticsEnabled, analytics, analyticsLabel);
 		updateString(settings.googleAnalyticsTrackingId, analyticsId, analyticsIdLabel);
 
+		updateBoolean(settings.downloadTrackingEnabled, downloadTracking, downloadTrackingLabel);
+
 		updateString(settings.templateTitle, templateTitle, templateTitleLabel);
 		updateString(settings.templateDatabaseName, templateDatabaseName, templateDatabaseNameLabel);
 		updateString(settings.templateContactEmail, templateEmail, templateEmailLabel);
@@ -271,6 +283,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateBoolean(settings.templateShowParallaxBanner, parallax, parallaxLabel);
 
 		updateBoolean(settings.hideIdColumn, ids, idsLabel);
+		updateBoolean(settings.pdciEnabled, pdci, pdciLabel);
 		updateBoolean(settings.serverLoggingEnabled, logging, loggingLabel);
 		updateBoolean(settings.debug, debug, debugLabel);
 		updateBoolean(settings.isReadOnlyMode, readOnly, readOnlyLabel);
@@ -300,10 +313,10 @@ public class AdminConfigPage extends Composite implements HasHelp
 		/* Take care of selection */
 		final SelectionModel<Page> selectionModel = new MultiSelectionModel<>();
 
-        /* Checkbox cell */
+		/* Checkbox cell */
 		CheckboxCell cell = new CheckboxCell(true, false);
 
-        /* First column: checkboxes */
+		/* First column: checkboxes */
 		Column<Page, Boolean> checkboxColumn = new Column<Page, Boolean>(cell)
 		{
 			@Override
@@ -449,6 +462,8 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.googleAnalyticsEnabled.setValue(analytics.getValue());
 			settings.googleAnalyticsTrackingId.setValue(analyticsId.getValue());
 
+			settings.downloadTrackingEnabled.setValue(downloadTracking.getValue());
+
 			settings.templateTitle.setValue(templateTitle.getValue());
 			settings.templateDatabaseName.setValue(templateDatabaseName.getValue());
 			settings.templateContactEmail.setValue(templateEmail.getValue());
@@ -470,6 +485,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.templateGradientColors.setValue(colors);
 
 			settings.hideIdColumn.setValue(ids.getValue());
+			settings.pdciEnabled.setValue(pdci.getValue());
 			settings.serverLoggingEnabled.setValue(logging.getValue());
 			settings.debug.setValue(debug.getValue());
 			settings.isReadOnlyMode.setValue(readOnly.getValue());

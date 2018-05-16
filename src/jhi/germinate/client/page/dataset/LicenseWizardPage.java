@@ -26,12 +26,13 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.datastructure.database.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class LicenseWizardPage extends Composite
+public class LicenseWizardPage extends ModalWizardPage
 {
 	interface LicenseWizardPageUiBinder extends UiBinder<HTMLPanel, LicenseWizardPage>
 	{
@@ -73,7 +74,7 @@ public class LicenseWizardPage extends Composite
 
 		license.setLicenseLog(new LicenseLog(-1L)
 				.setLicense(license.getId())
-				.setUser(ModuleCore.getUserAuth().getId())
+				.setUser(ModuleCore.getUseAuthentication() ? ModuleCore.getUserAuth().getId() : null)
 				.setAcceptedOn(System.currentTimeMillis()));
 
 		if (handler != null)
@@ -97,17 +98,5 @@ public class LicenseWizardPage extends Composite
 	public Decision getDecision()
 	{
 		return decision;
-	}
-
-	public enum Decision
-	{
-		UNKNOWN,
-		ACCEPTED,
-		DECLINED
-	}
-
-	public interface OnDecisionChangeHandler
-	{
-		void onDecisionChanged(Decision decision);
 	}
 }

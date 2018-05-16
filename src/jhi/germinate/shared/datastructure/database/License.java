@@ -37,6 +37,8 @@ public class License extends DatabaseObject
 	public static final String ID          = "licenses.id";
 	public static final String NAME        = "licenses.name";
 	public static final String DESCRIPTION = "licenses.description";
+	public static final String CREATED_ON  = "licenses.created_on";
+	public static final String UPDATED_ON  = "licenses.updated_on";
 
 	private String     name;
 	private String     description;

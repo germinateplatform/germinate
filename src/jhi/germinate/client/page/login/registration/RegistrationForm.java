@@ -58,6 +58,8 @@ public class RegistrationForm extends Composite implements Validator<String>
 	private static RegistrationFormUiBinder ourUiBinder = GWT.create(RegistrationFormUiBinder.class);
 
 	@UiField
+	HTML               privacyPolicy;
+	@UiField
 	ToggleSwitch       accountToggle;
 	@UiField
 	TextBox            username;
@@ -68,6 +70,12 @@ public class RegistrationForm extends Composite implements Validator<String>
 	@UiField
 	Input              passwordConfirm;
 	@UiField
+	Tooltip            tooltip;
+	@UiField
+	Progress           progress;
+	@UiField
+	ProgressBar        progressBar;
+	@UiField
 	TextBox            name;
 	@UiField
 	TextBox            email;
@@ -76,9 +84,49 @@ public class RegistrationForm extends Composite implements Validator<String>
 	@UiField
 	InstitutionListBox institution;
 
+	private int passwordStrength;
+
+	private ValueChangeHandler<String> passwordStrengthHandler = event -> {
+		if (StringUtils.isEmpty(password.getValue()))
+			passwordStrength = 0;
+		else
+			passwordStrength = getPasswordStrength(password.getValue());
+
+		switch (passwordStrength)
+		{
+			case 0:
+				progressBar.setPercent(1);
+				progressBar.setType(ProgressBarType.DANGER);
+				tooltip.setTitle(Text.LANG.passwordStrengthZero());
+				break;
+			case 1:
+				progressBar.setPercent(25);
+				progressBar.setType(ProgressBarType.DANGER);
+				tooltip.setTitle(Text.LANG.passwordStrengthOne());
+				break;
+			case 2:
+				progressBar.setPercent(50);
+				progressBar.setType(ProgressBarType.WARNING);
+				tooltip.setTitle(Text.LANG.passwordStrengthTwo());
+				break;
+			case 3:
+				progressBar.setPercent(75);
+				progressBar.setType(ProgressBarType.SUCCESS);
+				tooltip.setTitle(Text.LANG.passwordStrengthThree());
+				break;
+			case 4:
+				progressBar.setPercent(100);
+				progressBar.setType(ProgressBarType.SUCCESS);
+				tooltip.setTitle(Text.LANG.passwordStrengthFour());
+				break;
+		}
+	};
+
 	public RegistrationForm()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
+
+		privacyPolicy.setHTML(Text.LANG.privacyPolicyInformation());
 
 		// Add the validators that make sure everything is set
 		username.addValidator(this);
@@ -88,6 +136,9 @@ public class RegistrationForm extends Composite implements Validator<String>
 		email.addValidator(this);
 
 		updateInstitutions(null);
+
+		password.addValueChangeHandler(passwordStrengthHandler);
+		password.addKeyUpHandler(event -> passwordStrengthHandler.onValueChange(null));
 	}
 
 	public void addValueChangeHandlerString(ValueChangeHandler<String> handler)
@@ -159,6 +210,9 @@ public class RegistrationForm extends Composite implements Validator<String>
 	void onAccountToggleValueChange(ValueChangeEvent<Boolean> e)
 	{
 		newAccountPanel.setVisible(!e.getValue());
+		progress.setVisible(!e.getValue());
+
+		passwordStrengthHandler.onValueChange(null);
 	}
 
 	@UiHandler("addInstitutionButton")
@@ -220,6 +274,13 @@ public class RegistrationForm extends Composite implements Validator<String>
 				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationRegistrationPasswordsDontMatch());
 				return false;
 			}
+			else if(passwordStrength < 2)
+			{
+				password.addStyleName(ValidationState.ERROR.getCssName());
+				passwordConfirm.addStyleName(ValidationState.ERROR.getCssName());
+				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationRegistrationPasswordsWeakPassword());
+				return false;
+			}
 		}
 
 		return true;
@@ -241,7 +302,7 @@ public class RegistrationForm extends Composite implements Validator<String>
 		final LoadingIndicator indicator = new LoadingIndicator(Text.LANG.notificationLongRunning());
 		indicator.show();
 
-			/* Try to register the new user */
+		/* Try to register the new user */
 		UserService.Inst.get().register(Cookie.getRequestProperties(), user, new AsyncCallback<Void>()
 		{
 			@Override
@@ -313,6 +374,10 @@ public class RegistrationForm extends Composite implements Validator<String>
 			}
 		});
 	}
+
+	private native int getPasswordStrength(String password)/*-{
+		return $wnd.zxcvbn(password).score;
+	}-*/;
 
 	@Override
 	public int getPriority()

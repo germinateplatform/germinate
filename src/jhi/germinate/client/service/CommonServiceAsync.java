@@ -25,6 +25,7 @@ import java.util.Map;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.exception.*;
 
 /**
  * Async version of {@link CommonService}
@@ -101,7 +102,23 @@ public interface CommonServiceAsync
 	 */
 	void getCountryStats(RequestProperties properties, AsyncCallback<ServerResult<List<Country>>> callback);
 
+	/**
+	 * Returns statistics (counts) for the main data types within Germinate. {@link Accession}s, {@link Marker}s, {@link Group}s and {@link Location}s.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param callback   The {@link AsyncCallback}
+	 * @throws InvalidSessionException Thrown if the session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
 	void getOverviewStats(RequestProperties properties, AsyncCallback<ServerResult<Map<String, Long>>> callback);
 
+	/**
+	 * Marks the files for the given {@link ExperimentType} publically available. The actual files are stored on the server in the session, so we don't need to pass them here.
+	 *
+	 * @param properties     The {@link RequestProperties}
+	 * @param experimentType The {@link ExperimentType} of the files that should be made publically available.
+	 * @param callback       The {@link AsyncCallback}
+	 * @throws InvalidSessionException
+	 */
 	void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType, AsyncCallback<Void> callback);
 }

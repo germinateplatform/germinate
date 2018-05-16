@@ -71,7 +71,6 @@ public class PedigreeStringImporter extends DataImporter<PedigreeDefinition>
 			// Write or get the accession itself
 			getAccession(entry);
 			createOrGetNotation(entry);
-			createOrGetDescription(entry);
 			createPedigreeDefinition(entry);
 		}
 	}
@@ -116,45 +115,6 @@ public class PedigreeStringImporter extends DataImporter<PedigreeDefinition>
 	}
 
 	/**
-	 * Imports the {@link PedigreeDescription} object into the database if it doesn't already exist, otherwise returns the existing object from the
-	 * database.
-	 *
-	 * @param entry The {@link PedigreeDefinition} object containing the {@link PedigreeDescription} to import.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private void createOrGetDescription(PedigreeDefinition entry) throws DatabaseException
-	{
-		String name = entry.getDescription().getName();
-
-		if (StringUtils.isEmpty(name))
-			return;
-
-		PedigreeDescription cached = pedigreeDescriptionCache.get(name);
-
-		if (cached == null)
-		{
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM pedigreedescriptions WHERE name = ?");
-			stmt.setString(1, name);
-
-			DatabaseResult rs = stmt.query();
-
-			if (rs.next())
-			{
-				cached = PedigreeDescription.Parser.Inst.get().parse(rs, null, true);
-			}
-			else
-			{
-				cached = entry.getDescription();
-				PedigreeDescription.Writer.Inst.get().write(databaseConnection, cached);
-				createdPedigreeDescriptionIds.add(cached.getId());
-			}
-		}
-		entry.setDescription(cached);
-
-		pedigreeDescriptionCache.put(name, cached);
-	}
-
-	/**
 	 * Returns the {@link Accession} with the given {@link Accession#GENERAL_IDENTIFIER}.
 	 *
 	 * @param name The {@link Accession#GENERAL_IDENTIFIER} of the {@link Accession} to get.
@@ -192,12 +152,11 @@ public class PedigreeStringImporter extends DataImporter<PedigreeDefinition>
 		if (StringUtils.isEmpty(name))
 			throw new DatabaseException("Invalid pedigree string");
 
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM pedigreedefinitions WHERE definition = ? AND germinatebase_id = ? AND pedigreenotation_id = ? AND pedigreedescription_id <=> ?");
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM pedigreedefinitions WHERE definition = ? AND germinatebase_id = ? AND pedigreenotation_id = ?");
 		int i = 1;
 		stmt.setString(i++, name);
 		stmt.setLong(i++, entry.getAccession().getId());
 		stmt.setLong(i++, entry.getNotation().getId());
-		stmt.setLong(i++, entry.getDescription() == null ? null : entry.getDescription().getId());
 
 		DatabaseResult rs = stmt.query();
 

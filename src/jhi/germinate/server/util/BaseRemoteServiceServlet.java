@@ -173,6 +173,38 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 	 * creation, i.e. there is no other file in the temporary directory with this name.
 	 *
 	 * @param prefix    An optional prefix to simplify identification in the folder
+	 * @param ids       A {@link List} of database ids that need to be part of the generated filename
+	 * @param extension The file extension to use
+	 * @return The file object
+	 */
+	public File createTemporaryFile(String prefix, List<Long> ids, String extension)
+	{
+		prefix += "_dataset-" + CollectionUtils.join(ids, "-");
+
+		return createTemporaryFile(prefix, extension);
+	}
+
+	/**
+	 * Returns a file object created in the temporary folder with a random file name. This file is guaranteed to be unique during the time of
+	 * creation, i.e. there is no other file in the temporary directory with this name.
+	 *
+	 * @param prefix    An optional prefix to simplify identification in the folder
+	 * @param id        The database id that needs to be part of the generated filename
+	 * @param extension The file extension to use
+	 * @return The file object
+	 */
+	public File createTemporaryFile(String prefix, Long id, String extension)
+	{
+		prefix += "_dataset-" + id;
+
+		return createTemporaryFile(prefix, extension);
+	}
+
+	/**
+	 * Returns a file object created in the temporary folder with a random file name. This file is guaranteed to be unique during the time of
+	 * creation, i.e. there is no other file in the temporary directory with this name.
+	 *
+	 * @param prefix    An optional prefix to simplify identification in the folder
 	 * @param extension The file extension to use
 	 * @return The file object
 	 */

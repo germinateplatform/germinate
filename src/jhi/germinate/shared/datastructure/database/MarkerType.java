@@ -40,6 +40,8 @@ public class MarkerType extends DatabaseObject
 
 	public static final String ID          = "markertypes.id";
 	public static final String DESCRIPTION = "markertypes.description";
+	public static final String CREATED_ON  = "markertypes.created_on";
+	public static final String UPDATED_ON  = "markertypes.updated_on";
 
 	private String description;
 	private Long   createdOn;

@@ -46,7 +46,6 @@ import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.datastructure.database.LocationType;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
@@ -237,7 +236,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 						SearchCondition condition = new SearchCondition();
 						condition.setColumnName(jhi.germinate.shared.datastructure.database.LocationType.NAME);
 						condition.setComp(new Equal());
-						condition.addConditionValue(jhi.germinate.shared.enums.LocationType.collectingsites.name());
+						condition.addConditionValue(LocationType.collectingsites.name());
 						condition.setType(String.class.getSimpleName());
 						filter.add(condition);
 
@@ -317,7 +316,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 						SearchCondition condition = new SearchCondition();
 						condition.setColumnName(LocationType.NAME);
 						condition.setComp(new Equal());
-						condition.addConditionValue(jhi.germinate.shared.enums.LocationType.collectingsites.name());
+						condition.addConditionValue(LocationType.collectingsites.name());
 						condition.setType(Long.class.getSimpleName());
 						filter.add(condition);
 

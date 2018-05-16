@@ -29,10 +29,6 @@
 	fill: lightgray;
 }
 
-.hexagon .fill {
-	fill: #00acef;
-}
-
 .mesh {
 	fill: none;
 	stroke: #000;

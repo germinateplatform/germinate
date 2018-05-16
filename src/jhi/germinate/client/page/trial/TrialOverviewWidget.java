@@ -67,12 +67,12 @@ public class TrialOverviewWidget extends Composite
 	@UiField
 	FlowPanel                                        chartPanel;
 
-	private List<Long>                             selectedDatasets;
+	private List<Dataset>                          selectedDatasets;
 	private List<Phenotype>                        phenotypes;
 	private List<Integer>                          years;
 	private Map<TrialsRow.TrialsAttribute, String> attributeToFile;
 	private TrialsCellTable                        table;
-	private TrialsRow.TrialsAttribute trialsAttribute = TrialsRow.TrialsAttribute.COUNT;
+	private TrialsRow.TrialsAttribute              trialsAttribute = TrialsRow.TrialsAttribute.COUNT;
 
 	public TrialOverviewWidget(List<Phenotype> p, List<Integer> y)
 	{
@@ -83,7 +83,8 @@ public class TrialOverviewWidget extends Composite
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
-		selectedDatasets = LongListParameterStore.Inst.get().get(Parameter.trialsDatasetIds);
+		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 
 		ParallelAsyncCallback<ServerResult<List<Phenotype>>> phenotypeCallback = null;
 		ParallelAsyncCallback<ServerResult<List<Integer>>> yearsCallback = null;
@@ -95,7 +96,7 @@ public class TrialOverviewWidget extends Composite
 				@Override
 				protected void start()
 				{
-					PhenotypeService.Inst.get().get(Cookie.getRequestProperties(), selectedDatasets, ExperimentType.trials, true, this);
+					PhenotypeService.Inst.get().get(Cookie.getRequestProperties(), ids, ExperimentType.trials, true, this);
 				}
 			};
 		}
@@ -106,7 +107,7 @@ public class TrialOverviewWidget extends Composite
 				@Override
 				protected void start()
 				{
-					TrialService.Inst.get().getTrialYears(Cookie.getRequestProperties(), selectedDatasets, this);
+					TrialService.Inst.get().getTrialYears(Cookie.getRequestProperties(), ids, this);
 				}
 			};
 		}
@@ -142,7 +143,7 @@ public class TrialOverviewWidget extends Composite
 
 	private void addBox()
 	{
-		 /* Add the attribute selector */
+		/* Add the attribute selector */
 		trialAttributeBox = new GerminateValueListBox<>(new Renderer<TrialsRow.TrialsAttribute>()
 		{
 			@Override
@@ -188,8 +189,9 @@ public class TrialOverviewWidget extends Composite
 
 		List<Phenotype> selectedPhenotypes = phenotypeBox.getSelections();
 		List<Long> phenotypeIds = DatabaseObject.getIds(selectedPhenotypes);
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 
-		TrialService.Inst.get().getPhenotypeOverviewTable(Cookie.getRequestProperties(), selectedDatasets, phenotypeIds, yearBox.getSelections(),
+		TrialService.Inst.get().getPhenotypeOverviewTable(Cookie.getRequestProperties(), ids, phenotypeIds, yearBox.getSelections(),
 				new DefaultAsyncCallback<ServerResult<Tuple.Triple<List<String>, List<TrialsRow>, Map<TrialsRow.TrialsAttribute, String>>>>(true)
 				{
 					@Override
@@ -210,7 +212,7 @@ public class TrialOverviewWidget extends Composite
 							results.setVisible(true);
 							attributeToFile = result.getServerResult().getThird();
 
-                            /* Set up the redirect to the passport page */
+							/* Set up the redirect to the passport page */
 							TrialsCellTable.AccessionClickHandler handler = GerminateSettingsHolder.isPageAvailable(Page.PASSPORT) ? id ->
 							{
 								try
@@ -223,7 +225,7 @@ public class TrialOverviewWidget extends Composite
 								}
 							} : null;
 
-                            /* Create the fancy table */
+							/* Create the fancy table */
 							table = new TrialsCellTable(result.getServerResult().getFirst(), result.getServerResult().getSecond(), trialsAttribute, handler);
 
 							redrawChart();

@@ -27,7 +27,6 @@ import java.util.zip.*;
 import de.micromata.opengis.kml.v_2_2_0.*;
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -143,7 +142,7 @@ public class KMLCreatorMegaEnv extends KMLCreator
 		if (CollectionUtils.isEmpty(locations))
 			return;
 
-		String formatted = String.format(QUERY_DATA, Util.generateSqlPlaceholderString(locations.size()));
+		String formatted = String.format(QUERY_DATA, StringUtils.generateSqlPlaceholderString(locations.size()));
 
 		DatabaseObjectQuery<Accession> q = new DatabaseObjectQuery<>(formatted, null);
 

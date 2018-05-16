@@ -56,13 +56,21 @@ public enum FileType
 		return contentType;
 	}
 
-	public String getIconStyle()
+	public String getStyle(IconStyle style)
 	{
-		return iconStyle;
+		switch (style)
+		{
+			case MDI:
+				return mdiStyle;
+			case IMAGE:
+			default:
+				return iconStyle;
+		}
 	}
 
-	public String getMdiStyle()
+	public static enum IconStyle
 	{
-		return mdiStyle;
+		MDI,
+		IMAGE
 	}
 }

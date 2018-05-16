@@ -268,7 +268,7 @@ public final class MarkedItemList
 						  return null;
 					  }
 				  })
-				  .filter(l -> l != null)
+				  .filter(Objects::nonNull)
 				  .collect(Collectors.toSet());
 	}
 

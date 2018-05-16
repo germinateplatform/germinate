@@ -19,8 +19,10 @@ package jhi.germinate.client.widget.structure;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.query.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
@@ -177,6 +179,26 @@ public final class MainMenu
 		menuPanel.removeFromParent();
 
 		Scheduler.get().scheduleDeferred(() -> fancyUp(menuPanel.getElement().getId()));
+
+		addToggleFunctionality();
+	}
+
+	private static void addToggleFunctionality()
+	{
+		GQuery.$(".navbar-toggle").on("click", new Function()
+		{
+			@Override
+			public boolean f(Event e)
+			{
+				// Toggle the class name on the main page div
+				GQuery.$("#" + Id.STRUCTURE_PAGE).toggleClass(Style.LAYOUT_SIDEBAR_TOGGLED);
+
+				ResizeRegister.triggerResize();
+
+				// Supress the event propagation if the window is big
+				return Window.getClientWidth() < 992;
+			}
+		});
 	}
 
 	private static native void fancyUp(String id)/*-{

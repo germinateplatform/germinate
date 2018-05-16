@@ -20,17 +20,18 @@
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
 	<g:FlowPanel>
-		<b:FormGroup>
+		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formName" text="{msg.registrationInstitutionName}"/>
 			<b:TextBox b:id="formName" ui:field="name"/>
 		</b:FormGroup>
-		<b:FormGroup>
+		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formAcronym" text="{msg.registrationInstitutionAcronym}"/>
 			<b:TextBox b:id="formAcronym" ui:field="acronym"/>
 		</b:FormGroup>
-		<b:FormGroup>
+		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formAddress" text="{msg.registrationInstitutionAddress}"/>
 			<b:TextArea b:id="formAddress" ui:field="address"/>
 		</b:FormGroup>

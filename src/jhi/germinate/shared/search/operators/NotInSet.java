@@ -19,7 +19,6 @@ package jhi.germinate.shared.search.operators;
 
 import java.util.*;
 
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
@@ -75,7 +74,7 @@ public class NotInSet implements ComparisonOperator
 			throw new InvalidArgumentException("Not in set comparison requires that at least one comparison value is selected.");
 		}
 
-		return " NOT IN (" + Util.generateSqlPlaceholderString(values.size()) + ") ";
+		return " NOT IN (" + StringUtils.generateSqlPlaceholderString(values.size()) + ") ";
 	}
 
 	@Override

@@ -247,25 +247,35 @@ public class LeafletUtils
 
 	public static class DatasetMarkerCreator extends ClusteredMarkerCreator
 	{
-		private Map<Location, Dataset> mapping;
+		private Map<Location, List<Dataset>> mapping;
 
-		public DatasetMarkerCreator(Panel parent, Map<Location, Dataset> locations, OnMapLoadHandler handler)
+		public DatasetMarkerCreator(Panel parent, Map<Location, List<Dataset>> locations, OnMapLoadHandler handler)
 		{
 			super(parent, locations.keySet(), handler);
-			this.mapping = locations;
-		}
-
-		public DatasetMarkerCreator(Panel parent, Map<Location, Dataset> locations, OnMarkerClickHandler clickHandler, OnMapLoadHandler handler)
-		{
-			super(parent, locations.keySet(), clickHandler, handler);
 			this.mapping = locations;
 		}
 
 		@Override
 		protected StringBuilder getLocationInfoContent(Location location, boolean addLink)
 		{
+			StringBuilder descriptionBuilder = new StringBuilder();
+			descriptionBuilder.append("[");
+
+			boolean first = true;
+			for (Dataset dataset : mapping.get(location))
+			{
+				if (!first)
+					descriptionBuilder.append(", ");
+
+				descriptionBuilder.append(StringUtils.getWordsUntil(dataset.getDescription(), 50));
+
+				first = false;
+			}
+
+			descriptionBuilder.append("]");
+
 			StringBuilder builder = getLocationInfoWindowContent(location, addLink);
-			addToTooltip(builder, location, Text.LANG.locationMapDataset(), mapping.get(location).getDescription(), false);
+			addToTooltip(builder, location, Text.LANG.locationMapDataset(), descriptionBuilder.toString(), false);
 
 			builder.append("</div>");
 

@@ -38,19 +38,7 @@ public class DateUtils
 	private static final DateTimeFormat FORMAT_LOCALIZED           = DateTimeFormat.getFormat(Text.LANG.generalDateFormatShort());
 	private static final DateTimeFormat FORMAT_LOCALIZED_DATE_TIME = DateTimeFormat.getFormat(Text.LANG.generalDateTimeFormat());
 
-	public static final String[] MONTHS      = LocaleInfo.getCurrentLocale().getDateTimeFormatInfo().monthsFull();
 	public static final String[] MONTHS_ABBR = LocaleInfo.getCurrentLocale().getDateTimeFormatInfo().monthsShort();
-
-	/**
-	 * Returns the localized month given the month index
-	 *
-	 * @param month The month index (1 <= index <= 12)
-	 * @return The localized month
-	 */
-	public static String getLocalizedMonth(int month)
-	{
-		return MONTHS[month - 1];
-	}
 
 	/**
 	 * Returns the abbreviation of the localized month given the month index
@@ -61,32 +49,6 @@ public class DateUtils
 	public static String getLocalizedMonthAbbr(int month)
 	{
 		return MONTHS_ABBR[month - 1];
-	}
-
-	/**
-	 * Tries to parse the given date and returns an array containing day, month and year (input format: "yyyy-MM-dd")
-	 *
-	 * @param date The date to parse
-	 * @return Day, month and year
-	 */
-	public static int[] getDayMonthYearFromDatabaseString(String date)
-	{
-		try
-		{
-			FORMAT_DATABASE.parse(date);
-		}
-		catch (Exception e)
-		{
-			return new int[]{1, 1, 1960};
-		}
-
-		String[] parts = date.split("-");
-
-		int day = Integer.parseInt(parts[2]);
-		int month = Integer.parseInt(parts[1]);
-		int year = Integer.parseInt(parts[0]);
-
-		return new int[]{day, month, year};
 	}
 
 	/**

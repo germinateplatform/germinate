@@ -1,4 +1,4 @@
-<%@ page language ="java" contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page  contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="jhi.germinate.shared.*"%><%@ page import="jhi.germinate.shared.enums.*"%>
 
 <%--
@@ -43,7 +43,8 @@ footer > div.container-fluid {
   line-height: 40px;
 }
 
-button.mdi:empty:before {
+button.mdi:empty:before,
+a.mdi:empty:before {
   margin-right: 0;
 }
 
@@ -53,8 +54,24 @@ button.mdi:empty:before {
   vertical-align: -15%;
 }
 
-button.mdi:before {
+button.mdi:before,
+a.mdi:before {
   margin-right: 5px;
+}
+
+.navbar-toggle {
+	height: 40px;
+	margin: 10px;
+	display: inline-block !important;
+}
+
+.form-group.<%= Style.FORM_REQUIRED %> label:after {
+  content: " *";
+}
+
+.<%= Style.TABLE_PEITY_DONUT %> svg,
+.<%= Style.TABLE_PEITY_DONUT %> span {
+  vertical-align: middle;
 }
 
 .<%= Style.TABLE_BORDER %> {
@@ -101,17 +118,29 @@ button.mdi:before {
   min-height: 568px;
   background-color: white;
 }
+
 <%--.<%= Style.MAPS_PANEL %> {--%>
   <%--margin-left: -15px;--%>
   <%--margin-right: -15px;--%>
 <%--}--%>
 @media (min-width: 992px) {
+
+	.<%= Style.LAYOUT_SIDEBAR_TOGGLED %> .navbar-default.sidebar {
+		width: 0;
+		overflow-x: hidden;
+	}
+
   #content-wrapper {
     position: inherit;
     margin: 0 0 0 250px;
     padding: 30px;
     border-left: 1px solid #e7e7e7;
   }
+
+	.<%= Style.LAYOUT_SIDEBAR_TOGGLED %> #content-wrapper {
+		margin: 0;
+	}
+
   <%--.<%= Style.MAPS_PANEL %> {--%>
     <%--margin-left: -30px;--%>
     <%--margin-right: -30px;--%>
@@ -289,22 +318,7 @@ table.dataTable thead .sorting_asc_disabled,
 table.dataTable thead .sorting_desc_disabled {
   background: transparent;
 }
-table.dataTable thead .sorting_asc:after {
-  content: "\f0de";
-  float: right;
-  font-family: fontawesome;
-}
-table.dataTable thead .sorting_desc:after {
-  content: "\f0dd";
-  float: right;
-  font-family: fontawesome;
-}
-table.dataTable thead .sorting:after {
-  content: "\f0dc";
-  float: right;
-  font-family: fontawesome;
-  color: rgba(50, 50, 50, 0.5);
-}
+
 .btn-circle {
   width: 30px;
   height: 30px;
@@ -362,35 +376,35 @@ ul.<%= Style.WIDGET_UL_ICON_LIST %> li.empty {
   background: url(../img/mime/empty.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.helium.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.helium.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/helium.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.txt.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.txt.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/txt.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.pdf.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.pdf.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/pdf.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.unknown.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.unknown.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/unknown.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.flapjack.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.flapjack.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/flapjack.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.xlsx.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.xlsx.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/xlsx.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.strudel.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.strudel.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/strudel.png) no-repeat 0 50%;
 }
 
-ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.mct.getIconStyle() %> {
+ul.<%= Style.WIDGET_UL_ICON_LIST %> li.<%= FileType.mct.getStyle(FileType.IconStyle.IMAGE) %> {
   background: url(../img/mime/mct.png) no-repeat 0 50%;
 }
 

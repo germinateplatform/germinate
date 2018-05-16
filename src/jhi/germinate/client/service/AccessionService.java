@@ -35,17 +35,10 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("accession")
 public interface AccessionService extends RemoteService
 {
-	String[] COLUMNS_SORTABLE = {Accession.ID, Location.ID, LocationType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER, Accession.SYNONYMS, Synonym.SYNONYM};
+	String[] COLUMNS_SORTABLE = {Accession.ID, EntityType.NAME, Location.ID, LocationType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI};
 
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final AccessionServiceAsync INSTANCE = GWT.create(AccessionService.class);
@@ -60,8 +53,8 @@ public interface AccessionService extends RemoteService
 	/**
 	 * Returns a paginated list of {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 *
-	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
-	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @return A paginated list of {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 * @throws InvalidSessionException     Thrown if the current session is invalid
@@ -75,7 +68,7 @@ public interface AccessionService extends RemoteService
 	/**
 	 * Returns the ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 *
-	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param properties The {@link RequestProperties}
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @return The ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 * @throws InvalidSessionException     Thrown if the current session is invalid
@@ -263,4 +256,27 @@ public interface AccessionService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	ServerResult<Mcpd> getMcpd(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException;
+
+	/**
+	 * Returns the {@link EntityPair}s (entity parents and entity children) related to the {@link Accession} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param id         The {@link Accession} id
+	 * @param pagination The {@link Pagination}
+	 * @return The {@link EntityPair}s (entity parents and entity children) related to the {@link Accession} with the given id.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	PaginatedServerResult<List<EntityPair>> getEntityPairs(RequestProperties properties, Long id, Pagination pagination) throws InvalidSessionException, DatabaseException;
+
+	/**
+	 * Exports statistics about all the accession pdci scores and returns the name of the result file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @return The name of the result file.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 * @throws IOException             Thrown if the file creation fails
+	 */
+	ServerResult<String> getPDCIStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException;
 }

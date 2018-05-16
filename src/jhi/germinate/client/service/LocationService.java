@@ -25,7 +25,6 @@ import java.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.enums.LocationType;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
@@ -45,13 +44,6 @@ public interface LocationService extends RemoteService
 
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final LocationServiceAsync INSTANCE = GWT.create(LocationService.class);
@@ -271,19 +263,4 @@ public interface LocationService extends RemoteService
 	 * @throws KMLException            Thrown if an error occurs while trying to create the KML file
 	 */
 	ServerResult<String> exportToKml(RequestProperties properties, KmlType type, Long id) throws InvalidSessionException, DatabaseException, KMLException;
-
-	/**
-	 * Returns a list of {@link Country} objects with either {@link DatabaseObject#COUNT} or {@link Country#AVERAGE} set to the {@link Phenotype}
-	 * value for this {@link ExperimentType} and {@link Dataset} ids.
-	 *
-	 * @param properties  The {@link RequestProperties}
-	 * @param datasetIds  The {@link Dataset} ids
-	 * @param type        The {@link ExperimentType}
-	 * @param phenotypeId The {@link Phenotype} id
-	 * @return A list of {@link Country} objects with either {@link DatabaseObject#COUNT} or {@link Country#AVERAGE} set to the {@link Phenotype}
-	 * value for this {@link ExperimentType} and {@link Dataset} ids.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 */
-	ServerResult<List<Country>> getCountryValues(RequestProperties properties, List<Long> datasetIds, ExperimentType type, Long phenotypeId) throws InvalidSessionException, DatabaseException;
 }

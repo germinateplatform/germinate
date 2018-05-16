@@ -56,7 +56,7 @@ public abstract class Gallery extends GerminateComposite
 
 	private boolean showHeading = true;
 	private boolean showButton  = false;
-	private boolean setUp = false;
+	private boolean setUp       = false;
 
 	/**
 	 * Creates a new instance of {@link Gallery} with the default number of items as defined by {@link GerminateSettings#galleryImagesPerPage}.
@@ -208,7 +208,7 @@ public abstract class Gallery extends GerminateComposite
 	@Override
 	protected void onUnload()
 	{
-		if(setUp)
+		if (setUp)
 			jsniDestroy();
 		super.onUnload();
 	}

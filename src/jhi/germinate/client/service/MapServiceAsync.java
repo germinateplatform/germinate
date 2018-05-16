@@ -23,8 +23,8 @@ import com.google.gwt.user.client.rpc.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -32,7 +32,14 @@ import jhi.germinate.shared.enums.*;
  */
 public interface MapServiceAsync
 {
-	void getById(RequestProperties properties, Long mapId, AsyncCallback<ServerResult<Map>> async);
+	/**
+	 * Returns the {@link Map} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param mapId      The id of the {@link Map}
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void getById(RequestProperties properties, Long mapId, AsyncCallback<ServerResult<Map>> callback);
 
 	/**
 	 * Returns the available maps for the given user
@@ -40,7 +47,14 @@ public interface MapServiceAsync
 	 * @param properties The {@link RequestProperties}
 	 * @return The available maps for the given user
 	 */
-	Request get(RequestProperties properties, ExperimentType experimentType, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Map>>> async);
+	Request get(RequestProperties properties, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Map>>> async);
+
+	/**
+	 * Returns the available maps for the given datasets
+	 *
+	 * @param properties The {@link RequestProperties}
+	 */
+	void getForDatasets(RequestProperties properties, List<Long> datasetIds, AsyncCallback<ServerResult<List<Map>>> async);
 
 	/**
 	 * Creates a map file for the given regions in the given format and returns the relative path to the file

@@ -37,6 +37,8 @@ public class Country extends DatabaseObject
 	public static final String COUNTRY_CODE2 = "countries.country_code2";
 	public static final String COUNTRY_CODE3 = "countries.country_code3";
 	public static final String COUNTRY_NAME  = "countries.country_name";
+	public static final String CREATED_ON    = "countries.created_on";
+	public static final String UPDATED_ON    = "countries.updated_on";
 
 	public static final String AVERAGE = "avg";
 

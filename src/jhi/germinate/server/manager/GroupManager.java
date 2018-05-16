@@ -23,7 +23,6 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -38,13 +37,13 @@ public class GroupManager extends AbstractManager<Group>
 {
 	public static final String[] COLUMNS_TABLE = {Group.ID, Group.NAME, Group.DESCRIPTION, GroupType.DESCRIPTION, Group.CREATED_BY, Group.CREATED_ON, DatabaseObject.COUNT};
 
-	private static final String SELECT_ALL_FOR_FILTER                          = "SELECT groups.*, COUNT(groupmembers.id) AS count, grouptypes.id, grouptypes.description, grouptypes.target_table FROM groups LEFT JOIN grouptypes ON groups.grouptype_id = grouptypes.id LEFT JOIN groupmembers ON groupmembers.group_id = groups.id {{FILTER}} AND %s GROUP BY groups.id %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_ACCESSION                       = "SELECT groups.*, COUNT(groupmembers.id) AS count FROM germinatebase LEFT JOIN groupmembers ON germinatebase.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id WHERE grouptypes.target_table = 'germinatebase' AND %s AND EXISTS (SELECT 1 FROM groupmembers WHERE groupmembers.foreign_id = ? AND groupmembers.group_id = groups.id) GROUP BY groups.id %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_TYPE                            = "SELECT groups.*, COUNT(%s.id) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN %s ON %s.id = groupmembers.foreign_id WHERE grouptypes.target_table = ? AND %s GROUP BY groups.id ORDER BY groups.id";
-	private static final String SELECT_TRIALS_ACCESSION_GROUPS_FOR_DATASET     = "SELECT DISTINCT groups.*, COUNT( DISTINCT (phenotypedata.germinatebase_id) ) AS count FROM phenotypedata LEFT JOIN groupmembers ON groupmembers.foreign_id = phenotypedata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'trials' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
-	private static final String SELECT_COMPOUND_ACCESSION_GROUPS_FOR_DATASET   = "SELECT DISTINCT groups.*, COUNT( DISTINCT (compounddata.germinatebase_id) ) AS count FROM compounddata LEFT JOIN groupmembers ON groupmembers.foreign_id = compounddata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = compounddata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
-	private static final String SELECT_ALLELEFREQ_ACCESSION_GROUPS_FOR_DATASET = "SELECT DISTINCT groups.*, COUNT( DISTINCT (groupmembers.foreign_id) ) AS count FROM grouptypes LEFT JOIN groups ON groups.grouptype_id = grouptypes.id LEFT JOIN groupmembers ON groupmembers.group_id = groups.id LEFT JOIN allelefrequencydata ON allelefrequencydata.germinatebase_id = groupmembers.foreign_id LEFT JOIN datasets ON datasets.id = allelefrequencydata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'allelefreq' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
-	private static final String SELECT_ALLELEFREQ_MARKER_GROUPS_FOR_DATASET    = "SELECT DISTINCT groups.*, COUNT( DISTINCT markers.id ) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON groups.grouptype_id = grouptypes.id LEFT JOIN markers ON markers.id = groupmembers.foreign_id LEFT JOIN allelefrequencydata ON allelefrequencydata.marker_id = markers.id LEFT JOIN datasets ON datasets.id = allelefrequencydata.dataset_id WHERE grouptypes.target_table = 'markers' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
+	private static final String SELECT_ALL_FOR_FILTER                        = "SELECT groups.*, COUNT(groupmembers.id) AS count, grouptypes.id, grouptypes.description, grouptypes.target_table FROM groups LEFT JOIN grouptypes ON groups.grouptype_id = grouptypes.id LEFT JOIN groupmembers ON groupmembers.group_id = groups.id {{FILTER}} AND %s GROUP BY groups.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_ACCESSION                     = "SELECT groups.*, COUNT(groupmembers.id) AS count FROM germinatebase LEFT JOIN groupmembers ON germinatebase.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id WHERE grouptypes.target_table = 'germinatebase' AND %s AND EXISTS (SELECT 1 FROM groupmembers WHERE groupmembers.foreign_id = ? AND groupmembers.group_id = groups.id) GROUP BY groups.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_TYPE                          = "SELECT groups.*, COUNT(%s.id) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN %s ON %s.id = groupmembers.foreign_id WHERE grouptypes.target_table = ? AND %s GROUP BY groups.id ORDER BY groups.id";
+	private static final String SELECT_TRIALS_ACCESSION_GROUPS_FOR_DATASET   = "SELECT DISTINCT groups.*, COUNT( DISTINCT (phenotypedata.germinatebase_id) ) AS count FROM phenotypedata LEFT JOIN groupmembers ON groupmembers.foreign_id = phenotypedata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'trials' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
+	private static final String SELECT_COMPOUND_ACCESSION_GROUPS_FOR_DATASET = "SELECT DISTINCT groups.*, COUNT( DISTINCT (compounddata.germinatebase_id) ) AS count FROM compounddata LEFT JOIN groupmembers ON groupmembers.foreign_id = compounddata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = compounddata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
+	private static final String SELECT_ACCESSION_GROUPS_FOR_DATSET           = "SELECT DISTINCT groups.*, COUNT( DISTINCT ( datasetmembers.foreign_id ) ) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasetmembers ON datasetmembers.foreign_id = groupmembers.foreign_id LEFT JOIN datasets ON datasets.id = datasetmembers.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE datasetmembers.datasetmembertype_id = 2 AND (experimenttypes.description = 'genotype' OR experimenttypes.description = 'allelefreq' ) AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
+	private static final String SELECT_MARKER_GROUPS_FOR_DATSET              = "SELECT DISTINCT groups.*, COUNT( DISTINCT ( datasetmembers.foreign_id ) ) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasetmembers ON datasetmembers.foreign_id = groupmembers.foreign_id LEFT JOIN datasets ON datasets.id = datasetmembers.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE datasetmembers.datasetmembertype_id = 1 AND (experimenttypes.description = 'genotype' OR experimenttypes.description = 'allelefreq' ) AND grouptypes.target_table = 'markers' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM groups WHERE %s";
 
@@ -276,7 +275,7 @@ public class GroupManager extends AbstractManager<Group>
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 
-		String formatted = String.format(DELETE_MEMBERS, Util.generateSqlPlaceholderString(memberIds.size()));
+		String formatted = String.format(DELETE_MEMBERS, StringUtils.generateSqlPlaceholderString(memberIds.size()));
 
 		sqlDebug.addAll(new ValueQuery(formatted, userAuth)
 				.setLong(groupId)
@@ -356,9 +355,9 @@ public class GroupManager extends AbstractManager<Group>
 		String formatted;
 
 		if (userAuth.isAdmin())
-			formatted = String.format(q, Util.generateSqlPlaceholderString(datasetIds.size()), SELECT_ADMINISTRATOR);
+			formatted = String.format(q, StringUtils.generateSqlPlaceholderString(datasetIds.size()), SELECT_ADMINISTRATOR);
 		else
-			formatted = String.format(q, Util.generateSqlPlaceholderString(datasetIds.size()), SELECT_REGULAR_USER);
+			formatted = String.format(q, StringUtils.generateSqlPlaceholderString(datasetIds.size()), SELECT_REGULAR_USER);
 
 		DatabaseObjectQuery<Group> query = new DatabaseObjectQuery<Group>(formatted, userAuth)
 				.setLongs(datasetIds);
@@ -379,8 +378,8 @@ public class GroupManager extends AbstractManager<Group>
 			case trials:
 				return getGroupsForDataset(userAuth, datasetIds, SELECT_TRIALS_ACCESSION_GROUPS_FOR_DATASET);
 			case allelefreq:
-				return getGroupsForDataset(userAuth, datasetIds, SELECT_ALLELEFREQ_ACCESSION_GROUPS_FOR_DATASET);
 			case genotype:
+				return getGroupsForDataset(userAuth, datasetIds, SELECT_ACCESSION_GROUPS_FOR_DATSET);
 			default:
 				return new ServerResult<>(null, new ArrayList<>());
 		}
@@ -391,8 +390,8 @@ public class GroupManager extends AbstractManager<Group>
 		switch (type)
 		{
 			case allelefreq:
-				return getGroupsForDataset(userAuth, datasetIds, SELECT_ALLELEFREQ_MARKER_GROUPS_FOR_DATASET);
 			case genotype:
+				return getGroupsForDataset(userAuth, datasetIds, SELECT_MARKER_GROUPS_FOR_DATSET);
 			default:
 				return new ServerResult<>(null, new ArrayList<>());
 		}

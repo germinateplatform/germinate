@@ -36,6 +36,7 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
@@ -186,7 +187,7 @@ public class CompoundDetailsPage extends Composite
 		{
 			try
 			{
-				java.util.Map<String, String> mapping = new HashMap<>();
+				FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 				mapping.put(Compound.NAME, compound.getName());
 				table.forceFilter(mapping, true);
 			}

@@ -1,6 +1,6 @@
 /*
- *  Copyright 2017 Sebastian Raubach and Paul Shaw from the
- *  Information and Computational Sciences Group at JHI Dundee
+ *  Copyright 2018 Information and Computational Sciences,
+ *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,6 +83,15 @@ function scatterPlot() {
                 d.colorKey = colorKey(d);
                 d.color = color(d.colorKey);
                 d.id = id(d);
+            });
+
+            data = $.map(data, function (d, key) {
+                if(!isNaN(d.xValue) && !isNaN(d.yValue))
+                    return d;
+			});
+
+            data = data.filter(function (d) {
+                return !isNaN(d.xValue) && !isNaN(d.yValue);
             });
 
             if (xTickFormat)

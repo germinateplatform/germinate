@@ -21,7 +21,7 @@ import java.util.*;
 
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -53,7 +53,7 @@ public class ClimateManager extends AbstractManager<Climate>
 
 		String query = hasClimateData ? SELECT_ALL_HAVING_DATA : SELECT_ALL;
 
-		String formatted = String.format(query, Util.generateSqlPlaceholderString(datasetIds.size()));
+		String formatted = String.format(query, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		return new DatabaseObjectQuery<Climate>(formatted, userAuth)
 				.setLongs(datasetIds)

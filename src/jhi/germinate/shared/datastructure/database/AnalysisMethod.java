@@ -36,6 +36,8 @@ public class AnalysisMethod extends DatabaseObject
 	public static final String ID          = "analysismethods.id";
 	public static final String NAME        = "analysismethods.name";
 	public static final String DESCRIPTION = "analysismethods.description";
+	public static final String CREATED_ON  = "analysismethods.created_on";
+	public static final String UPDATED_ON  = "analysismethods.updated_on";
 
 	private String name;
 	private String description;

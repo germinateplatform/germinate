@@ -30,6 +30,7 @@ instance-stuff/*
 !instance-stuff/template
 
 # Local configuration files
+build.properties
 build-dev.properties
 /germinate3-bootstrap.iml
 
@@ -38,7 +39,6 @@ build-dev.properties
 /war/img/crop.svg
 /war/img/logo.svg
 /war/WEB-INF/lib-temp/
-/war/css/logo.css
 /war/css/custom.css
 /war/custom.html
 /war/css/images/css-images/

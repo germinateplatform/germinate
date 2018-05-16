@@ -23,8 +23,8 @@ import com.google.gwt.user.client.rpc.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -40,14 +40,6 @@ public interface MapService extends RemoteService
 
 	final class Inst
 	{
-
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 
@@ -58,9 +50,17 @@ public interface MapService extends RemoteService
 		{
 			return InstanceHolder.INSTANCE;
 		}
-
 	}
 
+	/**
+	 * Returns the {@link Map} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param mapId      The id of the {@link Map}
+	 * @return The {@link Map} with the given id.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException Thrown if the query fails on the server
+	 */
 	ServerResult<Map> getById(RequestProperties properties, Long mapId) throws InvalidSessionException, DatabaseException;
 
 	/**
@@ -71,7 +71,17 @@ public interface MapService extends RemoteService
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
-	PaginatedServerResult<List<Map>> get(RequestProperties properties, ExperimentType type, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+	PaginatedServerResult<List<Map>> get(RequestProperties properties, Pagination pagination) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+
+	/**
+	 * Returns the available maps for the given datasets
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @return The available maps for the given user
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	ServerResult<List<Map>> getForDatasets(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Creates a map file for the given regions in the given format and returns the relative path to the file

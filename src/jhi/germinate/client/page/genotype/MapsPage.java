@@ -63,6 +63,9 @@ import jhi.germinate.shared.search.operators.*;
  */
 public class MapsPage extends Composite implements HasHyperlinkButton
 {
+
+	private DownloadWidget downloadWidget;
+
 	interface MapsPageUiBinder extends UiBinder<HTMLPanel, MapsPage>
 	{
 	}
@@ -145,7 +148,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Map>>> callback)
 			{
-				return MapService.Inst.get().get(Cookie.getRequestProperties(), null, pagination, callback);
+				return MapService.Inst.get().get(Cookie.getRequestProperties(), pagination, callback);
 			}
 
 			@Override
@@ -156,6 +159,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 				map = object;
 
 				updateMapDetails();
+				setUpMapDownloadPanel();
 			}
 		});
 
@@ -171,57 +175,73 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 					{
 						map = result.getServerResult();
 						updateMapDetails();
+						setUpMapDownloadPanel();
+					}
+					else
+					{
+						LongParameterStore.Inst.get().remove(Parameter.mapId);
+						map = null;
+						updateMapDetails();
 					}
 				}
 			});
 		}
+	}
 
-		String[] files = new String[]{Text.LANG.downloadInFlapjackFormat(), Text.LANG.downloadInMapChartFormat(), Text.LANG.downloadInStrudelFormat()};
-		FileType[] fileTypes = new FileType[]{FileType.map, FileType.mct, FileType.strudel};
-
-		FileDownloadWidget widget = new OnDemandFileDownloadWidget((index, callback) ->
+	private void setUpMapDownloadPanel()
+	{
+		if(downloadWidget == null)
 		{
-			MapFormat format;
+			List<DownloadWidget.FileConfig> files = new ArrayList<>();
+			files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInFlapjackFormat(), FileType.flapjack).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
+			files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInMapChartFormat(), FileType.mct).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
+			files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInStrudelFormat(), FileType.strudel).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
 
-			switch (index)
+			downloadWidget = new DownloadWidget()
 			{
-				case 0:
-					format = MapFormat.flapjack;
-					break;
-				case 1:
-					format = MapFormat.mapchart;
-					break;
-				case 2:
-					format = MapFormat.strudel;
-					break;
-				default:
-					format = MapFormat.flapjack;
-			}
+				@Override
+				protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
+				{
+					MapFormat format;
 
-			try
-			{
-				MapExportOptions settings = getOptions();
+					switch (config.getType())
+					{
+						case flapjack:
+							format = MapFormat.flapjack;
+							break;
+						case mct:
+							format = MapFormat.mapchart;
+							break;
+						case strudel:
+							format = MapFormat.strudel;
+							break;
+						default:
+							format = MapFormat.flapjack;
+					}
 
-				MapService.Inst.get().getInFormat(Cookie.getRequestProperties(), map.getId(), format, settings, callback);
-			}
-			catch (InvalidOptionsException e)
-			{
-				callback.onFailure(e);
-			}
-		}, true)
-				.setHeading(null)
-				.setFiles(Arrays.asList(files))
-				.setTypes(Arrays.asList(fileTypes));
+					try
+					{
+						MapExportOptions settings = getOptions();
 
-		markerDownloadPanel.add(widget);
+						MapService.Inst.get().getInFormat(Cookie.getRequestProperties(), map.getId(), format, settings, callback);
+					}
+					catch (InvalidOptionsException e)
+					{
+						callback.onFailure(e);
+					}
+				}
+			};
+			downloadWidget.addAll(files);
+			markerDownloadPanel.add(downloadWidget);
 
-		panelHtml.setHTML(Text.LANG.markersExportOptionsText());
-		chromosomeHtml.setHTML(Text.LANG.markersExportOptionsChromosomesText());
-		regionHtml.setHTML(Text.LANG.markersExportOptionsRegionText());
-		intervalHtml.setHTML(Text.LANG.markersExportOptionsIntervalText());
-		radiusHtml.setHTML(Text.LANG.markersExportOptionsRadiusText());
+			panelHtml.setHTML(Text.LANG.markersExportOptionsText());
+			chromosomeHtml.setHTML(Text.LANG.markersExportOptionsChromosomesText());
+			regionHtml.setHTML(Text.LANG.markersExportOptionsRegionText());
+			intervalHtml.setHTML(Text.LANG.markersExportOptionsIntervalText());
+			radiusHtml.setHTML(Text.LANG.markersExportOptionsRadiusText());
+		}
 
-		MapService.Inst.get().getChromosomesForMap(Cookie.getRequestProperties(), LongParameterStore.Inst.get().get(Parameter.mapId),
+		MapService.Inst.get().getChromosomesForMap(Cookie.getRequestProperties(), map.getId(),
 				new DefaultAsyncCallback<ServerResult<List<String>>>()
 				{
 					@Override
@@ -231,6 +251,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 						{
 							chromosomes = result.getServerResult();
 							exportOptionsPanel.setVisible(true);
+							chromosomeBox.clear();
 							chromosomes.forEach(chromosomeBox::addItem);
 
 							setUpTable();
@@ -245,6 +266,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 
 	private void setUpTable()
 	{
+		regionTable.clear();
 		table = new CellTable<>(DatabaseObjectPaginationTable.DEFAULT_NR_OF_ITEMS_PER_PAGE);
 		regionTable.add(table);
 		final SelectionModel<MappingEntry> selectionModel = new MultiSelectionModel<>();
@@ -306,6 +328,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 			{
 				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNotANumber());
 				cell.clearViewData(object);
+				table.redrawRow(index);
 			}
 		});
 
@@ -593,8 +616,8 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 	private class MappingEntry
 	{
 		private String chromosome;
-		private Long start = null;
-		private Long end   = null;
+		private Long   start = null;
+		private Long   end   = null;
 
 		MappingEntry(String chromosome, Long start, Long end)
 		{

@@ -43,6 +43,8 @@ public class Map extends DatabaseObject
 	public static final String DESCRIPTION = "maps.description";
 	public static final String VISIBILITY  = "maps.visibility";
 	public static final String USER_ID     = "maps.user_id";
+	public static final String CREATED_ON  = "maps.created_on";
+	public static final String UPDATED_ON  = "maps.updated_on";
 
 	private String  description;
 	private Boolean visibility;

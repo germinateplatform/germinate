@@ -92,6 +92,10 @@
 					<b:FormLabel for="formAnalyticsId" ui:field="analyticsIdLabel"/>
 					<b:TextBox b:id="formAnalyticsId" ui:field="analyticsId"/>
 				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formDownloadTracking" ui:field="downloadTrackingLabel"/>
+					<t:ToggleSwitch offText="{msg.generalNo}" onText="{msg.generalYes}" b:id="formDownloadTracking" ui:field="downloadTracking"/>
+				</b:FormGroup>
 			</b:Column>
 
 			<b:Column size="XS_12,MD_6">
@@ -146,6 +150,10 @@
 							<b:FormGroup>
 								<b:FormLabel for="formIds" ui:field="idsLabel"/>
 								<t:ToggleSwitch b:id="formIds" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="ids"/>
+							</b:FormGroup>
+							<b:FormGroup>
+								<b:FormLabel for="formPdci" ui:field="pdciLabel"/>
+								<t:ToggleSwitch offText="{msg.generalNo}" onText="{msg.generalYes}" b:id="formPdci" ui:field="pdci"/>
 							</b:FormGroup>
 							<b:FormGroup>
 								<b:FormLabel for="formLogging" ui:field="loggingLabel"/>

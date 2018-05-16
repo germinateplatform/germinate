@@ -82,7 +82,7 @@ public class AttributeDataImporter extends DataImporter<AttributeData>
 	 */
 	private void createAttributeData(AttributeData entry) throws DatabaseException
 	{
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM attributedata WHERE attribute_id = ? AND germinatebase_id = ? AND value = ?");
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM attributedata WHERE attribute_id = ? AND foreign_id = ? AND value = ?");
 		int i = 1;
 		stmt.setLong(i++, entry.getAttribute().getId());
 		stmt.setLong(i++, entry.getForeign().getId());
@@ -121,7 +121,7 @@ public class AttributeDataImporter extends DataImporter<AttributeData>
 			DatabaseResult rs = stmt.query();
 
 			if (rs.next())
-				cached = Accession.Parser.Inst.get().parse(rs, null, true);
+				cached = Accession.ImportParser.Inst.get().parse(rs, null, true);
 			else
 				throw new DatabaseException("Accession not found: " + accession);
 		}

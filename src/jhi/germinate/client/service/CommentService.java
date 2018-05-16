@@ -36,19 +36,10 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("comment")
 public interface CommentService extends RemoteService
 {
-	String[] COLUMNS_SORTABLE = {Comment.ID, Comment.DESCRIPTION, CommentType.DESCRIPTION, "comments." + Comment.CREATED_ON, Comment.REFERENCE_ID, CommentType.REFERENCE_TABLE};
+	String[] COLUMNS_SORTABLE = {Comment.ID, Comment.DESCRIPTION, CommentType.DESCRIPTION, Comment.CREATED_ON, Comment.REFERENCE_ID, CommentType.REFERENCE_TABLE};
 
 	final class Inst
 	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before.
-		 * <p/>
-		 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder idiom</a>) is
-		 * thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
 		private static final class InstanceHolder
 		{
 			private static final CommentServiceAsync INSTANCE = GWT.create(CommentService.class);
@@ -98,5 +89,18 @@ public interface CommentService extends RemoteService
 	 */
 	void disable(RequestProperties properties, Comment comment) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
 
+	/**
+	 * Returns a paginated list of {@link Comment}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @return A paginated list of {@link Comment}s that match the given {@link PartialSearchQuery}.
+	 * @throws InvalidSessionException     Thrown if the current session is invalid
+	 * @throws DatabaseException           Thrown if the query fails on the server
+	 * @throws InvalidColumnException      Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
+	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
+	 */
 	PaginatedServerResult<List<Comment>> getForFilter(RequestProperties properties, PartialSearchQuery filter, Pagination pagination) throws InvalidSessionException, InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException;
 }

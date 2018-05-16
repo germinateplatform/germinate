@@ -22,11 +22,9 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.enums.LocationType;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
@@ -57,11 +55,8 @@ public class LocationManager extends AbstractManager<Location>
 
 	private static final String SELECT_CLIMATE_DATA = "SELECT locations.*, countries.*, climates.name AS climates_name, climates.description AS climates_description, units.unit_name, units.unit_description, MAX(CASE WHEN recording_date = 1 THEN climate_value END) `m1`, MAX(CASE WHEN recording_date = 2 THEN climate_value END) `m2`, MAX(CASE WHEN recording_date = 3 THEN climate_value END) `m3`, MAX(CASE WHEN recording_date = 4 THEN climate_value END) `m4`, MAX(CASE WHEN recording_date = 5 THEN climate_value END) `m5`, MAX(CASE WHEN recording_date = 6 THEN climate_value END) `m6`, MAX(CASE WHEN recording_date = 7 THEN climate_value END) `m7`, MAX(CASE WHEN recording_date = 8 THEN climate_value END) `m8`, MAX(CASE WHEN recording_date = 9 THEN climate_value END) `m9`, MAX(CASE WHEN recording_date = 10 THEN climate_value END) `m10`, MAX(CASE WHEN recording_date = 11 THEN climate_value END) `m11`, MAX(CASE WHEN recording_date = 12 THEN climate_value END) `m12` FROM climatedata LEFT JOIN locations ON climatedata.location_id = locations.id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN climates ON climatedata.climate_id = climates.id LEFT JOIN units ON units.id = climates.unit_id %s WHERE climatedata.dataset_id IN (%s) AND climate_id = ? %s GROUP BY location_id %s LIMIT ?, ?";
 
-	private static final String SELECT_IDS_FOR_TYPE = "SELECT DISTINCT(locations.id) FROM " + COMMON_TABLES + " WHERE locationtypes.name = ? AND locations.latitude IS NOT NULL AND locations.longitude IS NOT NULL";
-
 	private static final String SELECT_SORTED_BY_DISTANCE = "SELECT *, CAST(REPLACE(FORMAT(6378.7 * ACOS(SIN(RADIANS(latitude)) * SIN(RADIANS(?)) + COS(RADIANS(latitude)) * COS(RADIANS(?)) * COS(RADIANS(?) - RADIANS(longitude))),   2), ',','') AS DECIMAL(10,4)) AS distance FROM " + COMMON_TABLES + " WHERE locationtypes.name = 'collectingsites' AND locations.latitude IS NOT NULL AND locations.longitude IS NOT NULL %s LIMIT ?, ?";
 
-	private static final String SELECT_FOR_ACCESSION = "SELECT locations.* FROM locations LEFT JOIN germinatebase ON locations.id = germinatebase.location_id LEFT JOIN countries ON countries.id = locations.country_id WHERE germinatebase.id = ? AND latitude IS NOT NULL AND longitude IS NOT NULL";
 	private static final String SELECT_IDS_FOR_GROUP = "SELECT locations.id FROM locations LEFT JOIN groupmembers ON locations.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN countries ON locations.country_id = countries.id WHERE groups.id = ?";
 
 	private static final String SELECT_ALL_IN_POLYGON = "SELECT * FROM " + COMMON_TABLES + " WHERE locationtypes.name = ? AND !ISNULL(locations.latitude) AND !ISNULL(locations.longitude) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', locations.longitude, ' ', locations.latitude, ')'))) %s LIMIT ?, ?";
@@ -113,14 +108,6 @@ public class LocationManager extends AbstractManager<Location>
 				.getStreamer();
 	}
 
-	public static ServerResult<List<String>> getIds(UserAuth userAuth, LocationType type) throws DatabaseException
-	{
-		return new ValueQuery(SELECT_IDS_FOR_TYPE, userAuth)
-				.setString(type.name())
-				.run(Location.ID)
-				.getStrings();
-	}
-
 	public static ServerResult<List<String>> getIdsForMegaEnv(UserAuth userAuth, Long megaEnvId) throws DatabaseException
 	{
 		if (megaEnvId == null || Objects.equals(megaEnvId, -1L))
@@ -160,7 +147,7 @@ public class LocationManager extends AbstractManager<Location>
 	{
 		if (phenotypeId == null)
 		{
-			String formatted = String.format(SELECT_ALL_FOR_TRIAL, Util.generateSqlPlaceholderString(datasetIds.size()));
+			String formatted = String.format(SELECT_ALL_FOR_TRIAL, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 			return new DatabaseObjectQuery<Country>(formatted, user)
 					.setLongs(datasetIds)
 					.setString(type.name())
@@ -169,7 +156,7 @@ public class LocationManager extends AbstractManager<Location>
 		}
 		else
 		{
-			String formatted = String.format(SELECT_ALL_FOR_PHENOTYPE, Util.generateSqlPlaceholderString(datasetIds.size()));
+			String formatted = String.format(SELECT_ALL_FOR_PHENOTYPE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 			return new DatabaseObjectQuery<Country>(formatted, user)
 					.setLongs(datasetIds)
 					.setString(type.name())
@@ -177,14 +164,6 @@ public class LocationManager extends AbstractManager<Location>
 					.run()
 					.getObjects(Country.AverageParser.Inst.get());
 		}
-	}
-
-	public static ServerResult<Location> getForAccession(UserAuth user, String accessionId) throws DatabaseException
-	{
-		return new DatabaseObjectQuery<Location>(SELECT_FOR_ACCESSION, user)
-				.setString(accessionId)
-				.run()
-				.getObject(Location.Parser.Inst.get());
 	}
 
 	public static PaginatedServerResult<List<Location>> getAllForGroup(UserAuth userAuth, Long groupId, Pagination pagination) throws DatabaseException, InvalidColumnException, InsufficientPermissionsException
@@ -214,9 +193,9 @@ public class LocationManager extends AbstractManager<Location>
 		String formatted;
 
 		if (groupId != null && groupId >= 0)
-			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "LEFT JOIN groupmembers ON groupmembers.foreign_id = locations.id", " groupmembers.group_id = ? AND ", Util.generateSqlPlaceholderString(datasetIds.size()));
+			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "LEFT JOIN groupmembers ON groupmembers.foreign_id = locations.id", " groupmembers.group_id = ? AND ", StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 		else
-			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "", "", Util.generateSqlPlaceholderString(datasetIds.size()));
+			formatted = String.format(SELECT_ALL_FOR_CLIMATE_GROUP, "", "", StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		DatabaseObjectQuery<Location> query = new DatabaseObjectQuery<>(formatted, userAuth);
 
@@ -287,7 +266,7 @@ public class LocationManager extends AbstractManager<Location>
 	{
 		pagination.updateSortColumn(LocationService.COLUMNS_LOCATION_SORTABLE, Location.ID);
 
-		String formatted = String.format(SELECT_BY_IDS, Util.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
+		String formatted = String.format(SELECT_BY_IDS, StringUtils.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
 		return new DatabaseObjectQuery<Location>(formatted, userAuth)
 				.setStrings(ids)
 				.setInt(pagination.getStart())
@@ -359,9 +338,9 @@ public class LocationManager extends AbstractManager<Location>
 		String formatted;
 
 		if (groupId != null && groupId >= 0)
-			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", Util.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", StringUtils.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
 		else
-			formatted = String.format(SELECT_CLIMATE_DATA, "", Util.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "", StringUtils.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
 
 		DatabaseObjectQuery<ClimateYearData> query = new DatabaseObjectQuery<ClimateYearData>(formatted, userAuth)
 				.setFetchesCount(pagination.getResultSize())
@@ -389,9 +368,9 @@ public class LocationManager extends AbstractManager<Location>
 		String formatted;
 
 		if (groupId != null && groupId >= 0)
-			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", Util.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "LEFT JOIN groupmembers ON groupmembers.foreign_id = climatedata.location_id", StringUtils.generateSqlPlaceholderString(datasetIds.size()), " AND groupmembers.group_id = ?", pagination.getSortQuery());
 		else
-			formatted = String.format(SELECT_CLIMATE_DATA, "", Util.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
+			formatted = String.format(SELECT_CLIMATE_DATA, "", StringUtils.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
 
 		GerminateTableQuery query = new GerminateTableQuery(formatted, userAuth, null)
 				.setLongs(datasetIds)

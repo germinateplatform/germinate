@@ -110,7 +110,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			sessionIsValid = false;
 		}
 
-        /* If we don't use authentication, throw an Exception */
+		/* If we don't use authentication, throw an Exception */
 		if (!PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
 		{
 			/* Generate a new session id */
@@ -129,18 +129,18 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			throw new LoginRegistrationException(LoginRegistrationException.Reason.LOGIN_UNAVAILABLE, oldUserAuth);
 		}
 
-        /* If the session id is invalid */
+		/* If the session id is invalid */
 		if (!sessionIsValid)
 		{
 			/* Generate a new one but check the user credentials first */
 			properties.setSessionId(Session.generateSessionIdAndCheckDetails(credentials.getUsername(), credentials.getPassword()));
 
-            /* If this doesn't work, just return */
+			/* If this doesn't work, just return */
 			if (StringUtils.isEmpty(properties.getSessionId()))
 				return null;
 		}
 
-        /* Extend the session */
+		/* Extend the session */
 		storeInSession(Session.SID, properties.getSessionId());
 		storeInSession(Session.USER, oldUserAuth);
 		getThreadLocalRequest().getSession().setMaxInactiveInterval(SESSION_LIFETIME_MIN * 60);
@@ -233,7 +233,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			Integer rounds = PropertyReader.getInteger(ServerProperty.GERMINATE_GATEKEEPER_BCRYPT_ROUNDS);
 			String hashed = BCrypt.hashpw(user.userPassword, BCrypt.gensalt(rounds == null ? BCrypt.GENSALT_DEFAULT_LOG2_ROUNDS : rounds));
 
-            /* If the registration needs approval, insert into the
+			/* If the registration needs approval, insert into the
 			 * unapproved_users table */
 			ValueQuery query = new ValueQuery(INSERT_UNAPPROVED_USER)
 					.setQueryType(QueryType.AUTHENTICATION)
@@ -366,7 +366,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	private static void undoNewUserInsert(List<Long> ids) throws DatabaseException
 	{
 		/* Delete the created entries again */
-		String formatted = String.format(DELETE_UNAPPROVED_USER, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(DELETE_UNAPPROVED_USER, StringUtils.generateSqlPlaceholderString(ids.size()));
 		new ValueQuery(formatted)
 				.setQueryType(QueryType.AUTHENTICATION)
 				.setLongs(ids)
@@ -382,7 +382,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	private static void undoRequestInsert(List<Long> ids) throws DatabaseException
 	{
 		/* Delete the created entries again */
-		String formatted = String.format(DELETE_ACCESS_REQUEST, Util.generateSqlPlaceholderString(ids.size()));
+		String formatted = String.format(DELETE_ACCESS_REQUEST, StringUtils.generateSqlPlaceholderString(ids.size()));
 		new ValueQuery(formatted)
 				.setQueryType(QueryType.AUTHENTICATION)
 				.setLongs(ids)
@@ -400,8 +400,11 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	}
 
 	@Override
-	public void addInstitution(Institution institution) throws DatabaseException
+	public void addInstitution(Institution institution) throws DatabaseException, SystemInReadOnlyModeException
 	{
+		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
 		new ValueQuery(INSERT_INSTITUTE)
 				.setQueryType(QueryType.AUTHENTICATION)
 				.setString(institution.getName())
@@ -423,11 +426,11 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
 			GatekeeperUserWithPassword userDetails = GatekeeperUserManager.getForUsernameGlobal(user.userUsername);
 
-            /* User doesn't exist */
+			/* User doesn't exist */
 			if (userDetails == null)
 				throw new LoginRegistrationException(LoginRegistrationException.Reason.USERNAME_PASSWORD_WRONG);
 
-            /* Invalid password */
+			/* Invalid password */
 			if (!BCrypt.checkpw(user.userPassword, userDetails.getPassword()))
 				throw new LoginRegistrationException(LoginRegistrationException.Reason.USERNAME_PASSWORD_WRONG);
 
@@ -463,7 +466,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			{
 				String gatekeeperUrl = getGatekeeperUrl();
 
-                /* If the registration needs approval, insert into the
+				/* If the registration needs approval, insert into the
 				 * access_requests table */
 				List<Long> ids = new ValueQuery(INSERT_ACCESS_REQUEST)
 						.setQueryType(QueryType.AUTHENTICATION)

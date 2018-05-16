@@ -40,14 +40,14 @@ public class FileListServiceImpl extends BaseRemoteServiceServlet implements Fil
 	private static final long serialVersionUID = -177872580557382217L;
 
 	@Override
-	public List<String> getForFolder(RequestProperties properties, FileLocation location, ReferenceFolder referenceFolder) throws InvalidSessionException
+	public List<CreatedFile> getForFolder(RequestProperties properties, FileLocation location, ReferenceFolder referenceFolder) throws InvalidSessionException
 	{
 		Session.checkSession(properties, this);
 
 		File folder = getFileFolder(location, referenceFolder);
 		File folderLocale = getFileFolder(location, properties.getLocale(), referenceFolder);
 
-		List<String> result = new ArrayList<>();
+		List<CreatedFile> result = new ArrayList<>();
 
         /* First add the localized files */
 		if (folderLocale != null && folderLocale.exists() && folderLocale.isDirectory())
@@ -58,7 +58,7 @@ public class FileListServiceImpl extends BaseRemoteServiceServlet implements Fil
 			{
 				result.addAll(Arrays.stream(files)
 									.filter(File::isFile)
-									.map(File::getName)
+									.map(CreatedFile::new)
 									.collect(Collectors.toList()));
 			}
 		}
@@ -70,8 +70,8 @@ public class FileListServiceImpl extends BaseRemoteServiceServlet implements Fil
 			{
 				/* Then add the fallback files */
 				result.addAll(Arrays.stream(files)
-									.filter(file -> file.isFile() && !result.contains(file.getName()))
-									.map(File::getName)
+									.filter(file -> file.isFile() && !result.contains(new CreatedFile(file)))
+									.map(CreatedFile::new)
 									.collect(Collectors.toList()));
 			}
 		}

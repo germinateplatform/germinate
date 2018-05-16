@@ -100,7 +100,7 @@ public class AlleleFreqExportPage extends GerminateComposite implements HasHyper
 	public HyperlinkPopupOptions getHyperlinkOptions()
 	{
 		return new HyperlinkPopupOptions()
-				.setPage(Page.ALLELE_FREQUENCY_EXPORT)
+				.setPage(Page.ALLELE_FREQUENCY_DATASET)
 				.addParam(Parameter.allelefreqDatasetIds);
 	}
 }

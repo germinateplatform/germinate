@@ -38,12 +38,14 @@ public class Taxonomy extends DatabaseObject
 {
 	private static final long serialVersionUID = -235820564023498703L;
 
-	public static final String ID       = "taxonomies.id";
-	public static final String GENUS    = "taxonomies.genus";
-	public static final String SPECIES  = "taxonomies.species";
-	public static final String AUTHOR   = "taxonomies.species_author";
-	public static final String CROPNAME = "taxonomies.cropname";
-	public static final String PLOIDY   = "taxonomies.ploidy";
+	public static final String ID         = "taxonomies.id";
+	public static final String GENUS      = "taxonomies.genus";
+	public static final String SPECIES    = "taxonomies.species";
+	public static final String AUTHOR     = "taxonomies.species_author";
+	public static final String CROPNAME   = "taxonomies.cropname";
+	public static final String PLOIDY     = "taxonomies.ploidy";
+	public static final String CREATED_ON = "taxonomies.created_on";
+	public static final String UPDATED_ON = "taxonomies.updated_on";
 
 	private String  genus;
 	private String  species;

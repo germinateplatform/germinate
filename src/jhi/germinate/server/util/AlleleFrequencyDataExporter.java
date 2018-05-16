@@ -41,6 +41,8 @@ public class AlleleFrequencyDataExporter
 	private int linesToExport = 0;
 
 	private DataExporter.DataExporterParameters parameters;
+	private boolean allLines   = false;
+	private boolean allMarkers = false;
 
 	/**
 	 * Creates a new instance of the AlleleFrequencyDataExporter
@@ -51,7 +53,10 @@ public class AlleleFrequencyDataExporter
 	{
 		this.parameters = parameters;
 
-		if (SORT_FILES)
+		allLines = CollectionUtils.isEmpty(parameters.rowNames);
+		allMarkers = CollectionUtils.isEmpty(parameters.colNames);
+
+		if (SORT_FILES && !allLines)
 			Collections.sort(this.parameters.rowNames);
 	}
 
@@ -74,12 +79,12 @@ public class AlleleFrequencyDataExporter
 			{
 				String[] parts = line.split("\t", -1);
 
-				if (parameters.rowNames.contains(parts[0]))
+				if (allLines || parameters.rowNames.contains(parts[0]))
 				{
 					linesToExport++;
 					for (int i = 1; i < parts.length; i++)
 					{
-						if (parameters.colNames.contains(parts[i]) && isMissing(parts[i]))
+						if (allMarkers || parameters.colNames.contains(parts[i]) && isMissing(parts[i]))
 						{
 							qualityMissing[i - 1]++;
 						}
@@ -120,7 +125,7 @@ public class AlleleFrequencyDataExporter
         	/* Column headers */
 			for (int i = 0; i < qualityMissing.length; i++)
 			{
-				if (!parameters.colNames.contains(markers[i + 1]) || qualityMissing[i] > localMissingValue)
+				if ((!allMarkers && !parameters.colNames.contains(markers[i + 1])) || qualityMissing[i] > localMissingValue)
 				{
 					deletedMarkers.add(markers[i + 1]);
 
@@ -140,13 +145,13 @@ public class AlleleFrequencyDataExporter
 
 				parts = line.split(parameters.delimiter, -1);
 
-				if (parameters.rowNames.contains(parts[0]))
+				if (allLines || parameters.rowNames.contains(parts[0]))
 				{
 					bw.write(parts[0]);
 
 					for (int i = 0; i < qualityMissing.length; i++)
 					{
-						if (!parameters.colNames.contains(markers[i + 1]) || qualityMissing[i] > localMissingValue)
+						if ((!allMarkers && !parameters.colNames.contains(markers[i + 1])) || qualityMissing[i] > localMissingValue)
 							continue;
 
 						bw.write(parameters.delimiter + parts[i + 1]);

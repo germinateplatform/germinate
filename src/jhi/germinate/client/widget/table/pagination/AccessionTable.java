@@ -18,6 +18,7 @@
 package jhi.germinate.client.widget.table.pagination;
 
 import com.google.gwt.cell.client.*;
+import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.rpc.*;
@@ -172,6 +173,24 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		};
 		column.setDataStoreName(Accession.NUMBER);
 		addColumn(column, Text.LANG.accessionsColumnNumber(), sortingEnabled);
+
+		/* Add the entity type column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Accession object)
+			{
+				return object.getEntityType().getName();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return EntityType.class;
+			}
+		};
+		column.setDataStoreName(EntityType.NAME);
+		addColumn(column, Text.LANG.accessionsColumnEntityType(), sortingEnabled);
 
 		/* Add the synonyms column */
 		column = new TextColumn()
@@ -412,7 +431,58 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		};
 		column.setDataStoreName(Accession.COLLDATE);
 		addColumn(column, Text.LANG.passportColumnColldate(), sortingEnabled);
+
+		if (GerminateSettingsHolder.get().pdciEnabled.getValue())
+		{
+			column = new SafeHtmlColumn()
+			{
+				@Override
+				public String getCellStyle()
+				{
+					return Style.combine(Style.TEXT_CENTER_ALIGN, Style.LAYOUT_V_ALIGN_MIDDLE);
+				}
+
+				@Override
+				public SafeHtml getValue(Accession row)
+				{
+					if (row.getPdci() != null)
+						return SimpleHtmlTemplate.INSTANCE.peityDonut(NumberUtils.DECIMAL_FORMAT_TWO_PLACES.format(row.getPdci()), row.getPdci(), 10);
+					else
+						return SimpleHtmlTemplate.INSTANCE.empty();
+				}
+
+				@Override
+				public void render(Cell.Context context, Accession object, SafeHtmlBuilder sb)
+				{
+					super.render(context, object, sb);
+
+					if (GerminateSettingsHolder.get().pdciEnabled.getValue())
+					{
+						Scheduler.get().scheduleDeferred(() -> {
+							TableRowElement row = getTable().getRowElement(context.getIndex() - getTable().getPageStart());
+							jsniPeity(row);
+						});
+					}
+				}
+
+				@Override
+				public Class getType()
+				{
+					return Double.class;
+				}
+			};
+			column.setDataStoreName(Accession.PDCI);
+			addColumn(column, Text.LANG.passportColumnPDCI(), true);
+		}
 	}
+
+	private native void jsniPeity(Element element)/*-{
+		var color = @jhi.germinate.client.util.GerminateSettingsHolder::getCategoricalColor(*)(0);
+		$wnd.$(element).find('.donut').peity('donut', {
+			fill: [color, "#cccccc"],
+			radius: 9
+		});
+	}-*/;
 
 	@Override
 	protected void onItemSelected(NativeEvent event, Accession object, int column)

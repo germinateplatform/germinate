@@ -46,6 +46,8 @@ public class Pedigree extends DatabaseObject
 	public static final String RELATIONSHIP_TYPE        = "pedigrees.relationship_type";
 	public static final String PEDIGREEDESCRIPTION_ID   = "pedigrees.pedigreedescription_id";
 	public static final String RELATIONSHIP_DESCRIPTION = "pedigrees.relationship_description";
+	public static final String CREATED_ON               = "pedigrees.created_on";
+	public static final String UPDATED_ON               = "pedigrees.updated_on";
 
 	private Accession           accession;
 	private Accession           parent;

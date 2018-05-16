@@ -40,6 +40,8 @@ public class MapFeatureType extends DatabaseObject
 
 	public static final String ID          = "mapfeaturetypes.id";
 	public static final String DESCRIPTION = "mapfeaturetypes.description";
+	public static final String CREATED_ON  = "mapfeaturetypes.created_on";
+	public static final String UPDATED_ON  = "mapfeaturetypes.updated_on";
 
 	private String description;
 	private Long   createdOn;
@@ -140,7 +142,8 @@ public class MapFeatureType extends DatabaseObject
 				return new MapFeatureType(id)
 						.setDescription(row.getString(DESCRIPTION))
 						.setCreatedOn(row.getTimestamp(CREATED_ON))
-						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+						.setUpdatedOn(row.getTimestamp(UPDATED_ON))
+						;
 		}
 	}
 

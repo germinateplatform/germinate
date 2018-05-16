@@ -160,15 +160,15 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 		addColumn(column, Text.LANG.accessionsColumnName(), sortingEnabled);
 
 		/* Add the dataset description column */
-		column = new TextColumn()
+		column = new SafeHtmlColumn()
 		{
 			@Override
-			public String getValue(PhenotypeData object)
+			public SafeHtml getValue(PhenotypeData object)
 			{
 				if (object.getDataset() == null)
 					return null;
 				else
-					return object.getDataset().getDescription();
+					return DatasetTable.getValueTruncated(object.getDataset(), object.getDataset().getDescription());
 			}
 
 			@Override

@@ -80,12 +80,6 @@ public class ExcelPedigreeStringReader implements IStreamableReader<PedigreeDefi
 						.setDescription(IExcelReader.getCellValue(wb, row, 2))
 						.setCreatedOn(new Date())
 						.setUpdatedOn(new Date()))
-				.setDescription(new PedigreeDescription()
-						.setName(IExcelReader.getCellValue(wb, row, 3))
-						.setDescription(IExcelReader.getCellValue(wb, row, 3))
-						.setAuthor(IExcelReader.getCellValue(wb, row, 4))
-						.setCreatedOn(new Date())
-						.setUpdatedOn(new Date()))
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
 	}

@@ -36,6 +36,25 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("group")
 public interface GroupService extends RemoteService
 {
+	/**
+	 * Adds the {@link DatabaseObject} items from the file with the specified name to the given {@link Group}. Uses the {@link GerminateDatabaseTable}
+	 * and column to identify the items in question.
+	 *
+	 * @param properties     The {@link RequestProperties}
+	 * @param result         The name of the previously uploaded file
+	 * @param referenceTable The {@link GerminateDatabaseTable} the items are from
+	 * @param column         The column to use to identify the elements
+	 * @param groupId        The {@link Group} id
+	 * @return The number of new items that have been added and the number of items that have been skipped.
+	 * @throws InvalidSessionException          Thrown if the current session is invalid
+	 * @throws DatabaseException                Thrown if the query fails on the server
+	 * @throws IOException                      Thrown if the interaction with the uploaded file fails
+	 * @throws InvalidColumnException           Thrown if the given column is not valid
+	 * @throws InsufficientPermissionsException Thrown if the user doesn't have permissions to add group members to this group
+	 * @throws SystemInReadOnlyModeException    Thrown if Germinate is currently operating in "read-only" mode
+	 */
+	ServerResult<Tuple.Pair<Integer, Integer>> addItems(RequestProperties properties, String result, GerminateDatabaseTable referenceTable, String column, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidColumnException, InsufficientPermissionsException, SystemInReadOnlyModeException;
+
 	String[] COLUMNS_SORTABLE = {Group.ID, Group.NAME, Group.DESCRIPTION, Group.CREATED_BY, Group.CREATED_ON, Group.UPDATED_ON, GroupType.ID, GroupType.DESCRIPTION, Group.COUNT};
 
 	/**
@@ -239,43 +258,19 @@ public interface GroupService extends RemoteService
 	ServerResult<List<String>> getMarkerItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException;
 
 	/**
-	 * Adds the {@link DatabaseObject} items from the file with the specified name to the given {@link Group}. Uses the {@link GerminateDatabaseTable}
-	 * and column to identify the items in question.
+	 * Returns a paginated list of {@link Group}s that match the given {@link PartialSearchQuery}.
 	 *
-	 * @param properties     The {@link RequestProperties}
-	 * @param result         The name of the previously uploaded file
-	 * @param referenceTable The {@link GerminateDatabaseTable} the items are from
-	 * @param column         The column to use to identify the elements
-	 * @param groupId        The {@link Group} id
-	 * @return The number of new items that have been added and the number of items that have been skipped.
-	 * @throws InvalidSessionException          Thrown if the current session is invalid
-	 * @throws DatabaseException                Thrown if the query fails on the server
-	 * @throws IOException                      Thrown if the interaction with the uploaded file fails
-	 * @throws InvalidColumnException           Thrown if the given column is not valid
-	 * @throws InsufficientPermissionsException Thrown if the user doesn't have permissions to add group members to this group
-	 * @throws SystemInReadOnlyModeException    Thrown if Germinate is currently operating in "readAll-only" mode
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @return A paginated list of {@link Group}s that match the given {@link PartialSearchQuery}.
+	 * @throws InvalidSessionException     Thrown if the current session is invalid
+	 * @throws DatabaseException           Thrown if the query fails on the server
+	 * @throws InvalidColumnException      Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
+	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
-	ServerResult<Tuple.Pair<Integer, Integer>> addItems(RequestProperties properties, String result, GerminateDatabaseTable referenceTable, String column, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidColumnException, InsufficientPermissionsException, SystemInReadOnlyModeException;
-
-	final class Inst
-	{
-		/**
-		 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE}, not
-		 * before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-		 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-		 *
-		 * @author Sebastian Raubach
-		 */
-		private static final class InstanceHolder
-		{
-			private static final GroupServiceAsync INSTANCE = GWT.create(GroupService.class);
-		}
-
-		public static GroupServiceAsync get()
-		{
-			return InstanceHolder.INSTANCE;
-		}
-	}
+	PaginatedServerResult<List<Group>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
 	 * Returns a paginated list of {@link Group}s that the given {@link Accession} id is part of.
@@ -311,7 +306,29 @@ public interface GroupService extends RemoteService
 	 */
 	ServerResult<List<Group>> getMarkerGroups(RequestProperties properties, List<Long> datasetIds, ExperimentType type) throws InvalidSessionException, DatabaseException;
 
-	PaginatedServerResult<List<Group>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
-
+	/**
+	 * Renames the given {@link Group}
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param group      The {@link Group} with the new name and description
+	 * @return Nothing
+	 * @throws InvalidSessionException          Thrown if the current session is invalid
+	 * @throws DatabaseException                Thrown if the query fails on the server
+	 * @throws InsufficientPermissionsException Thrown if the user doesn't have permissions to add group members to this group
+	 * @throws SystemInReadOnlyModeException    Thrown if Germinate is currently operating in "read-only" mode
+	 */
 	ServerResult<Void> renameGroup(RequestProperties properties, Group group) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
+
+	final class Inst
+	{
+		public static GroupServiceAsync get()
+		{
+			return InstanceHolder.INSTANCE;
+		}
+
+		private static final class InstanceHolder
+		{
+			private static final GroupServiceAsync INSTANCE = GWT.create(GroupService.class);
+		}
+	}
 }

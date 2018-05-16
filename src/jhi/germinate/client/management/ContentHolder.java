@@ -84,7 +84,8 @@ public class ContentHolder
 		LanguageSelector.init();
 		MarkedItemList.init();
 		ShareWidget.init();
-		AccountSettings.init();
+//		AccountSettings.init();
+		UserPanel.init();
 		SearchPanel.init();
 		ParallaxBanner.init();
 		DebugInfoPanel.init();
@@ -187,6 +188,7 @@ public class ContentHolder
 
 	private void navigateToPage(Page page, Page parentPage, Composite newContent)
 	{
+		contentPanel.setStyleName("");
 		MainMenu.removeActiveStateMenuItems();
 		boolean highlighted = MainMenu.highlightMenuItem(page);
 
@@ -208,6 +210,7 @@ public class ContentHolder
 						contentPanel.clear();
 						/* Add the new content */
 						contentPanel.add(newContent);
+						contentPanel.setStyleName(page.name());
 					}
 				}, libraries);
 			}
@@ -217,6 +220,7 @@ public class ContentHolder
 				contentPanel.clear();
 				/* Add the new content */
 				contentPanel.add(newContent);
+				contentPanel.setStyleName(page.name());
 			}
 		}
 

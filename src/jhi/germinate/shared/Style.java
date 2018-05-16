@@ -45,6 +45,11 @@ public class Style
 	public static final String LAYOUT_SELECT_BUTTON_COMBO        = "gm8-select-button-combo";
 	public static final String LAYOUT_FLOAT_INITIAL              = "gm8-float-initial";
 	public static final String LAYOUT_NO_BORDER_LEFT             = "gm8-no-border-left";
+	public static final String LAYOUT_SIDEBAR_TOGGLED            = "gm8-sidebar-toggled";
+
+	public static final String TABLE_PEITY_DONUT = "gm8-table-peity-donut";
+
+	public static final String FORM_REQUIRED = "form-required";
 
 	public static final String TAG_DUMMY_ANCHOR = "gm8-tag-dummy-anchor";
 
@@ -91,6 +96,7 @@ public class Style
 	public static final String MDI_FLOWER                          = "mdi-flower";
 	public static final String MDI_DATABASE                        = "mdi-database";
 	public static final String MDI_CHART_AREASPLINE                = "mdi-chart-areaspline";
+	public static final String MDI_CHART_DONUT                     = "mdi-chart-donut";
 	public static final String MDI_EARTH                           = "mdi-earth";
 	public static final String MDI_WEATHER_SNOWY_RAIN              = "mdi-weather-snowy-rainy";
 	public static final String MDI_GROUP                           = "mdi-group";
@@ -133,6 +139,8 @@ public class Style
 	public static final String MDI_FILE_XML                        = "mdi-file-xml";
 	public static final String MDI_FILE_DOCUMENT                   = "mdi-file-document";
 	public static final String MDI_SITEMAP                         = "mdi-sitemap";
+	public static final String MDI_ACCOUNT                         = "mdi-account";
+	public static final String MDI_ACCOUNT_SETTINGS_VARIANT        = "mdi-account-settings-variant";
 	public static final String MDI_ACCOUNT_MULTIPLE                = "mdi-account-multiple";
 	public static final String MDI_MAGNIFY                         = "mdi-magnify";
 	public static final String MDI_LINK_VARIANT                    = "mdi-link-variant";
@@ -181,6 +189,11 @@ public class Style
 	public static final String MDI_ROTATE_270                      = "mdi-rotate-270";
 	public static final String MDI_FORMAT_INDENT_INCREASE          = "mdi-format-indent-increase";
 	public static final String MDI_VECTOR_POLYGON                  = "mdi-vector-polygon";
+	public static final String MDI_TIMER_SAND                      = "mdi-timer-sand";
+	public static final String MDI_PASSPORT                        = "mdi-passport";
+	public static final String MDI_CITY                            = "mdi-city";
+	public static final String MDI_SELECTION                       = "mdi-selection";
+	public static final String MDI_COMMENT_TEXT_OUTLINE            = "mdi-comment-text-outline";
 	public static final String MDI_LG                              = "mdi-lg";
 	public static final String MDI_PLAYLIST_PLUS                   = "mdi-playlist-plus";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";

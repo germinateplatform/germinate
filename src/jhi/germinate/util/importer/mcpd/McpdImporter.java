@@ -45,6 +45,7 @@ public class McpdImporter extends DataImporter<Accession>
 	private Set<Long> createdLocationIds           = new HashSet<>();
 	private Set<Long> createdPedigreeDefinitionIds = new HashSet<>();
 	private Set<Long> createdPedigreeNotationIds   = new HashSet<>();
+	private Set<Long> createdSynonymIds            = new HashSet<>();
 
 	private AttributeDataImporter attributeDataImporter;
 
@@ -86,6 +87,7 @@ public class McpdImporter extends DataImporter<Accession>
 		deleteItems(createdAttributeDataIds, "attributedata");
 		deleteItems(createdSubtaxaIds, "subtaxa");
 		deleteItems(createdTaxonomyIds, "taxonomies");
+		deleteItems(createdSynonymIds, "synonyms");
 
 		if (attributeDataImporter != null)
 			attributeDataImporter.deleteInsertedItems();
@@ -105,6 +107,8 @@ public class McpdImporter extends DataImporter<Accession>
 
 		// Write or get the accession itself
 		entry = createOrGetAccession(entry);
+
+		createSynonyms(entry);
 
 		// Now we've got the Accession id, so we can insert stuff tht depends on it.
 		getStorage(entry);
@@ -290,7 +294,7 @@ public class McpdImporter extends DataImporter<Accession>
 
 		if (rs.next())
 		{
-			result = Accession.Parser.Inst.get().parse(rs, null, true);
+			result = Accession.ImportParser.Inst.get().parse(rs, null, true);
 		}
 		else
 		{
@@ -444,7 +448,7 @@ public class McpdImporter extends DataImporter<Accession>
 	 */
 	private void createOrGetSubtaxa(Accession entry) throws DatabaseException
 	{
-		if (entry.getTaxonomy() == null || entry.getSubtaxa() == null || StringUtils.areEmpty(entry.getSubtaxa().getTaxonomyIdentifier(), entry.getSubtaxa().getAuthor()))
+		if (entry.getTaxonomy() == null || entry.getSubtaxa() == null || StringUtils.isEmpty(entry.getSubtaxa().getTaxonomyIdentifier()))
 			return;
 
 		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM subtaxa WHERE taxonomy_id = ? AND subtaxa_author <=> ? AND taxonomic_identifier <=> ?");
@@ -463,6 +467,42 @@ public class McpdImporter extends DataImporter<Accession>
 		{
 			Subtaxa.Writer.Inst.get().write(databaseConnection, entry.getSubtaxa());
 			createdSubtaxaIds.add(entry.getSubtaxa().getId());
+		}
+	}
+
+	/**
+	 * Creates/gets and then sets the {@link Subtaxa} based on the MCPD fields.
+	 *
+	 * @param entry The current {@link Accession}
+	 * @throws DatabaseException Thrown if the interaction with the database fails
+	 */
+	private void createSynonyms(Accession entry) throws DatabaseException
+	{
+		if (StringUtils.isEmpty(entry.getOtherNumb()))
+			return;
+
+		String[] synonyms = entry.getOtherNumb().split(";");
+
+		for (String syn : synonyms)
+		{
+			syn = syn.trim();
+			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM synonyms WHERE foreign_id = ? AND synonymtype_id = " + SynonymType.germinatebase.getId() + " AND synonym = ?");
+			int i = 1;
+			stmt.setLong(i++, entry.getId());
+			stmt.setString(i++, syn);
+
+			DatabaseResult rs = stmt.query();
+
+			if (!rs.next())
+			{
+				Synonym synonym = new Synonym().setForeignId(entry.getId())
+											   .setType(SynonymType.germinatebase)
+											   .setSynonym(syn)
+											   .setCreatedOn(new Date());
+
+				Synonym.Writer.Inst.get().write(databaseConnection, synonym);
+				createdSynonymIds.add(synonym.getId());
+			}
 		}
 	}
 

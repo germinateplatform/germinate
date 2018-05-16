@@ -19,6 +19,8 @@ package jhi.germinate.client.util;
 
 import com.google.gwt.i18n.client.*;
 
+import java.util.*;
+
 /**
  * @author Sebastian Raubach
  */
@@ -41,58 +43,40 @@ public class NumberUtils
 	 */
 	public static final NumberFormat INTEGER_FORMAT             = NumberFormat.getFormat("#,###").overrideFractionDigits(0, 0);
 
-	/**
-	 * Checks if the given number is an int in the local format
-	 *
-	 * @param input The potential int in local format
-	 * @return <code>true</code> if the number is an int in the local format
-	 */
-	public static boolean isInteger(String input)
+	private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
+	private static final NavigableMap<Long, String> suffixesBit = new TreeMap<>();
+
+	static
 	{
-		try
-		{
-			INTEGER_FORMAT.parse(input);
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
+		suffixes.put(               1000L, "k");
+		suffixes.put(            1000000L, "M");
+		suffixes.put(         1000000000L, "G");
+		suffixes.put(      1000000000000L, "T");
+		suffixes.put(   1000000000000000L, "P");
+		suffixes.put(1000000000000000000L, "E");
+
+		suffixesBit.put(               1024L, "k");
+		suffixesBit.put(            1048576L, "M");
+		suffixesBit.put(         1073741824L, "G");
+		suffixesBit.put(      1099511627776L, "T");
+		suffixesBit.put(   1125899906842624L, "P");
+		suffixesBit.put(1152921504606846976L, "E");
 	}
 
-	/**
-	 * Parses an int from the given number in local format
-	 *
-	 * @param input The number in local format
-	 * @return The int
-	 */
-	public static int toInteger(String input)
+	public static String format(long value, boolean bit)
 	{
-		return (int) Math.round(DECIMAL_FORMAT.parse(input));
-	}
+		//Long.MIN_VALUE == -Long.MIN_VALUE so we need an adjustment here
+		if (value == Long.MIN_VALUE) return format(Long.MIN_VALUE + 1, bit);
+		if (value < 0) return "-" + format(-value, bit);
+		if (value < (bit ? 1024 : 1000)) return Long.toString(value); //deal with easy case
 
-	/**
-	 * Checks if the given number is a decimal (float) in the local format.
-	 * <p/>
-	 * <b>IMPORTANT</b>: This will return <code>false</code> if {@link #isInteger(String)} returns <code>true</code>.
-	 *
-	 * @param input The potential decimal in local format
-	 * @return <code>true</code> if the number is a decimal in the local format
-	 */
-	public static boolean isDecimal(String input)
-	{
-		if (isInteger(input))
-			return false;
+		Map.Entry<Long, String> e = (bit ? suffixesBit : suffixes).floorEntry(value);
+		Long divideBy = e.getKey();
+		String suffix = e.getValue();
 
-		try
-		{
-			DECIMAL_FORMAT.parse(input);
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
+		long truncated = value / (divideBy / 10); //the number part of the output times 10
+		boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
+		return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
 	}
 
 	/**

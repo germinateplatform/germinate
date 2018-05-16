@@ -40,7 +40,8 @@
 		<g8:ParagraphPanel text="{msg.groupsUserInput}"/>
 
 		<b:NavTabs>
-			<g8:MdiTabListItem active="true" dataTarget="#upload" mdi="{MDI_VIEW_LIST} {MDI_LG}" text="{msg.groupsUserTabUpload}" ui:field="uploadTab"/>
+			<g8:MdiTabListItem active="true" dataTarget="#upload" mdi="{MDI_VIEW_LIST} {MDI_LG}" text="{msg.groupsUserTabUpload}"
+							   ui:field="uploadTab"/>
 			<g8:MdiTabListItem dataTarget="#input" mdi="{MDI_CONTENT_PASTE} {MDI_LG}" text="{msg.groupsUserTabCopyPaste}" ui:field="copyPasteTab"/>
 		</b:NavTabs>
 		<b:TabContent>

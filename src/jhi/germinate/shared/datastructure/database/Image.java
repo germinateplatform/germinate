@@ -41,13 +41,13 @@ public class Image extends DatabaseObject
 	public static final String DESCRIPTION  = "images.description";
 	public static final String FOREIGN_ID   = "images.foreign_id";
 	public static final String PATH         = "images.path";
+	public static final String CREATED_ON   = "images.created_on";
+	public static final String UPDATED_ON   = "images.updated_on";
 
 	private ImageType type;
 	private String    description;
 	private Long      foreignId;
 	private String    path;
-	private int width  = 0;
-	private int height = 0;
 	private Long createdOn;
 	private Long updatedOn;
 
@@ -104,28 +104,6 @@ public class Image extends DatabaseObject
 		return this;
 	}
 
-	public int getWidth()
-	{
-		return width;
-	}
-
-	public Image setWidth(int width)
-	{
-		this.width = width;
-		return this;
-	}
-
-	public int getHeight()
-	{
-		return height;
-	}
-
-	public Image setHeight(int height)
-	{
-		this.height = height;
-		return this;
-	}
-
 	public Long getCreatedOn()
 	{
 		return createdOn;
@@ -163,8 +141,6 @@ public class Image extends DatabaseObject
 				", description='" + description + '\'' +
 				", foreignId=" + foreignId +
 				", path='" + path + '\'' +
-				", width=" + width +
-				", height=" + height +
 				"} " + super.toString();
 	}
 

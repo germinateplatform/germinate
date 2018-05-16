@@ -33,21 +33,25 @@ public class GatekeeperUser extends DatabaseObject
 {
 	private static final long serialVersionUID = -3771426102208619594L;
 
-	public static final GatekeeperUser UNKNOWN = new GatekeeperUser(-1L, "Admin", "Administrator", true, false, null, null);
+	public static final GatekeeperUser UNKNOWN = new GatekeeperUser(-1L, "Admin", "Administrator", "germinate@hutton.ac.uk", null, true, false, null, null);
 
 	public static final String ID                    = "users.id";
 	public static final String USERNAME              = "users.username";
 	public static final String FULL_NAME             = "users.full_name";
+	public static final String EMAIL                 = "users.email_address";
+	public static final String INSTITUTION_NAME      = "institutions.name";
 	public static final String USER_TYPE_DESCRIPTION = "user_types.description";
 	public static final String DATABASE_NAME         = "database_systems.system_name";
 	public static final String DATABASE_SERVER       = "database_systems.server_name";
 
-	private String  username;
-	private String  fullName;
-	private boolean isAdmin;
-	private boolean isSuspended;
-	private String  databaseName;
-	private String  databaseServer;
+	private String      username;
+	private String      fullName;
+	private String      email;
+	private Institution institution;
+	private boolean     isAdmin;
+	private boolean     isSuspended;
+	private String      databaseName;
+	private String      databaseServer;
 
 	public GatekeeperUser()
 	{
@@ -58,11 +62,13 @@ public class GatekeeperUser extends DatabaseObject
 		super(id);
 	}
 
-	public GatekeeperUser(Long id, String username, String fullName, boolean isAdmin, boolean isSuspended, String databaseName, String databaseServer)
+	public GatekeeperUser(Long id, String username, String fullName, String email, Institution institution, boolean isAdmin, boolean isSuspended, String databaseName, String databaseServer)
 	{
 		super(id);
 		this.username = username;
 		this.fullName = fullName;
+		this.email = email;
+		this.institution = institution;
 		this.isAdmin = isAdmin;
 		this.isSuspended = isSuspended;
 		this.databaseName = databaseName;
@@ -88,6 +94,28 @@ public class GatekeeperUser extends DatabaseObject
 	public GatekeeperUser setFullName(String fullName)
 	{
 		this.fullName = fullName;
+		return this;
+	}
+
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public GatekeeperUser setEmail(String email)
+	{
+		this.email = email;
+		return this;
+	}
+
+	public Institution getInstitution()
+	{
+		return institution;
+	}
+
+	public GatekeeperUser setInstitution(Institution institution)
+	{
+		this.institution = institution;
 		return this;
 	}
 
@@ -181,7 +209,10 @@ public class GatekeeperUser extends DatabaseObject
 			{
 				GatekeeperUser u = new GatekeeperUser(id)
 						.setUsername(row.getString(USERNAME))
-						.setFullName(row.getString(FULL_NAME));
+						.setFullName(row.getString(FULL_NAME))
+						.setEmail(row.getString(EMAIL))
+						.setInstitution(new Institution()
+								.setName(row.getString(INSTITUTION_NAME)));
 
 				try
 				{

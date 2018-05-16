@@ -41,6 +41,8 @@ public class Climate extends DatabaseObject
 	public static final String DESCRIPTION = "climates.description";
 	public static final String DATA_TYPE   = "climates.datatype";
 	public static final String UNIT_ID     = "climates.unit_id";
+	public static final String CREATED_ON  = "climates.created_on";
+	public static final String UPDATED_ON  = "climates.updated_on";
 
 	private String name;
 	private String shortName;

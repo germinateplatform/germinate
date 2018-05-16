@@ -41,6 +41,8 @@ public class Comment extends DatabaseObject
 	public static final String VISIBILITY     = "comments.visibility";
 	public static final String DESCRIPTION    = "comments.description";
 	public static final String REFERENCE_ID   = "comments.reference_id";
+	public static final String CREATED_ON     = "comments.created_on";
+	public static final String UPDATED_ON     = "comments.updated_on";
 
 
 	private CommentType type;

@@ -21,6 +21,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.ListBox;
 
@@ -40,6 +41,7 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -190,6 +192,10 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	@UiHandler("continueButton")
 	void onContinueClicked(ClickEvent event)
 	{
+		AlleleFrequencyService.HistogramParams params = getHistogramParams();
+		List<Dataset> selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.allelefreqDatasets);
+		params.datasetIds = DatabaseObject.getIds(selectedDatasets);
+
 		AlleleFrequencyService.Inst.get().createProject(Cookie.getRequestProperties(), getHistogramParams(), new DefaultAsyncCallback<Tuple.Pair<String, FlapjackProjectCreationResult>>(true)
 		{
 			@Override
@@ -212,13 +218,12 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 				resultWrapper.setVisible(true);
 				resultPanel.clear();
 
-				List<String> files = Arrays.asList(result.getSecond().getRawDataFile(), result.getSecond().getMapFile(), result.getSecond().getProjectFile());
-				List<String> names = Arrays.asList(Text.LANG.allelefreqResultDownloadBinned(), Text.LANG.allelefreqResultDownloadMap(), Text.LANG.allelefreqResultDownloadFlapjack());
-				List<FileType> types = Arrays.asList(FileType.txt, FileType.txt, FileType.flapjack);
+				List<DownloadWidget.FileConfig> files = new ArrayList<>();
+				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadBinned(), result.getSecond().getRawDataFile()).setStyle(FileType.IconStyle.IMAGE));
+				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadMap(), result.getSecond().getMapFile()).setStyle(FileType.IconStyle.IMAGE));
+				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadFlapjack(), result.getSecond().getProjectFile()).setStyle(FileType.IconStyle.IMAGE));
 
-				FileDownloadWidget widget = new FileDownloadWidget(FileLocation.temporary, null, null, files, names, types, true);
-
-				resultPanel.add(widget);
+				resultPanel.add(new DownloadWidget().addAll(files));
 				markerPanel.clear();
 
 				/* Show the deleted markers in a list */
@@ -235,11 +240,16 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 
 					markerPanel.add(box);
 
-					markerPanel.add(new OnDemandFileDownloadWidget((index, callback) -> MarkerService.Inst.get().export(Cookie.getRequestProperties(), result.getSecond().getDeletedMarkers(), callback), false)
-							.setIconStyle(FileDownloadWidget.IconStyle.MDI)
-							.setHeading(null)
-							.addFile(Text.LANG.downloadDeletedMarkersAsTxt())
-							.addType(FileType.txt));
+					DownloadWidget widget = new DownloadWidget()
+					{
+						@Override
+						protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
+						{
+							MarkerService.Inst.get().export(Cookie.getRequestProperties(), result.getSecond().getDeletedMarkers(), callback);
+						}
+					};
+					widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadDeletedMarkersAsTxt()));
+					markerPanel.add(widget);
 				}
 				else
 				{

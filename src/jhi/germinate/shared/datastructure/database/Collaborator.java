@@ -19,12 +19,17 @@ package jhi.germinate.shared.datastructure.database;
 
 import com.google.gwt.core.shared.*;
 
+import java.sql.*;
+import java.util.Date;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.server.database.query.writer.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.exception.*;
 
@@ -39,6 +44,8 @@ public class Collaborator extends DatabaseObject
 	public static final String EMAIL          = "collaborators.email";
 	public static final String PHONE          = "collaborators.phone";
 	public static final String INSTITUTION_ID = "collaborators.institution_id";
+	public static final String CREATED_ON     = "collaborators.created_on";
+	public static final String UPDATED_ON     = "collaborators.updated_on";
 
 	private String      firstName;
 	private String      lastName;
@@ -233,6 +240,48 @@ public class Collaborator extends DatabaseObject
 			private static final class InstanceHolder
 			{
 				private static final Parser INSTANCE = new Parser();
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class Writer implements DatabaseObjectWriter<Collaborator>
+	{
+		@Override
+		public void write(Database database, Collaborator object) throws DatabaseException
+		{
+			ValueQuery query = new ValueQuery(database, "INSERT INTO collaborators (" + FIRST_NAME + ", " + LAST_NAME + ", " + EMAIL + ", " + PHONE + ", " + INSTITUTION_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
+					.setString(object.getFirstName())
+					.setString(object.getLastName())
+					.setString(object.getEmail())
+					.setString(object.getPhone())
+					.setLong(object.getInstitution() != null ? object.getInstitution().getId() : null);
+
+			if (object.getCreatedOn() != null)
+				query.setTimestamp(new Date(object.getCreatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				query.setTimestamp(new Date(object.getUpdatedOn()));
+			else
+				query.setNull(Types.TIMESTAMP);
+
+			ServerResult<List<Long>> ids = query.execute(false);
+
+			if (ids != null && !CollectionUtils.isEmpty(ids.getServerResult()))
+				object.setId(ids.getServerResult().get(0));
+		}
+
+		public static final class Inst
+		{
+			public static Writer get()
+			{
+				return Writer.Inst.InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final Writer INSTANCE = new Writer();
 			}
 		}
 	}
