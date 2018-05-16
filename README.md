@@ -35,7 +35,7 @@ The Germinate Team gratefully acknowledges support by the following organization
 ### Crowdin
 <img src="https://github.com/germinateplatform/germinate/raw/master/external-resources/crowdin-logo.png" width="250">
 
-We use <a href="https://crowdin.com">Crowdin</a> to manage Germinate's translations.
+We use <a href='https://crowdin.com'>Crowdin</a> to manage Germinate's translations.
 
 ### Dataedo
 <img src="https://github.com/germinateplatform/germinate/raw/master/external-resources/dataedo-logo.png" width="250">
