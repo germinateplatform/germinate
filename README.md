@@ -30,7 +30,7 @@ Please consult the [Wiki](../../wiki/Setup) for a variety of options to download
 If you have any questions or suggestions, please send us an email on [germinate@hutton.ac.uk](mailto:germinate@hutton.ac.uk) or post an issue.
 
 ## Acknowledgements
-The Germinate Team gratefully acknowledges support by the following organizations who have generously probided us with open source licenses for their software products:
+The Germinate Team gratefully acknowledges support by the following organizations who have generously provided us with open source licenses for their software products:
 
 ### Crowdin
 <img src="https://github.com/germinateplatform/germinate/raw/master/external-resources/crowdin-logo.png" width="250">
