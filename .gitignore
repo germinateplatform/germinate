@@ -32,7 +32,7 @@ instance-stuff/*
 # Local configuration files
 build.properties
 build-dev.properties
-/germinate3-bootstrap.iml
+/*.iml
 
 # Files that are created during the compilation process
 /src/jhi/germinate/Germinate.gwt.xml
