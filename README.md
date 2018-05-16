@@ -33,7 +33,7 @@ If you have any questions or suggestions, please send us an email on [germinate@
 The Germinate Team gratefully acknowledges support by the following organizations who have generously provided us with open source licenses for their software products:
 
 ### Crowdin
-<img src="https://github.com/germinateplatform/germinate/raw/master/external-resources/crowdin-logo.png" width="250">
+<img src='https://github.com/germinateplatform/germinate/raw/master/external-resources/crowdin-logo.png' width="250">
 
 We use <a href='https://crowdin.com'>Crowdin</a> to manage Germinate's translations.
 
