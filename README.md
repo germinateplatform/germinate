@@ -40,4 +40,4 @@ We use <a href='https://crowdin.com'>Crowdin</a> to manage Germinate's translati
 ### Dataedo
 <img src="https://github.com/germinateplatform/germinate/raw/master/external-resources/dataedo-logo.png" width="250">
 
-We use <a href="https://dataedo.com">Dataedo</a> to generate our database documentation which is available [here](https://ics.hutton.ac.uk/resources/germinate/database-docs/). 
+We use <a href='https://dataedo.com'>Dataedo</a> to generate our database documentation which is available [here](https://ics.hutton.ac.uk/resources/germinate/database-docs/). 
