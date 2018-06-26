@@ -380,7 +380,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd) throws InvalidArgumentException
 	{
-		return forceFilter(columnToValue, isAnd, new Equal());
+		return forceFilter(columnToValue, isAnd, new Like());
 	}
 
 	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd, ComparisonOperator operator) throws InvalidArgumentException

@@ -247,7 +247,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 				filter = new PartialSearchQuery();
 				SearchCondition condition = new SearchCondition();
 				condition.setColumnName(jhi.germinate.shared.datastructure.database.LocationType.NAME);
-				condition.setComp(new Equal());
+				condition.setComp(new Like());
 				condition.addConditionValue(type.name());
 				condition.setType(String.class.getSimpleName());
 				filter.add(condition);

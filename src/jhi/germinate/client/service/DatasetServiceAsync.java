@@ -39,11 +39,10 @@ public interface DatasetServiceAsync
 	 * @param properties     The {@link RequestProperties} The {@link RequestProperties}
 	 * @param filter         The {@link PartialSearchQuery} representing the user filtering
 	 * @param experimentType The {@link ExperimentType}
-	 * @param internal       Should only internal datasets be returned?
 	 * @param pagination     The {@link Pagination} The {@link Pagination}
 	 * @param callback       The {@link AsyncCallback}
 	 */
-	Request getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, boolean internal, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
+	Request getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
 
 	/**
 	 * Returns a paginated list of {@link Dataset}s that have an association with the given {@link Accession} id.

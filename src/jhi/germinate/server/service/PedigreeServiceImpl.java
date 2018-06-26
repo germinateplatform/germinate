@@ -161,10 +161,10 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 				/* Get the accession by its id */
 				Accession accession = new AccessionManager().getById(userAuth, accessionId).getServerResult();
 
-				/* Get the pedigree up the tree (parents, grandparents, ...) */
+				// Write the pedigree up the tree (parents, grandparents, ...)
 				new PedigreeWriter(bw, parentPairData, true, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
 						.run(accession.getName(), 1);
-				/* Get the pedigree down the tree (children, grandchildren, ...) */
+				// Write the pedigree down the tree (children, grandchildren, ...)
 				new PedigreeWriter(bw, childPairData, false, queryType == Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE ? PEDIGREE_LEVEL_LIMIT : 1)
 						.run(accession.getName(), 1);
 			}

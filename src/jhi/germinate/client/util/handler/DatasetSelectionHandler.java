@@ -54,7 +54,7 @@ public class DatasetSelectionHandler implements DatasetSelectionEvent.DatasetSel
 		if (user != null)
 		{
 			final List<Long> ids = DatabaseObject.getIds(event.getDatasets());
-			DatasetService.Inst.get().trackDatasetAccess(Cookie.getRequestProperties(), ids, user, new DefaultAsyncCallback<ServerResult<Boolean>>());
+			DatasetService.Inst.get().trackDatasetAccess(Cookie.getRequestProperties(), ids, user, new DefaultAsyncCallback<>());
 		}
 	}
 }

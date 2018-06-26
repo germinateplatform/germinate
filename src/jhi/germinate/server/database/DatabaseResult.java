@@ -49,6 +49,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -76,6 +77,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -102,6 +104,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -141,6 +144,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -163,6 +167,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -202,6 +207,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -224,6 +230,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -259,6 +266,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e + " " + e.getSQLState());
 		}
@@ -283,6 +291,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -307,6 +316,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -346,6 +356,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e);
 		}
@@ -384,6 +395,7 @@ public final class DatabaseResult
 		}
 		catch (SQLException e)
 		{
+			e.printStackTrace();
 			database.close();
 			throw new DatabaseException(e + " " + e.getSQLState());
 		}
@@ -406,6 +418,7 @@ public final class DatabaseResult
 			}
 			catch (SQLException e)
 			{
+				e.printStackTrace();
 				database.close();
 				throw new DatabaseException(e);
 			}
@@ -433,6 +446,7 @@ public final class DatabaseResult
 			}
 			catch (SQLException e)
 			{
+				e.printStackTrace();
 				database.close();
 				throw new DatabaseException(e);
 			}

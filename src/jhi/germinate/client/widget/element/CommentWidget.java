@@ -146,7 +146,7 @@ public class CommentWidget extends Composite
 							filter = new PartialSearchQuery();
 						SearchCondition condition = new SearchCondition();
 						condition.setColumnName(Comment.REFERENCE_ID);
-						condition.setComp(new Equal());
+						condition.setComp(new Like());
 						condition.addConditionValue(Long.toString(id));
 						condition.setType(Long.class.getSimpleName());
 						filter.add(condition);
@@ -156,7 +156,7 @@ public class CommentWidget extends Composite
 
 						condition = new SearchCondition();
 						condition.setColumnName(CommentType.REFERENCE_TABLE);
-						condition.setComp(new Equal());
+						condition.setComp(new Like());
 						condition.addConditionValue(gTable.name());
 						condition.setType(String.class.getSimpleName());
 						filter.add(condition);

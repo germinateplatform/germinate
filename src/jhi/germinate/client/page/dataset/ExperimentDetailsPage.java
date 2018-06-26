@@ -96,6 +96,33 @@ public class ExperimentDetailsPage extends Composite
 		}
 	}
 
+	public static void clickDownloadLink(ServerResult<String> result)
+	{
+		/* If there is a result */
+		if (result != null && result.getServerResult() != null)
+		{
+			/* Get the filename from the result */
+			String filename = result.getServerResult();
+
+			/* Create a new invisible dummy link on the page */
+			String path = new ServletConstants.Builder()
+					.setUrl(GWT.getModuleBaseURL())
+					.setPath(ServletConstants.SERVLET_FILES)
+					.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+					.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+					.setParam(ServletConstants.PARAM_FILE_PATH, filename).build();
+
+			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), filename);
+
+			/* Click it */
+			JavaScript.invokeDownload(path);
+		}
+		else
+		{
+			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
+		}
+	}
+
 	private void setUpPage()
 	{
 		html.setHTML(Text.LANG.experimentDetailsText());
@@ -105,26 +132,12 @@ public class ExperimentDetailsPage extends Composite
 		{
 			private PartialSearchQuery addToFilter(PartialSearchQuery filter)
 			{
-				try
-				{
-					if (filter == null)
-						filter = new PartialSearchQuery();
-					SearchCondition condition = new SearchCondition();
-					condition.setColumnName(Experiment.ID);
-					condition.setComp(new Equal());
-					condition.addConditionValue(Long.toString(experimentId));
-					condition.setType(Long.class.getSimpleName());
-					filter.add(condition);
+				if (filter == null)
+					filter = new PartialSearchQuery();
+				filter.add(new SearchCondition(Experiment.ID, new Like(), experimentId, Long.class));
 
-					if (filter.getAll().size() > 1)
-					{
-						filter.addLogicalOperator(new And());
-					}
-				}
-				catch (InvalidArgumentException | InvalidSearchQueryException e)
-				{
-					e.printStackTrace();
-				}
+				if (filter.getAll().size() > 1)
+					filter.addLogicalOperator(new And());
 
 				return filter;
 			}
@@ -134,7 +147,7 @@ public class ExperimentDetailsPage extends Composite
 			{
 				filter = addToFilter(filter);
 
-				return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, null, true, pagination, callback);
+				return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, null, pagination, callback);
 			}
 		};
 
@@ -170,10 +183,10 @@ public class ExperimentDetailsPage extends Composite
 					{
 						if (!StringUtils.isEmpty(result.getSourceFile()))
 						{
-								/* If we're dealing with an hdf5 file, convert it to tab-delimited */
+							/* If we're dealing with an hdf5 file, convert it to tab-delimited */
 							if (result.getSourceFile().endsWith(".hdf5"))
 							{
-									/* Start the export process */
+								/* Start the export process */
 								GenotypeService.Inst.get().convertHdf5ToText(Cookie.getRequestProperties(), result.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
 								{
 									@Override
@@ -194,7 +207,7 @@ public class ExperimentDetailsPage extends Composite
 							}
 							else
 							{
-									/* Else just download the file */
+								/* Else just download the file */
 								String href = new ServletConstants.Builder()
 										.setUrl(GWT.getModuleBaseURL())
 										.setPath(ServletConstants.SERVLET_FILES)
@@ -206,7 +219,7 @@ public class ExperimentDetailsPage extends Composite
 
 								JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), result.getSourceFile());
 
-            						/* Click it */
+								/* Click it */
 								JavaScript.invokeDownload(href);
 							}
 						}
@@ -216,32 +229,5 @@ public class ExperimentDetailsPage extends Composite
 		}
 
 		datasetTablePanel.add(datasetTable);
-	}
-
-	public static void clickDownloadLink(ServerResult<String> result)
-	{
-		/* If there is a result */
-		if (result != null && result.getServerResult() != null)
-		{
-			/* Get the filename from the result */
-			String filename = result.getServerResult();
-
-			/* Create a new invisible dummy link on the page */
-			String path = new ServletConstants.Builder()
-					.setUrl(GWT.getModuleBaseURL())
-					.setPath(ServletConstants.SERVLET_FILES)
-					.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-					.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-					.setParam(ServletConstants.PARAM_FILE_PATH, filename).build();
-
-			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), filename);
-
-            /* Click it */
-			JavaScript.invokeDownload(path);
-		}
-		else
-		{
-			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
-		}
 	}
 }

@@ -235,7 +235,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 							filter = new PartialSearchQuery();
 						SearchCondition condition = new SearchCondition();
 						condition.setColumnName(jhi.germinate.shared.datastructure.database.LocationType.NAME);
-						condition.setComp(new Equal());
+						condition.setComp(new Like());
 						condition.addConditionValue(LocationType.collectingsites.name());
 						condition.setType(String.class.getSimpleName());
 						filter.add(condition);
@@ -315,7 +315,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 							filter = new PartialSearchQuery();
 						SearchCondition condition = new SearchCondition();
 						condition.setColumnName(LocationType.NAME);
-						condition.setComp(new Equal());
+						condition.setComp(new Like());
 						condition.addConditionValue(LocationType.collectingsites.name());
 						condition.setType(Long.class.getSimpleName());
 						filter.add(condition);

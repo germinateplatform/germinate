@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018 Information and Computational Sciences,
+ *  Copyright 2017 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,22 +30,22 @@ import jhi.germinate.shared.search.SearchCondition.*;
  * @author Toby Philp
  * @author Sebastian Raubach
  */
-public class Equal implements ComparisonOperator
+public class Like implements ComparisonOperator
 {
 	private static final long serialVersionUID = -6996059089452093921L;
 
 	private String columnName;
 
 	@Override
-	public void setColumnName(String columnName)
-	{
-		this.columnName = columnName;
-	}
-
-	@Override
 	public String getColumnName()
 	{
 		return columnName;
+	}
+
+	@Override
+	public void setColumnName(String columnName)
+	{
+		this.columnName = columnName;
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class Equal implements ComparisonOperator
 	@Override
 	public String toString()
 	{
-		return " = ";
+		return " LIKE ";
 	}
 
 	@Override
@@ -71,14 +71,14 @@ public class Equal implements ComparisonOperator
 	{
 		if (values.size() < 1)
 		{
-			throw new InvalidArgumentException("Equal to requires that one comparison value is provided.");
+			throw new InvalidArgumentException("Like requires that one comparison value is provided.");
 		}
 		else if (StringUtils.isEmpty(values.get(0)))
 		{
-			throw new InvalidArgumentException("Equal to requires that one comparison value is provided.");
+			throw new InvalidArgumentException("Like requires that one comparison value is provided.");
 		}
 
-		return " " + columnName + " = ?";
+		return " " + columnName + " LIKE ?";
 	}
 
 	@Override

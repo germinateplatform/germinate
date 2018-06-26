@@ -45,6 +45,7 @@ import jhi.germinate.shared.datastructure.database.Image;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -132,7 +133,8 @@ public class CompoundDetailsPage extends Composite
 
 	private void showCompoundChart()
 	{
-		DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), null, ExperimentType.compound, true, new Pagination(0, Integer.MAX_VALUE), new DefaultAsyncCallback<PaginatedServerResult<List<Dataset>>>()
+		PartialSearchQuery q = new PartialSearchQuery(new SearchCondition(Dataset.IS_EXTERNAL, new Equal(), 0, Integer.class));
+		DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), q, ExperimentType.compound, new Pagination(0, Integer.MAX_VALUE), new DefaultAsyncCallback<PaginatedServerResult<List<Dataset>>>()
 		{
 			@Override
 			protected void onSuccessImpl(PaginatedServerResult<List<Dataset>> result)

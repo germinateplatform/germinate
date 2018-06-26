@@ -49,7 +49,6 @@ public interface DatasetService extends RemoteService
 	 * @param properties     The {@link RequestProperties} The {@link RequestProperties}
 	 * @param filter         The {@link PartialSearchQuery} representing the user filtering
 	 * @param experimentType The {@link ExperimentType}
-	 * @param internal       Should only internal datasets be returned?
 	 * @param pagination     The {@link Pagination} The {@link Pagination}
 	 * @return A paginated list of {@link Dataset}s that match the given {@link PartialSearchQuery}.
 	 * @throws InvalidSessionException          Thrown if the current session is invalid
@@ -59,7 +58,7 @@ public interface DatasetService extends RemoteService
 	 * @throws InvalidArgumentException         Thrown if one of the provided arguments for the filtering is invalid
 	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
 	 */
-	PaginatedServerResult<List<Dataset>> getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, boolean internal, Pagination pagination) throws InsufficientPermissionsException, InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
+	PaginatedServerResult<List<Dataset>> getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, Pagination pagination) throws InsufficientPermissionsException, InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
 
 	/**
 	 * Returns a paginated list of {@link Dataset}s that have an association with the given {@link Accession} id.

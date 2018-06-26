@@ -36,12 +36,12 @@ import jhi.germinate.shared.search.*;
  */
 public class DatasetManager extends AbstractManager<Dataset>
 {
-	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", Dataset.DATATYPE, License.NAME, License.DESCRIPTION, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS};
+	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", Dataset.IS_EXTERNAL, Dataset.DATATYPE, License.NAME, License.DESCRIPTION, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS};
 
 	private static final String DATA_POINTS_SUB_QUERY = "datasets LEFT JOIN datasetmeta ON datasets.id = datasetmeta.dataset_id LEFT JOIN datasetstates ON datasetstates.id = datasets.dataset_state_id LEFT JOIN datasetpermissions ON datasetpermissions.dataset_id = datasets.id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id LEFT JOIN locations ON locations.id = datasets.location_id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN licenses ON licenses.id = datasets.license_id";
 
 	private static final String SELECT_BY_ID               = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasetstates.id = datasets.dataset_state_id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE %s %s AND datasets.id IN ({{DATASET_IDS}}) LIMIT ?, ?";
-	private static final String SELECT_ALL                 = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
+	private static final String SELECT_ALL                 = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 	private static final String SELECT_ALL_WITHOUT_LICENSE = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND !ISNULL(licenses.id) AND NOT EXISTS (SELECT 1 FROM licenselogs WHERE licenselogs.license_id = licenses.id AND licenselogs.user_id = ?) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 	private static final String SELECT_ALL_EXPORT          = "SELECT datasets.id AS datasets_id, experimenttypes.description AS experimenttypes_description, experiments.description AS experiments_description, datasets.description AS datasets_description, licenses.name AS licenses_name, licenses.description AS licenses_description, datasets.contact AS datasets_contact, datasets.date_start AS datasets_date_start, datasets.date_end AS datasets_date_end, datasetmeta.nr_of_data_objects AS datasetmeta_nr_of_data_objects, datasetmeta.nr_of_data_points AS datasets_nr_of_data_points FROM " + DATA_POINTS_SUB_QUERY + " {{FILTER}} %s %s AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_ACCESSION   = "SELECT datasets.*, experiments.*, experimenttypes.*, locations.*, countries.*, datasetmeta.*, licenses.* FROM " + DATA_POINTS_SUB_QUERY + " WHERE %s %s AND (EXISTS (SELECT 1 FROM phenotypedata WHERE phenotypedata.dataset_id = datasets.id AND phenotypedata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM compounddata WHERE compounddata.dataset_id = datasets.id AND compounddata.germinatebase_id = ?) OR EXISTS (SELECT 1 FROM datasetmembers WHERE datasetmembers.dataset_id = datasets.id AND datasetmembers.datasetmembertype_id = 2 AND datasetmembers.foreign_id = ? )) AND datasets.is_external = ? GROUP BY datasets.id, datasetmeta.id {{SORT_BITS}} LIMIT ?, ?";
@@ -121,7 +121,6 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 * @param user       The user requesting the data
 	 * @param filter     The {@link PartialSearchQuery} defining the user-specified filter
 	 * @param type       The {@link ExperimentType}
-	 * @param isExternal Set to <code>true</code> to only get internal datasets, <code>false</code> to get external datasets
 	 * @param pagination The {@link Pagination} object defining the current chunk of data
 	 * @return The paginated {@link Dataset}s matching the filter
 	 * @throws DatabaseException                Thrown if the interaction with the database failed
@@ -130,13 +129,12 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 * @throws InvalidArgumentException         Thrown if the query assembly fails
 	 * @throws InvalidSearchQueryException      Thrown if the search query is invalid
 	 */
-	public static PaginatedServerResult<List<Dataset>> getAllForFilter(UserAuth user, PartialSearchQuery filter, ExperimentType type, boolean isExternal, Pagination pagination) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException, InsufficientPermissionsException
+	public static PaginatedServerResult<List<Dataset>> getAllForFilter(UserAuth user, PartialSearchQuery filter, ExperimentType type, Pagination pagination) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException, InsufficientPermissionsException
 	{
 		pagination.updateSortColumn(COLUMNS_TABLE, Dataset.ID);
 
 		String formatted = SELECT_ALL.replace("{{SORT_BITS}}", pagination.getSortQuery());
 		return getDatabaseObjectQuery(formatted, user, filter, type, pagination.getResultSize())
-				.setBoolean(isExternal)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.run()
@@ -159,7 +157,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 * Returns the paginated {@link Dataset}s the marker is part of
 	 *
 	 * @param user        The user requesting the data
-	 * @param accessionId The id of the {@link Marker}
+	 * @param markerId The id of the {@link Marker}
 	 * @param pagination  The {@link Pagination} object defining the current chunk of data
 	 * @return The paginated {@link Dataset}s the marker is part of
 	 * @throws DatabaseException                Thrown if the interaction with the database failed

@@ -58,8 +58,8 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 {
 	private static final int TRUNCATION_LIMIT = 150;
 
-	private boolean linkToExportPage = false;
-	private boolean showDownload     = false;
+	private boolean                 linkToExportPage = false;
+	private boolean                 showDownload     = false;
 	private ReferenceFolder         referenceFolder;
 	private SimpleCallback<Dataset> downloadCallback;
 
@@ -230,7 +230,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			public SafeHtml getValue(Dataset object)
 			{
 				/* Check if we want to link to the export page */
-				if(linkToExportPage && canAccess(object))
+				if (linkToExportPage && canAccess(object) && !object.isExternal())
 					return getExportPageLinkTruncated(object, object.getDescription());
 				else
 					return DatasetTable.getValueTruncated(object, object.getDescription());
@@ -644,7 +644,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				public SafeHtml getValue(Dataset row)
 				{
 					// If no authentication, but license available OR authentication but user hasn't accepted
-					if(!canAccess(row))
+					if (!canAccess(row) || row.isExternal())
 					{
 						return SimpleHtmlTemplate.INSTANCE.text("");
 					}
@@ -683,7 +683,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				@Override
 				public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
 				{
-					if (!canAccess(object))
+					if (!canAccess(object) || object.isExternal())
 					{
 						event.preventDefault();
 						return;
@@ -709,9 +709,8 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 	private boolean canAccess(Dataset dataset)
 	{
-		if (ModuleCore.getUseAuthentication() && !dataset.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
-			return false;
-		else if (!ModuleCore.getUseAuthentication() && dataset.getLicense() != null)
+		if ((ModuleCore.getUseAuthentication() && !dataset.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
+				|| (!ModuleCore.getUseAuthentication() && dataset.getLicense() != null))
 			return false;
 		else
 			return true;

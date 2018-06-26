@@ -50,6 +50,7 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * The {@link DatasetWidget} contains a list of available datasets for the current user and the given {@link ExperimentType}.
@@ -66,7 +67,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	private SimplePanel  mapPanel;
 	private FlowPanel    buttonPanel;
 	private DatasetTable table;
-	private PageHeader   header;
 	private String       headerText;
 	private SafeHtml     text                   = null;
 	private List<Long>   urlParameterDatasetIds = null;
@@ -134,7 +134,8 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 
 		if (showMap)
 		{
-			DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), null, experimentType, internal, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Dataset>>>(showLoadingIndicator)
+			PartialSearchQuery q = new PartialSearchQuery(new SearchCondition(Dataset.IS_EXTERNAL, new Equal(), 0, Integer.class));
+			DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), q, experimentType, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Dataset>>>(showLoadingIndicator)
 			{
 				@Override
 				protected void onFailureImpl(Throwable caught)
@@ -326,10 +327,24 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 				return true;
 			}
 
-			@Override
-			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
+			private PartialSearchQuery addToFilter(PartialSearchQuery filter)
 			{
-				return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, experimentType, internal, pagination, callback);
+				if (filter == null)
+					filter = new PartialSearchQuery();
+				filter.add(new SearchCondition(Dataset.IS_EXTERNAL, new Equal(), internal ? 0 : 1, Integer.class));
+
+				if (filter.getAll().size() > 1)
+					filter.addLogicalOperator(new And());
+
+				return filter;
+			}
+
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
+			{
+				filter = addToFilter(filter);
+
+				return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, experimentType, pagination, callback);
 			}
 		};
 

@@ -287,9 +287,7 @@ public abstract class AbstractManager<T extends DatabaseObject>
 
 				/* Make sure we only compare the visible digits in the case of decimal columns */
 				if (Objects.equals(Double.class.getSimpleName(), query.getType()) || Objects.equals(Float.class.getSimpleName(), query.getType()))
-				{
 					query.setColumnName("CAST(" + oldColumnName + " AS DECIMAL(30,2))");
-				}
 
 				builder.append(query.toPreparedStatementString());
 

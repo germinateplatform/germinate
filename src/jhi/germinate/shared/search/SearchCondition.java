@@ -96,6 +96,14 @@ public class SearchCondition implements Serializable, HasToSqlString
 		this.type = type;
 	}
 
+	public SearchCondition(String columnName, ComparisonOperator comp, Object conditionValue, Class<?> clazz)
+	{
+		this.columnName = columnName;
+		this.comp = comp;
+		conditionValues.add(conditionValue.toString());
+		this.type = clazz.getSimpleName();
+	}
+
 	public SearchCondition(String columnName, ComparisonOperator comp, List<String> conditionValues, String type)
 	{
 		this.columnName = columnName;

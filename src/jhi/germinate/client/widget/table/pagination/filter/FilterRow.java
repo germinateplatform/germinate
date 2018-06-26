@@ -128,7 +128,7 @@ public class FilterRow extends Composite
 
 		column.setData(columns, true);
 
-		operator.setData(Arrays.asList(new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between()), true);
+		operator.setData(Arrays.asList(new Like(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between()), true);
 		deleteButton.setEnabled(canDelete);
 	}
 
@@ -219,7 +219,7 @@ public class FilterRow extends Composite
 
 	private String getOperatorString(ComparisonOperator item)
 	{
-		if (item instanceof Equal)
+		if (item instanceof Like)
 			return Text.LANG.operatorsEqual();
 		else if (item instanceof GreaterThan)
 			return Text.LANG.operatorsGreaterThan();

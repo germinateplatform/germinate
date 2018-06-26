@@ -52,6 +52,7 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -454,10 +455,24 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					return true;
 				}
 
+				private PartialSearchQuery addToFilter(PartialSearchQuery filter)
+				{
+					if (filter == null)
+						filter = new PartialSearchQuery();
+					filter.add(new SearchCondition(Dataset.IS_EXTERNAL, new Equal(), 0, Integer.class));
+
+					if (filter.getAll().size() > 1)
+						filter.addLogicalOperator(new And());
+
+					return filter;
+				}
+
 				@Override
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
 				{
-					return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, null, true, pagination, new SearchCallback<>(datasetSection, callback));
+					filter = addToFilter(filter);
+
+					return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, null, pagination, new SearchCallback<>(datasetSection, callback));
 				}
 			};
 			datasetSection.add(datasetTable);

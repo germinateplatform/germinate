@@ -72,7 +72,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	}
 
 	@Override
-	public PaginatedServerResult<List<Dataset>> getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, boolean internal, Pagination pagination) throws InsufficientPermissionsException, InvalidSessionException,
+	public PaginatedServerResult<List<Dataset>> getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, Pagination pagination) throws InsufficientPermissionsException, InvalidSessionException,
 			DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
 	{
 		if (pagination == null)
@@ -80,7 +80,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return DatasetManager.getAllForFilter(userAuth, filter, experimentType, !internal, pagination);
+		return DatasetManager.getAllForFilter(userAuth, filter, experimentType, pagination);
 	}
 
 	@Override

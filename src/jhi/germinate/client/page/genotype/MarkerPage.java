@@ -77,9 +77,9 @@ public class MarkerPage extends Composite implements HasHyperlinkButton
 		PartialSearchQuery filter = null;
 
 		if (markerId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Marker.ID, new Equal(), Long.toString(markerId), Long.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Marker.ID, new Like(), Long.toString(markerId), Long.class.getSimpleName()));
 		else if (!StringUtils.isEmpty(markerName))
-			filter = new PartialSearchQuery(new SearchCondition(Marker.MARKER_NAME, new Equal(), markerName, String.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Marker.MARKER_NAME, new Like(), markerName, String.class.getSimpleName()));
 
 		if (filter != null)
 		{
