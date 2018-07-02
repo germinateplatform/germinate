@@ -19,7 +19,7 @@
   min-height: 100px;
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 70% 70%;
+  background-size: auto 70%;
 }
 .header.bs4-row {
   max-width: 100%;
