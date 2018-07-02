@@ -53,7 +53,7 @@ import jhi.germinate.shared.search.*;
 public class AccessionOverviewPage extends GerminateComposite implements ParallaxBannerPage, HasHelp
 {
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

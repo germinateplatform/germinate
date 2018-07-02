@@ -132,7 +132,7 @@ public class CompoundBarChart extends AbstractChart
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_BAR_CHART, Library.D3_DOWNLOAD};
 	}

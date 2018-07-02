@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,21 +17,21 @@
 
 package jhi.germinate.client.page.about;
 
+import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.i18n.client.*;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
-
-import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.*;
+import com.google.gwt.user.client.ui.Image;
 
 import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.page.about.resource.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.map.*;
-import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.gwt.leaflet.client.basic.*;
@@ -42,84 +42,78 @@ import jhi.gwt.leaflet.client.basic.*;
  *
  * @author Sebastian Raubach
  */
-public class AboutGerminatePage extends GerminateComposite
+public class AboutGerminatePage extends Composite implements HasLibraries
 {
-	@Override
-	public Library[] getLibraryList()
+	private static AboutGerminatePageUiBinder ourUiBinder = GWT.create(AboutGerminatePageUiBinder.class);
+	@UiField
+	FlowPanel panel;
+	@UiField
+	SimplePanel banner;
+	@UiField
+	CategoryPanel homepage;
+	@UiField
+	CategoryPanel github;
+	@UiField
+	CategoryPanel publication;
+	@UiField
+	CategoryPanel documentation;
+	@UiField
+	HTML        content;
+	@UiField
+	SimplePanel map;
+	@UiField
+	Image germinate;
+	@UiField
+	Image hutton;
+	@UiField
+	Image ics;
+	public AboutGerminatePage()
 	{
-		return new Library[]{Library.LEAFLET, Library.LEAFLET_MINIMAP, Library.HUTTON_BANNER};
+		initWidget(ourUiBinder.createAndBindUi(this));
 	}
 
 	@Override
-	protected void setUpContent()
+	protected void onLoad()
 	{
-		SimplePanel banner = new SimplePanel();
-		panel.add(banner);
+		super.onLoad();
+
 		jsniBanner(banner.getElement());
 
-		PageHeader header = new PageHeader();
-		header.setText(Text.LANG.aboutTitle());
-		panel.add(header);
-
-		Row row = new Row();
-		panel.add(row);
-
 		int i = 0;
-		Column column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
-		column.addStyleName(Style.COL_XXS_12);
-		CategoryPanel cp = new CategoryPanel();
-		cp.setText(Text.LANG.aboutButtonsHomepageTitle());
-		cp.setIcon(Style.MDI_WEB);
-		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
-		cp.setAnchor(Text.LANG.aboutButtonsHomepageUrl());
-		cp.getAnchor().setTarget("_blank");
-		column.add(cp);
-		row.add(column);
+		homepage.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		homepage.getAnchor().setTarget("_blank");
+		github.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		github.getAnchor().setTarget("_blank");
+		publication.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		publication.getAnchor().setTarget("_blank");
+		documentation.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+		documentation.getAnchor().setTarget("_blank");
 
-		column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
-		column.addStyleName(Style.COL_XXS_12);
-		cp = new CategoryPanel();
-		cp.setText(Text.LANG.aboutButtonsGithubTitle());
-		cp.setIcon(Style.MDI_GITHUB_CIRCLE);
-		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
-		cp.setAnchor(Text.LANG.aboutButtonsGithubUrl());
-		cp.getAnchor().setTarget("_blank");
-		column.add(cp);
-		row.add(column);
-
-		column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
-		column.addStyleName(Style.COL_XXS_12);
-		cp = new CategoryPanel();
-		cp.setText(Text.LANG.aboutButtonsPublicationTitle());
-		cp.setIcon(Style.MDI_FILE_DOCUMENT);
-		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
-		cp.setAnchor(Text.LANG.aboutButtonsPublicationUrl());
-		cp.getAnchor().setTarget("_blank");
-		column.add(cp);
-		row.add(column);
-
-		column = new Column(ColumnSize.XS_6, ColumnSize.SM_6, ColumnSize.LG_3);
-		column.addStyleName(Style.COL_XXS_12);
-		cp = new CategoryPanel();
-		cp.setText(Text.LANG.aboutButtonsDocumentationTitle());
-		cp.setIcon(Style.MDI_GLASSES);
-		cp.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
-		cp.setAnchor(Text.LANG.aboutButtonsDocumentationUrl());
-		cp.getAnchor().setTarget("_blank");
-		column.add(cp);
-		row.add(column);
-
-		panel.add(new HTML(Text.LANG.aboutText(GerminateSettingsHolder.get().gatekeeperUrl.getValue(), Integer.parseInt(DateTimeFormat.getFormat("yyyy").format(new Date())))));
+		content.setHTML(Text.LANG.aboutText(GerminateSettingsHolder.get().gatekeeperUrl.getValue(), Integer.parseInt(DateTimeFormat.getFormat("yyyy").format(new Date()))));
 
 		Location l = new Location()
 				.setLatitude(56.4567)
 				.setLongitude(-3.0695)
 				.setName(Text.LANG.aboutAddress());
 
-		new LeafletUtils.IndividualMarkerCreator(panel, Collections.singletonList(l), (mapPanel, map) -> map.setView(LeafletLatLng.newInstance(56.4567, -3.0695), 5));
+		new LeafletUtils.IndividualMarkerCreator(map, Collections.singletonList(l), (mapPanel, map) -> map.setView(LeafletLatLng.newInstance(56.4567, -3.0695), 5));
+
+		germinate.setUrl(Resources.INSTANCE.germinate().getSafeUri());
+		hutton.setUrl(Resources.INSTANCE.hutton().getSafeUri());
+		ics.setUrl(Resources.INSTANCE.ics().getSafeUri());
+	}
+
+	@Override
+	public Library[] getLibraries()
+	{
+		return new Library[]{Library.LEAFLET, Library.LEAFLET_MINIMAP, Library.HUTTON_BANNER};
 	}
 
 	private native void jsniBanner(Element element)/*-{
 		$wnd.$(element).huttonBanner();
 	}-*/;
+
+	interface AboutGerminatePageUiBinder extends UiBinder<FlowPanel, AboutGerminatePage>
+	{
+	}
 }

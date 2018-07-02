@@ -44,7 +44,7 @@ public class Home extends GerminateComposite implements HasHelp
 	private NewsWidget newsWidget = new NewsWidget();
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

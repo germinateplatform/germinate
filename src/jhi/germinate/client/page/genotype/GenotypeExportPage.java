@@ -51,7 +51,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 	private FlowPanel resultPanel = new FlowPanel();
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

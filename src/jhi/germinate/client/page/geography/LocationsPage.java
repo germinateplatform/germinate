@@ -317,7 +317,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 	@Override
 	public Library[] getLibraries()
 	{
-		Library[] l = chart.getLibraryList();
+		Library[] l = chart.getLibraries();
 		return ArrayUtils.add(l, Library.LEAFLET_COMPLETE, new Library[l.length + 1]);
 	}
 

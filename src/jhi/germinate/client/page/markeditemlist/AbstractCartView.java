@@ -62,7 +62,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 	protected abstract void writeToFile(List<String> markedIds, AsyncCallback<ServerResult<String>> callback);
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

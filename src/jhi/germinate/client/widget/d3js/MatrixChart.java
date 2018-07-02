@@ -306,7 +306,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 	}-*/;
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_SCATTER_MATRIX, Library.D3_DOWNLOAD};
 	}

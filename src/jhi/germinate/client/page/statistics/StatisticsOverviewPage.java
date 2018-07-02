@@ -49,7 +49,7 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 	private GeoChart geoChart;
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

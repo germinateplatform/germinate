@@ -126,7 +126,7 @@ public class TrialsCellTable extends GerminateComposite
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

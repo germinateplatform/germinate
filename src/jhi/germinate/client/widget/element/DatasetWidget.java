@@ -544,7 +544,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

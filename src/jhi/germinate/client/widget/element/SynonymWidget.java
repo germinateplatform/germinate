@@ -61,7 +61,7 @@ public class SynonymWidget extends GerminateComposite
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

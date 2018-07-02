@@ -73,7 +73,7 @@ public class DownloadWidget extends GerminateComposite
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

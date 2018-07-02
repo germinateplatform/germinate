@@ -78,7 +78,7 @@ public class AlleleFreqExportPage extends GerminateComposite implements HasHyper
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

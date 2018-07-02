@@ -64,7 +64,7 @@ public class DatasetListWidget extends GerminateComposite
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

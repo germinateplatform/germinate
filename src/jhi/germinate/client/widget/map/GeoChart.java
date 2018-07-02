@@ -67,7 +67,7 @@ public class GeoChart extends GerminateComposite
 	}
 
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return new Library[]{Library.GOOGLE_CHARTS};
 	}

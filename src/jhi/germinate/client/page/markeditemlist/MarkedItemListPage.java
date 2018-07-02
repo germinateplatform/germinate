@@ -38,7 +38,7 @@ import jhi.germinate.shared.enums.*;
 public class MarkedItemListPage extends GerminateComposite implements HasHelp
 {
 	@Override
-	public Library[] getLibraryList()
+	public Library[] getLibraries()
 	{
 		return null;
 	}

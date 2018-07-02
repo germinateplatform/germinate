@@ -92,12 +92,12 @@ public abstract class GerminateComposite extends Composite
 	 *
 	 * @return The list of {@link Library}s to load
 	 */
-	public abstract Library[] getLibraryList();
+	public abstract Library[] getLibraries();
 
 	@Override
 	public void onLoad()
 	{
-		Library[] librariesToLoad = getLibraryList();
+		Library[] librariesToLoad = getLibraries();
 
 		if (!ArrayUtils.isEmpty(librariesToLoad))
 		{
