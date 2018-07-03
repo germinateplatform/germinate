@@ -22,13 +22,11 @@ import com.google.gwt.dom.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.client.ui.Image;
 
 import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.*;
-import jhi.germinate.client.page.about.resource.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.map.*;
@@ -46,27 +44,22 @@ public class AboutGerminatePage extends Composite implements HasLibraries
 {
 	private static AboutGerminatePageUiBinder ourUiBinder = GWT.create(AboutGerminatePageUiBinder.class);
 	@UiField
-	FlowPanel panel;
+	FlowPanel         panel;
 	@UiField
-	SimplePanel banner;
+	SimplePanel       banner;
 	@UiField
-	CategoryPanel homepage;
+	CategoryPanel     homepage;
 	@UiField
-	CategoryPanel github;
+	CategoryPanel     github;
 	@UiField
-	CategoryPanel publication;
+	CategoryPanel     publication;
 	@UiField
-	CategoryPanel documentation;
+	CategoryPanel     documentation;
 	@UiField
-	HTML        content;
+	HTML              content;
 	@UiField
-	SimplePanel map;
-	@UiField
-	Image germinate;
-	@UiField
-	Image hutton;
-	@UiField
-	Image ics;
+	SimplePanel       map;
+
 	public AboutGerminatePage()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
@@ -97,10 +90,6 @@ public class AboutGerminatePage extends Composite implements HasLibraries
 				.setName(Text.LANG.aboutAddress());
 
 		new LeafletUtils.IndividualMarkerCreator(map, Collections.singletonList(l), (mapPanel, map) -> map.setView(LeafletLatLng.newInstance(56.4567, -3.0695), 5));
-
-		germinate.setUrl(Resources.INSTANCE.germinate().getSafeUri());
-		hutton.setUrl(Resources.INSTANCE.hutton().getSafeUri());
-		ics.setUrl(Resources.INSTANCE.ics().getSafeUri());
 	}
 
 	@Override
