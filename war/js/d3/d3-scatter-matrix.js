@@ -101,17 +101,29 @@ function scatterMatrix() {
 				.on("brushend", brushend);
 
 			// Select the svg element, if it exists.
-			var svg = d3.select(this).selectAll("svg").data([data]);
+			var svg = d3.select(this).selectAll("svg")
+				.data([data]);
 			// Otherwise, create the skeletal chart.
-			var gEnter = svg.enter().append("svg").append("g");
+			var g = svg.enter().append("svg").append("g")
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			// Update the outer dimensions.
 			svg.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.top + margin.bottom);
 
-			// Update the inner dimensions.
-			var g = svg.select("g")
-				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			if (d3.tip) {
+				tip = d3.tip()
+					.attr('class', 'gm8-d3js-tooltip ' + tooltipStyle)
+					.offset([-10, 0])
+					.html(
+						function (d) {
+							return tooltip(d);
+						});
+
+				g.call(tip);
+			}
+
+
 
 			// Update the x-axis.
 			g.selectAll(".x.axis")
@@ -145,8 +157,10 @@ function scatterMatrix() {
 				.attr("class", "cell")
 				.attr("transform", function (d) {
 					return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")";
-				})
-				.each(plot);
+				});
+
+			cell.call(brush);
+			cell.each(plot);
 
 			// Titles for the diagonal.
 			cell.filter(function (d) {
@@ -158,8 +172,6 @@ function scatterMatrix() {
 				.text(function (d) {
 					return d.x;
 				});
-
-			cell.call(brush);
 
 			// Check if a legend is required
 			if (showLegend) {
@@ -177,7 +189,8 @@ function scatterMatrix() {
 					.attr("x", padding / 2)
 					.attr("y", padding / 2)
 					.attr("width", size - padding)
-					.attr("height", size - padding);
+					.attr("height", size - padding)
+					.style("pointer-events", "none");
 
 				dots = cell.selectAll("circle")
 					.data(data)
@@ -190,7 +203,7 @@ function scatterMatrix() {
 						if (d.colorKey)
 							return "dot item " + dotStyle + " item-" + d3.makeSafeForCSS(d.colorKey);
 						else
-							return "dot item " + dotStyle;
+							return "dot item " + dotStyle + " item-n__a";
 					})
 					.attr("cx", function (d) {
 						return xScale(d[p.x]);
@@ -205,6 +218,28 @@ function scatterMatrix() {
 					.style("fill", function (d) {
 						return d.color;
 					});
+
+				if(d3.tip) {
+					dots
+						.on("mouseenter", function (d) {
+							d3.select(this)
+								.transition()
+								.duration(100)
+								.attr("r", 4.5);
+
+							d.xValue = d[p.x];
+							d.yValue = d[p.y];
+
+							tip.show(d);
+						})
+						.on("mouseleave", function (d) {
+							d3.select(this)
+								.transition()
+								.duration(200)
+								.attr("r", 2.5);
+							tip.hide();
+						});
+				}
 			}
 
 			var brushCell;
@@ -269,35 +304,6 @@ function scatterMatrix() {
 					});
 				return c;
 			}
-
-			if (d3.tip) {
-				tip = d3.tip()
-					.attr('class', 'gm8-d3js-tooltip ' + tooltipStyle)
-					.offset([-10, 0])
-					.html(
-						function (d) {
-							return tooltip(d);
-						});
-
-				gEnter.call(tip);
-
-				dots
-					.on("mouseenter", function (d) {
-						d3.select(this)
-							.transition()
-							.duration(100)
-							.attr("r", 4.5);
-						tip.show(d);
-					})
-					.on("mouseleave", function (d) {
-						d3.select(this)
-							.transition()
-							.duration(200)
-							.attr("r", 2.5);
-						tip.hide();
-					});
-			}
-
 		});
 	}
 

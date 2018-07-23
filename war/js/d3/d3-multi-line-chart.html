@@ -68,15 +68,14 @@
 		left: 0;
 	}
 </style>
+<link href="../../css/materialdesignicons.min.css" rel="stylesheet" type="text/css">
 
 <body>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
-	<script src="../jquery-1.8.2.min.js"></script>
+	<script src="../jquery-2.1.4.min.js"></script>
 	<script src="d3-multi-line-chart.js"></script>
 	<script src="d3-tip.js"></script>
 	<script src="d3-legend.js"></script>
-	<script src="d3-save-as-png.js"></script>
-	<script src="../html2canvas.js"></script>
 	<script>
 		var margin = {
 				top: 10,
@@ -120,8 +119,4 @@
 					.legendWidth(120)
 					.interpolate("cardinal"));
 		});
-
-		setTimeout(function () {
-			saveLegendAsPng($(".gm8-d3js-legend")[0], "test.png");
-		}, 1000);
 	</script>

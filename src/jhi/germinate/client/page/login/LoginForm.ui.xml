@@ -42,6 +42,16 @@
 			border-top-right-radius: 0;
 		}
 
+		.crop {
+			height: 50px;
+		}
+
+		.form img {
+			margin-top: 15px;
+			max-width: 100%;
+			width: 100%;
+		}
+
 		.margin {
 			margin-bottom: 10px;
 		}
@@ -92,7 +102,7 @@
 						<b:Heading size="H4" ui:field="pageTitle"/>
 					</b:Column>
 					<b:Column addStyleNames="{COL_XXS_12} text-center-xxs text-right-xs" size="XS_2">
-						<g:Image url="img/crop.svg"/>
+						<g:Image addStyleNames="{style.crop}" url="img/crop.svg"/>
 					</b:Column>
 				</b:Well>
 			</b:Container>
@@ -118,6 +128,7 @@
 								</g:FlowPanel>
 							</g:FormPanel>
 							<b:Anchor href="#" text="{msg.loginRegistrationLink}" ui:field="registerAnchor" visible="false"/>
+							<g:Image url="img/logo-horizontal.svg" />
 						</g:FlowPanel>
 					</b:Well>
 					<b:Well>

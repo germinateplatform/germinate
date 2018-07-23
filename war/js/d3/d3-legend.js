@@ -17,13 +17,20 @@
 
 d3.makeSafeForCSS = function (name) {
     if(name) {
-        name = name.replace(/[^a-z0-9]/g, function (s) {
-            var c = s.charCodeAt(0);
-            if (c == 32) return '-';
-            if (c >= 65 && c <= 90) return s.toLowerCase();
-            return '__' + ('000' + c.toString(16)).slice(-4);
-        });
+    	if(name === "N/A") {
+			name = "n__a";
+		} else {
+			name = name.replace(/[^a-z0-9]/g, function (s) {
+				var c = s.charCodeAt(0);
+				if (c == 32) return '-';
+				if (c >= 65 && c <= 90) return s.toLowerCase();
+				return '__' + ('000' + c.toString(16)).slice(-4);
+			});
+		}
     }
+    else {
+    	name = "n__a";
+	}
 
     return name;
 };
@@ -55,6 +62,11 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
     if (sortLegend)
         domain = domain.sort(d3.ascending);
 
+    var hidden = {};
+    domain.forEach(function (d) {
+        hidden[d] = false;
+    });
+
     // Add a new div for each item
     var legendItems = legendDiv.selectAll("div")
         .data(domain)
@@ -64,37 +76,17 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
             return "legend-item-" + d3.makeSafeForCSS(d);
         })
         .attr("class", "legend-item " + legendItemStyle)
-        .on("mouseover", function (d) {
-            svg.selectAll(".item:not(.item-" + d3.makeSafeForCSS(d) + ")")
-                .transition()
-                .duration(150)
-                .style("opacity", 0.1);
+        .on("click", function (d) {
+            hidden[d] = !hidden[d];
 
-            legendDiv.selectAll(".legend-item:not(#legend-item-" + d3.makeSafeForCSS(d) + ")")
-                .transition()
-                .duration(150)
-                .style("opacity", 0.1);
+            var opacity = hidden[d] ? 0.1 : 1.0;
 
-            svg.selectAll(".item-" + d3.makeSafeForCSS(d))
-                .transition()
-                .duration(150)
-                .style("opacity", 1.0);
+            console.log(d + " -> .item-" + d3.makeSafeForCSS(d));
+			svg.selectAll(".item-" + d3.makeSafeForCSS(d))
+				.style("opacity", opacity);
 
-            legendDiv.selectAll("#legend-item-" + d3.makeSafeForCSS(d))
-                .transition()
-                .duration(150)
-                .style("opacity", 1.0);
-        })
-        .on("mouseout", function () {
-            legendDiv.selectAll(".legend-item")
-                .transition()
-                .duration(150)
-                .style("opacity", 1.0);
-
-            svg.selectAll(".item")
-                .transition()
-                .duration(150)
-                .style("opacity", 1.0);
+			legendDiv.selectAll("#legend-item-" + d3.makeSafeForCSS(d) + " i")
+				.style("opacity", opacity);
         });
 
     legendItems.append("i")
@@ -120,8 +112,35 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
                 return "N/A";
         });
 
+    // Add buttons to hide/show all items at the same time
+    var parent = $.parseHTML("<div class='btn-group-vertical' role='group'></div>");
+	$(legendDiv.node()).append(parent);
+    addButton(parent, "mdi-eye", false);
+    addButton(parent, "mdi-eye-off", true);
+
     /* Reduce the width to accommodate space for an eventual scrollbar */
     if (isOverflowed(legendDiv.node())) {
         spans.style("width", (legendWidth - 40) + "px");
+    }
+
+    function addButton(div, style, hide) {
+        var element = $.parseHTML("<button type='button' class='btn mdi mdi-lg " + style + "'></button>");
+        $(div).append(element);
+
+		var opacity = hide ? 0.1 : 1.0;
+
+        $(element).on("click", function() {
+			svg.selectAll(".item")
+				.style("opacity", opacity);
+
+			legendDiv.selectAll(".legend-item i")
+				.style("opacity", opacity);
+
+			for (var property in hidden) {
+				if (hidden.hasOwnProperty(property)) {
+					hidden[property] = hide;
+				}
+			}
+        });
     }
 };

@@ -152,7 +152,7 @@ function scatterPlot() {
                     if (d.colorKey)
                         return "dot item " + dotStyle + " item-" + d3.makeSafeForCSS(d.colorKey);
                     else
-                        return "dot item " + dotStyle;
+                        return "dot item " + dotStyle + " item-n__a";
                 })
                 .attr("id", function (d) {
                     return "item-" + d.id;
@@ -180,7 +180,10 @@ function scatterPlot() {
                     .enter()
                     .append("line")
                     .attr("class", function (d) {
-                        return "histo-x";
+						if (d.colorKey)
+							return "histo-x item item-" + d3.makeSafeForCSS(d.colorKey);
+                        else
+                            return "histo-x item item-n__a";
                     })
                     .attr("r", 2.5)
                     .attr("x1", function (d) {
@@ -201,7 +204,10 @@ function scatterPlot() {
                     .enter()
                     .append("line")
                     .attr("class", function (d) {
-                        return "histo-y";
+						if (d.colorKey)
+							return "histo-y item item-" + d3.makeSafeForCSS(d.colorKey);
+						else
+						    return "histo-y item item-n__a";
                     })
                     .attr("r", 2.5)
                     .attr("y1", function (d) {

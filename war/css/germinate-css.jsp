@@ -128,8 +128,7 @@ td span.mdi:nth-child(2) {
 #<%= Id.STRUCTURE_LOGIN %> .well h4 {
 	line-height: 30px
 }
-#content-wrapper .well img,
-#<%= Id.STRUCTURE_LOGIN %> .well img{
+#content-wrapper .well img {
 	height: 50px;
 }
 

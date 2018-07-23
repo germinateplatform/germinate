@@ -251,6 +251,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 
 	private native void create(boolean colorByTreatment, boolean colorByDataset, boolean colorByYear, int widthHint)/*-{
 
+		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
 		var dotStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_DOT;
 		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_AXIS;
 		var frameStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_FRAME;
@@ -289,10 +290,21 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 						else
 							return null;
 					})
+					.tooltip(function (d) {
+						if (colorByTreatment && d.treatments_description)
+							return d.name + "<br/>" + d.treatments_description + "<br/>(" + d.xValue + ", " + d.yValue + ")";
+						else if (colorByDataset && d.dataset_name)
+							return d.name + "<br/>" + d.dataset_name + "<br/>(" + d.xValue + ", " + d.yValue + ")";
+						else if (colorByYear && d.year)
+							return d.name + "<br/>" + d.year + "<br/>(" + d.xValue + ", " + d.yValue + ")";
+						else
+							return d.name + "<br/>(" + d.xValue + ", " + d.yValue + ")";
+					})
 					.dotStyle(dotStyle)
 					.axisStyle(axisStyle)
 					.hiddenStyle(hiddenStyle)
 					.frameStyle(frameStyle)
+					.tooltipStyle(tooltipStyle)
 					.legendItemStyle(legendItemStyle)
 					.xTickFormat($wnd.d3.format(".2s"))
 					.yTickFormat($wnd.d3.format(".2s"))

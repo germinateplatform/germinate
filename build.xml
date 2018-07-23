@@ -59,6 +59,7 @@
 
 		<!-- Delete template styling -->
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/logo.svg"/>
+		<delete failonerror="false" file="${build.dir}/img/logo-horizontal.svg" quiet="true" verbose="true"/>
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/img/crop.svg"/>
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/css/custom.css"/>
 		<delete failonerror="false" verbose="true" quiet="true" file="${build.dir}/custom.html"/>
@@ -120,6 +121,7 @@
 
 		<!-- Copy template styling -->
 		<copy file="${instance.files}/template/logo.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
+		<copy failonerror="true" file="${instance.files}/template/logo-horizontal.svg" overwrite="true" todir="${build.dir}/img" verbose="true"/>
 		<copy file="${instance.files}/template/crop.svg" todir="${build.dir}/img" overwrite="true" failonerror="true" verbose="true"/>
 		<copy file="${instance.files}/template/custom.css" todir="${build.dir}/css" overwrite="true" failonerror="false" verbose="true"/>
 		<copy file="${instance.files}/template/custom.html" todir="${build.dir}" overwrite="true" failonerror="false" verbose="true"/>
@@ -272,12 +274,14 @@
 	<target name="jar-importer-lib" depends="build-project">
 		<jar destfile="germinate-importer-lib.jar">
 			<manifest>
-				<attribute name="Class-Path" value="./ ${classpath}" />
+				<attribute name="Class-Path" value="./ ${manifest.classpath}" />
 			</manifest>
 
-			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/manager/**/*.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/config/**/*.class"/>
 			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/database/**/*.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/manager/**/*.class"/>
 			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/server/util/DatabaseObjectCache.class"/>
+			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/shared/enums/**/*.class"/>
 			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/shared/exception/**/*.class"/>
 			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/shared/datastructure/**/*.class"/>
 			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/util/importer/**/*.class"/>
