@@ -111,6 +111,7 @@ function scatterMatrix() {
 			svg.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.top + margin.bottom);
 
+			// Add the tooltip if required
 			if (d3.tip) {
 				tip = d3.tip()
 					.attr('class', 'gm8-d3js-tooltip ' + tooltipStyle)
@@ -122,8 +123,6 @@ function scatterMatrix() {
 
 				g.call(tip);
 			}
-
-
 
 			// Update the x-axis.
 			g.selectAll(".x.axis")
@@ -227,6 +226,7 @@ function scatterMatrix() {
 								.duration(100)
 								.attr("r", 4.5);
 
+							// Set the current x and y value so the tooltip can use them
 							d.xValue = d[p.x];
 							d.yValue = d[p.y];
 
@@ -264,22 +264,15 @@ function scatterMatrix() {
 				});
 
 				// Then hide all circles
-				svg.selectAll("circle").attr("class", "dot item " + dotStyle + " " + hiddenStyle);
+				svg.selectAll("circle")
+					.classed(hiddenStyle, true);
 
 				// And then select all items with the same id as a selected item and select them as well
 				selected.each(function (d) {
-					var temp = svg.selectAll("#item-" + d[idColumn]);
-					temp.classed(hiddenStyle, false);
-					temp.attr("class", "dot item " + dotStyle + " selected");
+					var temp = svg.selectAll("#item-" + d[idColumn])
+						.classed(hiddenStyle, false)
+						.classed("selected", true);
 				});
-
-				//svg.selectAll("circle").classed(hiddenStyle, function (d) {
-				//    return e[0][0] > d[p.x] || d[p.x] > e[1][0] || e[0][1] > d[p.y] || d[p.y] > e[1][1];
-				//});
-				//// Mark the selected items so we can extract them easily on request
-				//svg.selectAll("circle").classed("selected", function (d) {
-				//    return e[0][0] <= d[p.x] && d[p.x] <= e[1][0] && e[0][1] <= d[p.y] && d[p.y] <= e[1][1];
-				//});
 			}
 
 			// If the brush is empty, select all circles.

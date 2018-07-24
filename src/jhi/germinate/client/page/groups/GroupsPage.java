@@ -143,7 +143,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 							}
 
 							if (group != null)
-								updateGroupMembers();
+								updateGroupMembers(false);
 						}
 
 						initialLoad = false;
@@ -207,7 +207,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 										if (group != null && Objects.equals(object.getId(), group.getId()))
 										{
 											group = null;
-											updateGroupMembers();
+											updateGroupMembers(false);
 										}
 									}
 								});
@@ -232,7 +232,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			{
 				super.onItemSelected(event, object, column);
 				group = object;
-				updateGroupMembers();
+				updateGroupMembers(true);
 			}
 		};
 		groupTable.setHideEmptyTable(false);
@@ -258,7 +258,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			groupTable.addExtraContent(group);
 		}
 
-		GerminateEventBus.BUS.addHandler(GroupMemberChangeEvent.TYPE, e -> updateGroupMembers());
+		GerminateEventBus.BUS.addHandler(GroupMemberChangeEvent.TYPE, e -> updateGroupMembers(false));
 	}
 
 	private void updateIsPublic()
@@ -268,7 +268,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		isPublic.setEnabled(canEdit(group));
 	}
 
-	private void updateGroupMembers()
+	private void updateGroupMembers(boolean scrollTo)
 	{
 		if (group == null)
 		{
@@ -373,11 +373,14 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		}
 
 		table.setHideEmptyTable(false);
-		table.getPanel().addAttachHandler(event ->
+		if(scrollTo)
 		{
-			if (event.isAttached())
-				JavaScript.smoothScrollTo(groupMembersPanel.getElement());
-		});
+			table.getPanel().addAttachHandler(event ->
+			{
+				if (event.isAttached())
+					JavaScript.smoothScrollTo(groupMembersWrapper.getElement());
+			});
+		}
 		groupMembersPanel.add(table);
 
 		if (canEdit)
@@ -641,7 +644,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", strippedString);
 				group = result.getServerResult();
 				groupTable.refreshTable();
-				updateGroupMembers();
+				updateGroupMembers(true);
 			}
 		});
 	}

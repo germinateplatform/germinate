@@ -79,9 +79,8 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
         .on("click", function (d) {
             hidden[d] = !hidden[d];
 
-            var opacity = hidden[d] ? 0.1 : 1.0;
+            var opacity = hidden[d] ? 0.05 : 1.0;
 
-            console.log(d + " -> .item-" + d3.makeSafeForCSS(d));
 			svg.selectAll(".item-" + d3.makeSafeForCSS(d))
 				.style("opacity", opacity);
 
@@ -113,10 +112,10 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
         });
 
     // Add buttons to hide/show all items at the same time
-    var parent = $.parseHTML("<div class='btn-group-vertical' role='group'></div>");
+    var parent = $.parseHTML("<div class='btn-group' role='group'></div>");
 	$(legendDiv.node()).append(parent);
     addButton(parent, "mdi-eye", false);
-    addButton(parent, "mdi-eye-off", true);
+    addButton(parent, "mdi-eye-off-outline", true);
 
     /* Reduce the width to accommodate space for an eventual scrollbar */
     if (isOverflowed(legendDiv.node())) {
@@ -124,10 +123,10 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
     }
 
     function addButton(div, style, hide) {
-        var element = $.parseHTML("<button type='button' class='btn mdi mdi-lg " + style + "'></button>");
+        var element = $.parseHTML("<button type='button' class='btn btn-xs mdi mdi-lg " + style + "'></button>");
         $(div).append(element);
 
-		var opacity = hide ? 0.1 : 1.0;
+		var opacity = hide ? 0.05 : 1.0;
 
         $(element).on("click", function() {
 			svg.selectAll(".item")
