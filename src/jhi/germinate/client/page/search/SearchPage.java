@@ -50,7 +50,6 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
@@ -66,33 +65,37 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 	private static SearchPageUiBinder ourUiBinder = GWT.create(SearchPageUiBinder.class);
 
 	@UiField
-	TextBox           searchBox;
+	Tooltip                                 tooltip;
 	@UiField
-	Button            searchButton;
+	TextBox                                 searchBox;
+	@UiField(provided = true)
+	DropdownInputButton<ComparisonOperator> operator;
 	@UiField
-	SearchTypeListBox typeBox;
+	Button                                  searchButton;
 	@UiField
-	SearchSection     accessionSection;
+	SearchTypeListBox                       typeBox;
 	@UiField
-	SearchSection     accessionAttributeSection;
+	SearchSection                           accessionSection;
 	@UiField
-	SearchSection     phenotypeSection;
+	SearchSection                           accessionAttributeSection;
 	@UiField
-	SearchSection     compoundSection;
+	SearchSection                           phenotypeSection;
 	@UiField
-	SearchSection     mapDefinitionSection;
+	SearchSection                           compoundSection;
 	@UiField
-	SearchSection     datasetSection;
+	SearchSection                           mapDefinitionSection;
 	@UiField
-	SearchSection     datasetAttributeSection;
+	SearchSection                           datasetSection;
 	@UiField
-	SearchSection     pedigreeSection;
+	SearchSection                           datasetAttributeSection;
 	@UiField
-	SearchSection     locationSection;
+	SearchSection                           pedigreeSection;
 	@UiField
-	Heading           resultHeading;
+	SearchSection                           locationSection;
 	@UiField
-	FlowPanel         resultPanel;
+	Heading                                 resultHeading;
+	@UiField
+	FlowPanel                               resultPanel;
 
 	@UiField
 	FlowPanel   additionalDataPanel;
@@ -114,11 +117,33 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 	private LocationTable               locationTable;
 
 	private List<ExperimentType> experimentTypes = new ArrayList<>();
-	private DatasetTable additionalDataTable;
+	private DatasetTable         additionalDataTable;
 
 	public SearchPage()
 	{
+		operator = new DropdownInputButton<ComparisonOperator>()
+		{
+			@Override
+			protected String getLabel(ComparisonOperator item)
+			{
+				return getOperatorString(item);
+			}
+
+			@Override
+			protected void onValueChange(ComparisonOperator value)
+			{
+				super.onValueChange(value);
+
+				if (value instanceof Like)
+					tooltip.init();
+				else
+					tooltip.destroy();
+			}
+		};
+
 		initWidget(ourUiBinder.createAndBindUi(this));
+
+		operator.setData(Arrays.asList(new Equal(), new Like()), true);
 
 		String searchString = StringParameterStore.Inst.get().get(Parameter.searchString);
 
@@ -129,6 +154,11 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				searchBox.setText(searchString);
 				searchBox.setFocus(true);
 				searchBox.selectAll();
+
+				if (searchString.contains("%"))
+					operator.setSelection(new Like(), true);
+				else
+					operator.setSelection(new Equal(), true);
 			});
 		}
 
@@ -140,7 +170,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 			StringParameterStore.Inst.get().remove(Parameter.searchString);
 
 			History.newItem(Page.OSTEREI.name());
-//			ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new OsterPassportPage());
+			//			ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new OsterPassportPage());
 
 			return;
 		}
@@ -154,6 +184,26 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 		additionalDataText.setHTML(Text.LANG.searchAdditionalDatasetsText());
 		additionalDataTextShort.setHTML(Text.LANG.searchAdditionalDatasetsTextShort());
 		additionalDataTextShort.addStyleName(Emphasis.INFO.getCssName());
+	}
+
+	private String getOperatorString(ComparisonOperator item)
+	{
+		if (item instanceof Like)
+			return Text.LANG.operatorsLike();
+		else if (item instanceof Equal)
+			return Text.LANG.operatorsEqual();
+		else if (item instanceof GreaterThan)
+			return Text.LANG.operatorsGreaterThan();
+		else if (item instanceof GreaterThanEquals)
+			return Text.LANG.operatorsGreaterThanEquals();
+		else if (item instanceof LessThan)
+			return Text.LANG.operatorsLessThan();
+		else if (item instanceof LessThanEquals)
+			return Text.LANG.operatorsLessThanEquals();
+		else if (item instanceof Between)
+			return Text.LANG.operatorsBetween();
+		else
+			return item.getClass().getSimpleName();
 	}
 
 	private void doSearch(String searchString)
@@ -603,154 +653,100 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				experimentTypes = new ArrayList<>();
 				if (section == SearchType.ACCESSION_DATA || section == SearchType.ALL)
 				{
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-						mapping.put(Accession.NAME, searchString);
-						mapping.put(Accession.NUMBER, searchString);
-						mapping.put(Accession.COLLNUMB, searchString);
-						mapping.put(Taxonomy.GENUS, searchString);
-						mapping.put(Taxonomy.SPECIES, searchString);
-						mapping.put(Subtaxa.TAXONOMY_IDENTIFIER, searchString);
-						mapping.put(Country.COUNTRY_NAME, searchString);
-						mapping.put(Synonym.SYNONYM, searchString);
-						accessionDataTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
+					mapping.put(Accession.NAME, searchString);
+					mapping.put(Accession.NUMBER, searchString);
+					mapping.put(Accession.COLLNUMB, searchString);
+					mapping.put(Taxonomy.GENUS, searchString);
+					mapping.put(Taxonomy.SPECIES, searchString);
+					mapping.put(Subtaxa.TAXONOMY_IDENTIFIER, searchString);
+					mapping.put(Country.COUNTRY_NAME, searchString);
+					mapping.put(Synonym.SYNONYM, searchString);
+					accessionDataTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.ACCESSION_ATTRIBUTE_DATA || section == SearchType.ALL)
 				{
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-						mapping.put(Accession.NAME, searchString);
-						mapping.put(Attribute.NAME, searchString);
-						mapping.put(Attribute.DESCRIPTION, searchString);
-						mapping.put(AttributeData.VALUE, searchString);
-						accessionAttributeDataTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
+					mapping.put(Accession.NAME, searchString);
+					mapping.put(Attribute.NAME, searchString);
+					mapping.put(Attribute.DESCRIPTION, searchString);
+					mapping.put(AttributeData.VALUE, searchString);
+					accessionAttributeDataTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.PHENOTYPE_DATA || section == SearchType.ALL)
 				{
 					experimentTypes.add(ExperimentType.trials);
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-						mapping.put(Accession.NAME, searchString);
-						mapping.put(Dataset.DESCRIPTION, searchString);
-						mapping.put(Phenotype.NAME, searchString);
-						mapping.put(Phenotype.SHORT_NAME, searchString);
-						phenotypeDataTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
+					mapping.put(Accession.NAME, searchString);
+					mapping.put(Dataset.DESCRIPTION, searchString);
+					mapping.put(Phenotype.NAME, searchString);
+					mapping.put(Phenotype.SHORT_NAME, searchString);
+					phenotypeDataTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.COMPOUND_DATA || section == SearchType.ALL)
 				{
 					experimentTypes.add(ExperimentType.compound);
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-						mapping.put(Accession.NAME, searchString);
-						mapping.put(Compound.NAME, searchString);
-						compoundDataTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
+					mapping.put(Accession.NAME, searchString);
+					mapping.put(Compound.NAME, searchString);
+					compoundDataTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.MAPDEFINITION_DATA || section == SearchType.ALL)
 				{
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Marker.MARKER_NAME, searchString);
-						mapping.put(MapFeatureType.DESCRIPTION, searchString);
-						mapping.put(jhi.germinate.shared.datastructure.database.Map.DESCRIPTION, searchString);
-						mapping.put(MapDefinition.CHROMOSOME, searchString);
-						mapping.put(Synonym.SYNONYM, searchString);
-						mapDefinitionTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Marker.MARKER_NAME, searchString);
+					mapping.put(MapFeatureType.DESCRIPTION, searchString);
+					mapping.put(jhi.germinate.shared.datastructure.database.Map.DESCRIPTION, searchString);
+					mapping.put(MapDefinition.CHROMOSOME, searchString);
+					mapping.put(Synonym.SYNONYM, searchString);
+					mapDefinitionTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.DATASETS || section == SearchType.ALL)
 				{
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Dataset.DESCRIPTION, searchString);
-						mapping.put(ExperimentType.DESCRIPTION, searchString);
-						mapping.put(Experiment.EXPERIMENT_NAME, searchString);
-						mapping.put(Dataset.CONTACT, searchString);
-						datasetTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Dataset.DESCRIPTION, searchString);
+					mapping.put(ExperimentType.DESCRIPTION, searchString);
+					mapping.put(Experiment.EXPERIMENT_NAME, searchString);
+					mapping.put(Dataset.CONTACT, searchString);
+					datasetTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.DATASET_ATTRIBUTE_DATA || section == SearchType.ALL)
 				{
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Dataset.DESCRIPTION, searchString);
-						mapping.put(Attribute.NAME, searchString);
-						mapping.put(Attribute.DESCRIPTION, searchString);
-						mapping.put(AttributeData.VALUE, searchString);
-						datasetAttributeDataTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Dataset.DESCRIPTION, searchString);
+					mapping.put(Attribute.NAME, searchString);
+					mapping.put(Attribute.DESCRIPTION, searchString);
+					mapping.put(AttributeData.VALUE, searchString);
+					datasetAttributeDataTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.PEDIGREE_DATA || section == SearchType.ALL)
 				{
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(PedigreeService.CHILD_GID, searchString);
-						mapping.put(PedigreeService.CHILD_NAME, searchString);
-						mapping.put(PedigreeService.PARENT_GID, searchString);
-						mapping.put(PedigreeService.PARENT_NAME, searchString);
-						pedigreeTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(PedigreeService.CHILD_GID, searchString);
+					mapping.put(PedigreeService.CHILD_NAME, searchString);
+					mapping.put(PedigreeService.PARENT_GID, searchString);
+					mapping.put(PedigreeService.PARENT_NAME, searchString);
+					pedigreeTable.forceFilter(mapping, false, operator.getSelection());
 				}
 				if (section == SearchType.LOCATION_DATA || section == SearchType.ALL)
 				{
-					try
-					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Location.SITE_NAME, searchString);
-						mapping.put(Location.REGION, searchString);
-						mapping.put(Location.STATE, searchString);
-						mapping.put(Country.COUNTRY_NAME, searchString);
-						locationTable.forceFilter(mapping, false);
-					}
-					catch (InvalidArgumentException e)
-					{
-					}
+					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+					mapping.put(Location.SITE_NAME, searchString);
+					mapping.put(Location.REGION, searchString);
+					mapping.put(Location.STATE, searchString);
+					mapping.put(Country.COUNTRY_NAME, searchString);
+					locationTable.forceFilter(mapping, false, operator.getSelection());
 				}
 
 				additionalDataTable.refreshTable();
 			});
 		}
 
-//		additionalDataTable.refreshTable();
+		//		additionalDataTable.refreshTable();
 	}
 
 	private void updateTables()

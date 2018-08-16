@@ -33,7 +33,6 @@ import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -89,13 +88,7 @@ public class InstitutionsPage extends Composite
 						/* When a country is selected by the user, force filter the table with the country name */
 						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
 						mapping.put(Country.COUNTRY_NAME, country.getName());
-						try
-						{
 							institutionsTable.forceFilter(mapping, true);
-						}
-						catch (InvalidArgumentException e)
-						{
-						}
 					}
 
 					@Override

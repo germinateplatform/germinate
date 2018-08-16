@@ -48,7 +48,6 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
@@ -355,17 +354,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 			for (Long id : urlParameterDatasetIds)
 				values.put(Dataset.ID, Long.toString(id));
 
-			Scheduler.get().scheduleDeferred(() -> {
-						try
-						{
-							table.forceFilter(values, false);
-						}
-						catch (InvalidArgumentException ex)
-						{
-							ex.printStackTrace();
-						}
-					}
-			);
+			Scheduler.get().scheduleDeferred(() -> table.forceFilter(values, false));
 		}
 
 		if (showDownload)

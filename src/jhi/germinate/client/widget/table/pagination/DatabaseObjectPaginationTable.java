@@ -61,7 +61,6 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
@@ -378,12 +377,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		return filterPanel.getSize() > 0;
 	}
 
-	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd) throws InvalidArgumentException
+	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd)
 	{
 		return forceFilter(columnToValue, isAnd, new Like());
 	}
 
-	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd, ComparisonOperator operator) throws InvalidArgumentException
+	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd, ComparisonOperator operator)
 	{
 		/* Cancel any currently running request */
 		if (currentRequest != null && currentRequest.isPending())

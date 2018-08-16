@@ -41,8 +41,8 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * The AccessionOverviewPage is the main accession view. It shows a table with all accessions and also contains options for exporting of the accession
@@ -106,16 +106,7 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 		FilterMappingParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
 
 		final FilterPanel.FilterMapping m = mapping;
-		Scheduler.get().scheduleDeferred(() ->
-		{
-			try
-			{
-				table.forceFilter(m, true);
-			}
-			catch (InvalidArgumentException e)
-			{
-			}
-		});
+		Scheduler.get().scheduleDeferred(() -> table.forceFilter(m, true, new Equal()));
 
 		/* Set up callbacks for column names and groups */
 		ParallelAsyncCallback<ServerResult<List<String>>> columnCallback = new ParallelAsyncCallback<ServerResult<List<String>>>()

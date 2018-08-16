@@ -43,7 +43,6 @@ import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Image;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
@@ -187,15 +186,9 @@ public class CompoundDetailsPage extends Composite
 
 		Scheduler.get().scheduleDeferred(() ->
 		{
-			try
-			{
-				FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-				mapping.put(Compound.NAME, compound.getName());
-				table.forceFilter(mapping, true);
-			}
-			catch (InvalidArgumentException e)
-			{
-			}
+			FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
+			mapping.put(Compound.NAME, compound.getName());
+			table.forceFilter(mapping, true);
 		});
 	}
 }

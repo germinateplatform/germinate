@@ -19,6 +19,7 @@
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:g8="urn:import:jhi.germinate.client.widget.listbox"
+			 xmlns:ge="urn:import:jhi.germinate.client.widget.element"
 			 xmlns:s="urn:import:jhi.germinate.client.page.search">
 
 	<ui:import field="jhi.germinate.shared.Style.*"/>
@@ -44,7 +45,8 @@
 		<b:FormGroup>
 			<b:FormLabel for="formSearch" text="{msg.searchPageSearchBox}"/>
 			<b:InputGroup b:id="formSearch">
-				<b:Tooltip title="{msg.searchBoxTooltip}" placement="BOTTOM">
+				<ge:DropdownInputButton ui:field="operator"/>
+				<b:Tooltip placement="BOTTOM" title="{msg.searchBoxTooltip}" ui:field="tooltip">
 					<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
 				</b:Tooltip>
 				<b:InputGroupButton>

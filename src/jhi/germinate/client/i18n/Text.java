@@ -1204,6 +1204,10 @@ public interface Text extends Messages
 	@Key("operators.equal")
 	String operatorsEqual();
 
+	@Key("operators.like")
+	@DefaultMessage("Like")
+	String operatorsLike();
+
 	@Key("operators.greater.than")
 	String operatorsGreaterThan();
 
@@ -2450,7 +2454,7 @@ public interface Text extends Messages
 	String groupsNewMembersSubtitle();
 
 	@Key("widget.table.filter.info")
-	@DefaultMessage("<b>Table filtering searches for exact matches in the specified column. To use fuzzy search, use the wildcard character '%'. As an example, searching for a country name of 'kingdom' will not return a result whereas searching for '%kingdom%' will return 'United Kingdom'.</b>")
+	@DefaultMessage("<b>Table filtering supports many different comparisons. 'Equal' searches for exact matches, while 'Like', by default, looks for matches starting or ending with the query, but also support the wildcard character '%'.</b>")
 	SafeHtml tableFilterInfo();
 
 	@Key("wizard.license.title")

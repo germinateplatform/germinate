@@ -127,7 +127,7 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 
 	private Location parseLocation()
 	{
-		return new Location()
+		Location location = new Location()
 				.setType(LocationType.collectingsites)
 				.setName(getPart(McpdField.COLLSITE))
 				.setLatitude(getLatitudeLongitude(getDouble(McpdField.DECLATITUDE), getPart(McpdField.LATITUDE)))
@@ -139,6 +139,13 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 				.setCountry(parseCountry())
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
+
+		// In some cases, we only know the country an accession is from, not a specific location.
+		// We then still want to be able to link an accession to a country, so make sure the location has a name.
+		if (!StringUtils.isEmpty(location.getCountry().getCountryCode3()) && StringUtils.isEmpty(location.getName()))
+			location.setName("UNKNOWN LOCATION");
+
+		return location;
 	}
 
 	private Country parseCountry()
@@ -183,7 +190,7 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	/**
 	 * Returns the MCPD field value. If this value is empty after calling {@link String#trim()} then <code>null</code> is returned.
 	 *
-	 * @param field The {@link McpdObject.McpdField}
+	 * @param field The {@link McpdField}
 	 * @return The trimmed field value or <code>null</code>.
 	 */
 	protected String getPart(McpdField field)
@@ -203,10 +210,10 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	}
 
 	/**
-	 * Tries to parse a data from the value of the given {@link McpdObject.McpdField}. Since Java can't represent missing months or days in a
+	 * Tries to parse a data from the value of the given {@link McpdField}. Since Java can't represent missing months or days in a
 	 * meaningful way, the first of each will be used in the case of a missing field.
 	 *
-	 * @param field The {@link McpdObject.McpdField}
+	 * @param field The {@link McpdField}
 	 * @return The parsed {@link Date} or null.
 	 */
 	protected Date getDateFromField(McpdField field)
@@ -217,9 +224,9 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	}
 
 	/**
-	 * Tries to parse a {@link Double} from the given {@link McpdObject.McpdField}.
+	 * Tries to parse a {@link Double} from the given {@link McpdField}.
 	 *
-	 * @param field The {@link McpdObject.McpdField}
+	 * @param field The {@link McpdField}
 	 * @return The parsed {@link Double} or null.
 	 */
 	protected Double getDouble(McpdField field)
@@ -241,9 +248,9 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	}
 
 	/**
-	 * Tries to parse an {@link Integer} from the given {@link McpdObject.McpdField}.
+	 * Tries to parse an {@link Integer} from the given {@link McpdField}.
 	 *
-	 * @param field The {@link McpdObject.McpdField}
+	 * @param field The {@link McpdField}
 	 * @return The parsed {@link Integer} or null.
 	 */
 	protected Integer getInt(McpdField field)
@@ -265,9 +272,9 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	}
 
 	/**
-	 * Tries to parse an {@link Integer} from the given {@link McpdObject.McpdField}.
+	 * Tries to parse an {@link Integer} from the given {@link McpdField}.
 	 *
-	 * @param field The {@link McpdObject.McpdField}
+	 * @param field The {@link McpdField}
 	 * @return The parsed {@link Integer} or null.
 	 */
 	protected Long getLong(McpdField field)

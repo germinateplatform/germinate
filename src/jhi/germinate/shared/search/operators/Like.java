@@ -18,6 +18,7 @@
 package jhi.germinate.shared.search.operators;
 
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
@@ -84,7 +85,9 @@ public class Like implements ComparisonOperator
 	@Override
 	public List<String> getValues(List<String> values)
 	{
-		return values;
+		return values.stream()
+					 .map(s -> "%" + s + "%")
+					 .collect(Collectors.toList());
 	}
 
 	@Override
