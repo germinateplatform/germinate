@@ -27,8 +27,6 @@ import jhi.germinate.client.page.*;
  */
 public class TrialsOverviewChart extends AbstractChart
 {
-	private FlowPanel chartPanel;
-
 	private String xAxisTitleLine = Text.LANG.generalYear();
 	private String yAxisTitleLine;
 
@@ -41,7 +39,6 @@ public class TrialsOverviewChart extends AbstractChart
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		panel.add(chartPanel);
 
 		onResize(true);
@@ -50,7 +47,7 @@ public class TrialsOverviewChart extends AbstractChart
 	@Override
 	protected void updateChart(int width)
 	{
-		create(chartPanel.getOffsetWidth());
+		create(width);
 	}
 
 	@Override

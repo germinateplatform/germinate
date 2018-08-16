@@ -108,7 +108,6 @@ public class GwtXmlWriter
 		}
 		catch (IOException e)
 		{
-
 		}
 
 		return result;

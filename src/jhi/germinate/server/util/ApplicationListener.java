@@ -17,16 +17,14 @@
 
 package jhi.germinate.server.util;
 
-import com.mysql.jdbc.*;
-
 import java.io.*;
-import java.sql.Driver;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.*;
 
 import javax.servlet.*;
+import javax.servlet.annotation.*;
 
 import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
@@ -39,6 +37,7 @@ import jhi.germinate.shared.enums.*;
  *
  * @author Sebastian Raubach
  */
+@WebListener
 public class ApplicationListener implements ServletContextListener
 {
 	private static ScheduledExecutorService scheduler;
@@ -138,17 +137,6 @@ public class ApplicationListener implements ServletContextListener
 				// Driver was not registered by the webapp's ClassLoader and may be in use elsewhere
 				Logger.getLogger("").log(Level.INFO, "Not deregistering JDBC driver '" + driver + "' as it does not belong to this webapp's ClassLoader");
 			}
-		}
-
-		// Finally, try to kill the AbandonedConnectionCleanupThread
-		try
-		{
-			AbandonedConnectionCleanupThread.shutdown();
-		}
-		catch (Exception e)
-		{
-			Logger.getLogger("").log(Level.SEVERE, "SEVERE problem cleaning up: " + e.getMessage());
-			e.printStackTrace();
 		}
 	}
 }

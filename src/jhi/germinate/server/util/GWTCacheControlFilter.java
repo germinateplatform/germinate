@@ -19,7 +19,9 @@ package jhi.germinate.server.util;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.*;
 
+import javax.servlet.Filter;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
@@ -34,12 +36,13 @@ import javax.servlet.http.*;
 public class GWTCacheControlFilter implements Filter
 {
 	@Override
-	public void destroy()
+	public void init(FilterConfig config)
 	{
+		Logger.getLogger("").log(Level.INFO, "Loading GWTCacheControlFilter");
 	}
 
 	@Override
-	public void init(FilterConfig config) throws ServletException
+	public void destroy()
 	{
 	}
 

@@ -41,7 +41,6 @@ public class CompoundBarChart extends AbstractChart
 {
 	private static final int LIMIT = 500;
 
-	private FlowPanel chartPanel;
 	private Element   sortValues;
 
 	private String yAxisTitle = Text.LANG.compoundBarChartYAxisTitle();
@@ -60,7 +59,6 @@ public class CompoundBarChart extends AbstractChart
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		createCheckBox(chartPanel);
 
 		dataLimitWarning.setVisible(false);
@@ -116,7 +114,7 @@ public class CompoundBarChart extends AbstractChart
 	@Override
 	protected void updateChart(int width)
 	{
-		create(chartPanel.getOffsetWidth());
+		create(width);
 	}
 
 	@Override

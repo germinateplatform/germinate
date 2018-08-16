@@ -38,15 +38,12 @@ import jhi.germinate.shared.datastructure.*;
  */
 public class DatasetStatsChart extends AbstractChart
 {
-	private FlowPanel chartPanel;
-
 	private String xAxisTitle = Text.LANG.datasetsColumnExperimentType();
 	private String yAxisTitle = Text.LANG.datasetsColumnDatasetDataPoints();
 
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		panel.add(new Heading(HeadingSize.H3, Text.LANG.dataStatisticsDatasetsTitle()));
 		panel.add(new Label(Text.LANG.dataStatisticsDatasetsText()));
 		panel.add(chartPanel);
@@ -85,7 +82,7 @@ public class DatasetStatsChart extends AbstractChart
 	@Override
 	protected void updateChart(int width)
 	{
-		create(chartPanel.getOffsetWidth());
+		create(width);
 	}
 
 	@Override

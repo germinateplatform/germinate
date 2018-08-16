@@ -74,7 +74,6 @@ function multiLineChart() {
 			width = width - margin.left - margin.right;
 
 			// Get the individual series
-			console.log(data);
 			color.domain(d3.keys(data[0]).filter(function (d, i) {
 				return ignoreIndices.indexOf(i) === -1;
 			}));

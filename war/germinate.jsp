@@ -52,8 +52,7 @@
 
 	<!-- Bootstrap Core CSS -->
 	<link href="css/bootstrap-germinate.css" rel="stylesheet">
-	<link href="css/bootstrap-xxs.css" rel="stylesheet">
-
+	
 	<!-- MetisMenu CSS -->
 	<link href="css/metisMenu.min.css" rel="stylesheet">
 
@@ -101,6 +100,7 @@
 	<!-- Custom CSS -->
 	<link type="text/css" rel="stylesheet" href="css/custom.css"/>
 
+	<link href="css/bootstrap-xxs.css" rel="stylesheet">
 	<link href="css/template-css.jsp" rel="stylesheet">
 
 	<% if (useGoogleAnalytics)

@@ -114,7 +114,7 @@ public class ClimateChart extends AbstractChart
 	@Override
 	protected void updateChart(int width)
 	{
-		create(chartPanel.getOffsetWidth());
+		create(width);
 	}
 
 	@Override

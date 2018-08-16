@@ -31,7 +31,6 @@ import jhi.germinate.shared.*;
  */
 public class AlleleFrequencyChart extends AbstractChart
 {
-	private FlowPanel             chartPanel;
 	private AlleleFreqResultsPage parent;
 
 	private String count     = Text.LANG.generalCount();
@@ -55,7 +54,6 @@ public class AlleleFrequencyChart extends AbstractChart
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		panel.add(chartPanel);
 
 		if (!StringUtils.isEmpty(filePath))
@@ -66,7 +64,7 @@ public class AlleleFrequencyChart extends AbstractChart
 	protected void updateChart(int width)
 	{
 		if (!StringUtils.isEmpty(filePath))
-			create(parent, chartPanel.getOffsetWidth());
+			create(parent, width);
 	}
 
 	@Override
@@ -84,7 +82,7 @@ public class AlleleFrequencyChart extends AbstractChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_BAR_CHART_FAKE_X, Library.D3_DOWNLOAD};
+		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_BAR_CHART_FAKE_X, Library.D3_DOWNLOAD};
 	}
 
 	private native void create(AlleleFreqResultsPage parent, int widthHint)/*-{

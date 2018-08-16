@@ -227,8 +227,6 @@
 
     html2canvas(e1, {
       "onrendered": function (canvas) {
-        console.log(canvas);
-
         var a = document.createElement('a');
         a.download = name;
         a.href = canvas.toDataURL('image/png');

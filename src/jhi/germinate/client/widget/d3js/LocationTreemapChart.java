@@ -37,7 +37,6 @@ public class LocationTreemapChart extends AbstractChart
 {
 	//	private final String items     = Text.LANG.collsiteTreemapItems();
 	private final String locations = Text.LANG.collsiteTreemapLocation();
-	private FlowPanel chartPanel;
 
 	private LocationType type = null;
 
@@ -72,14 +71,13 @@ public class LocationTreemapChart extends AbstractChart
 	@Override
 	protected void createContent(final FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		panel.add(chartPanel);
 	}
 
 	@Override
 	protected void updateChart(int width)
 	{
-		d3(chartPanel.getOffsetWidth());
+		d3(width);
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class AlleleFreqSplitBinningChart extends AbstractChart
 
 	private JsArrayString colors;
 	private JsArrayNumber widths;
-	private double splitPoint = 0.5;
+	private double        splitPoint = 0.5;
 
 	public AlleleFreqSplitBinningChart()
 	{

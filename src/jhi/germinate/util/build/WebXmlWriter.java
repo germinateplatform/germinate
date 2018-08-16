@@ -58,10 +58,10 @@ public class WebXmlWriter
 			Properties properties = new Properties();
 			properties.load(stream);
 
-			result = properties.getProperty(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME.getKey());
+			String name = properties.getProperty(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME.getKey());
 
-			if (StringUtils.isEmpty(result))
-				result = "Germinate 3";
+			if (!StringUtils.isEmpty(name))
+				result = name;
 		}
 		catch (IOException e)
 		{

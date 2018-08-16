@@ -37,15 +37,12 @@ import jhi.germinate.shared.datastructure.*;
  */
 public class PDCIStatsChart extends AbstractChart
 {
-	private FlowPanel chartPanel;
-
 	private String xAxisTitle = Text.LANG.passportColumnPDCI();
 	private String yAxisTitle = Text.LANG.generalCount();
 
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		panel.add(new Heading(HeadingSize.H3, Text.LANG.passportPDCITitle()));
 		panel.add(new HTML(Text.LANG.passportPDCIExplanation()));
 		panel.add(chartPanel);
@@ -84,7 +81,7 @@ public class PDCIStatsChart extends AbstractChart
 	@Override
 	protected void updateChart(int width)
 	{
-		create(chartPanel.getOffsetWidth());
+		create(width);
 	}
 
 	@Override
@@ -102,14 +99,13 @@ public class PDCIStatsChart extends AbstractChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_GROUPED_BAR_CHART, Library.D3_DOWNLOAD};
+		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_GROUPED_BAR_CHART, Library.D3_DOWNLOAD};
 	}
 
 	private native void create(int widthHint)/*-{
 		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
 
 		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
-		var legendItemStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_LEGEND_ITEM;
 
 		var xAxisTitle = this.@jhi.germinate.client.widget.d3js.PDCIStatsChart::xAxisTitle;
 		var yAxisTitle = this.@jhi.germinate.client.widget.d3js.PDCIStatsChart::yAxisTitle;

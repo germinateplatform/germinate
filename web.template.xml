@@ -23,26 +23,10 @@
 
 	<display-name>@display_name@</display-name>
 
-	<!-- LISTENERS -->
-	<listener>
-		<listener-class>jhi.germinate.server.util.ApplicationListener</listener-class>
-	</listener>
-
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>germinate.jsp</welcome-file>
 	</welcome-file-list>
-
-	<!-- Add a Filter that takes care of IE header -->
-	<filter-mapping>
-		<filter-name>HeaderFilter</filter-name>
-		<url-pattern/>
-	</filter-mapping>
-	<!-- Add a Filter that forces the browser NOT to cache .nocache files -->
-	<filter-mapping>
-		<filter-name>GWTCacheControlFilter</filter-name>
-		<url-pattern/>
-	</filter-mapping>
 
 	<!-- CUSTOM ERROR PAGES -->
 	<error-page>

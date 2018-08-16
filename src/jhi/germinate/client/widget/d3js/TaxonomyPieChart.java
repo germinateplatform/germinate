@@ -43,12 +43,9 @@ import jhi.germinate.shared.enums.*;
  */
 public class TaxonomyPieChart extends AbstractChart
 {
-	private FlowPanel chartPanel;
-
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		panel.add(new Heading(HeadingSize.H3, Text.LANG.dataStatisticsTaxonomyTitle()));
 		panel.add(new Label(Text.LANG.dataStatisticsTaxonomyText()));
 		panel.add(chartPanel);
@@ -80,7 +77,7 @@ public class TaxonomyPieChart extends AbstractChart
 	@Override
 	protected void updateChart(int width)
 	{
-		create(chartPanel.getOffsetWidth());
+		create(width);
 	}
 
 	@Override
@@ -174,7 +171,6 @@ public class TaxonomyPieChart extends AbstractChart
 				},
 				callbacks: {
 					onClickSegment: function (a) {
-						console.log(a);
 						that.@jhi.germinate.client.widget.d3js.TaxonomyPieChart::onClickSegment(*)(a.data.label);
 					}
 				}

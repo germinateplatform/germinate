@@ -112,10 +112,10 @@ d3.legend = function (parent, svg, scale, margin, width, height, legendWidth, le
         });
 
     // Add buttons to hide/show all items at the same time
-    var parent = $.parseHTML("<div class='btn-group' role='group'></div>");
-	$(legendDiv.node()).append(parent);
-    addButton(parent, "mdi-eye", false);
-    addButton(parent, "mdi-eye-off-outline", true);
+    var p = $.parseHTML("<div class='btn-group' role='group'></div>");
+	$(legendDiv.node()).append(p);
+    addButton(p, "mdi-eye", false);
+    addButton(p, "mdi-eye-off-outline", true);
 
     /* Reduce the width to accommodate space for an eventual scrollbar */
     if (isOverflowed(legendDiv.node())) {

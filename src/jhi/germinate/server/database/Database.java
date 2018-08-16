@@ -17,9 +17,6 @@
 
 package jhi.germinate.server.database;
 
-import com.microsoft.sqlserver.jdbc.*;
-import com.mysql.jdbc.exceptions.jdbc4.*;
-
 import java.sql.*;
 
 import jhi.germinate.server.config.*;
@@ -82,40 +79,40 @@ public final class Database
 	}
 
 	/**
-	 * The set of database types supported by Germinate
+	 * Connects to the given MySQL database with specified credentials
 	 *
-	 * @author Sebastian Raubach
+	 * @param type     The {@link DatabaseType}
+	 * @param dbPath   The location of the database
+	 * @param username The username
+	 * @param password The password
+	 * @return The {@link Database} instance
+	 * @throws DatabaseException Thrown if any kind of {@link Exception} is thrown while trying to connect. The {@link DatabaseException} will contain
+	 *                           the message of the original {@link Exception}.
 	 */
-	public enum DatabaseType
+	public static Database connect(DatabaseType type, String dbPath, String username, String password) throws DatabaseException
 	{
-		MYSQL("com.mysql.jdbc.Driver", "jdbc:mysql://", "?useSSL=false");
-//		MYSQL_BATCH_ENABLED("com.mysql.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
+		Database database = new Database();
 
-		private final String classForName;
-		private final String connectionString;
-		private final String optionalParameters;
-
-		DatabaseType(String classForName, String connectionString, String optionalParameters)
+		/* Connect to the database */
+		try
 		{
-			this.classForName = classForName;
-			this.connectionString = connectionString;
-			this.optionalParameters = optionalParameters;
+			Class.forName(type.classForName).newInstance();
+			String url = type.connectionString + dbPath + (type.optionalParameters != null ? type.optionalParameters : "");
+			database.connection = DriverManager.getConnection(url, username, password);
+		}
+		catch (IllegalAccessException | InstantiationException | ClassNotFoundException e)
+		{
+			throw new DatabaseException("Unable to instantiate MySQL connection: " + e.getLocalizedMessage());
+		}
+		catch (SQLException e)
+		{
+			if (e.getErrorCode() == 1044 && e.getSQLState().equals("42000"))
+				throw new DatabaseException(e.getLocalizedMessage().replace(PropertyReader.get(ServerProperty.DATABASE_USERNAME), "<USERNAME>"));
+			else
+				throw new DatabaseException(e);
 		}
 
-		public String getClassForName()
-		{
-			return classForName;
-		}
-
-		public String getConnectionString()
-		{
-			return connectionString;
-		}
-
-		public String getOptionalParameters()
-		{
-			return optionalParameters;
-		}
+		return database;
 	}
 
 	private Database()
@@ -145,48 +142,21 @@ public final class Database
 	}
 
 	/**
-	 * Connects to the given MySQL database with specified credentials
+	 * Checks the current session and connects to the database if the session is still valid
 	 *
-	 * @param type     The {@link DatabaseType}
-	 * @param dbPath   The location of the database
-	 * @param username The username
-	 * @param password The password
-	 * @return The {@link Database} instance
-	 * @throws DatabaseException Thrown if any kind of {@link Exception} is thrown while trying to connect. The {@link DatabaseException} will contain
-	 *                           the message of the original {@link Exception}.
+	 * @param type              The {@link DatabaseType}
+	 * @param requestProperties The {@link RequestProperties}
+	 * @param servlet           The {@link BaseRemoteServiceServlet}
+	 * @return The new database object
+	 * @throws InvalidSessionException Thrown if the current session is not valid
+	 * @throws DatabaseException       Thrown if the interaction with the database fails
 	 */
-	public static Database connect(DatabaseType type, String dbPath, String username, String password) throws DatabaseException
+	public static Database connectAndCheckSession(DatabaseType type, RequestProperties requestProperties, BaseRemoteServiceServlet servlet) throws InvalidSessionException, DatabaseException
 	{
-		Database database = new Database();
+		Session.checkSession(requestProperties, servlet);
 
-        /* Connect to the database */
-		try
-		{
-			Class.forName(type.classForName).newInstance();
-			String url = type.connectionString + dbPath + (type.optionalParameters != null ? type.optionalParameters : "");
-			database.connection = DriverManager.getConnection(url, username, password);
-		}
-		catch (CommunicationsException e)
-		{
-			throw new DatabaseException("Unable to connect to the database: " + e.getLocalizedMessage());
-		}
-		catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
-		{
-			throw new DatabaseException("Unable to instantiate MySQL connection: " + e.getLocalizedMessage());
-		}
-		catch (SQLServerException e)
-		{
-			throw new DatabaseException(e);
-		}
-		catch (SQLException e)
-		{
-			if (e.getErrorCode() == 1044 && e.getSQLState().equals("42000"))
-				throw new DatabaseException(e.getLocalizedMessage().replace(PropertyReader.get(ServerProperty.DATABASE_USERNAME), "<USERNAME>"));
-			else
-				throw new DatabaseException(e);
-		}
-
-		return database;
+		/* Connect to the database */
+		return connect(type);
 	}
 
 	/**
@@ -238,21 +208,40 @@ public final class Database
 	}
 
 	/**
-	 * Checks the current session and connects to the database if the session is still valid
+	 * The set of database types supported by Germinate
 	 *
-	 * @param type              The {@link DatabaseType}
-	 * @param requestProperties The {@link RequestProperties}
-	 * @param servlet           The {@link BaseRemoteServiceServlet}
-	 * @return The new database object
-	 * @throws InvalidSessionException Thrown if the current session is not valid
-	 * @throws DatabaseException       Thrown if the interaction with the database fails
+	 * @author Sebastian Raubach
 	 */
-	public static Database connectAndCheckSession(DatabaseType type, RequestProperties requestProperties, BaseRemoteServiceServlet servlet) throws InvalidSessionException, DatabaseException
+	public enum DatabaseType
 	{
-		Session.checkSession(requestProperties, servlet);
+		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false");
+		//		MYSQL_BATCH_ENABLED("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
 
-        /* Connect to the database */
-		return connect(type);
+		private final String classForName;
+		private final String connectionString;
+		private final String optionalParameters;
+
+		DatabaseType(String classForName, String connectionString, String optionalParameters)
+		{
+			this.classForName = classForName;
+			this.connectionString = connectionString;
+			this.optionalParameters = optionalParameters;
+		}
+
+		public String getClassForName()
+		{
+			return classForName;
+		}
+
+		public String getConnectionString()
+		{
+			return connectionString;
+		}
+
+		public String getOptionalParameters()
+		{
+			return optionalParameters;
+		}
 	}
 
 	/**
