@@ -33,10 +33,12 @@
 		<b:Row>
 			<b:Column size="XS_12,MD_6">
 				<b:Heading size="H4" text="{msg.trialsOverviewSelectPhenotypes}"/>
+				<g:HTML ui:field="phenotypeHtml"/>
 				<g8:PhenotypeListBox selectAllVisible="true" multipleSelect="true" ui:field="phenotypeBox"/>
 			</b:Column>
 			<b:Column size="XS_12,MD_6">
 				<b:Heading size="H4" text="{msg.trialsOverviewSelectYears}"/>
+				<g:HTML ui:field="yearsHtml"/>
 				<g8:IntegerListBox selectAllVisible="true" multipleSelect="true" ui:field="yearBox"/>
 			</b:Column>
 		</b:Row>

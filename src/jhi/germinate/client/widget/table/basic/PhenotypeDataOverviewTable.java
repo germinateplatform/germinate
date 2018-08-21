@@ -87,7 +87,7 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 				if (object.getUnit() != null)
 				{
 					result = object.getUnit().getName();
-					
+
 					if (!StringUtils.isEmpty(object.getUnit().getAbbreviation()))
 						result += " [" + object.getUnit().getAbbreviation() + "]";
 				}
@@ -121,7 +121,10 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getMin()));
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getMin()));
+				else
+					return "";
 			}
 
 			@Override
@@ -139,7 +142,10 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getAvg()));
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getAvg()));
+				else
+					return "";
 			}
 
 			@Override
@@ -157,7 +163,10 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getMax()));
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getMax()));
+				else
+					return "";
 			}
 
 			@Override
@@ -175,7 +184,10 @@ public class PhenotypeDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getStd()));
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getStd()));
+				else
+					return "";
 			}
 
 			@Override

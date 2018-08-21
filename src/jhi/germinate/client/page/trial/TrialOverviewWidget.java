@@ -66,6 +66,10 @@ public class TrialOverviewWidget extends Composite
 	FlowPanel                                        tablePanel;
 	@UiField
 	FlowPanel                                        chartPanel;
+	@UiField
+	HTML                                             phenotypeHtml;
+	@UiField
+	HTML                                             yearsHtml;
 
 	private List<Dataset>                          selectedDatasets;
 	private List<Phenotype>                        phenotypes;
@@ -85,6 +89,9 @@ public class TrialOverviewWidget extends Composite
 
 		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
+
+		phenotypeHtml.setHTML(Text.LANG.phenotypeExportSubtitlePhenotypes());
+		yearsHtml.setHTML(Text.LANG.phenotypeExportSubtitleAccessionGroups());
 
 		ParallelAsyncCallback<ServerResult<List<Phenotype>>> phenotypeCallback = null;
 		ParallelAsyncCallback<ServerResult<List<Integer>>> yearsCallback = null;

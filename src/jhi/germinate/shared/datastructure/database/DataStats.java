@@ -31,15 +31,16 @@ import jhi.germinate.shared.exception.*;
  */
 public class DataStats extends DatabaseObject
 {
-	private String name;
-	private String description;
-	private Unit   unit;
-	private Long   count;
-	private Double min;
-	private Double max;
-	private Double avg;
-	private Double std;
-	private String dataset;
+	private String  name;
+	private String  description;
+	private Boolean isNumeric;
+	private Unit    unit;
+	private Long    count;
+	private Double  min;
+	private Double  max;
+	private Double  avg;
+	private Double  std;
+	private String  dataset;
 
 	public DataStats()
 	{
@@ -69,6 +70,17 @@ public class DataStats extends DatabaseObject
 	public DataStats setDescription(String description)
 	{
 		this.description = description;
+		return this;
+	}
+
+	public boolean isNumeric()
+	{
+		return isNumeric == null ? false : isNumeric;
+	}
+
+	public DataStats setNumeric(Boolean numeric)
+	{
+		isNumeric = numeric;
 		return this;
 	}
 
@@ -180,6 +192,7 @@ public class DataStats extends DatabaseObject
 					return new DataStats(id)
 							.setName(row.getString("name"))
 							.setDescription(row.getString("description"))
+							.setNumeric(row.getBoolean("isNumeric"))
 							.setUnit(UNIT_CACHE.get(user, row.getLong("units.id"), row, foreignsFromResultSet))
 							.setCount(row.getLong("count"))
 							.setMin(row.getDouble("min"))
