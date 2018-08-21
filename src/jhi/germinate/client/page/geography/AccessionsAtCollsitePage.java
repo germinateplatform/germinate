@@ -78,7 +78,7 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 		}
 		else
 		{
-			PartialSearchQuery filter = new PartialSearchQuery(new SearchCondition(Location.ID, new Like(), Long.toString(collsiteId), Long.class.getSimpleName()));
+			PartialSearchQuery filter = new PartialSearchQuery(new SearchCondition(Location.ID, new Equal(), Long.toString(collsiteId), Long.class.getSimpleName()));
 			LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Location>>>()
 			{
 				@Override
@@ -163,7 +163,7 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 						filter = new PartialSearchQuery();
 					SearchCondition condition = new SearchCondition();
 					condition.setColumnName(Location.ID);
-					condition.setComp(new Like());
+					condition.setComp(new Equal());
 					condition.addConditionValue(Long.toString(collsiteId));
 					condition.setType(Long.class.getSimpleName());
 					filter.add(condition);

@@ -69,7 +69,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 				PartialSearchQuery q = new PartialSearchQuery();
 				SearchCondition c = new SearchCondition();
 				c.setColumnName(Map.ID);
-				c.setComp(new Like());
+				c.setComp(new Equal());
 				c.addConditionValue(Long.toString(mapToUse));
 				q.add(c);
 				ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
@@ -93,7 +93,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 				return null;
 
 			PartialSearchQuery q = new PartialSearchQuery();
-			q.add(new SearchCondition(Map.ID, new Like(), Long.toString(mapToUse), Long.class.getSimpleName()));
+			q.add(new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class.getSimpleName()));
 			q.addLogicalOperator(new And());
 			q.add(new SearchCondition(Group.ID, new InSet(), groupIds, Long.class.getSimpleName()));
 

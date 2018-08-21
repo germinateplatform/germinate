@@ -184,12 +184,12 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 		 */
 		PartialSearchQuery filter = null;
 		if (stateGeneralId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Like(), stateGeneralId, Long.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Equal(), stateGeneralId, Long.class.getSimpleName()));
 			/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
 		else if (!StringUtils.isEmpty(accessionName))
-			filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Like(), accessionName, String.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Equal(), accessionName, String.class.getSimpleName()));
 		else if (stateAccessionId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Like(), Long.toString(stateAccessionId), Long.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Equal(), Long.toString(stateAccessionId), Long.class.getSimpleName()));
 
 		if (filter != null)
 		{
@@ -300,7 +300,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 						filter = new PartialSearchQuery();
 					SearchCondition condition = new SearchCondition();
 					condition.setColumnName(Accession.ID);
-					condition.setComp(new Like());
+					condition.setComp(new Equal());
 					condition.addConditionValue(Long.toString(accession.getId()));
 					condition.setType(Long.class.getSimpleName());
 					filter.add(condition);
@@ -414,7 +414,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 					SearchCondition condition = new SearchCondition();
 					condition.setColumnName("Child.id");
-					condition.setComp(new Like());
+					condition.setComp(new Equal());
 					condition.addConditionValue(Long.toString(accession.getId()));
 					condition.setType(Long.class.getSimpleName());
 					filter.add(condition);
@@ -423,7 +423,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 					condition = new SearchCondition();
 					condition.setColumnName("Parent.id");
-					condition.setComp(new Like());
+					condition.setComp(new Equal());
 					condition.addConditionValue(Long.toString(accession.getId()));
 					condition.setType(Long.class.getSimpleName());
 					filter.add(condition);

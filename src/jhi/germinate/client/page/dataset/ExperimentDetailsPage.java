@@ -134,7 +134,7 @@ public class ExperimentDetailsPage extends Composite
 			{
 				if (filter == null)
 					filter = new PartialSearchQuery();
-				filter.add(new SearchCondition(Experiment.ID, new Like(), experimentId, Long.class));
+				filter.add(new SearchCondition(Experiment.ID, new Equal(), experimentId, Long.class));
 
 				if (filter.getAll().size() > 1)
 					filter.addLogicalOperator(new And());

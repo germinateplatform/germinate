@@ -403,7 +403,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 							filter = new PartialSearchQuery();
 						SearchCondition condition = new SearchCondition();
 						condition.setColumnName(Map.ID);
-						condition.setComp(new Like());
+						condition.setComp(new Equal());
 						condition.addConditionValue(Long.toString(map.getId()));
 						condition.setType(Long.class.getSimpleName());
 						filter.add(condition);

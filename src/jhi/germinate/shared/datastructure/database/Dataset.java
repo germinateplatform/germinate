@@ -428,7 +428,7 @@ public class Dataset extends DatabaseObject
 					try
 					{
 						PartialSearchQuery filter = new PartialSearchQuery();
-						filter.add(new SearchCondition(Dataset.ID, new Like(), Long.toString(dataset.getId()), Long.class.getSimpleName()));
+						filter.add(new SearchCondition(Dataset.ID, new Equal(), Long.toString(dataset.getId()), Long.class.getSimpleName()));
 
 						dataset.setAttributeData(AttributeDataManager.getAllForDatasetFilter(user, filter, Pagination.getDefault(), false).getServerResult());
 					}
