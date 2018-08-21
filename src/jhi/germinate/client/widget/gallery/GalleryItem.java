@@ -84,7 +84,7 @@ public class GalleryItem extends Composite
 		String urlLarge = getUrl(img, ImageService.SIZE_LARGE);
 
 		if (!StringUtils.isEmpty(img.getPath()))
-			image.getElement().getStyle().setBackgroundImage("url(" + UriUtils.fromTrustedString(urlSmall).asString() + ")");
+			image.getElement().getStyle().setBackgroundImage("url('" + UriUtils.fromTrustedString(urlSmall).asString() + "')");
 		else
 			image.setVisible(false);
 
