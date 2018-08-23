@@ -42,6 +42,9 @@ function scatterMatrix() {
 		xTickFormat = d3.format("s"),
 		yTickFormat = d3.format("s"),
 		tip,
+		onClick = function (d) {
+			// do nothing
+		},
 		showLegend = false,
 		legendWidth = 50,
 		color = d3.scale.category10(),
@@ -62,7 +65,7 @@ function scatterMatrix() {
 
 			var domainByTrait = {},
 				traits = d3.keys(data[0]).filter(function (d) {
-					return d !== idColumn && $.inArray(d, ignoreColumns) == -1;
+					return d !== idColumn && $.inArray(d, ignoreColumns) === -1;
 				}),
 				n = traits.length,
 				dots;
@@ -216,7 +219,8 @@ function scatterMatrix() {
 					})
 					.style("fill", function (d) {
 						return d.color;
-					});
+					})
+					.on("click", onClick);
 
 				if(d3.tip) {
 					dots
@@ -427,6 +431,12 @@ function scatterMatrix() {
 	chart.yTickFormat = function (_) {
 		if (!arguments.length) return yTickFormat;
 		yTickFormat = _;
+		return chart;
+	};
+
+	chart.onClick = function (_) {
+		if (!arguments.length) return onClick;
+		onClick = _;
 		return chart;
 	};
 

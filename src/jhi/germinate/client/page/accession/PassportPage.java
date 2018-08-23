@@ -164,6 +164,18 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	{
 		super.onLoad();
 
+		Library.Queue.load(new DefaultAsyncCallback<Void>()
+		{
+			@Override
+			protected void onSuccessImpl(Void result)
+			{
+				loadContent();
+			}
+		}, getLibraries());
+	}
+
+	private void loadContent()
+	{
 		html.setHTML(Text.LANG.passportText());
 		groupHtml.setHTML(Text.LANG.passportGroupsOverviewText());
 		datasetHtml.setHTML(Text.LANG.passportDatasetsOverviewText());

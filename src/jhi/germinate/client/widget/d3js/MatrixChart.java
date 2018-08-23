@@ -33,6 +33,7 @@ import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.page.accession.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -44,6 +45,7 @@ import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.exception.*;
 
 /**
  * @author Sebastian Raubach
@@ -249,6 +251,36 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 		return new HashSet<>(ids);
 	}
 
+	/**
+	 * Handles selection of data points. Will redirect to {@link Page#PASSPORT}
+	 *
+	 * @param id The accession id
+	 */
+	private static void onDataPointClicked(String id)
+	{
+		if (GerminateSettingsHolder.isPageAvailable(Page.PASSPORT))
+		{
+			try
+			{
+				LongParameterStore.Inst.get().putAsString(Parameter.accessionId, id);
+
+				Modal modal = new Modal();
+				modal.setClosable(true);
+				modal.setRemoveOnHide(true);
+				modal.setSize(ModalSize.LARGE);
+
+				ModalBody modalBody = new ModalBody();
+				modalBody.add(new PassportPage());
+				modal.add(modalBody);
+
+				modal.show();
+			}
+			catch (UnsupportedDataTypeException e)
+			{
+			}
+		}
+	}
+
 	private native void create(boolean colorByTreatment, boolean colorByDataset, boolean colorByYear, int widthHint)/*-{
 
 		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
@@ -299,6 +331,9 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 							return d.name + "<br/>" + d.year + "<br/>(" + d.xValue + ", " + d.yValue + ")";
 						else
 							return d.name + "<br/>(" + d.xValue + ", " + d.yValue + ")";
+					})
+					.onClick(function (d) {
+						@jhi.germinate.client.widget.d3js.MatrixChart::onDataPointClicked(Ljava/lang/String;)(d.dbId);
 					})
 					.dotStyle(dotStyle)
 					.axisStyle(axisStyle)

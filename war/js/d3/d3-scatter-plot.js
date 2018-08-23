@@ -261,7 +261,6 @@ function scatterPlot() {
                 gEnter.call(tip);
 
                 dots
-                    .on("click", onClick)
                     .on("mouseenter", function (d) {
                         if (!lassoConfig || !d3.select(this).classed(lassoConfig.selectedStyle)) {
 
@@ -286,7 +285,8 @@ function scatterPlot() {
                                 .attr("r", 2.5);
                         }
                         tip.hide();
-                    });
+                    })
+					.on("click", onClick);
             }
 
             // Check if a legend is required

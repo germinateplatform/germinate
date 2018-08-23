@@ -444,6 +444,7 @@ public enum Library
 			}
 
 			Arrays.stream(library)
+				  .filter(l -> !l.isLoaded())
 				  .forEachOrdered(Queue::push);
 
 			Library.Queue.callCallbacks(new Callback<Void, Exception>()

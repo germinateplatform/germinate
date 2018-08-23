@@ -34,6 +34,7 @@ import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.page.accession.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -408,7 +409,17 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			try
 			{
 				LongParameterStore.Inst.get().putAsString(Parameter.accessionId, id);
-				History.newItem(Page.PASSPORT.name());
+
+				Modal modal = new Modal();
+				modal.setClosable(true);
+				modal.setRemoveOnHide(true);
+				modal.setSize(ModalSize.LARGE);
+
+				ModalBody modalBody = new ModalBody();
+				modalBody.add(new PassportPage());
+				modal.add(modalBody);
+
+				modal.show();
 			}
 			catch (UnsupportedDataTypeException e)
 			{
