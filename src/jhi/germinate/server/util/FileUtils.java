@@ -36,39 +36,44 @@ public class FileUtils
 		File result = null;
 		String extra = "";
 
-		if(folder != null)
+		if (folder != null)
 			extra = folder.name();
-		if(filePath != null)
+		if (filePath != null)
 			extra += File.separator + filePath;
 
 		String externalFolder = PropertyWatcher.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER);
 
-		switch (location)
+		if (location != FileLocation.temporary)
 		{
-			case data:
-			case res:
-			case download:
-			case apps:
-			case template:
-				if (!StringUtils.isEmpty(externalFolder))
+			if (!StringUtils.isEmpty(externalFolder))
+			{
+				File externalData;
+				File externalDataI18n;
+
+				/* Remove tailing "/" or "\" */
+				if (externalFolder.endsWith(File.separator))
+					externalFolder = externalFolder.substring(0, externalFolder.length() - 1);
+
+				if (location != null)
 				{
-					/* Remove tailing "/" or "\" */
-					if (externalFolder.endsWith(File.separator))
-						externalFolder = externalFolder.substring(0, externalFolder.length() - 1);
-
-					File externalData = new File(new File(new File(externalFolder), location.name()), extra);
-					File externalDataI18n = new File(new File(new File(externalFolder + "-" + localeSubFolder), location.name()), extra);
-
-					if (externalDataI18n.exists() && !StringUtils.isEmpty(localeSubFolder))
-					{
-						result = externalDataI18n;
-					}
-					else if (externalData.exists())
-					{
-						result = externalData;
-					}
+					externalData = new File(new File(new File(externalFolder), location.name()), extra);
+					externalDataI18n = new File(new File(new File(externalFolder + "-" + localeSubFolder), location.name()), extra);
 				}
-				break;
+				else
+				{
+					externalData = new File(new File(externalFolder), extra);
+					externalDataI18n = new File(new File(externalFolder + "-" + localeSubFolder), extra);
+				}
+
+				if (externalDataI18n.exists() && !StringUtils.isEmpty(localeSubFolder))
+				{
+					result = externalDataI18n;
+				}
+				else if (externalData.exists())
+				{
+					result = externalData;
+				}
+			}
 		}
 
 		return result;

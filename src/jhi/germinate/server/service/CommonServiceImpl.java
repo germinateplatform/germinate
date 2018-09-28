@@ -21,7 +21,6 @@ import org.simpleframework.xml.*;
 import org.simpleframework.xml.core.*;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 import java.util.Map;
 import java.util.stream.*;
@@ -169,7 +168,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			{
 				PropertyWatcher.store();
 			}
-			catch (java.io.IOException | URISyntaxException | NullPointerException e)
+			catch (java.io.IOException | NullPointerException e)
 			{
 				throw new IOException(e);
 			}

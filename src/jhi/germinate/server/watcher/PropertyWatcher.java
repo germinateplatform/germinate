@@ -22,12 +22,12 @@ import org.apache.commons.io.monitor.*;
 import java.io.*;
 import java.io.IOException;
 import java.net.*;
-import java.nio.file.*;
 import java.util.*;
 
 import javax.servlet.http.*;
 
 import jhi.germinate.server.database.Database.*;
+import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
@@ -46,6 +46,7 @@ public class PropertyWatcher
 	private static Properties properties = new Properties();
 
 	private static FileAlterationMonitor monitor;
+	private static File                  config = null;
 
 	/**
 	 * Attempts to reads the properties file and then checks the required properties.
@@ -55,21 +56,39 @@ public class PropertyWatcher
 		/* Start to listen for file changes */
 		try
 		{
-			Path path = new File(PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE).toURI()).getParentFile().toPath();
-			FileAlterationObserver observer = new FileAlterationObserver(path.toFile());
+			// We have to load the internal one initially to figure out where the external data directory is...
+			config = new File(PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE).toURI());
+			loadProperties();
+
+			// Then check if there's another version in the external data directory
+			File folder = FileUtils.getFromExternalDataDirectory(null, null, null, null);
+			if (folder != null && folder.exists() && folder.isDirectory())
+			{
+				File potential = new File(folder, PROPERTIES_FILE);
+
+				if (potential.exists())
+				{
+					// Use it
+					config = potential;
+					// Load the external properties
+					loadProperties();
+				}
+			}
+
+			// Then watch whichever file exists for changes
+			FileAlterationObserver observer = new FileAlterationObserver(config.getParentFile());
 			monitor = new FileAlterationMonitor(1000L);
 			observer.addListener(new FileAlterationListenerAdaptor()
 			{
 				@Override
 				public void onFileChange(File file)
 				{
-					loadProperties();
+					if (file.equals(config))
+						loadProperties();
 				}
 			});
 			monitor.addObserver(observer);
 			monitor.start();
-
-			loadProperties();
 		}
 		catch (Exception e)
 		{
@@ -79,14 +98,12 @@ public class PropertyWatcher
 
 	private static void loadProperties()
 	{
-		try
+		try (FileInputStream stream = new FileInputStream(config))
 		{
-			URL url = PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE);
-			FileInputStream stream = new FileInputStream(new File(url.toURI()));
+			//			URL url = PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE);
 			properties.load(stream);
-			stream.close();
 		}
-		catch (URISyntaxException | IOException | NullPointerException e)
+		catch (IOException | NullPointerException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -607,14 +624,14 @@ public class PropertyWatcher
 	 * Stores changes to the properties persistantly in the config.properties file
 	 *
 	 * @throws IOException          Thrown if the file interaction fails
-	 * @throws URISyntaxException   Thrown if the config.properties file cannot be resolved
 	 * @throws NullPointerException Thrown if the config.properties file URL cannot be converted to a URI
 	 */
-	public static synchronized void store() throws IOException, URISyntaxException, NullPointerException
+	public static synchronized void store() throws IOException, NullPointerException
 	{
-		URL url = PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE);
-		FileOutputStream stream = new FileOutputStream(new File(url.toURI()));
-		properties.store(stream, null);
-		stream.close();
+		//		URL url = PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE);
+		try (FileOutputStream stream = new FileOutputStream(config))
+		{
+			properties.store(stream, null);
+		}
 	}
 }
