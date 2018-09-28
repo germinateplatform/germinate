@@ -58,6 +58,10 @@
 			white-space: nowrap;
 			text-overflow: ellipsis;
 		}
+
+		.type {
+			text-transform: capitalize;
+		}
 	</ui:style>
 
 	<b:Column size="XS_12" ui:field="panel">
@@ -67,6 +71,7 @@
 			</g8:AnchorWithContent>
 			<b:Caption>
 				<b:Heading size="H3" addStyleNames="{style.overflow}" ui:field="heading"/>
+				<b:Heading addStyleNames="{style.type}" size="H4" visible="false" ui:field="imageType"/>
 				<g8:ParagraphPanel addStyleNames="{style.overflow}" ui:field="paragraph"/>
 			</b:Caption>
 			<b:Button addStyleNames="{style.button}" ui:field="button" visible="false"/>

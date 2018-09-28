@@ -174,6 +174,9 @@ public abstract class Gallery extends GerminateComposite
 
 	private void fillContent()
 	{
+		if(setUp)
+			jsniDestroy();
+
 		if (storedResult == null || storedResult.size() < 1)
 			return;
 
@@ -218,7 +221,9 @@ public abstract class Gallery extends GerminateComposite
 	}-*/;
 
 	private native void jsniDestroy()/*-{
-		$wnd.baguetteBox.destroy();
+		if($wnd.baguetteBox) {
+			$wnd.baguetteBox.destroy();
+		}
 	}-*/;
 
 	/**

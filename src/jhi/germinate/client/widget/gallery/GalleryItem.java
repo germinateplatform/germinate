@@ -29,6 +29,7 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
@@ -50,22 +51,19 @@ public class GalleryItem extends Composite
 	private static GalleryItemUiBinder ourUiBinder = GWT.create(GalleryItemUiBinder.class);
 
 	@UiField
-	Column panel;
-
+	Column            panel;
 	@UiField
 	AnchorWithContent anchor;
-
 	@UiField
-	SimplePanel image;
-
+	SimplePanel       image;
 	@UiField
-	Heading heading;
-
+	Heading           heading;
 	@UiField
-	ParagraphPanel paragraph;
-
+	Heading           imageType;
 	@UiField
-	Button button;
+	ParagraphPanel    paragraph;
+	@UiField
+	Button            button;
 
 	private Image img;
 
@@ -103,17 +101,14 @@ public class GalleryItem extends Composite
 			button.setColor("white");
 
 			String text = img.getType().getDescription();
+			imageType.setText(text);
+			imageType.setVisible(true);
 
 			if (!StringUtils.isEmpty(img.getExtra(ImageService.IMAGE_REFERENCE_NAME)))
-				text += ": " + img.getExtra(ImageService.IMAGE_REFERENCE_NAME);
-
-			button.setText(text);
+				button.setText(img.getExtra(ImageService.IMAGE_REFERENCE_NAME));
+			else
+				button.setText(Text.LANG.generalContinue());
 		}
-	}
-
-	public void setGalleryId(String id)
-	{
-		anchor.getElement().setAttribute("data-gallery", id);
 	}
 
 	private boolean isPageAvailable()
@@ -127,7 +122,7 @@ public class GalleryItem extends Composite
 				case germinatebase:
 					return GerminateSettingsHolder.isPageAvailable(Page.PASSPORT);
 				case compounds:
-					return GerminateSettingsHolder.isPageAvailable(Page.COMPOUNDS);
+					return GerminateSettingsHolder.isPageAvailable(Page.COMPOUND_DETAILS);
 				default:
 					return false;
 			}
@@ -168,7 +163,7 @@ public class GalleryItem extends Composite
 				break;
 			case compounds:
 				LongParameterStore.Inst.get().put(Parameter.compoundId, img.getForeignId());
-				History.newItem(Page.COMPOUNDS.name());
+				History.newItem(Page.COMPOUND_DETAILS.name());
 				break;
 		}
 	}

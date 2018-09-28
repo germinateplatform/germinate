@@ -60,7 +60,7 @@ public class TemplateWatcher
 		{
 			FileFilter filter = pathname -> filesToWatch.keySet().contains(pathname.getName());
 
-			FileAlterationObserver observer = new FileAlterationObserver(path.toFile());
+			FileAlterationObserver observer = new FileAlterationObserver(path.toFile(), filter);
 			monitor = new FileAlterationMonitor(1000L);
 			observer.addListener(new FileAlterationListenerAdaptor()
 			{
@@ -103,19 +103,22 @@ public class TemplateWatcher
 
 	private static void copy(File source)
 	{
-		String target = filesToWatch.get(source.getName());
-
-		if (!StringUtils.isEmpty(target))
+		if(source.exists() && source.isFile())
 		{
-			File targetFile = new File(target);
+			String target = filesToWatch.get(source.getName());
 
-			try
+			if (!StringUtils.isEmpty(target))
 			{
-				Files.copy(source.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
+				File targetFile = new File(target);
+
+				try
+				{
+					Files.copy(source.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}

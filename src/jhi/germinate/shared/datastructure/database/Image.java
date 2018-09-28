@@ -48,8 +48,8 @@ public class Image extends DatabaseObject
 	private String    description;
 	private Long      foreignId;
 	private String    path;
-	private Long createdOn;
-	private Long updatedOn;
+	private Long      createdOn;
+	private Long      updatedOn;
 
 	public Image()
 	{
@@ -190,7 +190,9 @@ public class Image extends DatabaseObject
 				Long id = row.getLong(ID);
 
 				if (id == null)
+				{
 					return null;
+				}
 				else
 				{
 					Image image = new Image(id)

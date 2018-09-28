@@ -34,7 +34,7 @@ public class ImageManager extends AbstractManager<Image>
 {
 	private static final String COMMON_TABLES        = " images LEFT JOIN imagetypes ON imagetypes.id = images.imagetype_id ";
 	private static final String SELECT_ALL           = "SELECT images.* FROM " + COMMON_TABLES + " WHERE imagetypes.reference_table = ? AND images.foreign_id = ? LIMIT ?, ?";
-	private static final String SELECT_FOR_UNKNOWN   = "SELECT images.*, NULL AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
+	private static final String SELECT_FOR_UNKNOWN   = "SELECT * FROM (SELECT images.*, germinatebase.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN germinatebase ON germinatebase.id = images.foreign_id WHERE imagetypes.reference_table LIKE 'germinatebase' UNION SELECT images.*, compounds.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN compounds ON compounds.id = images.foreign_id WHERE imagetypes.reference_table LIKE 'compounds') images  LIMIT ?, ?";
 	private static final String SELECT_FOR_ACCESSION = "SELECT images.*, germinatebase.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN germinatebase ON germinatebase.id = images.foreign_id WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
 	private static final String SELECT_FOR_COMPOUNDS = "SELECT images.*, compounds.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN compounds ON compounds.id = images.foreign_id WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
 
@@ -68,7 +68,7 @@ public class ImageManager extends AbstractManager<Image>
 		String type;
 
 		if (imageType == null || imageType.getId() < 1)
-			type = "%";
+			type = null;
 		else
 			type = imageType.getReferenceTable().name();
 
@@ -87,10 +87,13 @@ public class ImageManager extends AbstractManager<Image>
 			}
 		}
 
-		return new DatabaseObjectQuery<Image>(query, userAuth)
-				.setFetchesCount(pagination.getResultSize())
-				.setString(type)
-				.setInt(pagination.getStart())
+		DatabaseObjectQuery<Image> q = new DatabaseObjectQuery<Image>(query, userAuth)
+				.setFetchesCount(pagination.getResultSize());
+
+		if (type != null)
+			q.setString(type);
+
+		return q.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.run()
 				.getObjectsPaginated(Image.Parser.Inst.get());
