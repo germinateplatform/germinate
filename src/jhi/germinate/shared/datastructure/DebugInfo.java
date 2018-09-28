@@ -22,7 +22,7 @@ import com.google.gwt.core.shared.*;
 import java.io.*;
 import java.util.*;
 
-import jhi.germinate.server.config.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -46,7 +46,7 @@ public class DebugInfo implements Serializable
 	@GwtIncompatible
 	public static DebugInfo create(UserAuth auth)
 	{
-		return new DebugInfo(PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG) && auth != null && auth.isAdmin());
+		return new DebugInfo(PropertyWatcher.getBoolean(ServerProperty.GERMINATE_DEBUG) && auth != null && auth.isAdmin());
 	}
 
 	/**

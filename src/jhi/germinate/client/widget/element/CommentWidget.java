@@ -41,7 +41,6 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
@@ -69,8 +68,8 @@ public class CommentWidget extends Composite
 	@UiField
 	TextArea           commentBox;
 
-	private Long         id;
-	private CommentTable commentTable;
+	private Long              id;
+	private CommentTable      commentTable;
 	private List<CommentType> annotationTypes = new ArrayList<>();
 
 	public CommentWidget()
@@ -140,34 +139,19 @@ public class CommentWidget extends Composite
 
 				private PartialSearchQuery addToFilter(PartialSearchQuery filter)
 				{
-					try
-					{
-						if (filter == null)
-							filter = new PartialSearchQuery();
-						SearchCondition condition = new SearchCondition();
-						condition.setColumnName(Comment.REFERENCE_ID);
-						condition.setComp(new Equal());
-						condition.addConditionValue(Long.toString(id));
-						condition.setType(Long.class.getSimpleName());
-						filter.add(condition);
+					if (filter == null)
+						filter = new PartialSearchQuery();
+					SearchCondition condition = new SearchCondition(Comment.REFERENCE_ID, new Equal(), Long.toString(id), Long.class);
+					filter.add(condition);
 
-						if (filter.getAll().size() > 1)
-							filter.addLogicalOperator(new And());
+					if (filter.getAll().size() > 1)
+						filter.addLogicalOperator(new And());
 
-						condition = new SearchCondition();
-						condition.setColumnName(CommentType.REFERENCE_TABLE);
-						condition.setComp(new Equal());
-						condition.addConditionValue(gTable.name());
-						condition.setType(String.class.getSimpleName());
-						filter.add(condition);
+					condition = new SearchCondition(CommentType.REFERENCE_TABLE, new Equal(), gTable.name(), String.class);
+					filter.add(condition);
 
-						if (filter.getAll().size() > 1)
-							filter.addLogicalOperator(new And());
-					}
-					catch (InvalidArgumentException | InvalidSearchQueryException e)
-					{
-						e.printStackTrace();
-					}
+					if (filter.getAll().size() > 1)
+						filter.addLogicalOperator(new And());
 
 					return filter;
 				}

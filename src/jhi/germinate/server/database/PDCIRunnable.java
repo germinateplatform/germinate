@@ -105,11 +105,11 @@ public class PDCIRunnable implements Runnable
 				value += 80;
 
 
-				if (!StringUtils.isEmpty(acc.getTaxonomy().getAuthor()))
+				if (!StringUtils.isEmpty(acc.getTaxonomy().getTaxonomyAuthor()))
 					value += 5;
-				if (acc.getSubtaxa() != null && !StringUtils.isEmpty(acc.getSubtaxa().getTaxonomyIdentifier()))
+				if (acc.getTaxonomy() != null && !StringUtils.isEmpty(acc.getTaxonomy().getSubtaxa()))
 					value += 40;
-				if (acc.getSubtaxa() != null && !StringUtils.isEmpty(acc.getSubtaxa().getAuthor()))
+				if (acc.getTaxonomy() != null && !StringUtils.isEmpty(acc.getTaxonomy().getSubtaxaAuthor()))
 					value += 5;
 				if (!StringUtils.isEmpty(acc.getTaxonomy().getCropName()))
 					value += 45;

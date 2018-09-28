@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package jhi.germinate.server.util;
+package jhi.germinate.server.watcher;
 
 import net.coobird.thumbnailator.*;
 import net.coobird.thumbnailator.geometry.*;
@@ -26,18 +26,18 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.service.*;
+import jhi.germinate.server.util.*;
 import jhi.germinate.shared.enums.*;
 
 import static jhi.germinate.shared.enums.ServerProperty.*;
 
 /**
- * {@link ImageScaler} creates thumbnails of all the inluded images. This way, the users don't have to do that themselves.
+ * {@link ImageWatcher} creates thumbnails of all the inluded images. This way, the users don't have to do that themselves.
  *
  * @author Sebastian Raubach
  */
-class ImageScaler
+public class ImageWatcher
 {
 	private static PropertyChangeListenerThread fileWatcher;
 	private static Thread                       fileWatcherThread;
@@ -120,7 +120,7 @@ class ImageScaler
 				  {
 					  File target = new File(thumbnails, file.getName());
 
-					  if (PropertyReader.getBoolean(GERMINATE_GALLERY_MAKE_THUMBNAILS_SQUARE))
+					  if (PropertyWatcher.getBoolean(GERMINATE_GALLERY_MAKE_THUMBNAILS_SQUARE))
 					  {
 						  Thumbnails.of(file)
 									.height(250)
@@ -143,7 +143,7 @@ class ImageScaler
 			  });
 	}
 
-	static void stopFileWatcher()
+	public static void stopFileWatcher()
 	{
 		if (watchKey != null)
 			watchKey.cancel();

@@ -32,10 +32,6 @@
 			<b:Heading size="H3" text="{msg.searchSectionCompoundData}"/>
 			<g:SimplePanel ui:field="compoundDataTablePanel"/>
 
-			<b:Heading size="H3" text="{msg.compoundDetailsCompoundDataChart}"/>
-			<b:Heading size="H4" ui:field="compoundChartHeading"/>
-			<g:SimplePanel ui:field="compoundChart"/>
-
 			<b:Heading size="H3" text="{msg.compoundDetailsImageTitle}"/>
 			<g:SimplePanel ui:field="galleryPanel"/>
 

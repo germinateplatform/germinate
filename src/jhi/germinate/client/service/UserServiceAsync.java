@@ -24,6 +24,8 @@ import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
 
 /**
  * Async version of {@link UserService}.
@@ -73,4 +75,55 @@ public interface UserServiceAsync
 	 * @param async       The {@link AsyncCallback}
 	 */
 	void addInstitution(Institution institution, AsyncCallback<Void> async);
+
+	/**
+	 * Returns the {@link GatekeeperUser}s for the given {@link UserGroup} or {@link Dataset id or all users if no id is specified.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param groupId    The id of the {@link UserGroup} or {@link Dataset in question. Setting this to <code>null</code> will return all users.
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	Request getUsersForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, Long groupId, GerminateDatabaseTable table, AsyncCallback<PaginatedServerResult<List<GatekeeperUser>>> callback);
+
+	/**
+	 * Removes the objects with the given ids from the {@link UserGroup} with the given id
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The id of the {@link UserGroup}
+	 * @param ids        The ids of the objects to remove
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void removeFromGroup(RequestProperties properties, Long groupId, List<Long> ids, AsyncCallback<Void> callback);
+
+	/**
+	 * Adds the objects with the given ids to the {@link UserGroup} with the given id
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The id of the {@link UserGroup}
+	 * @param ids        The ids of the objects to add
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void addToGroup(RequestProperties properties, Long groupId, List<Long> ids, AsyncCallback<Void> callback);
+
+	/**
+	 * Adds the objects with the given ids to the {@link Dataset} permissions with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetId  The id of the {@link Dataset}
+	 * @param ids        The ids of the objects to add
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void addToDataset(RequestProperties properties, Long datasetId, List<Long> ids, GerminateDatabaseTable table, AsyncCallback<Void> callback);
+
+	/**
+	 * Removes the objects with the given ids from the {@link Dataset} permissions with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetId  The id of the {@link Dataset}
+	 * @param ids        The ids of the objects to add
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void removeFromDataset(RequestProperties properties, Long datasetId, List<Long> ids, GerminateDatabaseTable table, AsyncCallback<Void> callback);
 }

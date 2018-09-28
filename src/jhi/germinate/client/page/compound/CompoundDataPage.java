@@ -223,7 +223,7 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 			{
 				if (result.getServerResult() != null && result.getServerResult().size() > 0)
 				{
-					overviewPanel.add(new CompoundDataOverviewTable(result.getServerResult()));
+					overviewPanel.add(new DataStatsTable(result.getServerResult()));
 				}
 			}
 		});

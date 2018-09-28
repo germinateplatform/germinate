@@ -17,24 +17,23 @@
 
 package jhi.germinate.client.util.parameterstore;
 
-import jhi.germinate.client.widget.table.pagination.filter.*;
-import jhi.germinate.shared.*;
+import jhi.germinate.shared.search.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class FilterMappingParameterStore extends TypedParameterStore<FilterPanel.FilterMapping>
+public class FilterMappingParameterStore extends TypedParameterStore<PartialSearchQuery>
 {
 	@Override
-	protected FilterPanel.FilterMapping stringToValue(String value)
+	protected PartialSearchQuery stringToValue(String value)
 	{
-		return CollectionUtils.parseFilterMapping(value, ";", ",");
+		return null;
 	}
 
 	@Override
-	protected String valueToString(FilterPanel.FilterMapping value)
+	protected String valueToString(PartialSearchQuery value)
 	{
-		return CollectionUtils.joinFilterMapping(value, ";", ",");
+		return null;
 	}
 
 	public final static class Inst

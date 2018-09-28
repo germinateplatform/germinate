@@ -20,9 +20,9 @@ package jhi.germinate.server.manager;
 import java.util.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -44,6 +44,7 @@ public class GroupManager extends AbstractManager<Group>
 	private static final String SELECT_COMPOUND_ACCESSION_GROUPS_FOR_DATASET = "SELECT DISTINCT groups.*, COUNT( DISTINCT (compounddata.germinatebase_id) ) AS count FROM compounddata LEFT JOIN groupmembers ON groupmembers.foreign_id = compounddata.germinatebase_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasets ON datasets.id = compounddata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 	private static final String SELECT_ACCESSION_GROUPS_FOR_DATSET           = "SELECT DISTINCT groups.*, COUNT( DISTINCT ( datasetmembers.foreign_id ) ) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasetmembers ON datasetmembers.foreign_id = groupmembers.foreign_id LEFT JOIN datasets ON datasets.id = datasetmembers.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE datasetmembers.datasetmembertype_id = 2 AND (experimenttypes.description = 'genotype' OR experimenttypes.description = 'allelefreq' ) AND grouptypes.target_table = 'germinatebase' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
 	private static final String SELECT_MARKER_GROUPS_FOR_DATSET              = "SELECT DISTINCT groups.*, COUNT( DISTINCT ( datasetmembers.foreign_id ) ) AS count FROM groups LEFT JOIN groupmembers ON groups.id = groupmembers.group_id LEFT JOIN grouptypes ON grouptypes.id = groups.grouptype_id LEFT JOIN datasetmembers ON datasetmembers.foreign_id = groupmembers.foreign_id LEFT JOIN datasets ON datasets.id = datasetmembers.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE datasetmembers.datasetmembertype_id = 1 AND (experimenttypes.description = 'genotype' OR experimenttypes.description = 'allelefreq' ) AND grouptypes.target_table = 'markers' AND datasets.id IN (%s) AND %s GROUP BY groups.id";
+	private static final String SELECT_ITEM_IDS_FOR_GROUP                    = "SELECT DISTINCT foreign_id FROM groupmembers WHERE groupmembers.group_id = ?";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM groups WHERE %s";
 
@@ -79,13 +80,13 @@ public class GroupManager extends AbstractManager<Group>
 	 * @return <code>true</code> if the user is allowed to view the group, <code>false</code> if not
 	 * @throws DatabaseException Thrown if the interaction with the database fails
 	 */
-	public static boolean hasAccessToGroup(UserAuth userAuth, Long groupId, boolean isEditOperation) throws DatabaseException, InsufficientPermissionsException
+	static boolean hasAccessToGroup(UserAuth userAuth, Long groupId, boolean isEditOperation) throws DatabaseException, InsufficientPermissionsException
 	{
 		if (groupId == null || groupId < 0)
 			return true;
 
 		/* We don't allow edit operations if authentication is turned off or if we're operating in readAll-only mode */
-		if (isEditOperation && (!PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) || PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY)))
+		if (isEditOperation && (!PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) || PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY)))
 			return false;
 
 		Group group = new GroupManager().getById(userAuth, groupId).getServerResult();
@@ -94,7 +95,7 @@ public class GroupManager extends AbstractManager<Group>
 		GatekeeperUserWithPassword userDetails = GatekeeperUserManager.getByIdWithPasswordForSystem(null, userAuth.getId());
 
 		/* First check if the user needs to authenticate */
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
 		{
 			/* If the user needs to log in, but there it's not a valid user */
 			if (userDetails == null)
@@ -122,17 +123,20 @@ public class GroupManager extends AbstractManager<Group>
 		}
 	}
 
-//	@Override
-//	public ServerResult<Group> getById(UserAuth userAuth, Long id) throws DatabaseException
-//	{
-//		if (id == null || !hasAccessToGroup(userAuth, id, false))
-//			return new ServerResult<>(null, null);
-//
-//		return new DatabaseObjectQuery<Group>(SELECT_BY_ID, userAuth)
-//				.setLong(id)
-//				.run()
-//				.getObject(Group.Parser.Inst.get());
-//	}
+	public static ServerResult<List<String>> getItemIds(UserAuth userAuth, Long id) throws DatabaseException, InsufficientPermissionsException
+	{
+		if (!hasAccessToGroup(userAuth, id, false))
+		{
+			return new ServerResult<>(null, new ArrayList<>());
+		}
+		else
+		{
+			return new ValueQuery(SELECT_ITEM_IDS_FOR_GROUP)
+					.setLong(id)
+					.run("foreign_id")
+					.getStrings();
+		}
+	}
 
 	/**
 	 * Returns all the paginated {@link Group}s fulfilling the {@link PartialSearchQuery} filter.
@@ -190,7 +194,7 @@ public class GroupManager extends AbstractManager<Group>
 
 	public static ServerResult<Set<Long>> addToGroup(UserAuth userAuth, Long groupId, List<Long> groupMembers) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		if (!hasAccessToGroup(userAuth, groupId, true))
@@ -219,7 +223,7 @@ public class GroupManager extends AbstractManager<Group>
 
 	public static ServerResult<Group> create(UserAuth userAuth, Group group, GerminateDatabaseTable table) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		ServerResult<Long> groupTypeId = GroupTypeManager.getForType(userAuth, table);
@@ -244,7 +248,7 @@ public class GroupManager extends AbstractManager<Group>
 
 	public static DebugInfo delete(UserAuth userAuth, List<Long> groupIds) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
@@ -267,7 +271,7 @@ public class GroupManager extends AbstractManager<Group>
 
 	public static DebugInfo deleteFromGroup(UserAuth userAuth, Long groupId, List<Long> memberIds) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		if (!hasAccessToGroup(userAuth, groupId, true))
@@ -290,7 +294,7 @@ public class GroupManager extends AbstractManager<Group>
 
 	public static DebugInfo setVisibility(UserAuth userAuth, Long groupId, boolean isPublic) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		if (!hasAccessToGroup(userAuth, groupId, true))
@@ -399,7 +403,7 @@ public class GroupManager extends AbstractManager<Group>
 
 	public static ServerResult<Void> rename(UserAuth userAuth, Group group) throws SystemInReadOnlyModeException, InsufficientPermissionsException, DatabaseException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		if (!hasAccessToGroup(userAuth, group.getId(), true))

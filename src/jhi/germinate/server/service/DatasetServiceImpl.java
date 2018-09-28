@@ -25,10 +25,10 @@ import java.util.stream.*;
 import javax.servlet.annotation.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -100,7 +100,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		boolean isPrivate = PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
+		boolean isPrivate = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
 
 		GatekeeperUserWithPassword details = null;
 
@@ -260,13 +260,13 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	@Override
 	public ServerResult<Boolean> trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED) && !PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED) && !PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
 		{
 			boolean worked = true;
 			for (Long dataset : datasetIds)

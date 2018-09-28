@@ -22,8 +22,8 @@ import java.util.*;
 
 import javax.servlet.http.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -103,7 +103,7 @@ public abstract class BaseHttpServlet extends HttpServlet
 	{
 		makeSureTempFolderExists(req);
 
-		return new File(System.getProperty("java.io.tmpdir") + PropertyReader.getContextPath(req));
+		return new File(System.getProperty("java.io.tmpdir") + PropertyWatcher.getContextPath(req));
 	}
 
 	/**
@@ -125,7 +125,7 @@ public abstract class BaseHttpServlet extends HttpServlet
 
 		do
 		{
-			file = new File(System.getProperty("java.io.tmpdir") + PropertyReader.getContextPath(req) + File.separator + prefix + "_" + UUID.randomUUID() + "." + extension);
+			file = new File(System.getProperty("java.io.tmpdir") + PropertyWatcher.getContextPath(req) + File.separator + prefix + "_" + UUID.randomUUID() + "." + extension);
 		} while (file.exists());
 
 		return file;
@@ -138,7 +138,7 @@ public abstract class BaseHttpServlet extends HttpServlet
 	 */
 	private static void makeSureTempFolderExists(HttpServletRequest req)
 	{
-		File file = new File(System.getProperty("java.io.tmpdir") + PropertyReader.getContextPath(req) + File.separator);
+		File file = new File(System.getProperty("java.io.tmpdir") + PropertyWatcher.getContextPath(req) + File.separator);
 
 		if (!file.exists())
 			file.mkdirs();

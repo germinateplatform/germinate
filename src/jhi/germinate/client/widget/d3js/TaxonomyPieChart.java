@@ -32,11 +32,12 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
-import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -108,12 +109,12 @@ public class TaxonomyPieChart extends AbstractChart
 			String species = genusSpecies.substring(index + 1);
 
 			/* Create the mapping */
-			FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-			mapping.put(Taxonomy.GENUS, genus);
-			mapping.put(Taxonomy.SPECIES, species);
+			PartialSearchQuery query = new PartialSearchQuery();
+			query.add(new SearchCondition(Taxonomy.GENUS, new Equal(), genus, String.class));
+			query.add(new SearchCondition(Taxonomy.SPECIES, new Equal(), species, String.class));
 
 			/* Save it to the parameter store and change to the browse page */
-			FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
+			FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
 			History.newItem(Page.ACCESSION_OVERVIEW.name());
 		}
 		catch (Exception e)

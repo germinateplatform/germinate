@@ -28,9 +28,11 @@
 		.inlineBlock {
 			display: inline-block;
 		}
+
 		.help {
 			margin-left: 5px;
 		}
+
 		.help:hover {
 			cursor: pointer;
 		}
@@ -79,6 +81,12 @@
 			<g:SimplePanel ui:field="pedigreeListPanel"/>
 			<g:SimplePanel ui:field="pedigreeTablePanel"/>
 			<g:SimplePanel ui:field="pedigreeDownloadPanel"/>
+
+			<g:FlowPanel ui:field="pedigreeChartPanel">
+				<b:Heading size="H4" text="{msg.passportPedigreeChart}" />
+				<g:Label text="{msg.passportPedigreeChartSub}" />
+				<g:SimplePanel ui:field="pedigreeChart"/>
+			</g:FlowPanel>
 		</g:FlowPanel>
 
 		<g:FlowPanel visible="false" ui:field="entityWrapper">

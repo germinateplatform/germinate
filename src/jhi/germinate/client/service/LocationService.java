@@ -165,18 +165,6 @@ public interface LocationService extends RemoteService
 	ServerResult<List<Location>> getByIds(RequestProperties properties, Pagination pagination, List<String> ids) throws InvalidSessionException, DatabaseException, InvalidColumnException;
 
 	/**
-	 * Exports the {@link Location} data and returns the name of the result file
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param ids        The ids of the accessions
-	 * @return The name of the result file
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 * @throws IOException             Thrown if the file creation fails
-	 */
-	ServerResult<String> exportForIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException;
-
-	/**
 	 * Returns a paginated list of {@link MegaEnvironment}s.
 	 *
 	 * @param properties The {@link RequestProperties}

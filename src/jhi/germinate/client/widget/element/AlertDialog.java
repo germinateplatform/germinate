@@ -18,6 +18,7 @@
 package jhi.germinate.client.widget.element;
 
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
 
@@ -27,6 +28,7 @@ import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.util.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -41,16 +43,20 @@ public final class AlertDialog
 	private String       heading;
 	private ButtonConfig positiveConfig;
 	private ButtonConfig negativeConfig;
-	private Modal       dialog = new Modal();
-	private ModalFooter footer = new ModalFooter();
+	private Modal        dialog      = new Modal();
+	private ModalFooter  footer      = new ModalFooter();
+	private ButtonGroup  buttonGroup = new ButtonGroup();
 
 	private boolean preventClose        = false;
 	private boolean autoCloseOnPositive = true;
 	private boolean autoCloseOnNegative = true;
 	private boolean removeOnHide        = true;
-	private Button negativeButton;
-	private Button positiveButton;
-	private boolean isSetUp = false;
+	private Button  negativeButton;
+	private Button  positiveButton;
+	private boolean isSetUp             = false;
+
+	private String printableId;
+	private String downloadFileName;
 
 	public AlertDialog(String heading)
 	{
@@ -82,6 +88,13 @@ public final class AlertDialog
 
 		this.content = new ModalBody();
 		this.content.add(new Label(content));
+	}
+
+	public AlertDialog setPrintable(String printableId, String downloadFileName)
+	{
+		this.printableId = printableId;
+		this.downloadFileName = downloadFileName;
+		return this;
 	}
 
 	public boolean isVisible()
@@ -218,6 +231,39 @@ public final class AlertDialog
 
 		dialog.add(content);
 
+		if (!StringUtils.isEmpty(printableId))
+		{
+			ButtonGroup group = new ButtonGroup();
+
+			Button toggle = new Button(Text.LANG.generalSave());
+			toggle.addStyleName(Style.mdiLg(Style.MDI_DOWNLOAD));
+			toggle.setDataToggle(Toggle.DROPDOWN);
+			toggle.setToggleCaret(true);
+			DropDownMenu menu = new DropDownMenu();
+			MdiAnchorListItem print = new MdiAnchorListItem();
+			print.setText(Text.LANG.generalPrint());
+			print.setMdi(Style.MDI_PRINTER);
+
+			print.addClickHandler(event -> {
+				JavaScript.printObject(printableId);
+			});
+
+			MdiAnchorListItem html = new MdiAnchorListItem();
+			html.setText(Text.LANG.downloadFileAsHtml());
+			html.setMdi(Style.MDI_FILE_XML);
+			html.addClickHandler(event -> {
+				String url = JavaScript.getOctetStreamBase64Data(GQuery.$("#" + printableId).html());
+				String filename = StringUtils.isEmpty(downloadFileName) ? "download.txt" : downloadFileName;
+				JavaScript.invokeDownload(url, filename);
+			});
+
+			menu.add(print);
+			menu.add(html);
+			group.add(toggle);
+			group.add(menu);
+			buttonGroup.add(group);
+		}
+
 		if (negativeConfig != null)
 		{
 			negativeButton = new Button(negativeConfig.text);
@@ -237,7 +283,7 @@ public final class AlertDialog
 					dialog.hide();
 			});
 
-			footer.add(negativeButton);
+			buttonGroup.add(negativeButton);
 		}
 
 		if (positiveConfig != null)
@@ -259,9 +305,10 @@ public final class AlertDialog
 					dialog.hide();
 			});
 
-			footer.add(positiveButton);
+			buttonGroup.add(positiveButton);
 		}
 
+		footer.add(buttonGroup);
 		dialog.add(footer);
 	}
 

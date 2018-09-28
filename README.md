@@ -1,5 +1,9 @@
 # Germinate
 
+![](https://ics.hutton.ac.uk/get-germinate/assets/img/germinate.svg "Germinate")
+
+![](https://ics.hutton.ac.uk/get-germinate/assets/img/browser.3.5.0.png "Home page")
+
 ## About
 Germinate is an open source plant database infrastructure and application programming platform
 on which complex data from genetic resource collections can be stored, queried and visualized

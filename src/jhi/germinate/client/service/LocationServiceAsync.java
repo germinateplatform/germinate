@@ -113,15 +113,6 @@ public interface LocationServiceAsync
 	Request getByIds(RequestProperties properties, Pagination pagination, List<String> ids, AsyncCallback<ServerResult<List<Location>>> callback);
 
 	/**
-	 * Exports the {@link Location} data and returns the name of the result file
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param ids        The ids of the accessions
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void exportForIds(RequestProperties properties, List<String> ids, AsyncCallback<ServerResult<String>> callback);
-
-	/**
 	 * Returns a paginated list of {@link MegaEnvironment}s.
 	 *
 	 * @param properties The {@link RequestProperties}

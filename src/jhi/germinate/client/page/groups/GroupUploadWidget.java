@@ -53,7 +53,7 @@ public class GroupUploadWidget extends Composite
 
 	private static GroupUploadWidgetUiBinder ourUiBinder = GWT.create(GroupUploadWidgetUiBinder.class);
 
-	private static final String[] COLUMNS_ACCESSION = {Accession.ID, Accession.NAME, Accession.GENERAL_IDENTIFIER, Location.SITE_NAME, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER};
+	private static final String[] COLUMNS_ACCESSION = {Accession.ID, Accession.NAME, Accession.GENERAL_IDENTIFIER, Location.SITE_NAME, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Taxonomy.SUBTAXA};
 	private static final String[] COLUMNS_MARKER    = {Marker.ID, Marker.MARKER_NAME, Map.ID, Map.DESCRIPTION, MapFeatureType.DESCRIPTION, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START};
 	private static final String[] COLUMNS_LOCATION  = {Location.ID, Location.SITE_NAME, Location.STATE, Location.REGION, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Country.COUNTRY_NAME, LocationType.NAME};
 

@@ -48,7 +48,6 @@ public class Accession extends DatabaseObject
 	public static final String BANK_NUMBER         = "germinatebase.bank_number";
 	public static final String BREEDERS_CODE       = "germinatebase.breeders_code";
 	public static final String BREEDERS_NAME       = "germinatebase.breeders_name";
-	public static final String SUBTAXA_ID          = "germinatebase.subtaxa_id";
 	public static final String TAXONOMY_ID         = "germinatebase.taxonomy_id";
 	public static final String INSTITUTION_ID      = "germinatebase.institution_id";
 	public static final String PLANT_PASSPORT      = "germinatebase.plant_passport";
@@ -83,7 +82,6 @@ public class Accession extends DatabaseObject
 	private String           bankNumber;
 	private String           breedersCode;
 	private String           breedersName;
-	private Subtaxa          subtaxa;
 	private Taxonomy         taxonomy;
 	private Institution      institution;
 	private String           plantPassport;
@@ -184,17 +182,6 @@ public class Accession extends DatabaseObject
 	public Accession setBreedersName(String breedersName)
 	{
 		this.breedersName = breedersName;
-		return this;
-	}
-
-	public Subtaxa getSubtaxa()
-	{
-		return subtaxa;
-	}
-
-	public Accession setSubtaxa(Subtaxa subtaxa)
-	{
-		this.subtaxa = subtaxa;
 		return this;
 	}
 
@@ -517,7 +504,6 @@ public class Accession extends DatabaseObject
 	@GwtIncompatible
 	public static class Parser extends DatabaseObjectParser<Accession>
 	{
-		protected static DatabaseObjectCache<Subtaxa>          SUBTAXA_CACHE;
 		protected static DatabaseObjectCache<Taxonomy>         TAXONOMY_CACHE;
 		protected static DatabaseObjectCache<Institution>      INSTITUTION_CACHE;
 		protected static DatabaseObjectCache<BiologicalStatus> BIOLOGICALSTATUS_CACHE;
@@ -543,7 +529,6 @@ public class Accession extends DatabaseObject
 							.setBreedersCode(row.getString(BREEDERS_CODE))
 							.setBreedersName(row.getString(BREEDERS_NAME))
 							.setPuid(row.getString(PUID))
-							.setSubtaxa(SUBTAXA_CACHE.get(user, row.getLong(SUBTAXA_ID), row, foreignsFromResultSet))
 							.setTaxonomy(TAXONOMY_CACHE.get(user, row.getLong(TAXONOMY_ID), row, foreignsFromResultSet))
 							.setInstitution(INSTITUTION_CACHE.get(user, row.getLong(INSTITUTION_ID), row, false))
 							.setPlantPassport(row.getString(PLANT_PASSPORT))
@@ -578,7 +563,6 @@ public class Accession extends DatabaseObject
 
 		private Parser()
 		{
-			SUBTAXA_CACHE = createCache(Subtaxa.class, SubtaxaManager.class);
 			TAXONOMY_CACHE = createCache(Taxonomy.class, TaxonomyManager.class);
 			INSTITUTION_CACHE = createCache(Institution.class, InstitutionManager.class);
 			BIOLOGICALSTATUS_CACHE = createCache(BiologicalStatus.class, BiologicalStatusManager.class);
@@ -637,7 +621,6 @@ public class Accession extends DatabaseObject
 	@GwtIncompatible
 	public static class ImportParser extends DatabaseObjectParser<Accession>
 	{
-		protected static DatabaseObjectCache<Subtaxa>          SUBTAXA_CACHE;
 		protected static DatabaseObjectCache<Taxonomy>         TAXONOMY_CACHE;
 		protected static DatabaseObjectCache<Institution>      INSTITUTION_CACHE;
 		protected static DatabaseObjectCache<BiologicalStatus> BIOLOGICALSTATUS_CACHE;
@@ -647,7 +630,6 @@ public class Accession extends DatabaseObject
 
 		private ImportParser()
 		{
-			SUBTAXA_CACHE = createCache(Subtaxa.class, SubtaxaManager.class);
 			TAXONOMY_CACHE = createCache(Taxonomy.class, TaxonomyManager.class);
 			INSTITUTION_CACHE = createCache(Institution.class, InstitutionManager.class);
 			BIOLOGICALSTATUS_CACHE = createCache(BiologicalStatus.class, BiologicalStatusManager.class);
@@ -674,7 +656,6 @@ public class Accession extends DatabaseObject
 							.setBreedersCode(row.getString(BREEDERS_CODE))
 							.setBreedersName(row.getString(BREEDERS_NAME))
 							.setPuid(row.getString(PUID))
-							.setSubtaxa(SUBTAXA_CACHE.get(user, row.getLong(SUBTAXA_ID), row, foreignsFromResultSet))
 							.setTaxonomy(TAXONOMY_CACHE.get(user, row.getLong(TAXONOMY_ID), row, foreignsFromResultSet))
 							.setInstitution(INSTITUTION_CACHE.get(user, row.getLong(INSTITUTION_ID), row, foreignsFromResultSet))
 							.setPlantPassport(row.getString(PLANT_PASSPORT))
@@ -850,14 +831,13 @@ public class Accession extends DatabaseObject
 		@Override
 		public void write(Database database, Accession object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO germinatebase (" + GENERAL_IDENTIFIER + ", " + NUMBER + ", " + NAME + ", " + BANK_NUMBER + ", " + BREEDERS_CODE + ", " + BREEDERS_NAME + ", " + SUBTAXA_ID + ", " + TAXONOMY_ID + ", " + INSTITUTION_ID + ", " + PLANT_PASSPORT + ", " + DONOR_CODE + ", " + DONOR_NAME + ", " + DONOR_NUMBER + ", " + ACQDATE + ", " + COLLNUMB + ", " + COLLDATE + ", " + COLLCODE + ", " + COLLNAME + ", " + COLLMISSID + ", " + OTHERNUMB + ", " + DUPLSITE + ", " + DUPLINSTNAME + ", " + MLSSTATUS + ", " + PUID + ", " + BIOLOGICALSTATUS_ID + ", " + COLLSRC_ID + ", " + LOCATION_ID + ", " + ENTITYTYPE_ID + ", " + ENTITYPARENT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO germinatebase (" + GENERAL_IDENTIFIER + ", " + NUMBER + ", " + NAME + ", " + BANK_NUMBER + ", " + BREEDERS_CODE + ", " + BREEDERS_NAME + ", " + TAXONOMY_ID + ", " + INSTITUTION_ID + ", " + PLANT_PASSPORT + ", " + DONOR_CODE + ", " + DONOR_NAME + ", " + DONOR_NUMBER + ", " + ACQDATE + ", " + COLLNUMB + ", " + COLLDATE + ", " + COLLCODE + ", " + COLLNAME + ", " + COLLMISSID + ", " + OTHERNUMB + ", " + DUPLSITE + ", " + DUPLINSTNAME + ", " + MLSSTATUS + ", " + PUID + ", " + BIOLOGICALSTATUS_ID + ", " + COLLSRC_ID + ", " + LOCATION_ID + ", " + ENTITYTYPE_ID + ", " + ENTITYPARENT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getGeneralIdentifier())
 					.setString(object.getNumber())
 					.setString(object.getName())
 					.setString(object.getBankNumber())
 					.setString(object.getBreedersCode())
 					.setString(object.getBreedersName())
-					.setLong(object.getSubtaxa() != null ? object.getSubtaxa().getId() : null)
 					.setLong(object.getTaxonomy() != null ? object.getTaxonomy().getId() : null)
 					.setLong(object.getInstitution() != null ? object.getInstitution().getId() : null)
 					.setString(object.getPlantPassport())

@@ -20,10 +20,10 @@ package jhi.germinate.server.manager;
 import java.util.*;
 import java.util.stream.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -36,7 +36,7 @@ import jhi.germinate.shared.search.*;
  */
 public class DatasetManager extends AbstractManager<Dataset>
 {
-	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", Dataset.IS_EXTERNAL, Dataset.DATATYPE, License.NAME, License.DESCRIPTION, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS};
+	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", Dataset.IS_EXTERNAL, Dataset.DATATYPE, License.NAME, License.DESCRIPTION, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS, Location.SITE_NAME, Country.COUNTRY_NAME};
 
 	private static final String DATA_POINTS_SUB_QUERY = "datasets LEFT JOIN datasetmeta ON datasets.id = datasetmeta.dataset_id LEFT JOIN datasetstates ON datasetstates.id = datasets.dataset_state_id LEFT JOIN datasetpermissions ON datasetpermissions.dataset_id = datasets.id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id LEFT JOIN locations ON locations.id = datasets.location_id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN licenses ON licenses.id = datasets.license_id";
 
@@ -53,6 +53,12 @@ public class DatasetManager extends AbstractManager<Dataset>
 	private static final String SELECT_FOR_USER_ADMIN   = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0";
 	private static final String SELECT_FOR_USER_REGULAR = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "' OR (datasetstates.name = '" + DatasetState.PRIVATE + "' AND datasets.created_by = ?) OR EXISTS (SELECT 1 FROM datasetpermissions WHERE datasetpermissions.user_id = ? AND datasetpermissions.dataset_id = datasets.id) OR EXISTS (SELECT 1 FROM datasetpermissions LEFT JOIN usergroups ON usergroups.id = datasetpermissions.group_id LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id WHERE usergroupmembers.user_id = ? AND datasetpermissions.dataset_id = datasets.id))";
 	private static final String SELECT_FOR_USER_PUBLIC  = "SELECT datasets.* FROM datasets LEFT JOIN datasetstates ON datasets.dataset_state_id = datasetstates.id LEFT JOIN datasetpermissions ON datasets.id = datasetpermissions.dataset_id WHERE datasets.is_external = 0 AND (datasetstates.name = '" + DatasetState.PUBLIC + "')";
+
+	private static final String INSERT_USER_PERMISSION  = "INSERT INTO datasetpermissions (user_id, dataset_id) SELECT ?, ? FROM dual WHERE NOT EXISTS (SELECT user_id, dataset_id FROM datasetpermissions WHERE user_id = ? AND dataset_id = ?) LIMIT 1";
+	private static final String INSERT_GROUP_PERMISSION = "INSERT INTO datasetpermissions (group_id, dataset_id) SELECT ?, ? FROM dual WHERE NOT EXISTS (SELECT group_id, dataset_id FROM datasetpermissions WHERE group_id = ? AND dataset_id = ?) LIMIT 1";
+
+	private static final String REMOVE_USER_PERMISSION  = "DELETE FROM datasetpermissions WHERE dataset_id = ? AND user_id IN (%s)";
+	private static final String REMOVE_GROUP_PERMISSION = "DELETE FROM datasetpermissions WHERE dataset_id = ? AND group_id IN (%s)";
 
 	private static final String[] COLUMNS_DATASET_DATA_EXPORT = {"datasets_id", "experimenttypes_description", "experiments_description", "datasets_description", "datasets_contact", "datasets_date_start", "datasets_date_end", "datasetmeta_nr_of_data_objects", "datasets_nr_of_data_points"};
 
@@ -156,9 +162,9 @@ public class DatasetManager extends AbstractManager<Dataset>
 	/**
 	 * Returns the paginated {@link Dataset}s the marker is part of
 	 *
-	 * @param user        The user requesting the data
-	 * @param markerId The id of the {@link Marker}
-	 * @param pagination  The {@link Pagination} object defining the current chunk of data
+	 * @param user       The user requesting the data
+	 * @param markerId   The id of the {@link Marker}
+	 * @param pagination The {@link Pagination} object defining the current chunk of data
 	 * @return The paginated {@link Dataset}s the marker is part of
 	 * @throws DatabaseException                Thrown if the interaction with the database failed
 	 * @throws InvalidColumnException           Thrown if the sort column is invalid
@@ -233,7 +239,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 */
 	private static GerminateTableQuery getGerminateTableQuery(String query, UserAuth user, PartialSearchQuery filter, ExperimentType type, String[] columnNames) throws DatabaseException, InvalidArgumentException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidColumnException
 	{
-		boolean isPrivate = PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
+		boolean isPrivate = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
 
 		GatekeeperUserWithPassword details = null;
 
@@ -276,7 +282,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 */
 	private static DatabaseObjectQuery<Dataset> getDatabaseObjectQuery(String query, UserAuth user, PartialSearchQuery filter, List<ExperimentType> types, Integer previousCount) throws DatabaseException, InvalidArgumentException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidColumnException
 	{
-		boolean isPrivate = PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
+		boolean isPrivate = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
 
 		GatekeeperUserWithPassword details = null;
 
@@ -383,7 +389,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 		if (CollectionUtils.isEmpty(datasetIds))
 			return DebugInfo.create(userAuth);
 
-		ServerResult<List<Dataset>> availableDatasets = getForUser(userAuth, PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION));
+		ServerResult<List<Dataset>> availableDatasets = getForUser(userAuth, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION));
 
 		if (CollectionUtils.isEmpty(availableDatasets.getServerResult()))
 		{
@@ -411,7 +417,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 */
 	public static ServerResult<List<Dataset>> getForUser(UserAuth userAuth, boolean checkLicense) throws DatabaseException
 	{
-		boolean isPrivate = PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
+		boolean isPrivate = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
 
 		GatekeeperUserWithPassword details = GatekeeperUserManager.getByIdWithPasswordForSystem(null, userAuth.getId());
 
@@ -508,5 +514,62 @@ public class DatasetManager extends AbstractManager<Dataset>
 		DatasetAccessLog.Writer.Inst.get().write(database, log);
 
 		return log.getId() != null;
+	}
+
+	public static ServerResult<Set<Long>> addToDatasetPermission(UserAuth userAuth, Long datasetId, List<Long> ids, GerminateDatabaseTable table) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
+	{
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		UserGroupManager.checkIfAdmin(userAuth);
+
+		Set<Long> newIds = new HashSet<>();
+
+		DebugInfo sqlDebug = DebugInfo.create(userAuth);
+
+		String query;
+		if (table == GerminateDatabaseTable.usergroups)
+			query = INSERT_GROUP_PERMISSION;
+		else
+			query = INSERT_USER_PERMISSION;
+
+		for (Long memberId : ids)
+		{
+			ServerResult<List<Long>> temp = new ValueQuery(query, userAuth)
+					.setLong(memberId)
+					.setLong(datasetId)
+					.setLong(memberId)
+					.setLong(datasetId)
+					.execute();
+
+			newIds.addAll(temp.getServerResult());
+
+			sqlDebug.addAll(temp.getDebugInfo());
+		}
+
+		return new ServerResult<>(sqlDebug, newIds);
+	}
+
+	public static void removeFromDatasetPermission(UserAuth userAuth, Long datasetId, List<Long> ids, GerminateDatabaseTable table) throws DatabaseException, SystemInReadOnlyModeException, InsufficientPermissionsException
+	{
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		UserGroupManager.checkIfAdmin(userAuth);
+
+		String query;
+		if (table == GerminateDatabaseTable.usergroups)
+			query = REMOVE_GROUP_PERMISSION;
+		else
+			query = REMOVE_USER_PERMISSION;
+
+		String formatted = String.format(query, StringUtils.generateSqlPlaceholderString(ids.size()));
+
+		new ValueQuery(formatted, userAuth)
+				.setLong(datasetId)
+				.setLongs(ids)
+				.execute();
+
+		resetAutoIncrement(GerminateDatabaseTable.datasetpermissions);
 	}
 }

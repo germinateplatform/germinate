@@ -82,34 +82,48 @@ public class SearchCondition implements Serializable, HasToSqlString
 	/* We can't send Class<?> or Class, so we're sending Class#getSimpleName() */
 	private String             type;
 	private ComparisonOperator comp;
-	private List<String> conditionValues = new ArrayList<>();
+	private List<String>       conditionValues = new ArrayList<>();
 
 	public SearchCondition()
 	{
 	}
 
-	public SearchCondition(String columnName, ComparisonOperator comp, String conditionValue, String type)
+	public SearchCondition(String columnName, ComparisonOperator comp, String conditionValue, Class<?> clazz)
 	{
 		this.columnName = columnName;
 		this.comp = comp;
-		conditionValues.add(conditionValue);
-		this.type = type;
+		try
+		{
+			addConditionValue(conditionValue);
+		}
+		catch (InvalidArgumentException | InvalidSearchQueryException e)
+		{
+			e.printStackTrace();
+		}
+		this.type = clazz.getSimpleName();
 	}
 
 	public SearchCondition(String columnName, ComparisonOperator comp, Object conditionValue, Class<?> clazz)
 	{
-		this.columnName = columnName;
-		this.comp = comp;
-		conditionValues.add(conditionValue.toString());
-		this.type = clazz.getSimpleName();
+		this(columnName, comp, conditionValue.toString(), clazz);
 	}
 
-	public SearchCondition(String columnName, ComparisonOperator comp, List<String> conditionValues, String type)
+	public SearchCondition(String columnName, ComparisonOperator comp, List<String> conditionValues, Class<?> clazz)
 	{
 		this.columnName = columnName;
 		this.comp = comp;
-		this.conditionValues = conditionValues;
-		this.type = type;
+		for (String value : conditionValues)
+		{
+			try
+			{
+				addConditionValue(value);
+			}
+			catch (InvalidArgumentException | InvalidSearchQueryException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		this.type = clazz.getSimpleName();
 	}
 
 	/**
@@ -137,11 +151,6 @@ public class SearchCondition implements Serializable, HasToSqlString
 		return type;
 	}
 
-	public void setType(String type)
-	{
-		this.type = type;
-	}
-
 	/**
 	 * Gets the comparison operator instance being used to define this condition.
 	 *
@@ -153,47 +162,44 @@ public class SearchCondition implements Serializable, HasToSqlString
 	}
 
 	/**
-	 * Sets the comparison operator instance to use in this condition
-	 *
-	 * @param comp - the comparison operator instance to use
-	 */
-	public void setComp(ComparisonOperator comp)
-	{
-		this.comp = comp;
-	}
-
-	// bean style getters and setters for serialisation
-	public List<String> getConditionValues()
-	{
-		return conditionValues;
-	}
-
-	public void setConditionValues(ArrayList<String> conditionValues)
-	{
-		this.conditionValues = conditionValues;
-	}
-
-	/**
 	 * addConditionValue adds the given value to the internal list of values that will be compared by the ComparisonOperator instance
 	 *
-	 * @param value - the value to add
+	 * @param conditionValue - the value to add
 	 * @throws InvalidArgumentException    - thrown when the value is illegal in some way, the wrong type or not injection safe
 	 * @throws InvalidSearchQueryException - thrown if values are being added and the PhenotypeDef and ComparisonOperators being used have not already
 	 *                                     been set (they are required for value validation)
 	 */
-	public void addConditionValue(String value) throws InvalidArgumentException, InvalidSearchQueryException
+	public void addConditionValue(String conditionValue) throws InvalidArgumentException, InvalidSearchQueryException
 	{
 		if (comp == null)
 		{
 			throw new InvalidSearchQueryException("Comparison operator must be specified before values can be handled.");
 		}
-		else if (StringUtils.isEmpty(value))
+		else if (StringUtils.isEmpty(conditionValue))
 		{
 			throw new InvalidSearchQueryException("Comparison conditional value cannot be empty.");
 		}
 
-		validateConditionValue(value);
-		conditionValues.add(value);
+		validateConditionValue(conditionValue);
+
+		if (comp.getRequiredNumberOfvalues() == RequiredNumberOfValues.MANY || comp.getRequiredNumberOfvalues() == RequiredNumberOfValues.TWO)
+		{
+			try
+			{
+				String[] values = conditionValue.split(",");
+
+				for (String value : values)
+					conditionValues.add(value.trim());
+			}
+			catch (Exception e)
+			{
+				conditionValues.add(conditionValue);
+			}
+		}
+		else
+		{
+			conditionValues.add(conditionValue);
+		}
 	}
 
 	/**
@@ -300,11 +306,11 @@ public class SearchCondition implements Serializable, HasToSqlString
 			}
 			else if (dt == DataType.STRING || dt == DataType.ANY)
 			{
-//			for (String forbidden : forbiddenCharacters)
-//			{
-//				if (value.contains(forbidden))
-//					throw new InvalidArgumentException("This type of comparison is not permitted to contain the character '" + forbidden + "'");
-//			}
+				//			for (String forbidden : forbiddenCharacters)
+				//			{
+				//				if (value.contains(forbidden))
+				//					throw new InvalidArgumentException("This type of comparison is not permitted to contain the character '" + forbidden + "'");
+				//			}
 				valid = true;
 			}
 		}

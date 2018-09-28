@@ -83,10 +83,10 @@ public class StringUtils
 			}
 		}
 
-        /*
+		/*
 		 * Remove the last delimiter. We have to do it this way, because we
-         * don't know how many (of any) parts pass the check
-         */
+		 * don't know how many (of any) parts pass the check
+		 */
 		if (atLeastOne)
 		{
 			int startIndex = builder.lastIndexOf(delimiter);
@@ -208,11 +208,11 @@ public class StringUtils
 		return value == null ? "" : Long.toString(value);
 	}
 
-//	@GwtIncompatible
-//	public static String dateToFileValue(Long value)
-//	{
-//		return value == null ? "" : Util.SDF_HUMAN_READABLE.format(new Date(value));
-//	}
+	//	@GwtIncompatible
+	//	public static String dateToFileValue(Long value)
+	//	{
+	//		return value == null ? "" : Util.SDF_HUMAN_READABLE.format(new Date(value));
+	//	}
 
 	public static String toFileValue(Integer value)
 	{
@@ -286,5 +286,13 @@ public class StringUtils
 		return IntStream.range(0, size)
 						.mapToObj(value -> "?")
 						.collect(Collectors.joining(","));
+	}
+
+	public static boolean isLink(String text)
+	{
+		if (isEmpty(text))
+			return false;
+		else
+			return text.contains("http://") || text.contains("https://") || text.contains("ftp://");
 	}
 }

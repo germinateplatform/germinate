@@ -62,7 +62,6 @@ import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
-import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -377,19 +376,14 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		return filterPanel.getSize() > 0;
 	}
 
-	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd)
-	{
-		return forceFilter(columnToValue, isAnd, new Like());
-	}
-
-	public boolean forceFilter(FilterPanel.FilterMapping columnToValue, boolean isAnd, ComparisonOperator operator)
+	public boolean forceFilter(PartialSearchQuery query, boolean isAnd)
 	{
 		/* Cancel any currently running request */
 		if (currentRequest != null && currentRequest.isPending())
 			currentRequest.cancel();
 
 		filterPanel.setVisible(false);
-		filterPanel.add(columnToValue, isAnd, operator);
+		filterPanel.add(query, isAnd);
 		filterButton.setType(ButtonType.SUCCESS);
 		refreshTable();
 
@@ -900,8 +894,11 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		SetSelectionModel<T> model = (SetSelectionModel<T>) selectionModel;
 		model.clear();
 
-		for (T item : items)
-			model.setSelected(item, true);
+		if(items != null)
+		{
+			for (T item : items)
+				model.setSelected(item, true);
+		}
 	}
 
 	public void addExtraContent(Widget widget)

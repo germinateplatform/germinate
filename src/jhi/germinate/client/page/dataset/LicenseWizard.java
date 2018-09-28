@@ -55,7 +55,7 @@ public class LicenseWizard extends ModalWizard
 
 			if (data != null)
 			{
-				page = new LicenseWizardPage(license, data, decision -> updateControls());
+				page = new LicenseWizardPage(license, decision -> updateControls());
 				licenses.add(license);
 				pages.add(page);
 				add(page);

@@ -261,7 +261,27 @@ public class Pedigree extends DatabaseObject
 
 	public enum PedigreeQuery
 	{
-		UP_DOWN,
-		UP_DOWN_RECURSIVE
+		UP_DOWN(1, 1),
+		UP_DOWN_GRANDPARENTS(2, 1),
+		UP_DOWN_RECURSIVE(5, 5);
+
+		private int up;
+		private int down;
+
+		PedigreeQuery(int up, int down)
+		{
+			this.up = up;
+			this.down = down;
+		}
+
+		public int getUp()
+		{
+			return up;
+		}
+
+		public int getDown()
+		{
+			return down;
+		}
 	}
 }

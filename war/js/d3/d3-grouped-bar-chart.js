@@ -30,6 +30,9 @@ function groupedBarChart() {
         tooltip = function (d) {
             return null;
         },
+		onClick = function (d) {
+			// do nothing
+		},
         xAxis = d3.svg.axis(),
         yAxis = d3.svg.axis(),
         yLabel = null,
@@ -62,6 +65,7 @@ function groupedBarChart() {
                 d.row = rows.map(function (name) {
                     return {
                         name: name,
+                        row: d[rowIdentifier],
                         value: +d[name]
                     };
                 });
@@ -133,7 +137,8 @@ function groupedBarChart() {
                 })
                 .style("fill", function (d) {
                     return color(d.name);
-                });
+                })
+                .on("click", onClick);
 
             // Update the x-axis.
             var xAxisElement = gEnter.select(".x.axis")
@@ -283,6 +288,12 @@ function groupedBarChart() {
         rowIdentifier = _;
         return chart;
     };
+
+	chart.onClick = function (_) {
+		if (!arguments.length) return onClick;
+		onClick = _;
+		return chart;
+	};
 
     return chart;
 }

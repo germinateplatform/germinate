@@ -19,6 +19,7 @@ package jhi.germinate.client.page.dataset;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -26,7 +27,9 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.*;
+import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 
 /**
@@ -41,27 +44,42 @@ public class LicenseWizardPage extends ModalWizardPage
 	private static LicenseWizardPageUiBinder ourUiBinder = GWT.create(LicenseWizardPageUiBinder.class);
 
 	@UiField
-	HTML      content;
+	HTML              content;
 	@UiField
-	FlowPanel acceptPart;
+	FlowPanel         acceptPart;
 	@UiField
-	Button    accept;
+	Button            accept;
 	@UiField
-	Button    decline;
+	Button            decline;
+	@UiField
+	MdiAnchorListItem html;
+	@UiField
+	MdiAnchorListItem print;
 
-	private Decision decision = Decision.UNKNOWN;
+	private Decision                decision = Decision.UNKNOWN;
+	private String                  datasetId;
 	private License                 license;
+	private LicenseData             data;
 	private OnDecisionChangeHandler handler;
 
-	public LicenseWizardPage(License license, LicenseData data, OnDecisionChangeHandler handler)
+	public LicenseWizardPage(License license, OnDecisionChangeHandler handler)
 	{
 		this.license = license;
+		this.data = license.getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName());
+		this.datasetId = license.getExtra(Dataset.ID);
 		this.handler = handler;
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
 		acceptPart.setVisible(handler != null);
 		content.setHTML(data.getContent());
+
+		content.getElement().setId(RandomUtils.generateRandomId());
+	}
+
+	public String getId()
+	{
+		return content.getElement().getId();
 	}
 
 	@UiHandler("accept")
@@ -93,6 +111,22 @@ public class LicenseWizardPage extends ModalWizardPage
 
 		if (handler != null)
 			handler.onDecisionChanged(decision);
+	}
+
+	@UiHandler("print")
+	void onPrintButtonClicked(ClickEvent e)
+	{
+		JavaScript.printString(data.getContent());
+	}
+
+	@UiHandler("html")
+	void onHtmlButtonClicked(ClickEvent e)
+	{
+		String url = JavaScript.getOctetStreamBase64Data(data.getContent());
+		String downloadFileName = datasetId + "-" + license.getName() + ".html";
+		downloadFileName = downloadFileName.replace(' ', '-');
+		String filename = StringUtils.isEmpty(downloadFileName) ? "download.txt" : downloadFileName;
+		JavaScript.invokeDownload(url, filename);
 	}
 
 	public Decision getDecision()

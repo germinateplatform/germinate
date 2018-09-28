@@ -40,6 +40,7 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.map.*;
@@ -102,6 +103,10 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	SimplePanel pedigreeTablePanel;
 	@UiField
 	SimplePanel pedigreeDownloadPanel;
+	@UiField
+	FlowPanel   pedigreeChartPanel;
+	@UiField
+	SimplePanel pedigreeChart;
 
 	@UiField
 	FlowPanel   entityWrapper;
@@ -196,12 +201,12 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 		 */
 		PartialSearchQuery filter = null;
 		if (stateGeneralId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Equal(), stateGeneralId, Long.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Equal(), stateGeneralId, Long.class));
 			/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
 		else if (!StringUtils.isEmpty(accessionName))
-			filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Equal(), accessionName, String.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Equal(), accessionName, String.class));
 		else if (stateAccessionId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Equal(), Long.toString(stateAccessionId), Long.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Equal(), Long.toString(stateAccessionId), Long.class));
 
 		if (filter != null)
 		{
@@ -306,24 +311,13 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback)
 			{
-				try
-				{
-					if (filter == null)
-						filter = new PartialSearchQuery();
-					SearchCondition condition = new SearchCondition();
-					condition.setColumnName(Accession.ID);
-					condition.setComp(new Equal());
-					condition.addConditionValue(Long.toString(accession.getId()));
-					condition.setType(Long.class.getSimpleName());
-					filter.add(condition);
+				if (filter == null)
+					filter = new PartialSearchQuery();
+				SearchCondition condition = new SearchCondition(Accession.ID, new Equal(), Long.toString(accession.getId()), Long.class);
+				filter.add(condition);
 
-					if (filter.getAll().size() > 1)
-						filter.addLogicalOperator(new And());
-				}
-				catch (InvalidArgumentException | InvalidSearchQueryException e)
-				{
-					e.printStackTrace();
-				}
+				if (filter.getAll().size() > 1)
+					filter.addLogicalOperator(new And());
 
 				return AttributeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, GerminateDatabaseTable.germinatebase, filter, callback);
 			}
@@ -333,7 +327,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	protected void updateDatasets()
 	{
 		datasetWrapper.setVisible(true);
-		datasetPanel.add(new DatasetTable(DatasetTable.SelectionMode.NONE, true, true)
+		datasetPanel.add(new DatasetTable(DatasetTable.SelectionMode.NONE, true, true, null)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
@@ -411,6 +405,8 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 		pedigreeTablePanel.add(new PedigreeTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
+			boolean chartInitialized = false;
+
 			@Override
 			protected boolean supportsFiltering()
 			{
@@ -420,30 +416,15 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Pedigree>>> callback)
 			{
-				try
-				{
-					filter = new PartialSearchQuery();
+				filter = new PartialSearchQuery();
 
-					SearchCondition condition = new SearchCondition();
-					condition.setColumnName("Child.id");
-					condition.setComp(new Equal());
-					condition.addConditionValue(Long.toString(accession.getId()));
-					condition.setType(Long.class.getSimpleName());
-					filter.add(condition);
+				SearchCondition condition = new SearchCondition("Child.id", new Equal(), Long.toString(accession.getId()), Long.class);
+				filter.add(condition);
 
-					filter.addLogicalOperator(new Or());
+				filter.addLogicalOperator(new Or());
 
-					condition = new SearchCondition();
-					condition.setColumnName("Parent.id");
-					condition.setComp(new Equal());
-					condition.addConditionValue(Long.toString(accession.getId()));
-					condition.setType(Long.class.getSimpleName());
-					filter.add(condition);
-				}
-				catch (InvalidArgumentException | InvalidSearchQueryException e)
-				{
-					e.printStackTrace();
-				}
+				condition = new SearchCondition("Parent.id", new Equal(), Long.toString(accession.getId()), Long.class);
+				filter.add(condition);
 
 				return PedigreeService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, new AsyncCallback<PaginatedServerResult<List<Pedigree>>>()
 				{
@@ -462,6 +443,16 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 							pedigreeDownloadPanel.clear();
 
 						callback.onSuccess(result);
+
+						if (!chartInitialized && result.getResultSize() > 0)
+						{
+							pedigreeChart.add(new PedigreeChart(accession.getId()));
+							chartInitialized = true;
+						}
+						else
+						{
+							pedigreeChartPanel.clear();
+						}
 					}
 				});
 
@@ -617,12 +608,9 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSpecies(), "<i>" + accession.getTaxonomy().getSpecies() + "</i>", true);
 
 						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCropname(), accession.getTaxonomy().getCropName());
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSpauthor(), accession.getTaxonomy().getAuthor());
-						if (accession.getSubtaxa() != null)
-						{
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSubtaxa(), accession.getSubtaxa().getTaxonomyIdentifier());
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSubtauthor(), accession.getSubtaxa().getAuthor());
-						}
+						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSpauthor(), accession.getTaxonomy().getTaxonomyAuthor());
+						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSubtaxa(), accession.getTaxonomy().getSubtaxa());
+						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSubtauthor(), accession.getTaxonomy().getSubtaxaAuthor());
 					}
 
 					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAcqdate(), accession.getAcqDate());

@@ -146,7 +146,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		{
 			Group group = new GroupManager().getById(userAuth, groupId).getServerResult();
 
-			if (userAuth.isAdmin() || group.getVisibility() || (group.getCreatedBy() != null && Objects.equals(group.getCreatedBy(), properties.getUserId())))
+			if (userAuth.isAdmin() || group.canAccess(properties.getUserId()))
 			{
 				/* If we get here, the user either has permissions to edit the group
 				 * or the group is public */
@@ -241,34 +241,11 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public ServerResult<List<String>> getIdsForMegaEnv(RequestProperties properties, Long megaEnvId) throws InvalidSessionException, DatabaseException, InvalidColumnException
+	public ServerResult<List<String>> getIdsForMegaEnv(RequestProperties properties, Long megaEnvId) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		return AccessionManager.getIdsForMegaEnv(userAuth, megaEnvId);
-	}
-
-	@Override
-	public ServerResult<String> exportForIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		try (GerminateTableStreamer streamer = AccessionManager.getStreamerForIds(userAuth, ids))
-		{
-			File output = createTemporaryFile("export_accession_group", FileType.txt.name());
-
-			try
-			{
-				Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
-			}
-			catch (java.io.IOException e)
-			{
-				throw new jhi.germinate.shared.exception.IOException(e);
-			}
-
-			return new ServerResult<>(streamer.getDebugInfo(), output.getName());
-		}
 	}
 
 	@SuppressWarnings("unchecked")

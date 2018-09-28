@@ -25,9 +25,9 @@ import java.util.stream.*;
 
 import jhi.flapjack.io.binning.*;
 import jhi.germinate.client.service.AlleleFrequencyService.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -173,7 +173,7 @@ public class FlapjackUtils
 //			}
 //			else
 //			{
-			String javaPath = PropertyReader.getJavaPath();
+			String javaPath = PropertyWatcher.getJavaPath();
 
 			List<String> parameters = new ArrayList<>();
 			parameters.add(javaPath);
@@ -230,7 +230,7 @@ public class FlapjackUtils
 			}
 			else
 			{
-				String javaPath = PropertyReader.getJavaPath();
+				String javaPath = PropertyWatcher.getJavaPath();
 
 				String flapjackPath = getFlapjackPath();
 
@@ -279,7 +279,7 @@ public class FlapjackUtils
 			}
 			else
 			{
-				String javaPath = PropertyReader.getJavaPath();
+				String javaPath = PropertyWatcher.getJavaPath();
 
 				String flapjackPath = getFlapjackPath();
 				String flapjackMain = ALLELE_FREQ_CREATE_IMAGE;
@@ -345,7 +345,7 @@ public class FlapjackUtils
 			}
 			else
 			{
-				String javaPath = PropertyReader.getJavaPath();
+				String javaPath = PropertyWatcher.getJavaPath();
 
 				String flapjackPath = getFlapjackPath();
 				String flapjackMain = ALLELE_FREQ_BIN_DATA;

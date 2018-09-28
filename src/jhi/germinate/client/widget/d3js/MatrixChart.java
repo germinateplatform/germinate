@@ -336,6 +336,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 						@jhi.germinate.client.widget.d3js.MatrixChart::onDataPointClicked(Ljava/lang/String;)(d.dbId);
 					})
 					.dotStyle(dotStyle)
+					.radius(2)
 					.axisStyle(axisStyle)
 					.hiddenStyle(hiddenStyle)
 					.frameStyle(frameStyle)

@@ -27,7 +27,7 @@
 	<ui:style>
 	</ui:style>
 	<g:FlowPanel>
-		<b:FormGroup>
+		<b:FormGroup ui:field="groupTypeGroup">
 			<b:FormLabel for="formGroupType" text="{msg.groupsSelectType}"/>
 			<g8:GroupTypeListBox multipleSelect="false" b:id="formGroupType" ui:field="groupType"/>
 		</b:FormGroup>

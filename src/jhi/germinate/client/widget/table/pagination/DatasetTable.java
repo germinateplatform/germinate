@@ -31,6 +31,7 @@ import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
+import java.util.Locale;
 
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.Text;
@@ -58,15 +59,17 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 {
 	private static final int TRUNCATION_LIMIT = 150;
 
-	private boolean                 linkToExportPage = false;
-	private boolean                 showDownload     = false;
+	private boolean                 linkToExportPage;
+	private boolean                 showDownload = false;
 	private ReferenceFolder         referenceFolder;
 	private SimpleCallback<Dataset> downloadCallback;
+	private ExperimentType          experimentType;
 
-	public DatasetTable(SelectionMode selectionMode, boolean sortingEnabled, boolean linkToExportPage)
+	public DatasetTable(SelectionMode selectionMode, boolean sortingEnabled, boolean linkToExportPage, ExperimentType experimentType)
 	{
 		super(selectionMode, sortingEnabled);
 		this.linkToExportPage = linkToExportPage;
+		this.experimentType = experimentType;
 	}
 
 	@Override
@@ -113,6 +116,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		this.downloadCallback = downloadCallback;
 	}
 
+	@Override
 	protected void onItemSelected(NativeEvent event, Dataset object, int column)
 	{
 		if (Objects.equals(table.getColumn(column).getDataStoreName(), Experiment.EXPERIMENT_NAME))
@@ -277,7 +281,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 					if (GerminateSettingsHolder.isPageAvailable(Page.EXPERIMENT_DETAILS))
 						return TableUtils.getHyperlinkValue(object.getExperiment().getName(), "#" + Page.EXPERIMENT_DETAILS);
 					else
-						return DatasetTable.this.getValueTruncated(object, object.getExperiment().getName());
+						return DatasetTable.getValueTruncated(object, object.getExperiment().getName());
 				}
 
 				return null;
@@ -298,7 +302,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			@Override
 			public SafeHtml getValue(Dataset object)
 			{
-				return DatasetTable.this.getValueTruncated(object, object.getDatatype());
+				return getValueTruncated(object, object.getDatatype());
 			}
 
 			@Override
@@ -309,6 +313,66 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		};
 		column.setDataStoreName(Dataset.DATATYPE);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDatatype(), sortingEnabled);
+
+		if (experimentType == ExperimentType.trials)
+		{
+			// Add the site name column
+			column = new TextColumn()
+			{
+				@Override
+				public String getValue(Dataset dataset)
+				{
+					if (dataset.getLocation() != null)
+						return dataset.getLocation().getName();
+					else
+						return null;
+				}
+
+				@Override
+				public Class getType()
+				{
+					return String.class;
+				}
+			};
+			column.setDataStoreName(Location.SITE_NAME);
+			addColumn(column, Text.LANG.datasetsColumnSiteName(), sortingEnabled);
+
+			/* Add the country column */
+			column = new TextColumn()
+			{
+				@Override
+				public String getValue(Dataset object)
+				{
+					if (object.getLocation() != null && object.getLocation().getCountry() != null)
+						return object.getLocation().getCountry().getName();
+					else
+						return null;
+				}
+
+				@Override
+				public Class getType()
+				{
+					return String.class;
+				}
+
+				@Override
+				public void render(Cell.Context context, Dataset object, SafeHtmlBuilder sb)
+				{
+					String value = getValue(object);
+					if (value != null)
+					{
+						sb.appendHtmlConstant("<span class=\"" + Style.COUNTRY_FLAG + " " + object.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "\"></span>");
+						sb.append(SafeHtmlUtils.fromString(value));
+					}
+					else
+					{
+						super.render(context, object, sb);
+					}
+				}
+			};
+			column.setDataStoreName(Country.COUNTRY_NAME);
+			addColumn(column, Text.LANG.datasetsColumnCountry(), sortingEnabled);
+		}
 
 		/* Add the license description column */
 		column = new ClickableSafeHtmlColumn()
@@ -334,9 +398,9 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 						icon = Style.MDI_CHECK;
 
 					if (data != null)
-						return TableUtils.getHyperlinkValueWithIcon(object.getLicense().getName(), null, Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
+						return TableUtils.getHyperlinkValueWithIcon(object.getLicense().getName(), null, Style.combine(Style.mdiLgFw(icon), Emphasis.PRIMARY.getCssName()));
 					else
-						return TableUtils.getCellValueWithIcon(object.getLicense().getName(), Style.combine(Style.MDI, Style.MDI_LG, Style.FA_FIXED_WIDTH, Emphasis.PRIMARY.getCssName(), icon));
+						return TableUtils.getCellValueWithIcon(object.getLicense().getName(), Style.combine(Style.mdiLgFw(icon), Emphasis.PRIMARY.getCssName()));
 				}
 				else
 					return null;
@@ -348,6 +412,13 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				return String.class;
 			}
 
+			private String getLicenseFileName(Dataset dataset)
+			{
+				String filename = dataset.getLicense().getName();
+				filename = dataset.getId() + "-" + filename.replace(' ', '-') + ".html";
+				return filename;
+			}
+
 			@Override
 			public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
 			{
@@ -355,15 +426,20 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				{
 					event.preventDefault();
 
+					License license = object.getLicense();
+					license.setExtra(Dataset.ID, object.getId());
+
+					LicenseWizardPage page = new LicenseWizardPage(license, null);
 					if (!ModuleCore.getUseAuthentication() || object.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
 					{
-						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
+						new AlertDialog(Text.LANG.licenseWizardTitle(), page)
+								.setPrintable(page.getId(), getLicenseFileName(object))
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
 								.open();
 					}
 					else
 					{
-						new AlertDialog(Text.LANG.licenseWizardTitle(), new LicenseWizardPage(object.getLicense(), object.getLicense().getLicenseData(LocaleInfo.getCurrentLocale().getLocaleName()), null))
+						new AlertDialog(Text.LANG.licenseWizardTitle(), page)
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalAccept(), Style.MDI_CHECK, ButtonType.SUCCESS, e ->
 								{
 									LicenseLog log = new LicenseLog(-1L)
@@ -385,6 +461,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 										}
 									});
 								}))
+								.setPrintable(page.getId(), getLicenseFileName(object))
 								.setNegativeButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDecline(), Style.MDI_CANCEL, ButtonType.DANGER, null))
 								.open();
 					}

@@ -36,7 +36,6 @@ import jhi.germinate.util.importer.reader.*;
 public class McpdImporter extends DataImporter<Accession>
 {
 	private Set<Long> createdAccessionIds          = new HashSet<>();
-	private Set<Long> createdSubtaxaIds            = new HashSet<>();
 	private Set<Long> createdTaxonomyIds           = new HashSet<>();
 	private Set<Long> createdAttributeIds          = new HashSet<>();
 	private Set<Long> createdAttributeDataIds      = new HashSet<>();
@@ -85,7 +84,6 @@ public class McpdImporter extends DataImporter<Accession>
 		deleteItems(createdStorageDataIds, "storagedata");
 		deleteItems(createdAttributeIds, "attributes");
 		deleteItems(createdAttributeDataIds, "attributedata");
-		deleteItems(createdSubtaxaIds, "subtaxa");
 		deleteItems(createdTaxonomyIds, "taxonomies");
 		deleteItems(createdSynonymIds, "synonyms");
 
@@ -99,7 +97,6 @@ public class McpdImporter extends DataImporter<Accession>
 		// Write or get the referenced database objects
 		createOrGetInstitution(entry);
 		createOrGetTaxonomy(entry);
-		createOrGetSubtaxa(entry);
 		getBiologicalStatus(entry);
 		getCollectingSource(entry);
 		getMlsStatus(entry);
@@ -260,7 +257,7 @@ public class McpdImporter extends DataImporter<Accession>
 		if (StringUtils.isEmpty(entry.getGeneralIdentifier()))
 			throw new DatabaseException("ACCENUMB cannot be empty!");
 
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM germinatebase WHERE general_identifier <=> ? AND puid <=> ? AND number <=> ? AND collnumb <=> ? AND collcode <=> ? AND collmissid <=> ? AND donor_number <=> ? AND donor_name <=> ? AND donor_code <=> ? AND name = ? AND acqdate <=> ? AND colldate <=> ? AND collname <=> ? AND breeders_code <=> ? AND breeders_name <=> ? AND othernumb <=> ? AND duplsite <=> ? ANd duplinstname <=> ? AND institution_id <=> ? AND taxonomy_id <=> ? AND subtaxa_id <=> ? AND location_id <=> ? AND biologicalstatus_id <=> ? AND collsrc_id <=> ? AND mlsstatus_id <=> ?");
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM germinatebase WHERE general_identifier <=> ? AND puid <=> ? AND number <=> ? AND collnumb <=> ? AND collcode <=> ? AND collmissid <=> ? AND donor_number <=> ? AND donor_name <=> ? AND donor_code <=> ? AND name = ? AND acqdate <=> ? AND colldate <=> ? AND collname <=> ? AND breeders_code <=> ? AND breeders_name <=> ? AND othernumb <=> ? AND duplsite <=> ? ANd duplinstname <=> ? AND institution_id <=> ? AND taxonomy_id <=> ? AND location_id <=> ? AND biologicalstatus_id <=> ? AND collsrc_id <=> ? AND mlsstatus_id <=> ?");
 		int i = 1;
 		stmt.setString(i++, entry.getGeneralIdentifier());
 		stmt.setString(i++, entry.getPuid());
@@ -282,7 +279,6 @@ public class McpdImporter extends DataImporter<Accession>
 		stmt.setString(i++, entry.getDuplInstName());
 		stmt.setLong(i++, entry.getInstitution() != null ? entry.getInstitution().getId() : null);
 		stmt.setLong(i++, entry.getTaxonomy() != null ? entry.getTaxonomy().getId() : null);
-		stmt.setLong(i++, entry.getSubtaxa() != null ? entry.getSubtaxa().getId() : null);
 		stmt.setLong(i++, entry.getLocation() != null ? entry.getLocation().getId() : null);
 		stmt.setLong(i++, entry.getBiologicalStatus() != null ? entry.getBiologicalStatus().getId() : null);
 		stmt.setLong(i++, entry.getCollSrc() != null ? entry.getCollSrc().getId() : null);
@@ -414,14 +410,14 @@ public class McpdImporter extends DataImporter<Accession>
 	 */
 	private void createOrGetTaxonomy(Accession entry) throws DatabaseException
 	{
-		if (entry.getTaxonomy() == null || StringUtils.areEmpty(entry.getTaxonomy().getGenus(), entry.getTaxonomy().getSpecies(), entry.getTaxonomy().getAuthor(), entry.getTaxonomy().getCropName()))
+		if (entry.getTaxonomy() == null || StringUtils.areEmpty(entry.getTaxonomy().getGenus(), entry.getTaxonomy().getSpecies(), entry.getTaxonomy().getTaxonomyAuthor(), entry.getTaxonomy().getCropName()))
 			return;
 
 		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM taxonomies WHERE genus <=> ? AND species <=> ? AND species_author <=> ? AND cropname <=> ?");
 		int i = 1;
 		stmt.setString(i++, entry.getTaxonomy().getGenus());
 		stmt.setString(i++, entry.getTaxonomy().getSpecies());
-		stmt.setString(i++, entry.getTaxonomy().getAuthor());
+		stmt.setString(i++, entry.getTaxonomy().getTaxonomyAuthor());
 		stmt.setString(i++, entry.getTaxonomy().getCropName());
 
 		DatabaseResult rs = stmt.query();
@@ -435,43 +431,10 @@ public class McpdImporter extends DataImporter<Accession>
 			Taxonomy.Writer.Inst.get().write(databaseConnection, entry.getTaxonomy());
 			createdTaxonomyIds.add(entry.getTaxonomy().getId());
 		}
-
-		if (entry.getSubtaxa() != null)
-			entry.getSubtaxa().setTaxonomy(entry.getTaxonomy());
 	}
 
 	/**
-	 * Creates/gets and then sets the {@link Subtaxa} based on the MCPD fields.
-	 *
-	 * @param entry The current {@link Accession}
-	 * @throws DatabaseException Thrown if the interaction with the database fails
-	 */
-	private void createOrGetSubtaxa(Accession entry) throws DatabaseException
-	{
-		if (entry.getTaxonomy() == null || entry.getSubtaxa() == null || StringUtils.isEmpty(entry.getSubtaxa().getTaxonomyIdentifier()))
-			return;
-
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM subtaxa WHERE taxonomy_id = ? AND subtaxa_author <=> ? AND taxonomic_identifier <=> ?");
-		int i = 1;
-		stmt.setLong(i++, entry.getTaxonomy().getId());
-		stmt.setString(i++, entry.getSubtaxa().getAuthor());
-		stmt.setString(i++, entry.getSubtaxa().getTaxonomyIdentifier());
-
-		DatabaseResult rs = stmt.query();
-
-		if (rs.next())
-		{
-			entry.setSubtaxa(Subtaxa.Parser.Inst.get().parse(rs, null, true));
-		}
-		else
-		{
-			Subtaxa.Writer.Inst.get().write(databaseConnection, entry.getSubtaxa());
-			createdSubtaxaIds.add(entry.getSubtaxa().getId());
-		}
-	}
-
-	/**
-	 * Creates/gets and then sets the {@link Subtaxa} based on the MCPD fields.
+	 * Creates/gets and then sets the {@link Accession} based on the MCPD fields.
 	 *
 	 * @param entry The current {@link Accession}
 	 * @throws DatabaseException Thrown if the interaction with the database fails

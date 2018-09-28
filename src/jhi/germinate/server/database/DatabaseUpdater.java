@@ -22,7 +22,7 @@ import org.flywaydb.core.api.*;
 
 import java.util.logging.*;
 
-import jhi.germinate.server.config.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -36,16 +36,16 @@ public class DatabaseUpdater
 	public void initialize()
 	{
 		/* Automatically update the database if this is enabled */
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_AUTO_UPDATE_DATABASE))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_AUTO_UPDATE_DATABASE))
 		{
-			String database = PropertyReader.get(ServerProperty.DATABASE_NAME);
+			String database = PropertyWatcher.get(ServerProperty.DATABASE_NAME);
 			try
 			{
 				Logger.getLogger("").log(Level.INFO, "RUNNING FLYWAY on: " + database);
 				Flyway flyway = new Flyway();
 				flyway.setTable("schema_version");
 				flyway.setValidateOnMigrate(false);
-				flyway.setDataSource(Database.DatabaseType.MYSQL.getConnectionString() + PropertyReader.getServerString(Database.DatabaseType.MYSQL), PropertyReader.get(ServerProperty.DATABASE_USERNAME), PropertyReader.get(ServerProperty.DATABASE_PASSWORD));
+				flyway.setDataSource(Database.DatabaseType.MYSQL.getConnectionString() + PropertyWatcher.getServerString(Database.DatabaseType.MYSQL), PropertyWatcher.get(ServerProperty.DATABASE_USERNAME), PropertyWatcher.get(ServerProperty.DATABASE_PASSWORD));
 				flyway.setLocations("classpath:jhi.germinate.server.database.migration");
 				flyway.setBaselineOnMigrate(true);
 				flyway.migrate();

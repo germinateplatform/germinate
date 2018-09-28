@@ -53,6 +53,8 @@ public enum Library
 	D3_TOPOJSON("./js/d3/d3-topojson.js"),
 	D3_SAVE_AS("./js/d3/d3-save-as-png.js"),
 	D3_DOWNLOAD(""),
+	D3_DAGRE("./js/d3/dagre-d3.min.js"),
+	D3_PEDIGREE_CHART("./js/d3/d3-pedigree-chart.js"),
 	D3_TOOLTIP("./js/d3/d3-tip.js"),
 	D3_LEGEND("./js/d3/d3-legend.js"),
 	D3_LASSO("./js/d3/d3-lasso.js"),

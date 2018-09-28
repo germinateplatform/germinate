@@ -68,6 +68,14 @@ public abstract class DatabaseObject implements Serializable
 			return null;
 	}
 
+	public void setExtra(String key, Long value)
+	{
+		if (extra == null)
+			extra = new HashMap<>();
+
+		extra.put(key, Long.toString(value));
+	}
+
 	public void setExtra(String key, String value)
 	{
 		if (extra == null)

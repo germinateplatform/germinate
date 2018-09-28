@@ -128,7 +128,7 @@ public class ExperimentDetailsPage extends Composite
 		html.setHTML(Text.LANG.experimentDetailsText());
 		noDataHeading.removeFromParent();
 
-		DatasetTable datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true)
+		DatasetTable datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, experiment.getType())
 		{
 			private PartialSearchQuery addToFilter(PartialSearchQuery filter)
 			{

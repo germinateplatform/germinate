@@ -27,6 +27,7 @@ import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.column.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.Map;
@@ -98,13 +99,34 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
+		/* Add the name column */
+		column = new ClickableSafeHtmlColumn()
+		{
+			@Override
+			public SafeHtml getValue(Map object)
+			{
+				return SimpleHtmlTemplate.INSTANCE.dummyAnchor(object.getName());
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Map.NAME);
+		addColumn(column, Text.LANG.mapsColumnsMapName(), sortingEnabled);
+
 		/* Add the description column */
 		column = new ClickableSafeHtmlColumn()
 		{
 			@Override
 			public SafeHtml getValue(Map object)
 			{
-				return SimpleHtmlTemplate.INSTANCE.dummyAnchor(object.getDescription());
+				if (StringUtils.isLink(object.getDescription()))
+					return SafeHtmlUtils.fromTrustedString(object.getDescription());
+				else
+					return SimpleHtmlTemplate.INSTANCE.dummyAnchor(object.getDescription());
 			}
 
 			@Override
@@ -114,7 +136,7 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 			}
 		};
 		column.setDataStoreName(Map.DESCRIPTION);
-		addColumn(column, Text.LANG.mapsColumnsMapName(), sortingEnabled);
+		addColumn(column, Text.LANG.mapsColumnsMapDescription(), sortingEnabled);
 
 		/* Add the created on column */
 		column = new TextColumn()

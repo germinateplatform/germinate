@@ -46,13 +46,13 @@ public class Comment extends DatabaseObject
 
 
 	private CommentType type;
-	private String user = GatekeeperUser.UNKNOWN.getFullName();
-	private boolean visibility;
-	private String  description;
-	private Long    createdBy;
-	private Long    referenceId;
-	private Long    createdOn;
-	private Long    updatedOn;
+	private String      user = GatekeeperUser.UNKNOWN.getFullName();
+	private Boolean     visibility;
+	private String      description;
+	private Long        createdBy;
+	private Long        referenceId;
+	private Long        createdOn;
+	private Long        updatedOn;
 
 	public Comment()
 	{
@@ -97,12 +97,12 @@ public class Comment extends DatabaseObject
 		return createdBy;
 	}
 
-	public boolean isVisibility()
+	public Boolean isVisibility()
 	{
 		return visibility;
 	}
 
-	public Comment setVisibility(boolean visibility)
+	public Comment setVisibility(Boolean visibility)
 	{
 		this.visibility = visibility;
 		return this;

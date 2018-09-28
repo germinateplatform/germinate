@@ -26,8 +26,8 @@ import java.util.logging.*;
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -49,7 +49,7 @@ public class ApplicationListener implements ServletContextListener
 	 */
 	public static void togglePdciEnabled()
 	{
-		boolean enabled = PropertyReader.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED);
+		boolean enabled = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED);
 
 		if (enabled && pdciFuture == null)
 			pdciFuture = scheduler.scheduleAtFixedRate(new PDCIRunnable(), 0, 4, TimeUnit.HOURS);
@@ -65,9 +65,11 @@ public class ApplicationListener implements ServletContextListener
 	public void contextInitialized(ServletContextEvent sce)
 	{
 		// Start reading the properties file and watch for changes
-		PropertyReader.initialize();
+		PropertyWatcher.initialize();
 		// Watch the image folder and resize images as required
-		ImageScaler.initialize();
+		ImageWatcher.initialize();
+		// Watch external data folder for changes to template files
+		TemplateWatcher.initialize(sce.getServletContext());
 
 		Database.initialize();
 
@@ -75,7 +77,7 @@ public class ApplicationListener implements ServletContextListener
 		// Every hour, update the dataset sizes
 		scheduler.scheduleAtFixedRate(new DatasetMetaJob(), 0, 1, TimeUnit.HOURS);
 
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED))
 		{
 			// Every foud hours, re-calculate the PDCI
 			pdciFuture = scheduler.scheduleAtFixedRate(new PDCIRunnable(), 0, 4, TimeUnit.HOURS);
@@ -86,8 +88,9 @@ public class ApplicationListener implements ServletContextListener
 	public void contextDestroyed(ServletContextEvent sce)
 	{
 		// Remember to stop the property and image file watcher
-		PropertyReader.stopFileWatcher();
-		ImageScaler.stopFileWatcher();
+		PropertyWatcher.stopFileWatcher();
+		ImageWatcher.stopFileWatcher();
+		TemplateWatcher.stopFileWatcher();
 
 		try
 		{

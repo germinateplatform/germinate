@@ -47,10 +47,6 @@ import jhi.germinate.shared.search.*;
  */
 public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment>
 {
-	public CommentTable()
-	{
-	}
-
 	public CommentTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
 		super(selectionMode, sortingEnabled);

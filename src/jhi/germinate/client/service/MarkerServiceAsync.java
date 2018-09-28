@@ -73,15 +73,6 @@ public interface MarkerServiceAsync
 	Request getByIds(RequestProperties properties, Pagination pagination, List<String> ids, AsyncCallback<ServerResult<List<Marker>>> callback);
 
 	/**
-	 * Exports the {@link Marker}s with the given ids and returns the name of the result file.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param ids        The {@link Marker} ids
-	 * @param callback   {@link AsyncCallback}
-	 */
-	void export(RequestProperties properties, List<String> ids, AsyncCallback<ServerResult<String>> callback);
-
-	/**
 	 * Exports the {@link Marker}s with the given names and returns the name of the result file.
 	 *
 	 * @param properties  The {@link RequestProperties}

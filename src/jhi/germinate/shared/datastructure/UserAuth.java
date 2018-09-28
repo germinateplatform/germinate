@@ -21,6 +21,8 @@ import com.google.gwt.core.shared.*;
 
 import java.io.*;
 
+import javax.servlet.http.*;
+
 import jhi.germinate.server.util.*;
 
 /**
@@ -111,6 +113,29 @@ public class UserAuth implements Serializable
 	public void setCookieLifespanMinutes(int cookieLifespanMinutes)
 	{
 		this.cookieLifespanMinutes = cookieLifespanMinutes;
+	}
+
+	@GwtIncompatible
+	public static UserAuth getFromSession(HttpSession session, RequestProperties properties)
+	{
+		UserAuth userAuth = (UserAuth) session.getAttribute(Session.USER);
+
+		if (userAuth == null)
+		{
+			userAuth = new UserAuth();
+		}
+		else if (userAuth.getId() == null)
+		{
+			try
+			{
+				userAuth.setId(properties.getUserId());
+			}
+			catch (NullPointerException | NumberFormatException e)
+			{
+			}
+		}
+
+		return userAuth;
 	}
 
 	@GwtIncompatible

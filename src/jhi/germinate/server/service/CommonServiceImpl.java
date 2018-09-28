@@ -30,13 +30,13 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.server.util.Session;
 import jhi.germinate.server.util.xml.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -98,14 +98,14 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 
 			GerminateSettings baseSettings = getBaseSettings();
 
-			baseSettings.cookieLifespanMinutes = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES, PropertyReader.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES));
-			baseSettings.externalDataFolder = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER, PropertyReader.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER));
-			baseSettings.gatekeeperRegistrationNeedsApproval = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL, PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL));
-			baseSettings.googleAnalyticsTrackingId = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID, PropertyReader.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID));
-			baseSettings.keepTempFilesForHours = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS, PropertyReader.getDouble(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS));
-			baseSettings.serverLoggingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED));
-			baseSettings.templateDatabaseName = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME));
-			baseSettings.templateCustomMenu = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_MENU, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_MENU));
+			baseSettings.cookieLifespanMinutes = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES, PropertyWatcher.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES));
+			baseSettings.externalDataFolder = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER, PropertyWatcher.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER));
+			baseSettings.gatekeeperRegistrationNeedsApproval = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL));
+			baseSettings.googleAnalyticsTrackingId = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID, PropertyWatcher.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID));
+			baseSettings.keepTempFilesForHours = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS, PropertyWatcher.getDouble(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS));
+			baseSettings.serverLoggingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED));
+			baseSettings.templateDatabaseName = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME, PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME));
+			baseSettings.templateCustomMenu = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_MENU, PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_MENU));
 
 			return new ServerResult<>(null, baseSettings);
 		}
@@ -128,46 +128,46 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			if (details == null || !details.isAdmin())
 				throw new InsufficientPermissionsException();
 
-			PropertyReader.set(settings.gatekeeperUrl.getServerProperty(), settings.gatekeeperUrl.getValue());
-			PropertyReader.setBoolean(settings.gatekeeperRegistrationEnabled.getServerProperty(), settings.gatekeeperRegistrationEnabled.getValue());
-			PropertyReader.setBoolean(settings.gatekeeperRegistrationNeedsApproval.getServerProperty(), settings.gatekeeperRegistrationNeedsApproval.getValue());
+			PropertyWatcher.set(settings.gatekeeperUrl.getServerProperty(), settings.gatekeeperUrl.getValue());
+			PropertyWatcher.setBoolean(settings.gatekeeperRegistrationEnabled.getServerProperty(), settings.gatekeeperRegistrationEnabled.getValue());
+			PropertyWatcher.setBoolean(settings.gatekeeperRegistrationNeedsApproval.getServerProperty(), settings.gatekeeperRegistrationNeedsApproval.getValue());
 
-			PropertyReader.set(settings.templateTitle.getServerProperty(), settings.templateTitle.getValue());
-			PropertyReader.set(settings.templateDatabaseName.getServerProperty(), settings.templateDatabaseName.getValue());
-			PropertyReader.setBoolean(settings.templateUseToggleSwitches.getServerProperty(), settings.templateUseToggleSwitches.getValue());
-			PropertyReader.set(settings.templateCategoricalColors.getServerProperty(), CollectionUtils.join(settings.templateCategoricalColors.getValue(), ","));
-			PropertyReader.set(settings.templateGradientColors.getServerProperty(), CollectionUtils.join(settings.templateGradientColors.getValue(), ","));
-			PropertyReader.set(settings.templateContactEmail.getServerProperty(), settings.templateContactEmail.getValue());
-			PropertyReader.setBoolean(settings.templateLogoContainsLink.getServerProperty(), settings.templateLogoContainsLink.getValue());
-			PropertyReader.setBoolean(settings.templateShowParallaxBanner.getServerProperty(), settings.templateShowParallaxBanner.getValue());
-			PropertyReader.set(settings.templateCustomMenu.getServerProperty(), settings.templateCustomMenu.getValue());
+			PropertyWatcher.set(settings.templateTitle.getServerProperty(), settings.templateTitle.getValue());
+			PropertyWatcher.set(settings.templateDatabaseName.getServerProperty(), settings.templateDatabaseName.getValue());
+			PropertyWatcher.setBoolean(settings.templateUseToggleSwitches.getServerProperty(), settings.templateUseToggleSwitches.getValue());
+			PropertyWatcher.set(settings.templateCategoricalColors.getServerProperty(), CollectionUtils.join(settings.templateCategoricalColors.getValue(), ","));
+			PropertyWatcher.set(settings.templateGradientColors.getServerProperty(), CollectionUtils.join(settings.templateGradientColors.getValue(), ","));
+			PropertyWatcher.set(settings.templateContactEmail.getServerProperty(), settings.templateContactEmail.getValue());
+			PropertyWatcher.setBoolean(settings.templateLogoContainsLink.getServerProperty(), settings.templateLogoContainsLink.getValue());
+			PropertyWatcher.setBoolean(settings.templateShowParallaxBanner.getServerProperty(), settings.templateShowParallaxBanner.getValue());
+			PropertyWatcher.set(settings.templateCustomMenu.getServerProperty(), settings.templateCustomMenu.getValue());
 
-			PropertyReader.setBoolean(settings.googleAnalyticsEnabled.getServerProperty(), settings.googleAnalyticsEnabled.getValue());
-			PropertyReader.set(settings.googleAnalyticsTrackingId.getServerProperty(), settings.googleAnalyticsTrackingId.getValue());
+			PropertyWatcher.setBoolean(settings.googleAnalyticsEnabled.getServerProperty(), settings.googleAnalyticsEnabled.getValue());
+			PropertyWatcher.set(settings.googleAnalyticsTrackingId.getServerProperty(), settings.googleAnalyticsTrackingId.getValue());
 
-			PropertyReader.setBoolean(settings.downloadTrackingEnabled.getServerProperty(), settings.downloadTrackingEnabled.getValue());
+			PropertyWatcher.setBoolean(settings.downloadTrackingEnabled.getServerProperty(), settings.downloadTrackingEnabled.getValue());
 
-			PropertyReader.setBoolean(settings.socialShowFacebook.getServerProperty(), settings.socialShowFacebook.getValue());
-			PropertyReader.setBoolean(settings.socialShowTwitter.getServerProperty(), settings.socialShowTwitter.getValue());
-			PropertyReader.setBoolean(settings.socialShowGooglePlus.getServerProperty(), settings.socialShowGooglePlus.getValue());
+			PropertyWatcher.setBoolean(settings.socialShowFacebook.getServerProperty(), settings.socialShowFacebook.getValue());
+			PropertyWatcher.setBoolean(settings.socialShowTwitter.getServerProperty(), settings.socialShowTwitter.getValue());
+			PropertyWatcher.setBoolean(settings.socialShowGooglePlus.getServerProperty(), settings.socialShowGooglePlus.getValue());
 
-			PropertyReader.setBoolean(settings.hideIdColumn.getServerProperty(), settings.hideIdColumn.getValue());
-			PropertyReader.setBoolean(settings.pdciEnabled.getServerProperty(), settings.pdciEnabled.getValue());
-			PropertyReader.setBoolean(settings.serverLoggingEnabled.getServerProperty(), settings.serverLoggingEnabled.getValue());
-			PropertyReader.setBoolean(settings.debug.getServerProperty(), settings.debug.getValue());
-			PropertyReader.setBoolean(settings.isReadOnlyMode.getServerProperty(), settings.isReadOnlyMode.getValue());
-			PropertyReader.setBoolean(settings.cookieNotifierEnabled.getServerProperty(), settings.cookieNotifierEnabled.getValue());
+			PropertyWatcher.setBoolean(settings.hideIdColumn.getServerProperty(), settings.hideIdColumn.getValue());
+			PropertyWatcher.setBoolean(settings.pdciEnabled.getServerProperty(), settings.pdciEnabled.getValue());
+			PropertyWatcher.setBoolean(settings.serverLoggingEnabled.getServerProperty(), settings.serverLoggingEnabled.getValue());
+			PropertyWatcher.setBoolean(settings.debug.getServerProperty(), settings.debug.getValue());
+			PropertyWatcher.setBoolean(settings.isReadOnlyMode.getServerProperty(), settings.isReadOnlyMode.getValue());
+			PropertyWatcher.setBoolean(settings.cookieNotifierEnabled.getServerProperty(), settings.cookieNotifierEnabled.getValue());
 
-			PropertyReader.setDouble(settings.keepTempFilesForHours.getServerProperty(), settings.keepTempFilesForHours.getValue());
-			PropertyReader.setDouble(settings.uploadSizeLimitMB.getServerProperty(), settings.uploadSizeLimitMB.getValue());
-			PropertyReader.setInteger(settings.cookieLifespanMinutes.getServerProperty(), settings.cookieLifespanMinutes.getValue());
-			PropertyReader.setInteger(settings.galleryImagesPerPage.getServerProperty(), settings.galleryImagesPerPage.getValue());
-			PropertyReader.set(settings.externalDataFolder.getServerProperty(), settings.externalDataFolder.getValue());
-			PropertyReader.setSet(settings.availablePages.getServerProperty(), settings.availablePages.getValue(), Page.class);
+			PropertyWatcher.setDouble(settings.keepTempFilesForHours.getServerProperty(), settings.keepTempFilesForHours.getValue());
+			PropertyWatcher.setDouble(settings.uploadSizeLimitMB.getServerProperty(), settings.uploadSizeLimitMB.getValue());
+			PropertyWatcher.setInteger(settings.cookieLifespanMinutes.getServerProperty(), settings.cookieLifespanMinutes.getValue());
+			PropertyWatcher.setInteger(settings.galleryImagesPerPage.getServerProperty(), settings.galleryImagesPerPage.getValue());
+			PropertyWatcher.set(settings.externalDataFolder.getServerProperty(), settings.externalDataFolder.getValue());
+			PropertyWatcher.setSet(settings.availablePages.getServerProperty(), settings.availablePages.getValue(), Page.class);
 
 			try
 			{
-				PropertyReader.store();
+				PropertyWatcher.store();
 			}
 			catch (java.io.IOException | URISyntaxException | NullPointerException e)
 			{
@@ -192,35 +192,35 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 	{
 		GerminateSettings settings = new GerminateSettings();
 
-		settings.debug = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DEBUG, PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG));
-		settings.googleAnalyticsEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_ANALYTICS_ENABLED, PropertyReader.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED));
-		settings.availablePages = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_AVAILABLE_PAGES, PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class));
-		settings.cookieNotifierEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.COOKIE_NOTIFIER_ENABLED, PropertyReader.getBoolean(ServerProperty.COOKIE_NOTIFIER_ENABLED));
-		settings.gatekeeperUrl = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_URL, PropertyReader.get(ServerProperty.GERMINATE_GATEKEEPER_URL));
-		settings.showHomeOnLogin = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_SHOW_HOME_ON_LOGIN, PropertyReader.getBoolean(ServerProperty.GERMINATE_SHOW_HOME_ON_LOGIN));
-		settings.uploadSizeLimitMB = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB, PropertyReader.getDouble(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB));
-		settings.gatekeeperRegistrationEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED));
-		settings.templateUseToggleSwitches = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES));
-		settings.socialShowFacebook = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK));
-		settings.socialShowTwitter = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER));
-		settings.socialShowGooglePlus = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS));
-		settings.hideIdColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDE_ID_COLUMNS, PropertyReader.getBoolean(ServerProperty.GERMINATE_HIDE_ID_COLUMNS));
-		settings.pdciEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_PDCI_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED));
-		settings.isReadOnlyMode = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_IS_READ_ONLY, PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY));
-		settings.templateContactEmail = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS));
-		settings.templateLogoContainsLink = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK));
-		settings.galleryImagesPerPage = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE, PropertyReader.getInteger(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE));
-		settings.templateShowParallaxBanner = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER, PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER));
-		settings.templateTitle = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TITLE, PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TITLE));
-		settings.downloadTrackingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED, PropertyReader.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED));
+		settings.debug = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DEBUG, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_DEBUG));
+		settings.googleAnalyticsEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GOOGLE_ANALYTICS_ENABLED, PropertyWatcher.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED));
+		settings.availablePages = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_AVAILABLE_PAGES, PropertyWatcher.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class));
+		settings.cookieNotifierEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.COOKIE_NOTIFIER_ENABLED, PropertyWatcher.getBoolean(ServerProperty.COOKIE_NOTIFIER_ENABLED));
+		settings.gatekeeperUrl = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_URL, PropertyWatcher.get(ServerProperty.GERMINATE_GATEKEEPER_URL));
+		settings.showHomeOnLogin = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_SHOW_HOME_ON_LOGIN, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_SHOW_HOME_ON_LOGIN));
+		settings.uploadSizeLimitMB = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB, PropertyWatcher.getDouble(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB));
+		settings.gatekeeperRegistrationEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED));
+		settings.templateUseToggleSwitches = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES));
+		settings.socialShowFacebook = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK));
+		settings.socialShowTwitter = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER));
+		settings.socialShowGooglePlus = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS));
+		settings.hideIdColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDE_ID_COLUMNS, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_HIDE_ID_COLUMNS));
+		settings.pdciEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_PDCI_ENABLED, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED));
+		settings.isReadOnlyMode = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_IS_READ_ONLY, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY));
+		settings.templateContactEmail = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS, PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS));
+		settings.templateLogoContainsLink = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK));
+		settings.galleryImagesPerPage = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE, PropertyWatcher.getInteger(ServerProperty.GERMINATE_GALLERY_IMAGES_PER_PAGE));
+		settings.templateShowParallaxBanner = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER));
+		settings.templateTitle = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TITLE, PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_TITLE));
+		settings.downloadTrackingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED));
 
 		settings.supportsAdvancedGeography = checkDatabaseVersion();
 
 
-		settings.loadPageOnLibraryError = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDDEN_LOAD_PAGE_ON_LIBRARY_ERROR, PropertyReader.getBoolean(ServerProperty.GERMINATE_HIDDEN_LOAD_PAGE_ON_LIBRARY_ERROR));
+		settings.loadPageOnLibraryError = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDDEN_LOAD_PAGE_ON_LIBRARY_ERROR, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_HIDDEN_LOAD_PAGE_ON_LIBRARY_ERROR));
 
 
-		String menuXml = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_MENU);
+		String menuXml = PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_MENU);
 		if (!StringUtils.isEmpty(menuXml))
 		{
 			try
@@ -235,8 +235,8 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			}
 		}
 
-		settings.templateCategoricalColors = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS, getColors(PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS)));
-		settings.templateGradientColors = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS, getColors(PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS)));
+		settings.templateCategoricalColors = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS, getColors(PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS)));
+		settings.templateGradientColors = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS, getColors(PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS)));
 
 		return settings;
 	}

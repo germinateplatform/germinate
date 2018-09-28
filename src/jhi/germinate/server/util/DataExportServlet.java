@@ -20,9 +20,9 @@ package jhi.germinate.server.util;
 import java.util.*;
 import java.util.stream.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.service.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -48,7 +48,6 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	/**
 	 * Retrieves the marker names
 	 *
-	 * @param type         The {@link DataExporter.Type} of data export
 	 * @param sqlDebug     The {@link DebugInfo} to use
 	 * @param markerGroups The marker groups
 	 * @param mapToUse     The map id to use
@@ -67,10 +66,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 			try
 			{
 				PartialSearchQuery q = new PartialSearchQuery();
-				SearchCondition c = new SearchCondition();
-				c.setColumnName(Map.ID);
-				c.setComp(new Equal());
-				c.addConditionValue(Long.toString(mapToUse));
+				SearchCondition c = new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class);
 				q.add(c);
 				ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
 				sqlDebug.addAll(result.getDebugInfo());
@@ -93,9 +89,9 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 				return null;
 
 			PartialSearchQuery q = new PartialSearchQuery();
-			q.add(new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class.getSimpleName()));
+			q.add(new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class));
 			q.addLogicalOperator(new And());
-			q.add(new SearchCondition(Group.ID, new InSet(), groupIds, Long.class.getSimpleName()));
+			q.add(new SearchCondition(Group.ID, new InSet(), groupIds, Long.class));
 
 			ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
 			sqlDebug.addAll(result.getDebugInfo());
@@ -138,10 +134,10 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		exportResult.subsetWithFlapjackLinks = createTemporaryFile(type.name() + "_links", datasetId, FileType.txt.name());
 
 		/* Check which Germinate pages are available. We do this to only add links to those pages that are actually available */
-		Set<Page> availablePages = PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
+		Set<Page> availablePages = PropertyWatcher.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
 
 		/* Get the base URL of the server */
-		String serverBase = PropertyReader.getServerBase(servlet.getRequest());
+		String serverBase = PropertyWatcher.getServerBase(servlet.getRequest());
 
 		/* Set up the flapjack links */
 		exportResult.flapjackLinks = "";

@@ -190,7 +190,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 
 	private void setUpMapDownloadPanel()
 	{
-		if(downloadWidget == null)
+		if (downloadWidget == null)
 		{
 			List<DownloadWidget.FileConfig> files = new ArrayList<>();
 			files.add(new DownloadWidget.FileConfig(Text.LANG.downloadInFlapjackFormat(), FileType.flapjack).setLongRunning(true).setStyle(FileType.IconStyle.IMAGE));
@@ -367,7 +367,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 
 	private void updateMapDetails()
 	{
-		mapDetailsHeading.setText(Text.LANG.mapsHeadingMarkers(HTMLUtils.stripHtmlTags(map.getDescription())));
+		mapDetailsHeading.setText(Text.LANG.mapsHeadingMarkers(HTMLUtils.stripHtmlTags(map.getName())));
 		mapDetailsWrapper.setVisible(true);
 
 		if (mapDefinitionTable == null)
@@ -397,24 +397,13 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 
 				private PartialSearchQuery addToFilter(PartialSearchQuery filter)
 				{
-					try
-					{
-						if (filter == null)
-							filter = new PartialSearchQuery();
-						SearchCondition condition = new SearchCondition();
-						condition.setColumnName(Map.ID);
-						condition.setComp(new Equal());
-						condition.addConditionValue(Long.toString(map.getId()));
-						condition.setType(Long.class.getSimpleName());
-						filter.add(condition);
+					if (filter == null)
+						filter = new PartialSearchQuery();
+					SearchCondition condition = new SearchCondition(Map.ID, new Equal(), Long.toString(map.getId()), Long.class);
+					filter.add(condition);
 
-						if (filter.getAll().size() > 1)
-							filter.addLogicalOperator(new And());
-					}
-					catch (InvalidArgumentException | InvalidSearchQueryException e)
-					{
-						e.printStackTrace();
-					}
+					if (filter.getAll().size() > 1)
+						filter.addLogicalOperator(new And());
 
 					return filter;
 				}

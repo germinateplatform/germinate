@@ -28,12 +28,14 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -58,8 +60,14 @@ public class InstitutionsPage extends Composite
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
+		final Long institutionId = LongParameterStore.Inst.get().get(Parameter.institutionId);
+
 		institutionsTable = new InstitutionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
+			{
+				preventInitialDataLoad = true;
+			}
+
 			@Override
 			protected boolean supportsFiltering()
 			{
@@ -74,21 +82,31 @@ public class InstitutionsPage extends Composite
 		};
 		table.add(institutionsTable);
 
+		/* Apply any filtering that another page requested before redirecting here */
+		PartialSearchQuery query = new PartialSearchQuery();
+
+		if (institutionId != null)
+			query.add(new SearchCondition(Institution.ID, new Equal(), Long.toString(institutionId), String.class));
+
+		final PartialSearchQuery m = query;
+		Scheduler.get().scheduleDeferred(() -> institutionsTable.forceFilter(m, true));
+
 		LocationService.Inst.get().getInstitutionsByCountry(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<Country>>>()
 		{
 			@Override
 			protected void onSuccessImpl(ServerResult<List<Country>> result)
 			{
-				/* When a country is selected by the user, force filter the table with the country name *//* If something is de-selected in the chart, clear the table filtering (if available) */
+				/* When a country is selected by the user, force filter the table with the country name */
+				/* If something is de-selected in the chart, clear the table filtering (if available) */
 				chart = new GeoChart(result.getServerResult(), new GeoChart.CountrySelectionHandler()
 				{
 					@Override
 					public void onCountySelected(Country country)
 					{
 						/* When a country is selected by the user, force filter the table with the country name */
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Country.COUNTRY_NAME, country.getName());
-							institutionsTable.forceFilter(mapping, true);
+						PartialSearchQuery query = new PartialSearchQuery();
+						query.add(new SearchCondition(Country.COUNTRY_NAME, new Equal(), country.getName(), String.class));
+						institutionsTable.forceFilter(query, true);
 					}
 
 					@Override

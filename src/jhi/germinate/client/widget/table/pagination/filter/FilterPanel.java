@@ -115,19 +115,28 @@ public class FilterPanel implements KeyPressHandler
 		switches.clear();
 	}
 
-	public void add(FilterMapping mapping, boolean isAnd, ComparisonOperator operator)
+	public void add(PartialSearchQuery query, boolean isAnd)
 	{
 		clear();
 
-		for (FilterMappingEntry entry : mapping.mapping)
+		for (int i = 0; i < query.getAll().size(); i++)
 		{
-			addRow();
+			try
+			{
+				addRow();
 
-			FilterRow row = rows.get(rows.size() - 1);
-			row.setValue(entry.column, entry.value, operator);
+				SearchCondition cond = query.getAll().get(i);
 
-			if (switches.size() > 0)
-				switches.get(switches.size() - 1).setValue(isAnd);
+				FilterRow row = rows.get(rows.size() - 1);
+				row.setValue(cond.getColumnName(), cond.getValues(), cond.getComp());
+
+				if (switches.size() > 0)
+					switches.get(switches.size() - 1).setValue(isAnd);
+			}
+			catch (InvalidSearchQueryException | InvalidArgumentException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -283,7 +292,12 @@ public class FilterPanel implements KeyPressHandler
 
 		public void put(String column, String value)
 		{
-			mapping.add(new FilterMappingEntry(column, value));
+			mapping.add(new FilterMappingEntry(column, value, new Like()));
+		}
+
+		public void put(String column, String value, ComparisonOperator operator)
+		{
+			mapping.add(new FilterMappingEntry(column, value, operator));
 		}
 
 		public List<FilterMappingEntry> getMapping()
@@ -294,13 +308,15 @@ public class FilterPanel implements KeyPressHandler
 
 	public static class FilterMappingEntry
 	{
-		private String column;
-		private String value;
+		private String             column;
+		private String             value;
+		private ComparisonOperator operator;
 
-		public FilterMappingEntry(String column, String value)
+		public FilterMappingEntry(String column, String value, ComparisonOperator operator)
 		{
 			this.column = column;
 			this.value = value;
+			this.operator = operator;
 		}
 
 		public String getColumn()
@@ -322,6 +338,17 @@ public class FilterPanel implements KeyPressHandler
 		public FilterMappingEntry setValue(String value)
 		{
 			this.value = value;
+			return this;
+		}
+
+		public ComparisonOperator getOperator()
+		{
+			return operator;
+		}
+
+		public FilterMappingEntry setOperator(ComparisonOperator operator)
+		{
+			this.operator = operator;
 			return this;
 		}
 	}

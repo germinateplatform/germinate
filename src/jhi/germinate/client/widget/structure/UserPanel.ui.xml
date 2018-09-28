@@ -68,10 +68,14 @@
 		<li ui:field="adminContainer">
 			<div class="{style.userdetails}">
 				<div class="{ROW}">
-					<div class="col-lg-12">
-						<a class="{BTN} btn-default {BTN_BLOCK} {MDI} {MDI_LG} {MDI_ACCOUNT_SETTINGS_VARIANT}" title="{i18n.adminConfigMenuItem}"
+					<div class="col-lg-12 {BTN_GROUP_VERTICAL}">
+						<a class="{BTN} btn-default {BTN_BLOCK} {MDI} {MDI_LG} {MDI_SECURITY_ACCOUNT}" title="{i18n.adminConfigMenuItem}"
 						   ui:field="adminLink">
 							<ui:text from='{i18n.adminConfigMenuItem}'/>
+						</a>
+						<a class="{BTN} btn-default {BTN_BLOCK} {MDI} {MDI_LG} {MDI_ACCOUNT_KEY}" title="{i18n.menuUserGroups}"
+						   ui:field="userPermissionsLink">
+							<ui:text from='{i18n.menuUserGroups}'/>
 						</a>
 					</div>
 				</div>

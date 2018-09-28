@@ -23,11 +23,11 @@ import java.io.IOException;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -50,7 +50,7 @@ public class StatisticsServlet extends HttpServlet
 		String password = req.getParameter(ServletConstants.PARAM_PASSWORD);
 		String viewString = req.getParameter(ServletConstants.PARAM_STATISTICS_VIEW);
 
-		boolean isPrivate = PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
+		boolean isPrivate = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
 
 		if (isPrivate)
 		{

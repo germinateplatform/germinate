@@ -36,7 +36,7 @@ import jhi.germinate.shared.exception.*;
 @RemoteServiceRelativePath("map")
 public interface MapService extends RemoteService
 {
-	String[] COLUMNS_MAP_SORTABLE = {Map.ID, Map.DESCRIPTION, Map.CREATED_ON, Map.UPDATED_ON};
+	String[] COLUMNS_MAP_SORTABLE = {Map.ID, Map.NAME, Map.DESCRIPTION, Map.CREATED_ON, Map.UPDATED_ON};
 
 	final class Inst
 	{

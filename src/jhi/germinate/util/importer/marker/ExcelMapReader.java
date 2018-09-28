@@ -44,6 +44,7 @@ public class ExcelMapReader implements IBatchReader<Map>
 
 		result.add(new Map()
 				.setVisibility(true)
+				.setName(IExcelReader.getCellValue(wb, dataSheet.getRow(12), 2))
 				.setDescription(IExcelReader.getCellValue(wb, dataSheet.getRow(12), 2)));
 
 		return result;

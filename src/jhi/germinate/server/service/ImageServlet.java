@@ -26,8 +26,8 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -73,7 +73,7 @@ public class ImageServlet extends BaseHttpServlet
 			return;
 		}
 
-		if (StringUtils.isEmpty(size) || StringUtils.isEmpty(imagePath) || PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
+		if (StringUtils.isEmpty(size) || StringUtils.isEmpty(imagePath) || PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
 		{
 			error(resp, HttpStatus.SC_BAD_REQUEST, "Requested resource not available.");
 			return;

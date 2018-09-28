@@ -77,9 +77,9 @@ public class MarkerPage extends Composite implements HasHyperlinkButton
 		PartialSearchQuery filter = null;
 
 		if (markerId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Marker.ID, new Equal(), Long.toString(markerId), Long.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Marker.ID, new Equal(), Long.toString(markerId), Long.class));
 		else if (!StringUtils.isEmpty(markerName))
-			filter = new PartialSearchQuery(new SearchCondition(Marker.MARKER_NAME, new Equal(), markerName, String.class.getSimpleName()));
+			filter = new PartialSearchQuery(new SearchCondition(Marker.MARKER_NAME, new Equal(), markerName, String.class));
 
 		if (filter != null)
 		{
@@ -141,7 +141,7 @@ public class MarkerPage extends Composite implements HasHyperlinkButton
 	 */
 	private void requestMarkerDatasets()
 	{
-		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, false, true)
+		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, false, true, null)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)

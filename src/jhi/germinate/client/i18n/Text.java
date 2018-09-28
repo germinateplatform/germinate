@@ -59,33 +59,13 @@ public interface Text extends Messages
 	@DefaultMessage("Select all")
 	String generalSelectAll();
 
-	@Key("general.success")
-	@DefaultMessage("Success")
-	String generalSuccess();
-
-	@Key("general.range.from")
-	@DefaultMessage("From")
-	String generalRangeFrom();
-
-	@Key("general.range.to")
-	@DefaultMessage("To")
-	String generalRangeTo();
-
-	@Key("general.info")
-	@DefaultMessage("Info")
-	String generalInfo();
-
-	@Key("general.error")
-	@DefaultMessage("Error")
-	String generalError();
-
-	@Key("general.warning")
-	@DefaultMessage("Warning")
-	String generalWarning();
-
 	@Key("general.delete")
 	@DefaultMessage("Delete")
 	String generalDelete();
+
+	@Key("general.remove")
+	@DefaultMessage("Remove")
+	String generalRemove();
 
 	@Key("general.add")
 	@DefaultMessage("Add")
@@ -94,10 +74,6 @@ public interface Text extends Messages
 	@Key("general.filter")
 	@DefaultMessage("Filter")
 	String generalFilter();
-
-	@Key("general.copy")
-	@DefaultMessage("Copy")
-	String generalCopy();
 
 	@Key("general.search")
 	@DefaultMessage("Search")
@@ -143,11 +119,9 @@ public interface Text extends Messages
 	@Key("general.annotations.submit")
 	String generalSubmitAnnotation();
 
-	@Key("general.month")
-	String generalMonth();
-
-	@Key("general.date.format.long")
-	String generalDateFormatLong();
+	@Key("general.print")
+	@DefaultMessage("Print")
+	String generalPrint();
 
 	@Key("general.date.format.short")
 	String generalDateFormatShort();
@@ -183,9 +157,6 @@ public interface Text extends Messages
 	@DefaultMessage("Read more")
 	String generalReadMore();
 
-	@Key("general.by")
-	String generalBy();
-
 	@Key("general.count")
 	@DefaultMessage("Count")
 	String generalCount();
@@ -202,10 +173,6 @@ public interface Text extends Messages
 	@DefaultMessage("Click to edit...")
 	String generalClickToEdit();
 
-	@Key("general.help")
-	@DefaultMessage("Help")
-	String generalHelp();
-
 	@Key("general.clear")
 	@DefaultMessage("Clear")
 	String generalClear();
@@ -214,14 +181,15 @@ public interface Text extends Messages
 	@DefaultMessage("Save as...")
 	String generalSaveAs();
 
+	@Key("general.save")
+	@DefaultMessage("Save")
+	String generalSave();
+
 	@Key("general.link.get")
 	String generalGetLinkToPage();
 
 	@Key("general.link.get.title")
 	String generalGetLinkToPageTitle();
-
-	@Key("general.link.get.text")
-	String generalGetLinkToPageText();
 
 	@Key("general.decline")
 	@DefaultMessage("Decline")
@@ -252,6 +220,10 @@ public interface Text extends Messages
 	@Key("download.format.txt")
 	String downloadFileAsTxt();
 
+	@Key("download.format.html")
+	@DefaultMessage("HTML")
+	String downloadFileAsHtml();
+
 	@Key("download.format.helium")
 	@DefaultMessage("Download pedigree for Helium")
 	String downloadPedigreeHelium();
@@ -264,10 +236,6 @@ public interface Text extends Messages
 
 	@Key("social.google.plus")
 	String socialGooglePlus();
-
-	@Key("menu.menu")
-	@DefaultMessage("Menu")
-	String menuMenu();
 
 	@Key("menu.about")
 	String menuAbout();
@@ -329,6 +297,10 @@ public interface Text extends Messages
 	@Key("menu.groups")
 	String menuGroups();
 
+	@Key("menu.user.permissions")
+	@DefaultMessage("User permissions")
+	String menuUserGroups();
+
 	@Key("menu.home")
 	String menuHome();
 
@@ -366,9 +338,6 @@ public interface Text extends Messages
 	@Key("notification.job.long.running")
 	String notificationLongRunning();
 
-	@Key("notification.login.successful")
-	String notificationLoginSuccessful();
-
 	@Key("notification.login.unsuccessful")
 	String notificationLoginUnsuccessful();
 
@@ -378,18 +347,9 @@ public interface Text extends Messages
 	@Key("notification.login.user.suspended")
 	String notificationLoginSuspendedUser();
 
-	@Key("notification.login.username.invalid")
-	String notificationLoginInvalidUsername();
-
 	@Key("notification.login.username.password.invalid")
 	@DefaultMessage("Invalid username or password.")
 	String notificationLoginInvalidUsernameOrPassword();
-
-	@Key("notification.login.password.invalid")
-	String notificationLoginInvalidPassword();
-
-	@Key("notification.login.prompt")
-	String notificationLoginPrompt();
 
 	@Key("notification.login.missing.input")
 	String notificationLoginFillFields();
@@ -413,12 +373,6 @@ public interface Text extends Messages
 	@Key("notification.datasets.no.data")
 	String notificationExportNoDataset();
 
-	@Key("notification.genotype.groups.accessions.no.data")
-	String notificationGenotypeExportNoAccessionGroupsForDataset();
-
-	@Key("notification.genotype.groups.markers.no.data")
-	String notificationGenotypeExportNoMarkerGroupsForDataset();
-
 	@Key("notification.genotype.map.no.data")
 	String notificationGenotypeExportNoMap();
 
@@ -428,20 +382,11 @@ public interface Text extends Messages
 	@Key("notification.genotype.selection.location.empty")
 	String notificationGeographyNoCollsiteSelected();
 
-	@Key("notification.geography.accessions.no.data")
-	String notificationGeographyNoAccessionsFound();
-
 	@Key("notification.climate.no.data")
 	String notificationClimateNoInformationClimate();
 
 	@Key("notification.climate.group.no.data")
 	String notificationClimateNoInformationClimateGroup();
-
-	@Key("notification.climate.selection.empty")
-	String notificationClimateSelectClimate();
-
-	@Key("notification.climate.group.selection.empty")
-	String notificationClimateSelectGroup();
 
 	@Key("notification.no.information")
 	String notificationNoInformationFound();
@@ -455,21 +400,8 @@ public interface Text extends Messages
 	@Key("notification.groups.selection.empty")
 	String notificationGroupsSelectAtLeastOne();
 
-	@Key("notification.groups.group.election.empty")
-	String notificationGroupsSelectGroup();
-
 	@Key("notification.number.invalid")
 	String notificationNotANumber();
-
-	@Key("notification.query.invalid")
-	String notificationInvalidQueryText();
-
-	@Key("notification.phenotype.dataset.no.phenotypes")
-	String notificationPhenotypeExportNoPhenotypesForDataset();
-
-	@Key("notification.compound.dataset.no.compound")
-	@DefaultMessage("No compounds found for the selected dataset.")
-	String notificationCompoundExportNoCompoundsForDataset();
 
 	@Key("notification.phenotype.no.data")
 	String notificationPhenotypeExportNoData();
@@ -502,9 +434,6 @@ public interface Text extends Messages
 	@Key("notification.groups.empty")
 	String notificationGroupsCannotBeEmpty();
 
-	@Key("notification.groups.types.no.data")
-	String notificationGroupsNoGroupTypes();
-
 	@Key("notification.groups.permissions.insufficient")
 	String notificationGroupsInsufficientPermissions();
 
@@ -514,14 +443,8 @@ public interface Text extends Messages
 	@Key("notification.kml.error")
 	String notificationKMLError();
 
-	@Key("notification.annotations.deleted")
-	String notificationAnnotationsDeleted(@PluralCount(DefaultRule_en.class) int itemCount);
-
 	@Key("notification.upload.progress.no.data")
 	String notificationUploadNoProgressInformation();
-
-	@Key("notification.upload.file.select")
-	String notificationUploadSelectFile();
 
 	@Key("notification.markers.export.options.fill.close")
 	String notificationMarkersExportOptionsFillInOrClose();
@@ -640,10 +563,6 @@ public interface Text extends Messages
 	@DefaultMessage("Add group")
 	String groupsButtonAddGroup();
 
-	@Key("page.about.button.search.members")
-	@DefaultMessage("Search")
-	String groupsButtonSearchMembers();
-
 	@Key("page.about.button.upload.members")
 	@DefaultMessage("Upload")
 	String groupsButtonUploadMembers();
@@ -684,6 +603,14 @@ public interface Text extends Messages
 	@Key("page.passport.pedigree.title")
 	@DefaultMessage("Pedigree")
 	String passportPedigreeData();
+
+	@Key("page.passport.pedigree.chart")
+	@DefaultMessage("Pedigree local view")
+	String passportPedigreeChart();
+
+	@Key("page.passport.pedigree.chart.sub")
+	@DefaultMessage("Shows grandparents, parents and children only. Red edges represent female parents and blue edges male parents.")
+	String passportPedigreeChartSub();
 
 	@Key("page.passport.entity.title")
 	@DefaultMessage("Entity data")
@@ -813,17 +740,11 @@ public interface Text extends Messages
 	@Key("column.accessions.collector.number")
 	String accessionsColumnCollNumber();
 
-	@Key("page.accessions.browse.download.dataset")
-	String accessionsDownloadDataset();
-
 	@Key("page.accessions.browse.download.column.identifier")
 	String accessionsDownloadIdColumn();
 
 	@Key("page.accessions.browse.download.group")
 	String accessionsDownloadGroups();
-
-	@Key("page.accessions.browse.download.dataset.complete")
-	String accessionsDownloadCompleteDataset();
 
 	@Key("page.accessions.browse.download.selected.accessions")
 	@DefaultMessage("Marked accessions")
@@ -859,6 +780,14 @@ public interface Text extends Messages
 	@Key("column.dataset.datatype")
 	@DefaultMessage("Data type")
 	String datasetsColumnDatasetDatatype();
+
+	@Key("column.dataset.site.name")
+	@DefaultMessage("Location")
+	String datasetsColumnSiteName();
+
+	@Key("column.dataset.country")
+	@DefaultMessage("Country")
+	String datasetsColumnCountry();
 
 	@Key("column.license.description")
 	@DefaultMessage("License description")
@@ -936,9 +865,6 @@ public interface Text extends Messages
 	@DefaultMessage("<p>This page shows all the datasets that are visible to you within this instance of Germinate. They are split into internal and external datasets. Internal datasets can be visualized and exported from Germinate whereas we only link external datasets. Each table supports sorting and filtering. Selecting a dataset will take you to the specific page for this dataset.</p>")
 	SafeHtml datasetOverviewHelp();
 
-	@Key("page.dataset.title")
-	String datasetsTitle();
-
 	@Key("page.dataset.internal.title")
 	String datasetsTitleInternal();
 
@@ -959,9 +885,6 @@ public interface Text extends Messages
 
 	@Key("dataset.state.private")
 	String datasetStatePrivate();
-
-	@Key("help.genotype")
-	SafeHtml genotypeExportHelp();
 
 	@Key("page.genotype.groups.accessions.title")
 	String genotypeExportHeadingAccessionGroups();
@@ -987,12 +910,6 @@ public interface Text extends Messages
 	@Key("page.genotype.cdf.text.three")
 	String genotypeExportSubtitleCDFThree();
 
-	@Key("page.genotype.cdf.hetero.title")
-	String genotypeExportHeadingHeteroFilter();
-
-	@Key("page.genotype.cdf.hetero.text")
-	String genotypeExportSubtitleHeteroFilter();
-
 	@Key("page.genotype.cdf.missing.title")
 	String genotypeExportHeadingMissingFilter();
 
@@ -1007,18 +924,6 @@ public interface Text extends Messages
 
 	@Key("page.geography.locations.heatmap.text")
 	String geographyCollsiteTextHeatmap();
-
-	@Key("page.geography.locations.elevation.title")
-	String geographyCollsiteHeadingHeatmapElevation();
-
-	@Key("page.geography.locations.elevation.text")
-	String geographyCollsiteHeadingTextElevation();
-
-	@Key("page.geography.locations.elevation.inverse.title")
-	String geographyCollsiteHeadingHeatmapElevationInv();
-
-	@Key("page.geography.locations.elevation.inverse.text")
-	String geographyCollsiteHeadingTextElevationInv();
 
 	@Key("page.geography.locations.clustered.title")
 	String geographyCollsiteHeadingClustered();
@@ -1036,12 +941,6 @@ public interface Text extends Messages
 	@Key("page.genotype.result.title")
 	String genotypeResultTitleResult();
 
-	@Key("page.genotype.result.text.one")
-	SafeHtml genotypeResultParagraphOne();
-
-	@Key("page.genotype.result.text.rwo")
-	SafeHtml genotypeResultParagraphTwo();
-
 	@Key("page.genotype.result.download.txt")
 	String genotypeResultDownloadRaw();
 
@@ -1055,9 +954,6 @@ public interface Text extends Messages
 	@Key("page.genotype.result.no.data")
 	SafeHtml genotypeResultNoData();
 
-	@Key("help.genotype.result")
-	SafeHtml genotypeResultHelp();
-
 	@Key("page.genotype.result.flapjack.title")
 	String genotypeResultFlapjackTitle();
 
@@ -1066,9 +962,6 @@ public interface Text extends Messages
 
 	@Key("page.genotype.result.deleted.markers")
 	String genotypeResultDeletedMarkers();
-
-	@Key("help.geography")
-	SafeHtml geographyHelp();
 
 	@Key("page.geography.title")
 	String geographyTitle(String collsite);
@@ -1084,23 +977,11 @@ public interface Text extends Messages
 	@DefaultMessage("Select group")
 	String climateSelectGroup();
 
-	@Key("column.climate.location")
-	String climateColumnCollectingsite();
-
-	@Key("column.climate.id")
-	String climateColumnId();
-
 	@Key("page.climate.table.title")
 	String climateHeadingTable();
 
 	@Key("page.climate.map.title")
 	String climateHeadingMapCollsites();
-
-	@Key("help.climate")
-	SafeHtml climateHelp();
-
-	@Key("page.climate.download.table.excel")
-	String climateDownloadTableExcel();
 
 	@Key("page.groups.title")
 	@DefaultMessage("Groups")
@@ -1118,9 +999,6 @@ public interface Text extends Messages
 
 	@Key("page.groups.public")
 	String groupsGroupPublic();
-
-	@Key("page.groups.filter.title")
-	String groupsCriteriaTitle();
 
 	@Key("help.groups")
 	@DefaultMessage("<h3>Groups</h3><p>In Germinate we define the concept of a group to be an arbitrary grouping of database items of a certain type. Germinate supports groups of <i>accessions</i>, <i>markers</i> and <i>locations</i>. These groups can be pre-created by an administrator or user-defined, which means that you can create your own groups (assuming user authentication is enabled).</p><p>The purpose of these groups becomes clear once you start exporting data. All types of data can either be exported for the whole dataset or the data can be subset into smaller chunks by selecting a single or a selection of groups. The exported data will then contain information about the selected groups only.</p><h4>Creating a group</h4><p><i>This section is only applicable if the Germinate instance you are using has user authentication enabled.</i></p><p>In addition to using the predefined groups, you can create new groups of your own. This page shows you all the existing groups in a table and upon selection, shows you its group members. New groups can be added and existing ones deleted by pressing the buttons below the groups table. Deleting a group requires you to select the checkbox in the corresponding table row as well as to have sufficient permissions to do so. When creating a new group you will be asked to select the group type and to decide on a name for the group. When you do so, the group will be associated with your user account.</p><p>Once this is done, the group will be created and Germinate will automatically select it and show the group members table (empty at this point) below the groups table. You can now manipulate the group itself by adding and removing members using the buttons below the table.</p><h4>Adding group members</h4><p>Adding members to an existing group can be achieved in two ways. You can upload a list of those items from a text file or your clipboard and Germinate will look these items up based on their identifier. Once found they will be added to the group. The other option is to use a boolean search feature that is similar to the way the table filtering works. You can choose fields from the database tables and specify values that the items in questions should equal, smaller or larger to.</p><p>Groups can be made public so that other users have the option to use them as well. If you decide to make your group public, toggle the switch button below the group members heading.</p>")
@@ -1183,9 +1061,6 @@ public interface Text extends Messages
 	@DefaultMessage("Location type")
 	String collectingsiteType();
 
-	@Key("column.locations.accession.count")
-	String collectingsiteNrOfAccessions();
-
 	@Key("column.locations.distance")
 	String collectingsiteDistance();
 
@@ -1194,9 +1069,6 @@ public interface Text extends Messages
 
 	@Key("page.megaenvironment.table.title")
 	String megaEnvHeadingTable(String megaEnvName);
-
-	@Key("help.megaenvironment")
-	SafeHtml megaEnvHelp();
 
 	@Key("page.megaenvironment.unknown")
 	String megaEnvUnknown();
@@ -1226,23 +1098,15 @@ public interface Text extends Messages
 	@DefaultMessage("Between")
 	String operatorsBetween();
 
-	@Key("operators.in.set")
+	@Key("operator.in.set")
 	@DefaultMessage("In set")
-	String operatorsInSet();
+	String operatorInSet();
 
 	@Key("operators.and")
 	String operatorsAnd();
 
 	@Key("operators.or")
 	String operatorsOr();
-
-	@Key("page.phenotypes.geochart.title")
-	@DefaultMessage("Map")
-	String phenotypeExportGeoChartTitle();
-
-	@Key("page.phenotypes.geochart.all.phenotypes")
-	@DefaultMessage("All phenotypes")
-	String phenotypeExportGeoChartAllPhenotypes();
 
 	@Key("page.phenotypes.matrix.select.group.phenotype")
 	@DefaultMessage("Please select at least one phenotype and at least one group.")
@@ -1274,25 +1138,6 @@ public interface Text extends Messages
 	@Key("page.phenotypes.phenotypes.text")
 	SafeHtml phenotypeExportSubtitlePhenotypes();
 
-	@Key("page.phenotypes.result.title")
-	String phenotypeExportHeadingResult();
-
-	@Key("help.phenotypes")
-	SafeHtml phenotypeExportHelp();
-
-	@Key("page.phenotypes.table.show.switch")
-	String phenotypeExportShowTable();
-
-	@Key("page.phenotypes.table.show.title")
-	String phenotypeExportHeadingShowTable();
-
-	@Key("column.phenotype.data.treatment.description")
-	@DefaultMessage("Treatment")
-	String phenotypeExportColumnTreatmentDescription();
-
-	@Key("page.phenotypes.dataset.title")
-	SafeHtml phenotypeDatasetHeader();
-
 	@Key("page.phenotypes.overview.title")
 	@DefaultMessage("Overview")
 	String phenotypeOverview();
@@ -1308,12 +1153,6 @@ public interface Text extends Messages
 
 	@Key("page.markers.datasets.paragraph")
 	SafeHtml markersParagraphDatasets();
-
-	@Key("page.markers.genotypes.count")
-	SafeHtml markersNumberOfGenotypes();
-
-	@Key("page.markers.details.title")
-	String markersHeadingDetails();
 
 	@Key("column.markers.name")
 	String markersColumnName();
@@ -1334,12 +1173,6 @@ public interface Text extends Messages
 
 	@Key("column.markers.definition.start")
 	String markersColumnDefinitionStart();
-
-	@Key("column.markers.allele.one")
-	String markersColumnAlleleOne();
-
-	@Key("column.markers.allele.two")
-	String markersColumnAlleleTwo();
 
 	@Key("column.markers.position.start")
 	String markersRegionStartPosition();
@@ -1411,7 +1244,12 @@ public interface Text extends Messages
 	SafeHtml mapsMarkersParagraph();
 
 	@Key("column.maps.name")
+	@DefaultMessage("Map Name")
 	String mapsColumnsMapName();
+
+	@Key("column.maps.description")
+	@DefaultMessage("Map Description")
+	String mapsColumnsMapDescription();
 
 	@Key("page.maps.download.format.map.chart")
 	String downloadInMapChartFormat();
@@ -1974,11 +1812,6 @@ public interface Text extends Messages
 	@DefaultMessage("Please mark at least one accession.")
 	String notificationAccessionExportMarkAtLeastOne();
 
-
-	@Key("contact.us.message")
-	@DefaultMessage("Contact us: {0}")
-	String contactUs(String email);
-
 	@Key("widget.contact.title")
 	@DefaultMessage("Contact us")
 	String contact();
@@ -2113,6 +1946,10 @@ public interface Text extends Messages
 	@DefaultMessage("Use ''%'' as the wildcard character, e.g. ''%KINGDOM%''.")
 	String searchBoxTooltip();
 
+	@Key("search.box.tooltip.in.set")
+	@DefaultMessage("Separate items with commas.")
+	String searchBoxTooltipInSet();
+
 	@Key("widget.synonyms.title")
 	@DefaultMessage("Synonyms")
 	String synonymsTitle();
@@ -2120,10 +1957,6 @@ public interface Text extends Messages
 	@Key("page.compounds.title")
 	@DefaultMessage("Compounds")
 	String compoundsTitle();
-
-	@Key("tooltip.table.header.filter.cell")
-	@DefaultMessage("Type your search term and hit enter. Use ''%'' as the wildcard character.")
-	String tableHeaderFilterCellTooltip();
 
 	@Key("notification.polygon.search.no.polygon.selected")
 	@DefaultMessage("No polygon selected.")
@@ -2141,21 +1974,9 @@ public interface Text extends Messages
 	@DefaultMessage("Details for compound: {0}")
 	String compoundDetailsFor(String compoundName);
 
-	@Key("page.compound.details.compound.data.chart")
-	@DefaultMessage("Compound data chart")
-	String compoundDetailsCompoundDataChart();
-
 	@Key("page.compound.details.image.title")
 	@DefaultMessage("Images")
 	String compoundDetailsImageTitle();
-
-	@Key("widget.d3.chart.compound.y.axis.title")
-	@DefaultMessage("Compound value")
-	String compoundBarChartYAxisTitle();
-
-	@Key("widget.d3.chart.compound.data.limit.warning")
-	@DefaultMessage("Data has been limited to {0} items.")
-	String compoundBarChartDataLimitWarning(int limit);
 
 	@Key("mcpd.accename")
 	@DefaultMessage("Accession name")
@@ -2716,4 +2537,69 @@ public interface Text extends Messages
 	@Key("widget.password.strength.four")
 	@DefaultMessage("Your password is very unguessable.")
 	String passwordStrengthFour();
+
+
+	@Key("page.user.groups.title")
+	@DefaultMessage("User groups")
+	String userGroupsTitle();
+
+	@Key("page.user.groups.text")
+	@DefaultMessage("<p>The table below shows the groups of users that are currently defined. You can add new groups, delete existing groups and add users to or remove users from groups.</p>")
+	SafeHtml userGroupsText();
+
+	@Key("page.user.groups.add.user")
+	@DefaultMessage("Add user")
+	String userGroupsAddUser();
+
+	@Key("page.dataset.permissions.add.group")
+	@DefaultMessage("Add group")
+	String userGroupsAddGroup();
+
+	@Key("page.dataset.permissions.title")
+	@DefaultMessage("Dataset permissions")
+	String datasetPermissionsTitle();
+
+	@Key("page.dataset.permissions.text")
+	@DefaultMessage("<p>The table below shows all available datasets. After selecting a dataset, you can define which user groups or individual users should have access to this dataset.</p>")
+	String datasetPermissionsText();
+
+	@Key("column.user.username")
+	@DefaultMessage("Username")
+	String userColumnUsername();
+
+	@Key("column.user.fullname")
+	@DefaultMessage("Full name")
+	String userColumnFullName();
+
+	@Key("column.user.email")
+	@DefaultMessage("Email")
+	String userColumnEmail();
+
+	@Key("column.user.institution")
+	@DefaultMessage("Institution")
+	String userColumnInstitution();
+
+	@Key("page.dataset.permissions.dataset")
+	@DefaultMessage("Dataset")
+	String datasetPermissionsDataset();
+
+	@Key("page.groups.current.members")
+	@DefaultMessage("Current group members")
+	String groupMembersCurrent();
+
+	@Key("page.dataset.permissions.users.title")
+	@DefaultMessage("User permissions")
+	String datasetPermissionsUsersTitle();
+
+	@Key("page.dataset.permissions.groups.title")
+	@DefaultMessage("Group permissions")
+	String datasetPermissionsGroupsTitle();
+
+	@Key("page.dataset.permissions.current.user.permissions")
+	@DefaultMessage("Current user permissions")
+	String datasetPermissionsCurrentUserPermissions();
+
+	@Key("page.dataset.permissions.current.group.permissions")
+	@DefaultMessage("Current group permissions")
+	String datasetPermissionsCurrentGroupPermissions();
 }

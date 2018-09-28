@@ -24,10 +24,10 @@ import java.util.stream.*;
 import javax.servlet.annotation.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -48,8 +48,11 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	private static final long serialVersionUID = -5552253474876329201L;
 
 	private static final String QUERY_NEW_GROUP_MEMBER_IDS_LOCATION   = "SELECT locations.id     FROM locations LEFT JOIN countries ON countries.id = locations.country_id WHERE %s IN (%s)";
-	private static final String QUERY_NEW_GROUP_MEMBER_IDS_ACCESSIONS = "SELECT germinatebase.id FROM germinatebase LEFT JOIN locations ON locations.id = germinatebase.location_id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN taxonomies ON taxonomies.id = germinatebase.taxonomy_id LEFT JOIN subtaxa ON subtaxa.id = germinatebase.subtaxa_id WHERE %s IN (%s)";
+	private static final String QUERY_NEW_GROUP_MEMBER_IDS_ACCESSIONS = "SELECT germinatebase.id FROM germinatebase LEFT JOIN locations ON locations.id = germinatebase.location_id LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN taxonomies ON taxonomies.id = germinatebase.taxonomy_id WHERE %s IN (%s)";
 	private static final String QUERY_NEW_GROUP_MEMBER_IDS_MARKERS    = "SELECT markers.id       FROM markers LEFT JOIN mapdefinitions ON markers.id = mapdefinitions.marker_id WHERE %s IN (%s)";
+
+	private static final String QUERY_MARKERS_DATA_IDS_DOWNLOAD = "SELECT markers.*, markertypes.description AS markertypes_description, mapdefinitions.definition_start AS mapdefinitions_definition_start, mapdefinitions.definition_end AS mapdefinitions_definition_end, mapdefinitions.chromosome AS mapdefinitions_chromosome, mapdefinitions.arm_impute AS mapdefinitions_arm_impute, maps.description AS maps_description FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN mapdefinitions ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id LEFT JOIN mapfeaturetypes ON mapfeaturetypes.id = mapdefinitions.mapfeaturetype_id WHERE (maps.visibility = 1 OR maps.user_id = ?) AND markers.id IN (%s)";
+	private static final String QUERY_COLLSITES_BY_IDS_DOWNLOAD = "SELECT locations.*, locationtypes.name AS locationtypes_name, locationtypes.description AS locationtypes_description, countries.country_name AS countries_country_name FROM locations LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id WHERE locations.id IN (%s)";
 
 	@Override
 	public PaginatedServerResult<List<Group>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
@@ -186,7 +189,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	}
 
 	@Override
-	public ServerResult<List<String>> getMarkerItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException
+	public ServerResult<List<String>> getMarkerItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -194,9 +197,104 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	}
 
 	@Override
+	public ServerResult<String> exportForGroupId(RequestProperties properties, Long groupId, GerminateDatabaseTable table) throws InvalidSessionException, InsufficientPermissionsException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		Group group = new GroupManager().getById(userAuth, groupId).getServerResult();
+
+		if (group != null)
+		{
+			if (userAuth.isAdmin() || group.canAccess(properties.getUserId()))
+			{
+				return exportForIds(properties, GroupManager.getItemIds(userAuth, groupId).getServerResult(), table);
+			}
+			else
+			{
+				throw new InsufficientPermissionsException();
+			}
+		}
+
+		return new ServerResult<>(null, null);
+	}
+
+	@Override
+	public ServerResult<String> exportForIds(RequestProperties properties, List<String> ids, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		String formatted;
+
+		switch (table)
+		{
+			case markers:
+				formatted = String.format(QUERY_MARKERS_DATA_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
+				try (GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
+						.setLong(userAuth.getId())
+						.setStrings(ids)
+						.getStreamer())
+				{
+					File output = createTemporaryFile("export_marker_group", FileType.txt.name());
+
+					try
+					{
+						Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
+					}
+					catch (java.io.IOException e)
+					{
+						throw new IOException(e);
+					}
+
+					return new ServerResult<>(streamer.getDebugInfo(), output.getName());
+				}
+
+			case germinatebase:
+				try (GerminateTableStreamer streamer = AccessionManager.getStreamerForIds(userAuth, ids))
+				{
+					File output = createTemporaryFile("export_accession_group", FileType.txt.name());
+
+					try
+					{
+						Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
+					}
+					catch (java.io.IOException e)
+					{
+						throw new jhi.germinate.shared.exception.IOException(e);
+					}
+
+					return new ServerResult<>(streamer.getDebugInfo(), output.getName());
+				}
+
+			case locations:
+				formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
+				try (GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
+						.setStrings(ids)
+						.getStreamer())
+				{
+					File output = createTemporaryFile("export_collsite_group", FileType.txt.name());
+
+					try
+					{
+						Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
+					}
+					catch (java.io.IOException e)
+					{
+						throw new jhi.germinate.shared.exception.IOException(e);
+					}
+
+					return new ServerResult<>(streamer.getDebugInfo(), output.getName());
+				}
+
+			default:
+				return new ServerResult<>(null, null);
+		}
+	}
+
+	@Override
 	public ServerResult<Tuple.Pair<Integer, Integer>> addItems(RequestProperties properties, String result, GerminateDatabaseTable referenceTable, String column, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidColumnException, InsufficientPermissionsException, SystemInReadOnlyModeException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(getFile(FileLocation.temporary, result))))
@@ -222,7 +320,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		column = Util.checkSortColumn(column, referenceTable.getColumnNames(), null);

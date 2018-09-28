@@ -43,6 +43,7 @@ import jhi.germinate.client.page.markeditemlist.*;
 import jhi.germinate.client.page.search.*;
 import jhi.germinate.client.page.statistics.*;
 import jhi.germinate.client.page.trial.*;
+import jhi.germinate.client.page.userpermissions.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
@@ -273,6 +274,11 @@ public class NavigationHandler
 		else if (Page.GROUPS.is(page))
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new GroupsPage()));
+		}
+		// USER GROUPS
+		else if (Page.USER_PERMISSIONS.is(page))
+		{
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new UserPermissionsPage()));
 		}
 		// HOME
 		else if (Page.HOME.is(page))

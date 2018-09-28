@@ -84,7 +84,6 @@ public class ContentHolder
 		LanguageSelector.init();
 		MarkedItemList.init();
 		ShareWidget.init();
-//		AccountSettings.init();
 		UserPanel.init();
 		SearchPanel.init();
 		ParallaxBanner.init();

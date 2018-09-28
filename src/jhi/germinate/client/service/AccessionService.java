@@ -35,7 +35,7 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("accession")
 public interface AccessionService extends RemoteService
 {
-	String[] COLUMNS_SORTABLE = {Accession.ID, EntityType.NAME, Location.ID, LocationType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Subtaxa.TAXONOMY_IDENTIFIER, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI};
+	String[] COLUMNS_SORTABLE = {Accession.ID, EntityType.NAME, Location.ID, LocationType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Taxonomy.SUBTAXA, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI};
 
 	final class Inst
 	{
@@ -161,18 +161,6 @@ public interface AccessionService extends RemoteService
 	 * @throws InvalidColumnException  Thrown if the requested sort column is invalid
 	 */
 	ServerResult<List<String>> getIdsForMegaEnv(RequestProperties properties, Long megaEnvId) throws InvalidSessionException, DatabaseException, InvalidColumnException;
-
-	/**
-	 * Exports the {@link Accession} data and returns the name of the result file
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param ids        The ids of the accessions
-	 * @return The name of the result file
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 * @throws IOException             Thrown if the file creation fails
-	 */
-	ServerResult<String> exportForIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException;
 
 	/**
 	 * Returns a paginated list of {@link Accession}s for the group preview (groups created from external tools).

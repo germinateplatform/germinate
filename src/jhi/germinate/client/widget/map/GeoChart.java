@@ -43,15 +43,7 @@ import jhi.germinate.shared.datastructure.database.*;
  */
 public class GeoChart extends GerminateComposite
 {
-	public enum GeoChartType
-	{
-		COUNT,
-		AVERAGE
-	}
-
-	private GeoChartType type = GeoChartType.COUNT;
-
-	private SimplePanel chartPanel = new SimplePanel();
+	private SimplePanel             chartPanel = new SimplePanel();
 	private List<Country>           chartData;
 	private CountrySelectionHandler handler;
 
@@ -90,11 +82,6 @@ public class GeoChart extends GerminateComposite
 		}
 	}
 
-	public void setGeoChartType(GeoChartType type)
-	{
-		this.type = type;
-	}
-
 	/**
 	 * Draws the Google GeoChart with the data from the server
 	 */
@@ -112,14 +99,14 @@ public class GeoChart extends GerminateComposite
 			return;
 		}
 
-        /* Set the axis colors */
+		/* Set the axis colors */
 		GeoChartColorAxis axis = GeoChartColorAxis.create();
 		String lower = Color.fromHex(GerminateSettingsHolder.getCategoricalColor(0))
 							.toTransparency(0.2f)
 							.toHexValue();
 		axis.setColors(lower, GerminateSettingsHolder.getCategoricalColor(0));
 
-        /* Set the GeoChart options */
+		/* Set the GeoChart options */
 		GeoChartLegend legend = GeoChartLegend.createObject().cast();
 		legend.setNumberFormat(".##");
 
@@ -128,14 +115,11 @@ public class GeoChart extends GerminateComposite
 		options.setColorAxis(axis);
 		options.setLegend(legend);
 
-        /* Set up the DataTable */
+		/* Set up the DataTable */
 		final DataTable data = DataTable.create();
 
 		data.addColumn(ColumnType.STRING, "Country");
-		if (type == GeoChartType.COUNT)
-			data.addColumn(ColumnType.NUMBER, Text.LANG.generalCount());
-		else
-			data.addColumn(ColumnType.NUMBER, Text.LANG.generalAverage());
+		data.addColumn(ColumnType.NUMBER, Text.LANG.generalCount());
 		data.addColumn(ColumnType.STRING, "Display");
 
 		data.addRows(chartData.size());
@@ -144,26 +128,13 @@ public class GeoChart extends GerminateComposite
 		for (Country row : chartData)
 		{
 			data.setValue(i, 0, row.getCountryCode2());
-			if (type == GeoChartType.COUNT)
-				data.setValue(i, 1, row.getExtra(Country.COUNT));
-			else
-				data.setValue(i, 1, row.getExtra(Country.AVERAGE));
+			data.setValue(i, 1, row.getExtra(Country.COUNT));
 			data.setValue(i, 2, row.getName());
 
 			i++;
 		}
 
-		/* Format the average values to two decimal places */
-		if (type == GeoChartType.AVERAGE)
-		{
-			NumberFormatOptions numberFormatOptions = NumberFormatOptions.create();
-			numberFormatOptions.setFractionDigits(2);
-			NumberFormat numberFormat = NumberFormat.create(numberFormatOptions);
-
-			numberFormat.format(data, 1);
-		}
-
-        /* We want to show the "Display" column in the tooltip rather than
+		/* We want to show the "Display" column in the tooltip rather than
 		 * "Country" */
 		PatternFormat format = PatternFormat.create("{1}");
 		format.format(data, 0, 2);
@@ -175,7 +146,7 @@ public class GeoChart extends GerminateComposite
 		DataView view = DataView.create(data);
 		view.setColumns(columns);
 
-        /* Create the chart from the view */
+		/* Create the chart from the view */
 		final com.googlecode.gwt.charts.client.geochart.GeoChart chart = new com.googlecode.gwt.charts.client.geochart.GeoChart();
 		chartPanel.add(chart);
 		chart.draw(view, options);

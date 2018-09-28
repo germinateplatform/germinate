@@ -25,7 +25,7 @@ import java.util.*;
 
 import javax.servlet.http.*;
 
-import jhi.germinate.server.config.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -43,7 +43,7 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 	@Override
 	public String processCall(String payload) throws SerializationException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
 			return RPC.encodeResponseForFailure(null, new SystemUnderMaintenanceException());
 		else
 			return super.processCall(payload);
@@ -165,7 +165,7 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 	{
 		makeSureTempFolderExists();
 
-		return new File(System.getProperty("java.io.tmpdir") + PropertyReader.getContextPath(getRequest()));
+		return new File(System.getProperty("java.io.tmpdir") + PropertyWatcher.getContextPath(getRequest()));
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 
 		do
 		{
-			file = new File(new File(System.getProperty("java.io.tmpdir") + PropertyReader.getContextPath(getRequest())), prefix + "_" + UUID.randomUUID() + "." + extension);
+			file = new File(new File(System.getProperty("java.io.tmpdir") + PropertyWatcher.getContextPath(getRequest())), prefix + "_" + UUID.randomUUID() + "." + extension);
 		} while (file.exists());
 
 		return file;
@@ -229,7 +229,7 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 	 */
 	private void makeSureTempFolderExists()
 	{
-		File file = new File(System.getProperty("java.io.tmpdir") + PropertyReader.getContextPath(getRequest()) + File.separator);
+		File file = new File(System.getProperty("java.io.tmpdir") + PropertyWatcher.getContextPath(getRequest()) + File.separator);
 
 		if (!file.exists())
 			file.mkdirs();

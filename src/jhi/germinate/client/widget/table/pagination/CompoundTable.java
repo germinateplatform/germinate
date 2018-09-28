@@ -26,6 +26,7 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -237,6 +238,30 @@ public abstract class CompoundTable extends DatabaseObjectPaginationTable<Compou
 		};
 		column.setDataStoreName(Unit.NAME);
 		addColumn(column, Text.LANG.compoundColumnUnitName(), sortingEnabled);
+
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Compound object)
+			{
+				String count = object.getExtra(DatabaseObject.COUNT);
+
+				if (StringUtils.isEmpty(count))
+					return null;
+				else
+				{
+					return count;
+				}
+			}
+
+			@Override
+			public Class getType()
+			{
+				return Long.class;
+			}
+		};
+		column.setDataStoreName(DatabaseObject.COUNT);
+		addColumn(column, Text.LANG.generalCount(), sortingEnabled);
 	}
 
 	@Override

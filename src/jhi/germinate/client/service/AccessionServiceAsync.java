@@ -112,15 +112,6 @@ public interface AccessionServiceAsync
 	void getIdsForMegaEnv(RequestProperties properties, Long megaEnvId, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
-	 * Retrieves the path to the file containing the accession data for the given ids
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param ids        The ids of the accessions
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void exportForIds(RequestProperties properties, List<String> ids, AsyncCallback<ServerResult<String>> callback);
-
-	/**
 	 * Returns a paginated list of {@link Accession}s for the group preview (groups created from external tools).
 	 *
 	 * @param properties The {@link RequestProperties}

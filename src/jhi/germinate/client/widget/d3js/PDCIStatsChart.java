@@ -19,18 +19,26 @@ package jhi.germinate.client.widget.d3js;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
+
+import java.util.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -78,6 +86,27 @@ public class PDCIStatsChart extends AbstractChart
 		});
 	}
 
+	public void onBarClicked(String group)
+	{
+		try
+		{
+			String[] parts = group.split("-");
+
+			/* Create the mapping */
+			PartialSearchQuery query = new PartialSearchQuery();
+			List<String> values = Arrays.asList(parts);
+			query.add(new SearchCondition(Accession.PDCI, new Between(), values, String.class));
+
+			/* Save it to the parameter store and change to the browse page */
+			FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
+			History.newItem(Page.ACCESSION_OVERVIEW.name());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	protected void updateChart(int width)
 	{
@@ -119,6 +148,8 @@ public class PDCIStatsChart extends AbstractChart
 
 		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
 
+		var that = this;
+
 		$wnd.d3.tsv(filePath, function (error, data) {
 			$wnd.d3.select("#" + panelId)
 				.datum(data)
@@ -130,6 +161,9 @@ public class PDCIStatsChart extends AbstractChart
 					.rowIdentifier("bin")
 					.tooltip(function (d) {
 						return d.value;
+					})
+					.onClick(function (d) {
+						that.@jhi.germinate.client.widget.d3js.PDCIStatsChart::onBarClicked(*)(d.row);
 					})
 					.tooltipStyle(tooltipStyle)
 					.axisStyle(axisStyle)

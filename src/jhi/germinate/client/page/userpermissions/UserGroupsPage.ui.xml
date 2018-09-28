@@ -1,0 +1,48 @@
+<!--
+  ~  Copyright 2018 Information and Computational Sciences,
+  ~  The James Hutton Institute.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+
+	<ui:style>
+	</ui:style>
+	<g:FlowPanel>
+		<b:PageHeader text="{msg.userGroupsTitle}"/>
+		<g:HTML ui:field="userGroupsHtml"/>
+		<g:SimplePanel ui:field="groupTablePanel"/>
+
+		<g:FlowPanel visible="false" ui:field="groupMembersWrapper">
+			<g:HTMLPanel tag="hr" />
+			<b:Heading size="H2" text="{msg.groupMembersTitle}" ui:field="groupName"/>
+			<b:Row>
+				<b:Column size="XS_12, LG_6">
+					<b:Heading size="H3" text="{msg.groupMembersCurrent}"/>
+					<g:SimplePanel ui:field="groupMembersPanel"/>
+				</b:Column>
+				<b:Column size="XS_12, LG_6">
+					<b:Heading size="H3" subText="{msg.groupsNewMembersSubtitle}" text="{msg.groupsNewMembersTitle}"/>
+					<g:SimplePanel ui:field="newGroupMembersTable"/>
+				</b:Column>
+			</b:Row>
+		</g:FlowPanel>
+	</g:FlowPanel>
+</ui:UiBinder>

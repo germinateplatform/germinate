@@ -46,10 +46,6 @@ import jhi.germinate.shared.search.*;
  */
 public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 {
-	public GroupTable()
-	{
-	}
-
 	public GroupTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
 		super(selectionMode, sortingEnabled);
@@ -151,7 +147,8 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 					event.preventDefault();
 
 					AddGroupDialog content = new AddGroupDialog(Collections.singletonList(object.getType()), object.getType());
-					content.setGroup(object);
+					content.setName(object.getName());
+					content.setDescription(object.getDescription());
 
 					new AlertDialog(Text.LANG.generalRename())
 							.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalRename(), Style.MDI_PENCIL_BOX_OUTLINE, ButtonType.PRIMARY, e ->

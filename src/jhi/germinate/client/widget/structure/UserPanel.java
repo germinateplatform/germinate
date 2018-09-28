@@ -34,15 +34,15 @@ import jhi.germinate.shared.datastructure.*;
  */
 public class UserPanel
 {
-	private static UserPanelUiBinder ourUiBinder = GWT.create(UserPanelUiBinder.class);
-	private static boolean isInitialized = false;
-	private static UserPanel INSTANCE;
+	private static UserPanelUiBinder ourUiBinder   = GWT.create(UserPanelUiBinder.class);
+	private static boolean           isInitialized = false;
+	private static UserPanel         INSTANCE;
 	@UiField
 	UListElement     root;
 	@UiField
 	ParagraphElement username;
 	//	@UiField
-//	ParagraphElement email;
+	//	ParagraphElement email;
 	@UiField
 	AnchorElement    gatekeeperLink;
 	@UiField
@@ -51,6 +51,8 @@ public class UserPanel
 	LIElement        adminContainer;
 	@UiField
 	AnchorElement    adminLink;
+	@UiField
+	AnchorElement    userPermissionsLink;
 
 	public UserPanel()
 	{
@@ -93,16 +95,30 @@ public class UserPanel
 
 	private void update(UserAuth auth)
 	{
+		boolean show = false;
 		if (auth.isAdmin() && GerminateSettingsHolder.isPageAvailable(Page.ADMIN_CONFIG))
 		{
-			GQuery.$(adminContainer).show();
+			show = true;
 			adminLink.setHref("#" + Page.ADMIN_CONFIG.name());
 		}
 		else
 		{
-			GQuery.$(adminContainer).hide();
 			adminLink.setHref("#");
 		}
+		if (auth.isAdmin() && GerminateSettingsHolder.isPageAvailable(Page.USER_PERMISSIONS))
+		{
+			show = true;
+			userPermissionsLink.setHref("#" + Page.USER_PERMISSIONS.name());
+		}
+		else
+		{
+			userPermissionsLink.setHref("#");
+		}
+
+		if (show)
+			GQuery.$(adminContainer).show();
+		else
+			GQuery.$(adminContainer).hide();
 
 		username.setInnerText(auth.getUsername());
 		gatekeeperLink.setHref(GerminateSettingsHolder.get().gatekeeperUrl.getValue());

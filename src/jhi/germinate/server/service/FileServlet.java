@@ -26,8 +26,8 @@ import java.util.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -47,15 +47,6 @@ public class FileServlet extends BaseHttpServlet
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
-//		// Delete publicly available files after they expire
-//		long purgeTime = System.currentTimeMillis() - (5 * 1000 * 60);
-//
-//		synchronized (PUBLICLY_AVAILABLE_FILES)
-//		{
-//			PUBLICLY_AVAILABLE_FILES.entrySet()
-//									.removeIf(e -> e.getValue() < purgeTime);
-//		}
-
 		/* Check parameters */
 		String workloadSessionId = req.getParameter(ServletConstants.PARAM_SID);
 		String filePath = req.getParameter(ServletConstants.PARAM_FILE_PATH);
@@ -92,7 +83,7 @@ public class FileServlet extends BaseHttpServlet
 			}
 		}
 
-		if (StringUtils.isEmpty(filePath) || PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
+		if (StringUtils.isEmpty(filePath) || PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
 		{
 			error(resp, HttpStatus.SC_BAD_REQUEST, "Requested resource not available.");
 			return;
@@ -136,20 +127,14 @@ public class FileServlet extends BaseHttpServlet
 		}
 
         /* Set the filename that will be used for file download */
-		String filename;
-
-//		if (location == FileLocation.temporary)
-//			filename = Util.getDateTime() + "." + extension;
-//		else
-			filename = file.getName();
+		String filename = file.getName();
 
         /* Set the header */
-//		String attachment = (location == FileLocation.download) ? "attachment; " : "";
 		/* Suggest a filename */
 		resp.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
 
         /* Delete old temporary files */
-		Long timeInHours = PropertyReader.getLong(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS);
+		Long timeInHours = PropertyWatcher.getLong(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS);
 		new DeleteOldFilesThread(getTemporaryFileFolder(req), timeInHours).start();
 
 		FileUtils.setLastModifyDateNow(file);

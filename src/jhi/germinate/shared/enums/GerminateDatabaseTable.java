@@ -87,7 +87,6 @@ public enum GerminateDatabaseTable
 	soils,
 	storage,
 	storagedata,
-	subtaxa,
 	synonyms,
 	synonymtypes,
 	taxonomies,

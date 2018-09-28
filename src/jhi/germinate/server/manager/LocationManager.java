@@ -41,8 +41,6 @@ public class LocationManager extends AbstractManager<Location>
 
 	private static final String COMMON_TABLES = "locations LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN locationtypes ON locations.locationtype_id = locationtypes.id";
 
-	private static final String SELECT_ALL_FOR_TRIAL         = "SELECT countries.*, COUNT(1) AS count FROM countries LEFT JOIN locations ON locations.country_id = countries.id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id LEFT JOIN phenotypedata ON germinatebase.id = phenotypedata.germinatebase_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE datasets.id IN (%s) AND experimenttypes.description = ? GROUP BY countries.id";
-	private static final String SELECT_ALL_FOR_PHENOTYPE     = "SELECT countries.*, AVG(phenotypedata.phenotype_value) AS avg FROM countries LEFT JOIN locations ON locations.country_id = countries.id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id LEFT JOIN phenotypedata ON germinatebase.id = phenotypedata.germinatebase_id LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE datasets.id IN (%s) AND experimenttypes.description = ? AND phenotypedata.phenotype_id = ? GROUP BY countries.id";
 	private static final String SELECT_ALL_FOR_GROUP         = "SELECT locations.* FROM locations LEFT JOIN groupmembers ON locations.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id LEFT JOIN countries ON locations.country_id = countries.id WHERE groups.id = ? %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_MEGA_ENV      = "SELECT locations.*, COUNT(DISTINCT germinatebase.id) AS count FROM locations LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id LEFT JOIN megaenvironmentdata ON locations.id = megaenvironmentdata.location_id WHERE megaenvironmentdata.is_final = 1 AND locationtypes.name = 'collectingsites' AND megaenvironmentdata.megaenvironment_id = ? GROUP BY locations.id %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_MEGA_ENV_UNK  = "SELECT locations.*, COUNT(DISTINCT germinatebase.id) AS count FROM locations LEFT JOIN countries ON countries.id = locations.country_id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id WHERE locationtypes.name = 'collectingsites' AND NOT EXISTS (SELECT 1 FROM megaenvironmentdata WHERE megaenvironmentdata.is_final = 1 AND megaenvironmentdata.location_id = locations.id) GROUP BY locations.id %s LIMIT ?, ?";
@@ -141,29 +139,6 @@ public class LocationManager extends AbstractManager<Location>
 		return AbstractManager.<Location>getFilteredValueQuery(filter, userAuth, SELECT_IDS_FOR_FILTER, LocationService.COLUMNS_LOCATION_SORTABLE)
 				.run(Location.ID)
 				.getStrings();
-	}
-
-	public static ServerResult<List<Country>> getAllForPhenotype(UserAuth user, List<Long> datasetIds, ExperimentType type, Long phenotypeId) throws DatabaseException
-	{
-		if (phenotypeId == null)
-		{
-			String formatted = String.format(SELECT_ALL_FOR_TRIAL, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
-			return new DatabaseObjectQuery<Country>(formatted, user)
-					.setLongs(datasetIds)
-					.setString(type.name())
-					.run()
-					.getObjects(Country.CountParser.Inst.get());
-		}
-		else
-		{
-			String formatted = String.format(SELECT_ALL_FOR_PHENOTYPE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
-			return new DatabaseObjectQuery<Country>(formatted, user)
-					.setLongs(datasetIds)
-					.setString(type.name())
-					.setLong(phenotypeId)
-					.run()
-					.getObjects(Country.AverageParser.Inst.get());
-		}
 	}
 
 	public static PaginatedServerResult<List<Location>> getAllForGroup(UserAuth userAuth, Long groupId, Pagination pagination) throws DatabaseException, InvalidColumnException, InsufficientPermissionsException

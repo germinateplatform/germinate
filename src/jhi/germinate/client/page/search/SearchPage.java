@@ -126,7 +126,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 			@Override
 			protected String getLabel(ComparisonOperator item)
 			{
-				return getOperatorString(item);
+				return FilterRow.getOperatorString(item);
 			}
 
 			@Override
@@ -135,15 +135,27 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				super.onValueChange(value);
 
 				if (value instanceof Like)
-					tooltip.init();
+				{
+					tooltip.setTitle(Text.LANG.searchBoxTooltip());
+					if (!tooltip.isInitialized())
+						tooltip.init();
+				}
+				else if (value instanceof InSet)
+				{
+					tooltip.setTitle(Text.LANG.searchBoxTooltipInSet());
+					if (!tooltip.isInitialized())
+						tooltip.init();
+				}
 				else
+				{
 					tooltip.destroy();
+				}
 			}
 		};
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
-		operator.setData(Arrays.asList(new Equal(), new Like()), true);
+		operator.setData(Arrays.asList(new Equal(), new Like(), new InSet()), true);
 
 		String searchString = StringParameterStore.Inst.get().get(Parameter.searchString);
 
@@ -184,26 +196,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 		additionalDataText.setHTML(Text.LANG.searchAdditionalDatasetsText());
 		additionalDataTextShort.setHTML(Text.LANG.searchAdditionalDatasetsTextShort());
 		additionalDataTextShort.addStyleName(Emphasis.INFO.getCssName());
-	}
-
-	private String getOperatorString(ComparisonOperator item)
-	{
-		if (item instanceof Like)
-			return Text.LANG.operatorsLike();
-		else if (item instanceof Equal)
-			return Text.LANG.operatorsEqual();
-		else if (item instanceof GreaterThan)
-			return Text.LANG.operatorsGreaterThan();
-		else if (item instanceof GreaterThanEquals)
-			return Text.LANG.operatorsGreaterThanEquals();
-		else if (item instanceof LessThan)
-			return Text.LANG.operatorsLessThan();
-		else if (item instanceof LessThanEquals)
-			return Text.LANG.operatorsLessThanEquals();
-		else if (item instanceof Between)
-			return Text.LANG.operatorsBetween();
-		else
-			return item.getClass().getSimpleName();
 	}
 
 	private void doSearch(String searchString)
@@ -481,7 +473,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		if (section == SearchType.DATASETS || section == SearchType.ALL)
 		{
-			datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true)
+			datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, null)
 			{
 				{
 					preventInitialDataLoad = true;
@@ -653,93 +645,93 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				experimentTypes = new ArrayList<>();
 				if (section == SearchType.ACCESSION_DATA || section == SearchType.ALL)
 				{
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-					mapping.put(Accession.NAME, searchString);
-					mapping.put(Accession.NUMBER, searchString);
-					mapping.put(Accession.COLLNUMB, searchString);
-					mapping.put(Taxonomy.GENUS, searchString);
-					mapping.put(Taxonomy.SPECIES, searchString);
-					mapping.put(Subtaxa.TAXONOMY_IDENTIFIER, searchString);
-					mapping.put(Country.COUNTRY_NAME, searchString);
-					mapping.put(Synonym.SYNONYM, searchString);
-					accessionDataTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Accession.GENERAL_IDENTIFIER, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Accession.NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Accession.NUMBER, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Accession.COLLNUMB, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Taxonomy.GENUS, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Taxonomy.SPECIES, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Taxonomy.SUBTAXA, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Country.COUNTRY_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Synonym.SYNONYM, operator.getSelection(), searchString, String.class));
+					accessionDataTable.forceFilter(query, false);
 				}
 				if (section == SearchType.ACCESSION_ATTRIBUTE_DATA || section == SearchType.ALL)
 				{
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-					mapping.put(Accession.NAME, searchString);
-					mapping.put(Attribute.NAME, searchString);
-					mapping.put(Attribute.DESCRIPTION, searchString);
-					mapping.put(AttributeData.VALUE, searchString);
-					accessionAttributeDataTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Accession.GENERAL_IDENTIFIER, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Accession.NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Attribute.NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Attribute.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(AttributeData.VALUE, operator.getSelection(), searchString, String.class));
+					accessionAttributeDataTable.forceFilter(query, false);
 				}
 				if (section == SearchType.PHENOTYPE_DATA || section == SearchType.ALL)
 				{
 					experimentTypes.add(ExperimentType.trials);
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-					mapping.put(Accession.NAME, searchString);
-					mapping.put(Dataset.DESCRIPTION, searchString);
-					mapping.put(Phenotype.NAME, searchString);
-					mapping.put(Phenotype.SHORT_NAME, searchString);
-					phenotypeDataTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Accession.GENERAL_IDENTIFIER, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Accession.NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Dataset.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Phenotype.NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Phenotype.SHORT_NAME, operator.getSelection(), searchString, String.class));
+					phenotypeDataTable.forceFilter(query, false);
 				}
 				if (section == SearchType.COMPOUND_DATA || section == SearchType.ALL)
 				{
 					experimentTypes.add(ExperimentType.compound);
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Accession.GENERAL_IDENTIFIER, searchString);
-					mapping.put(Accession.NAME, searchString);
-					mapping.put(Compound.NAME, searchString);
-					compoundDataTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Accession.GENERAL_IDENTIFIER, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Accession.NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Compound.NAME, operator.getSelection(), searchString, String.class));
+					compoundDataTable.forceFilter(query, false);
 				}
 				if (section == SearchType.MAPDEFINITION_DATA || section == SearchType.ALL)
 				{
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Marker.MARKER_NAME, searchString);
-					mapping.put(MapFeatureType.DESCRIPTION, searchString);
-					mapping.put(jhi.germinate.shared.datastructure.database.Map.DESCRIPTION, searchString);
-					mapping.put(MapDefinition.CHROMOSOME, searchString);
-					mapping.put(Synonym.SYNONYM, searchString);
-					mapDefinitionTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Marker.MARKER_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(MapFeatureType.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(jhi.germinate.shared.datastructure.database.Map.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(MapDefinition.CHROMOSOME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Synonym.SYNONYM, operator.getSelection(), searchString, String.class));
+					mapDefinitionTable.forceFilter(query, false);
 				}
 				if (section == SearchType.DATASETS || section == SearchType.ALL)
 				{
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Dataset.DESCRIPTION, searchString);
-					mapping.put(ExperimentType.DESCRIPTION, searchString);
-					mapping.put(Experiment.EXPERIMENT_NAME, searchString);
-					mapping.put(Dataset.CONTACT, searchString);
-					datasetTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Dataset.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(ExperimentType.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Experiment.EXPERIMENT_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Dataset.CONTACT, operator.getSelection(), searchString, String.class));
+					datasetTable.forceFilter(query, false);
 				}
 				if (section == SearchType.DATASET_ATTRIBUTE_DATA || section == SearchType.ALL)
 				{
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Dataset.DESCRIPTION, searchString);
-					mapping.put(Attribute.NAME, searchString);
-					mapping.put(Attribute.DESCRIPTION, searchString);
-					mapping.put(AttributeData.VALUE, searchString);
-					datasetAttributeDataTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Dataset.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Attribute.NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Attribute.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(AttributeData.VALUE, operator.getSelection(), searchString, String.class));
+					datasetAttributeDataTable.forceFilter(query, false);
 				}
 				if (section == SearchType.PEDIGREE_DATA || section == SearchType.ALL)
 				{
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(PedigreeService.CHILD_GID, searchString);
-					mapping.put(PedigreeService.CHILD_NAME, searchString);
-					mapping.put(PedigreeService.PARENT_GID, searchString);
-					mapping.put(PedigreeService.PARENT_NAME, searchString);
-					pedigreeTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(PedigreeService.CHILD_GID, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(PedigreeService.CHILD_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(PedigreeService.PARENT_GID, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(PedigreeService.PARENT_NAME, operator.getSelection(), searchString, String.class));
+					pedigreeTable.forceFilter(query, false);
 				}
 				if (section == SearchType.LOCATION_DATA || section == SearchType.ALL)
 				{
-					FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-					mapping.put(Location.SITE_NAME, searchString);
-					mapping.put(Location.REGION, searchString);
-					mapping.put(Location.STATE, searchString);
-					mapping.put(Country.COUNTRY_NAME, searchString);
-					locationTable.forceFilter(mapping, false, operator.getSelection());
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Location.SITE_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Location.REGION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Location.STATE, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Country.COUNTRY_NAME, operator.getSelection(), searchString, String.class));
+					locationTable.forceFilter(query, false);
 				}
 
 				additionalDataTable.refreshTable();
@@ -771,7 +763,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 	private void addAdditionalDatasetsTable()
 	{
-		additionalDataTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, true, false)
+		additionalDataTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, true, false, null)
 		{
 			{
 				preventInitialDataLoad = true;
@@ -814,7 +806,11 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		Set<License> licensesToAgreeTo = selectedItems.stream()
 													  .filter(d -> d.getLicense() != null)
-													  .map(Dataset::getLicense)
+													  .map(d -> {
+														  License license = d.getLicense();
+														  license.setExtra(Dataset.ID, d.getId());
+														  return license;
+													  })
 													  .collect(Collectors.toCollection(HashSet::new));
 
 		if (!CollectionUtils.isEmpty(licensesToAgreeTo))

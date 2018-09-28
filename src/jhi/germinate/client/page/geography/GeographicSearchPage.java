@@ -47,7 +47,6 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 import jhi.gwt.leaflet.client.basic.*;
@@ -229,24 +228,13 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
-					try
-					{
-						if (filter == null)
-							filter = new PartialSearchQuery();
-						SearchCondition condition = new SearchCondition();
-						condition.setColumnName(LocationType.NAME);
-						condition.setComp(new Equal());
-						condition.addConditionValue(LocationType.collectingsites.name());
-						condition.setType(String.class.getSimpleName());
-						filter.add(condition);
+					if (filter == null)
+						filter = new PartialSearchQuery();
+					SearchCondition condition = new SearchCondition(LocationType.NAME, new Equal(), LocationType.collectingsites.name(), String.class);
+					filter.add(condition);
 
-						if (filter.getAll().size() > 1)
-							filter.addLogicalOperator(new And());
-					}
-					catch (InvalidArgumentException | InvalidSearchQueryException e)
-					{
-						e.printStackTrace();
-					}
+					if (filter.getAll().size() > 1)
+						filter.addLogicalOperator(new And());
 
 					LocationService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
 				}
@@ -309,24 +297,13 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
-					try
-					{
-						if (filter == null)
-							filter = new PartialSearchQuery();
-						SearchCondition condition = new SearchCondition();
-						condition.setColumnName(LocationType.NAME);
-						condition.setComp(new Equal());
-						condition.addConditionValue(LocationType.collectingsites.name());
-						condition.setType(Long.class.getSimpleName());
-						filter.add(condition);
+					if (filter == null)
+						filter = new PartialSearchQuery();
+					SearchCondition condition = new SearchCondition(LocationType.NAME, new Equal(), LocationType.collectingsites.name(), Long.class);
+					filter.add(condition);
 
-						if (filter.getAll().size() > 1)
-							filter.addLogicalOperator(new And());
-					}
-					catch (InvalidArgumentException | InvalidSearchQueryException e)
-					{
-						e.printStackTrace();
-					}
+					if (filter.getAll().size() > 1)
+						filter.addLogicalOperator(new And());
 
 					AccessionService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
 				}

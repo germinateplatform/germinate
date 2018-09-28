@@ -17,6 +17,7 @@
 
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
@@ -43,6 +44,14 @@
 		<g:FlowPanel visible="false" ui:field="acceptPart">
 			<g:Label text="{msg.licenseWizardDeclineMeaning}"/>
 			<b:ButtonGroup addStyleNames="{PULL_RIGHT}">
+				<b:ButtonGroup dropUp="true">
+					<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DOWNLOAD}" dataToggle="DROPDOWN" text="{msg.generalSave}" toggleCaret="true" />
+					<b:DropDownMenu>
+						<g8:MdiAnchorListItem mdi="{MDI_PRINTER}" text="{msg.generalPrint}" ui:field="print"/>
+						<g8:MdiAnchorListItem mdi="{MDI_FILE_XML}" text="{msg.downloadFileAsHtml}" ui:field="html"/>
+					</b:DropDownMenu>
+				</b:ButtonGroup>
+
 				<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_CANCEL}" text="{msg.generalDecline}" ui:field="decline"/>
 				<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_CHECK}" text="{msg.generalAccept}" ui:field="accept"/>
 			</b:ButtonGroup>

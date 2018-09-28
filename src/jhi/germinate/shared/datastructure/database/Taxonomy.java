@@ -38,18 +38,22 @@ public class Taxonomy extends DatabaseObject
 {
 	private static final long serialVersionUID = -235820564023498703L;
 
-	public static final String ID         = "taxonomies.id";
-	public static final String GENUS      = "taxonomies.genus";
-	public static final String SPECIES    = "taxonomies.species";
-	public static final String AUTHOR     = "taxonomies.species_author";
-	public static final String CROPNAME   = "taxonomies.cropname";
-	public static final String PLOIDY     = "taxonomies.ploidy";
-	public static final String CREATED_ON = "taxonomies.created_on";
-	public static final String UPDATED_ON = "taxonomies.updated_on";
+	public static final String ID              = "taxonomies.id";
+	public static final String GENUS           = "taxonomies.genus";
+	public static final String SPECIES         = "taxonomies.species";
+	public static final String SUBTAXA         = "taxonomies.subtaxa";
+	public static final String TAXONOMY_AUTHOR = "taxonomies.species_author";
+	public static final String SUBTAXA_AUTHOR  = "taxonomies.subtaxa_author";
+	public static final String CROPNAME        = "taxonomies.cropname";
+	public static final String PLOIDY          = "taxonomies.ploidy";
+	public static final String CREATED_ON      = "taxonomies.created_on";
+	public static final String UPDATED_ON      = "taxonomies.updated_on";
 
 	private String  genus;
 	private String  species;
-	private String  author;
+	private String  subtaxa;
+	private String  taxonomyAuthor;
+	private String  subtaxaAuthor;
 	private String  cropName;
 	private Integer ploidy;
 	private Long    createdOn;
@@ -86,14 +90,36 @@ public class Taxonomy extends DatabaseObject
 		return this;
 	}
 
-	public String getAuthor()
+	public String getSubtaxa()
 	{
-		return author;
+		return subtaxa;
 	}
 
-	public Taxonomy setAuthor(String author)
+	public Taxonomy setSubtaxa(String subtaxa)
 	{
-		this.author = author;
+		this.subtaxa = subtaxa;
+		return this;
+	}
+
+	public String getTaxonomyAuthor()
+	{
+		return taxonomyAuthor;
+	}
+
+	public Taxonomy setTaxonomyAuthor(String taxonomyAuthor)
+	{
+		this.taxonomyAuthor = taxonomyAuthor;
+		return this;
+	}
+
+	public String getSubtaxaAuthor()
+	{
+		return subtaxaAuthor;
+	}
+
+	public Taxonomy setSubtaxaAuthor(String subtaxaAuthor)
+	{
+		this.subtaxaAuthor = subtaxaAuthor;
 		return this;
 	}
 
@@ -194,7 +220,9 @@ public class Taxonomy extends DatabaseObject
 				return new Taxonomy(id)
 						.setGenus(row.getString(GENUS))
 						.setSpecies(row.getString(SPECIES))
-						.setAuthor(row.getString(AUTHOR))
+						.setSubtaxa(row.getString(SUBTAXA))
+						.setTaxonomyAuthor(row.getString(TAXONOMY_AUTHOR))
+						.setSubtaxaAuthor(row.getString(SUBTAXA_AUTHOR))
 						.setCropName(row.getString(CROPNAME))
 						.setPloidy(row.getInt(PLOIDY))
 						.setCreatedOn(row.getTimestamp(CREATED_ON))
@@ -221,10 +249,12 @@ public class Taxonomy extends DatabaseObject
 		@Override
 		public void write(Database database, Taxonomy object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO taxonomies (" + GENUS + ", " + SPECIES + ", " + AUTHOR + ", " + CROPNAME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO taxonomies (" + GENUS + ", " + SPECIES + ", " + SUBTAXA + ", " + TAXONOMY_AUTHOR + ", " + SUBTAXA_AUTHOR + ", " + CROPNAME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getGenus())
 					.setString(object.getSpecies())
-					.setString(object.getAuthor())
+					.setString(object.getSubtaxa())
+					.setString(object.getTaxonomyAuthor())
+					.setString(object.getSubtaxaAuthor())
 					.setString(object.getCropName());
 
 			if (object.getCreatedOn() != null)

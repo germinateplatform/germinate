@@ -15,39 +15,37 @@
  *  limitations under the License.
  */
 
-package jhi.germinate.server.config;
+package jhi.germinate.server.watcher;
+
+import org.apache.commons.io.monitor.*;
 
 import java.io.*;
 import java.io.IOException;
 import java.net.*;
-import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
 
 import javax.servlet.http.*;
 
 import jhi.germinate.server.database.Database.*;
-import jhi.germinate.server.service.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
 /**
- * {@link PropertyReader} is a wrapper around {@link Properties} to readAll properties.
+ * {@link PropertyWatcher} is a wrapper around {@link Properties} to readAll properties.
  *
  * @author Sebastian Raubach
  */
-public class PropertyReader
+public class PropertyWatcher
 {
 	/** The name of the properties file */
 	private static final String PROPERTIES_FILE = "config.properties";
 
 	private static Properties properties = new Properties();
-	private static PropertyChangeListenerThread fileWatcher;
 
-	private static Thread   fileWatcherThread;
-	private static WatchKey watchKey;
+	private static FileAlterationMonitor monitor;
 
 	/**
 	 * Attempts to reads the properties file and then checks the required properties.
@@ -57,21 +55,23 @@ public class PropertyReader
 		/* Start to listen for file changes */
 		try
 		{
-			Path path = new File(PropertyReader.class.getClassLoader().getResource(PROPERTIES_FILE).toURI()).getParentFile().toPath();
-			FileSystem fs = path.getFileSystem();
-
-			WatchService service = fs.newWatchService();
-			/* start the file watcher thread below */
-			fileWatcher = new PropertyChangeListenerThread(service);
-			fileWatcherThread = new Thread(fileWatcher, "PropertyFileWatcher");
-			fileWatcherThread.start();
-
-			/* Register events */
-			watchKey = path.register(service, StandardWatchEventKinds.ENTRY_MODIFY);
+			Path path = new File(PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE).toURI()).getParentFile().toPath();
+			FileAlterationObserver observer = new FileAlterationObserver(path.toFile());
+			monitor = new FileAlterationMonitor(1000L);
+			observer.addListener(new FileAlterationListenerAdaptor()
+			{
+				@Override
+				public void onFileChange(File file)
+				{
+					loadProperties();
+				}
+			});
+			monitor.addObserver(observer);
+			monitor.start();
 
 			loadProperties();
 		}
-		catch (URISyntaxException | IOException | NullPointerException e)
+		catch (Exception e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -81,7 +81,7 @@ public class PropertyReader
 	{
 		try
 		{
-			URL url = PropertyReader.class.getClassLoader().getResource(PROPERTIES_FILE);
+			URL url = PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE);
 			FileInputStream stream = new FileInputStream(new File(url.toURI()));
 			properties.load(stream);
 			stream.close();
@@ -99,12 +99,17 @@ public class PropertyReader
 
 	public static void stopFileWatcher()
 	{
-		if (watchKey != null)
-			watchKey.cancel();
-		if (fileWatcher != null)
-			fileWatcher.stop();
-		if (fileWatcherThread != null)
-			fileWatcherThread.interrupt();
+		try
+		{
+			if (monitor != null)
+				monitor.stop();
+
+			monitor = null;
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -607,95 +612,9 @@ public class PropertyReader
 	 */
 	public static synchronized void store() throws IOException, URISyntaxException, NullPointerException
 	{
-		URL url = PropertyReader.class.getClassLoader().getResource(PROPERTIES_FILE);
+		URL url = PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE);
 		FileOutputStream stream = new FileOutputStream(new File(url.toURI()));
 		properties.store(stream, null);
 		stream.close();
-	}
-
-	/**
-	 * This Runnable is used to constantly attempt to take from the watch queue, and will receive all events that are registered with the fileWatcher
-	 * it is associated.
-	 */
-	private static class PropertyChangeListenerThread implements Runnable
-	{
-		/** the watchService that is passed in from above */
-		private WatchService watcher;
-
-		private boolean stopped = false;
-
-		public PropertyChangeListenerThread(WatchService watcher)
-		{
-			this.watcher = watcher;
-		}
-
-		public void stop()
-		{
-			stopped = true;
-		}
-
-		/**
-		 * In get to implement a file watcher, we loop forever ensuring requesting to take the next item from the file watchers queue.
-		 */
-		@Override
-		public void run()
-		{
-			while (!stopped)
-			{
-				/* Wait for key to be signaled */
-				WatchKey key;
-				try
-				{
-					key = watcher.take();
-				}
-				catch (InterruptedException x)
-				{
-					return;
-				}
-
-                /* We have a polled event, now we traverse it and receive all the states from it */
-				for (WatchEvent<?> event : key.pollEvents())
-				{
-					WatchEvent.Kind<?> kind = event.kind();
-
-					if (kind == StandardWatchEventKinds.OVERFLOW)
-					{
-						continue;
-					}
-
-                    /* The filename is the context of the event */
-					@SuppressWarnings("unchecked")
-					WatchEvent<Path> ev = (WatchEvent<Path>) event;
-					Path filename = ev.context();
-
-					if (!stopped && PROPERTIES_FILE.equals(filename.getFileName().toString()))
-					{
-						loadProperties();
-						UserServiceImpl.invalidateSessionAttributes();
-					}
-				}
-
-                /*
-				 * Reset the key -- this step is critical if you want to receive
-                 * further watch events. If the key is no longer valid, the
-                 * directory is inaccessible so exit the loop.
-                 */
-				boolean valid = key.reset();
-
-				try
-				{
-					Thread.sleep(1000);
-				}
-				catch (InterruptedException e)
-				{
-					throw new RuntimeException(e);
-				}
-
-				if (!valid)
-				{
-					break;
-				}
-			}
-		}
 	}
 }

@@ -84,60 +84,45 @@
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-        var data = [
-            {
-                label: "x14"
-            },
-            {
-                label: "chad"
-            },
-            {
-                label: "optic",
-                class: "highlight"
-            },
-            {
-                label: "x38"
-            },
-            {
-                label: "akita"
-            },
-            {
-                label: "spire"
-            }
-        ];
+		d3.xhr("d3-pedigree-chart.helium").get(function (err, response) {
+			var dirtyTsv = response.responseText;
+			var firstEOL = dirtyTsv.indexOf('\n');
+			var parsedTsv = d3.tsv.parse(dirtyTsv.substring(firstEOL + 1)); // Remove the first row (Helium header)
 
-        var connections = [
-            {
-                from: "x14",
-                to: "optic"
-            },
-            {
-                from: "chad",
-                to: "optic"
-            },
-            {
-                from: "optic",
-                to: "x38"
-            },
-            {
-                from: "optic",
-                to: "akita"
-            },
-            {
-                from: "optic",
-                to: "spire"
-            }
-        ];
+			var nodes = {};
+			var connections = [];
 
-        d3.select("body")
-            .datum(data)
-            .call(pedigreeChart()
-                .margin(margin)
-                .width(width)
-                .height(height)
-                .connections(connections)
-                .tooltip(function (d) {
-                    return "";
-                })
-                .interpolate("basis"));
+            parsedTsv.forEach(function (d) {
+				nodes[d.LineName] = null;
+				nodes[d.Parent] = null;
+
+                connections.push({
+                    from: d.Parent,
+                    to: d.LineName
+                });
+            });
+
+            var data = [];
+
+            for(var node in nodes) {
+				if (nodes.hasOwnProperty(node)) {
+                    data.push({
+                       label: node
+                    });
+				}
+            }
+
+			d3.select("body")
+				.datum(data)
+				.call(pedigreeChart()
+					.margin(margin)
+					.width(width)
+					.height(height)
+					.connections(connections)
+					.tooltip(function (d) {
+						return "";
+					})
+					.interpolate("basis"));
+		});
+
     </script>

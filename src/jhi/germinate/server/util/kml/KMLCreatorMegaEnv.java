@@ -25,8 +25,8 @@ import java.util.stream.*;
 import java.util.zip.*;
 
 import de.micromata.opengis.kml.v_2_2_0.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -213,7 +213,7 @@ public class KMLCreatorMegaEnv extends KMLCreator
 			   .append("</td></tr></table></p><p><b>Accessions at this collecting site:</b></p><table class='tftable' border='1'><tr><th>Id</th><th>Name</th></tr>");
 
 		/* Check which Germinate pages are available. We do this to only add links to those pages that are actually available */
-		Set<Page> availablePages = PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
+		Set<Page> availablePages = PropertyWatcher.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
 
 		for (Accession accession : dataForLocation)
 		{

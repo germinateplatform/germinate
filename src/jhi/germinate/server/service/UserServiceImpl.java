@@ -34,16 +34,17 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.Database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
+import jhi.germinate.shared.search.*;
 
 /**
  * {@link NewsServiceImpl} is the implementation of {@link NewsService}.
@@ -76,7 +77,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
 	private static final Map<Long, HttpSession> SESSIONS = new HashMap<>();
 
-	private static final int SESSION_LIFETIME_MIN = PropertyReader.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES);
+	private static final int SESSION_LIFETIME_MIN = PropertyWatcher.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES);
 
 	@Override
 	public void logout(RequestProperties properties) throws InvalidSessionException, LoginRegistrationException
@@ -88,11 +89,76 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 		session.invalidate();
 	}
 
+	private static void setCookie(HttpServletResponse response, String key, String value, UserAuth userAuth)
+	{
+		if (!StringUtils.isEmpty(key, value) && userAuth != null)
+		{
+			Cookie cookie = new Cookie(key, value);
+			//			cookie.setHttpOnly(true);
+			cookie.setPath(userAuth.getPath());
+			cookie.setMaxAge(PropertyWatcher.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES) * 60);
+			response.addCookie(cookie);
+		}
+	}
+
+	private synchronized UserAuth getOrCreate(RequestProperties properties, UserCredentials credentials) throws DatabaseException
+	{
+		UserAuth auth = UserAuth.getFromSession(this, properties);
+
+		String providedUsername = credentials.getUsername();
+		String sessionUsername = auth == null ? null : auth.getUsername();
+
+		if (auth == null || (!Objects.equals(providedUsername, "") && !Objects.equals(providedUsername, sessionUsername)))
+		{
+			GatekeeperUserWithPassword user = GatekeeperUserManager.getForUsernameAndSystem(credentials.getUsername());
+
+			auth = new UserAuth();
+			auth.setUsername(credentials.getUsername());
+
+			if (user != null)
+			{
+				auth.setId(user.getId());
+				auth.setIsAdmin(user.isAdmin());
+			}
+		}
+
+		return auth;
+	}
+
+	private static String getGatekeeperUrl() throws LoginRegistrationException
+	{
+		/* Get the Gatekeeper URL */
+		String gatekeeperURL = PropertyWatcher.get(ServerProperty.GERMINATE_GATEKEEPER_URL);
+
+		if (StringUtils.isEmpty(gatekeeperURL))
+		{
+			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_UNAVAILABLE);
+		}
+		else
+		{
+			if (!gatekeeperURL.endsWith("/"))
+				gatekeeperURL += "/";
+
+			gatekeeperURL += GATEKEEPER_URL_PATTERN;
+		}
+
+		return gatekeeperURL;
+	}
+
+	public static void invalidateSessionAttributes()
+	{
+		for (HttpSession session : SESSIONS.values())
+		{
+			session.removeAttribute(Session.SID);
+			session.removeAttribute(Session.USER);
+		}
+	}
+
 	@Override
 	public UserAuth login(RequestProperties properties, UserCredentials credentials) throws LoginRegistrationException, DatabaseException
 	{
 		/* Get the relative path of the current instance of Germinate3 */
-		String path = PropertyReader.getContextPath(getThreadLocalRequest());
+		String path = PropertyWatcher.getContextPath(getThreadLocalRequest());
 
 		/* Get the previous authentication information (if exists) */
 		UserAuth oldUserAuth = getOrCreate(properties, credentials);
@@ -111,7 +177,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 		}
 
 		/* If we don't use authentication, throw an Exception */
-		if (!PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
+		if (!PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
 		{
 			/* Generate a new session id */
 			if (!sessionIsValid)
@@ -153,55 +219,10 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 		return oldUserAuth;
 	}
 
-	private synchronized UserAuth getOrCreate(RequestProperties properties, UserCredentials credentials) throws DatabaseException
-	{
-		UserAuth auth = UserAuth.getFromSession(this, properties);
-
-		String providedUsername = credentials.getUsername();
-		String sessionUsername = auth == null ? null : auth.getUsername();
-
-		if (auth == null || (!Objects.equals(providedUsername, "") && !Objects.equals(providedUsername, sessionUsername)))
-		{
-			GatekeeperUserWithPassword user = GatekeeperUserManager.getForUsernameAndSystem(credentials.getUsername());
-
-			auth = new UserAuth();
-			auth.setUsername(credentials.getUsername());
-
-			if (user != null)
-			{
-				auth.setId(user.getId());
-				auth.setIsAdmin(user.isAdmin());
-			}
-		}
-
-		return auth;
-	}
-
-	private static void setCookie(HttpServletResponse response, String key, String value, UserAuth userAuth)
-	{
-		if (!StringUtils.isEmpty(key, value) && userAuth != null)
-		{
-			Cookie cookie = new Cookie(key, value);
-//			cookie.setHttpOnly(true);
-			cookie.setPath(userAuth.getPath());
-			cookie.setMaxAge(PropertyReader.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES) * 60);
-			response.addCookie(cookie);
-		}
-	}
-
-	public static void invalidateSessionAttributes()
-	{
-		for (HttpSession session : SESSIONS.values())
-		{
-			session.removeAttribute(Session.SID);
-			session.removeAttribute(Session.USER);
-		}
-	}
-
 	@Override
 	public void register(RequestProperties properties, UnapprovedUser user) throws DatabaseException, LoginRegistrationException, SystemInReadOnlyModeException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		if (user.toRegister)
@@ -214,10 +235,27 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 		}
 	}
 
+	private void handleError(String msg) throws LoginRegistrationException
+	{
+		/* Check if it's something we might expect */
+		if (msg.contains(GATEKEEPER_ERROR_EMAIL))
+		{
+			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_EMAIL_FAILED);
+		}
+		else if (msg.contains(GATEKEEPER_ERROR_INVALID_DATA))
+		{
+			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEPEEKER_REJECTED_REQUEST);
+		}
+		else
+		{
+			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_UNAVAILABLE);
+		}
+	}
+
 	private void registerNewUser(RequestProperties properties, UnapprovedUser user) throws DatabaseException, LoginRegistrationException
 	{
 		/* Check if we actually allow registration */
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) && PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) && PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED))
 		{
 			List<String> usernames = new ValueQuery(QUERY_USERNAME_EXISTS)
 					.setQueryType(QueryType.AUTHENTICATION)
@@ -230,7 +268,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
 			String gatekeeperUrl = getGatekeeperUrl();
 
-			Integer rounds = PropertyReader.getInteger(ServerProperty.GERMINATE_GATEKEEPER_BCRYPT_ROUNDS);
+			Integer rounds = PropertyWatcher.getInteger(ServerProperty.GERMINATE_GATEKEEPER_BCRYPT_ROUNDS);
 			String hashed = BCrypt.hashpw(user.userPassword, BCrypt.gensalt(rounds == null ? BCrypt.GENSALT_DEFAULT_LOG2_ROUNDS : rounds));
 
 			/* If the registration needs approval, insert into the
@@ -259,8 +297,8 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
 			String uuid = UUID.randomUUID().toString();
 
-			List<Long> ids = query.setString(PropertyReader.get(ServerProperty.DATABASE_SERVER))
-								  .setString(PropertyReader.get(ServerProperty.DATABASE_NAME))
+			List<Long> ids = query.setString(PropertyWatcher.get(ServerProperty.DATABASE_SERVER))
+								  .setString(PropertyWatcher.get(ServerProperty.DATABASE_NAME))
 								  .setString(uuid)
 								  .execute()
 								  .getServerResult();
@@ -268,7 +306,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			if (CollectionUtils.isEmpty(ids))
 				throw new DatabaseException("Registration failed");
 
-			boolean needsApproval = PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL);
+			boolean needsApproval = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL);
 
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpPost post = new HttpPost(gatekeeperUrl);
@@ -320,43 +358,6 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			throw new LoginRegistrationException(LoginRegistrationException.Reason.REGISTRATION_UNAVAILABLE);
 	}
 
-	private void handleError(String msg) throws LoginRegistrationException
-	{
-		/* Check if it's something we might expect */
-		if (msg.contains(GATEKEEPER_ERROR_EMAIL))
-		{
-			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_EMAIL_FAILED);
-		}
-		else if (msg.contains(GATEKEEPER_ERROR_INVALID_DATA))
-		{
-			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEPEEKER_REJECTED_REQUEST);
-		}
-		else
-		{
-			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_UNAVAILABLE);
-		}
-	}
-
-	private static String getGatekeeperUrl() throws LoginRegistrationException
-	{
-		/* Get the Gatekeeper URL */
-		String gatekeeperURL = PropertyReader.get(ServerProperty.GERMINATE_GATEKEEPER_URL);
-
-		if (StringUtils.isEmpty(gatekeeperURL))
-		{
-			throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_UNAVAILABLE);
-		}
-		else
-		{
-			if (!gatekeeperURL.endsWith("/"))
-				gatekeeperURL += "/";
-
-			gatekeeperURL += GATEKEEPER_URL_PATTERN;
-		}
-
-		return gatekeeperURL;
-	}
-
 	/**
 	 * Deletes the created database items based on their id
 	 *
@@ -402,7 +403,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	@Override
 	public void addInstitution(Institution institution) throws DatabaseException, SystemInReadOnlyModeException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		new ValueQuery(INSERT_INSTITUTE)
@@ -413,16 +414,73 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 				.execute();
 	}
 
+	@Override
+	public PaginatedServerResult<List<GatekeeperUser>> getUsersForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, Long id, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException, InsufficientPermissionsException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return GatekeeperUserManager.getForFilterAndGroup(userAuth, pagination, filter, id, table);
+	}
+
+	@Override
+	public void removeFromGroup(RequestProperties properties, Long groupId, List<Long> ids) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException
+	{
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		UserGroupManager.removeFromGroup(userAuth, groupId, ids);
+	}
+
+	@Override
+	public void addToGroup(RequestProperties properties, Long groupId, List<Long> ids) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException
+	{
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		UserGroupManager.addToGroup(userAuth, groupId, ids);
+	}
+
+	@Override
+	public void addToDataset(RequestProperties properties, Long datasetId, List<Long> ids, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException
+	{
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		DatasetManager.addToDatasetPermission(userAuth, datasetId, ids, table);
+	}
+
+	@Override
+	public void removeFromDataset(RequestProperties properties, Long datasetId, List<Long> ids, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException
+	{
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+			throw new SystemInReadOnlyModeException();
+
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		DatasetManager.removeFromDatasetPermission(userAuth, datasetId, ids, table);
+	}
+
 	public void registerForInstance(RequestProperties properties, UnapprovedUser user) throws DatabaseException, LoginRegistrationException, SystemInReadOnlyModeException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		/* Check if we actually allow registration */
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) && PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) && PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED))
 		{
-			String server = PropertyReader.get(ServerProperty.DATABASE_SERVER);
-			String database = PropertyReader.get(ServerProperty.DATABASE_NAME);
+			String server = PropertyWatcher.get(ServerProperty.DATABASE_SERVER);
+			String database = PropertyWatcher.get(ServerProperty.DATABASE_NAME);
 
 			GatekeeperUserWithPassword userDetails = GatekeeperUserManager.getForUsernameGlobal(user.userUsername);
 
@@ -460,7 +518,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
 			String uuid = UUID.randomUUID().toString();
 
-			boolean needsApproval = PropertyReader.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL);
+			boolean needsApproval = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL);
 
 			if (needsApproval)
 			{

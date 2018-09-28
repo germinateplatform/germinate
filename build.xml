@@ -42,7 +42,7 @@
 	</pathconvert>
 
 	<!-- First, make sure there are no leftovers from the previous build -->
-	<target name="delete_old_stuff" description="Deletes all the old files of the previously compiled Germinate instance">
+	<target name="clean" description="Deletes all the old files of the previously compiled Germinate instance">
 		<delete failonerror="false" verbose="true" quiet="true">
 			<fileset dir="${src.dir}/jhi/germinate/client/i18n" includes="**/*.properties"/>
 		</delete>
@@ -110,7 +110,7 @@
 	</target>
 
 	<!-- Then copy the instance specific files (downloads, i18n) to the place where the war task needs them to be -->
-	<target name="copy_files" depends="delete_old_stuff"
+	<target name="copy_files" depends="clean"
 			description="Copies the download and language files for this instance of germinate to the i18n folder">
 		<copy todir="${src.dir}/jhi/germinate/client/i18n" overwrite="true" failonerror="true" verbose="true">
 			<fileset dir="${instance.files}/i18n" includes="**/*.properties" excludes="**/config.properties"/>
@@ -192,7 +192,7 @@
 			</fileset>
 		</jar>
 
-		<antcall target="delete_old_stuff"/>
+		<antcall target="clean"/>
 	</target>
 
 	<!-- Compile the code with gwtc -->
@@ -242,7 +242,7 @@
 	<!-- The test build will make sure everything compiles, but won't actually deploy the application -->
 	<target name="testbuild" depends="buildwar" description="Runs a test build of Germinate without deploying it">
 		<!-- Finally, delete all the files we moved to leave a clean setup behind -->
-		<antcall target="delete_old_stuff"/>
+		<antcall target="clean"/>
 	</target>
 
 	<target name="deploy" depends="buildwar" description="Deploys Germinate to the target server">
@@ -257,7 +257,7 @@
 				war="${basedir}/${project.name}.war"/>
 
 		<!-- Finally, delete all the files we moved to leave a clean setup behind -->
-		<antcall target="delete_old_stuff"/>
+		<antcall target="clean"/>
 	</target>
 
 	<target name="open" depends="deploy" description="Opens the deployed application in a browser window">
@@ -268,7 +268,7 @@
 		]]></script>
 	</target>
 
-	<target name="debug" depends="delete_old_stuff, prepare_gwt_xml, prepare_web_xml" description="Prepares the debug mode">
+	<target name="debug" depends="clean, prepare_gwt_xml, prepare_web_xml" description="Prepares the debug mode">
 	</target>
 
 	<target name="jar-importer-lib" depends="build-project">
@@ -288,6 +288,6 @@
 			<fileset dir="${build.dir}/WEB-INF/classes" includes="**/jhi/germinate/shared/*Utils.class"/>
 		</jar>
 
-		<antcall target="delete_old_stuff"/>
+		<antcall target="clean"/>
 	</target>
 </project>

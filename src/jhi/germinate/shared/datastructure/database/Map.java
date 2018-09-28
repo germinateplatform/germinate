@@ -40,18 +40,20 @@ public class Map extends DatabaseObject
 	private static final long serialVersionUID = -2723037593946808092L;
 
 	public static final String ID          = "maps.id";
+	public static final String NAME        = "maps.name";
 	public static final String DESCRIPTION = "maps.description";
 	public static final String VISIBILITY  = "maps.visibility";
 	public static final String USER_ID     = "maps.user_id";
 	public static final String CREATED_ON  = "maps.created_on";
 	public static final String UPDATED_ON  = "maps.updated_on";
 
+	private String  name;
 	private String  description;
 	private Boolean visibility;
 	private Long    userId;
 	private Long    createdOn;
 	private Long    updatedOn;
-	private Long size = 0L;
+	private Long    size = 0L;
 
 	public Map()
 	{
@@ -60,6 +62,17 @@ public class Map extends DatabaseObject
 	public Map(Long id)
 	{
 		super(id);
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public Map setName(String name)
+	{
+		this.name = name;
+		return this;
 	}
 
 	public String getDescription()
@@ -180,6 +193,7 @@ public class Map extends DatabaseObject
 			else
 			{
 				Map map = new Map(id)
+						.setName(row.getString(NAME))
 						.setDescription(row.getString(DESCRIPTION))
 						.setVisibility(row.getBoolean(VISIBILITY))
 						.setUserId(row.getLong(USER_ID))
@@ -219,7 +233,8 @@ public class Map extends DatabaseObject
 		@Override
 		public void write(Database database, Map object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO maps (" + DESCRIPTION + ", " + VISIBILITY + ", " + USER_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO maps (" + NAME + ", " + DESCRIPTION + ", " + VISIBILITY + ", " + USER_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
+					.setString(object.getName())
 					.setString(object.getDescription())
 					.setBoolean(object.isVisibility())
 					.setLong(object.getUserId());

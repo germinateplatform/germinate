@@ -49,10 +49,10 @@ public class Group extends DatabaseObject
 	private String    description;
 	private boolean   visibility;
 	private Long      createdBy;
-	private String user = GatekeeperUser.UNKNOWN.getFullName();
-	private Long createdOn;
-	private Long updatedOn;
-	private Long size = 0L;
+	private String    user = GatekeeperUser.UNKNOWN.getFullName();
+	private Long      createdOn;
+	private Long      updatedOn;
+	private Long      size = 0L;
 
 	public Group()
 	{
@@ -163,6 +163,11 @@ public class Group extends DatabaseObject
 		return createdBy;
 	}
 
+	public boolean canAccess(Long id)
+	{
+		return visibility || (createdBy != null && Objects.equals(createdBy, id));
+	}
+
 	@Override
 	public String toString()
 	{
@@ -226,7 +231,7 @@ public class Group extends DatabaseObject
 					}
 					catch (Exception e)
 					{
-					/* Do nothing here */
+						/* Do nothing here */
 					}
 
 					return group;

@@ -271,9 +271,12 @@ public class Compound extends DatabaseObject
 				Long id = row.getLong(ID);
 
 				if (id == null)
+				{
 					return null;
+				}
 				else
-					return new Compound(id)
+				{
+					Compound compound = new Compound(id)
 							.setName(row.getString(NAME))
 							.setDescription(row.getString(DESCRIPTION))
 							.setMolecularFormula(row.getString(MOLECULAR_FORMULA))
@@ -284,6 +287,17 @@ public class Compound extends DatabaseObject
 							.setUnit(UNIT_CACHE.get(user, row.getLong(UNIT_ID), row, foreignsFromResultSet))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+
+					try
+					{
+						compound.setExtra(COUNT, row.getLong(COUNT));
+					}
+					catch (Exception e)
+					{
+					}
+
+					return compound;
+				}
 			}
 			catch (InsufficientPermissionsException e)
 			{

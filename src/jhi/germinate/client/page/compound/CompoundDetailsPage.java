@@ -32,12 +32,9 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
-import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.client.widget.table.pagination.filter.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -69,10 +66,6 @@ public class CompoundDetailsPage extends Composite
 	@UiField
 	SimplePanel   compoundDataTablePanel;
 	@UiField
-	Heading       compoundChartHeading;
-	@UiField
-	SimplePanel   compoundChart;
-	@UiField
 	SimplePanel   galleryPanel;
 	@UiField
 	LinkWidget    linkWidget;
@@ -100,7 +93,6 @@ public class CompoundDetailsPage extends Composite
 						synonyms.update(GerminateDatabaseTable.compounds, compound.getId());
 
 						showCompoundDataTable();
-						showCompoundChart();
 						showImages();
 
 						linkWidget.update(GerminateDatabaseTable.compounds, compound.getId());
@@ -126,26 +118,6 @@ public class CompoundDetailsPage extends Composite
 			protected void getData(Pagination pagination, AsyncCallback<PaginatedServerResult<List<Image>>> callback)
 			{
 				ImageService.Inst.get().getForId(Cookie.getRequestProperties(), GerminateDatabaseTable.compounds, compound.getId(), pagination, callback);
-			}
-		});
-	}
-
-	private void showCompoundChart()
-	{
-		PartialSearchQuery q = new PartialSearchQuery(new SearchCondition(Dataset.IS_EXTERNAL, new Equal(), 0, Integer.class));
-		DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), q, ExperimentType.compound, new Pagination(0, Integer.MAX_VALUE), new DefaultAsyncCallback<PaginatedServerResult<List<Dataset>>>()
-		{
-			@Override
-			protected void onSuccessImpl(PaginatedServerResult<List<Dataset>> result)
-			{
-				if (!CollectionUtils.isEmpty(result.getServerResult()))
-				{
-					for (Dataset d : result.getServerResult())
-					{
-						compoundChartHeading.setText(d.getDescription());
-						compoundChart.add(new CompoundBarChart(compound.getId(), d.getId()));
-					}
-				}
 			}
 		});
 	}
@@ -186,9 +158,9 @@ public class CompoundDetailsPage extends Composite
 
 		Scheduler.get().scheduleDeferred(() ->
 		{
-			FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-			mapping.put(Compound.NAME, compound.getName());
-			table.forceFilter(mapping, true);
+			PartialSearchQuery query = new PartialSearchQuery();
+			query.add(new SearchCondition(Compound.NAME, new Equal(), compound.getName(), String.class));
+			table.forceFilter(query, true);
 		});
 	}
 }

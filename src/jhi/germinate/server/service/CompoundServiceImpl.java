@@ -49,7 +49,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 	private static final String QUERY_COMPOUND_DATA = "SELECT germinatebase.`name` AS name, compounddata.compound_value AS value FROM compounddata INNER JOIN compounds ON compounddata.compound_id = compounds.id INNER JOIN germinatebase ON compounddata.germinatebase_id = germinatebase.id WHERE compounds.id = ? AND compounddata.dataset_id = ? ORDER BY germinatebase.name";
 
-	private static final String QUERY_PHENOTYPE_STATS      = "SELECT compounds.id, compounds.`name`, compounds.description, 1 AS isNumeric, units.*, MIN( cast( compound_value AS DECIMAL (30, 2) ) ) AS min, MAX( cast( compound_value AS DECIMAL (30, 2) ) ) AS max, AVG( cast( compound_value AS DECIMAL (30, 2) ) ) AS avg, STD( cast( compound_value AS DECIMAL (30, 2) ) ) AS std, datasets.description AS dataset_description FROM datasets LEFT JOIN compounddata ON datasets.id = compounddata.dataset_id LEFT JOIN compounds ON compounds.id = compounddata.compound_id LEFT JOIN units ON units.id = compounds.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND datasets.id IN (%s) GROUP BY compounds.id, datasets.id";
+	private static final String QUERY_COMPOUND_STATS = "SELECT compounds.id, compounds.`name`, compounds.description, 1 AS isNumeric, units.*, COUNT( 1 ) AS count, MIN( cast( compound_value AS DECIMAL (30, 2) ) ) AS min, MAX( cast( compound_value AS DECIMAL (30, 2) ) ) AS max, AVG( cast( compound_value AS DECIMAL (30, 2) ) ) AS avg, STD( cast( compound_value AS DECIMAL (30, 2) ) ) AS std, datasets.description AS dataset_description FROM datasets LEFT JOIN compounddata ON datasets.id = compounddata.dataset_id LEFT JOIN compounds ON compounds.id = compounddata.compound_id LEFT JOIN units ON units.id = compounds.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'compound' AND datasets.id IN (%s) GROUP BY compounds.id, datasets.id";
 
 	private static final String QUERY_COMPOUND_NAMES          = "SELECT CONCAT(name, IF(ISNULL(compounds.unit_id), '', CONCAT(' [', units.unit_abbreviation, ']'))) AS name FROM compounds LEFT JOIN units ON units.id = compounds.unit_id WHERE compounds.id IN (%s)";
 	private static final String QUERY_COMPOUND_NAMES_COMPLETE = "SELECT CONCAT(name, IF(ISNULL(compounds.unit_id), '', CONCAT(' [', units.unit_abbreviation, ']'))) AS name FROM compounds LEFT JOIN units ON units.id = compounds.unit_id WHERE EXISTS ( SELECT 1 FROM compounddata LEFT JOIN datasets ON datasets.id = compounddata.dataset_id WHERE compounddata.compound_id = compounds.id AND datasets.id IN (%s))";
@@ -118,9 +118,10 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	@Override
 	public ServerResult<List<DataStats>> getDataStatsForDatasets(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
 	{
+		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
-		String formatted = String.format(QUERY_PHENOTYPE_STATS, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
+		String formatted = String.format(QUERY_COMPOUND_STATS, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
 		return new DatabaseObjectQuery<DataStats>(formatted, userAuth)
 				.setLongs(datasetIds)

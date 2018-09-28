@@ -21,6 +21,8 @@ import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Style.*;
 import com.google.gwt.user.client.ui.*;
 
+import jhi.germinate.shared.*;
+
 /**
  * {@link HTMLUtils} contains methods to create common {@link HTML} elements. Using methods from this class will prevent XSS attacks, since every
  * possibly harmful HTML/Script code is stripped from the controls before creating them.
@@ -61,6 +63,9 @@ public final class HTMLUtils
 	 */
 	public static synchronized String stripHtmlTags(String input)
 	{
-		return new HTML(input).getText();
+		if (StringUtils.isEmpty(input))
+			return "";
+		else
+			return new HTML(input).getText();
 	}
 }

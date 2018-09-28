@@ -288,8 +288,8 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			@Override
 			public String getValue(Accession object)
 			{
-				if (object.getSubtaxa() != null)
-					return object.getSubtaxa().getTaxonomyIdentifier();
+				if (object.getTaxonomy() != null)
+					return object.getTaxonomy().getSubtaxa();
 				else
 					return null;
 			}
@@ -306,7 +306,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 				return Style.TEXT_ITALIC;
 			}
 		};
-		column.setDataStoreName(Subtaxa.TAXONOMY_IDENTIFIER);
+		column.setDataStoreName(Taxonomy.SUBTAXA);
 		addColumn(column, Text.LANG.passportColumnSubtaxa(), sortingEnabled);
 
 		/* Add the latitude column */

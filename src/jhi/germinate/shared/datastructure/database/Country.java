@@ -206,41 +206,4 @@ public class Country extends DatabaseObject
 			return country;
 		}
 	}
-
-	@GwtIncompatible
-	public static class AverageParser extends Parser
-	{
-		public static final class Inst
-		{
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
-			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
-			 * holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
-			 * <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
-			private static final class InstanceHolder
-			{
-				private static final AverageParser INSTANCE = new AverageParser();
-			}
-
-			public static AverageParser get()
-			{
-				return InstanceHolder.INSTANCE;
-			}
-		}
-
-
-		@Override
-		public Country parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
-		{
-			Country country = super.parse(row, user, foreignsFromResultSet);
-
-			if (country != null)
-				country.setExtra(AVERAGE, row.getString(AVERAGE));
-
-			return country;
-		}
-	}
 }

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.io.*" %>
-<%@ page import="jhi.germinate.server.config.*" %>
+<%@ page import="jhi.germinate.server.watcher.*" %>
 <%@ page import="jhi.germinate.shared.*" %>
 <%@ page import="jhi.germinate.shared.datastructure.*" %>
 <%@ page import="jhi.germinate.shared.enums.*" %>
@@ -23,14 +23,14 @@
   --%>
 
 <%
-	String pageTitle = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME);
-	boolean debugModeEnabled = PropertyReader.getBoolean(ServerProperty.GERMINATE_DEBUG);
-	boolean readOnlyModeEnebaled = PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY);
-	String title = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_TITLE);
-	boolean logoContainsLink = PropertyReader.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK);
-	boolean useGoogleAnalytics = PropertyReader.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED);
-	String googleAnalyticsTrackingId = "'" + PropertyReader.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID) + "'";
-	String contact = PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS);
+	String pageTitle = PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_DATABASE_NAME);
+	boolean debugModeEnabled = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_DEBUG);
+	boolean readOnlyModeEnebaled = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY);
+	String title = PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_TITLE);
+	boolean logoContainsLink = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_LOGO_CONTAINS_LINK);
+	boolean useGoogleAnalytics = PropertyWatcher.getBoolean(ServerProperty.GOOGLE_ANALYTICS_ENABLED);
+	String googleAnalyticsTrackingId = "'" + PropertyWatcher.get(ServerProperty.GOOGLE_ANALYTICS_TRACKING_ID) + "'";
+	String contact = PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS);
 
 
 	String version = "v3.5.0";
@@ -52,7 +52,7 @@
 
 	<!-- Bootstrap Core CSS -->
 	<link href="css/bootstrap-germinate.css" rel="stylesheet">
-	
+
 	<!-- MetisMenu CSS -->
 	<link href="css/metisMenu.min.css" rel="stylesheet">
 
@@ -79,17 +79,12 @@
 	<link rel="stylesheet" href="css/introjs.min.css"/>
 	<script src="js/intro.min.js"></script>
 
-	<%
-		if (debugModeEnabled)
-		{
-	%>
-	<!-- Code prettify -->
-	<script type="text/javascript" src="js/prettify.js" defer="defer"></script>
-	<script type="text/javascript" src="js/lang-sql.js" defer="defer"></script>
-	<link rel="stylesheet" href="css/prettify.css"/>
-	<%
-		}
-	%>
+	<% if (debugModeEnabled) { %>
+		<!-- Code prettify -->
+		<script type="text/javascript" src="js/prettify.js" defer="defer"></script>
+		<script type="text/javascript" src="js/lang-sql.js" defer="defer"></script>
+		<link rel="stylesheet" href="css/prettify.css"/>
+	<% } %>
 
 	<script type="text/javascript" src="germinate/germinate.nocache.js"></script>
 	<link href="css/germinate-css.jsp" rel="stylesheet" type="text/css">
@@ -103,27 +98,24 @@
 	<link href="css/bootstrap-xxs.css" rel="stylesheet">
 	<link href="css/template-css.jsp" rel="stylesheet">
 
-	<% if (useGoogleAnalytics)
-	{ %>
-
-	<!-- Google Analytics -->
-	<script>
-		(function (i, s, o, g, r, a, m) {
-			i['GoogleAnalyticsObject'] = r;
-			i[r] = i[r] || function () {
+	<% if (useGoogleAnalytics) { %>
+		<!-- Google Analytics -->
+		<script>
+			(function (i, s, o, g, r, a, m) {
+				i['GoogleAnalyticsObject'] = r;
+				i[r] = i[r] || function () {
 					(i[r].q = i[r].q || []).push(arguments)
 				}, i[r].l = 1 * new Date();
-			a = s.createElement(o),
-				m = s.getElementsByTagName(o)[0];
-			a.async = 1;
-			a.src = g;
-			m.parentNode.insertBefore(a, m)
-		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+				a = s.createElement(o),
+					m = s.getElementsByTagName(o)[0];
+				a.async = 1;
+				a.src = g;
+				m.parentNode.insertBefore(a, m)
+			})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-		ga('create', <%= googleAnalyticsTrackingId %>, 'auto');
-		ga('send', 'pageview');
-	</script>
-
+			ga('create', <%= googleAnalyticsTrackingId %>, 'auto');
+			ga('send', 'pageview');
+		</script>
 	<% } %>
 
 	<%
@@ -148,8 +140,6 @@
 			}
 		}
 	%>
-
-
 </head>
 
 <body>
@@ -203,15 +193,14 @@
 			</li>
 			<!-- /GM8 Account Settings -->
 
-			<% if (!StringUtils.isEmpty(contact))
-			{ %>
-			<!-- GM8 Contact -->
-			<li>
-				<a href="mailto:<%= contact %>" id="<%= Id.STRUCTURE_CONTACT_A %>">
-					<i class="mdi mdi-email fa-fw fa-lg"></i>
-				</a>
-			</li>
-			<!-- /GM8 Contact -->
+			<% if (!StringUtils.isEmpty(contact)) { %>
+				<!-- GM8 Contact -->
+				<li>
+					<a href="mailto:<%= contact %>" id="<%= Id.STRUCTURE_CONTACT_A %>">
+						<i class="mdi mdi-email fa-fw fa-lg"></i>
+					</a>
+				</li>
+				<!-- /GM8 Contact -->
 			<% } %>
 			<!-- GM8 Help -->
 			<li>
@@ -225,18 +214,16 @@
 		<div class="navbar-default sidebar" role="navigation">
 			<div class="sidebar-nav navbar-collapse">
 				<ul class="nav" id="<%= Id.STRUCTURE_MAIN_MENU_UL %>">
-					<li id="<%= Id.STRUCTURE_VERSION_NUMBER %>"><%= version %></li>
+					<li id="<%= Id.STRUCTURE_VERSION_NUMBER %>"><%= version %>
+					</li>
 					<li class="sidebar-search" id="<%= Id.STRUCTURE_SEARCH_PANEL %>" style="display: none"></li>
 				</ul>
 				<ul class="nav <%= Style.LAYOUT_LOGO_SECTION %>">
 					<li><a>
-						<% if (logoContainsLink)
-						{ %>
-						<object data="img/logo.svg" type="image/svg+xml"></object>
-						<% }
-						else
-						{ %>
-						<img src="img/logo.svg"/>
+						<% if (logoContainsLink) { %>
+							<object data="img/logo.svg" type="image/svg+xml"></object>
+						<% } else { %>
+							<img src="img/logo.svg"/>
 						<% } %>
 					</a></li>
 				</ul>
@@ -261,7 +248,8 @@
 		<div class="container-fluid">
 			<div class="well well-sm row">
 				<div class="col-xxs-12 col-xs-10 text-center-xxs text-left-xs">
-					<h4><%= pageTitle %></h4>
+					<h4><%= pageTitle %>
+					</h4>
 				</div>
 				<div class="col-xxs-12 col-xs-2 text-center-xxs text-right-xs">
 					<img src="img/crop.svg">

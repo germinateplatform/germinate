@@ -319,6 +319,31 @@ public interface GroupService extends RemoteService
 	 */
 	ServerResult<Void> renameGroup(RequestProperties properties, Group group) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
 
+	/**
+	 * Exports the items with the given ids and returns the name of the result file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param ids        The {@link Marker} ids
+	 * @return The name of the result file.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 * @throws IOException             Thrown if an I/O operation fails
+	 */
+	ServerResult<String> exportForIds(RequestProperties properties, List<String> ids, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, IOException;
+
+	/**
+	 * Exports the {@link Accession} data for all accessions within the group and returns the name of the result file
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The {@link Group} id
+	 * @return The name of the result file
+	 * @throws InvalidSessionException          Thrown if the current session is invalid
+	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to access the group
+	 * @throws DatabaseException                Thrown if the query fails on the server
+	 * @throws IOException                      Thrown if the file creation fails
+	 */
+	ServerResult<String> exportForGroupId(RequestProperties properties, Long groupId, GerminateDatabaseTable table) throws InvalidSessionException, InsufficientPermissionsException, DatabaseException, IOException;
+
 	final class Inst
 	{
 		public static GroupServiceAsync get()

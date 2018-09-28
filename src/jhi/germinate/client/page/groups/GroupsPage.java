@@ -20,6 +20,7 @@ package jhi.germinate.client.page.groups;
 import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.safehtml.shared.*;
@@ -76,6 +77,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 	FlowPanel      newGroupMembersPanel;
 	@UiField
 	SimplePanel    newGroupMembersTable;
+	@UiField
+	Button         download;
 	@UiField
 	ToggleSwitch   isPublic;
 	@UiField
@@ -373,7 +376,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		}
 
 		table.setHideEmptyTable(false);
-		if(scrollTo)
+		if (scrollTo)
 		{
 			table.getPanel().addAttachHandler(event ->
 			{
@@ -632,16 +635,17 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			return;
 		}
 
-		final String strippedString = HTMLUtils.stripHtmlTags(newGroup);
+		final String strippedName = HTMLUtils.stripHtmlTags(newGroup);
+		final String strippedDescription = HTMLUtils.stripHtmlTags(newGroupDescription);
 
-		Group g = new Group().setName(strippedString).setDescription(newGroupDescription);
+		Group g = new Group().setName(strippedName).setDescription(strippedDescription);
 
 		GroupService.Inst.get().createNew(Cookie.getRequestProperties(), g, type.getTargetTable(), new DefaultAsyncCallback<ServerResult<Group>>()
 		{
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", strippedString);
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", strippedName);
 				group = result.getServerResult();
 				groupTable.refreshTable();
 				updateGroupMembers(true);
@@ -665,6 +669,12 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				}
 			});
 		}
+	}
+
+	@UiHandler("download")
+	void onDownloadClicked(ClickEvent event)
+	{
+		GroupService.Inst.get().exportForGroupId(Cookie.getRequestProperties(), group.getId(), group.getType().getTargetTable(), new FileDownloadCallback(true));
 	}
 
 	@Override

@@ -255,7 +255,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			{
 				if (result.getServerResult() != null && result.getServerResult().size() > 0)
 				{
-					overviewPanel.add(new PhenotypeDataOverviewTable(result.getServerResult()));
+					overviewPanel.add(new DataStatsTable(result.getServerResult()));
 				}
 			}
 		});

@@ -19,13 +19,16 @@ package jhi.germinate.client.util;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.maps.client.*;
 import com.google.gwt.query.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
 
 import jhi.germinate.shared.*;
+import jhi.germinate.shared.Style;
 
 /**
  * {@link JavaScript} is a utility class containing methods executing javascript code.
@@ -63,6 +66,10 @@ public class JavaScript
 		$wnd.$(selector).toggle();
 	}-*/;
 
+	public static native String getOctetStreamBase64Data(String html) /*-{
+		return "data:application/octet-stream;base64," + $wnd.btoa(unescape(encodeURIComponent(html)));
+	}-*/;
+
 	public static native void setVisible(String selector, boolean value)/*-{
 		if (value)
 			$wnd.$(selector).show();
@@ -77,6 +84,28 @@ public class JavaScript
 		$wnd.document.body.removeChild(a);
 		return fillColor;
 	}-*/;
+
+	public static void printObject(String elementId)
+	{
+		printString(GQuery.$("#" + elementId).html());
+	}
+
+	public static void printHtml(HTML html)
+	{
+		printString(html.getHTML());
+	}
+
+	public static void printString(String string)
+	{
+		DivElement element = Document.get().createDivElement();
+		element.setInnerHTML(string);
+		Document.get().getBody().appendChild(element);
+		element.addClassName(Style.PRINT_SECTION);
+
+		Window.print();
+
+		Scheduler.get().scheduleDeferred(element::removeFromParent);
+	}
 
 	/**
 	 * {@link D3} is a utility class containing constants and utility methods for D3
@@ -136,6 +165,149 @@ public class JavaScript
 		}
 	}
 
+	public static void invokeDownload(String uri, String filename)
+	{
+		Anchor anchor;
+
+		if (!StringUtils.isEmpty(filename))
+		{
+			anchor = new Anchor("Download", uri, "_blank");
+			anchor.getElement().setAttribute("download", filename);
+		}
+		else
+		{
+			anchor = new Anchor("Download", uri);
+		}
+
+		anchor.setVisible(false);
+
+		RootPanel.get().add(anchor);
+
+		/* Click it */
+		clickElement(anchor.getElement());
+
+		/* And remove it */
+		anchor.removeFromParent();
+	}
+
+	/**
+	 * Invokes a click event on the given element
+	 *
+	 * @param elem The element
+	 */
+	public static native void clickElement(Element elem) /*-{
+		elem.click();
+	}-*/;
+
+	public static void invokeDownload(String uri)
+	{
+		invokeDownload(uri, null);
+	}
+
+	/**
+	 * Creates a JavaScript array based on the given Java {@link Collection}
+	 *
+	 * @param input The Java {@link Collection}
+	 * @return The JavaScript Array
+	 */
+	public static JsArrayString toJsArray(Collection<String> input)
+	{
+		JsArrayString jsArrayString = JsArrayString.createArray().cast();
+		for (String i : input)
+			jsArrayString.push(i);
+		//		input.forEach(jsArrayString::push);
+		return jsArrayString;
+	}
+
+	/**
+	 * Prints the given message to the browser console
+	 *
+	 * @param logMessage The log message to print
+	 */
+	public static native void consoleLog(String logMessage) /*-{
+		console.log(logMessage);
+	}-*/;
+
+	/**
+	 * Prints the given element to the browser console
+	 *
+	 * @param element The element
+	 */
+	public static native void consoleLog(Element element) /*-{
+		console.log(element);
+	}-*/;
+
+	/**
+	 * Highlights the given {@link Widget}'s {@link Element} using <code>$(element).delay(250).effect("highlight")</code>
+	 *
+	 * @param widget   The {@link Widget} to highlight
+	 * @param scrollTo Scroll to the highlighted element?
+	 */
+	public static void highlight(Widget widget, boolean scrollTo)
+	{
+		if (widget != null)
+		{
+			if (widget.isVisible())
+				highlight(widget.getElement(), scrollTo);
+		}
+	}
+
+	/**
+	 * Highlights the given {@link Element} using <code>$(element).delay(250).effect("highlight")</code>
+	 *
+	 * @param element  The element to highlight
+	 * @param scrollTo Scroll to the highlighted element?
+	 */
+	public static void highlight(final Element element, final boolean scrollTo)
+	{
+		/* The highlight effect changes the display cs property, so make sure it's not hidden */
+		if (element != null && GQuery.$(element).isVisible())
+		{
+			Scheduler.get().scheduleDeferred(() ->
+			{
+				if (scrollTo)
+					element.scrollIntoView();
+
+				highlightNative(element);
+			});
+		}
+	}
+
+	private static native void highlightNative(Element element)/*-{
+		var highlightColor = @jhi.germinate.client.util.GerminateSettingsHolder::getCategoricalColor(*)(0);
+		$wnd.$(element)
+			.stop(false, true)
+			.effect("highlight", {
+				color: highlightColor
+			}, 750);
+	}-*/;
+
+	/**
+	 * Creates a JavaScript array based on the given Java array
+	 *
+	 * @param input The Java array
+	 * @return The JavaScript Array
+	 */
+	public static JsArrayString toJsStringArray(String[] input)
+	{
+		JsArrayString jsArrayString = JsArrayString.createArray().cast();
+		for (String s : input)
+		{
+			jsArrayString.push(s);
+		}
+		return jsArrayString;
+	}
+
+	public static JsArrayNumber toJsNumbersArray(double[] input)
+	{
+		JsArrayNumber jsArrayNumbers = JsArrayNumber.createArray().cast();
+		for (double s : input)
+		{
+			jsArrayNumbers.push(s);
+		}
+		return jsArrayNumbers;
+	}
+
 	/**
 	 * {@link GoogleAnalytics} provides functionality to track user events and page views to GoogleAnalytics.
 	 *
@@ -151,6 +323,7 @@ public class JavaScript
 			HELP("help"),
 			SHARE("share"),
 			GROUPS("groups"),
+			USER_GROUPS("user-groups"),
 			ANNOTATIONS("annotations"),
 			SEARCH("search"),
 			DOWNLOAD("download");
@@ -245,149 +418,6 @@ public class JavaScript
 		public static native boolean isGoogleAnalyticsLoaded()/*-{
 			return $wnd['ga'] !== undefined;
 		}-*/;
-	}
-
-	/**
-	 * Invokes a click event on the given element
-	 *
-	 * @param elem The element
-	 */
-	public static native void clickElement(Element elem) /*-{
-		elem.click();
-	}-*/;
-
-	public static void invokeDownload(String uri)
-	{
-		invokeDownload(uri, null);
-	}
-
-	public static void invokeDownload(String uri, String filename)
-	{
-		Anchor anchor;
-
-		if (!StringUtils.isEmpty(filename))
-		{
-			anchor = new Anchor("Download", uri, "_blank");
-			anchor.getElement().setAttribute("download", filename);
-		}
-		else
-		{
-			anchor = new Anchor("Download", uri);
-		}
-
-		anchor.setVisible(false);
-
-		RootPanel.get().add(anchor);
-
-        /* Click it */
-		clickElement(anchor.getElement());
-
-        /* And remove it */
-		anchor.removeFromParent();
-	}
-
-	/**
-	 * Prints the given message to the browser console
-	 *
-	 * @param logMessage The log message to print
-	 */
-	public static native void consoleLog(String logMessage) /*-{
-		console.log(logMessage);
-	}-*/;
-
-	/**
-	 * Prints the given element to the browser console
-	 *
-	 * @param element The element
-	 */
-	public static native void consoleLog(Element element) /*-{
-		console.log(element);
-	}-*/;
-
-	/**
-	 * Highlights the given {@link Widget}'s {@link Element} using <code>$(element).delay(250).effect("highlight")</code>
-	 *
-	 * @param widget   The {@link Widget} to highlight
-	 * @param scrollTo Scroll to the highlighted element?
-	 */
-	public static void highlight(Widget widget, boolean scrollTo)
-	{
-		if (widget != null)
-		{
-			if (widget.isVisible())
-				highlight(widget.getElement(), scrollTo);
-		}
-	}
-
-	/**
-	 * Highlights the given {@link Element} using <code>$(element).delay(250).effect("highlight")</code>
-	 *
-	 * @param element  The element to highlight
-	 * @param scrollTo Scroll to the highlighted element?
-	 */
-	public static void highlight(final Element element, final boolean scrollTo)
-	{
-		/* The highlight effect changes the display cs property, so make sure it's not hidden */
-		if (element != null && GQuery.$(element).isVisible())
-		{
-			Scheduler.get().scheduleDeferred(() ->
-			{
-				if (scrollTo)
-					element.scrollIntoView();
-
-				highlightNative(element);
-			});
-		}
-	}
-
-	private static native void highlightNative(Element element)/*-{
-		var highlightColor = @jhi.germinate.client.util.GerminateSettingsHolder::getCategoricalColor(*)(0);
-		$wnd.$(element)
-			.stop(false, true)
-			.effect("highlight", {
-				color: highlightColor
-			}, 750);
-	}-*/;
-
-	/**
-	 * Creates a JavaScript array based on the given Java array
-	 *
-	 * @param input The Java array
-	 * @return The JavaScript Array
-	 */
-	public static JsArrayString toJsStringArray(String[] input)
-	{
-		JsArrayString jsArrayString = JsArrayString.createArray().cast();
-		for (String s : input)
-		{
-			jsArrayString.push(s);
-		}
-		return jsArrayString;
-	}
-
-	public static JsArrayNumber toJsNumbersArray(double[] input)
-	{
-		JsArrayNumber jsArrayNumbers = JsArrayNumber.createArray().cast();
-		for (double s : input)
-		{
-			jsArrayNumbers.push(s);
-		}
-		return jsArrayNumbers;
-	}
-
-	/**
-	 * Creates a JavaScript array based on the given Java {@link Collection}
-	 *
-	 * @param input The Java {@link Collection}
-	 * @return The JavaScript Array
-	 */
-	public static JsArrayString toJsArray(Collection<String> input)
-	{
-		JsArrayString jsArrayString = JsArrayString.createArray().cast();
-		for (String i : input)
-			jsArrayString.push(i);
-//		input.forEach(jsArrayString::push);
-		return jsArrayString;
 	}
 
 	/**

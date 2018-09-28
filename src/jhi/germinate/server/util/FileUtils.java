@@ -20,7 +20,7 @@ package jhi.germinate.server.util;
 import java.io.*;
 import java.net.*;
 
-import jhi.germinate.server.config.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
 
@@ -34,8 +34,14 @@ public class FileUtils
 	public static File getFromExternalDataDirectory(FileLocation location, String localeSubFolder, ReferenceFolder folder, String filePath)
 	{
 		File result = null;
-		String extra = folder == null ? filePath : folder.name() + File.separator + filePath;
-		String externalFolder = PropertyReader.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER);
+		String extra = "";
+
+		if(folder != null)
+			extra = folder.name();
+		if(filePath != null)
+			extra += File.separator + filePath;
+
+		String externalFolder = PropertyWatcher.get(ServerProperty.GERMINATE_EXTERNAL_DATA_FOLDER);
 
 		switch (location)
 		{
@@ -43,6 +49,7 @@ public class FileUtils
 			case res:
 			case download:
 			case apps:
+			case template:
 				if (!StringUtils.isEmpty(externalFolder))
 				{
 					/* Remove tailing "/" or "\" */

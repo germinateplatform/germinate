@@ -47,6 +47,8 @@
 				<g8:ParagraphPanel ui:field="description"/>
 			</g:FlowPanel>
 
+			<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DOWNLOAD}" text="{msg.downloadFileAsTxt}" type="PRIMARY" ui:field="download"/>
+
 			<g:SimplePanel ui:field="groupMembersPanel"/>
 
 			<g:FlowPanel ui:field="newGroupMembersPanel">

@@ -189,7 +189,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 			public String getValue(MapDefinition object)
 			{
 				if (object.getMap() != null)
-					return object.getMap().getDescription();
+					return object.getMap().getName();
 				else
 					return null;
 			}
@@ -200,7 +200,7 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 				return String.class;
 			}
 		};
-		column.setDataStoreName(Map.DESCRIPTION);
+		column.setDataStoreName(Map.NAME);
 		addColumn(column, Text.LANG.mapsColumnsMapName(), sortingEnabled);
 
 		/* Add the chromosome column */

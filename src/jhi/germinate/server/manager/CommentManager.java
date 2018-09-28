@@ -20,9 +20,9 @@ package jhi.germinate.server.manager;
 import java.util.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -69,7 +69,7 @@ public class CommentManager extends AbstractManager<Comment>
 	 */
 	public static void setVisibility(UserAuth user, Comment comment, boolean visible) throws DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		if (user == null || user.getId() == null)
@@ -109,7 +109,7 @@ public class CommentManager extends AbstractManager<Comment>
 	 */
 	public static DebugInfo add(UserAuth user, CommentType type, Long referenceId, String description) throws DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException
 	{
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 			throw new SystemInReadOnlyModeException();
 
 		/* Check if the username is valid */

@@ -110,7 +110,6 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 				.setDuplInstName(getPart(McpdField.DUPLINSTNAME))
 				.setInstitution(parseInstitution())
 				.setTaxonomy(taxonomy)
-				.setSubtaxa(parseSubtaxa(taxonomy))
 				.setLocation(parseLocation())
 				.setBiologicalStatus(new BiologicalStatus(getLong(McpdField.SAMPSTAT)))
 				.setCollSrc(new CollectingSource(getLong(McpdField.COLLSRC)))
@@ -154,23 +153,14 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 				.setCountryCode3(getPart(McpdField.ORIGCTY));
 	}
 
-	private Subtaxa parseSubtaxa(Taxonomy taxonomy)
-	{
-		return new Subtaxa()
-				.setTaxonomy(taxonomy)
-				.setTaxonomyIdentifier(getPart(McpdField.SUBTAXA))
-				.setAuthor(getPart(McpdField.SUBTAUTHOR))
-				.setCreatedOn(new Date())
-				.setUpdatedOn(new Date());
-
-	}
-
 	private Taxonomy parseTaxonomy()
 	{
 		return new Taxonomy()
 				.setGenus(getPart(McpdField.GENUS))
 				.setSpecies(getPart(McpdField.SPECIES))
-				.setAuthor(getPart(McpdField.SPAUTHOR))
+				.setSubtaxa(getPart(McpdField.SUBTAXA))
+				.setTaxonomyAuthor(getPart(McpdField.SPAUTHOR))
+				.setSubtaxaAuthor(getPart(McpdField.SUBTAUTHOR))
 				.setCropName(getPart(McpdField.CROPNAME))
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());

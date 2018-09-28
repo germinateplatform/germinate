@@ -23,9 +23,9 @@ import java.util.*;
 import java.util.Date;
 import java.util.logging.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.Database.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -73,8 +73,8 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 			switch (queryType)
 			{
 				case AUTHENTICATION:
-					database = Database.connect(DatabaseType.MYSQL, PropertyReader.getServerStringForAuthentication(), PropertyReader.get(ServerProperty.DATABASE_USERNAME),
-							PropertyReader.get(ServerProperty.DATABASE_PASSWORD));
+					database = Database.connect(DatabaseType.MYSQL, PropertyWatcher.getServerStringForAuthentication(), PropertyWatcher.get(ServerProperty.DATABASE_USERNAME),
+							PropertyWatcher.get(ServerProperty.DATABASE_PASSWORD));
 					break;
 
 				case DATA:

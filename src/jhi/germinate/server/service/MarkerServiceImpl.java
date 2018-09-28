@@ -44,7 +44,6 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 {
 	private static final long serialVersionUID = 3127051583642953437L;
 
-	private static final String QUERY_MARKERS_DATA_IDS_DOWNLOAD = "SELECT markers.*, markertypes.description AS markertypes_description, mapdefinitions.definition_start AS mapdefinitions_definition_start, mapdefinitions.definition_end AS mapdefinitions_definition_end, mapdefinitions.chromosome AS mapdefinitions_chromosome, mapdefinitions.arm_impute AS mapdefinitions_arm_impute, maps.description AS maps_description FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN mapdefinitions ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id LEFT JOIN mapfeaturetypes ON mapfeaturetypes.id = mapdefinitions.mapfeaturetype_id WHERE (maps.visibility = 1 OR maps.user_id = ?) AND markers.id IN (%s)";
 	private static final String QUERY_MARKER_DATA_WITH_NAMES = "SELECT mapdefinitions.chromosome, mapdefinitions.definition_start, mapfeaturetypes.description, markers.id, markers.marker_name FROM mapdefinitions, mapfeaturetypes, markers, maps WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND maps.id = mapdefinitions.map_id AND (maps.user_id = ? OR maps.visibility = 1) AND markers.marker_name IN (%s)";
 
 	@Override
@@ -122,32 +121,6 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		return MarkerManager.getByIds(userAuth, ids, pagination);
-	}
-
-	@Override
-	public ServerResult<String> export(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		String formatted = String.format(QUERY_MARKERS_DATA_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
-		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
-				.setLong(userAuth.getId())
-				.setStrings(ids)
-				.getStreamer();
-
-		File output = createTemporaryFile("export_marker_group", FileType.txt.name());
-
-		try
-		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
-		}
-		catch (java.io.IOException e)
-		{
-			throw new jhi.germinate.shared.exception.IOException(e);
-		}
-
-		return new ServerResult<>(streamer.getDebugInfo(), output.getName());
 	}
 
 	@Override

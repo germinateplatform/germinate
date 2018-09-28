@@ -38,6 +38,7 @@ function scatterMatrix() {
 		frameStyle = "",
 		hiddenStyle = hiddenStyle,
 		tooltipStyle = "",
+		radius = 2,
 		legendItemStyle = "",
 		xTickFormat = d3.format("s"),
 		yTickFormat = d3.format("s"),
@@ -213,7 +214,7 @@ function scatterMatrix() {
 					.attr("cy", function (d) {
 						return yScale(d[p.y]);
 					})
-					.attr("r", 3)
+					.attr("r", radius)
 					.attr("id", function (d) {
 						return "item-" + d[idColumn];
 					})
@@ -228,7 +229,7 @@ function scatterMatrix() {
 							d3.select(this)
 								.transition()
 								.duration(100)
-								.attr("r", 4.5);
+								.attr("r", radius + 2);
 
 							// Set the current x and y value so the tooltip can use them
 							d.xValue = d[p.x];
@@ -240,7 +241,7 @@ function scatterMatrix() {
 							d3.select(this)
 								.transition()
 								.duration(200)
-								.attr("r", 2.5);
+								.attr("r", radius);
 							tip.hide();
 						});
 				}
@@ -347,6 +348,12 @@ function scatterMatrix() {
 	chart.tooltip = function (_) {
 		if (!arguments.length) return tooltip;
 		tooltip = _;
+		return chart;
+	};
+
+	chart.radius = function (_) {
+		if (!arguments.length) return radius;
+		radius = _;
 		return chart;
 	};
 

@@ -25,16 +25,16 @@ import java.util.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.table.*;
+import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
+public class DataStatsTable extends AdvancedTable<DataStats>
 {
-
-	public CompoundDataOverviewTable(List<DataStats> data)
+	public DataStatsTable(List<DataStats> data)
 	{
 		super(data);
 
@@ -51,7 +51,7 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 				}
 			};
 			column.setSortable(true);
-			addStringColumn(column, Text.LANG.compoundColumnId());
+			addStringColumn(column, Text.LANG.phenotypeColumnId());
 		}
 
 		column = new Column<DataStats, String>(new TextCell())
@@ -63,7 +63,7 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 			}
 		};
 		column.setSortable(true);
-		addStringColumn(column, Text.LANG.compoundColumnName());
+		addStringColumn(column, Text.LANG.phenotypeColumnName());
 
 		column = new Column<DataStats, String>(new TextCell())
 		{
@@ -74,14 +74,56 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 			}
 		};
 		column.setSortable(true);
-		addStringColumn(column, Text.LANG.compoundColumnDescription());
+		addStringColumn(column, Text.LANG.phenotypeColumnDescription());
 
 		column = new Column<DataStats, String>(new TextCell())
 		{
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getMin()));
+				String result = null;
+
+				if (object.getUnit() != null)
+				{
+					result = object.getUnit().getName();
+
+					if (!StringUtils.isEmpty(object.getUnit().getAbbreviation()))
+						result += " [" + object.getUnit().getAbbreviation() + "]";
+				}
+
+				return result;
+			}
+		};
+		column.setSortable(true);
+		addStringColumn(column, Text.LANG.unitColumnName());
+
+		column = new Column<DataStats, String>(new TextCell())
+		{
+			@Override
+			public String getValue(DataStats object)
+			{
+				return TableUtils.getCellValueAsString(Long.toString(object.getCount()));
+			}
+
+			@Override
+			public String getCellStyleNames(Cell.Context context, DataStats object)
+			{
+				return Style.TEXT_RIGHT_ALIGN;
+			}
+		};
+		column.setSortable(true);
+		addStringColumn(column, Text.LANG.generalCount());
+		getTable().getHeader(getTable().getColumnCount() - 1).setHeaderStyleNames(Style.TEXT_RIGHT_ALIGN);
+
+		column = new Column<DataStats, String>(new TextCell())
+		{
+			@Override
+			public String getValue(DataStats object)
+			{
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getMin()));
+				else
+					return "";
 			}
 
 			@Override
@@ -99,7 +141,10 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getAvg()));
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getAvg()));
+				else
+					return "";
 			}
 
 			@Override
@@ -117,7 +162,10 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getMax()));
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getMax()));
+				else
+					return "";
 			}
 
 			@Override
@@ -135,7 +183,10 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return TableUtils.getCellValueAsString(Double.toString(object.getStd()));
+				if (object.isNumeric())
+					return TableUtils.getCellValueAsString(Double.toString(object.getStd()));
+				else
+					return "";
 			}
 
 			@Override
@@ -153,7 +204,7 @@ public class CompoundDataOverviewTable extends AdvancedTable<DataStats>
 			@Override
 			public String getValue(DataStats object)
 			{
-				return object.getDataset();
+				return DatasetTable.getTextTruncated(object.getDataset());
 			}
 		};
 		column.setSortable(true);

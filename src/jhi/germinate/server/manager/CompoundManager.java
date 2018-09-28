@@ -19,7 +19,6 @@ package jhi.germinate.server.manager;
 
 import java.util.*;
 
-import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
 import jhi.germinate.shared.*;
@@ -33,11 +32,13 @@ import jhi.germinate.shared.search.*;
  */
 public class CompoundManager extends AbstractManager<Compound>
 {
-	private static final String COMMON_TABLES = " compounds LEFT JOIN units ON units.id = compounds.unit_id ";
+	private static final String[] COLUMNS_SORTABLE      = {Compound.ID, Compound.NAME, Compound.DESCRIPTION, Compound.MOLECULAR_FORMULA, Compound.AVERAGE_MASS, Compound.MONOISOTOPIC_MASS, Compound.COMPOUND_CLASS, Compound.CREATED_ON, Compound.UPDATED_ON, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION, Compound.COUNT};
 
-	private static final String SELECT_ALL_FOR_FILTER = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
+	private static final String COMMON_TABLES = " compounds LEFT JOIN units ON units.id = compounds.unit_id LEFT JOIN compounddata ON compounddata.compound_id = compounds.id ";
 
-	private static final String SELECT_ALL_FOR_DATASET = "SELECT * FROM " + COMMON_TABLES + " WHERE EXISTS (SELECT 1 FROM compounddata WHERE compounddata.compound_id = compounds.id AND compounddata.dataset_id IN (%s))";
+	private static final String SELECT_ALL_FOR_FILTER = "SELECT compounds.*, units.*, COUNT(1) AS count FROM " + COMMON_TABLES + " {{FILTER}} GROUP BY compounds.id %s LIMIT ?, ?";
+
+	private static final String SELECT_ALL_FOR_DATASET = "SELECT compounds.*, units.*, COUNT(1) AS count FROM " + COMMON_TABLES + " WHERE compounddata.dataset_id IN (%s) GROUP BY compounds.id";
 
 	@Override
 	protected String getTable()
@@ -65,10 +66,10 @@ public class CompoundManager extends AbstractManager<Compound>
 	 */
 	public static PaginatedServerResult<List<Compound>> getAllForFilter(UserAuth userAuth, Pagination pagination, PartialSearchQuery filter) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
-		pagination.updateSortColumn(CompoundService.COLUMNS_SORTABLE, Compound.ID);
+		pagination.updateSortColumn(COLUMNS_SORTABLE, Compound.ID);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER, pagination.getSortQuery());
 
-		return AbstractManager.<Compound>getFilteredDatabaseObjectQuery(userAuth, filter, formatted, CompoundService.COLUMNS_SORTABLE, pagination.getResultSize())
+		return AbstractManager.<Compound>getFilteredDatabaseObjectQuery(userAuth, filter, formatted, COLUMNS_SORTABLE, pagination.getResultSize())
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.run()

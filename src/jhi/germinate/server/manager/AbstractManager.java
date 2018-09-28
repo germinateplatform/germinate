@@ -156,9 +156,33 @@ public abstract class AbstractManager<T extends DatabaseObject>
 	 */
 	public static <T extends DatabaseObject> DatabaseObjectQuery<T> getFilteredDatabaseObjectQuery(UserAuth userAuth, PartialSearchQuery filter, String input, String[] allowedColumns, Integer previousCount) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
 	{
+		return getFilteredDatabaseObjectQuery(userAuth, filter, input, allowedColumns, previousCount, Database.QueryType.DATA);
+	}
+
+	/**
+	 * This method is a utility method that will replace a placeholder (<code>{{FILTER}}</code>) with the SQL version of the given {@link
+	 * PartialSearchQuery}. <p> <b>IMPORTANT:</b> Make sure that the given SQL string contains this placeholder and also make sure that it is placed
+	 * in the location where the SQL keyword <code>WHERE</code> would usually be placed. This method will in ALL cases add a <code>WHERE</code>
+	 * clause. If no filter is given or it's empty, this "where" clause will be <code>WHERE 1=1</code>. Make sure to join additional conditions with
+	 * "AND" or "OR" to id.
+	 *
+	 * @param userAuth       The current user
+	 * @param filter         The {@link PartialSearchQuery}
+	 * @param input          The given SQL string with the filter placeholder
+	 * @param allowedColumns The allowed columns to filter on
+	 * @return Returns the given SQL string with the filter placeholder replaced with the SQL representation of the {@link PartialSearchQuery}
+	 * @throws DatabaseException           Thrown if the interaction with the database fails
+	 * @throws InvalidSearchQueryException Thrown if any part of the {@link PartialSearchQuery} contains a missing comparison operator
+	 * @throws InvalidColumnException      Thrown if the filter is trying to filter a column that hasn't been specified in the allowedColumns
+	 *                                     parameter
+	 * @throws InvalidArgumentException    Thrown if any part of the {@link PartialSearchQuery} is invalid
+	 */
+	public static <T extends DatabaseObject> DatabaseObjectQuery<T> getFilteredDatabaseObjectQuery(UserAuth userAuth, PartialSearchQuery filter, String input, String[] allowedColumns, Integer previousCount, Database.QueryType type) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
+	{
 		String formatted = getFormattedString(filter, input, allowedColumns);
 
 		DatabaseObjectQuery<T> query = new DatabaseObjectQuery<>(formatted, userAuth);
+		query.setQueryType(type);
 		query.setFetchesCount(previousCount);
 
 		if (filter != null)

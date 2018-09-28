@@ -47,6 +47,8 @@ public class Style
 	public static final String LAYOUT_NO_BORDER_LEFT             = "gm8-no-border-left";
 	public static final String LAYOUT_SIDEBAR_TOGGLED            = "gm8-sidebar-toggled";
 
+	public static final String PRINT_SECTION = "gm8-print-section";
+
 	public static final String TABLE_PEITY_DONUT = "gm8-table-peity-donut";
 
 	public static final String FORM_REQUIRED = "form-required";
@@ -140,13 +142,14 @@ public class Style
 	public static final String MDI_FILE_DOCUMENT                   = "mdi-file-document";
 	public static final String MDI_SITEMAP                         = "mdi-sitemap";
 	public static final String MDI_ACCOUNT                         = "mdi-account";
-	public static final String MDI_ACCOUNT_SETTINGS_VARIANT        = "mdi-account-settings-variant";
+	public static final String MDI_ACCOUNT_SETTINGS                = "mdi-account-settings";
 	public static final String MDI_ACCOUNT_MULTIPLE                = "mdi-account-multiple";
 	public static final String MDI_MAGNIFY                         = "mdi-magnify";
 	public static final String MDI_LINK_VARIANT                    = "mdi-link-variant";
 	public static final String MDI_NEW_BOX                         = "mdi-new-box";
 	public static final String MDI_CHECK                           = "mdi-check";
 	public static final String MDI_DELETE                          = "mdi-delete";
+	public static final String MDI_ACCOUNT_GROUP                   = "mdi-account-group";
 	public static final String MDI_FILE_PLUS                       = "mdi-file-plus";
 	public static final String MDI_RENAME_BOX                      = "mdi-rename-box";
 	public static final String MDI_FILE_EXCEL                      = "mdi-file-excel";
@@ -196,6 +199,10 @@ public class Style
 	public static final String MDI_COMMENT_TEXT_OUTLINE            = "mdi-comment-text-outline";
 	public static final String MDI_LG                              = "mdi-lg";
 	public static final String MDI_PLAYLIST_PLUS                   = "mdi-playlist-plus";
+	public static final String MDI_DATABASE_LOCK                   = "mdi-database-lock";
+	public static final String MDI_SECURITY_ACCOUNT                = "mdi-security-account";
+	public static final String MDI_ACCOUNT_KEY                     = "mdi-account-key";
+	public static final String MDI_PRINTER                         = "mdi-printer";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
 	public static final String COL_XXS_12                          = "col-xxs-12";
 
@@ -225,5 +232,10 @@ public class Style
 	public static String mdiLg(String style)
 	{
 		return combine(MDI, style, MDI_LG);
+	}
+
+	public static String mdiLgFw(String style)
+	{
+		return combine(MDI, MDI_LG, FA_FIXED_WIDTH, style);
 	}
 }

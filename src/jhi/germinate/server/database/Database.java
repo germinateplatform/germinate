@@ -19,8 +19,8 @@ package jhi.germinate.server.database;
 
 import java.sql.*;
 
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -107,7 +107,7 @@ public final class Database
 		catch (SQLException e)
 		{
 			if (e.getErrorCode() == 1044 && e.getSQLState().equals("42000"))
-				throw new DatabaseException(e.getLocalizedMessage().replace(PropertyReader.get(ServerProperty.DATABASE_USERNAME), "<USERNAME>"));
+				throw new DatabaseException(e.getLocalizedMessage().replace(PropertyWatcher.get(ServerProperty.DATABASE_USERNAME), "<USERNAME>"));
 			else
 				throw new DatabaseException(e);
 		}
@@ -267,7 +267,7 @@ public final class Database
 		switch (type)
 		{
 			case MYSQL:
-				return connect(type, PropertyReader.getServerString(type), PropertyReader.get(ServerProperty.DATABASE_USERNAME), PropertyReader.get(ServerProperty.DATABASE_PASSWORD));
+				return connect(type, PropertyWatcher.getServerString(type), PropertyWatcher.get(ServerProperty.DATABASE_USERNAME), PropertyWatcher.get(ServerProperty.DATABASE_PASSWORD));
 			default:
 				throw new InvalidDatabaseTypeException();
 		}

@@ -47,8 +47,6 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 {
 	private static final long serialVersionUID = -534823136023353625L;
 
-	private static final String QUERY_COLLSITES_BY_IDS_DOWNLOAD = "SELECT locations.*, locationtypes.name AS locationtypes_name, locationtypes.description AS locationtypes_description, countries.country_name AS countries_country_name FROM locations LEFT JOIN countries ON locations.country_id = countries.id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id WHERE locations.id IN (%s)";
-
 	private static final String SELECT_TREEMAP_DATA = "SELECT countries.*, locations.*, locationtypes.*, COUNT(germinatebase.id) AS count FROM countries LEFT JOIN locations ON locations.country_id = countries.id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id WHERE NOT ISNULL(site_name) AND locationtypes.name = ? GROUP BY countries.id, locations.id HAVING COUNT(germinatebase.id) > 0 ";
 
 	@Override
@@ -193,31 +191,6 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		return LocationManager.getAllForClimateGroup(userAuth, datasetIds, climateId, groupId);
-	}
-
-	@Override
-	public ServerResult<String> exportForIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		String formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
-		GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
-				.setStrings(ids)
-				.getStreamer();
-
-		File output = createTemporaryFile("export_collsite_group", FileType.txt.name());
-
-		try
-		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
-		}
-		catch (java.io.IOException e)
-		{
-			throw new jhi.germinate.shared.exception.IOException(e);
-		}
-
-		return new ServerResult<>(streamer.getDebugInfo(), output.getName());
 	}
 
 	@Override

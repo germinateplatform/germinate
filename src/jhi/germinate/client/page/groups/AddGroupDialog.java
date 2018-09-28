@@ -21,11 +21,13 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.TextBox;
 
 import java.util.*;
 
 import jhi.germinate.client.widget.listbox.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 
 /**
@@ -40,6 +42,8 @@ public class AddGroupDialog extends Composite
 	private static AddGroupDialogUiBinder ourUiBinder = GWT.create(AddGroupDialogUiBinder.class);
 
 	@UiField
+	FormGroup        groupTypeGroup;
+	@UiField
 	GroupTypeListBox groupType;
 
 	@UiField
@@ -51,31 +55,36 @@ public class AddGroupDialog extends Composite
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
-		if (toSelect != null)
+		if (types != null)
 		{
-			groupType.setValue(toSelect, false);
-			groupType.setEnabled(false);
+			if (toSelect != null)
+			{
+				groupType.setValue(toSelect, false);
+				groupType.setEnabled(false);
+			}
+			else
+			{
+				groupType.setValue(types.get(0), false);
+			}
+
+			groupType.setAcceptableValues(types);
 		}
 		else
 		{
-			groupType.setValue(types.get(0), false);
+			groupTypeGroup.setVisible(false);
 		}
-
-		groupType.setAcceptableValues(types);
 	}
 
-	public void setGroup(Group group)
+	public void setName(String name)
 	{
-		if (group != null)
-		{
-			groupName.setValue(group.getName());
-			groupDescription.setValue(group.getDescription());
-		}
-		else
-		{
-			groupName.setValue("");
-			groupDescription.setValue("");
-		}
+		name = StringUtils.isEmpty(name) ? "" : name;
+		groupName.setValue(name);
+	}
+
+	public void setDescription(String description)
+	{
+		description = StringUtils.isEmpty(description) ? "" : description;
+		groupDescription.setValue(description);
 	}
 
 	public String getName()

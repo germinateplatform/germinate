@@ -112,18 +112,6 @@ public interface MarkerService extends RemoteService
 	ServerResult<List<Marker>> getByIds(RequestProperties properties, Pagination pagination, List<String> ids) throws InvalidSessionException, DatabaseException, InvalidColumnException;
 
 	/**
-	 * Exports the {@link Marker}s with the given ids and returns the name of the result file.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param ids        The {@link Marker} ids
-	 * @return The name of the result file.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 * @throws IOException             Thrown if an I/O operation fails
-	 */
-	ServerResult<String> export(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException, IOException;
-
-	/**
 	 * Exports the {@link Marker}s with the given names and returns the name of the result file.
 	 *
 	 * @param properties  The {@link RequestProperties}

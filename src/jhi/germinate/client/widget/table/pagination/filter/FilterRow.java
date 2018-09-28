@@ -29,6 +29,7 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.extras.datepicker.client.ui.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
@@ -128,8 +129,36 @@ public class FilterRow extends Composite
 
 		column.setData(columns, true);
 
-		operator.setData(Arrays.asList(new Like(), new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between()), true);
+		operator.setData(Arrays.asList(new Like(), new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between(), new InSet()), true);
 		deleteButton.setEnabled(canDelete);
+	}
+
+	public static String getOperatorString(ComparisonOperator item)
+	{
+		if (item instanceof Like)
+			return Text.LANG.operatorsLike();
+		else if (item instanceof Equal)
+			return Text.LANG.operatorsEqual();
+		else if (item instanceof GreaterThan)
+			return Text.LANG.operatorsGreaterThan();
+		else if (item instanceof GreaterThanEquals)
+			return Text.LANG.operatorsGreaterThanEquals();
+		else if (item instanceof LessThan)
+			return Text.LANG.operatorsLessThan();
+		else if (item instanceof LessThanEquals)
+			return Text.LANG.operatorsLessThanEquals();
+		else if (item instanceof Between)
+			return Text.LANG.operatorsBetween();
+		else if (item instanceof InSet)
+			return Text.LANG.operatorInSet();
+		else
+			return item.getClass().getSimpleName();
+	}
+
+	public void setEnterKeyListener(KeyPressHandler handler)
+	{
+		firstInput.addKeyPressHandler(handler);
+		secondInput.addKeyPressHandler(handler);
 	}
 
 	private void update(ComparisonOperator value)
@@ -138,14 +167,15 @@ public class FilterRow extends Composite
 		boolean secondVisible;
 		boolean add;
 
-		switch (value.getRequiredNumberOfvalues().ordinal())
+		switch (value.getRequiredNumberOfvalues())
 		{
-			case 1:
+			case ONE:
+			case MANY:
 				firstVisible = true;
 				secondVisible = false;
 				add = false;
 				break;
-			case 2:
+			case TWO:
 				firstVisible = true;
 				secondVisible = true;
 				add = true;
@@ -184,13 +214,7 @@ public class FilterRow extends Composite
 		}
 	}
 
-	public void setEnterKeyListener(KeyPressHandler handler)
-	{
-		firstInput.addKeyPressHandler(handler);
-		secondInput.addKeyPressHandler(handler);
-	}
-
-	public void setValue(String col, String value, ComparisonOperator op)
+	public void setValue(String col, List<String> values, ComparisonOperator op)
 	{
 		columns.stream()
 			   .filter(c -> c.databaseColumn.equalsIgnoreCase(col))
@@ -203,38 +227,32 @@ public class FilterRow extends Composite
 				   {
 					   try
 					   {
-						   firstEntity.setValue(EntityType.valueOf(value), true);
+						   if (values.size() > 0)
+							   firstEntity.setValue(EntityType.valueOf(values.get(0)), true);
 					   }
 					   catch (IllegalArgumentException e)
 					   {
-						   firstInput.setValue(value);
+						   if (values.size() > 0)
+							   firstInput.setValue(values.get(0));
 					   }
 				   }
 				   else
 				   {
-					   firstInput.setValue(value);
+					   switch (op.getRequiredNumberOfvalues())
+					   {
+						   case TWO:
+							   firstInput.setValue(values.get(0));
+							   secondInput.setValue(values.get(1));
+							   break;
+						   case MANY:
+							   firstInput.setValue(values.stream().collect(Collectors.joining(", ")));
+							   break;
+						   case ONE:
+						   default:
+							   firstInput.setValue(values.get(0));
+					   }
 				   }
 			   });
-	}
-
-	private String getOperatorString(ComparisonOperator item)
-	{
-		if (item instanceof Like)
-			return Text.LANG.operatorsLike();
-		else if(item instanceof Equal)
-			return Text.LANG.operatorsEqual();
-		else if (item instanceof GreaterThan)
-			return Text.LANG.operatorsGreaterThan();
-		else if (item instanceof GreaterThanEquals)
-			return Text.LANG.operatorsGreaterThanEquals();
-		else if (item instanceof LessThan)
-			return Text.LANG.operatorsLessThan();
-		else if (item instanceof LessThanEquals)
-			return Text.LANG.operatorsLessThanEquals();
-		else if (item instanceof Between)
-			return Text.LANG.operatorsBetween();
-		else
-			return item.getClass().getSimpleName();
 	}
 
 	@UiHandler("deleteButton")
@@ -252,16 +270,12 @@ public class FilterRow extends Composite
 	 */
 	public SearchCondition getSearchCondition() throws InvalidArgumentException, InvalidSearchQueryException
 	{
-		SearchCondition value = new SearchCondition();
-
 		ComparisonOperator comparator = operator.getSelection();
 
 		if (comparator == null)
 			return null;
 
-		value.setColumnName(column.getSelection().databaseColumn);
-		value.setComp(comparator);
-		value.addConditionValue(getFirst());
+		SearchCondition value = new SearchCondition(column.getSelection().databaseColumn, comparator, getFirst(), String.class);
 
 		if (secondInput.isVisible())
 			value.addConditionValue(getSecond());

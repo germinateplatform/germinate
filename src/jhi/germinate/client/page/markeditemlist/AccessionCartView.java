@@ -27,6 +27,7 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -43,7 +44,7 @@ public class AccessionCartView extends AbstractCartView<Accession>
 	@Override
 	protected void writeToFile(List<String> markedIds, AsyncCallback<ServerResult<String>> callback)
 	{
-		AccessionService.Inst.get().exportForIds(Cookie.getRequestProperties(), markedIds, callback);
+		GroupService.Inst.get().exportForIds(Cookie.getRequestProperties(), markedIds, GerminateDatabaseTable.germinatebase, callback);
 	}
 
 	@Override

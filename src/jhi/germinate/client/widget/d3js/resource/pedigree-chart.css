@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,25 +15,40 @@
  *  limitations under the License.
  */
 
-package jhi.germinate.server.manager;
+.node rect,
+.node circle,
+.node ellipse,
+.node polygon {
+	stroke: #333;
+	fill: #fff;
+	rx: 5px;
+	ry: 5px;
+}
 
-import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.shared.datastructure.database.*;
+.node rect:hover,
+.node circle:hover,
+.node ellipse:hover,
+.node polygon:hover {
+	cursor: pointer;
+	fill: lightgray;
+}
 
-/**
- * @author Sebastian Raubach
- */
-public class SubtaxaManager extends AbstractManager<Subtaxa>
-{
-	@Override
-	protected String getTable()
-	{
-		return "subtaxa";
-	}
+.node tspan {
+	pointer-events: none;
+}
 
-	@Override
-	protected DatabaseObjectParser<Subtaxa> getParser()
-	{
-		return Subtaxa.Parser.Inst.get();
-	}
+.edgePath path {
+	stroke: #333;
+	fill: #333;
+	stroke-width: 2px;
+}
+
+.edgePath.female path {
+	stroke: #e74c3c;
+	fill: #e74c3c;
+}
+
+.edgePath.male path {
+	stroke: #2980b9;
+	fill: #2980b9;
 }

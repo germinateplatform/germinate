@@ -239,4 +239,22 @@ public interface GroupServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	void renameGroup(RequestProperties properties, Group group, AsyncCallback<ServerResult<Void>> callback);
+
+	/**
+	 * Exports the items with the given ids and returns the name of the result file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param ids        The {@link Marker} ids
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void exportForIds(RequestProperties properties, List<String> ids, GerminateDatabaseTable table, AsyncCallback<ServerResult<String>> callback);
+
+	/**
+	 * Exports the {@link Accession} data for all accessions within the group and returns the name of the result file
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The {@link Group} id
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void exportForGroupId(RequestProperties properties, Long groupId, GerminateDatabaseTable table, AsyncCallback<ServerResult<String>> callback);
 }

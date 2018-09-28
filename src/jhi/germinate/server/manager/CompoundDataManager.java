@@ -19,7 +19,6 @@ package jhi.germinate.server.manager;
 
 import java.util.*;
 
-import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
 import jhi.germinate.shared.*;
@@ -33,6 +32,8 @@ import jhi.germinate.shared.search.*;
  */
 public class CompoundDataManager extends AbstractManager<CompoundData>
 {
+	private static final String[] COLUMNS_DATA_SORTABLE = {CompoundData.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Compound.NAME, Dataset.DESCRIPTION, AnalysisMethod.NAME, Unit.NAME, CompoundData.COMPOUND_VALUE, Compound.COUNT};
+
 	private static final String COMMON_TABLES = " compounddata LEFT JOIN compounds ON compounds.id = compounddata.compound_id LEFT JOIN germinatebase ON germinatebase.id = compounddata.germinatebase_id LEFT JOIN datasets ON datasets.id = compounddata.dataset_id LEFT JOIN analysismethods ON analysismethods.id = compounddata.analysismethod_id LEFT JOIN units ON units.id = compounds.unit_id ";
 
 	private static final String SELECT_IDS_FOR_FILTER        = "SELECT DISTINCT(germinatebase.id) FROM " + COMMON_TABLES + " {{FILTER}} AND datasets.id IN (%s)";
@@ -72,10 +73,10 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 		if (CollectionUtils.isEmpty(datasetIds))
 			return new PaginatedServerResult<>(DebugInfo.create(userAuth), new ArrayList<>(), 0);
 
-		pagination.updateSortColumn(CompoundService.COLUMNS_DATA_SORTABLE, CompoundData.ID);
+		pagination.updateSortColumn(COLUMNS_DATA_SORTABLE, CompoundData.ID);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER, StringUtils.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
-		return AbstractManager.<CompoundData>getFilteredDatabaseObjectQuery(userAuth, filter, formatted, CompoundService.COLUMNS_DATA_SORTABLE, pagination.getResultSize())
+		return AbstractManager.<CompoundData>getFilteredDatabaseObjectQuery(userAuth, filter, formatted, COLUMNS_DATA_SORTABLE, pagination.getResultSize())
 				.setLongs(datasetIds)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
@@ -92,7 +93,7 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 
 		String formatted = String.format(SELECT_IDS_FOR_FILTER, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
-		return AbstractManager.<CompoundData>getFilteredValueQuery(filter, userAuth, formatted, CompoundService.COLUMNS_DATA_SORTABLE)
+		return AbstractManager.<CompoundData>getFilteredValueQuery(filter, userAuth, formatted, COLUMNS_DATA_SORTABLE)
 				.setLongs(datasetIds)
 				.run(Accession.ID)
 				.getStrings();
@@ -100,12 +101,12 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 
 	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
-		pagination.updateSortColumn(CompoundService.COLUMNS_DATA_SORTABLE, Accession.ID);
+		pagination.updateSortColumn(COLUMNS_DATA_SORTABLE, Accession.ID);
 		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(userAuth, true).getServerResult());
 
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, StringUtils.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, CompoundService.COLUMNS_DATA_SORTABLE, COLUMNS_COMPOUND_DATA_EXPORT)
+		return getFilteredGerminateTableQuery(userAuth, filter, formatted, COLUMNS_DATA_SORTABLE, COLUMNS_COMPOUND_DATA_EXPORT)
 				.setLongs(datasetIds)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

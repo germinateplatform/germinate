@@ -21,6 +21,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -34,6 +35,7 @@ import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.listbox.*;
@@ -43,6 +45,7 @@ import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
@@ -155,7 +158,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 					Climate dummy = new Climate(-1L)
 							.setName(Text.LANG.generalNone());
 
-                    /* Fill the climate combo box */
+					/* Fill the climate combo box */
 					result.getServerResult().add(0, dummy);
 					climateBox.setValue(dummy, false);
 					climateBox.setAcceptableValues(result.getServerResult());
@@ -180,11 +183,23 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 			clusteredMap.updateData(null);
 			heatmapMap.updateData(null);
 		}
-//		else if
+		//		else if
 		else
 		{
 			if (clusteredMap == null)
-				clusteredMap = new LeafletUtils.ClusteredMarkerCreator(clusteredPanel, result, new RedirectToAccessionsPageHandler(), null);
+				clusteredMap = new LeafletUtils.ClusteredMarkerCreator(clusteredPanel, result, (id, name) -> {
+					if (!StringUtils.isEmpty(id))
+					{
+						try
+						{
+							LongParameterStore.Inst.get().putAsString(Parameter.collectingsiteId, id);
+							History.newItem(Page.ACCESSIONS_FOR_COLLSITE.name());
+						}
+						catch (UnsupportedDataTypeException e)
+						{
+						}
+					}
+				}, null);
 			else
 				clusteredMap.updateData(result);
 
@@ -240,22 +255,11 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 
 		/* Set our search query */
 		PartialSearchQuery filter = null;
-		try
+		if (type != LocationType.all)
 		{
-			if (type != LocationType.all)
-			{
-				filter = new PartialSearchQuery();
-				SearchCondition condition = new SearchCondition();
-				condition.setColumnName(LocationType.NAME);
-				condition.setComp(new Equal());
-				condition.addConditionValue(type.name());
-				condition.setType(String.class.getSimpleName());
-				filter.add(condition);
-			}
-		}
-		catch (InvalidArgumentException | InvalidSearchQueryException e)
-		{
-			filter = null;
+			filter = new PartialSearchQuery();
+			SearchCondition condition = new SearchCondition(LocationType.NAME, new Equal(), type.name(), String.class);
+			filter.add(condition);
 		}
 
 		LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Location>>>()

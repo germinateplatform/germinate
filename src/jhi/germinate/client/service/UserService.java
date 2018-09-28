@@ -24,7 +24,9 @@ import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
+import jhi.germinate.shared.search.*;
 
 /**
  * {@link UserService} is a {@link RemoteService} providing methods to register users with Germinate Gatekeeper
@@ -98,4 +100,51 @@ public interface UserService extends RemoteService
 	 * @throws SystemInReadOnlyModeException Thrown if the system is currently operating in readAll-only mode
 	 */
 	void addInstitution(Institution institution) throws DatabaseException, SystemInReadOnlyModeException;
+
+	/**
+	 * Returns the {@link GatekeeperUser}s for the given {@link UserGroup} or {@link Dataset} id or all users if no id is specified.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param pagination The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param groupId    The id of the {@link UserGroup} or {@link Dataset in question. Setting this to <code>null</code> will return all users.
+	 * @return The {@link GatekeeperUser}s for the given {@link UserGroup} id or all users if no id is specified.
+	 */
+	PaginatedServerResult<List<GatekeeperUser>> getUsersForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, Long groupId, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException, InsufficientPermissionsException;
+
+	/**
+	 * Removes the objects with the given ids from the {@link UserGroup} with the given id
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The id of the {@link UserGroup}
+	 * @param ids        The ids of the objects to remove
+	 */
+	void removeFromGroup(RequestProperties properties, Long groupId, List<Long> ids) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
+
+	/**
+	 * Adds the objects with the given ids to the {@link UserGroup} with the given id
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param groupId    The id of the {@link UserGroup}
+	 * @param ids        The ids of the objects to add
+	 */
+	void addToGroup(RequestProperties properties, Long groupId, List<Long> ids) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
+
+	/**
+	 * Adds the objects with the given ids to the {@link Dataset} permissions with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetId  The id of the {@link Dataset}
+	 * @param ids        The ids of the objects to add
+	 */
+	void addToDataset(RequestProperties properties, Long datasetId, List<Long> ids, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
+
+	/**
+	 * Removes the objects with the given ids from the {@link Dataset} permissions with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetId  The id of the {@link Dataset}
+	 * @param ids        The ids of the objects to add
+	 */
+	void removeFromDataset(RequestProperties properties, Long datasetId, List<Long> ids, GerminateDatabaseTable table) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, SystemInReadOnlyModeException;
 }

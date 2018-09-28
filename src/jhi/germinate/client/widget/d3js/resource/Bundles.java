@@ -55,6 +55,31 @@ public class Bundles
 		}
 	}
 
+	public interface PedigreeChartBundle extends ClientBundle
+	{
+		PedigreeChartBundle INSTANCE    = GWT.create(PedigreeChartBundle.class);
+		Boolean             IS_INJECTED = INSTANCE.css().ensureInjected();
+
+		String STYLE_NODE      = INSTANCE.css().node();
+		String STYLE_EDGE_PATH = INSTANCE.css().edgePath();
+		String STYLE_MALE      = INSTANCE.css().male();
+		String STYLE_FEMALE    = INSTANCE.css().female();
+
+		@Source("pedigree-chart.css")
+		MyResource css();
+
+		interface MyResource extends CssResource
+		{
+			String node();
+
+			String edgePath();
+
+			String male();
+
+			String female();
+		}
+	}
+
 	/**
 	 * The {@link ClientBundle} used for styling the d3 histogram and bar chart
 	 *

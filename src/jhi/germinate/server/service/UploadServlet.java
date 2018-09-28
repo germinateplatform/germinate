@@ -32,8 +32,8 @@ import javax.servlet.annotation.*;
 import javax.servlet.http.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -66,7 +66,7 @@ public class UploadServlet extends BaseHttpServlet
 		}
 
 		/* If the system is under maintenance or in read-only-mode, don't accept file uploads */
-		if (PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE) || PropertyReader.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
+		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE) || PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY))
 		{
 			return;
 		}
@@ -89,7 +89,7 @@ public class UploadServlet extends BaseHttpServlet
 			}
 
 			/* Calculate the file size limit */
-			Float fileSizeLimitMB = PropertyReader.getFloat(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB);
+			Float fileSizeLimitMB = PropertyWatcher.getFloat(ServerProperty.GERMINATE_UPLOAD_SIZE_LIMIT_MB);
 			long fileSizeLimitB = (long) (fileSizeLimitMB * 1024d * 1024d);
 
 			List<FileItem> fileItems = fu.parseRequest(request);
@@ -120,7 +120,7 @@ public class UploadServlet extends BaseHttpServlet
 		finally
 		{
 			/* Delete old temporary files */
-			Long timeInHours = PropertyReader.getLong(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS);
+			Long timeInHours = PropertyWatcher.getLong(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS);
 			new DeleteOldFilesThread(getTemporaryFileFolder(request), timeInHours).start();
 
 			pw.close();

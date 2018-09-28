@@ -1,6 +1,6 @@
 <%@ page  contentType ="text/css; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="jhi.germinate.server.config.*"%>
 <%@ page import="jhi.germinate.server.service.*"%>
+<%@ page import="jhi.germinate.server.watcher.*"%>
 <%@ page import="jhi.germinate.shared.*"%>
 <%@ page import="jhi.germinate.shared.enums.*"%>
 
@@ -22,7 +22,7 @@
   --%>
 
 <%
-	String highlightColor = CommonServiceImpl.getColors(PropertyReader.get(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS)).get(0);
+	String highlightColor = CommonServiceImpl.getColors(PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_CATEGORICAL_COLORS)).get(0);
 %>
 
 /* This is a hack to counteract the padding that is added when you look at the data statistics page. No idea how it's added, but it happens... */
@@ -1628,4 +1628,27 @@ td.datePickerYear {
 	border: 0;
 	border-top: 1px solid #ccc;
 	overflow: hidden;
+}
+
+
+
+
+/* Make sure printing works ok */
+@media print {
+	body * {
+		visibility: hidden !important;
+	}
+	.<%= Style.PRINT_SECTION %>, .<%= Style.PRINT_SECTION %> * {
+		visibility: visible !important;
+		width: auto !important;
+		height: auto !important;
+		overflow: visible !important;
+		max-height: unset !important;
+		max-width: unset !important;
+	}
+	.<%= Style.PRINT_SECTION %> {
+		position: absolute !important;
+		left: 0 !important;
+		top: 0 !important;
+	}
 }

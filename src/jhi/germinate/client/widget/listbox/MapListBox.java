@@ -38,7 +38,7 @@ public class MapListBox extends GerminateValueListBox<Map>
 			@Override
 			protected String getText(Map object)
 			{
-				return object.getDescription();
+				return object.getName();
 			}
 
 			@Override

@@ -24,9 +24,9 @@ import java.util.*;
 import java.util.zip.*;
 
 import de.micromata.opengis.kml.v_2_2_0.*;
-import jhi.germinate.server.config.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.util.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Location;
@@ -155,7 +155,7 @@ public class KMLCreatorLocation extends KMLCreator
 		builder.append("<p><b>Detailed information about the accession:</b></p><table class='tftable' border='1'><tr><th>Passport Item</th><th>Value</th></tr>");
 
 		/* Check which Germinate pages are available. We do this to only add links to those pages that are actually available */
-		Set<Page> availablePages = PropertyReader.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
+		Set<Page> availablePages = PropertyWatcher.getSet(ServerProperty.GERMINATE_AVAILABLE_PAGES, Page.class);
 
 		builder.append("<tr><td>Germinate Id</td><td>");
 		if (availablePages.contains(Page.PASSPORT))

@@ -36,7 +36,6 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -69,6 +68,10 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 		/* Add the main accession table */
 		final AccessionTable table = new AccessionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
+			{
+				preventInitialDataLoad = true;
+			}
+
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Accession>>> callback)
 			{
@@ -96,17 +99,17 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 		panel.add(table);
 
 		/* Apply any filtering that another page requested before redirecting here */
-		FilterPanel.FilterMapping mapping = FilterMappingParameterStore.Inst.get().get(Parameter.tableFilterMapping);
+		PartialSearchQuery query = FilterMappingParameterStore.Inst.get().get(Parameter.tableFilterMapping);
 
-		if (mapping == null)
-			mapping = new FilterPanel.FilterMapping();
+		if (query == null)
+			query = new PartialSearchQuery();
 
 		/* By default, filter down to accessions only */
-		mapping.put(EntityType.NAME, EntityType.ACCESSION.getName());
+		query.add(new SearchCondition(EntityType.NAME, new Equal(), EntityType.ACCESSION.getName(), String.class));
 		FilterMappingParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
 
-		final FilterPanel.FilterMapping m = mapping;
-		Scheduler.get().scheduleDeferred(() -> table.forceFilter(m, true, new Equal()));
+		final PartialSearchQuery m = query;
+		Scheduler.get().scheduleDeferred(() -> table.forceFilter(m, true));
 
 		/* Set up callbacks for column names and groups */
 		ParallelAsyncCallback<ServerResult<List<String>>> columnCallback = new ParallelAsyncCallback<ServerResult<List<String>>>()

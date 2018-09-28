@@ -27,6 +27,7 @@ public enum FileLocation
 	temporary,
 	download,
 	res,
+	template,
 	apps,
 	data
 }

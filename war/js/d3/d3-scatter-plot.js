@@ -47,6 +47,7 @@ function scatterPlot() {
         xTickFormat = d3.format(".2s"),
         yTickFormat = d3.format(".2s"),
         tip,
+        radius = 3,
         id = function (d) {
             return d.id;
         },
@@ -163,7 +164,7 @@ function scatterPlot() {
                     else
                         return "";
                 })
-                .attr("r", 2.5)
+                .attr("r", radius)
                 .attr("cx", function (d) {
                     return xScale(d.xValue);
                 })
@@ -185,7 +186,7 @@ function scatterPlot() {
                         else
                             return "histo-x item item-n__a";
                     })
-                    .attr("r", 2.5)
+                    .attr("r", radius)
                     .attr("x1", function (d) {
                         return xScale(d.xValue);
                     })
@@ -209,7 +210,7 @@ function scatterPlot() {
 						else
 						    return "histo-y item item-n__a";
                     })
-                    .attr("r", 2.5)
+                    .attr("r", radius)
                     .attr("y1", function (d) {
                         return yScale(d.yValue);
                     })
@@ -268,7 +269,7 @@ function scatterPlot() {
                                 .transition()
                                 .duration(100)
                                 .style("fill", highlightColor ? highlightColor : null)
-                                .attr("r", 4.5);
+                                .attr("r", radius + 2);
                         }
 
                         tip.show(d);
@@ -282,7 +283,7 @@ function scatterPlot() {
                                 .style("fill", function (d) {
                                     return d.color;
                                 })
-                                .attr("r", 2.5);
+                                .attr("r", radius);
                         }
                         tip.hide();
                     })
@@ -298,7 +299,7 @@ function scatterPlot() {
                 // Lasso functions to execute while lassoing
                 var lasso_start = function () {
                     lasso.items()
-                        .attr("r", 2.5) // reset size
+                        .attr("r", radius) // reset size
                         .style("fill", null) // clear all of the fills
                         .classed(lassoConfig.selectedStyle, false)
                         .classed(lassoConfig.notPossibleStyle, true) // style as not possible
@@ -335,7 +336,7 @@ function scatterPlot() {
                             return d.selected === true && svg.selectAll("#item-" + d.id).style("opacity") != "0"
                         })
                         .classed(lassoConfig.selectedStyle, true)
-                        .attr("r", 5);
+                        .attr("r", radius + 2);
 
 
                     // Reset the style of the not selected dots
@@ -345,7 +346,7 @@ function scatterPlot() {
                         .classed(lassoConfig.selectedStyle, false)
                         .classed(lassoConfig.notPossibleStyle, false)
                         .classed(lassoConfig.possibleStyle, false)
-                        .attr("r", 2.5);
+                        .attr("r", radius);
 
                 };
 
@@ -516,6 +517,12 @@ function scatterPlot() {
         xTickFormat = _;
         return chart;
     };
+
+	chart.radius = function (_) {
+		if (!arguments.length) return radius;
+		radius = _;
+		return chart;
+	};
 
     chart.yTickFormat = function (_) {
         if (!arguments.length) return yTickFormat;

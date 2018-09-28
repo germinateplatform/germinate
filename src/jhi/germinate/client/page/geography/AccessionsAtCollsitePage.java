@@ -40,7 +40,6 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
@@ -78,7 +77,7 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 		}
 		else
 		{
-			PartialSearchQuery filter = new PartialSearchQuery(new SearchCondition(Location.ID, new Equal(), Long.toString(collsiteId), Long.class.getSimpleName()));
+			PartialSearchQuery filter = new PartialSearchQuery(new SearchCondition(Location.ID, new Equal(), Long.toString(collsiteId), Long.class));
 			LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Location>>>()
 			{
 				@Override
@@ -100,14 +99,15 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 
 	private void addDownloadWidget()
 	{
-		DownloadWidget widget = new DownloadWidget() {
+		DownloadWidget widget = new DownloadWidget()
+		{
 			@Override
 			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 			{
 				LocationService.Inst.get().exportToKml(Cookie.getRequestProperties(), KmlType.collectingsite, collsiteId, callback);
 			}
 		};
-		widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadGoogleEarth()).setType(FileType.kmz	));
+		widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadGoogleEarth()).setType(FileType.kmz));
 		downloadPanel.add(widget);
 	}
 
@@ -157,24 +157,13 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 
 			private PartialSearchQuery addToFilter(PartialSearchQuery filter)
 			{
-				try
-				{
-					if (filter == null)
-						filter = new PartialSearchQuery();
-					SearchCondition condition = new SearchCondition();
-					condition.setColumnName(Location.ID);
-					condition.setComp(new Equal());
-					condition.addConditionValue(Long.toString(collsiteId));
-					condition.setType(Long.class.getSimpleName());
-					filter.add(condition);
+				if (filter == null)
+					filter = new PartialSearchQuery();
+				SearchCondition condition = new SearchCondition(Location.ID, new Equal(), Long.toString(collsiteId), Long.class);
+				filter.add(condition);
 
-					if (filter.getAll().size() > 1)
-						filter.addLogicalOperator(new And());
-				}
-				catch (InvalidArgumentException | InvalidSearchQueryException e)
-				{
-					e.printStackTrace();
-				}
+				if (filter.getAll().size() > 1)
+					filter.addLogicalOperator(new And());
 
 				return filter;
 			}

@@ -42,7 +42,6 @@ import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
@@ -314,7 +313,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 			}
 		}
 
-		table = new DatasetTable(selectionMode, true, linkToExportPage)
+		table = new DatasetTable(selectionMode, true, linkToExportPage, experimentType)
 		{
 			{
 				preventInitialDataLoad = !CollectionUtils.isEmpty(urlParameterDatasetIds);
@@ -350,11 +349,11 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		// Pre-filter the table with the dataset ids that have been passed to Germinate in the URL
 		if (!CollectionUtils.isEmpty(urlParameterDatasetIds))
 		{
-			FilterPanel.FilterMapping values = new FilterPanel.FilterMapping();
+			PartialSearchQuery query = new PartialSearchQuery();
 			for (Long id : urlParameterDatasetIds)
-				values.put(Dataset.ID, Long.toString(id));
+				query.add(new SearchCondition(Dataset.ID, new Equal(), Long.toString(id), String.class));
 
-			Scheduler.get().scheduleDeferred(() -> table.forceFilter(values, false));
+			Scheduler.get().scheduleDeferred(() -> table.forceFilter(query, false));
 		}
 
 		if (showDownload)
@@ -382,7 +381,11 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 
 				Set<License> licensesToAgreeTo = selectedItems.stream()
 															  .filter(d -> d.getLicense() != null && (!ModuleCore.getUseAuthentication() || !d.hasLicenseBeenAccepted(ModuleCore.getUserAuth())))
-															  .map(Dataset::getLicense)
+															  .map(d -> {
+																  License license = d.getLicense();
+																  license.setExtra(Dataset.ID, d.getId());
+																  return license;
+															  })
 															  .collect(Collectors.toCollection(HashSet::new));
 
 				if (!CollectionUtils.isEmpty(licensesToAgreeTo) && !alreadyAskedUserAboutLicenses)

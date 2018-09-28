@@ -36,10 +36,11 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
-import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -86,9 +87,9 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 					@Override
 					public void onCountySelected(Country country)
 					{
-						FilterPanel.FilterMapping mapping = new FilterPanel.FilterMapping();
-						mapping.put(Country.COUNTRY_NAME, country.getName());
-						FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, mapping);
+						PartialSearchQuery query = new PartialSearchQuery();
+						query.add(new SearchCondition(Country.COUNTRY_NAME, new Equal(), country.getName(), String.class));
+						FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
 						History.newItem(Page.ACCESSION_OVERVIEW.name());
 					}
 
@@ -97,7 +98,6 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 					{
 					}
 				});
-				geoChart.setGeoChartType(GeoChart.GeoChartType.COUNT);
 
 				geoChartPanel.add(new Heading(HeadingSize.H3, Text.LANG.dataStatisticsAccessionsPerCountryTitle()));
 				geoChartPanel.add(new Label(Text.LANG.dataStatisticsAccessionsPerCountryText()));
