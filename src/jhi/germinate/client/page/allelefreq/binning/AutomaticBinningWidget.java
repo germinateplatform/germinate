@@ -45,7 +45,7 @@ public class AutomaticBinningWidget extends Composite
 	@UiField
 	RangedIntegerTextBox        nrOfBins;
 	@UiField
-	AlleleFreqEqualBinningChart chart;
+	AlleleFreqBinningChart chart;
 
 	private JsArrayString colors;
 	private JsArrayNumber widths;

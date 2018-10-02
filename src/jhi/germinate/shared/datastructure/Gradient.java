@@ -100,9 +100,9 @@ public class Gradient implements Serializable
 		if (colors == null || colors.length < 2)
 			throw new IllegalArgumentException("Invalid number of colors");
 
-        /* We assume a linear gradient, with equal spacing between colors. The
+		/* We assume a linear gradient, with equal spacing between colors. The
 		 * final gradient will be made up of n 'sections', where n =
-         * colors.length - 1 */
+		 * colors.length - 1 */
 		int numSections = colors.length - 1;
 		int gradientIndex = 0;
 
@@ -130,7 +130,7 @@ public class Gradient implements Serializable
 		{
 			/* The rounding didn't work out in our favor, and there is at least
 			 * one unfilled slot in the gradient[] array. We can just copy the
-             * final color there */
+			 * final color there */
 			for (/* nothing to initialize */; gradientIndex < numSteps; gradientIndex++)
 			{
 				gradient[gradientIndex] = colors[colors.length - 1];
@@ -147,7 +147,7 @@ public class Gradient implements Serializable
 	 * @param two      Color used for the top of the gradient
 	 * @param numSteps The number of steps in the gradient. 250 is a good number.
 	 */
-	private static Color[] createGradient(final Color one, final Color two, final int numSteps)
+	public static Color[] createGradient(final Color one, final Color two, final int numSteps)
 	{
 		int r1 = one.getRed();
 		int g1 = one.getGreen();
@@ -162,10 +162,10 @@ public class Gradient implements Serializable
 		int newB;
 
 		Color[] gradient = new Color[numSteps];
-		double iNorm;
+		float iNorm;
 		for (int i = 0; i < numSteps; i++)
 		{
-			iNorm = i / (double) numSteps; // a normalized [0:1] variable
+			iNorm = i / (float) (numSteps - 1); // a normalized [0:1] variable
 			newR = (int) (r1 + iNorm * (r2 - r1));
 			newG = (int) (g1 + iNorm * (g2 - g1));
 			newB = (int) (b1 + iNorm * (b2 - b1));

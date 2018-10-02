@@ -72,7 +72,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 
 	@Override
 	public Pair<String, HistogramImageData> getHistogramImageData(RequestProperties properties, HistogramParams params) throws InvalidSessionException,
-			jhi.germinate.shared.exception.IOException, FlapjackException, MissingPropertyException
+			jhi.germinate.shared.exception.IOException, FlapjackException
 	{
 		Session.checkSession(properties, this);
 

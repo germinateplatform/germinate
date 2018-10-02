@@ -101,19 +101,14 @@ function d3BinningDiv() {
         });
 
         // Add the separator if required
-        if (typeof splitPoint !== 'undefined' && splitPoint !== null) {
+        if (typeof splitPoint !== 'undefined' && splitPoint !== null && splitPoint !== -1) {
 
             // Make sure the split point has a valid position
             splitPoint = Math.min(Math.max(0, splitPoint), Math.min(widths.length, colors.length));
 
             div.append('div')
                 .attr('class', separatorStyle)
-                .style('margin-left', function (d) {
-                    var separatorWidth = d3.select(this)[0][0].offsetWidth / 2;
-                    if (separatorWidth % 1 === 0)
-                        separatorWidth += 0.25;
-                    return -separatorWidth + "px";
-                })
+                .style('margin-left', '-7.25px')
                 .style('padding-left', (splitPoint / (max + min)) * 100 + '%');
         }
     }

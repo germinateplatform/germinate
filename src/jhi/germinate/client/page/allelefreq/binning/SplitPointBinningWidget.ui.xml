@@ -63,6 +63,6 @@
 			</b:Column>
 		</b:Row>
 
-		<c:AlleleFreqSplitBinningChart ui:field="chart"/>
+		<c:AlleleFreqBinningChart ui:field="chart"/>
 	</g:FlowPanel>
 </ui:UiBinder>

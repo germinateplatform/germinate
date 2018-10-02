@@ -24,8 +24,6 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.client.util.*;
-import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.shared.datastructure.*;
@@ -43,9 +41,12 @@ public class EqualWidthBinningWidget extends Composite
 	private static EqualWidthBinningWidgetUiBinder ourUiBinder = GWT.create(EqualWidthBinningWidgetUiBinder.class);
 
 	@UiField
-	RangedIntegerTextBox        nrOfBins;
+	RangedIntegerTextBox   nrOfBins;
 	@UiField
-	AlleleFreqEqualBinningChart chart;
+	AlleleFreqBinningChart chart;
+
+	private Color low  = Color.fromHex("#ff7878");
+	private Color high = Color.fromHex("#78fd78");
 
 	private JsArrayString colors;
 	private JsArrayNumber widths;
@@ -100,17 +101,19 @@ public class EqualWidthBinningWidget extends Composite
 	{
 		if (nrOfBins.validate(true))
 		{
-			AlleleFrequencyService.Inst.get().getHistogramImageData(Cookie.getRequestProperties(), getParams(), new DefaultAsyncCallback<Tuple.Pair<String, AlleleFrequencyService.HistogramImageData>>()
+			int bins = nrOfBins.getIntegerValue();
+			Color[] gradient = Gradient.createGradient(low, high, bins);
+
+			widths = JsArrayNumber.createArray().cast();
+			colors = JsArrayString.createArray().cast();
+
+			for (int i = 0; i < bins; i++)
 			{
-				@Override
-				protected void onSuccessImpl(Tuple.Pair<String, AlleleFrequencyService.HistogramImageData> result)
-				{
-				/* Let the children handle the data and draw the visualization */
-					colors = JavaScript.toJsStringArray(result.getSecond().colors);
-					widths = JavaScript.toJsNumbersArray(result.getSecond().widths);
-					chart.update(colors, widths);
-				}
-			});
+				widths.push(100f / bins);
+				colors.push(gradient[i].toHexValue());
+			}
+
+			chart.update(colors, widths);
 		}
 	}
 }

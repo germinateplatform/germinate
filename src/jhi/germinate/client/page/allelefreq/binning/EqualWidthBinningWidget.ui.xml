@@ -36,6 +36,6 @@
 				</b:InputGroupButton>
 			</b:InputGroup>
 		</b:FormGroup>
-		<c:AlleleFreqEqualBinningChart ui:field="chart"/>
+		<c:AlleleFreqBinningChart ui:field="chart"/>
 	</g:FlowPanel>
 </ui:UiBinder>

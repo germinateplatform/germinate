@@ -23,18 +23,19 @@ import com.google.gwt.user.client.ui.*;
 import jhi.germinate.client.page.*;
 
 /**
- * The {@link AlleleFreqEqualBinningChart} visualizes the allele frequency data.
+ * The {@link AlleleFreqBinningChart} visualizes the allele frequency data.
  *
  * @author Sebastian Raubach
  */
-public class AlleleFreqEqualBinningChart extends AbstractChart
+public class AlleleFreqBinningChart extends AbstractChart
 {
 	private FlowPanel chartPanel;
 
 	private JsArrayString colors;
 	private JsArrayNumber widths;
+	private double        splitPoint = -1;
 
-	public AlleleFreqEqualBinningChart()
+	public AlleleFreqBinningChart()
 	{
 	}
 
@@ -42,6 +43,16 @@ public class AlleleFreqEqualBinningChart extends AbstractChart
 	{
 		this.colors = colors;
 		this.widths = widths;
+		this.splitPoint = -1;
+
+		onResize(true);
+	}
+
+	public void update(JsArrayString colors, JsArrayNumber widths, double splitPoint)
+	{
+		this.colors = colors;
+		this.widths = widths;
+		this.splitPoint = splitPoint;
 
 		onResize(true);
 	}
@@ -60,7 +71,7 @@ public class AlleleFreqEqualBinningChart extends AbstractChart
 	{
 		if (chartPanel != null && colors != null && widths != null)
 		{
-			updateBinningDiv(0, 1, colors, widths);
+			updateBinningDiv(0, 1, colors, widths, splitPoint);
 		}
 	}
 
@@ -82,7 +93,7 @@ public class AlleleFreqEqualBinningChart extends AbstractChart
 		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_FLAPJACK_BINNING};
 	}
 
-	private native void updateBinningDiv(int min, int max, JsArrayString colors, JsArrayNumber widths)/*-{
+	private native void updateBinningDiv(int min, int max, JsArrayString colors, JsArrayNumber widths, double splitPoint)/*-{
 		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.FlapjackBundle::STYLE_TOOLTIP;
 		var rectStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.FlapjackBundle::STYLE_AREA;
 		var separatorStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.FlapjackBundle::STYLE_SEPARATOR;
@@ -94,6 +105,7 @@ public class AlleleFreqEqualBinningChart extends AbstractChart
 			.max(max)
 			.colors(colors)
 			.widths(widths)
+			.splitPoint(splitPoint)
 			.tooltipStyle(tooltipStyle)
 			.rectStyle(rectStyle)
 			.separatorStyle(separatorStyle)

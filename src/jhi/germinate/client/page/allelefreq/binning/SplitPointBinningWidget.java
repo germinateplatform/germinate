@@ -24,8 +24,6 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.client.util.*;
-import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.shared.datastructure.*;
@@ -43,13 +41,16 @@ public class SplitPointBinningWidget extends Composite
 	private static EqualWidthBinningWidgetUiBinder ourUiBinder = GWT.create(EqualWidthBinningWidgetUiBinder.class);
 
 	@UiField
-	RangedIntegerTextBox        nrOfBinsLeft;
+	RangedIntegerTextBox   nrOfBinsLeft;
 	@UiField
-	RangedNumberTextBox         splitPoint;
+	RangedNumberTextBox    splitPoint;
 	@UiField
-	RangedIntegerTextBox        nrOfBinsRight;
+	RangedIntegerTextBox   nrOfBinsRight;
 	@UiField
-	AlleleFreqSplitBinningChart chart;
+	AlleleFreqBinningChart chart;
+
+	private Color low  = Color.fromHex("#ff7878");
+	private Color high = Color.fromHex("#78fd78");
 
 	private JsArrayString colors;
 	private JsArrayNumber widths;
@@ -117,17 +118,27 @@ public class SplitPointBinningWidget extends Composite
 	{
 		if (nrOfBinsLeft.validate(true) && splitPoint.validate(true) && nrOfBinsRight.validate(true))
 		{
-			AlleleFrequencyService.Inst.get().getHistogramImageData(Cookie.getRequestProperties(), getParams(), new DefaultAsyncCallback<Tuple.Pair<String, AlleleFrequencyService.HistogramImageData>>()
+			int binsLeft = nrOfBinsLeft.getIntegerValue();
+			int binsRight = nrOfBinsRight.getIntegerValue();
+			double split = splitPoint.getDoubleValue();
+			int bins = binsLeft + binsRight;
+			Color[] gradient = Gradient.createGradient(low, high, bins);
+
+			widths = JsArrayNumber.createArray().cast();
+			colors = JsArrayString.createArray().cast();
+
+			for (int i = 0; i < binsLeft; i++)
 			{
-				@Override
-				protected void onSuccessImpl(Tuple.Pair<String, AlleleFrequencyService.HistogramImageData> result)
-				{
-				/* Let the children handle the data and draw the visualization */
-					colors = JavaScript.toJsStringArray(result.getSecond().colors);
-					widths = JavaScript.toJsNumbersArray(result.getSecond().widths);
-					chart.update(colors, widths, splitPoint.getDoubleValue());
-				}
-			});
+				widths.push(split / binsLeft * 100);
+				colors.push(gradient[i].toHexValue());
+			}
+			for (int i = binsLeft; i < bins; i++)
+			{
+				widths.push((1 - split) / binsRight * 100);
+				colors.push(gradient[i].toHexValue());
+			}
+
+			chart.update(colors, widths, splitPoint.getDoubleValue());
 		}
 	}
 }
