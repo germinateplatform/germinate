@@ -347,7 +347,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 					.showLegend(true)
 					.legendWidth(legendWidth)
 					.idColumn("dbId")
-					.ignoreColumns(["general_identifier", "dataset_name", "license_name", "treatments_description", "name", "location_name", "year"])
+					.ignoreColumns(["general_identifier", "dataset_name", "dataset_version", "license_name", "treatments_description", "name", "location_name", "year"])
 					.color(color));
 		});
 

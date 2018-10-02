@@ -54,30 +54,33 @@ public class TemplateWatcher
 		/* Start to listen for file changes within the full scale image folder */
 		File folder = FileUtils.getFromExternalDataDirectory(FileLocation.template, null, null, null);
 
-		Path path = folder.toPath();
-
-		try
+		if(folder != null && folder.exists() && folder.isDirectory())
 		{
-			FileFilter filter = pathname -> filesToWatch.keySet().contains(pathname.getName());
+			Path path = folder.toPath();
 
-			FileAlterationObserver observer = new FileAlterationObserver(path.toFile(), filter);
-			monitor = new FileAlterationMonitor(1000L);
-			observer.addListener(new FileAlterationListenerAdaptor()
+			try
 			{
-				@Override
-				public void onFileChange(File file)
-				{
-					moveFiles(file);
-				}
-			});
-			monitor.addObserver(observer);
-			monitor.start();
+				FileFilter filter = pathname -> filesToWatch.keySet().contains(pathname.getName());
 
-			moveFiles(folder);
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
+				FileAlterationObserver observer = new FileAlterationObserver(path.toFile(), filter);
+				monitor = new FileAlterationMonitor(1000L);
+				observer.addListener(new FileAlterationListenerAdaptor()
+				{
+					@Override
+					public void onFileChange(File file)
+					{
+						moveFiles(file);
+					}
+				});
+				monitor.addObserver(observer);
+				monitor.start();
+
+				moveFiles(folder);
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

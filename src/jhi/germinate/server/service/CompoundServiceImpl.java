@@ -148,6 +148,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		if (includeId)
 			names.add("dbId");
 		names.add(PhenotypeService.DATASET_NAME);
+		names.add(PhenotypeService.DATASET_VERSION);
 
 		if (containsAllItemsGroup(groupIds))
 			groupIds = null;

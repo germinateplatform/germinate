@@ -85,6 +85,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		if (includeId)
 			names.add("dbId");
 		names.add(DATASET_NAME);
+		names.add(DATASET_VERSION);
 		names.add(LICENSE_NAME);
 		names.add(LOCATION_NAME);
 		names.add(TREATMENT_DESCRIPTION);
@@ -177,7 +178,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 		try
 		{
-			result = stmt.runQuery(names.toArray(new String[names.size()]));
+			result = stmt.runQuery(names.toArray(new String[0]));
 		}
 		catch (DatabaseException e)
 		{

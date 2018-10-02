@@ -37,6 +37,7 @@ public interface PhenotypeService extends RemoteService
 {
 	String NAME                  = "name";
 	String DATASET_NAME          = "dataset_name";
+	String DATASET_VERSION       = "dataset_version";
 	String LICENSE_NAME          = "license_name";
 	String LOCATION_NAME         = "location_name";
 	String TREATMENT_DESCRIPTION = "treatments_description";
