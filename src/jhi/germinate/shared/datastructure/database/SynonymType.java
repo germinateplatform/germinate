@@ -26,7 +26,8 @@ public enum SynonymType
 {
 	germinatebase(1L, "germinatebase", "Accessions", "Accession synonyms"),
 	markers(2L, "markers", "Markers", "Marker synonyms"),
-	compounds(3L, "compounds", "Compounds", "Compound synonyms");
+	compounds(3L, "compounds", "Compounds", "Compound synonyms"),
+	phenotypes(4L, "phenotypes", "Phenotypes", "Phenotype synonyms");
 
 	private final Long   id;
 	private final String targetTable;

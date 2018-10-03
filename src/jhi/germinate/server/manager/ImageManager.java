@@ -32,11 +32,12 @@ import jhi.germinate.shared.exception.*;
  */
 public class ImageManager extends AbstractManager<Image>
 {
-	private static final String COMMON_TABLES        = " images LEFT JOIN imagetypes ON imagetypes.id = images.imagetype_id ";
-	private static final String SELECT_ALL           = "SELECT images.* FROM " + COMMON_TABLES + " WHERE imagetypes.reference_table = ? AND images.foreign_id = ? LIMIT ?, ?";
-	private static final String SELECT_FOR_UNKNOWN   = "SELECT * FROM (SELECT images.*, germinatebase.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN germinatebase ON germinatebase.id = images.foreign_id WHERE imagetypes.reference_table LIKE 'germinatebase' UNION SELECT images.*, compounds.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN compounds ON compounds.id = images.foreign_id WHERE imagetypes.reference_table LIKE 'compounds') images  LIMIT ?, ?";
-	private static final String SELECT_FOR_ACCESSION = "SELECT images.*, germinatebase.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN germinatebase ON germinatebase.id = images.foreign_id WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
-	private static final String SELECT_FOR_COMPOUNDS = "SELECT images.*, compounds.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN compounds ON compounds.id = images.foreign_id WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
+	private static final String COMMON_TABLES         = " images LEFT JOIN imagetypes ON imagetypes.id = images.imagetype_id ";
+	private static final String SELECT_ALL            = "SELECT images.* FROM " + COMMON_TABLES + " WHERE imagetypes.reference_table = ? AND images.foreign_id = ? LIMIT ?, ?";
+	private static final String SELECT_FOR_UNKNOWN    = "SELECT * FROM (SELECT images.*, germinatebase.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN germinatebase ON germinatebase.id = images.foreign_id WHERE imagetypes.reference_table LIKE 'germinatebase' UNION SELECT images.*, compounds.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN compounds ON compounds.id = images.foreign_id WHERE imagetypes.reference_table LIKE 'compounds') images  LIMIT ?, ?";
+	private static final String SELECT_FOR_ACCESSION  = "SELECT images.*, germinatebase.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN germinatebase ON germinatebase.id = images.foreign_id WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
+	private static final String SELECT_FOR_COMPOUNDS  = "SELECT images.*, compounds.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN compounds ON compounds.id = images.foreign_id WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
+	private static final String SELECT_FOR_PHENOTYPES = "SELECT images.*, phenotypes.name AS " + ImageService.IMAGE_REFERENCE_NAME + " FROM " + COMMON_TABLES + " LEFT JOIN phenotypes ON phenotypes.id = images.foreign_id WHERE imagetypes.reference_table LIKE ? LIMIT ?, ?";
 
 	@Override
 
@@ -83,6 +84,9 @@ public class ImageManager extends AbstractManager<Image>
 					break;
 				case compounds:
 					query = SELECT_FOR_COMPOUNDS;
+					break;
+				case phenotypes:
+					query = SELECT_FOR_PHENOTYPES;
 					break;
 			}
 		}

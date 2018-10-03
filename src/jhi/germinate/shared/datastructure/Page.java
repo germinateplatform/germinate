@@ -49,6 +49,8 @@ public class Page implements Serializable
 	public static final Page COMPOUND_DETAILS         = new Page("compound-details", false);
 	public static final Page COMPOUND_DATASETS        = new Page("compound-datasets", false, Style.MDI_FLASK);
 	public static final Page COMPOUND_DATA            = new Page("compound-data", false);
+	public static final Page TRAITS                   = new Page("traits", false, Style.MDI_TAG_TEXT_OUTLINE);
+	public static final Page TRAIT_DETAILS            = new Page("trait-details", false);
 	public static final Page COOKIE                   = new Page("cookie", true);
 	public static final Page DATA_STATISTICS          = new Page("data-stats", false, Style.MDI_CHART_AREASPLINE);
 	public static final Page DATASET_OVERVIEW         = new Page("dataset-overview", false, Style.MDI_DATABASE);

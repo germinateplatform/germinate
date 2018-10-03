@@ -59,6 +59,32 @@ public interface PhenotypeService extends RemoteService
 	}
 
 	/**
+	 * Returns the {@link Phenotype} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param id         The id of the {@link Phenotype}
+	 * @return The {@link Accession} for the given id
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException;
+
+	/**
+	 * Returns a paginated list of {@link Phenotype}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @return A paginated list of {@link Phenotype}s that match the given {@link PartialSearchQuery}.
+	 * @throws InvalidSessionException     Thrown if the current session is invalid
+	 * @throws DatabaseException           Thrown if the query fails on the server
+	 * @throws InvalidColumnException      Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
+	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
+	 */
+	PaginatedServerResult<List<Phenotype>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
+
+	/**
 	 * Returns a paginated list of {@link PhenotypeData}s that match the given {@link PartialSearchQuery}.
 	 *
 	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
@@ -71,7 +97,7 @@ public interface PhenotypeService extends RemoteService
 	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
-	PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, List<Long> datasetIds, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
+	PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
 	 * Returns a list of {@link Phenotype}s for the given {@link Dataset} ids, {@link ExperimentType} and numeric setting.

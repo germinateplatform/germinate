@@ -328,6 +328,10 @@ public interface Text extends Messages
 	@Key("menu.trials")
 	String menuTrials();
 
+	@Key("menu.traits")
+	@DefaultMessage("Traits")
+	String menuTraits();
+
 	@Key("menu.datasets.overview")
 	String menuDatasetOverview();
 
@@ -1753,6 +1757,10 @@ public interface Text extends Messages
 	@DefaultMessage("Description")
 	String phenotypeColumnDescription();
 
+	@Key("column.phenotype.unit.name")
+	@DefaultMessage("Unit")
+	String phenotypeColumnUnitName();
+
 	@Key("column.phenotype.value")
 	@DefaultMessage("Value")
 	String phenotypeColumnValue();
@@ -1958,6 +1966,10 @@ public interface Text extends Messages
 	@DefaultMessage("Compounds")
 	String compoundsTitle();
 
+	@Key("page.traits.title")
+	@DefaultMessage("Traits")
+	String traitsTitle();
+
 	@Key("notification.polygon.search.no.polygon.selected")
 	@DefaultMessage("No polygon selected.")
 	String notificationNoPolygonSelected();
@@ -1974,9 +1986,17 @@ public interface Text extends Messages
 	@DefaultMessage("Details for compound: {0}")
 	String compoundDetailsFor(String compoundName);
 
+	@Key("page.trait.details.for.trait")
+	@DefaultMessage("Details for trait: {0}")
+	String traitDetailsFor(String traitName);
+
 	@Key("page.compound.details.image.title")
 	@DefaultMessage("Images")
 	String compoundDetailsImageTitle();
+
+	@Key("page.trait.details.image.title")
+	@DefaultMessage("Images")
+	String traitDetailsImageTitle();
 
 	@Key("mcpd.accename")
 	@DefaultMessage("Accession name")

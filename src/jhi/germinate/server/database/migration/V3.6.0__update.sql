@@ -34,3 +34,5 @@ DROP COLUMN `subtaxa_id`;
 
 DROP TABLE `subtaxa`;
 
+INSERT INTO synonymtypes (`id`, `target_table`, `name`, `description`) VALUES (4, "phenotypes", "Phenotypes", "Phenotype synonyms");
+INSERT INTO imagetypes (`description`, `reference_table`) VALUES ("phenotype images", "phenotypes");

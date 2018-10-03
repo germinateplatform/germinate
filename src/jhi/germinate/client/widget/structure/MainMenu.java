@@ -84,8 +84,8 @@ public final class MainMenu
 				data.addChild(genetic);
 
 			MenuItem phenotype = new MenuItem(data, Text.LANG.menuPhenotypes(), Style.MDI_TAG_MULTIPLE);
-//			if (GerminateSettingsHolder.isPageAvailable(Page.CATEGORICAL_DATASETS))
-//				phenotype.addChild(new MenuItem(phenotype, Text.LANG.menuPhenotypes(), Page.CATEGORICAL_DATASETS));
+			if (GerminateSettingsHolder.isPageAvailable(Page.TRAITS))
+				phenotype.addChild(new MenuItem(phenotype, Text.LANG.menuTraits(), Page.TRAITS));
 			if (GerminateSettingsHolder.isPageAvailable(Page.TRIALS_DATASETS))
 				phenotype.addChild(new MenuItem(phenotype, Text.LANG.menuTrials(), Page.TRIALS_DATASETS));
 
@@ -115,8 +115,8 @@ public final class MainMenu
 			MenuItem locations = new MenuItem(environment, Text.LANG.menuLocations(), Style.MDI_MAP_MARKER);
 			if (GerminateSettingsHolder.isPageAvailable(Page.GEOGRAPHIC_SEARCH))
 				locations.addChild(new MenuItem(locations, Text.LANG.menuGeographicSearch(), Page.GEOGRAPHIC_SEARCH));
-//			if (GerminateSettingsHolder.isPageAvailable(Page.LOCATION_TREEMAP))
-//				locations.addChild(new MenuItem(locations, Text.LANG.menuGeographicTreemap(), Page.LOCATION_TREEMAP));
+			//			if (GerminateSettingsHolder.isPageAvailable(Page.LOCATION_TREEMAP))
+			//				locations.addChild(new MenuItem(locations, Text.LANG.menuGeographicTreemap(), Page.LOCATION_TREEMAP));
 			if (GerminateSettingsHolder.isPageAvailable(Page.LOCATIONS))
 				locations.addChild(new MenuItem(locations, Text.LANG.menuGeography(), Page.LOCATIONS));
 
@@ -171,10 +171,10 @@ public final class MainMenu
 			}
 		}
 
-        /* Add the menu to its panel */
+		/* Add the menu to its panel */
 		root.addToParent(menuPanel.getElement());
 
-        /* Remove the menuPanel, since we cannot get the children as RootPanels
+		/* Remove the menuPanel, since we cannot get the children as RootPanels
 		 * if their parent is still attached */
 		menuPanel.removeFromParent();
 
@@ -281,8 +281,8 @@ public final class MainMenu
 		private String         name;
 		private boolean        isActive;
 		private Element        thisElement;
-		private int    level = 0;
-		private String icon  = null;
+		private int            level = 0;
+		private String         icon  = null;
 
 		public MenuItem()
 		{
@@ -413,7 +413,7 @@ public final class MainMenu
 				AnchorElement e = Document.get().createAnchorElement();
 				SpanElement span = Document.get().createSpanElement();
 
-                /* Are there any children? */
+				/* Are there any children? */
 				if (!CollectionUtils.isEmpty(children))
 				{
 					if (page == null)
@@ -436,7 +436,7 @@ public final class MainMenu
 
 					thisElement.appendChild(e);
 
-                    /* Create a list of children */
+					/* Create a list of children */
 					UListElement ul = Document.get().createULElement();
 
 					String style = getStyle();
@@ -452,7 +452,7 @@ public final class MainMenu
 				 * nothing to do */
 				else if (page == null)
 					return;
-				/* Else, the item doesn't have children but represents a link */
+					/* Else, the item doesn't have children but represents a link */
 				else
 				{
 					e = Document.get().createAnchorElement();

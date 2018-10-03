@@ -320,6 +320,16 @@ public class NavigationHandler
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ACCESSION_OVERVIEW, new SearchPage()));
 		}
+		// TRAITS
+		else if (Page.TRAITS.is(page))
+		{
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new TraitPage()));
+		}
+		// TRAIT DETAILS
+		else if (Page.TRAIT_DETAILS.is(page))
+		{
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.TRAITS, new TraitDetailsPage()));
+		}
 		// TRIALS
 		else if (Page.TRIALS.is(page))
 		{

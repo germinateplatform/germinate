@@ -203,7 +203,8 @@ public class Phenotype extends DatabaseObject
 				if (id == null)
 					return null;
 				else
-					return new Phenotype(id)
+				{
+					Phenotype phenotype = new Phenotype(id)
 							.setName(row.getString(NAME))
 							.setShortName(row.getString(SHORT_NAME))
 							.setDescription(row.getString(DESCRIPTION))
@@ -211,6 +212,17 @@ public class Phenotype extends DatabaseObject
 							.setUnit(UNIT_CACHE.get(user, row.getLong(UNIT_ID), row, foreignsFromResultSet))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+
+					try
+					{
+						phenotype.setExtra(COUNT, row.getLong(COUNT));
+					}
+					catch (Exception e)
+					{
+					}
+
+					return phenotype;
+				}
 			}
 			catch (InsufficientPermissionsException e)
 			{

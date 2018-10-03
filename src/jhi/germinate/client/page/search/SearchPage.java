@@ -371,7 +371,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				@Override
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback)
 				{
-					return PhenotypeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), null, pagination, filter, new SearchCallback<>(phenotypeSection, callback));
+					return PhenotypeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, new SearchCallback<>(phenotypeSection, callback));
 				}
 			};
 			phenotypeSection.add(phenotypeDataTable);

@@ -54,6 +54,34 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	private static final String QUERY_PHENOTYPE_STATS          = "SELECT phenotypes.id , phenotypes.`name`, phenotypes.description, (phenotypes.datatype != 'char') AS isNumeric, units.*, COUNT( 1 ) AS count, MIN(cast(phenotype_value AS DECIMAL(30,2))) as min, MAX(cast(phenotype_value AS DECIMAL(30,2))) as max, AVG(cast(phenotype_value AS DECIMAL(30,2))) as avg, STD(cast(phenotype_value AS DECIMAL(30,2))) as std, datasets.description as dataset_description FROM datasets LEFT JOIN phenotypedata ON datasets.id = phenotypedata.dataset_id LEFT JOIN phenotypes ON phenotypes.id = phenotypedata.phenotype_id LEFT JOIN units ON units.id = phenotypes.unit_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE datasets.id in (%s) GROUP by phenotypes.id, datasets.id";
 
 	@Override
+	public ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		try
+		{
+			return new PhenotypeManager().getById(userAuth, id);
+		}
+		catch (InsufficientPermissionsException e)
+		{
+			return new ServerResult<>(null, null);
+		}
+	}
+
+	@Override
+	public PaginatedServerResult<List<Phenotype>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
+	{
+		if (pagination == null)
+			pagination = Pagination.getDefault();
+
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return PhenotypeManager.getAllForFilter(userAuth, pagination, filter);
+	}
+
+	@Override
 	public ServerResult<List<DataStats>> getOverviewStats(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
@@ -75,7 +103,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
-        /* Check if debugging is activated */
+		/* Check if debugging is activated */
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 
 		String datasets = Util.joinCollection(datasetIds, ", ", true);
@@ -99,9 +127,9 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 		/*
 		 * Create a query that checks if there actually is data available. If
-         * not, the prepared statement from the sql file will fail. Connect to
-         * the database and check the session id
-         */
+		 * not, the prepared statement from the sql file will fail. Connect to
+		 * the database and check the session id
+		 */
 		Database database = Database.connectAndCheckSession(properties, this);
 
 		/* If both are empty, return everything */
@@ -211,11 +239,11 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	}
 
 	@Override
-	public PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, List<Long> datasetIds, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
+	public PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return PhenotypeManager.getDataForFilter(userAuth, datasetIds, filter, pagination);
+		return PhenotypeManager.getDataForFilter(userAuth, filter, pagination);
 	}
 
 	@Override

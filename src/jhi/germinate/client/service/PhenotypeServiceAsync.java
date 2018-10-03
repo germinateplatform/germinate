@@ -34,6 +34,25 @@ import jhi.germinate.shared.search.*;
 public interface PhenotypeServiceAsync
 {
 	/**
+	 * Returns the {@link Phenotype} with the given id.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param id         The id of the {@link Phenotype}
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void getById(RequestProperties properties, Long id, AsyncCallback<ServerResult<Phenotype>> callback);
+
+	/**
+	 * Returns a paginated list of {@link Phenotype}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	Request getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Phenotype>>> callback);
+
+	/**
 	 * Returns a list of {@link Phenotype}s for the given {@link Dataset} ids, {@link ExperimentType} and numeric setting.
 	 *
 	 * @param properties  The {@link RequestProperties}
@@ -71,7 +90,7 @@ public interface PhenotypeServiceAsync
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	Request getDataForFilter(RequestProperties properties, List<Long> datasetIds, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback);
+	Request getDataForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback);
 
 	/**
 	 * Exports all the data associated with {@link PhenotypeData}s mathing the given {@link PartialSearchQuery}.

@@ -113,6 +113,7 @@ public class Style
 	public static final String MDI_INFORMATION                     = "mdi-information";
 	public static final String MDI_INFORMATION_OUTLINE             = "mdi-information-outline";
 	public static final String MDI_TAG_MULTIPLE                    = "mdi-tag-multiple";
+	public static final String MDI_TAG_TEXT_OUTLINE                = "mdi-tag-text-outline";
 	public static final String MDI_FLASK                           = "mdi-flask";
 	public static final String MDI_SHOVEL                          = "mdi-shovel";
 	public static final String MDI_PULSE                           = "mdi-pulse";
