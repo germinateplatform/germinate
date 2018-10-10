@@ -43,7 +43,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 {
 	private static final long serialVersionUID = -1828922709884114932L;
 
-	private static final String QUERY_EXPORT_MAP = "SELECT markers.marker_name, mapdefinitions.chromosome, mapdefinitions.definition_start FROM mapdefinitions, mapfeaturetypes, markers WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND map_id = ? ORDER BY chromosome, definition_start";
+	private static final String QUERY_EXPORT_MAP = "SELECT `markers`.`marker_name`, `mapdefinitions`.`chromosome`, `mapdefinitions`.`definition_start` FROM `mapdefinitions`, `mapfeaturetypes`, `markers` WHERE `mapdefinitions`.`mapfeaturetype_id` = `mapfeaturetypes`.`id` AND `mapdefinitions`.`marker_id` = `markers`.`id` AND `map_id` = ? ORDER BY `chromosome`, `definition_start`";
 
 	/**
 	 * Retrieves the map used for genotype export

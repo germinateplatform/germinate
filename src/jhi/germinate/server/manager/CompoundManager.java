@@ -34,11 +34,11 @@ public class CompoundManager extends AbstractManager<Compound>
 {
 	private static final String[] COLUMNS_SORTABLE      = {Compound.ID, Compound.NAME, Compound.DESCRIPTION, Compound.MOLECULAR_FORMULA, Compound.AVERAGE_MASS, Compound.MONOISOTOPIC_MASS, Compound.COMPOUND_CLASS, Compound.CREATED_ON, Compound.UPDATED_ON, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION, Compound.COUNT};
 
-	private static final String COMMON_TABLES = " compounds LEFT JOIN units ON units.id = compounds.unit_id LEFT JOIN compounddata ON compounddata.compound_id = compounds.id ";
+	private static final String COMMON_TABLES = " `compounds` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` LEFT JOIN `compounddata` ON `compounddata`.`compound_id` = `compounds`.`id` ";
 
-	private static final String SELECT_ALL_FOR_FILTER = "SELECT compounds.*, units.*, COUNT(1) AS count FROM " + COMMON_TABLES + " {{FILTER}} GROUP BY compounds.id %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER = "SELECT `compounds`.*, `units`.*, COUNT(1) AS count FROM " + COMMON_TABLES + " {{FILTER}} GROUP BY `compounds`.`id` %s LIMIT ?, ?";
 
-	private static final String SELECT_ALL_FOR_DATASET = "SELECT compounds.*, units.*, COUNT(1) AS count FROM " + COMMON_TABLES + " WHERE compounddata.dataset_id IN (%s) GROUP BY compounds.id";
+	private static final String SELECT_ALL_FOR_DATASET = "SELECT `compounds`.*, `units`.*, COUNT(1) AS count FROM " + COMMON_TABLES + " WHERE `compounddata`.`dataset_id` IN (%s) GROUP BY `compounds`.`id`";
 
 	@Override
 	protected String getTable()

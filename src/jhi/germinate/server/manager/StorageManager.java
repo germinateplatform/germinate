@@ -30,7 +30,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class StorageManager extends AbstractManager<Storage>
 {
-	private static final String SELECT_FOR_ACCESSION_ID = "SELECT storage.* FROM storage LEFT JOIN storagedata ON storagedata.storage_id = storage.id WHERE storagedata.germinatebase_id = ?";
+	private static final String SELECT_FOR_ACCESSION_ID = "SELECT `storage`.* FROM `storage` LEFT JOIN `storagedata` ON `storagedata`.`storage_id` = `storage`.`id` WHERE `storagedata`.`germinatebase_id` = ?";
 
 	@Override
 	protected String getTable()

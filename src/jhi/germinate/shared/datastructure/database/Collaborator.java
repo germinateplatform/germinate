@@ -250,7 +250,7 @@ public class Collaborator extends DatabaseObject
 		@Override
 		public void write(Database database, Collaborator object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO collaborators (" + FIRST_NAME + ", " + LAST_NAME + ", " + EMAIL + ", " + PHONE + ", " + INSTITUTION_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `collaborators` (" + FIRST_NAME + ", " + LAST_NAME + ", " + EMAIL + ", " + PHONE + ", " + INSTITUTION_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getFirstName())
 					.setString(object.getLastName())
 					.setString(object.getEmail())

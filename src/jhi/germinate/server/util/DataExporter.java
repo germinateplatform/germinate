@@ -20,7 +20,6 @@ package jhi.germinate.server.util;
 import java.io.*;
 import java.util.*;
 
-import jhi.flapjack.io.cmd.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -83,7 +82,7 @@ public class DataExporter
 		if (parameters.colNames != null)
 			markers = new LinkedHashSet<>(parameters.colNames);
 
-		converter = new Hdf5ToFJTabbedConverter(parameters.inputFile, lines, markers, outputFile, parameters.qualityMissingValue != 100, parameters.qualityHeteroValue != 100);
+		converter = new Hdf5ToFJTabbedConverter(parameters.inputFile, lines, markers, outputFile, false, parameters.qualityMissingValue != 100, parameters.qualityHeteroValue != 100);
 	}
 
 	/**

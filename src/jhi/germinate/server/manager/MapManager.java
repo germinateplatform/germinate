@@ -35,8 +35,8 @@ import jhi.germinate.shared.exception.*;
  */
 public class MapManager extends AbstractManager<Map>
 {
-	private static final String SELECT_ALL              = "SELECT maps.*, COUNT(1) AS count FROM maps LEFT JOIN mapdefinitions ON mapdefinitions.map_id = maps.id WHERE (maps.user_id <=> ? OR maps.visibility = 1) GROUP BY maps.id %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_DATASETS = "SELECT maps.*, COUNT(1) AS count FROM maps LEFT JOIN mapdefinitions ON maps.id = mapdefinitions.map_id LEFT JOIN datasetmembers ON (datasetmembers.datasetmembertype_id = 1 AND datasetmembers.foreign_id = mapdefinitions.marker_id) WHERE (maps.user_id <=> ? OR maps.visibility = 1) AND datasetmembers.dataset_id IN (%s) GROUP BY maps.id";
+	private static final String SELECT_ALL              = "SELECT `maps`.*, COUNT(1) AS count FROM `maps` LEFT JOIN `mapdefinitions` ON `mapdefinitions`.`map_id` = `maps`.`id` WHERE (`maps`.`user_id` <=> ? OR `maps`.`visibility` = 1) GROUP BY `maps`.`id` %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_DATASETS = "SELECT `maps`.*, COUNT(1) AS count FROM `maps` LEFT JOIN `mapdefinitions` ON `maps`.`id` = `mapdefinitions`.`map_id` LEFT JOIN `datasetmembers` ON (`datasetmembers`.`datasetmembertype_id` = 1 AND `datasetmembers`.`foreign_id` = `mapdefinitions`.`marker_id`) WHERE (`maps`.`user_id` <=> ? OR `maps`.`visibility` = 1) AND `datasetmembers`.`dataset_id` IN (%s) GROUP BY `maps`.`id`";
 
 	@Override
 	protected String getTable()

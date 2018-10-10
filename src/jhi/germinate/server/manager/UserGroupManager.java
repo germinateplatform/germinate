@@ -36,17 +36,17 @@ public class UserGroupManager extends AbstractManager<UserGroup>
 {
 	public static final String[] COLUMNS_TABLE = {UserGroup.ID, UserGroup.NAME, UserGroup.DESCRIPTION, UserGroup.CREATED_ON, UserGroup.UPDATED_ON, DatabaseObject.COUNT, "datasetpermissions.dataset_id"};
 
-	private static final String SELECT_ALL_FOR_FILTER = "SELECT usergroups.*, COUNT(usergroupmembers.id) AS count FROM usergroups LEFT JOIN usergroupmembers ON usergroupmembers.usergroup_id = usergroups.id LEFT JOIN datasetpermissions ON datasetpermissions.group_id = usergroups.id {{FILTER}} GROUP BY usergroups.id %s LIMIT ?, ?";
-	private static final String SELECT_IDS_FOR_GROUP  = "SELECT usergroupmembers.user_id FROM usergroupmembers WHERE usergroup_id = ?";
+	private static final String SELECT_ALL_FOR_FILTER = "SELECT `usergroups`.*, COUNT(`usergroupmembers`.`id`) AS count FROM `usergroups` LEFT JOIN `usergroupmembers` ON `usergroupmembers`.`usergroup_id` = `usergroups`.`id` LEFT JOIN `datasetpermissions` ON `datasetpermissions`.`group_id` = `usergroups`.`id` {{FILTER}} GROUP BY `usergroups`.`id` %s LIMIT ?, ?";
+	private static final String SELECT_IDS_FOR_GROUP  = "SELECT `usergroupmembers`.`user_id` FROM `usergroupmembers` WHERE `usergroup_id` = ?";
 
-	private static final String UPDATE_NAME = "UPDATE usergroups SET name = ?, description = ?, updated_on = NOW() WHERE id = ?";
+	private static final String UPDATE_NAME = "UPDATE `usergroups` SET `name` = ?, `description` = ?, `updated_on` = NOW() WHERE `id` = ?";
 
-	private static final String INSERT         = "INSERT INTO usergroups (name, description, created_on) SELECT ?, ?, NOW() FROM dual WHERE NOT EXISTS (SELECT name FROM usergroups WHERE name = ?)";
-	private static final String INSERT_MEMBERS = "INSERT INTO usergroupmembers (user_id, usergroup_id) SELECT ?, ? FROM dual WHERE NOT EXISTS (SELECT user_id, usergroup_id FROM usergroupmembers WHERE user_id = ? AND usergroup_id = ?) LIMIT 1";
+	private static final String INSERT         = "INSERT INTO `usergroups` (`name`, `description`, `created_on`) SELECT ?, ?, NOW() FROM dual WHERE NOT EXISTS (SELECT `name` FROM `usergroups` WHERE `name` = ?)";
+	private static final String INSERT_MEMBERS = "INSERT INTO `usergroupmembers` (`user_id`, `usergroup_id`) SELECT ?, ? FROM dual WHERE NOT EXISTS (SELECT `user_id`, `usergroup_id` FROM `usergroupmembers` WHERE `user_id` = ? AND `usergroup_id` = ?) LIMIT 1";
 
-	private static final String DELETE = "DELETE FROM usergroups WHERE id = ?";
+	private static final String DELETE = "DELETE FROM `usergroups` WHERE `id` = ?";
 
-	private static final String DELETE_MEMBERS = "DELETE FROM usergroupmembers WHERE usergroup_id = ? AND user_id IN (%s)";
+	private static final String DELETE_MEMBERS = "DELETE FROM `usergroupmembers` WHERE `usergroup_id` = ? AND `user_id` IN (%s)";
 
 	/**
 	 * Returns all the paginated {@link UserGroup}s fulfilling the {@link PartialSearchQuery} filter.

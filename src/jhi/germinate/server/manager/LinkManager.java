@@ -32,10 +32,10 @@ import jhi.germinate.shared.exception.*;
  */
 public class LinkManager extends AbstractManager<Link>
 {
-	private static final String COMMON_TABLES = " linktypes LEFT JOIN links ON links.linktype_id = linktypes.id ";
+	private static final String COMMON_TABLES = " `linktypes` LEFT JOIN `links` ON `links`.`linktype_id` = `linktypes`.`id` ";
 
-	private static final String SELECT_FOR_TABLE_PLACEHOLDER = "SELECT links.* FROM " + COMMON_TABLES + " WHERE linktypes.target_table = ? AND visibility = 1 AND ISNULL(links.foreign_id)";
-	private static final String SELECT_FOR_TABLE_STATIC      = "SELECT links.* FROM " + COMMON_TABLES + " WHERE linktypes.target_table = ? AND visibility = 1 AND links.foreign_id = ?";
+	private static final String SELECT_FOR_TABLE_PLACEHOLDER = "SELECT `links`.* FROM " + COMMON_TABLES + " WHERE `linktypes`.`target_table` = ? AND `visibility` = 1 AND ISNULL(`links`.`foreign_id`)";
+	private static final String SELECT_FOR_TABLE_STATIC      = "SELECT `links`.* FROM " + COMMON_TABLES + " WHERE `linktypes`.`target_table` = ? AND `visibility` = 1 AND `links`.`foreign_id` = ?";
 
 	@Override
 	protected String getTable()

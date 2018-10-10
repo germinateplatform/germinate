@@ -166,7 +166,7 @@ public class Treatment extends DatabaseObject
 		@Override
 		public void write(Database database, Treatment object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO treatments (" + NAME + ", " + DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `treatments` (" + NAME + ", " + DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?)")
 					.setString(object.getName())
 					.setString(object.getDescription());
 

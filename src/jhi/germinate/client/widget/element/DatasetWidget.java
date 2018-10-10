@@ -401,12 +401,13 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 							continueWithDatasets(result);
 						}
 					});
-					return;
 				}
 				else
 				{
 					if (!CollectionUtils.isEmpty(selectedItems))
 						continueWithDatasets(new ArrayList<>(selectedItems));
+					else
+						Notification.notify(Notification.Type.INFO, Text.LANG.notificationDatasetsSelectAtLeastOne());
 				}
 			});
 			continueButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));

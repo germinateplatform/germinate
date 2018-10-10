@@ -61,19 +61,19 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	private static final String GATEKEEPER_ERROR_EMAIL        = "GATEKEEPER_ERROR_EMAIL";
 	private static final String GATEKEEPER_ERROR_INVALID_DATA = "GATEKEEPER_ERROR_INVALID_DATA";
 
-	private static final String INSERT_UNAPPROVED_USER = "INSERT INTO unapproved_users (user_username, user_password, user_full_name, user_email_address, institution_id, institution_name, institution_acronym, institution_address, database_system_id, created_on, activation_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT id FROM database_systems WHERE server_name = ? AND system_name = ?), NOW(), ?)";
-	private static final String DELETE_UNAPPROVED_USER = "DELETE FROM unapproved_users WHERE id IN (%s)";
+	private static final String INSERT_UNAPPROVED_USER = "INSERT INTO `unapproved_users` (`user_username`, `user_password`, `user_full_name`, `user_email_address`, `institution_id`, `institution_name`, `institution_acronym`, `institution_address`, `database_system_id`, `created_on`, `activation_key`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT `id` FROM `database_systems` WHERE `server_name` = ? AND `system_name` = ?), NOW(), ?)";
+	private static final String DELETE_UNAPPROVED_USER = "DELETE FROM `unapproved_users` WHERE `id` IN (%s)";
 
-	private static final String QUERY_USER_HAS_ACCESS_TO_DATABASE  = "SELECT 1 AS `exists` FROM user_has_access_to_databases WHERE user_id = ?       AND database_id =        (SELECT id FROM database_systems WHERE system_name = ? AND server_name = ?)";
-	private static final String QUERY_USER_HAS_REQUESTED_ACCESS    = "SELECT 1 AS `exists` FROM unapproved_users             WHERE user_username = ? AND database_system_id = (SELECT id FROM database_systems WHERE system_name = ? AND server_name = ?)";
-	private static final String INSERT_USER_HAS_ACCESS_TO_DATABASE = "INSERT INTO user_has_access_to_databases (user_id, database_id, user_type_id) VALUES (?, (SELECT id FROM database_systems WHERE system_name = ? AND server_name = ?), 2)";
-	private static final String INSERT_ACCESS_REQUEST              = "INSERT INTO access_requests (user_id, database_system_id, activation_key, created_on) VALUE (?, (SELECT id FROM database_systems WHERE system_name = ? AND server_name = ?), ?, NOW())";
-	private static final String DELETE_ACCESS_REQUEST              = "DELETE FROM access_requests WHERE id IN (%s)";
+	private static final String QUERY_USER_HAS_ACCESS_TO_DATABASE  = "SELECT 1 AS `exists` FROM `user_has_access_to_databases` WHERE `user_id` = ?       AND `database_id` =        (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?)";
+	private static final String QUERY_USER_HAS_REQUESTED_ACCESS    = "SELECT 1 AS `exists` FROM `unapproved_users`             WHERE `user_username` = ? AND `database_system_id` = (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?)";
+	private static final String INSERT_USER_HAS_ACCESS_TO_DATABASE = "INSERT INTO `user_has_access_to_databases` (`user_id`, `database_id`, `user_type_id`) VALUES (?, (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?), 2)";
+	private static final String INSERT_ACCESS_REQUEST              = "INSERT INTO `access_requests` (`user_id`, `database_system_id`, `activation_key`, `created_on`) VALUE (?, (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?), ?, NOW())";
+	private static final String DELETE_ACCESS_REQUEST              = "DELETE FROM `access_requests` WHERE `id` IN (%s)";
 
-	private static final String QUERY_USERNAME_EXISTS = "(SELECT DISTINCT username FROM users) UNION (SELECT DISTINCT user_username FROM unapproved_users WHERE has_been_rejected != 1)";
+	private static final String QUERY_USERNAME_EXISTS = "(SELECT DISTINCT `username` FROM `users`) UNION (SELECT DISTINCT `user_username` FROM `unapproved_users` WHERE `has_been_rejected` != 1)";
 
-	private static final String QUERY_INSTITUTES = "SELECT DISTINCT * FROM institutions ORDER BY institutions.name ASC";
-	private static final String INSERT_INSTITUTE = "INSERT INTO institutions (name, acronym, address) VALUES (?, ?, ?)";
+	private static final String QUERY_INSTITUTES = "SELECT DISTINCT * FROM `institutions` ORDER BY `institutions`.`name` ASC";
+	private static final String INSERT_INSTITUTE = "INSERT INTO `institutions` (`name`, `acronym`, `address`) VALUES (?, ?, ?)";
 
 	private static final Map<Long, HttpSession> SESSIONS = new HashMap<>();
 

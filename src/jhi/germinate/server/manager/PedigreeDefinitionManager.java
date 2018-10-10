@@ -30,7 +30,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class PedigreeDefinitionManager extends AbstractManager<PedigreeDefinition>
 {
-	private static final String SELECT_BY_ACCESSION_ID = "SELECT * FROM pedigreedefinitions WHERE germinatebase_id = ?";
+	private static final String SELECT_BY_ACCESSION_ID = "SELECT * FROM `pedigreedefinitions` WHERE `germinatebase_id` = ?";
 
 	@Override
 	protected String getTable()

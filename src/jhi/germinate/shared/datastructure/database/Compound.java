@@ -325,7 +325,7 @@ public class Compound extends DatabaseObject
 		@Override
 		public void write(Database database, Compound object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO compounds (" + NAME + ", " + DESCRIPTION + ", " + MOLECULAR_FORMULA + ", " + MONOISOTOPIC_MASS + ", " + AVERAGE_MASS + ", " + COMPOUND_CLASS + ", " + UNIT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `compounds` (" + NAME + ", " + DESCRIPTION + ", " + MOLECULAR_FORMULA + ", " + MONOISOTOPIC_MASS + ", " + AVERAGE_MASS + ", " + COMPOUND_CLASS + ", " + UNIT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getName())
 					.setString(object.getDescription())
 					.setString(object.getMolecularFormula())

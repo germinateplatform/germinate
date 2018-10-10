@@ -31,9 +31,9 @@ import jhi.germinate.shared.exception.*;
  */
 public class ClimateManager extends AbstractManager<Climate>
 {
-	private static final String SELECT_ALL                 = "SELECT climates.* FROM climates WHERE EXISTS (SELECT 1 FROM climatedata WHERE climatedata.climate_id = climates.id AND climatedata.dataset_id IN (%s)) ORDER BY name";
-	private static final String SELECT_ALL_HAVING_DATA     = "SELECT climates.* FROM climates WHERE EXISTS (SELECT 1 FROM climatedata WHERE climatedata.climate_id = climates.id) AND EXISTS (SELECT 1 FROM climatedata WHERE climatedata.climate_id = climates.id AND climatedata.dataset_id IN (%s)) ORDER BY name";
-	private static final String SELECT_ALL_HAVING_OVERLAYS = "SELECT climates.* FROM climates WHERE EXISTS (SELECT 1 FROM climateoverlays WHERE climateoverlays.climate_id = climates.id) ORDER BY name";
+	private static final String SELECT_ALL                 = "SELECT `climates`.* FROM `climates` WHERE EXISTS (SELECT 1 FROM `climatedata` WHERE `climatedata`.`climate_id` = `climates`.`id` AND `climatedata`.`dataset_id` IN (%s)) ORDER BY `name`";
+	private static final String SELECT_ALL_HAVING_DATA     = "SELECT `climates`.* FROM `climates` WHERE EXISTS (SELECT 1 FROM `climatedata` WHERE `climatedata`.`climate_id` = `climates`.`id`) AND EXISTS (SELECT 1 FROM `climatedata` WHERE `climatedata`.`climate_id` = `climates`.`id` AND `climatedata`.`dataset_id` IN (%s)) ORDER BY `name`";
+	private static final String SELECT_ALL_HAVING_OVERLAYS = "SELECT `climates`.* FROM `climates` WHERE EXISTS (SELECT 1 FROM `climateoverlays` WHERE `climateoverlays`.`climate_id` = `climates`.`id`) ORDER BY `name`";
 
 	@Override
 	protected String getTable()

@@ -34,11 +34,11 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 {
 	private static final String[] COLUMNS_DATA_SORTABLE = {CompoundData.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Compound.NAME, Dataset.DESCRIPTION, AnalysisMethod.NAME, Unit.NAME, CompoundData.COMPOUND_VALUE, Compound.COUNT};
 
-	private static final String COMMON_TABLES = " compounddata LEFT JOIN compounds ON compounds.id = compounddata.compound_id LEFT JOIN germinatebase ON germinatebase.id = compounddata.germinatebase_id LEFT JOIN datasets ON datasets.id = compounddata.dataset_id LEFT JOIN analysismethods ON analysismethods.id = compounddata.analysismethod_id LEFT JOIN units ON units.id = compounds.unit_id ";
+	private static final String COMMON_TABLES = " `compounddata` LEFT JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` LEFT JOIN `germinatebase` ON `germinatebase`.`id` = `compounddata`.`germinatebase_id` LEFT JOIN `datasets` ON `datasets`.`id` = `compounddata`.`dataset_id` LEFT JOIN `analysismethods` ON `analysismethods`.`id` = `compounddata`.`analysismethod_id` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` ";
 
-	private static final String SELECT_IDS_FOR_FILTER        = "SELECT DISTINCT(germinatebase.id) FROM " + COMMON_TABLES + " {{FILTER}} AND datasets.id IN (%s)";
-	private static final String SELECT_ALL_FOR_FILTER        = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} AND datasets.id IN (%s) %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_FILTER_EXPORT = "SELECT germinatebase.id AS germinatebase_id, germinatebase.general_identifier AS germinatebase_gid, germinatebase.name AS germinatebase_name, compounds.name AS compounds_name, datasets.description AS datasets_description, analysismethods.name AS analysismethods_name, units.unit_name AS units_unit_name, compounddata.compound_value AS compounddata_compound_value FROM " + COMMON_TABLES + " {{FILTER}} AND datasets.id IN (%s) %s LIMIT ?, ?";
+	private static final String SELECT_IDS_FOR_FILTER        = "SELECT DISTINCT(`germinatebase`.`id`) FROM " + COMMON_TABLES + " {{FILTER}} AND `datasets`.`id` IN (%s)";
+	private static final String SELECT_ALL_FOR_FILTER        = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} AND `datasets`.`id` IN (%s) %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER_EXPORT = "SELECT `germinatebase`.`id` AS germinatebase_id, `germinatebase`.`general_identifier` AS germinatebase_gid, `germinatebase`.`name` AS germinatebase_name, `compounds`.`name` AS compounds_name, `datasets`.`description` AS datasets_description, `analysismethods`.`name` AS analysismethods_name, `units`.`unit_name` AS units_unit_name, `compounddata`.`compound_value` AS compounddata_compound_value FROM " + COMMON_TABLES + " {{FILTER}} AND `datasets`.`id` IN (%s) %s LIMIT ?, ?";
 
 	private static final String[] COLUMNS_COMPOUND_DATA_EXPORT = {"germinatebase_id", "germinatebase_gid", "germinatebase_name", "compounds_name", "datasets_description", "analysismethods_name", "units_unit_name", "compounddata_compound_value"};
 

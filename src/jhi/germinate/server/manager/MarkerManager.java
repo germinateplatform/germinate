@@ -36,16 +36,16 @@ import jhi.germinate.shared.search.*;
  */
 public class MarkerManager extends AbstractManager<Marker>
 {
-	public static final  String COMMOM_SYNONYMS             = "LEFT JOIN synonyms ON (synonyms.foreign_id = markers.id AND synonyms.synonymtype_id = " + SynonymType.markers.getId() + " )";
-	public static final  String SELECT_SYNONYMS             = "mapdefinitions.*, mapfeaturetypes.*, maps.*, markers.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms";
-	private static final String COMMON_TABLES               = "mapdefinitions LEFT JOIN mapfeaturetypes ON mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id LEFT JOIN markers ON markers.id = mapdefinitions.marker_id LEFT JOIN maps ON maps.id = mapdefinitions.map_id";
-	private static final String SELECT_BY_IDS               = "SELECT markers.* FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id WHERE markers.id IN (%s) %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_GROUP        = "SELECT markers.*, markertypes.*, GROUP_CONCAT(synonyms.synonym SEPARATOR ', ') AS synonyms FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id " + COMMOM_SYNONYMS + " WHERE groups.id = ? GROUP BY markers.id, groupmembers.id %s LIMIT ?, ?";
-	private static final String SELECT_IDS_FOR_GROUP        = "SELECT markers.id FROM markers LEFT JOIN markertypes ON markertypes.id = markers.markertype_id LEFT JOIN groupmembers ON markers.id = groupmembers.foreign_id LEFT JOIN groups ON groups.id = groupmembers.group_id WHERE groups.id = ? GROUP BY markers.id, groupmembers.id";
-	private static final String SELECT_FOR_FILTER           = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} GROUP BY markers.id, mapdefinitions.id %s LIMIT ?, ?";
-	private static final String SELECT_IDS_FOR_FILTER_MAP   = "SELECT DISTINCT(markers.id) FROM " + COMMON_TABLES + " {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
-	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(markers.marker_name) FROM " + COMMON_TABLES + " LEFT JOIN groupmembers ON groupmembers.foreign_id = markers.id LEFT JOIN groups ON groups.id = groupmembers.group_id {{FILTER}} AND (maps.user_id = ? OR maps.visibility = 1)";
-	private static final String SELECT_COUNT                = "SELECT COUNT(1) AS count FROM markers";
+	public static final  String COMMOM_SYNONYMS             = " LEFT JOIN `synonyms` ON (`synonyms`.`foreign_id` = `markers`.`id` AND `synonyms`.`synonymtype_id` = " + SynonymType.markers.getId() + " )";
+	public static final  String SELECT_SYNONYMS             = " `mapdefinitions`.*, `mapfeaturetypes`.*, `maps`.*, `markers`.*, GROUP_CONCAT(`synonyms`.`synonym` SEPARATOR ', ') AS synonyms";
+	private static final String COMMON_TABLES               = " `mapdefinitions` LEFT JOIN `mapfeaturetypes` ON `mapdefinitions`.`mapfeaturetype_id` = `mapfeaturetypes`.`id` LEFT JOIN `markers` ON `markers`.`id` = `mapdefinitions`.`marker_id` LEFT JOIN `maps` ON `maps`.`id` = `mapdefinitions`.`map_id`";
+	private static final String SELECT_BY_IDS               = "SELECT `markers`.* FROM `markers` LEFT JOIN `markertypes` ON `markertypes`.`id` = `markers`.`markertype_id` WHERE `markers`.`id` IN (%s) %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_GROUP        = "SELECT `markers`.*, `markertypes`.*, GROUP_CONCAT(`synonyms`.`synonym` SEPARATOR ', ') AS synonyms FROM `markers` LEFT JOIN `markertypes` ON `markertypes`.`id` = `markers`.`markertype_id` LEFT JOIN `groupmembers` ON `markers`.`id` = `groupmembers`.`foreign_id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` " + COMMOM_SYNONYMS + " WHERE `groups`.`id` = ? GROUP BY `markers`.`id`, `groupmembers`.`id` %s LIMIT ?, ?";
+	private static final String SELECT_IDS_FOR_GROUP        = "SELECT `markers`.`id` FROM `markers` LEFT JOIN `markertypes` ON `markertypes`.`id` = `markers`.`markertype_id` LEFT JOIN `groupmembers` ON `markers`.`id` = `groupmembers`.`foreign_id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` WHERE `groups`.`id` = ? GROUP BY `markers`.`id`, `groupmembers`.`id`";
+	private static final String SELECT_FOR_FILTER           = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} GROUP BY `markers`.`id`, `mapdefinitions`.`id` %s LIMIT ?, ?";
+	private static final String SELECT_IDS_FOR_FILTER_MAP   = "SELECT DISTINCT(`markers`.`id`) FROM " + COMMON_TABLES + " {{FILTER}} AND (`maps`.`user_id` = ? OR `maps`.`visibility` = 1)";
+	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(`markers`.`marker_name`) FROM " + COMMON_TABLES + " LEFT JOIN `groupmembers` ON `groupmembers`.`foreign_id` = `markers`.`id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` {{FILTER}} AND (`maps`.`user_id` = ? OR `maps`.`visibility` = 1)";
+	private static final String SELECT_COUNT                = "SELECT COUNT(1) AS count FROM `markers`";
 
 	@Override
 	protected String getTable()

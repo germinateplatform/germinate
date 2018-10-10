@@ -32,10 +32,10 @@ import jhi.germinate.shared.search.*;
  */
 public class InstitutionManager extends AbstractManager<Institution>
 {
-	private static final String COMMON_TABLES         = "institutions LEFT JOIN countries ON countries.id = institutions.country_id";
-	private static final String SELECT_ALL_FOR_FILTER = "SELECT institutions.* FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
+	private static final String COMMON_TABLES         = " `institutions` LEFT JOIN `countries` ON `countries`.`id` = `institutions`.`country_id`";
+	private static final String SELECT_ALL_FOR_FILTER = "SELECT `institutions`.* FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
 
-	private static final String SELECT_GROUPED_BY_COUNTRY = "SELECT countries.*, COUNT(1) AS count FROM " + COMMON_TABLES + " GROUP BY countries.id";
+	private static final String SELECT_GROUPED_BY_COUNTRY = "SELECT `countries`.*, COUNT(1) AS count FROM " + COMMON_TABLES + " GROUP BY `countries`.`id`";
 
 	@Override
 	protected String getTable()

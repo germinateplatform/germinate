@@ -30,7 +30,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class CollaboratorManager extends AbstractManager<Collaborator>
 {
-	private static final String SELECT_FOR_DATASET_ID = "SELECT * FROM datasetcollaborators LEFT JOIN collaborators ON datasetcollaborators.collaborator_id = collaborators.id LEFT JOIN institutions ON institutions.id = collaborators.institution_id LEFT JOIN countries ON countries.id = institutions.country_id WHERE datasetcollaborators.dataset_id = ?";
+	private static final String SELECT_FOR_DATASET_ID = "SELECT * FROM `datasetcollaborators` LEFT JOIN `collaborators` ON `datasetcollaborators`.`collaborator_id` = `collaborators`.`id` LEFT JOIN `institutions` ON `institutions`.`id` = `collaborators`.`institution_id` LEFT JOIN `countries` ON `countries`.`id` = `institutions`.`country_id` WHERE `datasetcollaborators`.`dataset_id` = ?";
 
 	public static ServerResult<List<Collaborator>> getForDatasetId(UserAuth user, Long id) throws DatabaseException
 	{

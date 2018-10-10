@@ -1,0 +1,1712 @@
+#input=PHENOTYPE
+name	dbId	dataset_name	dataset_version	license_name	location_name	treatments_description	year	1000 Spine Weight [kg]	Diastatic power	Dry mass percent [pct]	Cactuar age [mfn]	Areoles frequency	Boiling water resistance factor	Cactuar size [m]	Crassulacean acid metabolism stem	Crassulacean acid metabolism spike	Cactuar virus x [sg]
+CACTUAR-1	1	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.0011	97.52	95.733	182.6	99	353.331	0	1.925	1.595	
+CACTUAR-1	1	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	59.202		94.8222	179.3			5			
+CACTUAR-1	1	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.9937				0			
+CACTUAR-1	1	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.7285	170.5			2.75			
+CACTUAR-2	2	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.292	95.7	95.3535	187	99	348.7	0	2.013	1.837	
+CACTUAR-2	2	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			95.3601	182.6			0			
+CACTUAR-2	2	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			78.3486				0			
+CACTUAR-2	2	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.0741	189.2			0			7.15
+CACTUAR-3	3	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	35.802	91		332.2	98.6	347.6	0	2.288	2.222	
+CACTUAR-3	3	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				332.2			0			8.1587
+CACTUAR-4	4	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	57.8765	99.9	98.4841	178.2	99	352	12.8337	1.936	1.859	
+CACTUAR-4	4	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.4228	170.5			0			46.583
+CACTUAR-6	6	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				358.6			8.4337			
+CACTUAR-6	6	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				331.1			0			
+CACTUAR-6	6	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							9			3
+CACTUAR-6	6	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			2.75			7.625
+CACTUAR-7	7	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-7	7	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001			96.5162	187			0.0363			
+CACTUAR-7	7	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	48.701		96.1719	180.4			0			
+CACTUAR-7	7	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			98.1266	177.1			50			
+CACTUAR-7	7	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.0157				0			
+CACTUAR-7	7	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.0862	189.2			0			1.375
+CACTUAR-7	7	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.832	183.7			16.667			1
+CACTUAR-9	9	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-9	9	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	63.888			344.3		335.643	0	1.892		
+CACTUAR-9	9	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	51.21			337.7		335.61	0	2.068		5.5
+CACTUAR-9	9	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				328.9			0			1
+CACTUAR-10	10	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-10	10	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	53.5711	97.9	97.46	182.6	98	345.95	0	1.727	1.54	
+CACTUAR-10	10	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	57.2	89.1	95.4393	187	98	340.307	0.3663	1.881	1.925	
+CACTUAR-10	10	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			97.515	244.2			9			
+CACTUAR-10	10	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.9266				0			
+CACTUAR-10	10	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.5779	180.4			0			
+CACTUAR-10	10	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			96.668	222			0			4.33
+CACTUAR-11	11	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	56.76	99		328.9	99	334.4	0	1.936	1.881	
+CACTUAR-11	11	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	34.34			332.2			0.667			
+CACTUAR-11	11	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				297			13.75			6.6
+CACTUAR-11	11	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			3.6663			0.1
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee		2003							6.5			
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	65.2	80.3	95.2281	188.1	97	355.971	0	1.749	1.705	
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	59.51	95.7	94.7881	187	99.2	357.17	2.25	2.057	1.79	
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	35.19	94.6	95.81	222	99	349.8	3.3	2.145	2.002	
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			98.0551	183.7			78.65			
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			91.3726				0			
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.1268	187			0			
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.403	222			0			5.33
+CACTUAR-13	13	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.7649	167			9			3
+CACTUAR-14	14	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	60.269	98	95.2908	187	97.5	346.5	0	2.123	1.815	
+CACTUAR-14	14	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			96.0168	174.9			0			
+CACTUAR-14	14	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			77.6709				0			
+CACTUAR-14	14	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			94.9938	174.9			2.75			20.9
+CACTUAR-15	15	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	38.8025	96.8		333.3	99	339.9	0	2.079	1.969	
+CACTUAR-15	15	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			5			2.345
+CACTUAR-16	16	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	53.9495	94.5	98.8746	171.6	99	350.68	29.3337	2.09	1.969	
+CACTUAR-16	16	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.2798	178.2			0.45			46.9337
+CACTUAR-18	18	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				333.3			9.6003			
+CACTUAR-18	18	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				331.1			2.75			
+CACTUAR-18	18	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	53.1245			346.5			15.4			
+CACTUAR-18	18	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							97.5			6.6
+CACTUAR-18	18	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				324.5			75			9.375
+CACTUAR-18	18	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	42.849			350.9			90.75			2.75
+CACTUAR-19	19	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				349.8			0			
+CACTUAR-19	19	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	43.265			346.5			0			
+CACTUAR-19	19	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				297			36.6663			14.5
+CACTUAR-19	19	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			0.667			0.055
+CACTUAR-20	20	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				328.9			0			
+CACTUAR-20	20	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	32.47			329.2663			0.7337			
+CACTUAR-20	20	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				297			0			14.5
+CACTUAR-20	20	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			1.667			0.55
+CACTUAR-21	21	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.329	108.9		333.3		338.745	5	2.255	1.683	
+CACTUAR-21	21	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	54.637			334.4	99.88	342.804	9	2.431	2.508	
+CACTUAR-21	21	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	50.567			335.5			88			
+CACTUAR-21	21	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							71.5			24
+CACTUAR-21	21	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				328.9			96.25			7.15
+CACTUAR-21	21	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			93.5			7.15
+CACTUAR-22	22	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	48.301	89.1	97.2301	188.1	99	348.315	0	1.903	1.65	
+CACTUAR-22	22	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	53.46	145.794	95.3062	180.4		342.617	0		1.87	
+CACTUAR-22	22	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.1632				0			
+CACTUAR-22	22	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			94.4361	187			0			
+CACTUAR-25	25	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	61.072	82.5	97.1971	188.1	90	349.8	0	1.98	1.65	
+CACTUAR-25	25	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	64.46	92.19	97.009	187		337.403	0		1.936	
+CACTUAR-25	25	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			91.7037				0			
+CACTUAR-25	25	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.1478	180.4			0.0363			
+CACTUAR-26	26	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	42.5	92.7		328.9	97.02	346.5	29.3337	1.98	2.013	
+CACTUAR-26	26	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	33.099			333.3			0.6003			
+CACTUAR-26	26	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			63.333			14.5
+CACTUAR-26	26	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			1.8337			3.15
+CACTUAR-27	27	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	43.8515			332.2			0			
+CACTUAR-27	27	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			0			6.8871
+CACTUAR-28	28	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	55.726	97	98.8944	176	99.1	357.5	12.8337	1.991	1.892	
+CACTUAR-28	28	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.1663	178.2			5			42.625
+CACTUAR-30	30	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	56.7611	99.9	98.2454	194.7	92	349.085	3.4	2.189	1.65	
+CACTUAR-30	30	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	53.601		89.8436	161		342.881	0	1.892		
+CACTUAR-30	30	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-30	30	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			99.2002	177.1			0			
+CACTUAR-31	31	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	50.7111	99	97.1025	187	99	351.56	0	2.277	1.773	
+CACTUAR-31	31	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	51.051		98.89	176			66			
+CACTUAR-31	31	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.1599	163			0			1.5
+CACTUAR-31	31	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.7019	178.2			3.3			23.083
+CACTUAR-33	33	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	37.901			333.3			9			
+CACTUAR-33	33	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	44.601			337.7			12.375			
+CACTUAR-33	33	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							49.5			3.3
+CACTUAR-33	33	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				349.8			88			8.25
+CACTUAR-37	37	Sample Trials Data	1	CC-BY-SA	Dundee		2003							9			
+CACTUAR-37	37	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				341			5.5			
+CACTUAR-37	37	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				349.8			0			
+CACTUAR-37	37	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				357.5			6.667			
+CACTUAR-37	37	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			2.25
+CACTUAR-37	37	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			55			21.6337
+CACTUAR-37	37	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				341			0			6.9663
+CACTUAR-38	38	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				326.7			0			
+CACTUAR-38	38	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	41.6075			346.5			0			
+CACTUAR-38	38	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				297			1.5			9.9
+CACTUAR-38	38	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			3.6663			6.261
+CACTUAR-39	39	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	42.262			332.2			3.6663			
+CACTUAR-39	39	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				332.2			6.05			0.0374
+CACTUAR-42	42	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	60.6111			316.8			0			
+CACTUAR-42	42	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.256	88.2		346.5	96.8	340.637	22	2.035	2.002	
+CACTUAR-42	42	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	63.789			358.6			3.6663			
+CACTUAR-42	42	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							22			0.11
+CACTUAR-42	42	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	37.653			316.8			7.5			2.5
+CACTUAR-42	42	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	59.28			358.6			4.5			0.167
+CACTUAR-43	43	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	38.335			333.3			0			
+CACTUAR-43	43	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				332.2			4.5			7.417
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee		2002							70			
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.0211			350.9			9			
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	60.236	96.048		335.5	99.902	335.808	68.75	2.134	2.112	
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	59.521	97.152		341	90.926	331.815	6.05	2.013	1.969	
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	64.944			358.6			8.333			
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	65.681			358.6			9			
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			3.33			
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							90			2.75
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			80			2.75
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				327.8			2.2			2.75
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	58.31			336.6			52.5			3.333
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	67.507			358.6			80.6663			0
+CACTUAR-45	45	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			0			5
+CACTUAR-48	48	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	66.2607			211.2		340.45	0	1.969		
+CACTUAR-48	48	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				211.2			9.1663			
+CACTUAR-49	49	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-49	49	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.53	99		310	98.2	334.224	2.75	2.277	1.892	
+CACTUAR-49	49	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	57.2	95.4		349.8	96	344.3	0	1.848	1.87	
+CACTUAR-49	49	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003		97		357.5	94.82	337.7	6.0003	1.98	1.881	
+CACTUAR-49	49	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0.045
+CACTUAR-49	49	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			33.333			13.9337
+CACTUAR-49	49	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			9			1.5763
+CACTUAR-50	50	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	50.0511	98	93.3141	180.4	99	345.818	0	1.848	1.925	
+CACTUAR-50	50	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	52.14	98.1	98.9043	178.2	99	358.6	3.75	1.881	5.5	
+CACTUAR-50	50	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			94.9069	163			0			1.65
+CACTUAR-50	50	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			96.3556	170.5			3.75			27
+CACTUAR-51	51	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	32.725	96.3		346.5	94.6	338.8	0.6003	2.112	2.068	
+CACTUAR-51	51	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			3.6663			0.0374
+CACTUAR-53	53	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-53	53	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	52.707		96.2753	178		344.19		2.079		
+CACTUAR-53	53	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	44.682			194.7		333.41	7.5	2.123		
+CACTUAR-53	53	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			95.8364	195.8						
+CACTUAR-54	54	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	50.798	81	97.3753	177.1	97	348.381	0	1.914	1.93	
+CACTUAR-54	54	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	52.3611	99.36	97.2994	181.5	99.5	356.994	2.5	2.123	1.914	
+CACTUAR-54	54	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	53.691	94.35	95.8474	183.7	99.68	340.054	34.8337		2.31	
+CACTUAR-54	54	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							0			
+CACTUAR-54	54	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	41.063		97.394	188.1			0			
+CACTUAR-54	54	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.8781	178.2			3.6663			
+CACTUAR-55	55	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	56.287	99	98.3554	176	99	347.6	84.3337	1.969	1.826	
+CACTUAR-55	55	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.6437	162.8			2.75			0
+CACTUAR-56	56	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	57.5245			349.8			25			
+CACTUAR-56	56	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			5.5			
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee		2002							5.5			
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	52.4711			350.9			8.25			
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	49.533	92.736		357.5	99.088	317.658	4.333	1.86	1.936	
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.595	97.152		341	88.814	336.006	0	1.815	1.716	
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	57.398			350.9			3.6663			
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	57.28	200.2		358.6	76.284		42.1663		2.134	
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002		99.9		356.4	93.896	324.995	7.3337	1.903	1.925	
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	35.7			357.5			3.333			
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							49.5			9.35
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			8.25			4.275
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				325.6			1			9
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	49.65			350.9			5			4.367
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	48.636			358.6			3.6663			14.3
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			5.5			9
+CACTUAR-57	57	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			0.667			6.6
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee		2002							40			
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	55.1111	88		335.5		307.45	0	1.99	1.95	
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	58.091	93.84		360.8	98.24	331.045	0	2.25	2.475	
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	62.002			345.4	98.52	336.347	5	2.123	2.222	
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	50.8332			358.6	97.76	342.353	8.0663	1.83	1.98	
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	60.5077			341	95.964	334.323	1.8337	2.068	2.09	
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	73.998			337.7			30.8997			
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	63.899			341			90			
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			9			
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			2.2
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			5.5			1.1
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			7.3337			25
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				358.6			85.7997			7.5
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				333.3			9			1.925
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	64.471			336.6			9.5337			1.667
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	67.254			342.1			76.5			0
+CACTUAR-60	60	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			0			8
+CACTUAR-61	61	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				331.1			2.75			
+CACTUAR-61	61	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				326.7			0.3663			
+CACTUAR-61	61	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0.5
+CACTUAR-61	61	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			9.1663			13.5663
+CACTUAR-62	62	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	43	97.2	96.9375	174.9	99	347.71	2.5	2.09	2.101	
+CACTUAR-62	62	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	45.9	99.9	96.9914	171.6	99	356.4	38.333	1.87	5.39	
+CACTUAR-62	62	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			93.3614	179.3			0			3.5
+CACTUAR-62	62	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			96.9474	178.2			16.5			59.8587
+CACTUAR-63	63	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	40.4855	96.8		332.2	99	338.8	0	2.255	2.156	
+CACTUAR-63	63	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			0			3.15
+CACTUAR-65	65	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	48.9511	99.9	95.5889	187	99	352.55	1.65	1.87	1.738	
+CACTUAR-65	65	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	51.92	97.9	98.8933	176	99	355.3	55	2.013	5.5	
+CACTUAR-65	65	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.0686	179.3			0			0.55
+CACTUAR-65	65	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.3598	167.2			18			27
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee		2002							27.5			
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee		2003							20			
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	53.301			352		333.047	15.4	2.013		
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	66.396	96		341	94	340.45	19.25	2.332	2.343	
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			9			
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				346.5			73.5003			
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							2.5			2.55
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			2.25			
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			5.5			2.2
+CACTUAR-66	66	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			90			5
+CACTUAR-68	68	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-68	68	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	54.766			349.8			0			0
+CACTUAR-68	68	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				338.8			2.5			0.025
+CACTUAR-68	68	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				348.7			0			2.75
+CACTUAR-69	69	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	48.201	93.5	97.977	202.4	99	351.505	32.5	2.24	1.87	
+CACTUAR-69	69	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	49.632		93.9257	177.1		348.304	0	1.98		
+CACTUAR-69	69	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	44.88		89.136	184.8						
+CACTUAR-69	69	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							35			
+CACTUAR-69	69	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			92.488	177.1			1.7			
+CACTUAR-72	72	Sample Trials Data	1	CC-BY-SA	Dundee		2003							7.5			
+CACTUAR-72	72	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	65.373	90.2	95.3051	187	99.8	348.92	0.0363	2.02	1.958	
+CACTUAR-72	72	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	41.7609		95.5614	174.9			25			
+CACTUAR-72	72	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			97.68	183.7			5.5			
+CACTUAR-72	72	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			86.641				0			
+CACTUAR-72	72	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			92.29	174.9			0			4.4
+CACTUAR-72	72	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.6186	167.2			14.6663			2
+CACTUAR-73	73	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-73	73	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	58.795	87.75		310	98	334.18	2.75	2.442	2.057	
+CACTUAR-73	73	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	48.8	97.2		333.3	95	345.4	0	1.87	2.057	
+CACTUAR-73	73	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				357.5			22			
+CACTUAR-73	73	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0.33
+CACTUAR-73	73	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			52.25			17.6
+CACTUAR-73	73	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				335.5			9			3
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				333.3			66			
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	66.341	99.36		331.1	96.162	340.285	3.6663	1.914	1.74	
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	79.926	92.736		358.6	88.506	326.81	6.667	2.475	2.519	
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	68.53			349.8			9.6003			
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							77			9
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			9			3.4375
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	66.704			350.9			82.5			3.667
+CACTUAR-74	74	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	69.432			342.1			34.4997			0.0363
+CACTUAR-75	75	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	52.173	95.7	98.89	167.2	99	353.1	26.667	1.914	1.771	
+CACTUAR-75	75	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.7264	178.2			0			19.167
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee		2002							7.5			
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	46.12	161.92		357.5		343.926	49.5	1.958		
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	51.271	96.048		330	99.5	350.075	0	1.837	1.826	
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.27	96.048		358.6	98.16	349.569	3.333	2.222	2.2	
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	50.842	75		349.8	99	340.329	5.8663	2.06	2.05	
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			7.337			
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				337.7			0			
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				328.9			82.5			0.825
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							15			0.5
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	52.371			359.7			6.667			5.8663
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	47.454			358.6			5			0
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			0			2.2
+CACTUAR-77	77	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				335.5			0			2.2
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee		2003										
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	59.048	95	95.3733	188.1	99	347.622	0	1.859	1.694	
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	53.13	93	96.5635	187	99	348.59	0.0297	2.068	2.112	
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			95.216	244.2			9.9			
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			98.1937	161.7			63.25			
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.7737				0			
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.172	173.8			2.5			
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.724	199.8			0			5.5
+CACTUAR-78	78	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.68	183.7			9			5
+CACTUAR-80	80	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-80	80	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	54.4192			349.8			0			0.5
+CACTUAR-80	80	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				333.3			99			0.9
+CACTUAR-80	80	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				348.7			0			3.3
+CACTUAR-81	81	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	46.299	89.1	98.4258	202.4	98	346.291	0.0363	2.288	1.903	
+CACTUAR-81	81	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	54.3411		95.348	166.1		345.906	0	1.892		
+CACTUAR-81	81	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-81	81	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			99.3014	161			2.2			
+CACTUAR-82	82	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	49.201	86.9		328.9		315.04	0	2.112	2.057	
+CACTUAR-82	82	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	43.7409			328			1.8337			
+CACTUAR-82	82	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			4
+CACTUAR-82	82	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			22.5			7.5
+CACTUAR-84	84	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	50.0192			358.6		331.32	5.5	2.068		
+CACTUAR-84	84	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				349.8			85.25			9
+CACTUAR-85	85	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-85	85	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				310			10			
+CACTUAR-85	85	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				349.8			0			
+CACTUAR-85	85	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				346.5			56.667			
+CACTUAR-85	85	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0
+CACTUAR-85	85	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				327.8			3.3			6
+CACTUAR-85	85	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			0			0.0603
+CACTUAR-86	86	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	44.99	97	95.5174	180.4	99.38	351.934	0	1.96	1.683	
+CACTUAR-86	86	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	48.62	96.8	98.8823	176	98	359.7	8.25	2.024	4.9	
+CACTUAR-86	86	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			92.8829	179.3			0			3.3
+CACTUAR-86	86	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.13	178.2			12.5			34.833
+CACTUAR-87	87	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	50.49	97.9	98.4445	178.2	98.8	349.8	20	2.057	1.73	
+CACTUAR-87	87	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.2037	170.5			0			8.25
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	44.001	95	94.0368	184.8	90	347.27	44	2.277	1.936	
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	47.701	99.36	97.3676	202.4	99.36	350.812	0.4037	2.398	2.354	
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	51.59		98.124	166.1		344.245	0	1.903		
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	48.601	79	98.3114	188.1	99	304.9	0	1.595	1.474	
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001			95.48	168.3			0			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			71.4375	158.4			0			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.2489	202.4			5			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			97.5524	177.1			0			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	39.91		97.9429	188.1			0			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			93.0116	162.8			0			
+CACTUAR-89	89	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			80	163.9						
+CACTUAR-90	90	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	66.99	90		341	94	342.65	2.75	2.343	1.87	
+CACTUAR-90	90	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				318			0			
+CACTUAR-90	90	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0.05
+CACTUAR-90	90	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			0.55			10.667
+CACTUAR-92	92	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-92	92	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.836		95.1225	195.8		341.55		2.101		
+CACTUAR-92	92	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	48.04			193.6		332.09	82.5	1.991		
+CACTUAR-92	92	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			95.546	160.2						
+CACTUAR-93	93	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	45.101			331.1			0.7337			
+CACTUAR-93	93	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	42.933			346.5			7.3337			
+CACTUAR-93	93	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							9			3
+CACTUAR-93	93	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	31.702			344.3			6			2.05
+CACTUAR-94	94	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-94	94	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	67.683			328.9		339.449	0	2.013		
+CACTUAR-94	94	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	56.111	54		337.7		335.39	0	2.123	1.9	4.95
+CACTUAR-94	94	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				323.4			0			6.0003
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	62.084			347.6		325.05	0	1.969		
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	66.3256	80		357.5	99.1	340.01	0	1.705	1.782	
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	55.9075	54		352	99.68	334.818	0	1.716	1.51	
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	60.0358			354.2	98.94	328.592	0	1.91	1.92	
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.581			349.8	97.62	336.754	9.5337	2.002	2.013	
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.153			347.6			3.6663			
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			55			0.3303
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	48.95			357.5			3.6663			0
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				345.4			55			1.87
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				352			1.8			3.5
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				339.9			71.667			13.333
+CACTUAR-96	96	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			7.3337			3.3
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	66.7777			211.2		347.82	0	1.848		
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	59.0777	83.7	79.9353	174.9	99.9	344.3	0.667	2.035	1.837	
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	59.2075	97.9	99.0055	168.3	99.82	344.212	0	1.859	1.859	
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	62.3711	127.512	97.4303	190.3	98.62	328.878	0	1.859	2.156	
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	59.06	86.112	98.2663	199.1	97.12	335.17	28.333	2.02	2.354	
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	57.189	82.8	93.8333	201.3	96.14	342.32	7.5	2.06	2.134	
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	58.3011	91.08	94.5802	187	94.96	348.095	0	1.98	1.77	
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	57.7511	117.392	96.14	188.1	98.24	348.678	0	1.43	1.507	
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				211.2			5.5			
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				189.2			3.6663			
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			99.0363	166.1			0			
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			98.6183	190.3			0			5.5
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			94.347	216.7			9			
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.4006	201.3			22			5
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			94.4405	178.2			0.45			
+CACTUAR-99	99	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	47.784		93.5451	190.3			0			0
+CACTUAR-100	100	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	56.8128	94.5	95.755	195.8	99.9	347.71		2.145	1.936	
+CACTUAR-100	100	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	50.2777	90	99.3641	168.3	97.3	347.27	3.6663	1.87	1.661	
+CACTUAR-100	100	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			87.712	178						
+CACTUAR-100	100	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			98.9395	166.1			1.8337			
+CACTUAR-101	101	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-101	101	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	52.9111	93.6	95.0675	195.8		347.38		1.87	1.548	
+CACTUAR-101	101	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	41.965			193.6		346.5	70	1.83		
+CACTUAR-101	101	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			95.7396	195.8						
+CACTUAR-102	102	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-102	102	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	50.99	80.3		328.9	99.74	343.64	0	1.947	1.837	
+CACTUAR-102	102	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	48.084			361.9			9.1663			
+CACTUAR-102	102	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	48.598	81		337.7		342.1	2.75	1.98	1.826	8
+CACTUAR-102	102	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				314.6			0			1.1737
+CACTUAR-102	102	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				361.9			75.1663			7.3337
+CACTUAR-103	103	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	58.278	83		335.5		345.334	0	2.035	1.9	
+CACTUAR-103	103	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	62.0411			360.8			0			
+CACTUAR-103	103	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			2.75
+CACTUAR-103	103	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			10.5003			50
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	53.5007	97	96.338	196.9		347.27	0	2.2	1.72	
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	52.9111	99.36	97.68	195.8	98.98	347.27	22	2.024	1.93	
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	58.08	98	96.5437	201.3	99.704	355.311	5.5	2.321	2.167	
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	54.098	97.52	93.7585	192.5	99.36	351.461	4.5	1.914	1.914	
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	50.963		96.4348	190.3	98.56	358.633	0	2.046	1.969	
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			91.6069	192.5			2.75			
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.4468	196.9			77			8.25
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.0565	178.2			9			
+CACTUAR-104	104	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	47.872		96.0344	194.3337			0			0.0033
+CACTUAR-105	105	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.779			350.9	97.768	338.47	8.25	2.618	2.106	
+CACTUAR-105	105	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	58.509	99.36		357.5	96.96	342.353	5	1.826	1.914	
+CACTUAR-105	105	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	62.898			331.1			0			
+CACTUAR-105	105	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							88			4.05
+CACTUAR-105	105	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			9			3.3
+CACTUAR-105	105	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			29.3337			7.425
+CACTUAR-106	106	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				358.6			75			
+CACTUAR-106	106	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				320.1			24.75			
+CACTUAR-106	106	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							88			32.5
+CACTUAR-106	106	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			64.1663			18
+CACTUAR-107	107	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.4411			331.1			0			
+CACTUAR-107	107	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	54.601			318			22			
+CACTUAR-107	107	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							23.333			1.5
+CACTUAR-107	107	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	42.944			344.3			5			3.5
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee		2002							54			
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee		2003							2.75			
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	52.701			352			14.6663			
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	59.88	69		341	88.8	273.06	5.5	1.617	1.595	
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			26.667			
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				346.5			30			
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							5.5			1.55
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				324.5			8.25			
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			2.75			13.2
+CACTUAR-108	108	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			27			0.55
+CACTUAR-110	110	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	70.8422			358.6		345.07	33	1.98		
+CACTUAR-110	110	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			9.1663			1.8337
+CACTUAR-111	111	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	58.9611			346.5			5.5			
+CACTUAR-111	111	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				337.7			9			0.33
+CACTUAR-112	112	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	62.1192			216.7		344.63	44	1.749		
+CACTUAR-112	112	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				197			8.25			
+CACTUAR-113	113	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-113	113	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	58.8511		97.4204	195.8		347.16		2.178		
+CACTUAR-113	113	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	45.65			194.7		345.73	5	1.98		
+CACTUAR-113	113	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			95.6648	178						
+CACTUAR-114	114	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-114	114	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	58.3011	90	98.4412	159.5		340.516	0	1.82	1.56	
+CACTUAR-114	114	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	51.9211	99	95.5196	194.7		348.15	0	1.936	1.947	
+CACTUAR-114	114	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	44.46		95.238	170.5			0			
+CACTUAR-115	115	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	59.444			344.3		342.65	0	1.86		
+CACTUAR-115	115	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	57.343			360.8			28.333			
+CACTUAR-115	115	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			0.55
+CACTUAR-115	115	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			45			5
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee		2003										
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	49.707	97	93.566	196.9		348.15	0	2.046	1.557	
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	52.8011	81.9	97.625	195.8	99.68	341.869	70	2.222	2.211	
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	50.754	99.36	96.69	198	99.8	347.6	33	2.266	2.079	
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	54.758	99.9	95.117	175	90	342.1	0	1.826	1.74	
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	54.142	147.752	96.5591	190.3	99.2	352.132	5.5	2.013	1.936	
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	53.768	83.6	96.9298	183.7	97.08	347.941	13.5		1.77	
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			97.064	244.2			2.7			
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			95.4591	167.2						
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.6855	175			68.75			
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.1157	201.3			9.1663			9.7497
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.634	178.2			1.8337			
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	40.051		95.8848	194.3337			0			0
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.35	170.5			14			
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			96.569	222			0			4.67
+CACTUAR-116	116	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			96.3853	167.2			0			
+CACTUAR-117	117	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	60.599			350.9	99.264	338.03	0	2.497	2.629	
+CACTUAR-117	117	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	57.761			357.5			7.4997			
+CACTUAR-117	117	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							66			6.6
+CACTUAR-117	117	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			75			3.3
+CACTUAR-118	118	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.461	96.048		333.3	97.35	342.573	68.75	2.156	2.134	
+CACTUAR-118	118	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	52.67	95.128		330		351.593	0	1.914		
+CACTUAR-118	118	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							97.5			24.75
+CACTUAR-118	118	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				316.8			5.5			5.667
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee		2002							33			
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	50.701			330			0			
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.9611	97.704		349.8	99.32	338.36	0	2.101	2.112	
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	57.233			358.6			40.3337			
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			55			
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	44.693			346.5			6.0003			
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							80.6663			0.1
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	36.79			317.9			5.5			0.55
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	56.61			341			80.6663			0.0603
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			0			5.5
+CACTUAR-119	119	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			5.5			5
+CACTUAR-120	120	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	54.6711			352			7.3337			
+CACTUAR-120	120	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				341			2.75			
+CACTUAR-120	120	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							60			2.75
+CACTUAR-120	120	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			1			
+CACTUAR-122	122	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	61.413			358.6		333.3	33	2.299		
+CACTUAR-122	122	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	63.9958			357.5	99.3	337.81	0	1.826		
+CACTUAR-122	122	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	56.6709	92.4		352	97.38	341	84.3337	1.98	1.738	
+CACTUAR-122	122	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			9			0.6003
+CACTUAR-122	122	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	55.088			357.5			47.6663			0
+CACTUAR-122	122	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			93.333			1.1
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	51.3777			333.3		340.89	5	2.079		
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	54.707	96.3		357.5	99.7	343.53	0	1.925	1.925	
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	49.5011	92.4		344.3	98.66	335.5	95	1.958	1.639	
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	51.1511	98.532		361.9	99.64	339.46	55	1.91	1.83	
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	51.648			345.4	99.36	342.32	6.0003	2.156	2.09	
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				346.5			7.5			7.15
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	47.465			357.5			6.667			8.1
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			90			5.5
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				361.9			6.0003			61.4997
+CACTUAR-123	123	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			82.5			9.6003
+CACTUAR-124	124	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	49.884			216.7		358.38	71.5	1.826		
+CACTUAR-124	124	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995			89.149							
+CACTUAR-124	124	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996			95.9475							
+CACTUAR-124	124	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				216.7			50			
+CACTUAR-125	125	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-125	125	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995				344.3			0			
+CACTUAR-125	125	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	39.38			337.7			0			0.1
+CACTUAR-125	125	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			0			0.0737
+CACTUAR-126	126	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-126	126	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	48.5958	93	98.516	170.5	99.74	342.738	0	1.958	1.837	
+CACTUAR-126	126	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	55.3894		97.5106	182.6	99.94	338.756	11.667	2.057	2.013	
+CACTUAR-126	126	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	49.6309	97.2	95.8661	177		345.95	0	1.991	1.683	
+CACTUAR-126	126	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	50.05		98.7063	157.3			0			
+CACTUAR-126	126	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			97.8714	194.7			2.5663			1.65
+CACTUAR-127	127	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	53.9011	128.7		366.3		290.7	0	1.7	1.59	
+CACTUAR-127	127	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.4611			334.4			5			
+CACTUAR-127	127	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			4.4
+CACTUAR-127	127	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				337.7			42.75			0.045
+CACTUAR-128	128	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	49.2811	97.2	96.0641	196.9		347.27	0	2.178	1.452	
+CACTUAR-128	128	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	44.301		97.4347	192.5		338.91	19.25	2.299		
+CACTUAR-128	128	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-128	128	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.13	192.5			0			
+CACTUAR-129	129	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-129	129	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.4411	99	98.967	182.6	99	353.991	0	1.782	1.628	
+CACTUAR-129	129	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	58.63	97	96.4645	180.4	99	354.97	0.0363	1.903	1.815	
+CACTUAR-129	129	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			97.009	222			0.667			
+CACTUAR-129	129	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			93.5				0			
+CACTUAR-129	129	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.3094	170.5			0			
+CACTUAR-129	129	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.81	222			0			4.763
+CACTUAR-130	130	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	52.4711	90.2	88.436	202.4	98	358.182	5.5	2.387	1.61	
+CACTUAR-130	130	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.7711		98.211	166.1			0			
+CACTUAR-130	130	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							2.75			
+CACTUAR-130	130	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			98.6491	166.1			3.3			
+CACTUAR-131	131	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	52.701			331.1			1.5003			
+CACTUAR-131	131	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.8511			318			25			
+CACTUAR-131	131	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							82.5			0.1
+CACTUAR-131	131	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	35.63			344.3			5			2.75
+CACTUAR-132	132	Sample Trials Data	1	CC-BY-SA	Dundee		2002							5			
+CACTUAR-132	132	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	54.001	82.5		345.4	89.01	338.657	15.4	2.134	1.507	
+CACTUAR-132	132	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	60.786	94.5		331.1	96.8	341.77	0	2.409	2.398	
+CACTUAR-132	132	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			1.5003			
+CACTUAR-132	132	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							4.5			4.05
+CACTUAR-132	132	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				324.5			0			
+CACTUAR-132	132	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			0			5.5
+CACTUAR-134	134	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	55.2607			358.6		318.89	0	2.222		
+CACTUAR-134	134	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			33			1.8337
+CACTUAR-135	135	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	60.0611			346.5			1.1			
+CACTUAR-135	135	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				346.5			60.5			0.11
+CACTUAR-136	136	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-136	136	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	50.001			348.7			0			1.1
+CACTUAR-136	136	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				338.8			7.5			3.3
+CACTUAR-136	136	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				348.7			0			3.3
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	51.425	84.7		323.4	99.814	349.448	0	2.046	1.914	
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.6777	91.3		357.5	99.64	345.4	2.5	2.046	2.035	
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	60.1777	80.96		347.6	99.4	347.38	9.1663	2.06	2.255	
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	52.866	99.176		358.6	99.594	346.346	9	1.76	1.771	
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.7194			341	97.34	345.356	5.333	1.837	1.903	
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	43.835			330		347.82	0	1.82		0.55
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			0			0
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				357.5			63.333			9.5103
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			90.75			6.0003
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				356.4			95.333			13.5663
+CACTUAR-137	137	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				341			5.5			3.5
+CACTUAR-139	139	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	44.1009	84		366.3		298	29.3337	1.771	1.323	
+CACTUAR-139	139	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	61.1611			349.8			58.333			
+CACTUAR-139	139	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			1.155
+CACTUAR-139	139	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				336.6			96.25			1.35
+CACTUAR-140	140	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	53.1245	84.7	96.0289	196.9		339.68	0	2.277	1.85	
+CACTUAR-140	140	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	48.9511		97.68	192.5		336.16	0	2.244		
+CACTUAR-140	140	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-140	140	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.24	192.5			5.5			
+CACTUAR-141	141	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.1311		94.1017	184.8	99.44	344.685	52.25	2.167	2.156	
+CACTUAR-141	141	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	46.701		96.7593	202.4			2.2363			
+CACTUAR-141	141	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-141	141	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.1807	202.4			44			
+CACTUAR-142	142	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	55.4411	82.8	98.0551	202.4	90	352.165	11	2.365	1.65	
+CACTUAR-142	142	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.501		98.097	166.1			0			
+CACTUAR-142	142	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-142	142	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			99.2926	177.1			0			
+CACTUAR-143	143	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	65.461	99.36		331.1	97.9	341.22	11.9997	1.991	1.49	
+CACTUAR-143	143	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	60.001			346.5		334.114	33.5997	2.013		
+CACTUAR-143	143	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							97.1663			1.5
+CACTUAR-143	143	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	52.954			317.9			80			3.85
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee		2002							49.5			
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	61.3811			352			15			
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	62.15	99		341	98	340.45	0	2.34	2.508	
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002		88		357.5	89.76	333.861	5.5	1.72	1.804	
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				357.5			29.3337			
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							32.5			2.2
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				310			0			
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			2.75			5
+CACTUAR-144	144	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			0			5.5
+CACTUAR-145	145	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	51.3711			345.4			2.25			
+CACTUAR-145	145	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				343.2			77.5			
+CACTUAR-146	146	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	53.9011			358.6		338.14	5	2.255		
+CACTUAR-146	146	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	58.5607			353.1	99.8	338.25	0	1.925		
+CACTUAR-146	146	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				346.5			5.5			5.333
+CACTUAR-146	146	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	49.104			357.5			45.8337			4.5
+CACTUAR-147	147	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	55.0011			337.7		331.54	8.25	2.024		
+CACTUAR-147	147	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	57.766			357.5	99.8	337.04	0	1.991		
+CACTUAR-147	147	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	50.48	82.8		352	99.7	332.563	8.8	1.969	1.694	
+CACTUAR-147	147	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				336.6			85.25			0.33
+CACTUAR-147	147	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	48.499			345.4			9.1663			2
+CACTUAR-147	147	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				337.7			88.4997			8.4337
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.066	123.2		337.7	98.56	328.35	0	2.03	1.65	7.5
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	48.5111	85.5		352	99.6	328.46	2.75	1.991	1.57	
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.5226			361.9			2.75			
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				333.3			8.25			0.0275
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				348.7			2.5			1.1
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			76			5.3163
+CACTUAR-148	148	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				361.9			9.1663			9.1663
+CACTUAR-149	149	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-149	149	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995				328.9			0			
+CACTUAR-149	149	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	41.64	84.7		337.7			0		1.914	0.11
+CACTUAR-149	149	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				328.9			0			5.17
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee		2002							16.5			
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	43.7409	96		344.3		276	0	2.211	2.09	
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.164	99.36		356.4	99.7	333.08	0	2.244	2.134	
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	55.531			347.6	98.84	333.685	7.3337	1.854	2.233	
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	58.8841			355.3	98.82	335.247	69.6663	1.969	1.936	
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	58.3594			336.6	96.02	329.846	0.55	1.991	2.002	
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	60.566	98		358.6	99	338.8	9.1663	2.057	2.013	
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.16			358.6		305.8	9.2997	2.486		
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002		92		356.4	96.096	337.392	55	1.925	1.914	
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	41.2335			346.5			88			
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			2.7
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			0			4.4
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				349.8			60.0003			9.667
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				358.6			86.667			5
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				333.3			5			6
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	60.357			344.3			7.65			4.333
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	64.6			358.6			88			0.825
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			16.5			8.333
+CACTUAR-150	150	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			7.5			9
+CACTUAR-151	151	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	44.101	90		366.3		283.7	14.6663	1.69	1.422	
+CACTUAR-151	151	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	55.101			349.8			5.5			
+CACTUAR-151	151	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			6.05
+CACTUAR-151	151	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				337.7			79.75			9.9
+CACTUAR-152	152	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	55.077	92.092	96.3347	196.9	99.76	342.452	0	2.134	2.178	
+CACTUAR-152	152	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.9011		97.515	195.8		343.09	82.5	2.299		
+CACTUAR-152	152	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-152	152	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.91	192.5			44			
+CACTUAR-153	153	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	51.8111	85.8	97.2862	173.8	99	346.39	47.5	2.156	1.64	
+CACTUAR-153	153	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	52.4711		94.0148	202.4			0.0297			
+CACTUAR-153	153	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-153	153	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			95.4954	192.5			2.75			
+CACTUAR-154	154	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	56.3211	92	97.6536	202.4	99	355.564	16.5	2.06	1.683	
+CACTUAR-154	154	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	59.5111		98.288	166.1		352.011	0	1.694		
+CACTUAR-154	154	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							16.5			
+CACTUAR-154	154	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			99.3146	177.1			1.1			
+CACTUAR-155	155	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	62.5911			331.1			0			
+CACTUAR-155	155	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	62.3711			349.8			19.0663			
+CACTUAR-155	155	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							75			0.495
+CACTUAR-155	155	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	38.35			344.3			65			3.85
+CACTUAR-156	156	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.2211	54		345.4	97.2	343.42	23.8337	1.936	1.41	
+CACTUAR-156	156	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	57.002			301		327.91	11		2.167	
+CACTUAR-156	156	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							8.25			1.05
+CACTUAR-156	156	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			2.5			
+CACTUAR-158	158	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	59.06			211.2		351.01	0	1.738		
+CACTUAR-158	158	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	56.47	93.5	88.643	174.9	99.9	341	0.667	1.947	1.65	
+CACTUAR-158	158	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	55.7711	89	97.0783	161.7	99.92	347.512	1.8337	1.837	1.749	
+CACTUAR-158	158	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				201.3			44			
+CACTUAR-158	158	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				189.2			7.37			
+CACTUAR-158	158	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			99.3663	161.7			0			
+CACTUAR-160	160	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-160	160	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	64.9011	92.7		349.8		310.86	0	1.837	1.815	0
+CACTUAR-160	160	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				325.6			9			1.1
+CACTUAR-160	160	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				348.7			0			5
+CACTUAR-161	161	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-161	161	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	46.4211	97.9		344.3		277.97	0	2.035	1.8	
+CACTUAR-161	161	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	41.921	110		337.7			0		1.74	4.95
+CACTUAR-161	161	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				323.4			0			0.55
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	46.701	80.1		324.5		310.42	0	2.244	2.134	
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	52.0311	77.28		360.8	98.8	328.856	0	2.189	2.1	
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	51.531			349.8	97.72	340.021	8.25	2.178	2.255	
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	51.3777			349.8			51.3337			
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			5.4
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			5			6.05
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			9.333			8.0663
+CACTUAR-162	162	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				358.6			9			7.3337
+CACTUAR-163	163	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	55.671	96.8		366.3	98.66	334.554	31.1663	2.178	2.233	
+CACTUAR-163	163	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	55.968			349.8			76.667			
+CACTUAR-163	163	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							15			9.9
+CACTUAR-163	163	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				349.8			97.5			2.333
+CACTUAR-164	164	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	50.6011	95.128	96.5976	179	99.8	353.65	0	2.244	2.145	
+CACTUAR-164	164	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	51.2611		97.1256	195.8		344.41	99	2.343		
+CACTUAR-164	164	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-164	164	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			91.7807	192.5			77.5			
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				358.6			52.5			
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				316.8			0			
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	61.1611	78.936		346.5	98.89	325.655	9	2.101	2.101	
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	63.35	85.5		358.6	97.08		71.5		1.84	
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							97.5			22
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				324.5			9			3
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	37.82			344.3			55			2
+CACTUAR-165	165	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	63.998			342.1			53.333			0
+CACTUAR-166	166	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	47.701	96.048	97.3478	192.5	99.46	345.873	2.5	2.189	2.189	
+CACTUAR-166	166	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.9911	91.08	98.253	166.1	99.78	351.12	0	1.87	1.64	
+CACTUAR-166	166	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-166	166	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.4679	166.1			0			
+CACTUAR-167	167	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	57.651	99.36		331.1	88.29	340.351	0	1.914	1.683	
+CACTUAR-167	167	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.825			346.5		339.02	18.333	2.013		
+CACTUAR-167	167	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							16.5			0.11
+CACTUAR-167	167	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	43.362			316.8			75			1.5
+CACTUAR-168	168	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	60.0611			352			30.667			
+CACTUAR-168	168	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				331.1			0			
+CACTUAR-168	168	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							2.75			3
+CACTUAR-168	168	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			0.55			
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	67.727			358.6		337.48	11	1.969		
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	75.2543	83.6		357.5	99.4	343.75	0	1.936	1.93	
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	67.6522	101.7		352	99.46	337.59	33	1.947	1.936	
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	64.581			357.5	95.86	334.158	9.1663	2.09	1.936	
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	62.3711			349.8	98.186	332.255	60.8663	2.288	2.13	
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	73.1192			358.6	95.9	337.711	8.25	1.969	1.892	
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	70.5826			321.2			2.75			
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	69.322			336.6			9.9			
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	67.914			341			1.8337			
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				349.8			5			1.5037
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	64.427			353.1			53.1663			1.667
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				352			88.4997			0.3663
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				357.5			52.5			8.3
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			82.5			9.9
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				356.4			8.333			5.333
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				341			5.5			8.0663
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	63.558			359.7			93.5			3.6663
+CACTUAR-169	169	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	57.825			342.1			3.6663			0.2997
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	63.2511			358.6		332.2	22	2.123		
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	63.6724	82.8		353.1	99.66	335.83	0	2.112	2.046	
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	55.001	88		344.3	97.32	333.157	1.8337	1.82	1.77	
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	56.001	84.7		361.9	96.44	335.5	3.6663	2.255	2.112	
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	56.7611			343.2	95.44	310.552	66	2.28	2.585	
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	56.7611			347.6	96.38	337.513	16.5	1.68	1.63	
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.919			341			0			
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			9			1.1
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	51.08			357.5			8.333			0.1837
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				352			61.667			0.0737
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				361.9			6.75			5.99985
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				345.4			73.3337			4.333
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			7.3337			8.4337
+CACTUAR-170	170	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				325.6			9.9			1.333
+CACTUAR-171	171	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	47.0426			336.6			68.75			
+CACTUAR-171	171	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				337.7			9.45			9
+CACTUAR-172	172	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-172	172	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	56.958			349.8			0			0
+CACTUAR-172	172	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	53.548			333.3		342.76	5.5	2.255		2.2
+CACTUAR-172	172	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				337.7			0			6.6
+CACTUAR-173	173	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-173	173	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995				344.3			0			
+CACTUAR-173	173	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	44.506	64		337.7			8.25		1.881	9
+CACTUAR-173	173	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				321.2			5.5			2.97
+CACTUAR-174	174	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	48.301	133.1		324.5		295.7	0	2.024	1.87	
+CACTUAR-174	174	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	47.9611			356.4			36.6663			
+CACTUAR-174	174	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							25			7.65
+CACTUAR-174	174	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				356.4			40.3337			9.625
+CACTUAR-175	175	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	56.7611	91		333.3		327.36	3.333	1.914	1.59	
+CACTUAR-175	175	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	65.5611			337.7			65.25			
+CACTUAR-175	175	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			0.09
+CACTUAR-175	175	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				337.7			95			0.4037
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee		2002							5.5			
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.185			350.9		338.69	9	2.552		
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	51.535			357.5		345.433	7.667	2.442		
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	62.645	92		331.1	99.5	345.95	0	1.98	2.035	
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	63.4711	97.52		358.6	98.36	347.633	1.8337	2.211	2.178	
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	68.849	68		358.6	89.748	342.111	5		2.101	
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				356.4			0.2997			
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							88			5.5
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				328.9			5.8663			21.5
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			0			7.7
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	52.316			359.7			9			6.0003
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	67.815			342.1			5.5			0.7
+CACTUAR-176	176	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			0			8
+CACTUAR-177	177	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				358.6			74.25			
+CACTUAR-177	177	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				331.1			1.8337			
+CACTUAR-177	177	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							90			9.9
+CACTUAR-177	177	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			72			4.5375
+CACTUAR-178	178	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	50.201	97.152	97.8604	202.4	99	351.505	5.5	2.101	2.222	
+CACTUAR-178	178	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.4311	89	98.198	161	99.34	348.535	3.7037	1.837	1.771	
+CACTUAR-178	178	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							29.3337			
+CACTUAR-178	178	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			99.3124	177.1			0			
+CACTUAR-179	179	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	57.882	99.36	97.0024	151	99.78	351.241	0	1.672	2.134	
+CACTUAR-179	179	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	56.386	92	95.6538	177.1	99.2	358.116	0	1.76	1.903	
+CACTUAR-179	179	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							0			
+CACTUAR-179	179	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	47.245		98.1057	177.1			0			
+CACTUAR-180	180	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.9911	97.52	96.8352	188.1	98	352.462	0	1.793	1.672	
+CACTUAR-180	180	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	58.3		94.9641	180.4			0			
+CACTUAR-180	180	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.48				0			
+CACTUAR-180	180	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.8529	187			0			
+CACTUAR-181	181	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	65.5611			358.6		332.75	2.75	2.211		
+CACTUAR-181	181	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	72.8607			353.1	99.8	340.89	0	2.068		
+CACTUAR-181	181	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				349.8			9			0.7
+CACTUAR-181	181	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	55.044			357.5			33			0.9
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	55.6611			349.8		317.9	0.5	1.936		
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	61.5373	90		357.5	99.7	334.4	0	1.914	1.848	
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	50.2777	95		345.4	99.58	334.4	0	2.002	1.749	
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.2245			356.4	97.98	330.913	1.5003	2.244	2.211	
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	54.237			347.6	99.32	332.013	9.6003	1.94	2.09	
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	52.943			357.5			1.8337			
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				349.8			9			8.4337
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	43.96			357.5			6.667			1.8337
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			8.25			4.5
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				354.2			2.75			27.5
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				347.6			91.6663			8.8
+CACTUAR-182	182	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			5.5			7.333
+CACTUAR-183	183	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	53.301			346.5			77			
+CACTUAR-183	183	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				322.3			5			0.825
+CACTUAR-184	184	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-184	184	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	53.4611			349.8			0			0.11
+CACTUAR-184	184	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				346.5			8.25			3
+CACTUAR-184	184	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				337.7			4.125			4
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	53.02	72.9		323.4	99.74	341.748	0	1.903	1.771	
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	49.7079			361.9	99.64	331.1	9.1663	1.692	1.87	
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	46.472			349.8	99.56	342.749	9	2.09	2.167	
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	48.158	101.2		337.7		346.39	4.5	1.8	1.804	1.1
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			22			3.367
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				361.9			76.667			9.25
+CACTUAR-185	185	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				349.8			97.1663			8.25
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	46.001	95.7		328.9		263.34	0	1.773	1.91	
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	52.679	92		360.8	99.28	336.82	0	2.497	2.013	
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	61.8607			345.4	97.26	341.605	9	2.145	2.123	
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	63.1543			358.6			56.667			
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			9.35
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				356.4			0			3.3
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			9.1663			8.25
+CACTUAR-186	186	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			80.6663			7.5
+CACTUAR-187	187	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	52.998	92.4		366.3		330.451	0	2.53	1.727	
+CACTUAR-187	187	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	47.971			337.7			9			
+CACTUAR-187	187	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			0.05
+CACTUAR-187	187	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				349.8			86.1663			0
+CACTUAR-188	188	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	49.533			350.9		339.317	5.5	2.25		
+CACTUAR-188	188	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	49.2811			333.3		346.951	9.6003	1.892		
+CACTUAR-188	188	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	51.76			331.1			1.65			
+CACTUAR-188	188	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							99			5.5
+CACTUAR-188	188	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			63			6.6
+CACTUAR-188	188	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			53.333			3.3
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee		2002							8.25			
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	49.863	66		331.1	98.5	349.382	0	1.837	1.551	
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	49.2811	89.056		349.8	97.82	343.42	3.6663	1.925	2.013	
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	56.848	81.4		349.8	98	345.642	80	1.75	2.233	
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			6.667			
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				341			25.6663			
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							50			1.5
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	48.037			316.8			8.1			4.5
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	57.255			358.6			88			0.367
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			0			9
+CACTUAR-190	190	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				341			44			5.5
+CACTUAR-191	191	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	50.2975	98.1	97.7097	177.1	97	351.428	0	1.771	1.97	
+CACTUAR-191	191	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	52.5811		97.4754	188.1		337.711	0	1.991		
+CACTUAR-191	191	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							0.0603			
+CACTUAR-191	191	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	43.56		98.3048	182.6			0			
+CACTUAR-192	192	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	54.1211	93.5	95.9981	182.6	99	351.395	0	1.881	1.595	
+CACTUAR-192	192	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.38		96.9045	187			0			
+CACTUAR-192	192	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.0543				0			
+CACTUAR-192	192	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.063	187			0			
+CACTUAR-193	193	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	63.0311			349.8		325.16	20	2.156		
+CACTUAR-193	193	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			9.1663			1.033
+CACTUAR-195	195	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	49.06	94.5		349.8	96	336.6	1.65	1.892	1.892	
+CACTUAR-195	195	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	32.725			346.5			1.4663			
+CACTUAR-195	195	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				297			83.333			17
+CACTUAR-195	195	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			43.333			1.189
+CACTUAR-196	196	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	51.43	67.5		303		331.21	5.5	2.387	1.584	
+CACTUAR-196	196	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	45.14			337.7			8.25			
+CACTUAR-196	196	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							38.5			6.6
+CACTUAR-196	196	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				349.8			93.5			7.65
+CACTUAR-197	197	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	41.635	84.7	88.631	202.4	90	343.332	0	2.17	1.74	
+CACTUAR-197	197	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	49.3911		93.599	166.1		339.504	0	1.727		
+CACTUAR-197	197	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-197	197	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			92.158	161			1.1			
+CACTUAR-199	199	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-199	199	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	53.4479		97.0761	195.8		338.47		2.101		
+CACTUAR-199	199	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	39.644			193.6		343.64	9	2.057		
+CACTUAR-199	199	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			947.7897	195.8						
+CACTUAR-200	200	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	50.38	84.6		344.3		344.828	0	1.892	2.112	
+CACTUAR-200	200	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	50.85			356.4			16.667			
+CACTUAR-200	200	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			3.6
+CACTUAR-200	200	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				333.3			9			7.5
+CACTUAR-201	201	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	48.9511			350.9			0			
+CACTUAR-201	201	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	46.001			357.5			33			
+CACTUAR-201	201	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							95			0.055
+CACTUAR-201	201	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				335.5			7.4997			8.25
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.584	79.2	97.1157	177.1	98	349.305	0	1.617	1.59	
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	60.5011	97.52	97.8065	181.5	99.6	354.684	0	1.716	1.573	
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.05	93.5	95.2237	183.7	98.8	345.4	14.6663	2.024	2.09	
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			95.4085	222			1.8337			
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			99.44	176			4.5			
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							0			
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	48.081		97.6481	182.6			0			
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.7934	183.7			9			
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			98.065	222			0			4.67
+CACTUAR-202	202	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.1937	183.7			9			5.5
+CACTUAR-203	203	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	62.271	98	95.1236	187	99.3	354.2	0.0603	2.024	1.925	
+CACTUAR-203	203	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			95.6725	174.9			0			
+CACTUAR-203	203	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			77.7771				0			
+CACTUAR-203	203	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			96.47	189.2			0			5
+CACTUAR-205	205	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	68.0922			345.4	98.9	336.6	11.9997	2.05	1.65	
+CACTUAR-205	205	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	66.726			314.6			9			
+CACTUAR-205	205	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							0			5
+CACTUAR-205	205	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				324.5			1			
+CACTUAR-206	206	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-206	206	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.1309		95.5075	195.8		345.4		2.068		
+CACTUAR-206	206	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	40.7			193.6		339.57	37.5	1.75		
+CACTUAR-206	206	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			96.6482	195.8						
+CACTUAR-207	207	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	34.92	88.2	95.2171	187	98.1	349.8	2.5	1.96	1.89	
+CACTUAR-207	207	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	50.5835		98.8878	176			86.25			
+CACTUAR-207	207	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			92.598	179.3			22			6.6
+CACTUAR-207	207	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.5666	170.5			91.25			34.0087
+CACTUAR-208	208	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	53.4611	79.2		366.3		321.42	3.333	1.76	1.606	
+CACTUAR-208	208	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	49.577			349.8			22			
+CACTUAR-208	208	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			5.5
+CACTUAR-208	208	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				328.9			8.333			7.425
+CACTUAR-209	209	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995						310.85		1.64		
+CACTUAR-209	209	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	53.3511	97.152	97.1223	178	99.84	351.89	0	2.068	1.925	
+CACTUAR-209	209	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	53.766	92	98.1959	199.1	98.6	345.103	91.6663	2.057	2.013	
+CACTUAR-209	209	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	53.273	73.7	95.5339	170.5		343.673	0	2.046	2.013	
+CACTUAR-209	209	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			93.3229	190.3			0			
+CACTUAR-209	209	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			98.2311	199.1			55			9.1663
+CACTUAR-211	211	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-211	211	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.275	99	95.7	178	99.1	345.62		2.123	1.98	
+CACTUAR-211	211	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	54.6777	99	98.4038	168.3	99.98	345.829	0	2.002	1.958	
+CACTUAR-211	211	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996			96.14							
+CACTUAR-211	211	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	39.05			193.6		349.69	44	1.914		
+CACTUAR-211	211	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			97.757	173.8						
+CACTUAR-211	211	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			97.834	166.1			0			
+CACTUAR-212	212	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	45.76	90.2		366.3		339.196	13.75	2.31	1.59	
+CACTUAR-212	212	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	47.801			349.8		337.81	9	2.497		
+CACTUAR-212	212	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			6.05
+CACTUAR-212	212	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				328.9			82.5			4.333
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	59.1811	94.5	91.949	169.4	90	354.09	93.5	2.431	1.804	
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	60.8311	95.68	97.5249	192.5	98.94	354.717	24.75	2.178	2.288	
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	64.0211	94	93.7728	192.5	99	350.9	5.5	1.958	1.94	
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	59.906		95.293	190.3	97.32	359.194	5.5	2.035	1.804	
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			94.5318	202.4			82.5			
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			96.03	192.5			8.333			
+CACTUAR-213	213	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	50.468		96.9034	194.7			9.1663			0
+CACTUAR-214	214	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.737	95.7	97.5084	166.1	99	346.852	0	1.815	2.123	
+CACTUAR-214	214	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	60.621	96.048	95.9948	181.5	99	352.495	0	1.892	1.793	
+CACTUAR-214	214	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	56.639	74.8	94.8145	183.7	97.6	329.307	22		2.145	
+CACTUAR-214	214	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							0			
+CACTUAR-214	214	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	48.026		98.1695	188.1			0			
+CACTUAR-214	214	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.9562	180.4			9.1663			
+CACTUAR-215	215	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	64.119	99.57	95.1368	181.5	98	348.59	0.4037	2.002	1.881	
+CACTUAR-215	215	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			95.3634	171.6			0			
+CACTUAR-215	215	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.0433				0.0363			
+CACTUAR-215	215	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			96.525	172			0			4.4
+CACTUAR-217	217	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	43.197			346.5			0			
+CACTUAR-217	217	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			1.4663			1.3079
+CACTUAR-218	218	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	56.2111	115.5		333.3		296.4	0	1.804	1.551	
+CACTUAR-218	218	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	51.7509			337.7			9			
+CACTUAR-218	218	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.4511			357.5			38.5			
+CACTUAR-218	218	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			5.5
+CACTUAR-218	218	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				327.8			96.25			3.3
+CACTUAR-218	218	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			91.667			33
+CACTUAR-220	220	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	63.459	91		366.3		340.109	3.6663	2.409	1.49	
+CACTUAR-220	220	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	57.827			328.9			5.5			
+CACTUAR-220	220	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			5.5
+CACTUAR-220	220	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				336.6			62.5			5
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee		2002							8.25			
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	39.001	95		366.3		315.04	0	1.56	1.573	
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	51.3711	96.048		334.4	85.668	329.659	5.5	2.519	2.574	
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	45.9426			358.6	97.064	334.994	9	1.837	1.63	
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	51.7			330	82.214	327.305	2.667	1.804	1.804	
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	53.0794			350.9			9.1663			
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	59.906			358.6			5			
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			3.6663			
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				346.5			0			
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			9.9
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				337.7			82.5			6.6
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				358.6			8.25			6.75
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				341			3			8.8
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	45.045			359.7			9			7.7
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	53.22			358.6			8.333			1.5
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			0			9.955
+CACTUAR-221	221	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5						0
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.413	97.9	97.8538	178	99.9	353.21		2.002	1.914	
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	60.0611	98.1	99.1474	163.9	99.96	355.3	0	1.936	1.63	
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	58.6311	97.9	96.085	184.8	99.76	348.7	0	2.079	2.079	
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	57.884		98.0837	216.7	99.32	346.093	51.3337	1.92	2.09	
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	39.93			194.7		352	27.5	1.804		
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			97.4743	195.8						
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			97.7713	166.1			0			
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			98.3994	194.7			1.8337			1.5
+CACTUAR-223	223	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.7582	216.7			99			8.5063
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	43.3809	98		333		317.68	27.5	1.958	1.815	
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	57.4211	97.704		318	94.336	316.47	7.5	2.629	2.574	
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	62.9607			355.3	95.44	335.214	8.25	1.859	1.69	
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	57.024			341	83.08	329.274	1	2.167	2.101	
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	63.8011			349.8			3.6663			
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	63.71			349.8			8.25			
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			1.65
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				336.6			92.5			2.75
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				358.6			9.333			8
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				341			41.0663			1.1
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	52.69			359.7			8.333			2.6037
+CACTUAR-224	224	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	68.805			332.2			7.3337			0
+CACTUAR-225	225	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	55.341			333.3		338.327	71.5	1.947		
+CACTUAR-225	225	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	61.171			331.1		340.494	0	1.86		
+CACTUAR-225	225	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							75			2.2
+CACTUAR-225	225	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				324.5			34.8337			8.0663
+CACTUAR-226	226	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	61.8277	99	94.6231	161	99	350.35	0.2997	1.87	1.656	
+CACTUAR-226	226	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	62.436		96.9386	181.5		352.616	0	2.035		
+CACTUAR-226	226	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							2.75			
+CACTUAR-226	226	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	53.064		97.1091	177.1			0			
+CACTUAR-227	227	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.468	88	95.6494	187	97	345.62	0	2.101	1.947	
+CACTUAR-227	227	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			96.0696	182.6			0			
+CACTUAR-227	227	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			78.012				0			
+CACTUAR-227	227	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			96.3325	179.3			0			2.75
+CACTUAR-230	230	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	63.2511			337.7			9			
+CACTUAR-230	230	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	39.901			357.5			12.5			
+CACTUAR-230	230	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							80			5
+CACTUAR-230	230	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			9.9			9.9
+CACTUAR-231	231	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-231	231	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	62.2611			324.5			0			0
+CACTUAR-231	231	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				333.3			2.75			1.705
+CACTUAR-231	231	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				326.7			5.5			1.1
+CACTUAR-232	232	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	49.401			319			0			
+CACTUAR-232	232	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	57.4211			349.8			7.3337			
+CACTUAR-232	232	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							36.6663			0.5
+CACTUAR-232	232	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	32.879			344.3			63			3.85
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	50.05			174.9			0			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	54.362			174.9			18.3337			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	57.0042	83	88.908	158.4	96.8	304.76		1.86	2.013	
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	59.201		94.9586	190.3	97.66	334.169	0.3663	2.112	1.958	
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	71.8256		93.2448	216.7	97.48	335.533	71.5	2.09	2.02	
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	58.8511		94.4405	198	88.55	326.37	28.333	2.04	2.266	
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	64.2411		95.2193	175	93.14	337.381	9	2.01	2.112	
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	56.672		93.9422	180			5.5			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				172.7			11			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				174.9			3			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			97.207	158.4			0			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			93.7332	190.3			9.1663			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.6349	199.1			91.667			5.3163
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.8186	198			91.6663			8.25
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.535	192.5			45			
+CACTUAR-233	233	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	50.875		94.4416	194.7			0			
+CACTUAR-234	234	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	50.1611			337.7			8.25			
+CACTUAR-234	234	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				325.6			85.25			0.275
+CACTUAR-235	235	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-235	235	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	57.728	116.6		323.4	99.82	339.691	0	2.013	1.947	
+CACTUAR-235	235	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	55.7711			347.6			46.667			
+CACTUAR-235	235	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	47.553	88		337.7		343.97	0	2.079	1.771	5.4
+CACTUAR-235	235	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				328.9			0			8.0663
+CACTUAR-235	235	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				356.4			0			60.75
+CACTUAR-236	236	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	56.3211	85		366.3		320.21	2.2	1.87	1.54	
+CACTUAR-236	236	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	57.2011			337.7			8.25			
+CACTUAR-236	236	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							22			4
+CACTUAR-236	236	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				337.7			90			0.55
+CACTUAR-237	237	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				330			60			
+CACTUAR-237	237	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				330			0			
+CACTUAR-237	237	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							81.333			20.9
+CACTUAR-237	237	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				324.5			61.667			7.4
+CACTUAR-238	238	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	49.901	91.8		321.2	97.2	335.83	30.0663	2.068	1.296	
+CACTUAR-238	238	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.743			341		327.954	5.5		2.13	
+CACTUAR-238	238	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							52.25			4
+CACTUAR-238	238	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				310			10			
+CACTUAR-239	239	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	52.47	98		349.8	95	343.2	0	1.991	2.013	
+CACTUAR-239	239	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	40.2985			332.2			0			
+CACTUAR-239	239	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			25.6663			16
+CACTUAR-239	239	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			0			1.3079
+CACTUAR-242	242	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997				350.9			8.333			
+CACTUAR-242	242	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.001			357.5			6.2337			
+CACTUAR-242	242	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							95			2.5
+CACTUAR-242	242	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				335.5			8.25			9.35
+CACTUAR-243	243	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-243	243	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	58.7543			348.7			0			0.5
+CACTUAR-243	243	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	44.9	85.5		338.8	100	294	96	1.694	1.51	
+CACTUAR-243	243	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				346.5			9.5			0.495
+CACTUAR-243	243	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				348.7			0			1.1
+CACTUAR-243	243	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				328.9			90			0
+CACTUAR-246	246	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	52.472			197		349.03	7.5	1.826		
+CACTUAR-246	246	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				216.7			60			
+CACTUAR-247	247	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-247	247	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995				344.3			0			
+CACTUAR-247	247	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	42.81			337.7			16.5			8.25
+CACTUAR-247	247	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			5.5			0.033
+CACTUAR-248	248	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.4841	97.9	96.3776	196.9		353.65	0	2.079	1.72	
+CACTUAR-248	248	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	46.701		97.955	195.8		347.71	60.5	2.06		
+CACTUAR-248	248	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-248	248	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.405	192.5			46.75			
+CACTUAR-249	249	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				358.6			9			
+CACTUAR-249	249	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				331.1			0			
+CACTUAR-249	249	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							92.5			13.5
+CACTUAR-249	249	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				324.5			9			1.4663
+CACTUAR-250	250	Sample Trials Data	1	CC-BY-SA	Dundee		2002							16.5			
+CACTUAR-250	250	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	54.4511	71		352	88.11	339.68	14.6663	1.925	1.47	
+CACTUAR-250	250	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	59.994	91.3		341	99.55	334.18	13.75	2.33	2.07	
+CACTUAR-250	250	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				357.5			5.5			
+CACTUAR-250	250	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							13.75			3.905
+CACTUAR-250	250	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				310			5.5			
+CACTUAR-250	250	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			9			1.75
+CACTUAR-251	251	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				349.8			0			
+CACTUAR-251	251	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	41.0465			346.5			0			
+CACTUAR-251	251	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			0			5.5
+CACTUAR-251	251	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			6.667			6.6
+CACTUAR-254	254	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	52.9209			337.7			44			
+CACTUAR-254	254	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	41.901			357.5			5			
+CACTUAR-254	254	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							76.5			5
+CACTUAR-254	254	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				335.5			9.1663			4.95
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee		2002							30.25			
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	46.06	73.8		349.8	99.8	332.64	0	1.969	1.782	1.1
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	46.2495	82		352	99.94	336.985	86.1663	1.837	1.67	
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	51.0411			361.9	99.52	333.575	5.5	1.85	1.84	
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	52.4128			349.8	99.4	334.312	9	2.035	2.101	
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	48.9192			358.6	88.956	334.29	9	1.793	1.7	
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	49.5209			336.6	92.54	342.012	2.5	1.771	1.793	
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	49.676			358.6	87.58	340.065	75.1663	2.079	2.002	
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	52.074	99.9		358.6	92.18	336.391	7.5	2.167	2.167	
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				356.4			0			
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				338.8			9			0.5
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				348.7			5			5.5
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				352			9			2.333
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				356.4			9			8.525
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			93.5			7.0587
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				358.6			9			9.9
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				341			8.25			8.525
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	46.54			359.7			90			6.2337
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	57.101			341			80.6663			1.8337
+CACTUAR-255	255	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			0			6.17
+CACTUAR-256	256	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-256	256	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	62.315		94.93	195.8		344.85		1.97		
+CACTUAR-256	256	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	38.83			194.7		347.93	96.25	1.815		
+CACTUAR-256	256	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			97.4138	178						
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	57.3309			211.2		336.16	0	1.837		
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	50.7309			174.9	99.7	329.01	9	2.123		
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	48.466		95.3788	161.7	89.208	305.22	0	1.53		
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	47.9611		97.7306	190.3	95.32	321.596	2.75	2.057	2.057	
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				211.2			88.333			
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				189.2			2.9997			
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			92.609	166.1			0			
+CACTUAR-257	257	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			98.5149	184.8			0			3.6
+CACTUAR-258	258	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	55.3894			216.7		346.72	44	1.804		
+CACTUAR-258	258	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				216.7			33			
+CACTUAR-259	259	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-259	259	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-259	259	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	58.3275	97.9	98.1508	159.5		349.536	0	2.057	1.859	
+CACTUAR-259	259	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			83.116	149			1.8337			
+CACTUAR-259	259	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	55.1309	94.5	95.5559	177		341.33	0	1.958	1.903	
+CACTUAR-259	259	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	49.8		97.185	157.3			0			
+CACTUAR-259	259	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			89.056	163.9						
+CACTUAR-260	260	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.3411	93	93.7772	179		341.176	0	2.156	1.496	
+CACTUAR-260	260	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	50.001		95.5592	195.8		339.46	75	2.244		
+CACTUAR-260	260	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-260	260	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.075	192.5			80			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	57.9711	95.7	97.9748	202.4	87.3	355.3165	2.75	2.354	1.63	
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	58.839	132	94.1336	166.1	95.8	346.929	0	2.002	1.51	
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	59.9511	137.5	97.7988	173.8	95	349.8	0	1.826	1.54	
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001			96.2863	161.7			0			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			95.5493	222			3.6663			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			98.8537	183.7			47.25			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.1973	177.1			0.55			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	50.094		97.7801	188.1			0			
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.403	244.2			0			7.7
+CACTUAR-261	261	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.3832	176			2.2			10
+CACTUAR-262	262	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	57.0911	82.5	97.8483	182.6	98	349.36	0	1.83	1.628	
+CACTUAR-262	262	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	63.47		97.2125	187		339.119	0.033		1.87	
+CACTUAR-262	262	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.9277				0			
+CACTUAR-262	262	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.0926	187			0			
+CACTUAR-264	264	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	66.4422			336.6			9			
+CACTUAR-264	264	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				346.5			9			0.11
+CACTUAR-266	266	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998				334.4			72.5			
+CACTUAR-266	266	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999				316.8			1.35			
+CACTUAR-266	266	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							8.25			9.9
+CACTUAR-266	266	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			61.4997			5.5
+CACTUAR-267	267	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-267	267	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	54.8911	89.1		344.3		293.8	0	1.84	1.77	
+CACTUAR-267	267	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	45.58	70.4		330			0		1.81	3
+CACTUAR-267	267	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				344.3			0			0.033
+CACTUAR-268	268	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995				344.3			0			
+CACTUAR-268	268	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			4
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	75.3192			211.2		342.76	9	1.903		
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	63.5426		95.59	195.8	98.6	341.55	1.8337	2.134		
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	64.2411	99	99.0407	168.3	99.26	338.888	0	2.035	1.892	
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	64.9011	78.1	96.2126	195.8	99.4	338.8	18.3337	2.244	2.1	
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	64.825	92	98.0837	216.7	99.924	337.216	96.25	2.442	1.881	
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	56.5411	86.9	98.0089	202.4	92.092	345.51	5.5	2.354	2.09	
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	44.99			198		342.1	63	1.936		
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	61.0192		95.5394	195.8		332.97	2.5663	1.947		
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	57.97		98.6381	166.1		336.27	1.65	2.024		
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			97.9275	190.3			8.333			0.5
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.8066	197			93.5			5.733
+CACTUAR-269	269	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.46	202.4			91.6663			8.2503
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	48.707			197		352.88	8.25	1.848		
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	57.2011	92.4	88.527	183.7	99	341	9.1663	1.98	1.815	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	60.2811	64	98.3378	168.3	99.8	346.324	3.333	1.903	1.87	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	63.8011	91.08	96.2236	194.7	99.82	341.176	11.9997	1.81	1.991	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	61.649		94.4614	199.1	96.34	342.408	9.1663	1.88	2.112	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	57.332		96.5437	201.3	97.966	345.697	50	1.9	1.86	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	60.1128	86	95.2743	192.5	99.64	347.644	1.65	1.969	1.969	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	61.8211	92.4	97.8021	194.7	99	349.723	5.5	1.925	1.881	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	64.119	90	95.1192	187	98.934	344.927	38.5	1.8	2.156	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	49.901	99	97.339	244.2	97.48	341.187	5.5	1.848	1.848	
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	56.474		98.12	183.7			70			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				197			70			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				189.2			1.5003			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			99.3751	166.1			6.667			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			95.6901	194.7			0			0.9
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.756	199.1			91.6663			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.3038	201.3			69.0003			6.667
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			99.737	192.5			11			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	51.205		97.1366	194.7			7.3337			0
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.02	187			58.6663			
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.557	244.2			25			9
+CACTUAR-270	270	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.7713	183.7			87.5			30.917
+CACTUAR-271	271	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-271	271	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	54.164	93.6	95.744	170.5		346.313	0	2.046	1.98	
+CACTUAR-271	271	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998			95.194	181.5			0			
+CACTUAR-271	271	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	52.756		85.838	187						
+CACTUAR-271	271	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	55.2607	99	96.4766	194.7		350.13	0	1.991	1.936	
+CACTUAR-271	271	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	46.9		98.8086	170.5			0			
+CACTUAR-272	272	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	55.044			350.9		339.515	62.3337	2.27		
+CACTUAR-272	272	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	53.141			325.6			65			
+CACTUAR-272	272	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							95			6.6
+CACTUAR-272	272	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				325			9.1663			5
+CACTUAR-273	273	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.1111			330			0			
+CACTUAR-273	273	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	51.557			346.5			29.3337			
+CACTUAR-273	273	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							4.5			0.11
+CACTUAR-273	273	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	29.448			313			25			0.55
+CACTUAR-274	274	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-274	274	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.121	86.4	95.8859	182.6	96	357.808	0	1.76	1.672	
+CACTUAR-274	274	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.05	95	97.0585	179.3	97.52	351.89	0	2.134	1.804	
+CACTUAR-274	274	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			97.713	244.2			5			
+CACTUAR-274	274	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.7737				0			
+CACTUAR-274	274	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.1829	187			0			
+CACTUAR-274	274	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.59	244.2			0			4.67
+CACTUAR-275	275	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	51.34	98	98.3686	167.2	99	347.6	2.9997	1.76	1.804	
+CACTUAR-275	275	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.8177	162.8			0			34.0087
+CACTUAR-276	276	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	48.8928	92.4	96.1389	188.1	99	349.8	0	1.848	1.694	
+CACTUAR-276	276	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	55		97.2015	187		341.275	0		1.694	
+CACTUAR-276	276	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			92.07				0			
+CACTUAR-276	276	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.3579	180.4			0			
+CACTUAR-278	278	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	47.1609			352			3.6			
+CACTUAR-278	278	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				314.6			0			
+CACTUAR-278	278	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							16.5			3.3
+CACTUAR-278	278	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			5.5			
+CACTUAR-279	279	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	30.8709	101		344.3		308.33	0	2.057	2.134	
+CACTUAR-279	279	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	39.4911			356.4			0			
+CACTUAR-279	279	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			1.5
+CACTUAR-279	279	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			1.667			0.045
+CACTUAR-280	280	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	50.901			333			0			
+CACTUAR-280	280	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	46.761			349.8			57.75			
+CACTUAR-280	280	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			9
+CACTUAR-280	280	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				336.6			67.5			6
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	56			346.5		340.45	49.5	2.244		
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	64.5777	94.6		345.4	99.8	342.32	5	2.057	1.936	
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	49.093	92.4		345.4	99.72	337.414	91.667	1.85	1.958	
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	59.609			357.5	96.7	330.649	8.0663	2.244	2.233	
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	51.1511			349.8			66			
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				358.6			95.3337			2.5663
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	45.584			345.4			66			2.2
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				352			93.5			1.033
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				354.2			66			9.7497
+CACTUAR-281	281	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			90			5.5
+CACTUAR-282	282	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-282	282	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	56.4894			348.7			0			1.1
+CACTUAR-282	282	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	44.825			346.5		342.87	6.6	2.04		5
+CACTUAR-282	282	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				337.7			0			5
+CACTUAR-283	283	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	58.168	90		344.3		338.734	0	2.057	1.638	
+CACTUAR-283	283	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	51.0411			356.4		321.992	9.1663	2.266		
+CACTUAR-283	283	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			1.705
+CACTUAR-283	283	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				356.4			16.5			9
+CACTUAR-284	284	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	63.4711			350.9		342.232	91.667	2.596		
+CACTUAR-284	284	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	48.38			333.3			72.5			
+CACTUAR-284	284	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							90			7.65
+CACTUAR-284	284	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				357.5			8.3997			4
+CACTUAR-285	285	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	50.37	83.7		330	88.38	345.037	0	2.299	1.606	
+CACTUAR-285	285	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.101			349.8		339.515	6.667	2.046		
+CACTUAR-285	285	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							58.333			6.5
+CACTUAR-285	285	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	31.01			344.3			40			7.5
+CACTUAR-286	286	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.49	85.5		341	99	333.3	5.5	2.31	2.035	
+CACTUAR-286	286	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				328.9			0			
+CACTUAR-286	286	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0.055
+CACTUAR-286	286	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				323.4			27.5			6.6
+CACTUAR-287	287	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	58.0635	94.5	98.4467	178.2	97.02	348.7	9	1.947	1.859	
+CACTUAR-287	287	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.4963	178.2			0			38.4003
+CACTUAR-288	288	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	35.53			346.5			0.667			
+CACTUAR-288	288	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			5.5			0.0374
+CACTUAR-289	289	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	52.8011	99.9	96.9364	202.4	90	354.915	0	2.18	1.76	
+CACTUAR-289	289	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	54.967		98.188	177.1		339.79	0	1.925		
+CACTUAR-289	289	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-289	289	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			97.7911	166.1			0			
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee		2003							9.35			
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.791	94.5	97.5722	202.4	98	356.587	1.8	2.277	1.694	
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	57.2011	97.52	94.8981	166.1	99.6	351.934	0	1.804	1.815	
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.517	94.5	96.2335	198	99.24	356.422	1.8337	1.925	1.892	
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.919	99	96.3204	183.7	99.1	350.9	18.333	2.167	2.046	
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	50.2711	98.1	97.559	244.2	99.02	353.76	49.5	2.288	2.134	
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	54.23	99	99.1837	183.7	99	355.3	53.1663	2.024	4.41	
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			92.6079	177.1			0			
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	46.145		96.6284	190.3			10			0
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.13	183.7			5.333			
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.504	244.2			0			4.763
+CACTUAR-290	290	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003		93.6	98.5072	183.7	106.7	348.7	35.75	1.584	1.54	55.55
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	62.8958			216.7		345.73	22	1.628		
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	63.2841	87.3		183.7	98.7	346.5	0	1.87	1.639	
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	59.8543	124.3	99.0473	166.1	99.92	342.1	3.333	1.815	1.59	
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	59.7245		96.25	194.7	99.68	327.899	0	1.947	1.925	
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				197			8.25			
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				183.7			1.8337			
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			97.46	166.1			0			
+CACTUAR-291	291	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			98.0045	190.3			2.333			1.35
+CACTUAR-292	292	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995						347.182		1.804		
+CACTUAR-292	292	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	60.8509	98.44	97.2125	178	99.92	345.95	0	2.189	2.189	
+CACTUAR-292	292	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	55.1111	83.7	98.3037	216.7	99.68	345.4	7.3337	2.04	2.365	
+CACTUAR-292	292	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998			94.9487	187			0			
+CACTUAR-292	292	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	55.88	99	98.8614	157.3		345.356	0	1.969	1.892	
+CACTUAR-292	292	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			95.4514	190.3			0			
+CACTUAR-292	292	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.6845	216.7			70			6.3063
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	56.397	99.9	94.4812	170.5	99.62	349.965	0	1.87	1.925	
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	53.306	97.152	97.6778	194.7	99.94	345.191	1.8337	2.123	1.98	
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	60.9543	92.736	96.25	216.7	98.4	343.2	76.667	2.156	2.156	
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.417	184	97.7889	202.4	98.7	354.629	44	2.2	2.09	
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	54.6711		97.7933	192.5	99.84	346.896	3.667	1.98	1.848	
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	49.9543	143	95.6472	177		348.81	0	2.01	1.89	
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	51.37		98.7327	155			0			
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			98.0298	194.7			24.0003			0
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.7515	216.7			67.5			6.6737
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.6812	201.3			71.5			4.5837
+CACTUAR-293	293	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			98.989	192.5			13.333			
+CACTUAR-296	296	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	55.352	97.2	98.9032	178.2	99	353.1	36.667	1.88	1.903	
+CACTUAR-296	296	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.6337	178.2			0			16.775
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee		2002							5.5			
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee		2003							5			
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	45.101			345.4			11.7337			
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	55.484	99.9		341	96.14	331.683	7.5	2.156	1.96	
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				353.1			0.333			
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				357.5			3.3			
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							42.5			0.05
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			12.5			
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			27			2.013
+CACTUAR-297	297	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				341			0			5
+CACTUAR-298	298	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-298	298	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				341			5			
+CACTUAR-298	298	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				333.3			25.6663			
+CACTUAR-298	298	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				357.5			35			
+CACTUAR-298	298	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0.55
+CACTUAR-298	298	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			41.25			11.333
+CACTUAR-298	298	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				341			0			1
+CACTUAR-299	299	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-299	299	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	55.9911	91	95.9552	182.6	90	349.8	0	1.749	1.595	
+CACTUAR-299	299	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	57.937	94.52	95.2501	187	99.1	355.08	2.75	2.123	1.771	
+CACTUAR-299	299	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			96.459	244.2			53.1663			
+CACTUAR-299	299	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.48				0			
+CACTUAR-299	299	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.6681	180.4			0.033			
+CACTUAR-299	299	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.394	244.2			0			4
+CACTUAR-301	301	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	41.004	95.7	98.8944	178.2	98.8	354.09	33	1.969	1.771	
+CACTUAR-301	301	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			96.6229	170.5			0			34.0087
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee		2002							2.75			
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995						345.642		1.395		
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	57.2011	93.104	96.7285	195.8	99.8	352.33	0	2.046	2.068	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	69.6256	95.68	97.9363	197	97.76	343.464	9.1663	2.101	1.96	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	55.517	97.9	95.3755	201.3	99.34	353.782	5.5	2.299	2.123	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	58.113	87.032	93.5	187	99.7	347.908	1.8337	1.848	1.848	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.146	99	97.592	190.3	98.4	355.256	0	1.85	1.958	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	58.971	99.88	97.042	187	99.04	354.651	26.667	2.145	2.31	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	50.2711	99	96.3875	199.8	99	351.89	84.3337	2.266	2.134	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	53.2015	95.7	98.9263	180.4	99	355.3	90	2.189	5.5	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	52.03	92.7	98.8878	170.5		348.117	0	1.914	1.859	
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			96.8055	190.3			0			
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.9242	199.1			80			7.667
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.4237	196.9			88			4.5837
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			96.69	178.2			4.5			
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	47.85		98.0584	194.7			1.667			0
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.13	187			7.3337			
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			96.7175	244.2			4.5			8.25
+CACTUAR-302	302	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.5556	176			8.4337			42.625
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	49.324	99	88.863	202.4	98	350.658	8.25	2.134	1.771	
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.8524	99	92.1866	159.5	99.78	346.478	0	1.738	1.672	
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.102	99.36	93.7552	198	99	349.096	7.3337	1.925	1.7	
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.424	81.4	95.5163	173.8	98.62	314.11	20		1.74	
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			97.031	244.2			47.6663			
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			97.2587	161			0			
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	48.257		96.8077	194.3337			3.333			0
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.152	170.5			45			
+CACTUAR-303	303	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.57	244.2			0			6.963
+CACTUAR-304	304	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-304	304	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	58.212	97.42	94.831	181.5	98	348.92	0	1.947	1.84	
+CACTUAR-304	304	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	40.701	99.9	95.3623	182.6	97.76	341.165	0	1.78	1.881	
+CACTUAR-304	304	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			98.56	167.2			40			
+CACTUAR-304	304	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			91.4386				0			
+CACTUAR-304	304	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			94.8717	189.2			0			1.155
+CACTUAR-304	304	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.8923	183.7			0.3663			2.75
+CACTUAR-305	305	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	52.4711	91	96.2995	196.9		351.56	0	2.167	1.68	
+CACTUAR-305	305	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	50.201		96.9991	175		345.62	46.75	2.2		
+CACTUAR-305	305	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-305	305	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.0663	168			4.5			
+CACTUAR-306	306	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	46.6	97	96.8825	187	99	352.11	0	1.98	2.145	
+CACTUAR-306	306	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	51.765		98.9318	178.2			31.1663			
+CACTUAR-306	306	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.0114	179.3			0			1.65
+CACTUAR-306	306	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.7118	178.2			5			29.7
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee		2002							9			
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee		2003							5			
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	54.6711	84.7		352	98.3	343.673	28.2337	2.057	1.39	
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	62.931	86		341	97.24	336.655	0	2.398	1.99	
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	42.9	75.9		358.6	96.734	346.5	9	2.244	2.134	
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				357.5			30			
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							60.75			0.605
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			0.45			
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			3			5.5
+CACTUAR-307	307	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			33			4.5
+CACTUAR-309	309	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	52.173	91.8	98.8801	176	99	350.9	13.333	2.002	1.815	
+CACTUAR-309	309	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.0937	178.2			3.5			29.7
+CACTUAR-313	313	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	55.0011			216.7		347.71	33	1.727		
+CACTUAR-313	313	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	63.8011		88.733	183.7	99.8	336.6	1.8337	2.013		
+CACTUAR-313	313	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	52.899	71	98.9109	166.1			0		1.573	
+CACTUAR-313	313	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				197			50			
+CACTUAR-313	313	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				174.9			2.9337			
+CACTUAR-313	313	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			98.78	166.1			0			
+CACTUAR-314	314	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	47.201	96	97.878	184.8	96	345.95	19.25	1.98	1.65	
+CACTUAR-314	314	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	52.9111	77.28	97.9704	202.4	99.04	351.9285	0.0363	2.288	2.343	
+CACTUAR-314	314	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.386	114.4	96.0751	192.5	99.48	347.6	0	1.859	1.837	
+CACTUAR-314	314	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-314	314	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.6207	202.4			0			
+CACTUAR-314	314	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			94.9608	178.2			25			
+CACTUAR-315	315	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	50.9575	97.9	97.2433	178.2	99	357.5	29.9997	1.947	1.804	
+CACTUAR-315	315	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.5823	178.2			0			34.0087
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995						343.629		1.826		
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	58.1075	94.392	97.5975	178	99.32	353.65	0	2.233	2.266	
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	54.3186	90	98.1937	197	99.3	339.9	86.667	2.101	2.145	
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	29.9502		95.3403	187			36.6663			
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	48.901	95	97.9099	170.5		345.18	0	2.035	1.903	
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			93.0688	178.2			0			
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.3159	216.7			80.6663			6.8697
+CACTUAR-316	316	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			83.0137	150			0			8.333
+CACTUAR-317	317	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	46.101	97.9	97.02	187	99	355.3	0	2.1	2.01	
+CACTUAR-317	317	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	57.5025		98.89	178.2			18.3337			
+CACTUAR-317	317	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			93.5484	179.3			0			3.5
+CACTUAR-317	317	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.2763	178.2			0.45			42.625
+CACTUAR-321	321	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	36.278	96		346.5	97.9	345.4	0	2.2	2.068	
+CACTUAR-321	321	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				332.2			0			1.0701
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee		2002										
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	45.6309	89.1	96.9573	184.8	99	352.231	17.5	2.09	1.826	
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	46.901	99.36	97.7339	202.4	99.4	351.45	0	2.299	2.123	
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	58.2362	99.176	96.327	192.5	99.9	347.6	0	1.881	1.914	
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	56.7611	99.36	96.2654	190.3	99.18	348.865	0	1.892	1.68	
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	59.576	95.612	95.9464	173.8	99.12	344.025	19.4337		1.903	
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			96.47	244.2			0.2937			
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.5382	202.4			5			
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.8859	192.5			2.75			
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	49.5		97.2818	188.1			0			0
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.35	183.7			9			
+CACTUAR-322	322	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.449	244.2			0			9
+CACTUAR-323	323	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	49.9411	99	95.6032	174.9	98.26	351.12	0	2.079	1.84	
+CACTUAR-323	323	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	49.64	97.9	97.5744	178.2	98	353.1	5	2.002	5.2	
+CACTUAR-323	323	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			94.8376	146.7			0			2.5
+CACTUAR-323	323	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			94.5087	170.5			8.25			34.0087
+CACTUAR-325	325	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-325	325	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	59.785	99	95.1544	187	99	354.42	0	1.749	1.903	
+CACTUAR-325	325	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	49.39	91.3	95.4668	182.6	99	349.8	0	2.189	2.079	
+CACTUAR-325	325	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			97.9858	183.7			90			
+CACTUAR-325	325	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			86.87				0.36			
+CACTUAR-325	325	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.1148	179.3			0			1.65
+CACTUAR-325	325	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			95.8199	183.7			4.7663			1.35
+CACTUAR-326	326	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-326	326	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	54.23		97.4479	195.8		343.2		2.101		
+CACTUAR-326	326	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	39.65			194.7		342.43	96.25	1.903		
+CACTUAR-326	326	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			95.7781	178						
+CACTUAR-327	327	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	51.205			346.5		331.1	0	1.826		
+CACTUAR-327	327	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				346.5			8.25			5.5
+CACTUAR-328	328	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	43.74	93.5		349.8	99	343.255	10	1.793	2.002	
+CACTUAR-328	328	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	38.0545	99		346.5	99.2	344.3	0.7337	1.914	1.91	
+CACTUAR-328	328	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				267.3			91.6663			13.2
+CACTUAR-328	328	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			5			3.5
+CACTUAR-329	329	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001				341			0			
+CACTUAR-329	329	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				349.8			0			
+CACTUAR-329	329	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001							0			0
+CACTUAR-329	329	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				328.9			0			13
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	51.801	92	97.4413	194.7	97	348.106	0	2.19	1.683	
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.386	91.08	93.6672	177.1	99.74	344.674	0	1.859	1.848	
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.3011	95	95.535	198	99.8	349.8	0	1.958	1.991	
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	62.667	92.928	95.5658	183.7	88.272	346.335	23.8337		1.77	
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			97.834	244.2			3.5			
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			97.702	177.1			1			
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	51.414		97.031	194.3337			0			0.007
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.68	183.7			3			
+CACTUAR-331	331	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.548	244.2			0			9.297
+CACTUAR-332	332	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	48	83.6		349.8	96	345.4	0	1.793	1.903	
+CACTUAR-332	332	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	37.213			333.3			0			
+CACTUAR-332	332	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				267.3			22			7
+CACTUAR-332	332	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			2			5.5
+CACTUAR-333	333	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	54.978	97.9	98.8933	167.2	99	348.7	3.6663	2.013	1.892	
+CACTUAR-333	333	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.0563	178.2			0			38.75
+CACTUAR-334	334	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	56.5158	90	96.4502	178.2		354.86	0	2.09	1.947	
+CACTUAR-334	334	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	52.4711	81	97.735	192.5	88.2	354.431	36	2.07	1.892	
+CACTUAR-334	334	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	50.7111		97.3709	201.3			0			
+CACTUAR-334	334	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-334	334	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			91.1262	175			0			
+CACTUAR-334	334	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.1818	202.4			5.5			
+CACTUAR-337	337	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	53.614	94.5	92.9225	161	99	353.672	0	1.837	2.068	
+CACTUAR-337	337	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	53.856	161.92	98.1112	188.1	99.24	360.052	0	1.914	1.804	
+CACTUAR-337	337	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001			86.9363	161.7			0			
+CACTUAR-337	337	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			95.4437	185.9						
+CACTUAR-337	337	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							0			
+CACTUAR-337	337	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	46.761		93.676	188.1			0			
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee		2003							5			
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	52.723	88	96.03	182.6	99	349.701	0	1.815	1.441	
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	57.618	96.82	94.9432	180.4	99	355.96	0.0297	2.035	1.727	
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	42.35	98.1	95.0708	222	99	351.12	1.4663	1.991	1.936	
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			99.1463	183.7			11			
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			95.7				0			
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.3985	180.4			0.0297			
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.196	244.2			0			7
+CACTUAR-338	338	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			96.3941	183.7			11.667			5.5
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.0011	87		349.8	99.8	340.23	0	1.98	1.881	0.605
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	48.5111	98.1		345.4	99.86	337.7	86.1663	1.958	1.881	
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	55.3894	98		361.9	99.62	342.1	83.333	2.06	2.09	
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	59.1426	85.008		347.6	99.26	339.515	8.3997	2.123	1.89	
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	53.4479	99.36		358.6	98.96	346.786	9.625	2.167	1.947	
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	56.7611	99.36		336.6	98.1	345.213	1.667	1.969	1.804	
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	52.8011			358.6	98.6	347.644	6.667	2.112	1.958	
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	58.366			342.1			12.8337			
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	48.422			346.5		339.57	8.25	1.881		3.3
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				337.7			2.75			9
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995				352			90			7.59
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				361.9			66			7.7
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			99			8.0663
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				358.6			88.7337			6.6
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				341			81.667			3.7037
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	53.328			332.2			88			34.8337
+CACTUAR-340	340	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	54.43			342.1			55			0.0737
+CACTUAR-341	341	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	46.189	93.6		346.5	96	345.4	0	2.035	2.068	
+CACTUAR-341	341	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				323.4			1.8337			5
+CACTUAR-344	344	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	43.6815	95	98.9285	176	99	353.1	5	1.947	1.815	
+CACTUAR-344	344	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.0563	178.2			0			55.55
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	58.949	124.3		344.3		348.337	0	2.057	1.86	
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	51.843	99.36		356.4	99.44	338.591	0	2.145	2.497	
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	54.3411	99.36		345.4	99.7	345.477	9	2.002	2.02	
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.6128	96		358.6	97	338.8	9	2.079	1.903	
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995							0			3
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996				360.8			5.5			9.625
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997				353.1			5.5			9.1663
+CACTUAR-345	345	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998				350.9			5.5			7.4997
+CACTUAR-349	349	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	60.4373			193.6		349.25	0	1.76		
+CACTUAR-349	349	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.43	76.5	97.5557	183.7	99.7	339.79	7.3337	2.035	1.793	
+CACTUAR-349	349	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	49.522	95	98.6436	163.9	99.88	347.743	5.5	1.936	1.672	
+CACTUAR-349	349	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				211.2			30			
+CACTUAR-349	349	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994				189.2			4.0337			
+CACTUAR-349	349	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			97.2763	166.1			0			
+CACTUAR-350	350	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	54.1211	99	96.9265	184.8	90	351.12	68.75	2.156	1.694	
+CACTUAR-350	350	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.1211		97.5634	201.3		350.757	0	2.31		
+CACTUAR-350	350	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-350	350	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.2489	192.5			2.5			
+CACTUAR-351	351	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-351	351	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	53.856	85.05	98.2762	170.5	99.8	346.478	0	1.859	1.694	
+CACTUAR-351	351	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.6711		97.4556	184.8	99.74	345.037	6.0003	2.013	1.83	
+CACTUAR-351	351	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	49.9411	155.1	95.3953	194.7		346.5	0	1.914	1.859	
+CACTUAR-351	351	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	50.16		96.9518	170.5			0			
+CACTUAR-351	351	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			96.107	194.7			15.4			0.55
+CACTUAR-352	352	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-352	352	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	54.065	97.2	94.5362	159.5		345.004	0	1.826	1.727	
+CACTUAR-352	352	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	47.601	146.3	96.8429	177		343.42	0	1.969	1.69	
+CACTUAR-352	352	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	52.36		89.71	159.5			0			
+CACTUAR-353	353	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				318			0			
+CACTUAR-353	353	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	32.3			332.2			4.4			
+CACTUAR-353	353	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				326.7			40.3337			6.6
+CACTUAR-353	353	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			7.4997			1.3079
+CACTUAR-356	356	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	60.8641	88.2	95.7902	179		346.39	0	2.332	1.65	
+CACTUAR-356	356	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	52.001		96.14	178		347.16	90.75	2.409		
+CACTUAR-356	356	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	57.53		94.2337	187						
+CACTUAR-356	356	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	52.173		98.0573	172.7						
+CACTUAR-356	356	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-356	356	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.13	184.8			13.75			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee		2002							0			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee		2003							9			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.2311	99.9	96.3259	196.9		340.252	0.55	2.16	1.611	
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	50.138	246.928	97.79	195.8	98.362	340.45	35	2.266	2.211	
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	56.221	98	96.36	201.3	99	344.3	3.333	2.079	2.068	
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	57.9711		95.3887	175	98.28	345.994	0.7337	1.947	1.925	
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	59.4011		97.7999	198	96.54	349.767	0	2.046	1.81	
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	61.446	99	96.7318	187	93.61	343.53	2.75	1.87	2.497	
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	42.601	95.4	97.603	222	96.94	338.14	76.667	2.09	2.035	
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	51.986		98.2399	167.2			55			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996							0			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			97.185	192.5			9			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.0607	198			62.3337			7.3337
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.2281	192.5			11			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	45.4		98.1838	194.7			23.8337			0
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.3137	187			8.333			
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.35	244.2			0			4.5
+CACTUAR-357	357	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.4698	170.5			6.6			42.667
+CACTUAR-358	358	Sample Trials Data	1	CC-BY-SA	Dundee		2003							2.75			
+CACTUAR-358	358	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	69.388	99.022	94.8497	187	99	351.89	0.033	1.87	1.936	
+CACTUAR-358	358	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	49.39	97.2	95.3755	174.9	99	357.83	11.25	2.178	1.837	
+CACTUAR-358	358	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			98.3763	183.7			27.5			
+CACTUAR-358	358	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			77.9634				0.0603			
+CACTUAR-358	358	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.0367	172			0			8.25
+CACTUAR-358	358	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			97.8637	167			14.6663			2.2
+CACTUAR-361	361	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	54.4511	78	93.1282	202.4	90	353.199	9.2037	2.178	1.639	
+CACTUAR-361	361	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	58.3011	93	98.202	177.1	99.42	349.536	0	1.68	1.683	
+CACTUAR-361	361	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	59.4011		98.5039	198	99.94	353.98	1.8337	1.848	1.71	
+CACTUAR-361	361	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001			96.3237	161.7			0			
+CACTUAR-361	361	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							0			
+CACTUAR-361	361	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			98.6733	166.1			1.35			
+CACTUAR-361	361	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	46.673		94.6264	190.3			3.6663			0
+CACTUAR-362	362	Sample Trials Data	1	CC-BY-SA	Dundee		2002							2.75			
+CACTUAR-362	362	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	56.2111	93.5	97.4138	182.6	99	354.684	0	1.947	1.771	
+CACTUAR-362	362	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	56.738	95.7	97.0475	180.4	99	352	0.0363	2.013	1.947	
+CACTUAR-362	362	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			97.317	199.8			30			
+CACTUAR-362	362	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			96.25				0			
+CACTUAR-362	362	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.6031	187			0			
+CACTUAR-362	362	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			95.634	244.2			0			6.963
+CACTUAR-363	363	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995						314.6		1.59		
+CACTUAR-363	363	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	57.2528		96.6009	195.8		340.725	0	2.079		
+CACTUAR-363	363	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	45.5136		95.7187	181			9			
+CACTUAR-363	363	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	55.132	94.5	98.8284	170.5		342.133	0	2.024	1.76	
+CACTUAR-363	363	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			96.8825	178.2			0			
+CACTUAR-363	363	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.3347	181			86.1663			
+CACTUAR-364	364	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-364	364	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	50.776	141.9	88.791	170.5		344.41	0	1.936	1.61	
+CACTUAR-364	364	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	48.0645	136.4	94.0016	159.5		351.12	0	1.958	1.903	
+CACTUAR-364	364	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	46.97		89.641	155			0			
+CACTUAR-367	367	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	54.714	92		315.7	88.65	340.846	0	2.024	1.64	
+CACTUAR-367	367	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.9611			346.5		331.386	12.8337	2.15		
+CACTUAR-367	367	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999							14.6663			0.55
+CACTUAR-367	367	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	35.352			317.9			2.5			2.255
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	48.17	99.9	97.8791	173.8	99	341.627	0	2.277	1.628	
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	51.801	99.36	97.7691	202.4	98.46	345.422	0.0363	2.08	2.07	
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	61.512	97.152	96.2038	192.5	96.2	347.303	0	1.936	1.903	
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.949		95.37	190.3	96.096	353.386	0	1.74	1.71	
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	60.841	91.036	96.2709	183.7	88.614	346.5	7.3337		2.09	
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997							0			
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			96.2368	202.4			2.75			
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			95.1643	192.5			0.55			
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	48.829		96.1994	194.7			0			0.003
+CACTUAR-368	368	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			97.3082	183.7			2.333			
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee		2002							8.25			
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	47.18			334.4			33			
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	55.88	78.936		330	98.86	339.086	4.7663	1.68	1.881	
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	60.8311	93.84		337.7	97.72	342.144	7.3337	1.936	1.925	
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	63.272			348.7			51.0003			
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002				358.6			2			
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003				357.5			31.1663			
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998							97.5			4.4
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999				331.1			56.667			6.125
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000	55.814			350.9			9.1663			2.5663
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001	55.4			342.1			53.333			0
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002				350.9			0			8.8
+CACTUAR-369	369	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				346.5			5.5			0.5
+CACTUAR-370	370	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994										
+CACTUAR-370	370	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	56.463	99	94.8365	170.5	99.8	348.238	0	1.859	1.782	
+CACTUAR-370	370	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	63.2511		97.3137	194.7	99.94	348.007	13.333	2.024	1.79	
+CACTUAR-370	370	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	57.6543	196.9	87.589	177		348.26	0	2.046	1.914	
+CACTUAR-370	370	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	52.91		89.743	170.5			0			
+CACTUAR-370	370	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			95.436	194.7			5			0.5
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993	57.648			211.2		352.22	0	1.782		
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	56.93	84.7	95.7	195.8	99.7	350.9	4.5	1.98	1.903	
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	52.5811	94	98.1728	159.5	99.84	350.977	3.6663	1.848	1.716	
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996	54.8075	99.176	97.24	194.7	99.98	343.926	0	2.178	2.068	
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1997	61.2128	92.736	97.9	216.7	99.14	349.91	6.667	2.31	2.211	
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1998	52.4711	92	97.7933	201.3	99.44	351.604	5.5	2.13	2.057	
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1999	54.802		97.2213	192.5	99.98	348.282	0	1.969	1.947	
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993				211.2			3.333			
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994	49.885		96.6988	194.7		344.63	2.97	1.87		
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995	57.002		98.8251	170.5		347.798	0	1.848		
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1996			96.1972	190.3			0			2.75
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1997			96.2104	199.1			77			8.0663
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1998			97.68	202.4			9.1663			7.7
+CACTUAR-374	374	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1999			98.9582	192.5			10.667			
+CACTUAR-375	375	Sample Trials Data	1	CC-BY-SA	Dundee		2003							0			
+CACTUAR-375	375	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	62.7	93.5	95.1236	187	95.88	348.601	0	1.969	2.09	
+CACTUAR-375	375	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002	50.05	98	95.8485	182.6	99	352.66	0	2.145	1.947	
+CACTUAR-375	375	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003			98.89	183.7			52.25			
+CACTUAR-375	375	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			95.3766				0			
+CACTUAR-375	375	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			94.2876	189.2			0			6.5
+CACTUAR-375	375	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003			98.1937	176			3.6663			1
+CACTUAR-376	376	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.96	110		352	97.7	341.77	9	2.09	1.529	
+CACTUAR-376	376	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	66.495			341			2.5			
+CACTUAR-376	376	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000							2.75			0.55
+CACTUAR-376	376	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001				341			1.1			
+CACTUAR-378	378	Sample Trials Data	1	CC-BY-SA	Dundee		2002							2.75			
+CACTUAR-378	378	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2000	58.0811	99	97.6811	188.1	90	355.003	0	1.958	1.628	
+CACTUAR-378	378	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2001	60.61	94.38	96.756	180.4	99.836	351.12	11	2.123	1.947	
+CACTUAR-378	378	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2002			96.987	222			7.3337			
+CACTUAR-378	378	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2000			93.5				0			
+CACTUAR-378	378	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2001			96.1433	170			0			
+CACTUAR-378	378	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2002			97.636	222			0			7.7
+CACTUAR-379	379	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-379	379	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	55.418	172	96.4535	195.8	99.6	352.77		2.046	2.057	
+CACTUAR-379	379	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	53.9011	151.8	98.6711	168.3	99.58	342.177	3.333	1.936	1.914	
+CACTUAR-379	379	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1996			96.36							
+CACTUAR-379	379	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	38.093			194.7		347.93	57.75	1.892		
+CACTUAR-379	379	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			87.788	195.8						
+CACTUAR-379	379	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			99.0363	166.1			3.333			
+CACTUAR-381	381	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	2003	35.105	93		332.2	99	341	0	1.936	2.035	
+CACTUAR-381	381	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	2003				333.3			7.3337			1.1
+CACTUAR-382	382	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1993										
+CACTUAR-382	382	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1994	54.8724	181.5	97.8967	178	99.7	345.18		2.013	1.98	
+CACTUAR-382	382	Sample Trials Data	1	CC-BY-SA	Dundee	Untreated	1995	53.9011	93.6	98.7272	163.9	99.98	350.9	1.667	1.76	1.628	
+CACTUAR-382	382	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1993	39.842			193.6		352.11	7.5	1.87		
+CACTUAR-382	382	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1994			95.5669	195.8						
+CACTUAR-382	382	Sample Trials Data	1	CC-BY-SA	Dundee	Sprinkled with magic dust	1995			99.1463	166.1			15			

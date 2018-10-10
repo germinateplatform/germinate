@@ -30,7 +30,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class ClimateOverlayManager extends AbstractManager<ClimateOverlay>
 {
-	private static final String SELECT_ALL_FOR_CLIMATE = "SELECT * FROM climateoverlays WHERE climate_id = ?";
+	private static final String SELECT_ALL_FOR_CLIMATE = "SELECT * FROM `climateoverlays` WHERE `climate_id` = ?";
 
 	@Override
 	protected String getTable()

@@ -225,7 +225,7 @@ public class DatasetAccessLog extends DatabaseObject
 		@Override
 		public void write(Database database, DatasetAccessLog object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO datasetaccesslogs (" + USER_ID + ", " + USER_NAME + ", " + USER_EMAIL + ", " + USER_INSTITUTION + ", " + DATASET_ID + ", " + REASON + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasetaccesslogs` (" + USER_ID + ", " + USER_NAME + ", " + USER_EMAIL + ", " + USER_INSTITUTION + ", " + DATASET_ID + ", " + REASON + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
 			query.setLong(object.getUser().id)
 				 .setString(object.getUser().userFullName)

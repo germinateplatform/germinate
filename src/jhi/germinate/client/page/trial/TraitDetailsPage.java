@@ -63,6 +63,7 @@ public class TraitDetailsPage extends Composite
 	@UiField
 	LinkWidget    linkWidget;
 	private Phenotype phenotype;
+
 	public TraitDetailsPage()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
@@ -119,10 +120,6 @@ public class TraitDetailsPage extends Composite
 	{
 		final PhenotypeDataTable table = new PhenotypeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
-			{
-				preventInitialDataLoad = true;
-			}
-
 			@Override
 			public boolean supportsFullIdMarking()
 			{
@@ -144,17 +141,18 @@ public class TraitDetailsPage extends Composite
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback)
 			{
+				if (filter == null)
+					filter = new PartialSearchQuery();
+
+				if (filter.getColumnNames().size() > 0)
+					filter.addLogicalOperator(new And());
+
+				filter.add(new SearchCondition(Phenotype.NAME, new Equal(), phenotype.getName(), String.class));
+
 				return PhenotypeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
 			}
 		};
 		phenotypeDataTablePanel.add(table);
-
-		Scheduler.get().scheduleDeferred(() ->
-		{
-			PartialSearchQuery query = new PartialSearchQuery();
-			query.add(new SearchCondition(Phenotype.NAME, new Equal(), phenotype.getName(), String.class));
-			table.forceFilter(query, true);
-		});
 	}
 
 	interface CompoundDetailsPageUiBinder extends UiBinder<HTMLPanel, TraitDetailsPage>

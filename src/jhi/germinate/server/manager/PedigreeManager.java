@@ -32,11 +32,11 @@ import jhi.germinate.shared.search.*;
  */
 public class PedigreeManager extends AbstractManager<Pedigree>
 {
-	private static final String COMMON_TABLES = " pedigrees LEFT JOIN pedigreedescriptions ON pedigreedescriptions.id = pedigrees.pedigreedescription_id LEFT JOIN germinatebase Child ON Child.id = pedigrees.germinatebase_id LEFT JOIN germinatebase Parent ON Parent.id = pedigrees.parent_id ";
+	private static final String COMMON_TABLES = " `pedigrees` LEFT JOIN `pedigreedescriptions` ON `pedigreedescriptions`.`id` = `pedigrees`.`pedigreedescription_id` LEFT JOIN `germinatebase` Child ON Child.id = `pedigrees`.`germinatebase_id` LEFT JOIN `germinatebase` Parent ON Parent.id = pedigrees.parent_id ";
 
-	private static final String SELECT_ALL_FOR_ACCESSION     = "SELECT * FROM " + COMMON_TABLES + " WHERE pedigrees.germinatebase_id = ? %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_ACCESSION     = "SELECT * FROM " + COMMON_TABLES + " WHERE `pedigrees`.`germinatebase_id` = ? %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_FILTER        = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_FILTER_EXPORT = "SELECT pedigrees.id AS pedigrees_id, Child.general_identifier AS germinatebase_gid_child, Child.name AS germinatebase_name_child, Parent.general_identifier AS germinatebase_gid_parent, Parent.name AS germinatebase_name_parent, pedigrees.relationship_type AS pedigrees_relationship_type, pedigrees.relationship_description AS pedigrees_relationship_description, pedigreedescriptions.name AS pedigreedescriptions_name, pedigreedescriptions.author AS pedigreedescriptions_author FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER_EXPORT = "SELECT `pedigrees`.`id` AS pedigrees_id, Child.`general_identifier` AS germinatebase_gid_child, Child.`name` AS germinatebase_name_child, Parent.`general_identifier` AS germinatebase_gid_parent, Parent.`name` AS germinatebase_name_parent, `pedigrees`.`relationship_type` AS pedigrees_relationship_type, `pedigrees`.`relationship_description` AS pedigrees_relationship_description, `pedigreedescriptions`.`name` AS pedigreedescriptions_name, `pedigreedescriptions`.`author` AS pedigreedescriptions_author FROM " + COMMON_TABLES + " {{FILTER}} %s LIMIT ?, ?";
 
 	private static final String[] COLUMNS_PEDIGREE_DATA_EXPORT = {"pedigrees_id", "germinatebase_gid_child", "germinatebase_name_child", "germinatebase_gid_parent", "germinatebase_name_parent", "pedigrees_relationship_type", "pedigrees_relationship_description", "pedigreedescriptions_name", "pedigreedescriptions_author"};
 

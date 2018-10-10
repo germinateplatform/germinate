@@ -31,7 +31,7 @@ function scatterMatrix() {
 		tooltip = function (d) {
 			return null;
 		},
-		xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(4),
+		xAxis = d3.svg.axis().scale(xScale).orient("top").ticks(4),
 		yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(4),
 		axisStyle = "",
 		dotStyle = "",
@@ -94,8 +94,8 @@ function scatterMatrix() {
 			xScale.range([padding / 2, size - padding / 2]);
 			yScale.range([size - padding / 2, padding / 2]);
 
-			xAxis.tickSize(size * n);
-			yAxis.tickSize(-size * n);
+			// xAxis.tickSize(size * n);
+			// yAxis.tickSize(-size * n);
 
 			var brush = d3.svg.brush()
 				.x(xScale)
@@ -135,11 +135,14 @@ function scatterMatrix() {
 				.append("g")
 				.attr("class", "x axis " + axisStyle)
 				.attr("transform", function (d, i) {
-					return "translate(" + (n - i - 1) * size + ",0)";
+					return "translate(" + ((n - i - 1) * size) + "," + (i * size) + ")";
 				})
-				.each(function (d) {
-					xScale.domain(domainByTrait[d]);
-					d3.select(this).call(xAxis);
+				.each(function (d, i) {
+					if (i > 0) {
+						xScale.domain(domainByTrait[d]);
+						xAxis.tickSize(i * size);
+						d3.select(this).call(xAxis);
+					}
 				});
 
 			g.selectAll(".y.axis")
@@ -147,11 +150,14 @@ function scatterMatrix() {
 				.enter().append("g")
 				.attr("class", "y axis " + axisStyle)
 				.attr("transform", function (d, i) {
-					return "translate(0," + i * size + ")";
+					return "translate(0," + (i * size) + ")";
 				})
-				.each(function (d) {
-					yScale.domain(domainByTrait[d]);
-					d3.select(this).call(yAxis);
+				.each(function (d, i) {
+					if (i < n - 1) {
+						yScale.domain(domainByTrait[d]);
+						yAxis.tickSize(-(n - i - 1) * size);
+						d3.select(this).call(yAxis);
+					}
 				});
 
 			var cell = g.selectAll(".cell")
@@ -182,68 +188,70 @@ function scatterMatrix() {
 			}
 
 			function plot(p) {
-				var cell = d3.select(this);
+				if (p.i > p.j) {
+					var cell = d3.select(this);
 
-				xScale.domain(domainByTrait[p.x]);
-				yScale.domain(domainByTrait[p.y]);
+					xScale.domain(domainByTrait[p.x]);
+					yScale.domain(domainByTrait[p.y]);
 
-				cell.append("rect")
-					.attr("class", "frame " + frameStyle)
-					.attr("x", padding / 2)
-					.attr("y", padding / 2)
-					.attr("width", size - padding)
-					.attr("height", size - padding)
-					.style("pointer-events", "none");
+					cell.append("rect")
+						.attr("class", "frame " + frameStyle)
+						.attr("x", padding / 2)
+						.attr("y", padding / 2)
+						.attr("width", size - padding)
+						.attr("height", size - padding)
+						.style("pointer-events", "none");
 
-				dots = cell.selectAll("circle")
-					.data(data)
-					.enter().append("circle")
-					// Don't show items where either of the dimensions is NaN
-					.filter(function (d) {
-						return !isNaN(d[p.x]) && !isNaN(d[p.y]);
-					})
-					.attr("class", function (d) {
-						if (d.colorKey)
-							return "dot item " + dotStyle + " item-" + d3.makeSafeForCSS(d.colorKey);
-						else
-							return "dot item " + dotStyle + " item-n__a";
-					})
-					.attr("cx", function (d) {
-						return xScale(d[p.x]);
-					})
-					.attr("cy", function (d) {
-						return yScale(d[p.y]);
-					})
-					.attr("r", radius)
-					.attr("id", function (d) {
-						return "item-" + d[idColumn];
-					})
-					.style("fill", function (d) {
-						return d.color;
-					})
-					.on("click", onClick);
-
-				if(d3.tip) {
-					dots
-						.on("mouseenter", function (d) {
-							d3.select(this)
-								.transition()
-								.duration(100)
-								.attr("r", radius + 2);
-
-							// Set the current x and y value so the tooltip can use them
-							d.xValue = d[p.x];
-							d.yValue = d[p.y];
-
-							tip.show(d);
+					dots = cell.selectAll("circle")
+						.data(data)
+						.enter().append("circle")
+						// Don't show items where either of the dimensions is NaN
+						.filter(function (d) {
+							return !isNaN(d[p.x]) && !isNaN(d[p.y]);
 						})
-						.on("mouseleave", function (d) {
-							d3.select(this)
-								.transition()
-								.duration(200)
-								.attr("r", radius);
-							tip.hide();
-						});
+						.attr("class", function (d) {
+							if (d.colorKey)
+								return "dot item " + dotStyle + " item-" + d3.makeSafeForCSS(d.colorKey);
+							else
+								return "dot item " + dotStyle + " item-n__a";
+						})
+						.attr("cx", function (d) {
+							return xScale(d[p.x]);
+						})
+						.attr("cy", function (d) {
+							return yScale(d[p.y]);
+						})
+						.attr("r", radius)
+						.attr("id", function (d) {
+							return "item-" + d[idColumn];
+						})
+						.style("fill", function (d) {
+							return d.color;
+						})
+						.on("click", onClick);
+
+					if(d3.tip) {
+						dots
+							.on("mouseenter", function (d) {
+								d3.select(this)
+									.transition()
+									.duration(100)
+									.attr("r", radius + 2);
+
+								// Set the current x and y value so the tooltip can use them
+								d.xValue = d[p.x];
+								d.yValue = d[p.y];
+
+								tip.show(d);
+							})
+							.on("mouseleave", function (d) {
+								d3.select(this)
+									.transition()
+									.duration(200)
+									.attr("r", radius);
+								tip.hide();
+							});
+					}
 				}
 			}
 
@@ -274,7 +282,7 @@ function scatterMatrix() {
 
 				// And then select all items with the same id as a selected item and select them as well
 				selected.each(function (d) {
-					var temp = svg.selectAll("#item-" + d[idColumn])
+					svg.selectAll("#item-" + d[idColumn])
 						.classed(hiddenStyle, false)
 						.classed("selected", true);
 				});
@@ -294,12 +302,16 @@ function scatterMatrix() {
 					m = b.length,
 					i, j;
 				for (i = -1; ++i < n;)
-					for (j = -1; ++j < m;) c.push({
-						x: a[i],
-						i: i,
-						y: b[j],
-						j: j
-					});
+					for (j = -1; ++j < m;) {
+						if(i >= j) {
+							c.push({
+								x: a[i],
+								i: i,
+								y: b[j],
+								j: j
+							});
+						}
+					}
 				return c;
 			}
 		});

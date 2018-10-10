@@ -31,7 +31,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class NewsManager extends AbstractManager<News>
 {
-	private static final String SELECT_FOR_TYPE = "SELECT news.* FROM news LEFT JOIN newstypes ON news.newstype_id = newstypes.id WHERE newstypes.name IN (%s) %s LIMIT ?, ?";
+	private static final String SELECT_FOR_TYPE = "SELECT `news`.* FROM `news` LEFT JOIN `newstypes` ON `news`.`newstype_id` = `newstypes`.`id` WHERE `newstypes`.`name` IN (%s) %s LIMIT ?, ?";
 
 	@Override
 	protected String getTable()

@@ -236,7 +236,7 @@ public class Pedigree extends DatabaseObject
 		@Override
 		public void write(Database database, Pedigree object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO pedigrees (" + GERMINATEBASE_ID + ", " + PARENT_ID + ", " + RELATIONSHIP_TYPE + ", " + PEDIGREEDESCRIPTION_ID + ", " + RELATIONSHIP_DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `pedigrees` (" + GERMINATEBASE_ID + ", " + PARENT_ID + ", " + RELATIONSHIP_TYPE + ", " + PEDIGREEDESCRIPTION_ID + ", " + RELATIONSHIP_DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getAccession().getId())
 					.setLong(object.getParent().getId())
 					.setString(object.getRelationshipType())

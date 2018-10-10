@@ -192,7 +192,7 @@ public class PedigreeNotation extends DatabaseObject
 		@Override
 		public void write(Database database, PedigreeNotation object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO pedigreenotations (" + NAME + ", " + DESCRIPTION + ", " + REFERENCE_URL + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `pedigreenotations` (" + NAME + ", " + DESCRIPTION + ", " + REFERENCE_URL + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setString(object.getName())
 					.setString(object.getDescription())
 					.setString(object.getReferenceUrl());

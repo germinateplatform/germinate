@@ -55,7 +55,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 	private static final long serialVersionUID = -2599538621272643710L;
 
 	private static final String QUERY_COLUMNS       = "SELECT * FROM %s LIMIT 1";
-	private static final String QUERY_COUNTRY_STATS = "SELECT countries.*, count(1) AS `count` FROM germinatebase LEFT JOIN locations ON germinatebase.location_id = locations.id LEFT JOIN countries ON countries.id = locations.country_id GROUP BY countries.id ORDER BY count(1) DESC";
+	private static final String QUERY_COUNTRY_STATS = "SELECT `countries`.*, count(1) AS count FROM `germinatebase` LEFT JOIN `locations` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` GROUP BY `countries`.`id` ORDER BY count(1) DESC";
 
 	@Override
 	public ServerResult<List<Synonym>> getSynonyms(RequestProperties properties, GerminateDatabaseTable table, Long id) throws InvalidSessionException, DatabaseException

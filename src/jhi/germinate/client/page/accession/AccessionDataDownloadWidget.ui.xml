@@ -35,14 +35,20 @@
 		<b:Heading addStyleNames="{style.clear}" size="H1" text="{msg.downloadHeading}"/>
 		<g:HTML ui:field="text"/>
 
-		<b:FormGroup>
-			<b:FormLabel for="formColumn" text="{msg.accessionsDownloadIdColumn}"/>
-			<b:ListBox b:id="formColumn" multipleSelect="false" ui:field="columnBox"/>
-		</b:FormGroup>
-		<b:FormGroup>
-			<b:FormLabel for="formGroup" text="{msg.accessionsDownloadGroups}"/>
-			<g8:GroupListBox type="ACCESSION" b:id="formGroup" multipleSelect="false" ui:field="groupBox"/>
-		</b:FormGroup>
+		<b:Row>
+			<b:Column size="XS12,MD_6">
+				<b:FormGroup>
+					<b:FormLabel for="formColumn" text="{msg.accessionsDownloadIdColumn}"/>
+					<b:ListBox multipleSelect="false" b:id="formColumn" ui:field="columnBox"/>
+				</b:FormGroup>
+			</b:Column>
+			<b:Column size="XS12,MD_6">
+				<b:FormGroup>
+					<b:FormLabel for="formGroup" text="{msg.accessionsDownloadGroups}"/>
+					<g8:GroupListBox multipleSelect="false" type="ACCESSION" b:id="formGroup" ui:field="groupBox"/>
+				</b:FormGroup>
+			</b:Column>
+		</b:Row>
 		<b:FormGroup>
 			<b:FormLabel for="formAttributes" text="{msg.accessionsDownloadIncludeAttributes}"/>
 			<t:ToggleSwitch b:id="formAttributes" ui:field="includeAttributes"/>

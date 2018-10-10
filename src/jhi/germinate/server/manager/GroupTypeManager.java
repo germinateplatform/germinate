@@ -31,8 +31,8 @@ import jhi.germinate.shared.exception.*;
  */
 public class GroupTypeManager extends AbstractManager<GroupType>
 {
-	private static final String SELECT_FOR_TYPE = "SELECT id FROM grouptypes WHERE target_table = ?";
-	private static final String SELECT_ALL      = "SELECT * FROM grouptypes ORDER BY description ASC";
+	private static final String SELECT_FOR_TYPE = "SELECT `id` FROM `grouptypes` WHERE `target_table` = ?";
+	private static final String SELECT_ALL      = "SELECT * FROM `grouptypes` ORDER BY `description` ASC";
 
 	@Override
 	protected String getTable()

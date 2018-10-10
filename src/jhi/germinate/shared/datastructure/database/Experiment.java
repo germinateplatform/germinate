@@ -221,7 +221,7 @@ public class Experiment extends DatabaseObject
 		@Override
 		public void write(Database database, Experiment object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO experiments (" + EXPERIMENT_NAME + ", " + USER_ID + ", " + DESCRIPTION + ", " + EXPERIMENT_DATE + ", " + EXPERIMENT_TYPE_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `experiments` (" + EXPERIMENT_NAME + ", " + USER_ID + ", " + DESCRIPTION + ", " + EXPERIMENT_DATE + ", " + EXPERIMENT_TYPE_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getName())
 					.setLong(object.getUserId())
 					.setString(object.getDescription())

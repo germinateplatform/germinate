@@ -275,7 +275,7 @@ public class Institution extends DatabaseObject
 		@Override
 		public void write(Database database, Institution object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO institutions (" + CODE + ", " + NAME + ", " + ACRONYM + ", " + COUNTRY_ID + ", " + CONTACT + ", " + PHONE + ", " + ADDRESS + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `institutions` (" + CODE + ", " + NAME + ", " + ACRONYM + ", " + COUNTRY_ID + ", " + CONTACT + ", " + PHONE + ", " + ADDRESS + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getCode())
 					.setString(object.getName())
 					.setString(object.getAcronym())

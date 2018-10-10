@@ -126,10 +126,6 @@ public class CompoundDetailsPage extends Composite
 	{
 		final CompoundDataTable table = new CompoundDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
-			{
-				preventInitialDataLoad = true;
-			}
-
 			@Override
 			public boolean supportsFullIdMarking()
 			{
@@ -151,16 +147,17 @@ public class CompoundDetailsPage extends Composite
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<CompoundData>>> callback)
 			{
+				if (filter == null)
+					filter = new PartialSearchQuery();
+
+				if (filter.getColumnNames().size() > 0)
+					filter.addLogicalOperator(new And());
+
+				filter.add(new SearchCondition(Compound.NAME, new Equal(), compound.getName(), String.class));
+
 				return CompoundService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
 			}
 		};
 		compoundDataTablePanel.add(table);
-
-		Scheduler.get().scheduleDeferred(() ->
-		{
-			PartialSearchQuery query = new PartialSearchQuery();
-			query.add(new SearchCondition(Compound.NAME, new Equal(), compound.getName(), String.class));
-			table.forceFilter(query, true);
-		});
 	}
 }

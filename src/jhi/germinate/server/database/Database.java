@@ -97,7 +97,7 @@ public final class Database
 		try
 		{
 			Class.forName(type.classForName).newInstance();
-			String url = type.connectionString + dbPath + (type.optionalParameters != null ? type.optionalParameters : "");
+			String url = type.getUrl(dbPath);
 			database.connection = DriverManager.getConnection(url, username, password);
 		}
 		catch (IllegalAccessException | InstantiationException | ClassNotFoundException e)
@@ -214,7 +214,7 @@ public final class Database
 	 */
 	public enum DatabaseType
 	{
-		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false");
+		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true");
 		//		MYSQL_BATCH_ENABLED("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
 
 		private final String classForName;
@@ -228,19 +228,9 @@ public final class Database
 			this.optionalParameters = optionalParameters;
 		}
 
-		public String getClassForName()
+		public String getUrl(String dbPath)
 		{
-			return classForName;
-		}
-
-		public String getConnectionString()
-		{
-			return connectionString;
-		}
-
-		public String getOptionalParameters()
-		{
-			return optionalParameters;
+			return connectionString + dbPath + (optionalParameters != null ? optionalParameters : "");
 		}
 	}
 

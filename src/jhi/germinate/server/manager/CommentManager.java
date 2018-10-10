@@ -37,13 +37,11 @@ import jhi.germinate.shared.search.*;
  */
 public class CommentManager extends AbstractManager<Comment>
 {
-	private static final String SELECT_ALL_PAGINATED = "SELECT comments.* FROM comments LEFT JOIN commenttypes ON comments.commenttype_id = commenttypes.id WHERE commenttypes.reference_table = ? AND reference_id = ? AND visibility = 1 ORDER BY comments.created_on DESC LIMIT ?, ?";
+	private static final String UPDATE_VISIBILITY = "UPDATE `comments` SET `visibility` = ? WHERE `id` = ?";
 
-	private static final String UPDATE_VISIBILITY = "UPDATE comments SET visibility = ? WHERE id = ?";
+	private static final String INSERT = "INSERT INTO `comments` (`commenttype_id`, `user_id`, `visibility`, `description`, `reference_id`, `created_on`) VALUES (?, ?, 1, ?, ?, NOW())";
 
-	private static final String INSERT = "INSERT INTO comments (commenttype_id, user_id, visibility, description, reference_id, created_on) VALUES (?, ?, 1, ?, ?, NOW())";
-
-	private static final String SELECT_ALL_FOR_FILTER = "SELECT * FROM comments LEFT JOIN commenttypes ON comments.commenttype_id = commenttypes.id {{FILTER}} AND visibility = 1 %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER = "SELECT * FROM `comments` LEFT JOIN `commenttypes` ON `comments`.`commenttype_id` = `commenttypes`.`id` {{FILTER}} AND `visibility` = 1 %s LIMIT ?, ?";
 
 	@Override
 	protected String getTable()

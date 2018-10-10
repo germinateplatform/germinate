@@ -193,7 +193,7 @@ public class Unit extends DatabaseObject
 		@Override
 		public void write(Database database, Unit object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO units (" + NAME + ", " + ABBREVIATION + ", " + DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `units` (" + NAME + ", " + ABBREVIATION + ", " + DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setString(object.getName())
 					.setString(object.getAbbreviation())
 					.setString(object.getDescription());

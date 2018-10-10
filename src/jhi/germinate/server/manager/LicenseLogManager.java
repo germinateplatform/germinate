@@ -30,8 +30,8 @@ import jhi.germinate.shared.exception.*;
  */
 public class LicenseLogManager extends AbstractManager<LicenseLog>
 {
-	private static final String SELECT_FOR_USER_AND_LICENSE = "SELECT * FROM licenselogs WHERE license_id = ? AND user_id = ?";
-	private static final String INSERT                      = "INSERT INTO licenselogs (user_id, license_id, accepted_on) VALUES (?, ?, ?)";
+	private static final String SELECT_FOR_USER_AND_LICENSE = "SELECT * FROM `licenselogs` WHERE `license_id` = ? AND `user_id` = ?";
+	private static final String INSERT                      = "INSERT INTO `licenselogs` (`user_id`, `license_id`, `accepted_on`) VALUES (?, ?, ?)";
 
 	@Override
 	protected String getTable()

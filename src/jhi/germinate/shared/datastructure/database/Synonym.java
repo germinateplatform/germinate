@@ -184,7 +184,7 @@ public class Synonym extends DatabaseObject
 		@Override
 		public void write(Database database, Synonym object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO synonyms (" + FOREIGN_ID + ", " + SYNONYMTYPE_ID + ", " + SYNONYM + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `synonyms` (" + FOREIGN_ID + ", " + SYNONYMTYPE_ID + ", " + SYNONYM + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setLong(object.getForeignId())
 					.setLong(object.getType().getId())
 					.setString(object.getSynonym());

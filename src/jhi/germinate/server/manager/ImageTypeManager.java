@@ -30,7 +30,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class ImageTypeManager extends AbstractManager<ImageType>
 {
-	private static final String SELECT_ALL_WITH_IMAGES = "SELECT * FROM imagetypes WHERE EXISTS (SELECT 1 FROM images WHERE images.imagetype_id = imagetypes.id LIMIT 1)";
+	private static final String SELECT_ALL_WITH_IMAGES = "SELECT * FROM `imagetypes` WHERE EXISTS (SELECT 1 FROM `images` WHERE `images`.`imagetype_id` = `imagetypes`.`id` LIMIT 1)";
 
 	@Override
 	protected String getTable()

@@ -47,7 +47,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 {
 	private static final long serialVersionUID = -534823136023353625L;
 
-	private static final String SELECT_TREEMAP_DATA = "SELECT countries.*, locations.*, locationtypes.*, COUNT(germinatebase.id) AS count FROM countries LEFT JOIN locations ON locations.country_id = countries.id LEFT JOIN germinatebase ON germinatebase.location_id = locations.id LEFT JOIN locationtypes ON locationtypes.id = locations.locationtype_id WHERE NOT ISNULL(site_name) AND locationtypes.name = ? GROUP BY countries.id, locations.id HAVING COUNT(germinatebase.id) > 0 ";
+	private static final String SELECT_TREEMAP_DATA = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT(`germinatebase`.`id`) AS count FROM `countries` LEFT JOIN `locations` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `germinatebase` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL(`site_name`) AND `locationtypes`.`name` = ? GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT(`germinatebase`.`id`) > 0 ";
 
 	@Override
 	public PaginatedServerResult<List<Location>> getByDistance(RequestProperties properties, double latitude, double longitude, Pagination pagination)

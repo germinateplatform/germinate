@@ -206,7 +206,7 @@ public class Marker extends DatabaseObject
 		@Override
 		public void write(Database database, Marker object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO markers (" + MARKER_NAME + ", " + MARKERTYPE_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `markers` (" + MARKER_NAME + ", " + MARKERTYPE_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?)")
 					.setString(object.getName())
 					.setLong(object.getType().getId());
 

@@ -507,7 +507,7 @@ public class Dataset extends DatabaseObject
 		@Override
 		public void write(Database database, Dataset object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO datasets (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasets` (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getExperiment().getId())
 					.setLong(object.getLocation() == null ? null : object.getLocation().getId())
 					.setString(object.getDescription())

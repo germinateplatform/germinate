@@ -292,7 +292,7 @@ public class MapDefinition extends DatabaseObject
 		@Override
 		public void write(Database database, MapDefinition object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO mapdefinitions (" + MAPFEATURETYPE_ID + ", " + MARKER_ID + ", " + MAP_ID + ", " + DEFINITION_START + ", " + DEFINITION_END + ", " + CHROMOSOME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `mapdefinitions` (" + MAPFEATURETYPE_ID + ", " + MARKER_ID + ", " + MAP_ID + ", " + DEFINITION_START + ", " + DEFINITION_END + ", " + CHROMOSOME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getType().getId())
 					.setLong(object.getMarker().getId())
 					.setLong(object.getMap().getId())

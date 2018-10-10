@@ -39,7 +39,7 @@ public abstract class AbstractManager<T extends DatabaseObject>
 {
 	public static final String COUNT = "count";
 
-	private static final String SELECT_TRUSTED_CELL   = "SELECT %s FROM %s WHERE id = ?";
+	private static final String SELECT_TRUSTED_CELL   = "SELECT `%s` FROM `%s` WHERE `id` = ?";
 	private static final String UPDATE_AUTO_INCREMENT = "call " + StoredProcedureInitializer.UPDATE_AUTO_INCREMENT + "(?)";
 
 	/**
@@ -101,7 +101,7 @@ public abstract class AbstractManager<T extends DatabaseObject>
 		if (id == null)
 			return new ServerResult<>(null, null);
 
-		return new DatabaseObjectQuery<T>("SELECT * FROM " + getTable() + " WHERE id = ?", user)
+		return new DatabaseObjectQuery<T>("SELECT * FROM `" + getTable() + "` WHERE `id` = ?", user)
 				.setLong(id)
 				.run()
 				.getObject(getParser());

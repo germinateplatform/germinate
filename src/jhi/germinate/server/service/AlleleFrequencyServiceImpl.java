@@ -46,30 +46,6 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 {
 	private static final long serialVersionUID = 8117627823769568395L;
 
-	private static final String QUERY_EXPORT_MAP = "SELECT markers.marker_name, mapdefinitions.chromosome, mapdefinitions.definition_start FROM mapdefinitions, mapfeaturetypes, markers WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND map_id = ? AND marker_name IN (%s) ORDER BY chromosome, definition_start";
-
-	/**
-	 * Retrieves the map used for genotype export
-	 *
-	 * @param sqlDebug The {@link DebugInfo} to use
-	 * @param mapToUse The map id to use
-	 * @param markers  The markers to use (we only want to include these markers)
-	 * @return The map information (marker_name, chromosome, definition_start)
-	 * @throws DatabaseException Thrown if the database interaction fails
-	 */
-	private GerminateTable getMap(UserAuth userAuth, DebugInfo sqlDebug, Long mapToUse, Set<String> markers) throws DatabaseException
-	{
-		String formatted = String.format(QUERY_EXPORT_MAP, StringUtils.generateSqlPlaceholderString(markers.size()));
-		ServerResult<GerminateTable> temp = new GerminateTableQuery(formatted, userAuth, new String[]{Marker.MARKER_NAME, MapDefinition.CHROMOSOME, MapDefinition.DEFINITION_START})
-				.setLong(mapToUse)
-				.setStrings(markers)
-				.run();
-
-		sqlDebug.addAll(temp.getDebugInfo());
-
-		return temp.getServerResult();
-	}
-
 	@Override
 	public Pair<String, HistogramImageData> getHistogramImageData(RequestProperties properties, HistogramParams params) throws InvalidSessionException,
 			jhi.germinate.shared.exception.IOException, FlapjackException

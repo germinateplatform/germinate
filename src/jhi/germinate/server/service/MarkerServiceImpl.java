@@ -44,7 +44,7 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 {
 	private static final long serialVersionUID = 3127051583642953437L;
 
-	private static final String QUERY_MARKER_DATA_WITH_NAMES = "SELECT mapdefinitions.chromosome, mapdefinitions.definition_start, mapfeaturetypes.description, markers.id, markers.marker_name FROM mapdefinitions, mapfeaturetypes, markers, maps WHERE mapdefinitions.mapfeaturetype_id = mapfeaturetypes.id AND mapdefinitions.marker_id = markers.id AND maps.id = mapdefinitions.map_id AND (maps.user_id = ? OR maps.visibility = 1) AND markers.marker_name IN (%s)";
+	private static final String QUERY_MARKER_DATA_WITH_NAMES = "SELECT `mapdefinitions`.`chromosome`, `mapdefinitions`.`definition_start`, `mapfeaturetypes`.`description`, `markers`.`id`, `markers`.`marker_name` FROM `mapdefinitions`, `mapfeaturetypes`, `markers`, `maps` WHERE `mapdefinitions`.`mapfeaturetype_id` = `mapfeaturetypes`.`id` AND `mapdefinitions`.`marker_id` = `markers`.`id` AND `maps`.`id` = `mapdefinitions`.`map_id` AND (`maps`.`user_id` = ? OR `maps`.`visibility` = 1) AND `markers`.`marker_name` IN (%s)";
 
 	@Override
 	public ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException

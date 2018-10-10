@@ -31,7 +31,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class CommentTypeManager extends AbstractManager<CommentType>
 {
-	private static final String SELECT_ALL = "SELECT * FROM commenttypes WHERE reference_table = ? ORDER BY description";
+	private static final String SELECT_ALL = "SELECT * FROM `commenttypes` WHERE `reference_table` = ? ORDER BY `description`";
 
 	@Override
 	protected String getTable()

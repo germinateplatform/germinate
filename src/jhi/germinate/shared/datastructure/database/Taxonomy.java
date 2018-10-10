@@ -249,7 +249,7 @@ public class Taxonomy extends DatabaseObject
 		@Override
 		public void write(Database database, Taxonomy object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO taxonomies (" + GENUS + ", " + SPECIES + ", " + SUBTAXA + ", " + TAXONOMY_AUTHOR + ", " + SUBTAXA_AUTHOR + ", " + CROPNAME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `taxonomies` (" + GENUS + ", " + SPECIES + ", " + SUBTAXA + ", " + TAXONOMY_AUTHOR + ", " + SUBTAXA_AUTHOR + ", " + CROPNAME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getGenus())
 					.setString(object.getSpecies())
 					.setString(object.getSubtaxa())

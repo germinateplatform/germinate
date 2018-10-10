@@ -39,12 +39,14 @@ public class GatekeeperUserManager extends AbstractManager<GatekeeperUser>
 {
 	private static final String[] COLUMNS_TABLE = {GatekeeperUser.USERNAME, GatekeeperUser.FULL_NAME, GatekeeperUser.EMAIL, "institutions.name", "database_systems.system_name", "database_systems.server_name"};
 
-	private static final String SELECT_BY_ID                    = "SELECT * FROM users LEFT JOIN user_has_access_to_databases ON users.id = user_has_access_to_databases.user_id LEFT JOIN user_types ON user_types.id = user_has_access_to_databases.user_type_id LEFT JOIN database_systems ON database_systems.id = user_has_access_to_databases.database_id WHERE users.id = ? AND database_systems.system_name = ? AND database_systems.server_name = ?";
-	private static final String SELECT_BY_NAME_AND_SYSTEM       = "SELECT * FROM users LEFT JOIN user_has_access_to_databases ON users.id = user_has_access_to_databases.user_id LEFT JOIN user_types ON user_types.id = user_has_access_to_databases.user_type_id LEFT JOIN database_systems ON database_systems.id = user_has_access_to_databases.database_id WHERE users.username = ? AND database_systems.system_name = ? AND database_systems.server_name = ?";
-	private static final String SELECT_BY_NAME_GLOBAL           = "SELECT * FROM users LEFT JOIN user_has_access_to_databases ON users.id = user_has_access_to_databases.user_id LEFT JOIN user_types ON user_types.id = user_has_access_to_databases.user_type_id LEFT JOIN database_systems ON database_systems.id = user_has_access_to_databases.database_id WHERE users.username = ?";
-	private static final String SELECT_ALL_FOR_FILTER           = "SELECT * FROM users LEFT JOIN user_has_access_to_databases ON users.id = user_has_access_to_databases.user_id LEFT JOIN user_types ON user_types.id = user_has_access_to_databases.user_type_id LEFT JOIN database_systems ON database_systems.id = user_has_access_to_databases.database_id LEFT JOIN institutions ON institutions.id = users.institution_id {{FILTER}} %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_FILTER_AND_GROUP = "SELECT * FROM users LEFT JOIN institutions ON institutions.id = users.institution_id {{FILTER}} AND users.id IN (%s) %s LIMIT ?, ?";
-	private static final String SELECT_IDS_FOR_DATASET          = "SELECT datasetpermissions.user_id FROM datasetpermissions WHERE dataset_id = ?";
+	private static final String COMMON_TABLES  = " `users` LEFT JOIN `user_has_access_to_databases` ON `users`.`id` = `user_has_access_to_databases`.`user_id` LEFT JOIN `user_types` ON `user_types`.`id` = `user_has_access_to_databases`.`user_type_id` LEFT JOIN `database_systems` ON `database_systems`.`id` = `user_has_access_to_databases`.`database_id` ";
+
+	private static final String SELECT_BY_ID                    = "SELECT * FROM " + COMMON_TABLES + " WHERE `users`.`id` = ? AND `database_systems`.`system_name` = ? AND `database_systems`.`server_name` = ?";
+	private static final String SELECT_BY_NAME_AND_SYSTEM       = "SELECT * FROM " + COMMON_TABLES + " WHERE `users`.`username` = ? AND `database_systems`.`system_name` = ? AND `database_systems`.`server_name` = ?";
+	private static final String SELECT_BY_NAME_GLOBAL           = "SELECT * FROM " + COMMON_TABLES + " WHERE `users`.`username` = ?";
+	private static final String SELECT_ALL_FOR_FILTER           = "SELECT * FROM " + COMMON_TABLES + " LEFT JOIN `institutions` ON `institutions`.`id` = `users`.`institution_id` {{FILTER}} %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_FILTER_AND_GROUP = "SELECT * FROM `users` LEFT JOIN `institutions` ON `institutions`.`id` = `users`.`institution_id` {{FILTER}} AND `users`.`id` IN (%s) %s LIMIT ?, ?";
+	private static final String SELECT_IDS_FOR_DATASET          = "SELECT `datasetpermissions`.`user_id` FROM `datasetpermissions` WHERE `dataset_id` = ?";
 
 	private static final String UPDATE_PASSWORD_FROM_ID = "UPDATE users SET password = ? WHERE id = ?";
 

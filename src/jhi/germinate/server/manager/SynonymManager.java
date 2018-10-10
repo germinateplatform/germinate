@@ -33,9 +33,9 @@ import jhi.germinate.shared.exception.*;
  */
 public class SynonymManager extends AbstractManager<Synonym>
 {
-	private static final String COMMON_TABLES = " synonyms LEFT JOIN synonymtypes ON synonymtypes.id = synonyms.synonymtype_id ";
+	private static final String COMMON_TABLES = " `synonyms` LEFT JOIN `synonymtypes` ON `synonymtypes`.`id` = `synonyms`.`synonymtype_id` ";
 
-	private static final String SELECT_ALL_FOR_TABLE = "SELECT * FROM " + COMMON_TABLES + " WHERE synonymtypes.id = ? AND synonyms.foreign_id = ?";
+	private static final String SELECT_ALL_FOR_TABLE = "SELECT * FROM " + COMMON_TABLES + " WHERE `synonymtypes`.`id` = ? AND `synonyms`.`foreign_id` = ?";
 
 	@Override
 	protected String getTable()

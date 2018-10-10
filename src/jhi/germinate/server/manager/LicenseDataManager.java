@@ -34,7 +34,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class LicenseDataManager extends AbstractManager<LicenseData>
 {
-	private static final String SELECT_FOR_LICENSE = "SELECT * FROM licensedata LEFT JOIN licenses ON licenses.id = licensedata.license_id LEFT JOIN locales ON locales.id = licensedata.license_id WHERE licenses.id = ?";
+	private static final String SELECT_FOR_LICENSE = "SELECT * FROM `licensedata` LEFT JOIN `licenses` ON `licenses`.`id` = `licensedata`.`license_id` LEFT JOIN `locales` ON `locales`.`id` = `licensedata`.`license_id` WHERE `licenses`.`id` = ?";
 
 	@Override
 	protected String getTable()
