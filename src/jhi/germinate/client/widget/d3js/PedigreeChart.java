@@ -40,7 +40,6 @@ import jhi.germinate.shared.enums.*;
  */
 public class PedigreeChart extends AbstractChart
 {
-	private FlowPanel chartPanel;
 	private Long      accessionId;
 
 	public PedigreeChart(Long accessionId)
@@ -51,7 +50,6 @@ public class PedigreeChart extends AbstractChart
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.chartPanel = chartPanel;
 		panel.add(chartPanel);
 
 		getData();
