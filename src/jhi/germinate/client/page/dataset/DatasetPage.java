@@ -38,9 +38,9 @@ public class DatasetPage extends Composite implements ParallaxBannerPage, HasHel
 	private static DatasetPageUiBinder ourUiBinder = GWT.create(DatasetPageUiBinder.class);
 
 	@UiField
-	HTML internalText;
+	HTML          internalText;
 	@UiField
-	HTML externalText;
+	HTML          externalText;
 
 	public DatasetPage()
 	{

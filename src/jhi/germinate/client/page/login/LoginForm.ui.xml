@@ -46,6 +46,10 @@
 			height: 50px;
 		}
 
+		.block {
+			display: block;
+		}
+
 		.form img {
 			margin-top: 15px;
 			max-width: 100%;
@@ -127,7 +131,8 @@
 													type="PRIMARY" ui:field="button"/>
 								</g:FlowPanel>
 							</g:FormPanel>
-							<b:Anchor href="#" text="{msg.loginRegistrationLink}" ui:field="registerAnchor" visible="false"/>
+							<b:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_ACCOUNT_PLUS} {style.block}" href="#" text="{msg.loginRegistrationLink}" visible="false" ui:field="registerAnchor"/>
+							<b:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_LOCK_RESET} {style.block}" href="#" text="{msg.loginForgotPasswordLink}" ui:field="forgotPasswordAnchor"/>
 							<g:Image url="img/logo-horizontal.svg" />
 						</g:FlowPanel>
 					</b:Well>

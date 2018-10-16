@@ -58,6 +58,13 @@
 
 			<b:html.ClearFix/>
 
+			<g:FlowPanel visible="false" ui:field="mapHeatmapPanel">
+				<b:Heading size="H3" text="{msg.mapsHeatmapTitle}" />
+				<g:HTML ui:field="mapHeatmapParagraph" />
+			</g:FlowPanel>
+
+			<g:SimplePanel ui:field="chartPanel" />
+
 			<b:Heading size="H3" text="{msg.downloadHeading}"/>
 
 			<b:Panel visible="false" ui:field="exportOptionsPanel">

@@ -573,13 +573,9 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 	{
 		/* Remember to remove the handler */
 		if (markedItemListRegistration != null)
-		{
 			markedItemListRegistration.removeHandler();
-		}
 		if (groupRegistration != null)
-		{
 			groupRegistration.removeHandler();
-		}
 
 		super.onUnload();
 	}

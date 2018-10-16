@@ -55,7 +55,7 @@ public abstract class AbstractChart extends GerminateComposite
 	/** Keep track of the created {@link HandlerRegistration}s */
 	private static final Map<Widget, HandlerRegistration> handlers    = new HashMap<>();
 
-	private String panelId = "";
+	protected String panelId = "";
 	protected String filePath;
 
 	private String   title;
@@ -161,6 +161,13 @@ public abstract class AbstractChart extends GerminateComposite
 		removeD3(panelId);
 		chartPanel.getElement().removeAllChildren();
 		chartPanel.clear();
+	}
+
+	@Override
+	protected void onUnload()
+	{
+		clear();
+		super.onUnload();
 	}
 
 	/**
@@ -504,7 +511,7 @@ public abstract class AbstractChart extends GerminateComposite
 	/**
 	 * Removes d3 from the current page.
 	 */
-	private void removeD3(String panelId)
+	protected void removeD3(String panelId)
 	{
 		GQuery.$("#" + panelId + " ." + Id.CHART_D3_TOOLTIP).remove();
 		GQuery g = GQuery.$("#" + panelId + " ." + Id.CHART_D3_LEGEND);

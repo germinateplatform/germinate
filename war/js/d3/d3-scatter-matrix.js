@@ -36,7 +36,7 @@ function scatterMatrix() {
 		axisStyle = "",
 		dotStyle = "",
 		frameStyle = "",
-		hiddenStyle = hiddenStyle,
+		hiddenStyle = "",
 		tooltipStyle = "",
 		radius = 2,
 		legendItemStyle = "",
@@ -303,6 +303,7 @@ function scatterMatrix() {
 					i, j;
 				for (i = -1; ++i < n;)
 					for (j = -1; ++j < m;) {
+						// Only include cells in the top half diagonal of the matrix
 						if(i >= j) {
 							c.push({
 								x: a[i],

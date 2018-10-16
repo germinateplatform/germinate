@@ -61,8 +61,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 	private boolean                 linkToExportPage;
 	private boolean                 showDownload = false;
-	private ReferenceFolder         referenceFolder;
-	private SimpleCallback<Dataset> downloadCallback;
+	private DatasetDownloadCallback downloadCallback;
 	private ExperimentType          experimentType;
 
 	public DatasetTable(SelectionMode selectionMode, boolean sortingEnabled, boolean linkToExportPage, ExperimentType experimentType)
@@ -104,15 +103,15 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			return StringUtils.getWordsUntil(text, TRUNCATION_LIMIT);
 	}
 
-	public void setShowDownload(boolean showDownload, ReferenceFolder referenceFolder)
+	public void setShowDownload(boolean showDownload)
 	{
 		this.showDownload = showDownload;
-		this.referenceFolder = referenceFolder;
+		this.downloadCallback = new DatasetDownloadCallback();
 	}
 
-	public void setShowDownload(boolean showDownload, SimpleCallback<Dataset> downloadCallback)
+	public void setShowDownload(DatasetDownloadCallback downloadCallback)
 	{
-		this.showDownload = showDownload;
+		this.showDownload = true;
 		this.downloadCallback = downloadCallback;
 	}
 
@@ -731,9 +730,16 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 						if (downloadCallback != null)
 						{
-							String fa = Style.MDI_DOWNLOAD;
-							String title = Text.LANG.generalDownload();
-							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(fa, title, UriUtils.fromString(""), "");
+							if (downloadCallback.isSupported(row.getExperiment().getType()))
+							{
+								String fa = Style.MDI_DOWNLOAD;
+								String title = Text.LANG.generalDownload();
+								return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(fa, title, UriUtils.fromString(""), "");
+							}
+							else
+							{
+								return SimpleHtmlTemplate.INSTANCE.text("");
+							}
 						}
 						else if (!StringUtils.isEmpty(sourceFile) && !sourceFile.equals("NA"))
 						{
@@ -743,7 +749,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 									.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
 									.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 									.setParam(ServletConstants.PARAM_FILE_LOCATION, FileLocation.data.name())
-									.setParam(ServletConstants.PARAM_FILE_PATH, (referenceFolder == null ? "" : (referenceFolder.name() + "/")) + sourceFile)
 									.build();
 
 							String fa = Style.MDI_DOWNLOAD;
@@ -768,10 +773,17 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 					if (BrowserEvents.CLICK.equals(event.getType()) && downloadCallback != null)
 					{
-						event.preventDefault();
-						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "dataset", Long.toString(object.getId()));
-						GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(object)));
-						downloadCallback.onSuccess(object);
+						if (downloadCallback.isSupported(object.getExperiment().getType()))
+						{
+							event.preventDefault();
+							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "dataset", Long.toString(object.getId()));
+							GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(object)));
+							downloadCallback.onSuccess(object);
+						}
+						else
+						{
+							super.onBrowserEvent(context, elem, object, event);
+						}
 					}
 					else
 					{

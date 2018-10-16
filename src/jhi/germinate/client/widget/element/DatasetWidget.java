@@ -75,8 +75,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	private boolean showDownload         = false;
 	private boolean showMap              = false;
 
-	private ReferenceFolder         referenceFolder  = null;
-	private SimpleCallback<Dataset> downloadCallback = null;
+	private DatasetDownloadCallback downloadCallback = null;
 
 	private DatasetTable.SelectionMode selectionMode                 = null;
 	private Button                     continueButton;
@@ -359,9 +358,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		if (showDownload)
 		{
 			if (downloadCallback != null)
-				table.setShowDownload(showDownload, downloadCallback);
-			else if (referenceFolder != null)
-				table.setShowDownload(showDownload, referenceFolder);
+				table.setShowDownload(downloadCallback);
 		}
 
 		tablePanel.add(table);
@@ -522,13 +519,22 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		this.showLoadingIndicator = showLoadingIndicator;
 	}
 
-	public void setShowDownload(boolean showDownload, SimpleCallback<Dataset> downloadCallback)
+	public void setShowDownload(boolean showDownload)
 	{
 		this.showDownload = showDownload;
+		this.downloadCallback = new DatasetDownloadCallback();
+
+		if (table != null)
+			table.setShowDownload(downloadCallback);
+	}
+
+	public void setShowDownload(DatasetDownloadCallback downloadCallback)
+	{
+		this.showDownload = true;
 		this.downloadCallback = downloadCallback;
 
 		if (table != null)
-			table.setShowDownload(showDownload, downloadCallback);
+			table.setShowDownload(downloadCallback);
 	}
 
 	public void setShowMap(boolean showMap)

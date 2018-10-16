@@ -22,7 +22,6 @@ import java.util.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -66,10 +65,7 @@ public class MapDefinitionManager extends AbstractManager<MapDefinition>
 
 	public static PaginatedServerResult<List<MapDefinition>> getForFilter(UserAuth userAuth, Pagination pagination, PartialSearchQuery filter) throws DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
 	{
-		if (StringUtils.isEmpty(pagination.getSortColumn()))
-			pagination.setSortColumn(MapDefinition.CHROMOSOME + ", " + MapDefinition.DEFINITION_START);
-		else
-			pagination.updateSortColumn(MarkerService.COLUMNS_MAPDEFINITION_TABLE, MapDefinition.CHROMOSOME + ", " + MapDefinition.DEFINITION_START);
+		pagination.updateSortColumn(MarkerService.COLUMNS_MAPDEFINITION_TABLE, null);
 
 		String formatted = String.format(SELECT_ALL_FOR_FILTER, pagination.getSortQuery());
 
@@ -83,7 +79,7 @@ public class MapDefinitionManager extends AbstractManager<MapDefinition>
 
 	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
-		pagination.updateSortColumn(MarkerService.COLUMNS_MAPDEFINITION_TABLE, MapDefinition.CHROMOSOME + ", " + MapDefinition.DEFINITION_START);
+		pagination.updateSortColumn(MarkerService.COLUMNS_MAPDEFINITION_TABLE, null);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
 		return getFilteredGerminateTableQuery(userAuth, filter, formatted, MarkerService.COLUMNS_MAPDEFINITION_TABLE, COLUMNS_MARKER_DATA_EXPORT)

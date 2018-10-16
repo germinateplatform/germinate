@@ -73,6 +73,9 @@ public class LoginForm extends Composite
 	Anchor registerAnchor;
 
 	@UiField
+	Anchor forgotPasswordAnchor;
+
+	@UiField
 	LIElement languageSelector;
 
 	@UiField
@@ -155,6 +158,17 @@ public class LoginForm extends Composite
 			});
 		}
 
+		GQuery.$(forgotPasswordAnchor).click(new Function()
+		{
+			@Override
+			public boolean f(Event e)
+			{
+				HelpWidget.show(page);
+
+				return false;
+			}
+		});
+
 		String email = GerminateSettingsHolder.get().templateContactEmail.getValue();
 		if (!StringUtils.isEmpty(email))
 			emailAnchor.setHref("mailto:" + email);
@@ -219,7 +233,7 @@ public class LoginForm extends Composite
 		originalForm.appendChild(usernameBox);
 		originalForm.appendChild(passwordBox);
 
-        /* Unfortunately, we have to use this approach, as the browser will always try to fill the text fields again */
+		/* Unfortunately, we have to use this approach, as the browser will always try to fill the text fields again */
 		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand()
 		{
 			int counter = 1;

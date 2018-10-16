@@ -152,7 +152,7 @@ public class Util
 		if (StringUtils.isEmpty(searchColumn))
 		{
 			if (StringUtils.isEmpty(fallbackColumn))
-				throw new InvalidColumnException(searchColumn + " is not a valid column.");
+				return null;
 			else
 				return fallbackColumn;
 		}

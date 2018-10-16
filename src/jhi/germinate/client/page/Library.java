@@ -59,6 +59,7 @@ public enum Library
 	D3_LEGEND("./js/d3/d3-legend.js"),
 	D3_LASSO("./js/d3/d3-lasso.js"),
 	D3_PIE("./js/d3/d3-pie.js"),
+	D3_MAP_CANVAS("./js/d3/d3-map-canvas.js"),
 	D3_SCATTER_PLOT("./js/d3/d3-scatter-plot.js"),
 	D3_SCATTER_MATRIX("./js/d3/d3-scatter-matrix.js"),
 	D3_GROUPED_BAR_CHART("./js/d3/d3-grouped-bar-chart.js"),

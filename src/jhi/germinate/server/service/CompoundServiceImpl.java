@@ -246,7 +246,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		String filePath;
 
 		/* Export the data to a temporary file */
-		File file = createTemporaryFile("phenotype", datasetIds, FileType.txt.name());
+		File file = createTemporaryFile("compound", datasetIds, FileType.txt.name());
 		filePath = file.getName();
 
 		try

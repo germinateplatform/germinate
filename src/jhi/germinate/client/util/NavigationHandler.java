@@ -18,10 +18,7 @@
 package jhi.germinate.client.util;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
-
-import java.util.*;
 
 import jhi.germinate.client.*;
 import jhi.germinate.client.i18n.*;
@@ -44,19 +41,13 @@ import jhi.germinate.client.page.search.*;
 import jhi.germinate.client.page.statistics.*;
 import jhi.germinate.client.page.trial.*;
 import jhi.germinate.client.page.userpermissions.*;
-import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.news.*;
 import jhi.germinate.client.widget.structure.resource.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
-
-import static jhi.germinate.client.page.dataset.ExperimentDetailsPage.*;
 
 /**
  * @author Sebastian Raubach
@@ -200,55 +191,7 @@ public class NavigationHandler
 					widget.setLinkToExportPage(false);
 					widget.setTitle(Text.LANG.genotypeDatasetHeader());
 					widget.setText(Text.LANG.genotypeDatasetText());
-					widget.setShowDownload(true, new SimpleCallback<Dataset>()
-					{
-						@Override
-						public void onSuccess(Dataset result)
-						{
-							if (!StringUtils.isEmpty(result.getSourceFile()))
-							{
-								/* If we're dealing with an hdf5 file, convert it to tab-delimited */
-								if (result.getSourceFile().endsWith(".hdf5"))
-								{
-									/* Start the export process */
-									GenotypeService.Inst.get().convertHdf5ToText(Cookie.getRequestProperties(), result.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
-									{
-										@Override
-										protected void onFailureImpl(Throwable caught)
-										{
-											if (caught instanceof InvalidArgumentException)
-												Notification.notify(Notification.Type.ERROR, Text.LANG.notificationInsufficientPermissions());
-											else
-												super.onFailureImpl(caught);
-										}
-
-										@Override
-										protected void onSuccessImpl(ServerResult<String> result)
-										{
-											clickDownloadLink(result);
-										}
-									});
-								}
-								else
-								{
-									/* Else just download the file */
-									String href = new ServletConstants.Builder()
-											.setUrl(GWT.getModuleBaseURL())
-											.setPath(ServletConstants.SERVLET_FILES)
-											.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-											.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-											.setParam(ServletConstants.PARAM_FILE_LOCATION, FileLocation.data.name())
-											.setParam(ServletConstants.PARAM_FILE_PATH, (ReferenceFolder.genotype.name() + "/") + result.getSourceFile())
-											.build();
-
-									JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), result.getSourceFile());
-
-									/* Click it */
-									JavaScript.invokeDownload(href);
-								}
-							}
-						}
-					});
+					widget.setShowDownload(true);
 
 					ContentHolder.getInstance().setContent(page, page, widget);
 				}
@@ -365,26 +308,7 @@ public class NavigationHandler
 				widget.setLinkToExportPage(false);
 				widget.setTitle(Text.LANG.trialsDatasetHeader());
 				widget.setText(Text.LANG.trialsDatasetText());
-				widget.setShowDownload(true, new SimpleCallback<Dataset>()
-				{
-					@Override
-					public void onSuccess(Dataset result)
-					{
-						/* Get the id of the selected dataset */
-						List<Long> ids = new ArrayList<>();
-						ids.add(result.getId());
-
-						/* Start the export process */
-						PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
-						{
-							@Override
-							protected void onSuccessImpl(ServerResult<String> result)
-							{
-								clickDownloadLink(result);
-							}
-						});
-					}
-				});
+				widget.setShowDownload(true);
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});
@@ -489,6 +413,7 @@ public class NavigationHandler
 				widget.setLinkToExportPage(false);
 				widget.setTitle(Text.LANG.compoundDatasetHeader());
 				widget.setText(Text.LANG.compoundDatasetText());
+				widget.setShowDownload(true);
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});

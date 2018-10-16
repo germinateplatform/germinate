@@ -47,7 +47,7 @@ public class NewsManager extends AbstractManager<News>
 
 	public static PaginatedServerResult<List<News>> getForType(Pagination pagination, NewsType... newsTypes) throws DatabaseException
 	{
-		pagination.setSortColumn(News.UPDATED_ON);
+		pagination.setSortColumn(News.CREATED_ON);
 		pagination.setAscending(false);
 
 		String formatted = String.format(SELECT_FOR_TYPE, StringUtils.generateSqlPlaceholderString(newsTypes.length), pagination.getSortQuery());
@@ -68,7 +68,7 @@ public class NewsManager extends AbstractManager<News>
 	public static ServerResult<Integer> getIndex(Long newsId) throws DatabaseException
 	{
 		NewsType[] newsTypes = {NewsType.general, NewsType.data, NewsType.updates};
-		String formatted = String.format(SELECT_FOR_TYPE, StringUtils.generateSqlPlaceholderString(newsTypes.length), "ORDER BY " + News.UPDATED_ON + " DESC");
+		String formatted = String.format(SELECT_FOR_TYPE, StringUtils.generateSqlPlaceholderString(newsTypes.length), "ORDER BY " + News.CREATED_ON + " DESC");
 
 
 		ValueQuery query = new ValueQuery(formatted);

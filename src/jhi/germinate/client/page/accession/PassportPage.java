@@ -327,14 +327,16 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	protected void updateDatasets()
 	{
 		datasetWrapper.setVisible(true);
-		datasetPanel.add(new DatasetTable(DatasetTable.SelectionMode.NONE, true, true, null)
+		DatasetTable datasetTable = new DatasetTable(DatasetTable.SelectionMode.NONE, true, true, null)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
 			{
 				return DatasetService.Inst.get().getForAccession(Cookie.getRequestProperties(), accession.getId(), pagination, callback);
 			}
-		});
+		};
+		datasetTable.setShowDownload(true);
+		datasetPanel.add(datasetTable);
 	}
 
 	protected void updateGroups()

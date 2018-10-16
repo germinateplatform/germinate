@@ -39,7 +39,6 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
@@ -154,77 +153,8 @@ public class ExperimentDetailsPage extends Composite
 		switch (experiment.getType())
 		{
 			case trials:
-				datasetTable.setShowDownload(true, new SimpleCallback<Dataset>()
-				{
-					@Override
-					public void onSuccess(Dataset result)
-					{
-						/* Get the id of the selected dataset */
-						List<Long> ids = new ArrayList<>();
-						ids.add(result.getId());
-
-						/* Start the export process */
-						PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
-						{
-							@Override
-							protected void onSuccessImpl(ServerResult<String> result)
-							{
-								clickDownloadLink(result);
-							}
-						});
-					}
-				});
-				break;
 			case genotype:
-				datasetTable.setShowDownload(true, new SimpleCallback<Dataset>()
-				{
-					@Override
-					public void onSuccess(Dataset result)
-					{
-						if (!StringUtils.isEmpty(result.getSourceFile()))
-						{
-							/* If we're dealing with an hdf5 file, convert it to tab-delimited */
-							if (result.getSourceFile().endsWith(".hdf5"))
-							{
-								/* Start the export process */
-								GenotypeService.Inst.get().convertHdf5ToText(Cookie.getRequestProperties(), result.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
-								{
-									@Override
-									protected void onFailureImpl(Throwable caught)
-									{
-										if (caught instanceof InvalidArgumentException)
-											Notification.notify(Notification.Type.ERROR, Text.LANG.notificationInsufficientPermissions());
-										else
-											super.onFailureImpl(caught);
-									}
-
-									@Override
-									protected void onSuccessImpl(ServerResult<String> result)
-									{
-										ExperimentDetailsPage.clickDownloadLink(result);
-									}
-								});
-							}
-							else
-							{
-								/* Else just download the file */
-								String href = new ServletConstants.Builder()
-										.setUrl(GWT.getModuleBaseURL())
-										.setPath(ServletConstants.SERVLET_FILES)
-										.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-										.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-										.setParam(ServletConstants.PARAM_FILE_LOCATION, FileLocation.data.name())
-										.setParam(ServletConstants.PARAM_FILE_PATH, (ReferenceFolder.genotype.name() + "/") + result.getSourceFile())
-										.build();
-
-								JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), result.getSourceFile());
-
-								/* Click it */
-								JavaScript.invokeDownload(href);
-							}
-						}
-					}
-				});
+				datasetTable.setShowDownload(true);
 				break;
 		}
 

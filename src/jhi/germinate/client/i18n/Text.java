@@ -1184,6 +1184,14 @@ public interface Text extends Messages
 	@Key("column.markers.position.end")
 	String markersRegionEndPosition();
 
+	@Key("page.maps.heatmap.title")
+	@DefaultMessage("Heatmap")
+	String mapsHeatmapTitle();
+
+	@Key("page.maps.heatmap.text")
+	@DefaultMessage("<p>The diagram below shows the density of markers on each chromosome. Hovering over the diagram will show the closest marker to the mouse position.</p>")
+	SafeHtml mapsHeatmapText();
+
 	@Key("page.maps.export.options.title")
 	String markersExportOptionsTitle();
 
@@ -2237,6 +2245,10 @@ public interface Text extends Messages
 	@Key("page.login.registration.link")
 	@DefaultMessage("Don''t have an account? Register here!")
 	String loginRegistrationLink();
+
+	@Key("page.login.password.reset.link")
+	@DefaultMessage("Forgot your password?")
+	String loginForgotPasswordLink();
 
 	@Key("widget.wizard.progress.page")
 	@DefaultMessage("Page {0}/{1}")

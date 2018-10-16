@@ -19,6 +19,7 @@ package jhi.germinate.client.page.geography;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
@@ -39,10 +40,12 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.input.*;
+import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -86,6 +89,11 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 	@UiField
 	SimplePanel polygonMapPanel;
 
+	@UiField
+	FormGroup      climateSection;
+	@UiField
+	ClimateListBox climateBox;
+
 	// CONTINUE
 	@UiField
 	Button continueButton;
@@ -104,6 +112,8 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 	private LeafletUtils.ClusteredMarkerCreator  polygonMap;
 	private Location                             queryLocation;
 	private LeafletGeodesic                      geodesic;
+	private LeafletUtils.ImageOverlayWrapper     pointClimateOverlays   = new LeafletUtils.ImageOverlayWrapper();
+	private LeafletUtils.ImageOverlayWrapper     polygonClimateOverlays = new LeafletUtils.ImageOverlayWrapper();
 
 	public GeographicSearchPage()
 	{
@@ -116,6 +126,8 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 		super.onLoad();
 
 		polygonHtml.setHTML(Text.LANG.geographicSearchPolygonText());
+
+		getClimates();
 
 		pointMap = new LeafletUtils.IndividualMarkerCreator(pointMapPanel, null, (mapPanel, map) ->
 		{
@@ -148,6 +160,41 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 
 			Scheduler.get().scheduleDeferred(() -> continueButton.click());
 		}
+	}
+
+	private void getClimates()
+	{
+		ClimateService.Inst.get().getWithGroundOverlays(Cookie.getRequestProperties(), new AsyncCallback<ServerResult<List<Climate>>>()
+		{
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				/* If anything goes wrong, just hide the climate box */
+				climateSection.setVisible(false);
+			}
+
+			@Override
+			public void onSuccess(ServerResult<List<Climate>> result)
+			{
+				/* Fill the climate box if there are climates or hide it if
+				 * there aren't */
+				if (!CollectionUtils.isEmpty(result.getServerResult()))
+				{
+					Climate dummy = new Climate(-1L)
+							.setName(Text.LANG.generalNone());
+
+					/* Fill the climate combo box */
+					result.getServerResult().add(0, dummy);
+					climateBox.setValue(dummy, false);
+					climateBox.setAcceptableValues(result.getServerResult());
+					climateSection.setVisible(true);
+				}
+				else
+				{
+					climateSection.setVisible(false);
+				}
+			}
+		});
 	}
 
 	@UiHandler("polygonTab")
@@ -459,6 +506,35 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 					Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoPolygonSelected());
 				}
 			}
+		}
+	}
+
+	@UiHandler("climateBox")
+	void onClimateChange(ValueChangeEvent<List<Climate>> event)
+	{
+		Climate climate = climateBox.getSelection();
+
+		pointClimateOverlays.clear(pointMap.getMap());
+		polygonClimateOverlays.clear(polygonMap.getMap());
+
+		if (climate != null && climate.getId() != -1)
+		{
+			ClimateService.Inst.get().getClimateOverlays(Cookie.getRequestProperties(), climate.getId(), new DefaultAsyncCallback<ServerResult<List<ClimateOverlay>>>()
+			{
+				@Override
+				public void onSuccessImpl(ServerResult<List<ClimateOverlay>> result)
+				{
+					if (result.getServerResult().size() > 0)
+					{
+						pointClimateOverlays = LeafletUtils.addClimateOverlays(pointMap.getMap(), result.getServerResult());
+						polygonClimateOverlays = LeafletUtils.addClimateOverlays(polygonMap.getMap(), result.getServerResult());
+					}
+					else
+					{
+						Notification.notify(Notification.Type.INFO, Text.LANG.notificationNoInformationFound());
+					}
+				}
+			});
 		}
 	}
 

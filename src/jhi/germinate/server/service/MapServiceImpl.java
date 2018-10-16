@@ -59,27 +59,19 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	@Override
 	public ServerResult<Map> getById(RequestProperties properties, Long mapId) throws InvalidSessionException, DatabaseException
 	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		try
 		{
-			ServerResult<Map> result = new MapManager().getById(userAuth, mapId);
+			PaginatedServerResult<List<Map>> maps = get(properties, null);
 
-			if (result.getServerResult() == null)
+			for(Map map : maps.getServerResult())
 			{
-				return result;
+				if (Objects.equals(map.getId(), mapId))
+					return new ServerResult<>(maps.getDebugInfo(), map);
 			}
-			else
-			{
-				Map map = result.getServerResult();
 
-				if (map.isVisibility() || Objects.equals(map.getUserId(), userAuth.getId()))
-					return result;
-				else
-					return new ServerResult<>(null, null);
-			}
+			return new ServerResult<>(null, null);
 		}
-		catch (InsufficientPermissionsException e)
+		catch (InvalidColumnException e)
 		{
 			return new ServerResult<>(null, null);
 		}

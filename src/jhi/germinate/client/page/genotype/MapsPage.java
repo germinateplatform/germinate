@@ -44,6 +44,7 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.client.widget.table.pagination.*;
@@ -86,6 +87,13 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 	SimplePanel markerTablePanel;
 	@UiField
 	SimplePanel markerDownloadPanel;
+
+	@UiField
+	FlowPanel   mapHeatmapPanel;
+	@UiField
+	SimplePanel chartPanel;
+	@UiField
+	HTML        mapHeatmapParagraph;
 
 	@UiField
 	Panel         exportOptionsPanel;
@@ -142,6 +150,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 
 		text.setHTML(Text.LANG.mapsParagraph());
 		mapDetailsParagraph.setHTML(Text.LANG.mapsMarkersParagraph());
+		mapHeatmapParagraph.setHTML(Text.LANG.mapsHeatmapText());
 
 		mapPanel.add(new MapTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
@@ -419,6 +428,17 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 		else
 		{
 			mapDefinitionTable.refreshTable();
+		}
+
+		chartPanel.clear();
+		if(map.getSize() < 100000)
+		{
+			mapHeatmapPanel.setVisible(true);
+			chartPanel.add(new MapChartCanvas(map.getId()));
+		}
+		else
+		{
+			mapHeatmapPanel.setVisible(false);
 		}
 	}
 

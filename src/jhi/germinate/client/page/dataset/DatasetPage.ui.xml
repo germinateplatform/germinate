@@ -26,7 +26,7 @@
 	<g:HTMLPanel>
 		<b:PageHeader text="{msg.datasetsTitleInternal}"/>
 		<g:HTML ui:field="internalText"/>
-		<g8:DatasetWidget showLoadingIndicator="true" linkToExportPage="true"/>
+		<g8:DatasetWidget linkToExportPage="true" showDownload="true" showLoadingIndicator="true"/>
 
 		<b:PageHeader text="{msg.datasetsTitleExternal}"/>
 		<g:HTML ui:field="externalText"/>
