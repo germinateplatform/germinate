@@ -279,7 +279,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			return;
 		}
 
-		groupName.setSubText(group.getName());
+		groupName.setText(group.getName());
+		groupName.setSubText(group.getType().getDescription());
 		descriptionPanel.setVisible(!StringUtils.isEmpty(group.getDescription()));
 		description.setText(StringUtils.toEmptyIfNull(group.getDescription()));
 

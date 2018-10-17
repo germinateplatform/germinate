@@ -25,6 +25,7 @@ import java.util.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.event.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -51,6 +52,8 @@ public class DatasetDownloadCallback extends SimpleCallback<Dataset>
 				downloadTrials(dataset);
 				break;
 		}
+
+		GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(dataset)));
 	}
 
 	public boolean isSupported(ExperimentType type)

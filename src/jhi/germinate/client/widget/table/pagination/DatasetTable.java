@@ -666,45 +666,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		}, "", false);
 
-		/* Add the style for the dataset state column and the column itself */
-		addColumn(new Column<Dataset, SafeHtml>(new SafeHtmlCell())
-		{
-			@Override
-			public String getCellStyleNames(Cell.Context context, Dataset row)
-			{
-				String style = Style.TEXT_CENTER_ALIGN;
-				if (row.getDatasetState() == DatasetState.HIDDEN)
-					style = Style.combine(style, Emphasis.PRIMARY.getCssName());
-
-				return style;
-			}
-
-			@Override
-			public SafeHtml getValue(Dataset row)
-			{
-				String mdi = "";
-				String title = "";
-
-				switch (row.getDatasetState())
-				{
-					case HIDDEN:
-						mdi = Style.MDI_EYE_OFF;
-						title = Text.LANG.datasetStateHidden();
-						break;
-					case PUBLIC:
-						mdi = Style.MDI_LOCK_OPEN;
-						title = Text.LANG.datasetStatePublic();
-						break;
-					case PRIVATE:
-						mdi = Style.MDI_LOCK;
-						title = Text.LANG.datasetStatePrivate();
-						break;
-				}
-
-				return SimpleHtmlTemplate.INSTANCE.materialIconFixedWidth(mdi, title);
-			}
-		}, "", false);
-
 		if (showDownload)
 		{
 			// Add the style for the dataset download column and the column itself
@@ -776,8 +737,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 						if (downloadCallback.isSupported(object.getExperiment().getType()))
 						{
 							event.preventDefault();
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "dataset", Long.toString(object.getId()));
-							GerminateEventBus.BUS.fireEvent(new DatasetSelectionEvent(Collections.singletonList(object)));
 							downloadCallback.onSuccess(object);
 						}
 						else
@@ -794,6 +753,45 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 			addColumn(downloadColumn, "", false);
 		}
+
+		/* Add the style for the dataset state column and the column itself */
+		addColumn(new Column<Dataset, SafeHtml>(new SafeHtmlCell())
+		{
+			@Override
+			public String getCellStyleNames(Cell.Context context, Dataset row)
+			{
+				String style = Style.TEXT_CENTER_ALIGN;
+				if (row.getDatasetState() == DatasetState.HIDDEN)
+					style = Style.combine(style, Emphasis.PRIMARY.getCssName());
+
+				return style;
+			}
+
+			@Override
+			public SafeHtml getValue(Dataset row)
+			{
+				String mdi = "";
+				String title = "";
+
+				switch (row.getDatasetState())
+				{
+					case HIDDEN:
+						mdi = Style.MDI_EYE_OFF;
+						title = Text.LANG.datasetStateHidden();
+						break;
+					case PUBLIC:
+						mdi = Style.MDI_LOCK_OPEN;
+						title = Text.LANG.datasetStatePublic();
+						break;
+					case PRIVATE:
+						mdi = Style.MDI_LOCK;
+						title = Text.LANG.datasetStatePrivate();
+						break;
+				}
+
+				return SimpleHtmlTemplate.INSTANCE.materialIconFixedWidth(mdi, title);
+			}
+		}, "", false);
 	}
 
 	private boolean canAccess(Dataset dataset)

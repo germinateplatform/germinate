@@ -19,13 +19,16 @@ package jhi.germinate.client.widget.news;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.Panel;
 
 import java.util.*;
 
+import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.element.*;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 
 /**
@@ -40,11 +43,18 @@ public class NewsPanel extends Composite
 	private static NewsItemUiBinder ourUiBinder = GWT.create(NewsItemUiBinder.class);
 
 	@UiField
+	Anchor  link;
+	@UiField
 	ULPanel list;
 
 	public NewsPanel(List<News> news, boolean trim)
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
+
+		if (GerminateSettingsHolder.isPageAvailable(Page.NEWS))
+			link.setHref("#" + Page.NEWS.name());
+		else
+			link.setHref("");
 
 		if (news != null)
 		{
