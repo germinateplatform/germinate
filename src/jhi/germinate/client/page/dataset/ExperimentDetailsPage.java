@@ -19,7 +19,6 @@ package jhi.germinate.client.page.dataset;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.http.client.*;
-import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -33,8 +32,8 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -67,11 +66,16 @@ public class ExperimentDetailsPage extends Composite
 	@UiField
 	SimplePanel datasetTablePanel;
 
+	@UiField(provided = true)
+	DatasetMetadataDownload metadataDownload;
+
 	private Long       experimentId;
 	private Experiment experiment;
 
 	public ExperimentDetailsPage()
 	{
+		metadataDownload = new DatasetMetadataDownload(null);
+
 		initWidget(ourUiBinder.createAndBindUi(this));
 
 		experimentId = LongParameterStore.Inst.get().get(Parameter.experimentId);
@@ -82,6 +86,16 @@ public class ExperimentDetailsPage extends Composite
 		}
 		else
 		{
+			// Get the list of datasets for the metadata export panel
+			DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), addToFilter(null), null, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Dataset>>>(false)
+			{
+				@Override
+				protected void onSuccessImpl(PaginatedServerResult<List<Dataset>> result)
+				{
+					metadataDownload.update(result.getServerResult());
+				}
+			});
+
 			DatasetService.Inst.get().getExperiment(Cookie.getRequestProperties(), experimentId, new DefaultAsyncCallback<ServerResult<Experiment>>()
 			{
 				@Override
@@ -95,33 +109,6 @@ public class ExperimentDetailsPage extends Composite
 		}
 	}
 
-	public static void clickDownloadLink(ServerResult<String> result)
-	{
-		/* If there is a result */
-		if (result != null && result.getServerResult() != null)
-		{
-			/* Get the filename from the result */
-			String filename = result.getServerResult();
-
-			/* Create a new invisible dummy link on the page */
-			String path = new ServletConstants.Builder()
-					.setUrl(GWT.getModuleBaseURL())
-					.setPath(ServletConstants.SERVLET_FILES)
-					.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-					.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-					.setParam(ServletConstants.PARAM_FILE_PATH, filename).build();
-
-			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), filename);
-
-			/* Click it */
-			JavaScript.invokeDownload(path);
-		}
-		else
-		{
-			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
-		}
-	}
-
 	private void setUpPage()
 	{
 		html.setHTML(Text.LANG.experimentDetailsText());
@@ -129,18 +116,6 @@ public class ExperimentDetailsPage extends Composite
 
 		DatasetTable datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, experiment.getType())
 		{
-			private PartialSearchQuery addToFilter(PartialSearchQuery filter)
-			{
-				if (filter == null)
-					filter = new PartialSearchQuery();
-				filter.add(new SearchCondition(Experiment.ID, new Equal(), experimentId, Long.class));
-
-				if (filter.getAll().size() > 1)
-					filter.addLogicalOperator(new And());
-
-				return filter;
-			}
-
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
 			{
@@ -159,5 +134,17 @@ public class ExperimentDetailsPage extends Composite
 		}
 
 		datasetTablePanel.add(datasetTable);
+	}
+
+	private PartialSearchQuery addToFilter(PartialSearchQuery filter)
+	{
+		if (filter == null)
+			filter = new PartialSearchQuery();
+		filter.add(new SearchCondition(Experiment.ID, new Equal(), experimentId, Long.class));
+
+		if (filter.getAll().size() > 1)
+			filter.addLogicalOperator(new And());
+
+		return filter;
 	}
 }

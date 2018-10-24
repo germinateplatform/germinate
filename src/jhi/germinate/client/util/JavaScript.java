@@ -20,6 +20,7 @@ package jhi.germinate.client.util;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.i18n.client.*;
 import com.google.gwt.maps.client.*;
 import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
@@ -29,6 +30,7 @@ import java.util.*;
 
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
+import jhi.germinate.shared.enums.*;
 
 /**
  * {@link JavaScript} is a utility class containing methods executing javascript code.
@@ -68,6 +70,10 @@ public class JavaScript
 
 	public static native String getOctetStreamBase64Data(String html) /*-{
 		return "data:application/octet-stream;base64," + $wnd.btoa(unescape(encodeURIComponent(html)));
+	}-*/;
+
+	public static native String getJsonData(String json) /*-{
+		return "data:text/json;charset=utf-8," + $wnd.encodeURIComponent(json);
 	}-*/;
 
 	public static native void setVisible(String selector, boolean value)/*-{
@@ -202,6 +208,22 @@ public class JavaScript
 	public static void invokeDownload(String uri)
 	{
 		invokeDownload(uri, null);
+	}
+
+	public static void invokeGerminateDownload(String uri)
+	{
+		/* Create a new invisible dummy link on the page */
+		String path = new ServletConstants.Builder()
+				.setUrl(GWT.getModuleBaseURL())
+				.setPath(ServletConstants.SERVLET_FILES)
+				.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+				.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+				.setParam(ServletConstants.PARAM_FILE_PATH, uri)
+				.build();
+
+		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), uri);
+
+		invokeDownload(path);
 	}
 
 	/**

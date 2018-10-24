@@ -391,7 +391,6 @@ th {
 	width: 1.733333em;
 	line-height: 1.3em;
 	margin-right: 5px;
-	box-shadow: 1px 1px 3px 0px #cccccc;
 }
 .<%= Style.COUNTRY_FLAG %>:before {
 	content: "\00a0";

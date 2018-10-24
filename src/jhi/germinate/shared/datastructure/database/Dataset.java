@@ -45,6 +45,7 @@ public class Dataset extends DatabaseObject
 	public static final String ID               = "datasets.id";
 	public static final String EXPERIMENT_ID    = "datasets.experiment_id";
 	public static final String LOCATION_ID      = "datasets.location_id";
+	public static final String NAME             = "datasets.name";
 	public static final String DESCRIPTION      = "datasets.description";
 	public static final String DATE_START       = "datasets.date_start";
 	public static final String DATE_END         = "datasets.date_end";
@@ -64,25 +65,26 @@ public class Dataset extends DatabaseObject
 	public static final String NR_OF_DATA_OBJECTS = "nr_of_data_objects";
 	public static final String NR_OF_DATA_POINTS  = "nr_of_data_points";
 
-	private Experiment   experiment;
-	private Location     location;
-	private String       description;
-	private Date         dateStart;
-	private Date         dateEnd;
-	private String       sourceFile;
-	private String       datatype;
-	private String       dublinCore;
-	private String       contact;
-	private String       version;
-	private Long         userId;
-	private DatasetState datasetState;
-	private License      license;
-	private Boolean      isExternal;
-	private String       hyperlink;
-	private Long         createdOn;
-	private Long         updatedOn;
-	private Long size       = 0L;
-	private Long dataPoints = 0L;
+	private Experiment          experiment;
+	private Location            location;
+	private String              name;
+	private String              description;
+	private Date                dateStart;
+	private Date                dateEnd;
+	private String              sourceFile;
+	private String              datatype;
+	private String              dublinCore;
+	private String              contact;
+	private String              version;
+	private Long                userId;
+	private DatasetState        datasetState;
+	private License             license;
+	private Boolean             isExternal;
+	private String              hyperlink;
+	private Long                createdOn;
+	private Long                updatedOn;
+	private Long                size       = 0L;
+	private Long                dataPoints = 0L;
 	private List<Collaborator>  collaborators;
 	private List<AttributeData> attributeData;
 
@@ -114,6 +116,17 @@ public class Dataset extends DatabaseObject
 	public Dataset setLocation(Location location)
 	{
 		this.location = location;
+		return this;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public Dataset setName(String name)
+	{
+		this.name = name;
 		return this;
 	}
 
@@ -334,7 +347,7 @@ public class Dataset extends DatabaseObject
 
 	public boolean hasLicenseBeenAccepted(UserAuth user)
 	{
-		if(user == null)
+		if (user == null)
 			return false;
 		else
 			return license == null || license.getLicenseLog() != null && Objects.equals(license.getLicenseLog().getUser(), user.getId());
@@ -346,6 +359,7 @@ public class Dataset extends DatabaseObject
 		return "Dataset{" +
 				"experiment=" + experiment +
 				", location=" + location +
+				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", dateStart=" + dateStart +
 				", dateEnd=" + dateEnd +
@@ -392,6 +406,7 @@ public class Dataset extends DatabaseObject
 							.setExperiment(EXPERIMENT_CACHE.get(user, row.getLong(EXPERIMENT_ID), row, foreignsFromResultSet))
 							.setLocation(LOCATION_CACHE.get(user, row.getLong(LOCATION_ID), row, foreignsFromResultSet))
 							.setLicense(LICENSE_CACHE.get(user, row.getLong(LICENSE_ID), row, foreignsFromResultSet))
+							.setName(row.getString(NAME))
 							.setDescription(row.getString(DESCRIPTION))
 							.setDateStart(row.getDate(DATE_START))
 							.setDateEnd(row.getDate(DATE_END))
@@ -507,9 +522,10 @@ public class Dataset extends DatabaseObject
 		@Override
 		public void write(Database database, Dataset object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasets` (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasets` (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + NAME + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getExperiment().getId())
 					.setLong(object.getLocation() == null ? null : object.getLocation().getId())
+					.setString(object.getName())
 					.setString(object.getDescription())
 					.setDate(object.getDateStart())
 					.setDate(object.getDateEnd())

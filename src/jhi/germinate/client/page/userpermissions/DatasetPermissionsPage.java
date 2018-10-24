@@ -207,7 +207,7 @@ public class DatasetPermissionsPage extends Composite
 	private void updateDatasetUserPermissions()
 	{
 		datasetUserPermissionsPanel.clear();
-		datasetName.setSubText(dataset.getDescription());
+		datasetName.setSubText(dataset.getName());
 		datasetPermissionsWrapper.setVisible(dataset != null);
 		newDatasetUserPermissionsTable.clear();
 

@@ -37,15 +37,15 @@ import jhi.germinate.shared.*;
  *
  * @author Sebastian Raubach
  */
-public final class AlertDialog
+public class AlertDialog
 {
-	private ModalBody    content;
-	private String       heading;
-	private ButtonConfig positiveConfig;
-	private ButtonConfig negativeConfig;
-	private Modal        dialog      = new Modal();
-	private ModalFooter  footer      = new ModalFooter();
-	private ButtonGroup  buttonGroup = new ButtonGroup();
+	protected ButtonGroup  buttonGroup = new ButtonGroup();
+	private   ModalBody    content;
+	private   String       heading;
+	private   ButtonConfig positiveConfig;
+	private   ButtonConfig negativeConfig;
+	private   Modal        dialog      = new Modal();
+	private   ModalFooter  footer      = new ModalFooter();
 
 	private boolean preventClose        = false;
 	private boolean autoCloseOnPositive = true;
@@ -216,7 +216,7 @@ public final class AlertDialog
 		dialog.show();
 	}
 
-	private void setUp()
+	protected void setUp()
 	{
 		isSetUp = true;
 

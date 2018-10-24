@@ -206,6 +206,7 @@ public class Style
 	public static final String MDI_SECURITY_ACCOUNT                = "mdi-security-account";
 	public static final String MDI_ACCOUNT_KEY                     = "mdi-account-key";
 	public static final String MDI_PRINTER                         = "mdi-printer";
+	public static final String MDI_JSON                            = "mdi-json";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
 	public static final String COL_XXS_12                          = "col-xxs-12";
 

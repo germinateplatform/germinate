@@ -37,8 +37,8 @@ import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
-import jhi.germinate.shared.datastructure.database.Image;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.datastructure.database.Image;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
@@ -51,18 +51,23 @@ public class TraitDetailsPage extends Composite
 {
 	private static CompoundDetailsPageUiBinder ourUiBinder = GWT.create(CompoundDetailsPageUiBinder.class);
 	@UiField
-	PageHeader    pageHeader;
+	PageHeader           pageHeader;
 	@UiField
-	FlowPanel     resultsPanel;
+	FlowPanel            resultsPanel;
 	@UiField
-	SynonymWidget synonyms;
+	SynonymWidget        synonyms;
 	@UiField
-	SimplePanel   phenotypeDataTablePanel;
+	SimplePanel          phenotypeDataTablePanel;
 	@UiField
-	SimplePanel   galleryPanel;
+	AdditionalDataWidget additionalDatasetWidget;
 	@UiField
-	LinkWidget    linkWidget;
-	private Phenotype phenotype;
+	SimplePanel          datasetPanel;
+	@UiField
+	SimplePanel          galleryPanel;
+	@UiField
+	LinkWidget           linkWidget;
+	private Phenotype          phenotype;
+	private PhenotypeDataTable phenotypeDataTable;
 
 	public TraitDetailsPage()
 	{
@@ -81,12 +86,31 @@ public class TraitDetailsPage extends Composite
 
 					if (phenotype != null)
 					{
+						List<ExperimentType> types = new ArrayList<>();
+						types.add(ExperimentType.trials);
+						additionalDatasetWidget.setExperimentTypes(types);
+						additionalDatasetWidget.setUpdateCallback(new AdditionalDataWidget.UpdateCallback()
+						{
+							@Override
+							public void onVisibilityChanged(boolean visible)
+							{
+							}
+
+							@Override
+							public void onDataUpdate()
+							{
+								phenotypeDataTable.refreshTable();
+							}
+						});
+						additionalDatasetWidget.update();
+
 						resultsPanel.setVisible(true);
 						pageHeader.setText(Text.LANG.traitDetailsFor(phenotype.getName()));
 
 						synonyms.update(GerminateDatabaseTable.phenotypes, phenotype.getId());
 
 						showPhenotypeDataTable();
+						showDatasetTable();
 						showImages();
 
 						linkWidget.update(GerminateDatabaseTable.phenotypes, phenotype.getId());
@@ -116,9 +140,21 @@ public class TraitDetailsPage extends Composite
 		});
 	}
 
+	private void showDatasetTable()
+	{
+		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, ExperimentType.trials)
+		{
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
+			{
+				return DatasetService.Inst.get().getForFilterAndTrait(Cookie.getRequestProperties(), filter, ExperimentType.trials, phenotype.getId(), pagination, callback);
+			}
+		});
+	}
+
 	private void showPhenotypeDataTable()
 	{
-		final PhenotypeDataTable table = new PhenotypeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		phenotypeDataTable = new PhenotypeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
 			public boolean supportsFullIdMarking()
@@ -152,7 +188,7 @@ public class TraitDetailsPage extends Composite
 				return PhenotypeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
 			}
 		};
-		phenotypeDataTablePanel.add(table);
+		phenotypeDataTablePanel.add(phenotypeDataTable);
 	}
 
 	interface CompoundDetailsPageUiBinder extends UiBinder<HTMLPanel, TraitDetailsPage>

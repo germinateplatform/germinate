@@ -27,7 +27,6 @@ import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.util.importer.common.*;
-import jhi.germinate.util.importer.phenotype.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
@@ -56,7 +55,7 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 	public void run(File input, String server, String database, String username, String password, String port, String readerName)
 	{
 		// Import the meta-data first. Get the created dataset
-		metadataImporter = new MetadataImporter(ExperimentType.trials);
+		metadataImporter = new MetadataImporter(ExperimentType.compound);
 		metadataImporter.run(input, server, database, username, password, port, ExcelMetadataReader.class.getCanonicalName());
 		dataset = metadataImporter.getDataset();
 
@@ -71,7 +70,7 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 	@Override
 	protected IDataReader getFallbackReader()
 	{
-		return new ExcelPhenotypeDataReader();
+		return new ExcelCompoundDataReader();
 	}
 
 	@Override
@@ -109,7 +108,7 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 	 */
 	private void createCompoundData(CompoundData entry) throws DatabaseException
 	{
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM compounddata WHERE compound_id = ? AND germinatebase_id = ? AND dataset_id <=> ? AND compound_value = ? AND recording_date <=> ?");
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM `compounddata` WHERE `compound_id` = ? AND `germinatebase_id` = ? AND `dataset_id` <=> ? AND `compound_value` = ? AND `recording_date` <=> ?");
 		int i = 1;
 		stmt.setLong(i++, entry.getCompound().getId());
 		stmt.setLong(i++, entry.getAccession().getId());
@@ -147,7 +146,7 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 
 		if (cached == null)
 		{
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM germinatebase WHERE general_identifier = ?");
+			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM `germinatebase` WHERE `general_identifier` = ?");
 			int i = 1;
 			stmt.setString(i++, entry.getGeneralIdentifier());
 
@@ -190,7 +189,7 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 
 		if (cached == null)
 		{
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM compounds WHERE name = ?");
+			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT `id` FROM `compounds` WHERE `name` = ?");
 			stmt.setString(1, name);
 
 			DatabaseResult rs = stmt.query();

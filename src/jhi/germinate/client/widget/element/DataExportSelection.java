@@ -19,7 +19,6 @@ package jhi.germinate.client.widget.element;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -129,19 +128,11 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 			@Override
 			public void onSuccessImpl(ServerResult<String> result)
 			{
-						/* Add a download link if the result file creation was
-						 * successful */
+				// Add a download link if the result file creation was successful
 				if (!StringUtils.isEmpty(result.getServerResult()))
 				{
-					String path = new ServletConstants.Builder()
-							.setUrl(GWT.getModuleBaseURL())
-							.setPath(ServletConstants.SERVLET_FILES)
-							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
-
-                        	/* Click it */
-					JavaScript.invokeDownload(path);
+					// Click it
+					JavaScript.invokeGerminateDownload(result.getServerResult());
 				}
 				else
 				{

@@ -47,7 +47,7 @@ public class FilenameMetadataImporter extends GenotypeMetadataImporter
 			name.substring(0, name.lastIndexOf("."));
 
 		this.dataset = new Dataset()
-				.setDescription(name)
+				.setName(name)
 				.setVersion("1")
 				.setDatasetState(DatasetState.PUBLIC)
 				.setIsExternal(false)

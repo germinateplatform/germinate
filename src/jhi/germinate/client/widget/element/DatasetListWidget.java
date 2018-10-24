@@ -76,7 +76,7 @@ public class DatasetListWidget extends GerminateComposite
 		ULPanel ulPanel = new ULPanel();
 
 		for (Dataset dataset : selectedDatasets)
-			ulPanel.add(new Label(dataset.getId() + " - " + dataset.getDescription()));
+			ulPanel.add(new Label(dataset.getId() + " - " + dataset.getName()));
 
 		panel.add(new Heading(HeadingSize.H3, Text.LANG.selectedDatasets()));
 		panel.add(ulPanel);

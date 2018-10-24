@@ -24,7 +24,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.http.client.*;
-import com.google.gwt.i18n.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.cellview.client.Column;
@@ -189,14 +188,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			{
 				if (!StringUtils.isEmpty(result.getServerResult()))
 				{
-					String path = new ServletConstants.Builder()
-							.setUrl(GWT.getModuleBaseURL())
-							.setPath(ServletConstants.SERVLET_FILES)
-							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
-
-					JavaScript.invokeDownload(path);
+					JavaScript.invokeGerminateDownload(result.getServerResult());
 				}
 			}
 		});

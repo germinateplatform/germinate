@@ -319,7 +319,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				if (filter.getAll().size() > 1)
 					filter.addLogicalOperator(new And());
 
-				return AttributeService.Inst.get().getForFilter(Cookie.getRequestProperties(), pagination, GerminateDatabaseTable.germinatebase, filter, callback);
+				return AttributeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, GerminateDatabaseTable.germinatebase, filter, callback);
 			}
 		});
 	}

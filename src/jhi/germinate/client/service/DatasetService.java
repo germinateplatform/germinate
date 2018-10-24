@@ -61,6 +61,23 @@ public interface DatasetService extends RemoteService
 	PaginatedServerResult<List<Dataset>> getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, Pagination pagination) throws InsufficientPermissionsException, InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
 
 	/**
+	 * Returns a paginated list of {@link Dataset}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param id         The {@link DatabaseObject} id
+	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @return A paginated list of {@link Dataset}s that match the given {@link PartialSearchQuery}.
+	 * @throws InvalidSessionException          Thrown if the current session is invalid
+	 * @throws DatabaseException                Thrown if the query fails on the server
+	 * @throws InvalidColumnException           Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws InvalidSearchQueryException      Thrown if the search query is invalid
+	 * @throws InvalidArgumentException         Thrown if one of the provided arguments for the filtering is invalid
+	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
+	 */
+	PaginatedServerResult<List<Dataset>> getForFilterAndTrait(RequestProperties properties, PartialSearchQuery filter, ExperimentType type, Long id, Pagination pagination) throws InsufficientPermissionsException, InvalidSessionException, DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException;
+
+	/**
 	 * Returns a paginated list of {@link Dataset}s that have an association with the given {@link Accession} id.
 	 *
 	 * @param properties  The {@link RequestProperties}
@@ -166,4 +183,14 @@ public interface DatasetService extends RemoteService
 	 * @throws SystemInReadOnlyModeException Thrown if Germinate is currently operating in "read-only" mode
 	 */
 	ServerResult<Boolean> trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user) throws InvalidSessionException, DatabaseException, SystemInReadOnlyModeException;
+
+	/**
+	 * Exports the dataset attributes of the given {@link Dataset}s to a file. Only includes the {@link Attribute}s with the given ids (can be <code>null</code>).
+	 *
+	 * @param properties   The {@link RequestProperties}
+	 * @param datasetIds   The {@link List} of {@link Dataset} ids.
+	 * @param attributeIds The {@link List} of {@link Attribute} ids.
+	 * @return The dataset attributes of the given {@link Dataset}s to a file. Only includes the {@link Attribute}s with the given ids (can be <code>null</code>).
+	 */
+	ServerResult<String> exportAttributes(RequestProperties properties, List<Long> datasetIds, List<Long> attributeIds) throws InvalidSessionException, DatabaseException;
 }

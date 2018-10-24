@@ -322,7 +322,7 @@ public interface Text extends Messages
 	String menuPhenotypes();
 
 	@Key("menu.search")
-	@DefaultMessage("search")
+	@DefaultMessage("Search")
 	String menuSearch();
 
 	@Key("menu.trials")
@@ -369,6 +369,10 @@ public interface Text extends Messages
 
 	@Key("notification.datasets.selection.empty")
 	String notificationDatasetsSelectAtLeastOne();
+
+	@Key("notification.attribute.selection.empty")
+	@DefaultMessage("Please select at least one attribute.")
+	String notificationAttributeSelectAtLeastOne();
 
 	@Key("notification.datasets.selection.too.many")
 	@DefaultMessage("At most one dataset can be selected!")
@@ -484,7 +488,7 @@ public interface Text extends Messages
 	String notificationIOError();
 
 	@Key("notification.system.read.only")
-	@DefaultMessage("Germinate is operating in readAll-only mode. Changes have not been applied.")
+	@DefaultMessage("Germinate is operating in read-only mode. Changes have not been applied.")
 	String notificationSystemReadOnly();
 
 	@Key("notification.exception.flapjack")
@@ -777,6 +781,10 @@ public interface Text extends Messages
 
 	@Key("column.dataset.experiment.name")
 	String datasetsColumnExperimentName();
+
+	@Key("column.dataset.name")
+	@DefaultMessage("Dataset Name")
+	String datasetsColumnDatasetName();
 
 	@Key("column.dataset.description")
 	String datasetsColumnDatasetDescription();
@@ -1669,7 +1677,7 @@ public interface Text extends Messages
 	String maintenanceText();
 
 	@Key("banner.read.only")
-	@DefaultMessage("Germinate is currently operating in readAll-only mode. Some features have been temporarily disabled.")
+	@DefaultMessage("Germinate is currently operating in read-only mode. Some features have been temporarily disabled.")
 	String readOnlyBanner();
 
 	@Key("widget.dataset.title.allelefreq")
@@ -1711,6 +1719,14 @@ public interface Text extends Messages
 	@Key("widget.dataset.text.climate")
 	@DefaultMessage("<p>Please select a dataset for the export process.</p>")
 	SafeHtml climateDatasetText();
+
+	@Key("widget.dataset.metadata.download.title")
+	@DefaultMessage("Download Metadata")
+	String datasetMetadataDownloadTitle();
+
+	@Key("widget.dataset.metadata.download.text")
+	@DefaultMessage("Please select at least one attribute for which to export the attribute data. Then click on the download button below the list.")
+	String datasetMetadataDownloadText();
 
 	@Key("page.acknowledgements.title")
 	String acknowledgementsTitle();
@@ -2002,9 +2018,25 @@ public interface Text extends Messages
 	@DefaultMessage("Images")
 	String compoundDetailsImageTitle();
 
+	@Key("page.compound.details.dataset.title")
+	@DefaultMessage("Dataset")
+	String compoundDetailsDatasetTitle();
+
+	@Key("page.compound.details.dataset.text")
+	@DefaultMessage("This table shows all datasets containing the selected compound. Additionally, the number of germplasm for which there is a value for this compound within the current dataset is shown alongside the total number of compound values per dataset.")
+	String compoundDetailsDatasetText();
+
 	@Key("page.trait.details.image.title")
 	@DefaultMessage("Images")
 	String traitDetailsImageTitle();
+
+	@Key("page.trait.details.datasets.title")
+	@DefaultMessage("Datasets")
+	String traitDetailsDatasetTitle();
+
+	@Key("page.trait.details.dataset.text")
+	@DefaultMessage("This table shows all datasets containing the selected trait. Additionally, the number of germplasm for which there is a value for this trait within the current dataset is shown alongside the total number of phenotype values per dataset.")
+	String traitDetailsDatasetText();
 
 	@Key("mcpd.accename")
 	@DefaultMessage("Accession name")
@@ -2266,7 +2298,7 @@ public interface Text extends Messages
 	@DefaultMessage("© Information & Computational Sciences, JHI 2005-{0}")
 	String copyright(String currentYear);
 
-	@Key("adminConfigHelp")
+	@Key("help.admin.config")
 	@DefaultMessage("<p>This page let''s you configure Germinate the way you want it to be. Please be aware that changes to this page will majorly affect how Germinate works and looks, so be careful.</p>")
 	SafeHtml adminConfigHelp();
 
@@ -2307,7 +2339,7 @@ public interface Text extends Messages
 	String groupsNewMembersSubtitle();
 
 	@Key("widget.table.filter.info")
-	@DefaultMessage("<b>Table filtering supports many different comparisons. 'Equal' searches for exact matches, while 'Like', by default, looks for matches starting or ending with the query, but also support the wildcard character '%'.</b>")
+	@DefaultMessage("<b>Table filtering supports many different comparisons. ''Equal'' searches for exact matches, while 'Like', by default, looks for matches starting or ending with the query, but also support the wildcard character ''%''.</b>")
 	SafeHtml tableFilterInfo();
 
 	@Key("wizard.license.title")
@@ -2634,4 +2666,12 @@ public interface Text extends Messages
 	@Key("page.dataset.permissions.current.group.permissions")
 	@DefaultMessage("Current group permissions")
 	String datasetPermissionsCurrentGroupPermissions();
+
+	@Key("widget.dataset.download.attributes")
+	@DefaultMessage("Attributes")
+	String datasetAttributesDownloadAttributes();
+
+	@Key("widget.dataset.download.dublin.core")
+	@DefaultMessage("Dublin Core")
+	String datasetAttributesDownloadDublinCore();
 }

@@ -28,7 +28,7 @@
 	<g:HTMLPanel ui:field="panel">
 		<b:PageHeader text="{msg.trialsTitle}"/>
 
-		<g8:DatasetListWidget ui:field="datasetList" />
+		<g8:DatasetListWidget ui:field="datasetList"/>
 
 		<b:Row ui:field="content" visible="false">
 			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
@@ -49,7 +49,10 @@
 			<g:FlowPanel ui:field="overviewPanel"/>
 			<c:ScatterChart ui:field="phenotypeByPhenotypeChart"/>
 			<c:MatrixChart ui:field="matrixChart"/>
-			<g8:DataExportSelection ui:field="exportSelection"/>
+			<g:FlowPanel>
+				<g8:DataExportSelection ui:field="exportSelection"/>
+				<g8:DatasetMetadataDownload ui:field="metadataDownload"/>
+			</g:FlowPanel>
 		</g:DeckPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

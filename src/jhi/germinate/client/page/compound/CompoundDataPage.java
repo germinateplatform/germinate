@@ -80,6 +80,9 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	@UiField(provided = true)
 	DataExportSelection<Compound> exportSelection;
 
+	@UiField(provided = true)
+	DatasetMetadataDownload metadataDownload;
+
 	@UiField
 	DeckPanel deck;
 
@@ -87,9 +90,14 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 
 	public CompoundDataPage()
 	{
+		/* See if there are selected datasets in the parameter store */
+		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
+
 		compoundMatrixChart = new MatrixChart<>();
 		compoundByCompoundChart = new ScatterChart<>();
 		exportSelection = new DataExportSelection<>(ExperimentType.compound);
+
+		metadataDownload = new DatasetMetadataDownload(selectedDatasets);
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -100,9 +108,6 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	protected void onLoad()
 	{
 		super.onLoad();
-
-		/* See if there are selected datasets in the parameter store */
-		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
 
 		if (selectedDatasets == null || selectedDatasets.size() < 1)
 		{

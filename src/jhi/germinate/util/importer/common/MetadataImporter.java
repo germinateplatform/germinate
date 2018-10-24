@@ -211,7 +211,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 	 */
 	protected void createOrGetDataset() throws DatabaseException
 	{
-		String name = dataset.getDescription();
+		String name = dataset.getName();
 
 		if (StringUtils.isEmpty(name) || dataset.getExperiment() == null)
 			throw new DatabaseException("Invalid experiment or dataset name.");
@@ -219,7 +219,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 		createOrGetLocation(dataset);
 
 		int i = 1;
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM datasets WHERE description <=> ? AND location_id <=> ? AND experiment_id <=> ? AND dublin_core <=> CAST(? AS JSON) AND version <=> ?");
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM datasets WHERE name <=> ? AND location_id <=> ? AND experiment_id <=> ? AND dublin_core <=> CAST(? AS JSON) AND version <=> ?");
 		stmt.setString(i++, name);
 		stmt.setLong(i++, dataset.getLocation() == null ? null : dataset.getLocation().getId());
 		stmt.setLong(i++, dataset.getExperiment().getId());

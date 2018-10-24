@@ -78,6 +78,9 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	@UiField(provided = true)
 	DataExportSelection<Phenotype> exportSelection;
 
+	@UiField(provided = true)
+	DatasetMetadataDownload metadataDownload;
+
 	@UiField
 	DeckPanel deck;
 
@@ -87,9 +90,13 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 	public TrialPage()
 	{
+		/* See if there are selected datasets in the parameter store */
+		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
+
 		matrixChart = new MatrixChart<>();
 		phenotypeByPhenotypeChart = new ScatterChart<>();
 		exportSelection = new DataExportSelection<>(ExperimentType.trials);
+		metadataDownload = new DatasetMetadataDownload(selectedDatasets);
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -100,9 +107,6 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	protected void onLoad()
 	{
 		super.onLoad();
-
-		/* See if there are selected datasets in the parameter store */
-		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 
 		if (selectedDatasets == null || selectedDatasets.size() < 1)
 		{

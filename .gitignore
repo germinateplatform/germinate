@@ -44,3 +44,5 @@ build-dev.properties
 /war/css/images/css-images/
 /war/js/js-external
 /war/favicon.ico
+
+FindMissingProperties.java

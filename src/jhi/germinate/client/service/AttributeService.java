@@ -37,7 +37,7 @@ import jhi.germinate.shared.search.*;
 public interface AttributeService extends RemoteService
 {
 	String[] COLUMNS_SORTABLE_ACCESSION = {Attribute.ID, Attribute.TARGET_TABLE, Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Attribute.NAME, Attribute.DESCRIPTION, Attribute.DATA_TYPE, AttributeData.VALUE};
-	String[] COLUMNS_SORTABLE_DATASET   = {Attribute.ID, Attribute.TARGET_TABLE, Dataset.ID, Dataset.DESCRIPTION, Attribute.NAME, Attribute.DESCRIPTION, Attribute.DATA_TYPE, AttributeData.VALUE};
+	String[] COLUMNS_SORTABLE_DATASET   = {Attribute.ID, Attribute.TARGET_TABLE, Dataset.ID, Dataset.NAME, Dataset.DESCRIPTION, Attribute.NAME, Attribute.DESCRIPTION, Attribute.DATA_TYPE, AttributeData.VALUE};
 
 	final class Inst
 	{
@@ -67,7 +67,22 @@ public interface AttributeService extends RemoteService
 	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
-	PaginatedServerResult<List<AttributeData>> getForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
+	PaginatedServerResult<List<AttributeData>> getDataForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
+
+	/**
+	 * Returns a paginated list of {@link Attribute} objects that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @return A paginated list of {@link Attribute} objects that match the given {@link PartialSearchQuery}.
+	 * @throws InvalidSessionException     Thrown if the current session is invalid
+	 * @throws DatabaseException           Thrown if the query fails on the server
+	 * @throws InvalidColumnException      Thrown if the filtering is trying to access a column that isn't available for filtering
+	 * @throws InvalidSearchQueryException Thrown if the search query is invalid
+	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
+	 */
+	PaginatedServerResult<List<Attribute>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
 	 * Returns the ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.

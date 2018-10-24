@@ -38,7 +38,7 @@ public class AttributeDataManager extends AbstractManager<AttributeData>
 	private static final String SELECT_IDS_FOR_ACCESSION_FILTER        = "SELECT DISTINCT `germinatebase`.`id` FROM " + COMMON_TABLES_ACCESSIONS + " {{FILTER}} AND `attributes`.`target_table` = 'germinatebase'";
 
 	private static final String COMMON_TABLES_DATASETS               = "`attributedata` LEFT JOIN `datasets` ON `datasets`.`id` = `attributedata`.`foreign_id` LEFT JOIN `attributes` ON `attributes`.`id` = `attributedata`.`attribute_id`";
-	private static final String SELECT_ALL_FOR_DATASET_FILTER_EXPORT = "SELECT `datasets`.`id` AS dataset_id, `datasets`.`description` AS dataset_description, `attributes`.`name` AS attributes_name, `attributes`.`datatype` AS attributes_datatype, `attributedata`.`value` AS attributedata_value FROM " + COMMON_TABLES_DATASETS + " {{FILTER}} AND `attributes`.`target_table` = 'datasets' %s LIMIT ?, ?";
+	private static final String SELECT_ALL_FOR_DATASET_FILTER_EXPORT = "SELECT `datasets`.`id` AS dataset_id, `datasets`.`name` AS datasets_name, `datasets`.`description` AS datasets_description, `attributes`.`name` AS attributes_name, `attributes`.`datatype` AS attributes_datatype, `attributedata`.`value` AS attributedata_value FROM " + COMMON_TABLES_DATASETS + " {{FILTER}} AND `attributes`.`target_table` = 'datasets' %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_DATASET_FILTER        = "SELECT *                         FROM " + COMMON_TABLES_DATASETS + " {{FILTER}} AND `attributes`.`target_table` = 'datasets' %s LIMIT ?, ?";
 
 	private static final String[] COLUMNS_ATTRIBUTE_ACCESSION_DATA_EXPORT = {"germinatebase_id", "germinatebase_gid", "germinatebase_name", "attributes_name", "attributes_datatype", "attributedata_value"};

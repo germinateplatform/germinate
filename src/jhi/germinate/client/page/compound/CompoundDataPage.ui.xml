@@ -49,7 +49,11 @@
 			<g:FlowPanel ui:field="overviewPanel"/>
 			<c:ScatterChart ui:field="compoundByCompoundChart"/>
 			<c:MatrixChart ui:field="compoundMatrixChart"/>
-			<g8:DataExportSelection ui:field="exportSelection"/>
+
+			<g:FlowPanel>
+				<g8:DataExportSelection ui:field="exportSelection"/>
+				<g8:DatasetMetadataDownload ui:field="metadataDownload"/>
+			</g:FlowPanel>
 		</g:DeckPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

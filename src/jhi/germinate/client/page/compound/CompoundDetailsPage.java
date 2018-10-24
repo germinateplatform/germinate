@@ -49,6 +49,10 @@ import jhi.germinate.shared.search.operators.*;
  */
 public class CompoundDetailsPage extends Composite
 {
+
+	@UiField
+	PageHeader           pageHeader;
+
 	interface CompoundDetailsPageUiBinder extends UiBinder<HTMLPanel, CompoundDetailsPage>
 	{
 	}
@@ -56,19 +60,21 @@ public class CompoundDetailsPage extends Composite
 	private static CompoundDetailsPageUiBinder ourUiBinder = GWT.create(CompoundDetailsPageUiBinder.class);
 
 	private Compound compound;
-
 	@UiField
-	PageHeader    pageHeader;
+	FlowPanel            resultsPanel;
 	@UiField
-	FlowPanel     resultsPanel;
+	SynonymWidget        synonyms;
 	@UiField
-	SynonymWidget synonyms;
+	SimplePanel          compoundDataTablePanel;
 	@UiField
-	SimplePanel   compoundDataTablePanel;
+	AdditionalDataWidget additionalDatasetWidget;
 	@UiField
-	SimplePanel   galleryPanel;
+	SimplePanel          datasetPanel;
 	@UiField
-	LinkWidget    linkWidget;
+	SimplePanel          galleryPanel;
+	@UiField
+	LinkWidget           linkWidget;
+	private CompoundDataTable compoundDataTable;
 
 	public CompoundDetailsPage()
 	{
@@ -87,12 +93,31 @@ public class CompoundDetailsPage extends Composite
 
 					if (compound != null)
 					{
+						List<ExperimentType> types = new ArrayList<>();
+						types.add(ExperimentType.compound);
+						additionalDatasetWidget.setExperimentTypes(types);
+						additionalDatasetWidget.setUpdateCallback(new AdditionalDataWidget.UpdateCallback()
+						{
+							@Override
+							public void onVisibilityChanged(boolean visible)
+							{
+							}
+
+							@Override
+							public void onDataUpdate()
+							{
+								compoundDataTable.refreshTable();
+							}
+						});
+						additionalDatasetWidget.update();
+
 						resultsPanel.setVisible(true);
 						pageHeader.setText(Text.LANG.compoundDetailsFor(compound.getName()));
 
 						synonyms.update(GerminateDatabaseTable.compounds, compound.getId());
 
 						showCompoundDataTable();
+						showDatasetTable();
 						showImages();
 
 						linkWidget.update(GerminateDatabaseTable.compounds, compound.getId());
@@ -110,6 +135,18 @@ public class CompoundDetailsPage extends Composite
 		}
 	}
 
+	private void showDatasetTable()
+	{
+		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, ExperimentType.compound)
+		{
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
+			{
+				return DatasetService.Inst.get().getForFilterAndTrait(Cookie.getRequestProperties(), filter, ExperimentType.compound, compound.getId(), pagination, callback);
+			}
+		});
+	}
+
 	private void showImages()
 	{
 		galleryPanel.add(new Gallery(false, false)
@@ -124,7 +161,7 @@ public class CompoundDetailsPage extends Composite
 
 	private void showCompoundDataTable()
 	{
-		final CompoundDataTable table = new CompoundDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		compoundDataTable = new CompoundDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
 			public boolean supportsFullIdMarking()
@@ -158,6 +195,6 @@ public class CompoundDetailsPage extends Composite
 				return CompoundService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
 			}
 		};
-		compoundDataTablePanel.add(table);
+		compoundDataTablePanel.add(compoundDataTable);
 	}
 }

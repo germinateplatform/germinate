@@ -90,6 +90,29 @@ public abstract class DatasetAttributeDataTable extends DatabaseObjectPagination
 			addColumn(column, Text.LANG.accessionsColumnId(), sortingEnabled);
 		}
 
+		/* Add the dataset name column */
+		column = new ClickableSafeHtmlColumn()
+		{
+			@Override
+			public SafeHtml getValue(AttributeData object)
+			{
+				if (object.getForeign() != null)
+				{
+					return SimpleHtmlTemplate.INSTANCE.text(((Dataset) object.getForeign()).getName());
+				}
+				else
+					return null;
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Dataset.NAME);
+		addColumn(column, Text.LANG.datasetsColumnDatasetName(), sortingEnabled);
+
 		/* Add the dataset description column */
 		column = new ClickableSafeHtmlColumn()
 		{

@@ -43,7 +43,7 @@
 			</b:Column>
 		</b:Row>
 
-		<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_DOWNLOAD}" enabled="false" text="{msg.generalDownload}" type="SUCCESS"
+		<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_DOWNLOAD}" enabled="false" text="{msg.generalDownload}" type="PRIMARY"
 				  ui:field="downloadButton"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

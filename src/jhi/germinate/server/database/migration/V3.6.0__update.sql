@@ -7,8 +7,12 @@
 ALTER TABLE `synonyms` ADD INDEX(`foreign_id`) USING BTREE;
 
 ALTER TABLE `maps`
-MODIFY COLUMN `description` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL COMMENT 'Describes the map.' AFTER `id`,
-ADD COLUMN `name` varchar(255) NOT NULL COMMENT 'The name of this map.' AFTER `id`;
+CHANGE COLUMN `description` `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Describes the map.' AFTER `id`,
+ADD COLUMN `description` text NULL COMMENT 'The name of this map.' AFTER `name`;
+
+ALTER TABLE `datasets`
+CHANGE COLUMN `description` `name` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL COMMENT 'Describes the dataset.' AFTER `location_id`,
+ADD COLUMN `description` text NULL COMMENT 'The name of this dataset.' AFTER `name`;
 
 ALTER TABLE `usergroupmembers`
 ADD FOREIGN KEY (`usergroup_id`) REFERENCES `usergroups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

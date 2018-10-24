@@ -70,6 +70,7 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 	{
 		PageHeader header = new PageHeader();
 		header.setText(Text.LANG.dataStatisticsTitle());
+		panel.add(header);
 
 		panel.add(new TaxonomyPieChart());
 		if(GerminateSettingsHolder.get().pdciEnabled.getValue())

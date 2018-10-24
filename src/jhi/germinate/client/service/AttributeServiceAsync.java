@@ -40,7 +40,17 @@ public interface AttributeServiceAsync
 	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	Request getForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback);
+	Request getDataForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback);
+
+	/**
+	 * Returns a paginated list of {@link Attribute} objects that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	Request getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Attribute>>> callback);
 
 	/**
 	 * Returns the ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.

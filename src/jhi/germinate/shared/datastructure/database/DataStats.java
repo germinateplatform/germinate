@@ -199,7 +199,7 @@ public class DataStats extends DatabaseObject
 							.setAvg(row.getDouble("avg"))
 							.setMax(row.getDouble("max"))
 							.setStd(row.getDouble("std"))
-							.setDataset(row.getString("dataset_description"));
+							.setDataset(row.getString("datasets_name"));
 				}
 				catch (InsufficientPermissionsException e)
 				{

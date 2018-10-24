@@ -103,20 +103,15 @@ public class SearchCondition implements Serializable, HasToSqlString
 		this.type = clazz.getSimpleName();
 	}
 
-	public SearchCondition(String columnName, ComparisonOperator comp, Object conditionValue, Class<?> clazz)
-	{
-		this(columnName, comp, conditionValue.toString(), clazz);
-	}
-
-	public SearchCondition(String columnName, ComparisonOperator comp, List<String> conditionValues, Class<?> clazz)
+	public SearchCondition(String columnName, ComparisonOperator comp, List<?> conditionValues, Class<?> clazz)
 	{
 		this.columnName = columnName;
 		this.comp = comp;
-		for (String value : conditionValues)
+		for (Object value : conditionValues)
 		{
 			try
 			{
-				addConditionValue(value);
+				addConditionValue(value.toString());
 			}
 			catch (InvalidArgumentException | InvalidSearchQueryException e)
 			{
@@ -124,6 +119,11 @@ public class SearchCondition implements Serializable, HasToSqlString
 			}
 		}
 		this.type = clazz.getSimpleName();
+	}
+
+	public SearchCondition(String columnName, ComparisonOperator comp, Object conditionValue, Class<?> clazz)
+	{
+		this(columnName, comp, conditionValue.toString(), clazz);
 	}
 
 	/**

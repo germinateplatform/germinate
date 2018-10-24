@@ -17,32 +17,24 @@
 
 <ui:UiBinder xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
-			 xmlns:g8="urn:import:jhi.germinate.client.widget.element"
+			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
+			 xmlns:lb="urn:import:jhi.germinate.client.widget.listbox"
 			 xmlns:ui='urn:ui:com.google.gwt.uibinder'>
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
 
-	<g:HTMLPanel>
-		<b:PageHeader ui:field="pageHeader"/>
+	<ui:style>
+	</ui:style>
 
-		<g:FlowPanel visible="false" ui:field="resultsPanel">
-			<b:Heading size="H3" text="{msg.synonymsTitle}"/>
-			<g8:SynonymWidget ui:field="synonyms"/>
+	<g:FlowPanel ui:field="panel">
+		<b:Heading size="H3" text="{msg.datasetMetadataDownloadTitle}" />
+		<g8:ParagraphPanel text="{msg.datasetMetadataDownloadText}" />
 
-			<b:Heading size="H3" text="{msg.searchSectionPhenotypeData}"/>
-			<g:SimplePanel ui:field="phenotypeDataTablePanel"/>
+		<lb:AttributeListBox ui:field="attributesListBox" />
 
-			<g8:AdditionalDataWidget visible="false" ui:field="additionalDatasetWidget" />
+		<g8:ParagraphPanel />
 
-			<b:Heading size="H3" text="{msg.traitDetailsDatasetTitle}" />
-			<g8:ParagraphPanel text="{msg.traitDetailsDatasetText}" />
-			<g:SimplePanel ui:field="datasetPanel" />
-
-			<b:Heading size="H3" text="{msg.traitDetailsImageTitle}"/>
-			<g:SimplePanel ui:field="galleryPanel"/>
-
-			<b:Heading size="H3" text="{msg.passportExternalLinks}"/>
-			<g8:LinkWidget ui:field="linkWidget"/>
-		</g:FlowPanel>
-	</g:HTMLPanel>
+		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DOWNLOAD}" text="{msg.generalDownload}" type="PRIMARY" ui:field="download"/>
+	</g:FlowPanel>
 </ui:UiBinder>

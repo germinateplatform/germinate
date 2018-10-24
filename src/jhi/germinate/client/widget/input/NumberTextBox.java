@@ -53,7 +53,7 @@ public class NumberTextBox extends TextBox implements Validator<String>
 	{
 		try
 		{
-			return Double.parseDouble(getValue());
+			return NumberUtils.DECIMAL_FORMAT_FOUR_PLACES.parse(getValue());
 		}
 		catch (Exception e)
 		{
@@ -74,7 +74,7 @@ public class NumberTextBox extends TextBox implements Validator<String>
 
 		try
 		{
-			Double.parseDouble(value);
+			NumberUtils.DECIMAL_FORMAT_FOUR_PLACES.parse(value);
 		}
 		catch (Exception e)
 		{

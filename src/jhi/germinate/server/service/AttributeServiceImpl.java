@@ -43,7 +43,16 @@ import jhi.germinate.shared.search.*;
 public class AttributeServiceImpl extends BaseRemoteServiceServlet implements AttributeService
 {
 	@Override
-	public PaginatedServerResult<List<AttributeData>> getForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
+	public PaginatedServerResult<List<Attribute>> getForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		return AttributeManager.getAllForFilter(userAuth, filter, pagination);
+	}
+
+	@Override
+	public PaginatedServerResult<List<AttributeData>> getDataForFilter(RequestProperties properties, Pagination pagination, GerminateDatabaseTable target, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		if (pagination == null)
 			pagination = Pagination.getDefault();

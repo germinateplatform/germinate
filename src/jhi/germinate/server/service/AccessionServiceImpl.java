@@ -20,6 +20,7 @@ package jhi.germinate.server.service;
 import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
+import java.sql.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -121,8 +122,9 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 
 		String idString = Util.joinCollection(accessionIds, ",", true);
 
-		GerminateTableQuery query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_ACCESSION_DATA + "(?, ?)", userAuth, null)
+		GerminateTableQuery query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth, null)
 				.setBoolean(includeAttributes)
+				.setNull(Types.VARCHAR)
 				.setString(idString);
 
 		return exportData(query, idColumn, sqlDebug);
@@ -150,9 +152,10 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 			{
 				/* If we get here, the user either has permissions to edit the group
 				 * or the group is public */
-				query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_GROUP_DATA + "(?, ?)", userAuth, null)
+				query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth, null)
 						.setBoolean(includeAttributes)
-						.setLong(groupId);
+						.setLong(groupId)
+						.setNull(Types.VARCHAR);
 			}
 			else
 			{
@@ -162,8 +165,10 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		}
 		else
 		{
-			query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?)", userAuth, null)
-					.setBoolean(includeAttributes);
+			query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth, null)
+					.setBoolean(includeAttributes)
+					.setNull(Types.VARCHAR)
+					.setNull(Types.VARCHAR);
 		}
 
 		return exportData(query, idColumn, sqlDebug);

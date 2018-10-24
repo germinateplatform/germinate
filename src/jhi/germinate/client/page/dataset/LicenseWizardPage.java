@@ -125,8 +125,7 @@ public class LicenseWizardPage extends ModalWizardPage
 		String url = JavaScript.getOctetStreamBase64Data(data.getContent());
 		String downloadFileName = datasetId + "-" + license.getName() + ".html";
 		downloadFileName = downloadFileName.replace(' ', '-');
-		String filename = StringUtils.isEmpty(downloadFileName) ? "download.txt" : downloadFileName;
-		JavaScript.invokeDownload(url, filename);
+		JavaScript.invokeDownload(url, downloadFileName);
 	}
 
 	public Decision getDecision()

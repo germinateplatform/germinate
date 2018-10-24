@@ -121,6 +121,21 @@ public abstract class DatabaseObject implements Serializable
 		return ids;
 	}
 
+	public static List<Long> getIds(DatabaseObject... objects)
+	{
+		List<Long> ids = new ArrayList<>();
+
+		if (objects != null)
+		{
+			for (DatabaseObject o : objects)
+			{
+				ids.add(o.getId());
+			}
+		}
+
+		return ids;
+	}
+
 	public static Long getGroupSpecificId(DatabaseObject o)
 	{
 		Long id = null;

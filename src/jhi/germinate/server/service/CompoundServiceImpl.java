@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.sql.*;
 import java.util.*;
 
 import javax.servlet.annotation.*;
@@ -49,14 +50,12 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 	private static final String QUERY_COMPOUND_DATA = "SELECT `germinatebase`.`name` AS name, `compounddata`.`compound_value` AS value FROM `compounddata` INNER JOIN `compounds` ON `compounddata`.`compound_id` = `compounds`.`id` INNER JOIN `germinatebase` ON `compounddata`.`germinatebase_id` = `germinatebase`.`id` WHERE `compounds`.`id` = ? AND `compounddata`.`dataset_id` = ? ORDER BY `germinatebase`.`name`";
 
-	private static final String QUERY_COMPOUND_STATS = "SELECT `compounds`.`id`, `compounds`.`name`, `compounds`.`description`, 1 AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS min, MAX( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS max, AVG( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS avg, STD( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS std, `datasets`.`description` AS dataset_description FROM `datasets` LEFT JOIN `compounddata` ON `datasets`.`id` = `compounddata`.`dataset_id` LEFT JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `experimenttypes`.`description` = 'compound' AND `datasets`.`id` IN (%s) GROUP BY `compounds`.`id`, `datasets`.`id`";
+	private static final String QUERY_COMPOUND_STATS = "SELECT `compounds`.`id`, `compounds`.`name`, `compounds`.`description`, 1 AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS min, MAX( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS max, AVG( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS avg, STD( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS std, `datasets`.`name` AS datasets_name, `datasets`.`description` AS datasets_description FROM `datasets` LEFT JOIN `compounddata` ON `datasets`.`id` = `compounddata`.`dataset_id` LEFT JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `experimenttypes`.`description` = 'compound' AND `datasets`.`id` IN (%s) GROUP BY `compounds`.`id`, `datasets`.`id`";
 
 	private static final String QUERY_COMPOUND_NAMES          = "SELECT CONCAT(`name`, IF(ISNULL(`compounds`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `compounds` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` WHERE `compounds`.`id` IN (%s)";
 	private static final String QUERY_COMPOUND_NAMES_COMPLETE = "SELECT CONCAT(`name`, IF(ISNULL(`compounds`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `compounds` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` WHERE EXISTS ( SELECT 1 FROM `compounddata` LEFT JOIN `datasets` ON `datasets`.`id` = `compounddata`.`dataset_id` WHERE `compounddata`.`compound_id` = `compounds`.`id` AND `datasets`.`id` IN (%s))";
 
-	private static final String QUERY_DATA          = "call " + StoredProcedureInitializer.COMPOUND_DATA + "(?, ?, ?)";
-	private static final String QUERY_DATA_COMPOUND = "call " + StoredProcedureInitializer.COMPOUND_DATA_COMPOUND + "(?, ?)";
-	private static final String QUERY_DATA_COMPLETE = "call " + StoredProcedureInitializer.COMPOUND_DATA_COMPLETE + "(?)";
+	private static final String QUERY_DATA = "call " + StoredProcedureInitializer.COMPOUND_DATA + "(?, ?, ?)";
 
 	@Override
 	public ServerResult<List<Compound>> getForDatasetIds(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
@@ -138,7 +137,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
-        /* Check if debugging is activated */
+		/* Check if debugging is activated */
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 
 		String datasets = Util.joinCollection(datasetIds, ", ", true);
@@ -148,7 +147,9 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		if (includeId)
 			names.add("dbId");
 		names.add(PhenotypeService.DATASET_NAME);
+		names.add(PhenotypeService.DATASET_DESCRIPTION);
 		names.add(PhenotypeService.DATASET_VERSION);
+		names.add(PhenotypeService.LICENSE_NAME);
 
 		if (containsAllItemsGroup(groupIds))
 			groupIds = null;
@@ -157,9 +158,9 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 		/*
 		 * Create a query that checks if there actually is data available. If
-         * not, the prepared statement from the sql file will fail. Connect to
-         * the database and check the session id
-         */
+		 * not, the prepared statement from the sql file will fail. Connect to
+		 * the database and check the session id
+		 */
 		Database database = Database.connectAndCheckSession(properties, this);
 
 		/* If both are empty, return everything */
@@ -175,10 +176,12 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 			sqlDebug.addAll(temp.getDebugInfo());
 			names.addAll(temp.getServerResult());
 
-			stmt = database.prepareStatement(QUERY_DATA_COMPLETE);
+			stmt = database.prepareStatement(QUERY_DATA);
 
 			int i = 1;
+			stmt.setNull(i++, Types.VARCHAR);
 			stmt.setString(i++, datasets);
+			stmt.setNull(i++, Types.VARCHAR);
 		}
 		/* If just one is empty, return nothing */
 		else if (CollectionUtils.isEmpty(datasetIds, compoundIds))
@@ -214,14 +217,13 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 				if (number > 0)
 				{
-					if (CollectionUtils.isEmpty(groupIds))
-						stmt = database.prepareStatement(QUERY_DATA_COMPOUND);
-					else
-						stmt = database.prepareStatement(QUERY_DATA);
+					stmt = database.prepareStatement(QUERY_DATA);
 
 					int i = 1;
 					if (!CollectionUtils.isEmpty(groupIds))
 						stmt.setString(i++, groups);
+					else
+						stmt.setNull(i++, Types.VARCHAR);
 					stmt.setString(i++, datasets);
 					stmt.setString(i++, phenotypes);
 				}

@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.sql.*;
 import java.util.*;
 import java.util.Map;
 import java.util.stream.*;
@@ -25,6 +26,7 @@ import java.util.stream.*;
 import javax.servlet.annotation.*;
 
 import jhi.germinate.client.service.*;
+import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
@@ -36,6 +38,7 @@ import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * {@link DatasetServiceImpl} is the implementation of {@link CommonService}.
@@ -48,6 +51,8 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	private static final long serialVersionUID = -2599538621272643710L;
 
 	private static final String QUERY_DATASET_STATS = "SELECT `experimenttypes`.`description` AS experimentType, DATE_FORMAT(`datasets`.`created_on`, '%%Y') AS theYear, SUM(`datasetmeta`.`nr_of_data_objects`) AS nrOfDataObjects, SUM(`datasetmeta`.`nr_of_data_points`) AS nrOfDataPoints FROM `datasets` LEFT JOIN `datasetmeta` ON `datasets`.`id` = `datasetmeta`.`dataset_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` LEFT JOIN `datasetpermissions` ON `datasetpermissions`.`dataset_id` = `datasets`.`id` LEFT JOIN `datasetstates` ON `datasets`.`dataset_state_id` = `datasetstates`.`id` WHERE `datasets`.`is_external` = 0 AND DATE_FORMAT(`datasets`.`created_on`, '%%Y') IS NOT NULL AND %s GROUP BY `experimenttypes`.`description`, theYear ORDER BY `experimenttypes`.`description`, theYear";
+
+	private static final String QUERY_ATTRIBUTE_DATA = "call " + StoredProcedureInitializer.DATASET_ATTRIBUTES + "(?, ?)";
 
 	@Override
 	public ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, InsufficientPermissionsException
@@ -81,6 +86,18 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		return DatasetManager.getAllForFilter(userAuth, filter, experimentType, pagination);
+	}
+
+	@Override
+	public PaginatedServerResult<List<Dataset>> getForFilterAndTrait(RequestProperties properties, PartialSearchQuery filter, ExperimentType type, Long phenotypeId, Pagination pagination) throws InsufficientPermissionsException, InvalidSessionException,
+			DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
+	{
+		if (pagination == null)
+			pagination = Pagination.getDefault();
+
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		return DatasetManager.getAllForFilterAndTrait(userAuth, filter, type, phenotypeId, pagination);
 	}
 
 	@Override
@@ -280,9 +297,118 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		}
 	}
 
+	@Override
+	public ServerResult<String> exportAttributes(RequestProperties properties, List<Long> datasetIds, List<Long> attributeIds) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
+
+		/* Check if debugging is activated */
+		DebugInfo sqlDebug = DebugInfo.create(userAuth);
+
+		String datasets = Util.joinCollection(datasetIds, ", ", true);
+		String attributes = null;
+
+		List<String> names = new ArrayList<>();
+		names.add(PhenotypeService.DATASET_NAME);
+		names.add(PhenotypeService.DATASET_DESCRIPTION);
+		names.add(PhenotypeService.DATASET_VERSION);
+		names.add(PhenotypeService.LICENSE_NAME);
+
+		DatabaseStatement stmt;
+
+		/*
+		 * Create a query that checks if there actually is data available. If
+		 * not, the prepared statement from the sql file will fail. Connect to
+		 * the database and check the session id
+		 */
+		Database database = Database.connectAndCheckSession(properties, this);
+
+		ServerResult<List<Attribute>> attributeList = null;
+
+		// If no specific attributes have been requested, get them all
+		if (CollectionUtils.isEmpty(attributeIds))
+		{
+			PartialSearchQuery filter = new PartialSearchQuery();
+			filter.add(new SearchCondition(Attribute.TARGET_TABLE, new Equal(), GerminateDatabaseTable.datasets.name(), String.class));
+			try
+			{
+				attributeList = AttributeManager.getAllForFilter(userAuth, filter, Pagination.getDefault());
+			}
+			catch (InvalidSearchQueryException | InvalidArgumentException | InvalidColumnException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			attributeList = AttributeManager.getForIds(userAuth, attributeIds);
+			attributes = Util.joinCollection(attributeIds, ", ", true);
+		}
+
+		if(attributeList != null)
+		{
+			sqlDebug.addAll(attributeList.getDebugInfo());
+			if (!CollectionUtils.isEmpty(attributeList.getServerResult()))
+			{
+				attributeList.getServerResult().stream()
+							 .map(Attribute::getName)
+							 .forEach(names::add);
+			}
+		}
+
+		stmt = database.prepareStatement(QUERY_ATTRIBUTE_DATA);
+
+		int i = 1;
+		stmt.setString(i++, datasets);
+		if (attributes == null)
+			stmt.setNull(i++, Types.VARCHAR);
+		else
+			stmt.setString(i++, attributes);
+
+		sqlDebug.add(stmt.getStringRepresentation());
+
+		GerminateTable result;
+
+		try
+		{
+			result = stmt.runQuery(names.toArray(new String[0]));
+		}
+		catch (DatabaseException e)
+		{
+			database.close();
+			return new ServerResult<>(sqlDebug, null);
+		}
+
+		String filePath;
+
+		/* Export the data to a temporary file */
+		File file = createTemporaryFile("attributes", datasetIds, FileType.txt.name());
+		filePath = file.getName();
+
+		try
+		{
+			PhenotypeServiceImpl.exportDataToFile(null, names, result, file);
+		}
+		catch (java.io.IOException e)
+		{
+			filePath = null;
+		}
+
+		database.close();
+
+		/*
+		 * Return the debug information, the path to the temporary file
+		 * and the resulting GerminateTable
+		 */
+		return new ServerResult<>(sqlDebug, filePath);
+	}
+
 	private static class DatasetStats
 	{
-		public String experimentType;
+		public String              experimentType;
 		public Map<String, String> yearToCount = new HashMap<>();
 
 		public DatasetStats(String experimentType)

@@ -226,6 +226,28 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			addColumn(column, Text.LANG.datasetsColumnDatasetId(), sortingEnabled);
 		}
 
+		/* Add the dataset name column */
+		column = new ClickableSafeHtmlColumn()
+		{
+			@Override
+			public SafeHtml getValue(Dataset object)
+			{
+				/* Check if we want to link to the export page */
+				if (linkToExportPage && canAccess(object) && !object.isExternal())
+					return getExportPageLinkTruncated(object, object.getName());
+				else
+					return DatasetTable.getValueTruncated(object, object.getName());
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Dataset.NAME);
+		addColumn(column, Text.LANG.datasetsColumnDatasetName(), sortingEnabled);
+
 		/* Add the dataset description column */
 		column = new ClickableSafeHtmlColumn()
 		{
@@ -647,14 +669,14 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 					FlowPanel content = new FlowPanel();
 
-					if (!StringUtils.isEmpty(object.getDublinCore()))
-						content.add(new DublinCoreWidget(object.getDublinCore()));
 					if (!CollectionUtils.isEmpty(object.getAttributeData()))
 						content.add(new AttributeDataWidget(object.getAttributeData()));
+					if (!StringUtils.isEmpty(object.getDublinCore()))
+						content.add(new DublinCoreWidget(object.getDublinCore()));
 
 					if (content.getWidgetCount() > 0)
 					{
-						new AlertDialog(Text.LANG.datasetAttributesTitle(), content)
+						new DatasetAttributeDownloadDialog(Text.LANG.datasetAttributesTitle(), content, object)
 								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
 								.open();
 					}
@@ -813,7 +835,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 	public SafeHtml getExportPageLinkTruncated(Dataset dataset, String text)
 	{
 		/* If there's not text to display, just return */
-		if (dataset.getExperiment() == null || dataset.getExperiment().getType() == null)
+		if (StringUtils.isEmpty(text) || dataset.getExperiment() == null || dataset.getExperiment().getType() == null)
 			return SimpleHtmlTemplate.INSTANCE.text("");
 
 		ExperimentType type = dataset.getExperiment().getType();

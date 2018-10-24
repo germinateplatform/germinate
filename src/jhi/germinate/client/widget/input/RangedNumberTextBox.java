@@ -102,7 +102,7 @@ public class RangedNumberTextBox extends NumberTextBox
 
 		try
 		{
-			double i = Double.parseDouble(value);
+			double i = NumberUtils.DECIMAL_FORMAT_TWO_PLACES.parse(value);
 
 			if (i > max || i < min)
 				result.add(new BasicEditorError(this, value, Text.LANG.notificationNumberNotInRange(i, min, max)));

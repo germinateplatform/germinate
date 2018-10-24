@@ -17,12 +17,8 @@
 
 package jhi.germinate.client.util.callback;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.i18n.client.*;
-
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.util.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -57,17 +53,10 @@ public class FileDownloadCallback extends DefaultAsyncCallback<ServerResult<Stri
 		if (result.getServerResult() != null)
 		{
 			/* Create a new invisible dummy link on the page */
-			String path = new ServletConstants.Builder()
-					.setUrl(GWT.getModuleBaseURL())
-					.setPath(ServletConstants.SERVLET_FILES)
-					.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-					.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-					.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
-
 			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), result.getServerResult());
 
 			/* Click it */
-			JavaScript.invokeDownload(path);
+			JavaScript.invokeGerminateDownload(result.getServerResult());
 		}
 	}
 }

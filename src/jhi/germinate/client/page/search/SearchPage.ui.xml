@@ -82,14 +82,6 @@
 			</b:PanelGroup>
 		</g:FlowPanel>
 
-		<g:FlowPanel ui:field="additionalDataPanel" visible="false">
-			<b:Heading size="H3" text="{msg.searchAdditionalDatasetsTitle}"/>
-
-			<g:HTML ui:field="additionalDataText"/>
-
-			<g:SimplePanel ui:field="additionalDataTablePanel"/>
-
-			<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_REFRESH}" text="{msg.generalUpdate}" ui:field="updateButton"/>
-		</g:FlowPanel>
+		<ge:AdditionalDataWidget visible="false" ui:field="additionalDataPanel" />
 	</g:FlowPanel>
 </ui:UiBinder>

@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.sql.*;
 import java.util.*;
 
 import javax.servlet.annotation.*;
@@ -49,9 +50,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	private static final String QUERY_PHENOTYPE_NAMES          = "SELECT CONCAT(`name`, IF(ISNULL(`phenotypes`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `phenotypes` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` WHERE `phenotypes`.`id` IN (%s)";
 	private static final String QUERY_PHENOTYPE_NAMES_COMPLETE = "SELECT CONCAT(`name`, IF(ISNULL(`phenotypes`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `phenotypes` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` WHERE EXISTS ( SELECT 1 FROM `phenotypedata` LEFT JOIN `datasets` ON `datasets`.`id` = `phenotypedata`.`dataset_id` WHERE `phenotypedata`.`phenotype_id` = `phenotypes`.`id` AND `datasets`.`id` IN (%s))";
 	private static final String QUERY_DATA                     = "call " + StoredProcedureInitializer.PHENOTYPE_DATA + "(?, ?, ?)";
-	private static final String QUERY_DATA_PHENOTYPES          = "call " + StoredProcedureInitializer.PHENOTYPE_DATA_PHENOTYPE + "(?, ?)";
-	private static final String QUERY_DATA_COMPLETE            = "call " + StoredProcedureInitializer.PHENOTYPE_DATA_COMPLETE + "(?)";
-	private static final String QUERY_PHENOTYPE_STATS          = "SELECT `phenotypes`.`id`, `phenotypes`.`name`, `phenotypes`.`description`, (`phenotypes`.`datatype` != 'char') AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN(cast(`phenotype_value` AS DECIMAL(30,2))) as min, MAX(cast(`phenotype_value` AS DECIMAL(30,2))) as max, AVG(cast(`phenotype_value` AS DECIMAL(30,2))) as avg, STD(cast(`phenotype_value` AS DECIMAL(30,2))) as std, `datasets`.`description` as dataset_description FROM `datasets` LEFT JOIN `phenotypedata` ON `datasets`.`id` = `phenotypedata`.`dataset_id` LEFT JOIN `phenotypes` ON `phenotypes`.`id` = `phenotypedata`.`phenotype_id` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `datasets`.`id` IN (%s) GROUP BY `phenotypes`.`id`, `datasets`.`id`";
+	private static final String QUERY_PHENOTYPE_STATS          = "SELECT `phenotypes`.`id`, `phenotypes`.`name`, `phenotypes`.`description`, (`phenotypes`.`datatype` != 'char') AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN(cast(`phenotype_value` AS DECIMAL(30,2))) as min, MAX(cast(`phenotype_value` AS DECIMAL(30,2))) as max, AVG(cast(`phenotype_value` AS DECIMAL(30,2))) as avg, STD(cast(`phenotype_value` AS DECIMAL(30,2))) as std, `datasets`.`name` AS datasets_name, `datasets`.`description` as datasets_description FROM `datasets` LEFT JOIN `phenotypedata` ON `datasets`.`id` = `phenotypedata`.`dataset_id` LEFT JOIN `phenotypes` ON `phenotypes`.`id` = `phenotypedata`.`phenotype_id` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `datasets`.`id` IN (%s) GROUP BY `phenotypes`.`id`, `datasets`.`id`";
 
 	@Override
 	public ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
@@ -95,6 +94,73 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 				.getObjects(DataStats.Parser.Inst.get(), true);
 	}
 
+	public static void exportDataToFile(String header, List<String> phenotypes, GerminateTable result, File file) throws java.io.IOException
+	{
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")))
+		{
+			if(!StringUtils.isEmpty(header))
+			{
+				bw.write(header);
+				bw.newLine();
+			}
+			bw.write(phenotypes.get(0));
+
+			for (int i = 1; i < phenotypes.size(); i++)
+			{
+				bw.write("\t" + phenotypes.get(i));
+			}
+
+			bw.newLine();
+
+			for (GerminateRow row : result)
+			{
+				String zero = row.get(phenotypes.get(0));
+				String value;
+				bw.write(zero == null ? "" : zero);
+
+				for (int i = 1; i < phenotypes.size(); i++)
+				{
+					String ii = row.get(phenotypes.get(i));
+					value = ii == null ? "" : ii;
+					bw.write("\t" + value);
+				}
+
+				bw.newLine();
+			}
+
+		}
+	}
+
+	@Override
+	public PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		return PhenotypeManager.getDataForFilter(userAuth, filter, pagination);
+	}
+
+	@Override
+	public ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, jhi.germinate.shared.exception.IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		GerminateTableStreamer streamer = PhenotypeManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
+
+		File result = createTemporaryFile("download-phenotypes", FileType.txt.name());
+
+		try
+		{
+			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+		}
+		catch (java.io.IOException e)
+		{
+			throw new IOException(e);
+		}
+
+		return new ServerResult<>(streamer.getDebugInfo(), result.getName());
+	}
+
 	@Override
 	public ServerResult<String> export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> phenotypeIds, boolean includeId) throws InvalidSessionException, DatabaseException
 	{
@@ -113,6 +179,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		if (includeId)
 			names.add("dbId");
 		names.add(DATASET_NAME);
+		names.add(DATASET_DESCRIPTION);
 		names.add(DATASET_VERSION);
 		names.add(LICENSE_NAME);
 		names.add(LOCATION_NAME);
@@ -146,10 +213,12 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 			if (!CollectionUtils.isEmpty(temp.getServerResult()))
 				names.addAll(temp.getServerResult());
 
-			stmt = database.prepareStatement(QUERY_DATA_COMPLETE);
+			stmt = database.prepareStatement(QUERY_DATA);
 
 			int i = 1;
+			stmt.setNull(i++, Types.VARCHAR);
 			stmt.setString(i++, datasets);
+			stmt.setNull(i++, Types.VARCHAR);
 		}
 		/* If just one is empty, return nothing */
 		else if (CollectionUtils.isEmpty(datasetIds, phenotypeIds))
@@ -185,14 +254,13 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 				if (number > 0)
 				{
-					if (CollectionUtils.isEmpty(groupIds))
-						stmt = database.prepareStatement(QUERY_DATA_PHENOTYPES);
-					else
-						stmt = database.prepareStatement(QUERY_DATA);
+					stmt = database.prepareStatement(QUERY_DATA);
 
 					int i = 1;
 					if (!CollectionUtils.isEmpty(groupIds))
 						stmt.setString(i++, groups);
+					else
+						stmt.setNull(i++, Types.NULL);
 					stmt.setString(i++, datasets);
 					stmt.setString(i++, phenotypes);
 				}
@@ -236,70 +304,6 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		 * and the resulting GerminateTable
 		 */
 		return new ServerResult<>(sqlDebug, filePath);
-	}
-
-	@Override
-	public PaginatedServerResult<List<PhenotypeData>> getDataForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return PhenotypeManager.getDataForFilter(userAuth, filter, pagination);
-	}
-
-	@Override
-	public ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, jhi.germinate.shared.exception.IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		GerminateTableStreamer streamer = PhenotypeManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
-
-		File result = createTemporaryFile("download-phenotypes", FileType.txt.name());
-
-		try
-		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
-		}
-		catch (java.io.IOException e)
-		{
-			throw new IOException(e);
-		}
-
-		return new ServerResult<>(streamer.getDebugInfo(), result.getName());
-	}
-
-	public static void exportDataToFile(String header, List<String> phenotypes, GerminateTable result, File file) throws java.io.IOException
-	{
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")))
-		{
-			bw.write(header);
-			bw.newLine();
-			bw.write(phenotypes.get(0));
-
-			for (int i = 1; i < phenotypes.size(); i++)
-			{
-				bw.write("\t" + phenotypes.get(i));
-			}
-
-			bw.newLine();
-
-			for (GerminateRow row : result)
-			{
-				String zero = row.get(phenotypes.get(0));
-				String value;
-				bw.write(zero == null ? "" : zero);
-
-				for (int i = 1; i < phenotypes.size(); i++)
-				{
-					String ii = row.get(phenotypes.get(i));
-					value = ii == null ? "" : ii;
-					bw.write("\t" + value);
-				}
-
-				bw.newLine();
-			}
-
-		}
 	}
 
 	@Override

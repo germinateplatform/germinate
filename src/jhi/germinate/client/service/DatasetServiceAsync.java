@@ -45,6 +45,17 @@ public interface DatasetServiceAsync
 	Request getForFilter(RequestProperties properties, PartialSearchQuery filter, ExperimentType experimentType, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
 
 	/**
+	 * Returns a paginated list of {@link Dataset}s that match the given {@link PartialSearchQuery}.
+	 *
+	 * @param properties The {@link RequestProperties} The {@link RequestProperties}
+	 * @param filter     The {@link PartialSearchQuery} representing the user filtering
+	 * @param id         The {@link DatabaseObject} id
+	 * @param pagination The {@link Pagination} The {@link Pagination}
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	Request getForFilterAndTrait(RequestProperties properties, PartialSearchQuery filter, ExperimentType type, Long id, Pagination pagination, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback);
+
+	/**
 	 * Returns a paginated list of {@link Dataset}s that have an association with the given {@link Accession} id.
 	 *
 	 * @param properties  The {@link RequestProperties}
@@ -117,4 +128,14 @@ public interface DatasetServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	void trackDatasetAccess(RequestProperties properties, List<Long> datasetIds, UnapprovedUser user, AsyncCallback<ServerResult<Boolean>> callback);
+
+	/**
+	 * Exports the dataset attributes of the given {@link Dataset}s to a file. Only includes the {@link Attribute}s with the given ids (can be <code>null</code>).
+	 *
+	 * @param properties   The {@link RequestProperties}
+	 * @param datasetIds   The {@link List} of {@link Dataset} ids.
+	 * @param attributeIds The {@link List} of {@link Attribute} ids.
+	 * @param callback     The {@link AsyncCallback}
+	 */
+	void exportAttributes(RequestProperties properties, List<Long> datasetIds, List<Long> attributeIds, AsyncCallback<ServerResult<String>> callback);
 }

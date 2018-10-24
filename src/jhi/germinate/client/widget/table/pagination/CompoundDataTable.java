@@ -185,6 +185,24 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 		column.setDataStoreName(Compound.NAME);
 		addColumn(column, Text.LANG.compoundColumnName(), sortingEnabled);
 
+		/* Add the dataset name column */
+		column = new TextColumn()
+		{
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+
+			@Override
+			public String getValue(CompoundData object)
+			{
+				return object.getDataset().getName();
+			}
+		};
+		column.setDataStoreName(Dataset.NAME);
+		addColumn(column, Text.LANG.datasetsColumnDatasetName(), sortingEnabled);
+
 		/* Add the dataset description column */
 		column = new TextColumn()
 		{

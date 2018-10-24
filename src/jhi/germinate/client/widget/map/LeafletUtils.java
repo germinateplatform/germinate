@@ -267,7 +267,7 @@ public class LeafletUtils
 				if (!first)
 					descriptionBuilder.append(", ");
 
-				descriptionBuilder.append(StringUtils.getWordsUntil(dataset.getDescription(), 50));
+				descriptionBuilder.append(StringUtils.getWordsUntil(dataset.getName(), 50));
 
 				first = false;
 			}
