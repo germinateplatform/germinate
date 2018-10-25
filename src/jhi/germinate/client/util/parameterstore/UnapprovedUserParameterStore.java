@@ -33,14 +33,7 @@ public class UnapprovedUserParameterStore extends TypedParameterStore<Unapproved
 	@Override
 	protected String valueToString(UnapprovedUser value)
 	{
-		try
-		{
-			return value.toString();
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
+		return null;
 	}
 
 	public final static class Inst

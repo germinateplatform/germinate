@@ -273,9 +273,6 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 	{
 		/* Get the id */
 		if (GerminateSettingsHolder.isPageAvailable(Page.GROUPS))
-		{
-			GerminateDatabaseTableParameterStore.Inst.get().put(Parameter.groupType, GerminateDatabaseTable.germinatebase);
 			LongParameterStore.Inst.get().put(Parameter.groupId, object.getId());
-		}
 	}
 }

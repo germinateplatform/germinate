@@ -57,7 +57,7 @@ public class LogoutHandler implements LogoutEvent.LogoutEventHandler
 	{
 		ModuleCore.setLoggedIn(false);
 		Cookie.removeAll();
-		TypedParameterStore.clearAll();
+		TypedParameterStore.clearAllStores();
 
 		if (ModuleCore.getUseAuthentication())
 		{

@@ -217,7 +217,7 @@ public class ModuleCore implements EntryPoint
 						default:
 							/* User has to log in */
 							useAuthentication = true;
-							TypedParameterStore.clearAll();
+							TypedParameterStore.clearAllStores();
 
 //							ContentHolder.getInstance().initContent();
 

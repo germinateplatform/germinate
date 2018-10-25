@@ -38,7 +38,7 @@
 		}
 	</ui:style>
 
-	<g:FlowPanel ui:field="panel">
+	<g:FlowPanel>
 		<g:SimplePanel ui:field="banner"/>
 
 		<b:PageHeader text="{msg.aboutTitle}"/>

@@ -59,19 +59,6 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 		downloadGroup.add(button);
 		downloadGroup.add(menu);
 
-		if(!StringUtils.isEmpty(dataset.getDublinCore()))
-		{
-			MdiAnchorListItem json = new MdiAnchorListItem(Text.LANG.datasetAttributesDownloadDublinCore());
-			menu.add(json);
-			json.setMdi(Style.MDI_JSON);
-			json.addClickHandler((event) -> {
-				String url = JavaScript.getJsonData(dataset.getDublinCore());
-				String downloadFileName = dataset.getId() + "-dublin-core.json";
-				downloadFileName = downloadFileName.replace(' ', '-');
-				JavaScript.invokeDownload(url, downloadFileName);
-			});
-		}
-
 		MdiAnchorListItem attr = new MdiAnchorListItem(Text.LANG.datasetAttributesDownloadAttributes());
 		menu.add(attr);
 		attr.setMdi(Style.MDI_PLAYLIST_PLUS);
@@ -84,6 +71,19 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 				}
 			});
 		});
+
+		if(!StringUtils.isEmpty(dataset.getDublinCore()))
+		{
+			MdiAnchorListItem json = new MdiAnchorListItem(Text.LANG.datasetAttributesDownloadDublinCore());
+			menu.add(json);
+			json.setMdi(Style.MDI_JSON);
+			json.addClickHandler((event) -> {
+				String url = JavaScript.getJsonData(dataset.getDublinCore());
+				String downloadFileName = dataset.getId() + "-dublin-core.json";
+				downloadFileName = downloadFileName.replace(' ', '-');
+				JavaScript.invokeDownload(url, downloadFileName);
+			});
+		}
 
 		buttonGroup.insert(downloadGroup, 0);
 	}

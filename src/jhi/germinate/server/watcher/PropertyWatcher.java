@@ -27,6 +27,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import jhi.germinate.server.database.Database.*;
+import jhi.germinate.server.service.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
@@ -84,7 +85,10 @@ public class PropertyWatcher
 				public void onFileChange(File file)
 				{
 					if (file.equals(config))
+					{
 						loadProperties();
+						UserServiceImpl.invalidateSessionAttributes();
+					}
 				}
 			});
 			monitor.addObserver(observer);

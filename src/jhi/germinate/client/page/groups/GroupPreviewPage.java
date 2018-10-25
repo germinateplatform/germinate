@@ -187,7 +187,6 @@ public class GroupPreviewPage extends Composite
 
 				Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupItemsAddedIgnored(result.getServerResult(), 0));
 
-				GerminateDatabaseTableParameterStore.Inst.get().put(Parameter.groupType, GerminateDatabaseTable.germinatebase);
 				LongParameterStore.Inst.get().put(Parameter.groupId, groupId);
 
 				History.newItem(Page.GROUPS.name());

@@ -21,6 +21,7 @@ import java.util.*;
 
 import jhi.germinate.client.util.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.search.*;
 
 /**
  * Valid {@link Parameter}s of the {@link jhi.germinate.client.util.parameterstore.TypedParameterStore}
@@ -31,7 +32,6 @@ public enum Parameter
 {
 	paginationPageSize(Integer.class, ParameterLifetime.PERSISTENT),
 	invisibleTableColumns(List.class, ParameterLifetime.PERSISTENT),
-	application(String.class, ParameterLifetime.VOLATILE),
 	accessionId(Long.class, ParameterLifetime.TEMPORARY),
 	generalId(String.class, ParameterLifetime.TEMPORARY),
 	accessionName(String.class, ParameterLifetime.TEMPORARY),
@@ -46,24 +46,17 @@ public enum Parameter
 	climateDatasetIds(List.class, ParameterLifetime.TEMPORARY),
 	trialsDatasets(List.class, ParameterLifetime.VOLATILE, false),
 	trialsDatasetIds(List.class, ParameterLifetime.TEMPORARY),
-	tableFilterMapping(Map.class, ParameterLifetime.VOLATILE),
-	flapjackExportResult(FlapjackProjectCreationResult.class, ParameterLifetime.VOLATILE),
-	megaEnvironmentId(Long.class, ParameterLifetime.TEMPORARY),
+	tableFilterMapping(PartialSearchQuery.class, ParameterLifetime.VOLATILE),
+	flapjackExportResult(FlapjackAllelefreqBinningResult.class, ParameterLifetime.VOLATILE),
 	collectingsiteId(Long.class, ParameterLifetime.TEMPORARY),
-	climateId(Long.class, ParameterLifetime.TEMPORARY),
 	groupId(Long.class, ParameterLifetime.TEMPORARY),
 	markerId(Long.class, ParameterLifetime.TEMPORARY),
 	markerName(String.class, ParameterLifetime.VOLATILE),
 	mapId(Long.class, ParameterLifetime.TEMPORARY),
-	groupType(GerminateDatabaseTable.class, ParameterLifetime.VOLATILE),
 	latitude(Float.class, ParameterLifetime.VOLATILE),
 	longitude(Float.class, ParameterLifetime.VOLATILE),
-	mapZoomLevel(Integer.class, ParameterLifetime.VOLATILE),
 	newsId(Long.class, ParameterLifetime.TEMPORARY),
-	trialsYear(String.class, ParameterLifetime.VOLATILE),
-	trialsPhenotypeOne(Long.class, ParameterLifetime.VOLATILE),
-	trialsPhenotypeTwo(Long.class, ParameterLifetime.VOLATILE),
-	phenotypeId(Long.class, ParameterLifetime.VOLATILE),
+	phenotypeId(Long.class, ParameterLifetime.TEMPORARY),
 	markedAccessionIds(List.class, ParameterLifetime.PERSISTENT),
 	markedMarkerIds(List.class, ParameterLifetime.PERSISTENT),
 	markedCollectingsiteIds(List.class, ParameterLifetime.PERSISTENT),

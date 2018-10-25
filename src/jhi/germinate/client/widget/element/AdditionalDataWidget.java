@@ -53,6 +53,7 @@ public class AdditionalDataWidget extends Composite
 	private DatasetTable additionalDataTable;
 	private UpdateCallback       updateCallback;
 	private List<ExperimentType> experimentTypes = new ArrayList<>();
+
 	public AdditionalDataWidget()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));

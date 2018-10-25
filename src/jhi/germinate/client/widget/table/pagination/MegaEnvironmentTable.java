@@ -23,13 +23,11 @@ import com.google.gwt.user.client.rpc.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
-import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -143,6 +141,5 @@ public abstract class MegaEnvironmentTable extends DatabaseObjectPaginationTable
 	@Override
 	protected void onItemSelected(NativeEvent event, MegaEnvironment object, int column)
 	{
-		LongParameterStore.Inst.get().put(Parameter.megaEnvironmentId, object.getId());
 	}
 }

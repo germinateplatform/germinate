@@ -66,6 +66,12 @@ public class StringListParameterStore extends TypedParameterStore<List<String>>
 		return list.contains(value);
 	}
 
+	/**
+	 * Adds a new String to the stored {@link List} for the given {@link Parameter}.
+	 *
+	 * @param parameter The {@link Parameter} for which to update the list.
+	 * @param value     The new value to add to the list.
+	 */
 	public void add(Parameter parameter, String value)
 	{
 		List<String> list = get(parameter, new ArrayList<>());
@@ -77,6 +83,12 @@ public class StringListParameterStore extends TypedParameterStore<List<String>>
 		}
 	}
 
+	/**
+	 * Removes a String from the stored {@link List} for the given {@link Parameter}.
+	 *
+	 * @param parameter The {@link Parameter} for which to update the list.
+	 * @param value     The value to remove from the list.
+	 */
 	public void remove(Parameter parameter, String value)
 	{
 		List<String> list = get(parameter, new ArrayList<>());

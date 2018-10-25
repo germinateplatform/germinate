@@ -53,13 +53,6 @@ public class FlapjackAllelefreqBinningResultParameterStore extends TypedParamete
 	@Override
 	protected String valueToString(FlapjackAllelefreqBinningResult value)
 	{
-		try
-		{
-			return value.toString();
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
+		return null;
 	}
 }

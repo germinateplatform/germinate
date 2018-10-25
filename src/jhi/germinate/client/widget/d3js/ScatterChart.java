@@ -145,9 +145,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 			setNames(first, second);
 
-			LongParameterStore.Inst.get().put(Parameter.trialsPhenotypeOne, firstId);
-			LongParameterStore.Inst.get().put(Parameter.trialsPhenotypeTwo, secondId);
-
 			getData(groupId, firstId, secondId, new DefaultAsyncCallback<ServerResult<String>>(true)
 			{
 				@Override

@@ -28,9 +28,4 @@ public class ClassUtils
 	{
 		return Objects.equals(clazz, Float.class) || Objects.equals(clazz, Double.class) || Objects.equals(clazz, Integer.class) || Objects.equals(clazz, Long.class);
 	}
-
-	public static boolean isAnyType(Class clazz)
-	{
-		return Objects.equals(clazz, Object.class);
-	}
 }

@@ -47,7 +47,7 @@ public class LoginPage extends GerminateComposite implements HasHelp
 	 */
 	public LoginPage()
 	{
-		TypedParameterStore.clearAll();
+		TypedParameterStore.clearAllStores();
 	}
 
 	/**

@@ -39,25 +39,24 @@ public abstract class TypedParameterStore<T>
 		STORES.add(this);
 	}
 
+	/**
+	 * Tries to get a {@link String} representation of the value stored for the given {@link Parameter}.
+	 *
+	 * @param parameter The {@link Parameter} for which to get the String representation.
+	 * @return A {@link String} representation of the value stored for the given {@link Parameter}.
+	 * @throws UnsupportedDataTypeException Thrown if the parameter type isn't supported, i.e. no suitable parameter store could be found.
+	 */
 	public static String getUntyped(Parameter parameter) throws UnsupportedDataTypeException
 	{
-		if (Boolean.class.equals(parameter.getType()))
-		{
-			return BooleanParameterStore.Inst.get().getAsString(parameter);
-		}
-		else if (DebugInfo.class.equals(parameter.getType()))
+		if (DebugInfo.class.equals(parameter.getType()))
 		{
 			return DebugInfoParameterStore.Inst.get().getAsString(parameter);
 		}
-		else if (Double.class.equals(parameter.getType()))
-		{
-			return DoubleParameterStore.Inst.get().getAsString(parameter);
-		}
-		else if (FlapjackProjectCreationResult.class.equals(parameter.getType()))
+		else if (FlapjackAllelefreqBinningResult.class.equals(parameter.getType()))
 		{
 			return FlapjackAllelefreqBinningResultParameterStore.Inst.get().getAsString(parameter);
 		}
-		else if(UnapprovedUser.class.equals(parameter.getType()))
+		else if (UnapprovedUser.class.equals(parameter.getType()))
 		{
 			return UnapprovedUserParameterStore.Inst.get().getAsString(parameter);
 		}
@@ -65,18 +64,10 @@ public abstract class TypedParameterStore<T>
 		{
 			return FloatParameterStore.Inst.get().getAsString(parameter);
 		}
-		else if (GerminateDatabaseTable.class.equals(parameter.getType()))
-		{
-			return GerminateDatabaseTableParameterStore.Inst.get().getAsString(parameter);
-		}
 		else if (Integer.class.equals(parameter.getType()))
 		{
 			return IntegerParameterStore.Inst.get().getAsString(parameter);
 		}
-//		else if (MarkedItemList.ItemType.class.equals(parameter.getType()))
-//		{
-//			return ItemTypeParameterStore.Inst.get().getAsString(parameter);
-//		}
 		else if (List.class.equals(parameter.getType()))
 		{
 			return LongListParameterStore.Inst.get().getAsString(parameter);
@@ -95,21 +86,20 @@ public abstract class TypedParameterStore<T>
 		}
 	}
 
+	/**
+	 * Tries to store the given {@link String} value for the {@link Parameter} based on its type.
+	 *
+	 * @param parameter The {@link Parameter} for which to store the given value.
+	 * @param value     The String value.
+	 * @throws UnsupportedDataTypeException Thrown if the parameter type isn't supported, i.e. no suitable parameter store could be found.
+	 */
 	public static void putUntyped(Parameter parameter, String value) throws UnsupportedDataTypeException
 	{
-		if (Boolean.class.equals(parameter.getType()))
-		{
-			BooleanParameterStore.Inst.get().putAsString(parameter, value);
-		}
-		else if (DebugInfo.class.equals(parameter.getType()))
+		if (DebugInfo.class.equals(parameter.getType()))
 		{
 			DebugInfoParameterStore.Inst.get().putAsString(parameter, value);
 		}
-		else if (Double.class.equals(parameter.getType()))
-		{
-			DoubleParameterStore.Inst.get().putAsString(parameter, value);
-		}
-		else if (FlapjackProjectCreationResult.class.equals(parameter.getType()))
+		else if (FlapjackAllelefreqBinningResult.class.equals(parameter.getType()))
 		{
 			FlapjackAllelefreqBinningResultParameterStore.Inst.get().putAsString(parameter, value);
 		}
@@ -117,18 +107,10 @@ public abstract class TypedParameterStore<T>
 		{
 			FloatParameterStore.Inst.get().putAsString(parameter, value);
 		}
-		else if (GerminateDatabaseTable.class.equals(parameter.getType()))
-		{
-			GerminateDatabaseTableParameterStore.Inst.get().putAsString(parameter, value);
-		}
 		else if (Integer.class.equals(parameter.getType()))
 		{
 			IntegerParameterStore.Inst.get().putAsString(parameter, value);
 		}
-//		else if (MarkedItemList.ItemType.class.equals(parameter.getType()))
-//		{
-//			ItemTypeParameterStore.Inst.get().putAsString(parameter, value);
-//		}
 		else if (List.class.equals(parameter.getType()))
 		{
 			try
@@ -154,6 +136,21 @@ public abstract class TypedParameterStore<T>
 		}
 	}
 
+	/**
+	 * Clears all {@link TypedParameterStore}s by calling {@link TypedParameterStore#clear()} on all of them.
+	 */
+	public static void clearAllStores()
+	{
+		STORES.forEach(TypedParameterStore::clear);
+	}
+
+	/**
+	 * Adds the given {@link Parameter} value combination to the store.
+	 *
+	 * @param parameter The {@link Parameter} for which to store the given value.
+	 * @param value     The value to store.
+	 * @return The previous value associated with the {@link Parameter}, if any.
+	 */
 	public final T put(Parameter parameter, T value)
 	{
 		if (parameter.getLifetime() != Parameter.ParameterLifetime.VOLATILE)
@@ -173,14 +170,28 @@ public abstract class TypedParameterStore<T>
 			return STATE.put(parameter, value);
 	}
 
+	/**
+	 * Adds the given {@link Parameter} value combination to the store.
+	 *
+	 * @param parameter The {@link Parameter} for which to store the given value.
+	 * @param value     The String value to store.
+	 * @return The previous value associated with the {@link Parameter}, if any.
+	 * @throws UnsupportedDataTypeException Thrown if the parameter type isn't supported, i.e. no suitable parameter store could be found.
+	 */
 	public final T putAsString(Parameter parameter, String value) throws UnsupportedDataTypeException
 	{
 		return put(parameter, stringToValue(value));
 	}
 
+	/**
+	 * Returns the value stored for the given {@link Parameter}.
+	 *
+	 * @param parameter The {@link Parameter} for which to get the value.
+	 * @return The value stored for the given {@link Parameter}.
+	 */
 	public final T get(Parameter parameter)
 	{
-		if(parameter == null)
+		if (parameter == null)
 			return null;
 
 		T result = STATE.get(parameter);
@@ -200,9 +211,16 @@ public abstract class TypedParameterStore<T>
 			return result;
 	}
 
+	/**
+	 * Returns the value stored for the given {@link Parameter} or the given fallback if no value is present.
+	 *
+	 * @param parameter The {@link Parameter} for which to get the value.
+	 * @param fallback  A fallback value in case there is no value associated with the given parameter.
+	 * @return The value stored for the given {@link Parameter} or the given fallback if no value is present.
+	 */
 	public final T get(Parameter parameter, T fallback)
 	{
-		if(parameter == null)
+		if (parameter == null)
 			return fallback;
 
 		T result = STATE.get(parameter);
@@ -227,11 +245,23 @@ public abstract class TypedParameterStore<T>
 			return result;
 	}
 
+	/**
+	 * Returns the {@link String} representation of the value associated with the given {@link Parameter}.
+	 *
+	 * @param parameter The {@link Parameter} for which to get the String representation.
+	 * @return The {@link String} representation of the value associated with the given {@link Parameter}.
+	 */
 	public final String getAsString(Parameter parameter)
 	{
 		return valueToString(get(parameter));
 	}
 
+	/**
+	 * Removes the given {@link Parameter} from the store.
+	 *
+	 * @param parameter The {@link Parameter} to remove.
+	 * @return The previous value associated with the given {@link Parameter}.
+	 */
 	public final T remove(Parameter parameter)
 	{
 		if (parameter.getLifetime() != Parameter.ParameterLifetime.VOLATILE)
@@ -240,6 +270,9 @@ public abstract class TypedParameterStore<T>
 		return STATE.remove(parameter);
 	}
 
+	/**
+	 * Removes all {@link Parameter}s and their values from the store.
+	 */
 	public final void clear()
 	{
 		for (Parameter param : Parameter.values())
@@ -251,12 +284,20 @@ public abstract class TypedParameterStore<T>
 		STATE.clear();
 	}
 
+	/**
+	 * Converts the given {@link String} into a value of the store type.
+	 *
+	 * @param value The String value to convert.
+	 * @return The converted value of the store type.
+	 * @throws UnsupportedDataTypeException Thrown if the parameter type isn't supported, i.e. no suitable parameter store could be found.
+	 */
 	protected abstract T stringToValue(String value) throws UnsupportedDataTypeException;
 
+	/**
+	 * Converts the given value of the store type into a {@link String}.
+	 *
+	 * @param value The value of the store type to convert.
+	 * @return The converted String value.
+	 */
 	protected abstract String valueToString(T value);
-
-	public static void clearAll()
-	{
-		STORES.forEach(TypedParameterStore::clear);
-	}
 }

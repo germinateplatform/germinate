@@ -21,7 +21,6 @@ import java.util.*;
 
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.exception.*;
 
 /**
  * @author Sebastian Raubach
@@ -29,7 +28,7 @@ import jhi.germinate.shared.exception.*;
 public class DatasetListParameterStore extends TypedParameterStore<List<Dataset>>
 {
 	@Override
-	protected List<Dataset> stringToValue(String value) throws UnsupportedDataTypeException
+	protected List<Dataset> stringToValue(String value)
 	{
 		return null;
 	}

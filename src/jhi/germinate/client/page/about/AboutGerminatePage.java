@@ -44,8 +44,6 @@ public class AboutGerminatePage extends Composite implements HasLibraries
 {
 	private static AboutGerminatePageUiBinder ourUiBinder = GWT.create(AboutGerminatePageUiBinder.class);
 	@UiField
-	FlowPanel         panel;
-	@UiField
 	SimplePanel       banner;
 	@UiField
 	CategoryPanel     homepage;
