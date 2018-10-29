@@ -181,7 +181,6 @@ public class DownloadWidget extends GerminateComposite
 		{
 			this.name = name;
 			this.type = type;
-			this.longRunning = longRunning;
 		}
 
 		public FileConfig(FileLocation location, String name, CreatedFile path)

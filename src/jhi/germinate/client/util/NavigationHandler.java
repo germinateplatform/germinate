@@ -278,6 +278,10 @@ public class NavigationHandler
 		{
 			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.TRIALS_DATASETS, new TrialPage()));
 		}
+		else if (Page.TRIAL_SITE_DETAILS.is(page))
+		{
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, page, new TrialSitesPage()));
+		}
 		// TRIALS DATASETS
 		else if (Page.TRIALS_DATASETS.is(page))
 		{

@@ -940,6 +940,10 @@ public interface Text extends Messages
 	@Key("page.geography.locations.clustered.title")
 	String geographyCollsiteHeadingClustered();
 
+	@Key("page.geography.locations.table.title")
+	@DefaultMessage("Location Table")
+	String geographyLocationHeadingTable();
+
 	@Key("page.geography.locations.clustered.text")
 	SafeHtml geographyCollsiteTextClustered();
 
@@ -1057,7 +1061,12 @@ public interface Text extends Messages
 	@Key("column.locations.state")
 	String collectingsiteState();
 
+	@Key("column.location.type")
+	@DefaultMessage("Type")
+	String locationColumnType();
+
 	@Key("column.locations.site.name")
+	@DefaultMessage("Site name")
 	String collectingsiteCollsite();
 
 	@Key("column.locations.elevation")
@@ -2674,4 +2683,8 @@ public interface Text extends Messages
 	@Key("widget.dataset.download.dublin.core")
 	@DefaultMessage("Dublin Core")
 	String datasetAttributesDownloadDublinCore();
+
+	@Key("page.trialsites.title")
+	@DefaultMessage("Trial Site Details")
+	String trialSitesTitle();
 }

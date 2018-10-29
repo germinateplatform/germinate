@@ -36,7 +36,7 @@ import jhi.germinate.shared.search.*;
  */
 public class DatasetManager extends AbstractManager<Dataset>
 {
-	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", Dataset.IS_EXTERNAL, Dataset.DATATYPE, License.NAME, License.DESCRIPTION, Dataset.NAME, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS, Location.SITE_NAME, Country.COUNTRY_NAME};
+	public static final String[] COLUMNS_TABLE = {Dataset.ID, Experiment.ID, "experimenttypes.description", "experiment_name", Dataset.IS_EXTERNAL, Dataset.DATATYPE, License.NAME, License.DESCRIPTION, Dataset.NAME, Dataset.DESCRIPTION, Dataset.CONTACT, Dataset.DATE_START, Dataset.DATE_END, Dataset.NR_OF_DATA_OBJECTS, Dataset.NR_OF_DATA_POINTS, Location.ID, Location.SITE_NAME, Country.COUNTRY_NAME};
 
 	public static final  String BITS_PRIVATE_REGULAR       = " (`datasetstates`.`name` = '" + DatasetState.PUBLIC.getName() + "' OR (`datasetstates`.`name` = '" + DatasetState.PRIVATE.getName() + "' AND `datasets`.`created_by` = ?) OR EXISTS (SELECT 1 FROM `datasetpermissions` WHERE `datasetpermissions`.`user_id` = ? AND `datasetpermissions`.`dataset_id` = `datasets`.`id`) OR EXISTS (SELECT 1 FROM `datasetpermissions` LEFT JOIN `usergroups` ON `usergroups`.`id` = `datasetpermissions`.`group_id` LEFT JOIN `usergroupmembers` ON `usergroupmembers`.`usergroup_id` = `usergroups`.`id` WHERE `usergroupmembers`.`user_id` = ? AND `datasetpermissions`.`dataset_id` = `datasets`.`id`))";
 	public static final  String BITS_PUBLIC                = " (`datasetstates`.`name` = '" + DatasetState.PUBLIC.getName() + "')";

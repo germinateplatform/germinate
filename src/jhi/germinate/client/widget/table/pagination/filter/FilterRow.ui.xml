@@ -19,7 +19,6 @@
 			 xmlns:d="urn:import:org.gwtbootstrap3.extras.datepicker.client.ui"
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 			 xmlns:g8="urn:import:jhi.germinate.client.widget.element"
-			 xmlns:lb="urn:import:jhi.germinate.client.widget.listbox"
 			 xmlns:ui="urn:ui:com.google.gwt.uibinder">
 
 	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
@@ -80,9 +79,9 @@
 			<d:DatePicker addStyleNames="{style.input}" autoClose="true" visible="false" ui:field="secondDate"/>
 		</g:FlowPanel>
 
-		<g:FlowPanel visible="false" ui:field="entity">
-			<lb:EntityTypeListBox addStyleNames="{style.entity}" ui:field="firstEntity"/>
-			<lb:EntityTypeListBox addStyleNames="{style.entity}" visible="false" ui:field="secondEntity"/>
+		<g:FlowPanel visible="false" ui:field="dbObject">
+			<g:SimplePanel addStyleNames="{style.entity}"  ui:field="firstDbObjectPanel" />
+			<g:SimplePanel addStyleNames="{style.entity}" visible="false" ui:field="secondDbObjectPanel" />
 		</g:FlowPanel>
 
 		<b:InputGroupButton>

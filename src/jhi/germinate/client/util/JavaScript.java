@@ -343,12 +343,18 @@ public class JavaScript
 			LOGIN("login"),
 			LOGOUT("logout"),
 			HELP("help"),
+			UI("ui"),
+			ADMIN("admin"),
 			SHARE("share"),
 			GROUPS("groups"),
 			USER_GROUPS("user-groups"),
+			DATASET("datasets"),
+			LICENSE("license"),
+			DATASET_PERMISSIONS("dataset-permissions"),
 			ANNOTATIONS("annotations"),
 			SEARCH("search"),
-			DOWNLOAD("download");
+			DOWNLOAD("download"),
+			MARKED_ITEMS("marked-items");
 
 			private final String category;
 

@@ -37,23 +37,28 @@
 
 		<b:PageHeader text="{msg.menuSearch}" addStyleNames="{style.header}"/>
 
-		<b:FormGroup>
-			<b:FormLabel for="formType" text="{msg.searchPageDataCategory}"/>
-			<g8:SearchTypeListBox ui:field="typeBox"/>
-		</b:FormGroup>
-
-		<b:FormGroup>
-			<b:FormLabel for="formSearch" text="{msg.searchPageSearchBox}"/>
-			<b:InputGroup b:id="formSearch">
-				<ge:DropdownInputButton ui:field="operator"/>
-				<b:Tooltip placement="BOTTOM" title="{msg.searchBoxTooltip}" ui:field="tooltip">
-					<b:TextBox addStyleNames="{FORM_CONTROL}" ui:field="searchBox" placeholder="{msg.searchPrompt}"/>
-				</b:Tooltip>
-				<b:InputGroupButton>
-					<b:Button addStyleNames="{MDI} {MDI_MAGNIFY} {MDI_LG}" ui:field="searchButton"/>
-				</b:InputGroupButton>
-			</b:InputGroup>
-		</b:FormGroup>
+		<b:Row>
+			<b:Column size="XS_12, SM_6">
+				<b:FormGroup>
+					<b:FormLabel for="formSearch" text="{msg.searchPageSearchBox}"/>
+					<b:InputGroup b:id="formSearch">
+						<ge:DropdownInputButton ui:field="operator"/>
+						<b:Tooltip placement="BOTTOM" title="{msg.searchBoxTooltip}" ui:field="tooltip">
+							<b:TextBox addStyleNames="{FORM_CONTROL}" placeholder="{msg.searchPrompt}" ui:field="searchBox"/>
+						</b:Tooltip>
+						<b:InputGroupButton>
+							<b:Button addStyleNames="{MDI} {MDI_MAGNIFY} {MDI_LG}" type="PRIMARY" ui:field="searchButton"/>
+						</b:InputGroupButton>
+					</b:InputGroup>
+				</b:FormGroup>
+			</b:Column>
+			<b:Column size="XS_12, SM_6">
+				<b:FormGroup>
+					<b:FormLabel for="formType" text="{msg.searchPageDataCategory}"/>
+					<g8:SearchTypeListBox ui:field="typeBox"/>
+				</b:FormGroup>
+			</b:Column>
+		</b:Row>
 
 		<g:FlowPanel ui:field="resultPanel" visible="false">
 			<b:Heading size="H3" text="{msg.searchTitleResults}" ui:field="resultHeading"/>

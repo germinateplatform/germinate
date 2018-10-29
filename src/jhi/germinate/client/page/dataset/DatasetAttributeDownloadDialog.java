@@ -19,6 +19,7 @@ package jhi.germinate.client.page.dataset;
 
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
@@ -51,7 +52,7 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 
 		ButtonGroup downloadGroup = new ButtonGroup();
 		downloadGroup.setDropUp(true);
-		org.gwtbootstrap3.client.ui.Button button = new org.gwtbootstrap3.client.ui.Button(Text.LANG.generalSave());
+		Button button = new Button(Text.LANG.generalSave());
 		button.addStyleName(Style.combine(Style.MDI, Style.MDI_LG, Style.MDI_DOWNLOAD));
 		button.setDataToggle(Toggle.DROPDOWN);
 		button.setToggleCaret(true);
@@ -63,16 +64,18 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 		menu.add(attr);
 		attr.setMdi(Style.MDI_PLAYLIST_PLUS);
 		attr.addClickHandler((event) -> {
-			DatasetService.Inst.get().exportAttributes(Cookie.getRequestProperties(), DatabaseObject.getIds(dataset), null, new DefaultAsyncCallback<ServerResult<String>>(true) {
+			DatasetService.Inst.get().exportAttributes(Cookie.getRequestProperties(), DatabaseObject.getIds(dataset), null, new DefaultAsyncCallback<ServerResult<String>>(true)
+			{
 				@Override
 				protected void onSuccessImpl(ServerResult<String> result)
 				{
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "txt", dataset.getId().intValue());
 					JavaScript.invokeGerminateDownload(result.getServerResult());
 				}
 			});
 		});
 
-		if(!StringUtils.isEmpty(dataset.getDublinCore()))
+		if (!StringUtils.isEmpty(dataset.getDublinCore()))
 		{
 			MdiAnchorListItem json = new MdiAnchorListItem(Text.LANG.datasetAttributesDownloadDublinCore());
 			menu.add(json);
@@ -81,6 +84,7 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 				String url = JavaScript.getJsonData(dataset.getDublinCore());
 				String downloadFileName = dataset.getId() + "-dublin-core.json";
 				downloadFileName = downloadFileName.replace(' ', '-');
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "json", dataset.getId().intValue());
 				JavaScript.invokeDownload(url, downloadFileName);
 			});
 		}

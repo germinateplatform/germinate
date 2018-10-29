@@ -142,6 +142,8 @@ public class DatasetPermissionsPage extends Composite
 					{
 						super.onSuccessImpl(result);
 
+						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DATASET_PERMISSIONS, "removeItemsGroup", Long.toString(dataset.getId()), ids.size());
+
 						userGroupTable.refreshTable();
 					}
 				});
@@ -184,6 +186,8 @@ public class DatasetPermissionsPage extends Composite
 					protected void onSuccessImpl(Void result)
 					{
 						super.onSuccessImpl(result);
+
+						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DATASET_PERMISSIONS, "addItemsGroup", Long.toString(dataset.getId()), ids.size());
 
 						userGroupTable.refreshTable();
 						newUserGroupTable.setSelection(null);
@@ -245,6 +249,8 @@ public class DatasetPermissionsPage extends Composite
 					{
 						super.onSuccessImpl(result);
 
+						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DATASET_PERMISSIONS, "removeItemsUser", Long.toString(dataset.getId()), ids.size());
+
 						userTable.refreshTable();
 					}
 				});
@@ -287,6 +293,8 @@ public class DatasetPermissionsPage extends Composite
 					protected void onSuccessImpl(Void result)
 					{
 						super.onSuccessImpl(result);
+
+						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DATASET_PERMISSIONS, "addItemsUser", Long.toString(dataset.getId()), ids.size());
 
 						userTable.refreshTable();
 						newUserTable.setSelection(null);

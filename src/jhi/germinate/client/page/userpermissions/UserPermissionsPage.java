@@ -36,5 +36,4 @@ public class UserPermissionsPage extends Composite
 	interface GroupsPageUiBinder extends UiBinder<FlowPanel, UserPermissionsPage>
 	{
 	}
-
 }

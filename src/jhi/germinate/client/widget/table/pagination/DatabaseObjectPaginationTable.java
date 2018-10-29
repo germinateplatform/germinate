@@ -355,12 +355,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 	public void toggleFilter()
 	{
-//		filterVisible = !filterVisible;
-
 		filterPanel.setVisible(true);
-
-//		if (!filterVisible)
-//			refreshTable();
 	}
 
 	public boolean isFiltered()
@@ -376,7 +371,10 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		filterPanel.setVisible(false);
 		filterPanel.add(query, isAnd);
-		filterButton.setType(ButtonType.SUCCESS);
+
+		if(query != null)
+			filterButton.setType(ButtonType.SUCCESS);
+
 		refreshTable();
 
 		return true;
@@ -754,12 +752,14 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 				if (item.getValue())
 				{
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "showTableColumn", column.getDataStoreName());
 					StringListParameterStore.Inst.get().remove(Parameter.invisibleTableColumns, cellStyle);
 					column.setCellStyleNames(column.getCellStyle());
 					header.setHeaderStyleNames(Style.combine(headerStyle, column.getHeaderStyle()));
 				}
 				else
 				{
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "hideTableColumn", column.getDataStoreName());
 					StringListParameterStore.Inst.get().add(Parameter.invisibleTableColumns, cellStyle);
 					column.setCellStyleNames(Style.combine(Style.LAYOUT_DISPLAY_NONE, column.getCellStyle()));
 					header.setHeaderStyleNames(Style.combine(headerStyle, Style.LAYOUT_DISPLAY_NONE, column.getHeaderStyle()));

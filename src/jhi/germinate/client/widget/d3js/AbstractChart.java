@@ -153,7 +153,9 @@ public abstract class AbstractChart extends GerminateComposite
 	public void setFilePath(String filePath)
 	{
 		this.filePath = filePath;
-		onResize(true);
+
+		if(filePath != null)
+			onResize(true);
 	}
 
 	public void clear()
@@ -513,6 +515,9 @@ public abstract class AbstractChart extends GerminateComposite
 	 */
 	protected void removeD3(String panelId)
 	{
+		if(StringUtils.isEmpty(panelId))
+			return;
+
 		GQuery.$("#" + panelId + " ." + Id.CHART_D3_TOOLTIP).remove();
 		GQuery g = GQuery.$("#" + panelId + " ." + Id.CHART_D3_LEGEND);
 		g.remove();

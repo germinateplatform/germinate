@@ -17,6 +17,8 @@
 
 package jhi.germinate.shared.datastructure.database;
 
+import java.util.*;
+
 /**
  * @author Sebastian Raubach
  */
@@ -53,6 +55,20 @@ public enum LocationType
 			for (LocationType type : values())
 			{
 				if (type.id == id.longValue())
+					return type;
+			}
+		}
+
+		return null;
+	}
+
+	public static LocationType getByName(String name)
+	{
+		if (name != null)
+		{
+			for (LocationType type : values())
+			{
+				if (Objects.equals(name, type.name))
 					return type;
 			}
 		}

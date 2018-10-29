@@ -19,6 +19,7 @@ package jhi.germinate.client.widget.d3js;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
 
@@ -30,8 +31,13 @@ import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -103,6 +109,14 @@ public class DatasetStatsChart extends AbstractChart
 		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_GROUPED_BAR_CHART, Library.D3_DOWNLOAD};
 	}
 
+	protected void onClick(String experimentType)
+	{
+		PartialSearchQuery query = new PartialSearchQuery();
+		query.add(new SearchCondition(ExperimentType.DESCRIPTION, new Equal(), experimentType, String.class));
+		FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
+		History.newItem(Page.DATASET_OVERVIEW.name());
+	}
+
 	private native void create(int widthHint)/*-{
 		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
 
@@ -120,6 +134,8 @@ public class DatasetStatsChart extends AbstractChart
 
 		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
 
+		var that = this;
+
 		$wnd.d3.tsv(filePath, function (error, data) {
 			$wnd.d3.select("#" + panelId)
 				.datum(data)
@@ -131,6 +147,9 @@ public class DatasetStatsChart extends AbstractChart
 					.rowIdentifier("ExperimentType")
 					.tooltip(function (d) {
 						return d.value + " (" + d.name + ")";
+					})
+					.onClick(function (d) {
+						that.@jhi.germinate.client.widget.d3js.DatasetStatsChart::onClick(*)(d.row);
 					})
 					.tooltipStyle(tooltipStyle)
 					.axisStyle(axisStyle)

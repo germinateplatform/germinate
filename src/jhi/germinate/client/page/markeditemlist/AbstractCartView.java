@@ -143,7 +143,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", strippedString);
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", Long.toString(result.getServerResult().getId()));
 
 				if (!CollectionUtils.isEmpty(newGroupMembers))
 					addGroupMembers(newGroupMembers, result.getServerResult().getId(), type);
@@ -154,6 +154,25 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 		});
 
 		return true;
+	}
+
+	private static void addGroupMembers(List<String> newGroupMembers, Long groupId, MarkedItemList.ItemType type)
+	{
+		List<Long> ids = CollectionUtils.convertToLong(newGroupMembers);
+
+		GroupService.Inst.get().addItems(Cookie.getRequestProperties(), groupId, ids, new DefaultAsyncCallback<ServerResult<Set<Long>>>(true)
+		{
+			@Override
+			public void onSuccessImpl(ServerResult<Set<Long>> result)
+			{
+				Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupItemsAdded());
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(groupId), result.getServerResult().size());
+
+				MarkedItemList.clear(type);
+
+				GerminateEventBus.BUS.fireEvent(new GroupCreationEvent(type, groupId));
+			}
+		});
 	}
 
 	@Override
@@ -215,6 +234,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 				@Override
 				protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 				{
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.MARKED_ITEMS, "download", getItemType().getDisplayName());
 					writeToFile(new ArrayList<>(MarkedItemList.get(getItemType())), callback);
 				}
 			};
@@ -222,23 +242,5 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 
 			tablePanel.add(widget);
 		}
-	}
-
-	private static void addGroupMembers(List<String> newGroupMembers, Long groupId, MarkedItemList.ItemType type)
-	{
-		List<Long> ids = CollectionUtils.convertToLong(newGroupMembers);
-
-		GroupService.Inst.get().addItems(Cookie.getRequestProperties(), groupId, ids, new DefaultAsyncCallback<ServerResult<Set<Long>>>(true)
-		{
-			@Override
-			public void onSuccessImpl(ServerResult<Set<Long>> result)
-			{
-				Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupItemsAdded());
-
-				MarkedItemList.clear(type);
-
-				GerminateEventBus.BUS.fireEvent(new GroupCreationEvent(type, groupId));
-			}
-		});
 	}
 }

@@ -119,23 +119,26 @@ public class FilterPanel implements KeyPressHandler
 	{
 		clear();
 
-		for (int i = 0; i < query.getAll().size(); i++)
+		if(query != null)
 		{
-			try
+			for (int i = 0; i < query.getAll().size(); i++)
 			{
-				addRow();
+				try
+				{
+					addRow();
 
-				SearchCondition cond = query.getAll().get(i);
+					SearchCondition cond = query.getAll().get(i);
 
-				FilterRow row = rows.get(rows.size() - 1);
-				row.setValue(cond.getColumnName(), cond.getValues(), cond.getComp());
+					FilterRow row = rows.get(rows.size() - 1);
+					row.setValue(cond.getColumnName(), cond.getValues(), cond.getComp());
 
-				if (switches.size() > 0)
-					switches.get(switches.size() - 1).setValue(isAnd);
-			}
-			catch (InvalidSearchQueryException | InvalidArgumentException e)
-			{
-				e.printStackTrace();
+					if (switches.size() > 0)
+						switches.get(switches.size() - 1).setValue(isAnd);
+				}
+				catch (InvalidSearchQueryException | InvalidArgumentException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -243,6 +246,8 @@ public class FilterPanel implements KeyPressHandler
 				return null;
 			}
 		}
+
+		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "tableFilter", "filter", query.getAll().size());
 
 		return query;
 	}

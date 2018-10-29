@@ -193,6 +193,7 @@ public class OsterPassportPage extends PassportPage
 
 		if (accession != null)
 		{
+			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "easteregg", "found", id.intValue());
 			super.updateContent();
 		}
 		else

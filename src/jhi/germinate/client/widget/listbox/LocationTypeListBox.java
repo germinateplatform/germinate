@@ -38,7 +38,7 @@ public class LocationTypeListBox extends GerminateValueListBox<LocationType>
 			@Override
 			protected String getText(LocationType object)
 			{
-				return object.name();
+				return object.getName();
 			}
 
 			@Override

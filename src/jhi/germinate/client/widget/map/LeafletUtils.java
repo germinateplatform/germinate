@@ -46,60 +46,35 @@ public class LeafletUtils
 	private static final LeafletLatLng CENTER             = LeafletLatLng.newInstance(22.4749, 2.1703);
 	public static final  int           DEFAULT_MAP_HEIGHT = 500;
 
-	public static class MapCreator<T>
+	private static void addToTooltip(StringBuilder title, Location location, String key, String value, boolean addMarkerLink)
 	{
-		private   Panel            parent;
-		protected LeafletMap       map;
-		private   OnMapLoadHandler handler;
-		protected SimplePanel mapPanel = new SimplePanel();
-
-		public MapCreator(Panel parent, OnMapLoadHandler handler)
+		if (addMarkerLink)
 		{
-			this.parent = parent;
-			this.handler = handler;
-
-			mapPanel.addStyleName(Style.MAPS_PANEL);
-			mapPanel.setHeight(DEFAULT_MAP_HEIGHT + "px");
-
-			parent.add(mapPanel);
-
-			Scheduler.get().scheduleDeferred(() ->
-			{
-				map = LeafletMap.newInstance(mapPanel.getElement());
-				map.postponeZoomUntilFocus();
-				map.setView(CENTER, 1);
-
-				LeafletMiniMap.newInstance(map, LeafletMiniMap.Options.newInstance()
-																	  .setToggleDisplay(true)
-																	  .setPosition(LeafletControlPosition.BOTTOM_LEFT)
-																	  .setZoomLevelFixed(0)
-																	  .setCenterFixed(CENTER)
-																	  .setWidth(240)
-																	  .setHeight(120));
-
-				onMapLoad();
-			});
+			/*
+			 * Add a link which will call the newly defined
+			 * javascript function
+			 */
+			title.append("<p><b>")
+				 .append(key)
+				 .append(":</b> ")
+				 .append("<a href='javascript:void(0);' onclick=\"javascript:markerLinkFunction('")
+				 .append(location.getId())
+				 .append("','")
+				 .append(value)
+				 .append("','")
+				 .append(location.getType().getName())
+				 .append("');\">")
+				 .append(value)
+				 .append("</a>")
+				 .append("</p>");
 		}
-
-		public LeafletMap getMap()
+		else
 		{
-			return map;
-		}
-
-		public Panel getParent()
-		{
-			return parent;
-		}
-
-		protected void onMapLoad()
-		{
-			if (handler != null)
-				handler.onMapLoaded(mapPanel, map);
-		}
-
-		public void updateData(T data)
-		{
-			// Nothing to update
+			title.append("<p><b>")
+				 .append(key)
+				 .append(":</b> ")
+				 .append(value)
+				 .append("</p>");
 		}
 	}
 
@@ -283,59 +258,23 @@ public class LeafletUtils
 		}
 	}
 
-	public static class IndividualMarkerCreator extends MapCreator<Collection<Location>>
-	{
-		private List<LeafletMarker> markers = new ArrayList<>();
-		private Collection<Location> locations;
-
-		public IndividualMarkerCreator(Panel parent, Collection<Location> locations, OnMapLoadHandler handler)
-		{
-			super(parent, handler);
-			this.locations = locations;
-		}
-
-		@Override
-		protected void onMapLoad()
-		{
-			updateData(locations);
-
-			super.onMapLoad();
-		}
-
-		@Override
-		public void updateData(Collection<Location> data)
-		{
-			this.locations = data;
-
-			for (LeafletMarker marker : markers)
-				map.removeLayer(marker);
-
-			if (!CollectionUtils.isEmpty(locations))
-			{
-				for (Location location : locations)
-				{
-					Double latitude = location.getLatitude();
-					Double longitude = location.getLongitude();
-
-					if (latitude == null || longitude == null)
-						continue;
-
-					LeafletLatLng latLng = LeafletLatLng.newInstance(latitude, longitude);
-
-					StringBuilder title = getLocationInfoWindowContent(location, false);
-
-					title.append("</div>");
-
-					markers.add(LeafletMarker.newInstance(latLng)
-											 .addTo(map)
-											 .bindPopup(title.toString()));
-				}
-
-				if (markers.size() == 1)
-					markers.get(0).openPopup();
+	/**
+	 * Defines the javascript function <code>markerLinkFunction(id, collsite)</code>, calling this function from javascript will invoke the method
+	 * {@link OnMarkerClickHandler#onMarkerClicked(String, String, String)} )}.
+	 *
+	 * @param handler The {@link OnMarkerClickHandler} to call
+	 */
+	private static native void addMarkerLinkFunction(OnMarkerClickHandler handler)/*-{
+		// Define the function
+		if (handler) {
+			$wnd.markerLinkFunction = function (id, collsite, type) {
+				handler.@jhi.germinate.client.widget.map.LeafletUtils.OnMarkerClickHandler::onMarkerClicked(*)(id, collsite, type);
 			}
 		}
-	}
+		else {
+			$wnd.markerLinkFunction = undefined;
+		}
+	}-*/;
 
 	public static StringBuilder getLocationInfoWindowContent(Location location, boolean addLink)
 	{
@@ -368,53 +307,79 @@ public class LeafletUtils
 		addToTooltip(title, location, key, formattedValue, false);
 	}
 
-	private static void addToTooltip(StringBuilder title, Location location, String key, String value, boolean addMarkerLink)
+	/**
+	 * An interface to listen for click events on markers
+	 *
+	 * @author Sebastian Raubach
+	 */
+	public interface OnMarkerClickHandler
 	{
-		if (addMarkerLink)
-		{
-			/*
-			 * Add a link which will call the newly defined
-			 * javascript function
-			 */
-			title.append("<p><b>")
-				 .append(key)
-				 .append(":</b> ")
-				 .append("<a href='javascript:void(0);' onclick=\"javascript:markerLinkFunction('")
-				 .append(location.getId())
-				 .append("','")
-				 .append(value)
-				 .append("');\">")
-				 .append(value)
-				 .append("</a>")
-				 .append("</p>");
-		}
-		else
-		{
-			title.append("<p><b>")
-				 .append(key)
-				 .append(":</b> ")
-				 .append(value)
-				 .append("</p>");
-		}
+		/**
+		 * Called when a marker has been clicked
+		 *
+		 * @param id   The id of the item represented by this marker
+		 * @param name The content of the marker
+		 * @param type The name of the {@link LocationType}
+		 */
+		void onMarkerClicked(String id, String name, String type);
 	}
 
-	/**
-	 * Defines the javascript function <code>markerLinkFunction(id, collsite)</code>, calling this function from javascript will invoke the method
-	 * {@link OnMarkerClickHandler#onMarkerClicked(String, String)} )}.
-	 *
-	 * @param handler The {@link OnMarkerClickHandler} to call
-	 */
-	private static native void addMarkerLinkFunction(OnMarkerClickHandler handler)/*-{
-		// Define the function
-		if (handler) {
-			$wnd.markerLinkFunction = function (id, collsite) {
-				handler.@jhi.germinate.client.widget.map.LeafletUtils.OnMarkerClickHandler::onMarkerClicked(*)(id, collsite);
-			}
+	public static class MapCreator<T>
+	{
+		private   Panel            parent;
+		protected LeafletMap       map;
+		private   OnMapLoadHandler handler;
+		protected SimplePanel      mapPanel = new SimplePanel();
+
+		public MapCreator(Panel parent, OnMapLoadHandler handler)
+		{
+			this.parent = parent;
+			this.handler = handler;
+
+			mapPanel.addStyleName(Style.MAPS_PANEL);
+			mapPanel.setHeight(DEFAULT_MAP_HEIGHT + "px");
+
+			parent.add(mapPanel);
+
+			Scheduler.get().scheduleDeferred(() ->
+			{
+				map = LeafletMap.newInstance(mapPanel.getElement());
+				map.postponeZoomUntilFocus();
+				map.setView(CENTER, 1);
+
+				LeafletMiniMap.newInstance(map, LeafletMiniMap.Options.newInstance()
+																	  .setToggleDisplay(true)
+																	  .setPosition(LeafletControlPosition.BOTTOM_LEFT)
+																	  .setZoomLevelFixed(0)
+																	  .setCenterFixed(CENTER)
+																	  .setWidth(240)
+																	  .setHeight(120));
+
+				onMapLoad();
+			});
 		}
-		else {
-			$wnd.markerLinkFunction = undefined;
+
+		public LeafletMap getMap()
+		{
+			return map;
 		}
-	}-*/;
+
+		public Panel getParent()
+		{
+			return parent;
+		}
+
+		protected void onMapLoad()
+		{
+			if (handler != null)
+				handler.onMapLoaded(mapPanel, map);
+		}
+
+		public void updateData(T data)
+		{
+			// Nothing to update
+		}
+	}
 
 	public static ImageOverlayWrapper addClimateOverlays(LeafletMap map, List<ClimateOverlay> overlays)
 	{
@@ -466,10 +431,69 @@ public class LeafletUtils
 		return result;
 	}
 
+	public static class IndividualMarkerCreator extends MapCreator<Collection<Location>>
+	{
+		private List<LeafletMarker>  markers = new ArrayList<>();
+		private Collection<Location> locations;
+
+		public IndividualMarkerCreator(Panel parent, Collection<Location> locations, OnMapLoadHandler handler)
+		{
+			super(parent, handler);
+			this.locations = locations;
+		}
+
+		@Override
+		protected void onMapLoad()
+		{
+			updateData(locations);
+
+			super.onMapLoad();
+		}
+
+		@Override
+		public void updateData(Collection<Location> data)
+		{
+			this.locations = data;
+
+			for (LeafletMarker marker : markers)
+				map.removeLayer(marker);
+
+			if (!CollectionUtils.isEmpty(locations))
+			{
+				for (Location location : locations)
+				{
+					Double latitude = location.getLatitude();
+					Double longitude = location.getLongitude();
+
+					if (latitude == null || longitude == null)
+						continue;
+
+					LeafletLatLng latLng = LeafletLatLng.newInstance(latitude, longitude);
+
+					StringBuilder title = getLocationInfoWindowContent(location, false);
+
+					title.append("</div>");
+
+					markers.add(LeafletMarker.newInstance(latLng)
+											 .addTo(map)
+											 .bindPopup(title.toString()));
+				}
+
+				if (markers.size() == 1)
+					markers.get(0).openPopup();
+			}
+		}
+	}
+
+	public interface OnMapLoadHandler
+	{
+		void onMapLoaded(SimplePanel mapPanel, LeafletMap map);
+	}
+
 	public static class ImageOverlayWrapper
 	{
 		private List<LeafletImageOverlay> overlays = new ArrayList<>();
-		private Element legendOverlay;
+		private Element                   legendOverlay;
 
 		public void clear(LeafletMap map)
 		{
@@ -480,26 +504,5 @@ public class LeafletUtils
 			overlays.clear();
 			legendOverlay = null;
 		}
-	}
-
-	public interface OnMapLoadHandler
-	{
-		void onMapLoaded(SimplePanel mapPanel, LeafletMap map);
-	}
-
-	/**
-	 * An interface to listen for click events on markers
-	 *
-	 * @author Sebastian Raubach
-	 */
-	public interface OnMarkerClickHandler
-	{
-		/**
-		 * Called when a marker has been clicked
-		 *
-		 * @param id   The id of the item represented by this marker
-		 * @param name The content of the marker
-		 */
-		void onMarkerClicked(String id, String name);
 	}
 }

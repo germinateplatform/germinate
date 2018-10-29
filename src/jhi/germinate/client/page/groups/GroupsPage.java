@@ -207,6 +207,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 										Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
 										groupTable.refreshTable();
 
+										JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "delete", Long.toString(group.getId()));
+
 										if (group != null && Objects.equals(object.getId(), group.getId()))
 										{
 											group = null;
@@ -573,6 +575,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				protected void onSuccessImpl(ServerResult<Set<Long>> result)
 				{
 					GerminateEventBus.BUS.fireEvent(new GroupMemberChangeEvent());
+
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(group.getId()), result.getServerResult().size());
 				}
 			});
 		});
@@ -646,7 +650,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", strippedName);
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", Long.toString(result.getServerResult().getId()));
 				group = result.getServerResult();
 				groupTable.refreshTable();
 				updateGroupMembers(true);
@@ -665,6 +669,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				protected void onFailureImpl(Throwable caught)
 				{
 					group.setVisibility(!group.getVisibility());
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "changeVisibility", Long.toString(group.getId()), group.getVisibility() ? 1 : 0);
 
 					super.onFailureImpl(caught);
 				}
@@ -676,6 +681,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 	void onDownloadClicked(ClickEvent event)
 	{
 		GroupService.Inst.get().exportForGroupId(Cookie.getRequestProperties(), group.getId(), group.getType().getTargetTable(), new FileDownloadCallback(true));
+		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "download", Long.toString(group.getId()));
 	}
 
 	@Override

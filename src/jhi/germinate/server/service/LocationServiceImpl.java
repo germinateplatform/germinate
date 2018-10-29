@@ -47,7 +47,9 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 {
 	private static final long serialVersionUID = -534823136023353625L;
 
-	private static final String SELECT_TREEMAP_DATA = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT(`germinatebase`.`id`) AS count FROM `countries` LEFT JOIN `locations` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `germinatebase` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL(`site_name`) AND `locationtypes`.`name` = ? GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT(`germinatebase`.`id`) > 0 ";
+	private static final String SELECT_TREEMAP_DATA_COLLSITE  = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT(`germinatebase`.`id`) AS count FROM `countries` LEFT JOIN `locations` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `germinatebase` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL(`site_name`) AND `locationtypes`.`name` = 'collectingsites' GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT(`germinatebase`.`id`) > 0";
+	private static final String SELECT_TREEMAP_DATA_TRIALSITE = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT( `phenotypedata`.`id` ) AS count FROM `phenotypedata` LEFT JOIN `locations` ON `locations`.`id` = `phenotypedata`.`location_id` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL( `site_name` ) AND `locationtypes`.`name` LIKE 'trialsite' GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT( `phenotypedata`.`id` ) > 0";
+	private static final String SELECT_TREEMAP_DATA_DATASETS  = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT( `datasets`.`id` ) AS count FROM `datasets` LEFT JOIN `locations` ON `locations`.`id` = `datasets`.`location_id` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL( `site_name` ) AND `locationtypes`.`name` LIKE 'datasets' GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT( `datasets`.`id` ) > 0";
 
 	@Override
 	public PaginatedServerResult<List<Location>> getByDistance(RequestProperties properties, double latitude, double longitude, Pagination pagination)
@@ -200,9 +202,25 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		DefaultStreamer streamer = new DefaultQuery(SELECT_TREEMAP_DATA, userAuth)
-				.setString(type.name())
-				.getStreamer();
+		DefaultStreamer streamer;
+
+		switch (type)
+		{
+			case collectingsites:
+				streamer = new DefaultQuery(SELECT_TREEMAP_DATA_COLLSITE, userAuth)
+						.getStreamer();
+				break;
+			case trialsite:
+				streamer = new DefaultQuery(SELECT_TREEMAP_DATA_TRIALSITE, userAuth)
+						.getStreamer();
+				break;
+			case datasets:
+				streamer = new DefaultQuery(SELECT_TREEMAP_DATA_DATASETS, userAuth)
+						.getStreamer();
+				break;
+			default:
+				return new ServerResult<>(null, null);
+		}
 
 		/* Start writing the file */
 		String filePath = null;
@@ -263,13 +281,13 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 
 		HttpServletRequest req = this.getThreadLocalRequest();
 
-        /* Check if the session is valid */
+		/* Check if the session is valid */
 		Session.checkSession(properties, req);
 
-        /* Get the base url */
+		/* Get the base url */
 		String baseURL = req.getRequestURL().toString().replace(req.getRequestURI(), req.getContextPath());
 
-        /* Create a temporary file */
+		/* Create a temporary file */
 		File file = createTemporaryFile("kml", "kmz");
 
 		KMLCreator creator = null;

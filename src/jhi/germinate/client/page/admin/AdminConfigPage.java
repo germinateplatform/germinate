@@ -523,6 +523,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 				protected void onSuccessImpl(Void result)
 				{
 					Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationAdminConfigChangesApplied());
+					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.ADMIN, "changeSettings");
 				}
 			});
 		}

@@ -19,6 +19,7 @@ package jhi.germinate.client.page.geography;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.event.logical.shared.*;
+import com.google.gwt.http.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
@@ -41,6 +42,7 @@ import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
+import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
@@ -83,12 +85,15 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 	@UiField
 	SimplePanel         gradientPanel;
 
+	@UiField(provided = true)
+	LocationTable locationTable;
+
 	@UiField
-	HTML                html;
+	HTML        html;
 	@UiField
-	LocationTypeListBox locationTypeBoxTwo;
+	FlowPanel   treemapPanel;
 	@UiField
-	SimplePanel         chartPanel;
+	SimplePanel chartPanel;
 
 	private LeafletUtils.ClusteredMarkerCreator clusteredMap;
 	private LeafletUtils.HeatmapCreator         heatmapMap;
@@ -99,6 +104,33 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 
 	public LocationsPage()
 	{
+		locationTable = new LocationTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		{
+			@Override
+			protected boolean supportsFiltering()
+			{
+				return true;
+			}
+
+			@Override
+			public boolean supportsFullIdMarking()
+			{
+				return true;
+			}
+
+			@Override
+			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+			{
+				LocationService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
+			}
+
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Location>>> callback)
+			{
+				return LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, callback);
+			}
+		};
+
 		initWidget(ourUiBinder.createAndBindUi(this));
 
 		clusteredText.setHTML(Text.LANG.geographyCollsiteTextClustered());
@@ -132,9 +164,6 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 
 		List<LocationType> list = new ArrayList<>(Arrays.asList(LocationType.values()));
 		list.remove(LocationType.all);
-
-		locationTypeBoxTwo.setValue(LocationType.collectingsites, true);
-		locationTypeBoxTwo.setAcceptableValues(list);
 	}
 
 	private void getClimates()
@@ -178,8 +207,6 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 
 		if (result == null || result.size() < 1)
 		{
-			Notification.notify(Notification.Type.INFO, Text.LANG.notificationNoDataFound());
-
 			clusteredMap.updateData(null);
 			heatmapMap.updateData(null);
 		}
@@ -187,13 +214,30 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 		else
 		{
 			if (clusteredMap == null)
-				clusteredMap = new LeafletUtils.ClusteredMarkerCreator(clusteredPanel, result, (id, name) -> {
+				clusteredMap = new LeafletUtils.ClusteredMarkerCreator(clusteredPanel, result, (id, name, type) -> {
 					if (!StringUtils.isEmpty(id))
 					{
+						LocationType locationType = LocationType.getByName(type);
+
 						try
 						{
-							LongParameterStore.Inst.get().putAsString(Parameter.collectingsiteId, id);
-							History.newItem(Page.ACCESSIONS_FOR_COLLSITE.name());
+							PartialSearchQuery query = new PartialSearchQuery();
+							switch (locationType)
+							{
+								case collectingsites:
+									LongParameterStore.Inst.get().putAsString(Parameter.collectingsiteId, id);
+									History.newItem(Page.ACCESSIONS_FOR_COLLSITE.name());
+									break;
+								case trialsite:
+									LongParameterStore.Inst.get().putAsString(Parameter.trialsiteId, id);
+									History.newItem(Page.TRIAL_SITE_DETAILS.name());
+									break;
+								case datasets:
+									query.add(new SearchCondition(Location.SITE_NAME, new Equal(), name, String.class));
+									FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
+									//									StringParameterStore.Inst.get().put(Parameter.datasetLocationName, name);
+									History.newItem(Page.DATASET_OVERVIEW.name());
+							}
 						}
 						catch (UnsupportedDataTypeException e)
 						{
@@ -230,10 +274,6 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 						clusteredClimateOverlays = LeafletUtils.addClimateOverlays(clusteredMap.getMap(), result.getServerResult());
 						heatmapClimateOverlays = LeafletUtils.addClimateOverlays(heatmapMap.getMap(), result.getServerResult());
 					}
-					else
-					{
-						Notification.notify(Notification.Type.INFO, Text.LANG.notificationNoInformationFound());
-					}
 				}
 			});
 		}
@@ -258,8 +298,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 		if (type != LocationType.all)
 		{
 			filter = new PartialSearchQuery();
-			SearchCondition condition = new SearchCondition(LocationType.NAME, new Equal(), type.name(), String.class);
-			filter.add(condition);
+			filter.add(new SearchCondition(LocationType.NAME, new Equal(), type.name(), String.class));
 		}
 
 		LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, Pagination.getDefault(), new DefaultAsyncCallback<PaginatedServerResult<List<Location>>>()
@@ -279,43 +318,48 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 				updateMaps(result.getServerResult());
 			}
 		});
-	}
 
-	@UiHandler("locationTypeBoxTwo")
-	void onLocationTypeChanged(ValueChangeEvent<List<LocationType>> event)
-	{
-		LocationType type = locationTypeBoxTwo.getSelection();
-
-		LocationService.Inst.get().getJsonForType(Cookie.getRequestProperties(), type, new DefaultAsyncCallback<ServerResult<String>>(true)
+		if (type != LocationType.all)
 		{
-			@Override
-			public void onFailureImpl(Throwable caught)
+			treemapPanel.setVisible(true);
+			LocationService.Inst.get().getJsonForType(Cookie.getRequestProperties(), type, new DefaultAsyncCallback<ServerResult<String>>(true)
 			{
-				chart.clear();
-				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
-			}
+				@Override
+				public void onFailureImpl(Throwable caught)
+				{
+					chart.setFilePath(null);
+					treemapPanel.setVisible(false);
+				}
 
-			@Override
-			public void onSuccessImpl(ServerResult<String> result)
-			{
-				if (!StringUtils.isEmpty(result.getServerResult()))
+				@Override
+				public void onSuccessImpl(ServerResult<String> result)
 				{
-					/* Construct the path to the json file */
-					chart.setLocationType(type);
-					chart.setFilePath(new ServletConstants.Builder()
-							.setUrl(GWT.getModuleBaseURL())
-							.setPath(ServletConstants.SERVLET_FILES)
-							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult())
-							.build());
+					if (!StringUtils.isEmpty(result.getServerResult()))
+					{
+						/* Construct the path to the json file */
+						chart.setLocationType(type);
+						chart.setFilePath(new ServletConstants.Builder()
+								.setUrl(GWT.getModuleBaseURL())
+								.setPath(ServletConstants.SERVLET_FILES)
+								.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+								.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+								.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult())
+								.build());
+					}
+					else
+					{
+						onFailureImpl(null);
+					}
 				}
-				else
-				{
-					onFailureImpl(null);
-				}
-			}
-		});
+			});
+		}
+		else
+		{
+			chart.setFilePath(null);
+			treemapPanel.setVisible(false);
+		}
+
+		locationTable.forceFilter(filter, true);
 	}
 
 	@Override

@@ -1,0 +1,130 @@
+<!--
+  ~  Copyright 2018 Information and Computational Sciences,
+  ~  The James Hutton Institute.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<ui:UiBinder xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:i='urn:import:jhi.germinate.client.widget.input'
+			 xmlns:ui='urn:ui:com.google.gwt.uibinder'>
+
+	<ui:with field="msg" type="jhi.germinate.client.i18n.Text"/>
+	<ui:import field="jhi.germinate.shared.Style.*"/>
+
+	<ui:style>
+		.margin {
+			margin-top: 10px;
+		}
+
+		.header:hover {
+			cursor: pointer;
+		}
+
+		.header {
+			text-transform: capitalize;
+		}
+
+		.no-border-top {
+			border-top: 0;
+		}
+	</ui:style>
+
+	<g:FlowPanel ui:field="panel">
+		<b:Heading size="H3" text="{msg.downloadHeading}"/>
+
+		<b:Panel visible="false" ui:field="exportOptionsPanel">
+			<b:PanelHeader addStyleNames="{style.header}" dataParent="#accordion" dataTarget="#collapse" dataToggle="COLLAPSE">
+				<b:Heading size="H4" text="{msg.markersExportOptionsTitle}"/>
+			</b:PanelHeader>
+			<b:PanelCollapse b:id="collapse" ui:field="collapsePanel">
+				<b:PanelBody>
+
+					<g:HTML ui:field="panelHtml"/>
+
+					<b:NavTabs>
+						<b:TabListItem active="true" dataTarget="#chromosome" text="{msg.markersExportOptionsTabChromosomes}"
+									   ui:field="chromosomeTab"/>
+						<b:TabListItem dataTarget="#region" text="{msg.markersExportOptionsTabRegion}" ui:field="regionTab"/>
+						<b:TabListItem dataTarget="#interval" text="{msg.markersExportOptionsTabInterval}" ui:field="intervalTab"/>
+						<b:TabListItem dataTarget="#radius" text="{msg.markersExportOptionsTabRadius}" ui:field="radiusTab"/>
+					</b:NavTabs>
+					<b:TabContent>
+						<b:TabPane active="true" b:id="chromosome">
+							<g:HTML ui:field="chromosomeHtml"/>
+
+							<b:ListBox multipleSelect="true" visibleItemCount="7" ui:field="chromosomeBox"/>
+						</b:TabPane>
+						<b:TabPane b:id="region">
+							<g:HTML ui:field="regionHtml"/>
+
+							<g:SimplePanel addStyleNames="{TABLE_BORDER}" ui:field="regionTable"/>
+
+							<b:ButtonGroup>
+								<b:Button addStyleNames="{style.no-border-top} {MDI} {MDI_LG} {MDI_DELETE}" ui:field="deleteRegion"/>
+								<b:Button addStyleNames="{style.no-border-top} {MDI} {MDI_LG} {MDI_PLUS_BOX}" ui:field="addRegion"/>
+							</b:ButtonGroup>
+						</b:TabPane>
+						<b:TabPane b:id="interval">
+							<g:HTML ui:field="intervalHtml"/>
+
+							<b:Row>
+								<b:Column size="XS_12,SM_6">
+									<b:FormGroup>
+										<b:FormLabel for="formFirst" text="{msg.markersExportOptionsIntervalFirstMarker}"/>
+										<b:TextBox b:id="formFirst" ui:field="intervalFirstMarker"/>
+									</b:FormGroup>
+								</b:Column>
+								<b:Column size="XS_12,SM_6">
+									<b:FormGroup>
+										<b:FormLabel for="formSecond" text="{msg.markersExportOptionsIntervalSecondMarker}"/>
+										<b:TextBox b:id="formSecond" ui:field="intervalSecondMarker"/>
+									</b:FormGroup>
+								</b:Column>
+							</b:Row>
+						</b:TabPane>
+						<b:TabPane b:id="radius">
+							<g:HTML ui:field="radiusHtml"/>
+
+							<b:Row>
+								<b:Column size="XS_12,SM_4">
+									<b:FormGroup>
+										<b:FormLabel for="formLeft" text="{msg.markersExportOptionsRadiusOffsetLeft}"/>
+										<i:RangedLongTextBox min="0" b:id="formLeft" ui:field="radiusLeft"/>
+									</b:FormGroup>
+								</b:Column>
+								<b:Column size="XS_12,SM_4">
+									<b:FormGroup>
+										<b:FormLabel for="formMarker" text="{msg.markersExportOptionsRadiusMarker}"/>
+										<b:TextBox b:id="formMarker" ui:field="radiusMarker"/>
+									</b:FormGroup>
+								</b:Column>
+								<b:Column size="XS_12,SM_4">
+									<b:FormGroup>
+										<b:FormLabel for="formRight" text="{msg.markersExportOptionsRadiusOffsetRight}"/>
+										<i:RangedLongTextBox min="0" b:id="formRight" ui:field="radiusRight"/>
+									</b:FormGroup>
+								</b:Column>
+							</b:Row>
+						</b:TabPane>
+					</b:TabContent>
+
+					<b:Button addStyleNames="{style.margin} {MDI} {MDI_LG} {MDI_CANCEL}" text="{msg.markersExportOptionsClosePanel}" type="DANGER"
+							  ui:field="closeOptions"/>
+				</b:PanelBody>
+			</b:PanelCollapse>
+		</b:Panel>
+		<g:SimplePanel ui:field="markerDownloadPanel"/>
+	</g:FlowPanel>
+</ui:UiBinder>

@@ -106,6 +106,7 @@ public class Style
 	public static final String MDI_HARDDISK                        = "mdi-harddisk";
 	public static final String MDI_DNA                             = "mdi-dna";
 	public static final String MDI_MAP_MARKER                      = "mdi-map-marker";
+	public static final String MDI_MAP_MARKER_RADIUS               = "mdi-map-marker-radius";
 	public static final String MDI_TWITTER_BOX                     = "mdi-twitter-box";
 	public static final String MDI_FACEBOOK_BOX                    = "mdi-facebook-box";
 	public static final String MDI_GOOGLE_PLUS_BOX                 = "mdi-google-plus-box";

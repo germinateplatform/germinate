@@ -335,8 +335,8 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Dataset.DATATYPE);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDatatype(), sortingEnabled);
 
-		if (experimentType == ExperimentType.trials)
-		{
+//		if (experimentType == ExperimentType.trials)
+//		{
 			// Add the site name column
 			column = new TextColumn()
 			{
@@ -393,7 +393,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			};
 			column.setDataStoreName(Country.COUNTRY_NAME);
 			addColumn(column, Text.LANG.datasetsColumnCountry(), sortingEnabled);
-		}
+//		}
 
 		/* Add the license description column */
 		column = new ClickableSafeHtmlColumn()

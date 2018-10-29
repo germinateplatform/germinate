@@ -139,6 +139,8 @@ public class AdditionalDataWidget extends Composite
 						if (updateCallback != null)
 							updateCallback.onDataUpdate();
 						additionalDataTable.refreshTable();
+
+						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DATASET, "additionalDatasets", "show", selectedItems.size());
 					}
 				});
 			}

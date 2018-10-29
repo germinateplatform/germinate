@@ -49,6 +49,7 @@ public enum Parameter
 	tableFilterMapping(PartialSearchQuery.class, ParameterLifetime.VOLATILE),
 	flapjackExportResult(FlapjackAllelefreqBinningResult.class, ParameterLifetime.VOLATILE),
 	collectingsiteId(Long.class, ParameterLifetime.TEMPORARY),
+	trialsiteId(Long.class, ParameterLifetime.TEMPORARY),
 	groupId(Long.class, ParameterLifetime.TEMPORARY),
 	markerId(Long.class, ParameterLifetime.TEMPORARY),
 	markerName(String.class, ParameterLifetime.VOLATILE),

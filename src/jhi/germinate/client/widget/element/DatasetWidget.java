@@ -103,6 +103,70 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		this.singleSelection = singleSelection;
 	}
 
+	public static void showLicenseAcceptWizard(DatasetTable table, Set<License> licenses, DefaultAsyncCallback<List<Dataset>> callback)
+	{
+		new LicenseWizard(licenses)
+		{
+			@Override
+			protected boolean onFinished()
+			{
+				List<LicenseLog> logs = getLicenseLogs();
+				List<License> licenses = getAcceptedLicenses();
+
+				// Get all the currently selected datasets
+				Set<Dataset> datasets = table.getSelection();
+				// Which ones should still be selected?
+				List<Dataset> toSelect = new ArrayList<>();
+
+				// For each of them, check if its license has been accepted
+				for (Dataset d : datasets)
+				{
+					// If the dataset has a license
+					if (d.getLicense() != null)
+					{
+						// License was already accepted before (there is a log with a valid id)
+						if (d.getLicense().getLicenseLog() != null && d.getLicense().getLicenseLog().getId() > 0)
+							toSelect.add(d);
+							// The user just accepted this license
+						else if (licenses.contains(d.getLicense()))
+							toSelect.add(d);
+					}
+					else
+					{
+						// Else, just add it. It's a freebie!
+						toSelect.add(d);
+					}
+				}
+
+				// Then set the selection of the table
+				table.setSelection(toSelect);
+				table.redraw();
+
+				// Finally, if there are new log entries (new licenses that the user accepted), then submit them
+				if (!CollectionUtils.isEmpty(logs))
+				{
+					DatasetService.Inst.get().updateLicenseLogs(Cookie.getRequestProperties(), logs, new AsyncCallback<ServerResult<Boolean>>()
+					{
+						@Override
+						public void onFailure(Throwable caught)
+						{
+							callback.onFailure(caught);
+						}
+
+						@Override
+						public void onSuccess(ServerResult<Boolean> result)
+						{
+							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LICENSE, "accepted", licenses.stream().map(l -> Long.toString(l.getId())).collect(Collectors.joining(", ")));
+							callback.onSuccess(toSelect);
+						}
+					});
+				}
+
+				return true;
+			}
+		}.open();
+	}
+
 	/**
 	 * Initializes the table containing the datasets defined in the database
 	 */
@@ -199,67 +263,9 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		};
 	}
 
-	public static void showLicenseAcceptWizard(DatasetTable table, Set<License> licenses, DefaultAsyncCallback<List<Dataset>> callback)
+	public DatasetTable getTable()
 	{
-		new LicenseWizard(licenses)
-		{
-			@Override
-			protected boolean onFinished()
-			{
-				List<LicenseLog> logs = getLicenseLogs();
-				List<License> licenses = getAcceptedLicenses();
-
-				// Get all the currently selected datasets
-				Set<Dataset> datasets = table.getSelection();
-				// Which ones should still be selected?
-				List<Dataset> toSelect = new ArrayList<>();
-
-				// For each of them, check if its license has been accepted
-				for (Dataset d : datasets)
-				{
-					// If the dataset has a license
-					if (d.getLicense() != null)
-					{
-						// License was already accepted before (there is a log with a valid id)
-						if (d.getLicense().getLicenseLog() != null && d.getLicense().getLicenseLog().getId() > 0)
-							toSelect.add(d);
-							// The user just accepted this license
-						else if (licenses.contains(d.getLicense()))
-							toSelect.add(d);
-					}
-					else
-					{
-						// Else, just add it. It's a freebie!
-						toSelect.add(d);
-					}
-				}
-
-				// Then set the selection of the table
-				table.setSelection(toSelect);
-				table.redraw();
-
-				// Finally, if there are new log entries (new licenses that the user accepted), then submit them
-				if (!CollectionUtils.isEmpty(logs))
-				{
-					DatasetService.Inst.get().updateLicenseLogs(Cookie.getRequestProperties(), logs, new AsyncCallback<ServerResult<Boolean>>()
-					{
-						@Override
-						public void onFailure(Throwable caught)
-						{
-							callback.onFailure(caught);
-						}
-
-						@Override
-						public void onSuccess(ServerResult<Boolean> result)
-						{
-							callback.onSuccess(toSelect);
-						}
-					});
-				}
-
-				return true;
-			}
-		}.open();
+		return table;
 	}
 
 	/**

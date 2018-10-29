@@ -74,6 +74,7 @@ public class Page implements Serializable
 	public static final Page SEARCH                   = new Page("search", false, Style.MDI_MAGNIFY);
 	public static final Page TRIALS                   = new Page("trials", false).addLegacyNames("categorical-export");
 	public static final Page TRIALS_DATASETS          = new Page("trials-datasets", false, Style.MDI_SHOVEL).addLegacyNames("categorical-datasets");
+	public static final Page TRIAL_SITE_DETAILS       = new Page("trial-site-details", false, Style.MDI_MAP_MARKER_RADIUS);
 	public static final Page USER_PERMISSIONS         = new Page("user-permissions", false, Style.MDI_ACCOUNT_MULTIPLE);
 
 	private String      name;

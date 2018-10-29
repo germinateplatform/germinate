@@ -66,14 +66,18 @@ public class FilterRow extends Composite
 	@UiField
 	DatePicker                              secondDate;
 	@UiField
-	FlowPanel                               entity;
+	FlowPanel                               dbObject;
 	@UiField
-	EntityTypeListBox                       firstEntity;
+	SimplePanel                             firstDbObjectPanel;
 	@UiField
-	EntityTypeListBox                       secondEntity;
+	SimplePanel                             secondDbObjectPanel;
+
 	@UiField
-	Button                                  deleteButton;
+	Button deleteButton;
 	private List<Column> columns;
+
+	private GerminateValueListBox firstDbObject;
+	private GerminateValueListBox secondDbObject;
 
 	public FilterRow(List<Column> columns, boolean canDelete)
 	{
@@ -94,20 +98,22 @@ public class FilterRow extends Composite
 				{
 					date.setVisible(true);
 					input.setVisible(false);
-					entity.setVisible(false);
+					dbObject.setVisible(false);
 				}
-				else if (item.getDataType().equals(EntityType.class))
+				else if (item.getDataType().equals(EntityType.class) || item.getDataType().equals(LocationType.class))
 				{
 					date.setVisible(false);
 					input.setVisible(false);
-					entity.setVisible(true);
+					dbObject.setVisible(true);
 				}
 				else
 				{
 					date.setVisible(false);
 					input.setVisible(true);
-					entity.setVisible(false);
+					dbObject.setVisible(false);
 				}
+
+				updateDbObjects();
 			}
 		};
 		operator = new DropdownInputButton<ComparisonOperator>()
@@ -125,12 +131,38 @@ public class FilterRow extends Composite
 			}
 		};
 
+
 		initWidget(ourUiBinder.createAndBindUi(this));
 
 		column.setData(columns, true);
 
 		operator.setData(Arrays.asList(new Like(), new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between(), new InSet()), true);
 		deleteButton.setEnabled(canDelete);
+
+		updateDbObjects();
+	}
+
+	private void updateDbObjects()
+	{
+		firstDbObjectPanel.clear();
+		secondDbObjectPanel.clear();
+
+		Class<?> type = column.getSelection().getDataType();
+
+		if (Objects.equals(type, EntityType.class))
+		{
+			firstDbObject = new EntityTypeListBox(false);
+			secondDbObject = new EntityTypeListBox(false);
+			firstDbObjectPanel.add(firstDbObject);
+			secondDbObjectPanel.add(secondDbObject);
+		}
+		else if (Objects.equals(type, LocationType.class))
+		{
+			firstDbObject = new LocationTypeListBox(false);
+			secondDbObject = new LocationTypeListBox(false);
+			firstDbObjectPanel.add(firstDbObject);
+			secondDbObjectPanel.add(secondDbObject);
+		}
 	}
 
 	public static String getOperatorString(ComparisonOperator item)
@@ -191,8 +223,8 @@ public class FilterRow extends Composite
 		secondInput.setVisible(secondVisible);
 		firstDate.setVisible(firstVisible);
 		secondDate.setVisible(secondVisible);
-		firstEntity.setVisible(firstVisible);
-		secondEntity.setVisible(secondVisible);
+		firstDbObjectPanel.setVisible(firstVisible);
+		secondDbObjectPanel.setVisible(secondVisible);
 
 		if (add)
 		{
@@ -200,8 +232,8 @@ public class FilterRow extends Composite
 			secondInput.addStyleName(style.inputDual());
 			firstDate.addStyleName(style.inputDual());
 			secondDate.addStyleName(style.inputDual());
-			firstEntity.addStyleName(style.inputDual());
-			secondEntity.addStyleName(style.inputDual());
+			firstDbObjectPanel.addStyleName(style.inputDual());
+			secondDbObjectPanel.addStyleName(style.inputDual());
 		}
 		else
 		{
@@ -209,8 +241,8 @@ public class FilterRow extends Composite
 			secondInput.removeStyleName(style.inputDual());
 			firstDate.removeStyleName(style.inputDual());
 			secondDate.removeStyleName(style.inputDual());
-			firstEntity.removeStyleName(style.inputDual());
-			secondEntity.removeStyleName(style.inputDual());
+			firstDbObjectPanel.removeStyleName(style.inputDual());
+			secondDbObjectPanel.removeStyleName(style.inputDual());
 		}
 	}
 
@@ -228,7 +260,20 @@ public class FilterRow extends Composite
 					   try
 					   {
 						   if (values.size() > 0)
-							   firstEntity.setValue(EntityType.valueOf(values.get(0)), true);
+							   firstDbObject.setValue(EntityType.valueOf(values.get(0)), true);
+					   }
+					   catch (IllegalArgumentException e)
+					   {
+						   if (values.size() > 0)
+							   firstInput.setValue(values.get(0));
+					   }
+				   }
+				   else if (c.getDataType().equals(LocationType.class))
+				   {
+					   try
+					   {
+						   if (values.size() > 0)
+							   firstDbObject.setValue(LocationType.valueOf(values.get(0)), true);
 					   }
 					   catch (IllegalArgumentException e)
 					   {
@@ -289,8 +334,21 @@ public class FilterRow extends Composite
 			return firstInput.getValue();
 		else if (date.isVisible())
 			return DateUtils.getDatabaseDate(firstDate.getValue().getTime());
-		else if (entity.isVisible())
-			return firstEntity.getSelection().getName();
+		else if (dbObject.isVisible())
+		{
+			Class<?> type = column.getSelection().getDataType();
+
+			if (Objects.equals(type, EntityType.class))
+			{
+				return ((EntityType) firstDbObject.getSelection()).getName();
+			}
+			else if (Objects.equals(type, LocationType.class))
+			{
+				return ((LocationType) firstDbObject.getSelection()).name();
+			}
+
+			return null;
+		}
 		else
 			return "";
 	}
@@ -301,22 +359,35 @@ public class FilterRow extends Composite
 			return secondInput.getValue();
 		else if (date.isVisible())
 			return DateUtils.getDatabaseDate(secondDate.getValue().getTime());
-		else if (entity.isVisible())
-			return secondEntity.getSelection().getName();
+		else if (dbObject.isVisible())
+		{
+			Class<?> type = column.getSelection().getDataType();
+
+			if (Objects.equals(type, EntityType.class))
+			{
+				return ((EntityType) secondDbObject.getSelection()).getName();
+			}
+			else if (Objects.equals(type, LocationType.class))
+			{
+				return ((LocationType) secondDbObject.getSelection()).getName();
+			}
+
+			return null;
+		}
 		else
 			return "";
 	}
 
 	public String getSearchConditionString()
 	{
-		return "'" + column.getSelection().displayName + "' " + getOperatorString(operator.getSelection()) + " '" + getFirst() + (secondInput.isVisible() || secondDate.isVisible() || secondEntity.isVisible() ? ", " + getSecond() : "") + "'";
+		return "'" + column.getSelection().displayName + "' " + getOperatorString(operator.getSelection()) + " '" + getFirst() + (secondInput.isVisible() || secondDate.isVisible() || secondDbObjectPanel.isVisible() ? ", " + getSecond() : "") + "'";
 	}
 
 	public boolean isEmpty()
 	{
 		if (StringUtils.isEmpty(getFirst()))
 			return true;
-		else if (secondInput.isVisible() || secondDate.isVisible() || secondEntity.isVisible())
+		else if (secondInput.isVisible() || secondDate.isVisible() || secondDbObjectPanel.isVisible())
 			return StringUtils.isEmpty(getSecond());
 		else
 			return false;

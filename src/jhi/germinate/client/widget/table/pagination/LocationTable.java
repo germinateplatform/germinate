@@ -35,6 +35,7 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -94,10 +95,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 				@Override
 				public SafeHtml getValue(Location object)
 				{
-					if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSIONS_FOR_COLLSITE))
-						return TableUtils.getHyperlinkValue(object.getId(), "#" + Page.ACCESSIONS_FOR_COLLSITE);
-					else
-						return SimpleHtmlTemplate.INSTANCE.text(Long.toString(object.getId()));
+					return getLink(object, Long.toString(object.getId()));
 				}
 
 				@Override
@@ -122,10 +120,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			@Override
 			public SafeHtml getValue(Location object)
 			{
-				if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSIONS_FOR_COLLSITE))
-					return TableUtils.getHyperlinkValue(object.getName(), "#" + Page.ACCESSIONS_FOR_COLLSITE);
-				else
-					return SimpleHtmlTemplate.INSTANCE.text(object.getName());
+				return getLink(object, object.getName());
 			}
 
 			@Override
@@ -172,6 +167,26 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 		};
 		column.setDataStoreName(Location.STATE);
 		addColumn(column, Text.LANG.collectingsiteState(), sortingEnabled);
+
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Location object)
+			{
+				if (object.getType() != null)
+					return object.getType().getName();
+				else
+					return null;
+			}
+
+			@Override
+			public Class getType()
+			{
+				return LocationType.class;
+			}
+		};
+		column.setDataStoreName(LocationType.NAME);
+		addColumn(column, Text.LANG.locationColumnType(), sortingEnabled);
 
 		/* Add the latitude column */
 		column = new TextColumn()
@@ -279,11 +294,53 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 		addColumn(column, Text.LANG.passportColumnCountry(), sortingEnabled);
 	}
 
+	protected SafeHtml getLink(Location object, String value)
+	{
+		Page page = null;
+
+		switch (object.getType())
+		{
+			case collectingsites:
+				page = Page.ACCESSIONS_FOR_COLLSITE;
+				break;
+			case trialsite:
+				page = Page.TRIAL_SITE_DETAILS;
+				break;
+			case datasets:
+				page = Page.DATASET_OVERVIEW;
+				break;
+		}
+
+		if (GerminateSettingsHolder.isPageAvailable(page))
+			return TableUtils.getHyperlinkValue(value, "#" + page);
+		else
+			return SimpleHtmlTemplate.INSTANCE.text(value);
+	}
+
 	@Override
 	protected void onItemSelected(NativeEvent event, Location object, int column)
 	{
-		/* Get the id */
-		if (GerminateSettingsHolder.isPageAvailable(Page.ACCESSIONS_FOR_COLLSITE))
-			LongParameterStore.Inst.get().put(Parameter.collectingsiteId, object.getId());
+		Page page = null;
+
+		switch (object.getType())
+		{
+			case collectingsites:
+				page = Page.ACCESSIONS_FOR_COLLSITE;
+				LongParameterStore.Inst.get().put(Parameter.collectingsiteId, object.getId());
+				break;
+			case trialsite:
+				page = Page.TRIAL_SITE_DETAILS;
+				LongParameterStore.Inst.get().put(Parameter.trialsiteId, object.getId());
+				break;
+			case datasets:
+				page = Page.DATASET_OVERVIEW;
+				PartialSearchQuery query = new PartialSearchQuery();
+				query.add(new SearchCondition(Location.SITE_NAME, new Equal(), object.getName(), String.class));
+				FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
+				break;
+		}
+
+		if (!GerminateSettingsHolder.isPageAvailable(page))
+			event.preventDefault();
 	}
 }

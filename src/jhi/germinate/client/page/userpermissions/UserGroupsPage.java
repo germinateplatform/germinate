@@ -164,6 +164,8 @@ public class UserGroupsPage extends Composite
 											updateGroupMembers();
 										}
 
+										JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "delete", Long.toString(object.getId()));
+
 										GerminateEventBus.BUS.fireEvent(new UserGroupChangeEvent());
 									}
 								});
@@ -260,6 +262,8 @@ public class UserGroupsPage extends Composite
 							userTable.refreshTable();
 //							groupTable.refreshTable();
 
+							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "removeItems", Long.toString(group.getId()), ids.size());
+
 							GerminateEventBus.BUS.fireEvent(new UserGroupChangeEvent());
 						}
 					});
@@ -307,6 +311,8 @@ public class UserGroupsPage extends Composite
 //							groupTable.refreshTable();
 							newUserTable.setSelection(null);
 
+							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "addItems", Long.toString(group.getId()), ids.size());
+
 							GerminateEventBus.BUS.fireEvent(new UserGroupChangeEvent());
 						}
 					});
@@ -343,7 +349,7 @@ public class UserGroupsPage extends Composite
 			@Override
 			public void onSuccessImpl(ServerResult<UserGroup> result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "create", strippedName);
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "create", Long.toString(result.getServerResult().getId()));
 				group = result.getServerResult();
 //				groupTable.refreshTable();
 

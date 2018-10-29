@@ -23,6 +23,7 @@ import com.google.gwt.i18n.client.*;
 import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 
+import jhi.germinate.client.util.*;
 import jhi.germinate.shared.Style;
 
 /**
@@ -54,6 +55,7 @@ public class LanguageSelectorItem
 			@Override
 			public boolean f(Event e)
 			{
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "language", locale);
 				Window.Location.replace(Window.Location.createUrlBuilder().setParameter(LocaleInfo.getLocaleQueryParam(), locale).buildString());
 				return false;
 			}

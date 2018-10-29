@@ -31,6 +31,7 @@ import org.gwtbootstrap3.client.ui.html.*;
 import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.input.*;
@@ -48,16 +49,16 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 
 	private NumberFormat formatter;
 
-	private MdiAnchorListItem firstPage   = new MdiAnchorListItem();
-	private MdiAnchorListItem prevPage    = new MdiAnchorListItem();
-	private AnchorListItem    currentPage = new AnchorListItem();
-	private MdiAnchorListItem nextPage    = new MdiAnchorListItem();
-	private MdiAnchorListItem lastPage    = new MdiAnchorListItem();
-	private ButtonGroup       group       = new ButtonGroup();
-	private Button            toggle      = new Button();
-	private DropDownMenu      menu        = new DropDownMenu();
-	private final FlowPanel     panel;
-	private final UnorderedList ul;
+	private final FlowPanel         panel;
+	private final UnorderedList     ul;
+	private       MdiAnchorListItem firstPage   = new MdiAnchorListItem();
+	private       MdiAnchorListItem prevPage    = new MdiAnchorListItem();
+	private       AnchorListItem    currentPage = new AnchorListItem();
+	private       MdiAnchorListItem nextPage    = new MdiAnchorListItem();
+	private       MdiAnchorListItem lastPage    = new MdiAnchorListItem();
+	private       ButtonGroup       group       = new ButtonGroup();
+	private       Button            toggle      = new Button();
+	private       DropDownMenu      menu        = new DropDownMenu();
 
 	public BootstrapPager()
 	{
@@ -108,6 +109,8 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 				toggle.setText(item.getText());
 
 				IntegerParameterStore.Inst.get().put(Parameter.paginationPageSize, value);
+
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "set", "itemsPerPage", value);
 
 				GerminateEventBus.BUS.fireEvent(new TableRowCountChangeEvent());
 			});
@@ -177,6 +180,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 			if (box.validate(true))
 			{
 				setPage(box.getIntegerValue() - 1);
+				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "jump", "toPage", box.getIntegerValue() - 1);
 				dialog.close();
 			}
 		}))
@@ -226,7 +230,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 
 		String text;
 
-        /* Use the internationalized text */
+		/* Use the internationalized text */
 		if (pageStart == endIndex)
 			text = formatter.format(pageStart) + (exact ? Text.LANG.pagerOf() : Text.LANG.pagerOfOver()) + formatter.format(dataSize);
 		else
@@ -244,10 +248,10 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 			Range range = getDisplay().getVisibleRange();
 			int pageSize = range.getLength();
 
-            /* Removing this fixes an issue with the last page. Example: If
+			/* Removing this fixes an issue with the last page. Example: If
 			 * there are 850 items and each size is set to show 100, the last
-             * page (if reached by stepping through and not by jumping to the
-             * end) would go from 751 to 850 instead of 801 - 850. */
+			 * page (if reached by stepping through and not by jumping to the
+			 * end) would go from 751 to 850 instead of 801 - 850. */
 			// if (isRangeLimited && display.isRowCountExact())
 			// {
 			// index = Math.min(index, display.getRowCount() - pageSize);

@@ -17,11 +17,13 @@
 
 package jhi.germinate.client.widget.table.pagination;
 
+import com.google.gwt.cell.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.rpc.*;
 
 import java.util.*;
+import java.util.Locale;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
@@ -53,13 +55,19 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 	@Override
 	public boolean supportsFullIdMarking()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean supportsDownload()
 	{
 		return false;
+	}
+
+	@Override
+	protected boolean supportsFiltering()
+	{
+		return true;
 	}
 
 	@Override
@@ -221,6 +229,63 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 		};
 		column.setDataStoreName(ExperimentType.DESCRIPTION);
 		addColumn(column, Text.LANG.datasetsColumnExperimentType(), sortingEnabled);
+
+		// Add the location site column
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(PhenotypeData object)
+			{
+				if (object.getLocation() == null)
+					return null;
+				else
+					return object.getLocation().getName();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Location.SITE_NAME);
+		addColumn(column, Text.LANG.datasetsColumnSiteName(), sortingEnabled);
+
+		/* Add the country column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(PhenotypeData object)
+			{
+				if (object.getLocation() != null && object.getLocation().getCountry() != null)
+					return object.getLocation().getCountry().getName();
+				else
+					return null;
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+
+			@Override
+			public void render(Cell.Context context, PhenotypeData object, SafeHtmlBuilder sb)
+			{
+				String value = getValue(object);
+				if (value != null)
+				{
+					sb.appendHtmlConstant("<span class=\"" + Style.COUNTRY_FLAG + " " + object.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "\"></span>");
+					sb.append(SafeHtmlUtils.fromString(value));
+				}
+				else
+				{
+					super.render(context, object, sb);
+				}
+			}
+		};
+		column.setDataStoreName(Country.COUNTRY_NAME);
+		addColumn(column, Text.LANG.datasetsColumnCountry(), sortingEnabled);
 
 		/* Add the phenotype name column */
 		column = new TextColumn()

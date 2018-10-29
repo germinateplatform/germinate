@@ -23,9 +23,12 @@ import com.google.gwt.user.client.ui.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * {@link LocationTreemapChart} is a page that shows the locations in a treemap. Will redirect to {@link Page#ACCESSIONS_FOR_COLLSITE} when user
@@ -41,25 +44,35 @@ public class LocationTreemapChart extends AbstractChart
 	private LocationType type = null;
 
 	/**
-	 * Redirects the user to the {@link Page#ACCESSIONS_FOR_COLLSITE} page
+	 * Redirects the user to the corresponding details page
 	 *
-	 * @param id The id of the selected collectingsite
+	 * @param id   The id of the selected location
+	 * @param name The name of the location
 	 */
-	public void redirectToAccessionsForCollsitePage(String id)
+	public void redirect(String id, String name)
 	{
-		if (type == LocationType.collectingsites)
+		try
 		{
-			try
+			switch (type)
 			{
-				Long longId = Long.parseLong(id);
-
-				LongParameterStore.Inst.get().put(Parameter.collectingsiteId, longId);
-				History.newItem(Page.ACCESSIONS_FOR_COLLSITE.name());
+				case collectingsites:
+					LongParameterStore.Inst.get().put(Parameter.collectingsiteId, Long.parseLong(id));
+					History.newItem(Page.ACCESSIONS_FOR_COLLSITE.name());
+					break;
+				case trialsite:
+					LongParameterStore.Inst.get().put(Parameter.trialsiteId, Long.parseLong(id));
+					History.newItem(Page.TRIAL_SITE_DETAILS.name());
+					break;
+				case datasets:
+					PartialSearchQuery query = new PartialSearchQuery();
+					query.add(new SearchCondition(Location.SITE_NAME, new Equal(), name, String.class));
+					FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
+					History.newItem(Page.DATASET_OVERVIEW.name());
+					break;
 			}
-			catch (NumberFormatException e)
-			{
-
-			}
+		}
+		catch (NumberFormatException e)
+		{
 		}
 	}
 
@@ -77,7 +90,8 @@ public class LocationTreemapChart extends AbstractChart
 	@Override
 	protected void updateChart(int width)
 	{
-		d3(width);
+		if (!StringUtils.isEmpty(filePath))
+			d3(width);
 	}
 
 	@Override
@@ -131,7 +145,7 @@ public class LocationTreemapChart extends AbstractChart
 					.tooltipStyle(tooltipStyle)
 					.overallHeaderName(collsiteString)
 					.onClick(function (d) {
-						that.@jhi.germinate.client.widget.d3js.LocationTreemapChart::redirectToAccessionsForCollsitePage(*)(d._children[0].id);
+						that.@jhi.germinate.client.widget.d3js.LocationTreemapChart::redirect(*)(d._children[0].id, d._children[0].site);
 					})
 					.tooltip(function (d) {
 						return d.key + " (" + d.value + ")";

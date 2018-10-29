@@ -363,12 +363,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				}
 
 				@Override
-				public boolean supportsFullIdMarking()
-				{
-					return true;
-				}
-
-				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
 					PhenotypeService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
@@ -683,6 +677,8 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(Dataset.DESCRIPTION, operator.getSelection(), searchString, String.class));
 					query.add(new SearchCondition(Phenotype.NAME, operator.getSelection(), searchString, String.class));
 					query.add(new SearchCondition(Phenotype.SHORT_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Location.SITE_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Country.COUNTRY_NAME, operator.getSelection(), searchString, String.class));
 					phenotypeDataTable.forceFilter(query, false);
 				}
 				if (section == SearchType.COMPOUND_DATA || section == SearchType.ALL)

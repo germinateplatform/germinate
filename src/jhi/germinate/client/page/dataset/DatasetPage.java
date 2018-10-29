@@ -24,7 +24,11 @@ import com.google.gwt.user.client.ui.*;
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
+import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
 
 /**
  * @author Sebastian Raubach
@@ -40,7 +44,11 @@ public class DatasetPage extends Composite implements ParallaxBannerPage, HasHel
 	@UiField
 	HTML          internalText;
 	@UiField
+	DatasetWidget internalTable;
+	@UiField
 	HTML          externalText;
+	@UiField
+	DatasetWidget externalTable;
 
 	public DatasetPage()
 	{
@@ -48,6 +56,18 @@ public class DatasetPage extends Composite implements ParallaxBannerPage, HasHel
 
 		internalText.setHTML(Text.LANG.datasetsTextInternal());
 		externalText.setHTML(Text.LANG.datasetsTextExternal());
+
+		/* Apply any filtering that another page requested before redirecting here */
+		PartialSearchQuery query = FilterMappingParameterStore.Inst.get().get(Parameter.tableFilterMapping);
+		FilterMappingParameterStore.Inst.get().remove(Parameter.tableFilterMapping);
+
+		if (query != null)
+		{
+			Scheduler.get().scheduleDeferred(() -> {
+				internalTable.getTable().forceFilter(query, true);
+				externalTable.getTable().forceFilter(query, true);
+			});
+		}
 	}
 
 	@Override
