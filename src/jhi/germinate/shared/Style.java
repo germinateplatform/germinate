@@ -40,7 +40,7 @@ public class Style
 	public static final String LAYOUT_DISPLAY_INLINE_BLOCK       = "gm8-display-inline-block";
 	public static final String LAYOUT_DISPLAY_NONE               = "gm8-display-none";
 	public static final String LAYOUT_LOGO_SECTION               = "gm8-logo-section";
-	public static final String LAYOUT_BUTTON_MARGIN              = "gm8-button-margin";
+	public static final String LAYOUT_MARGIN_MAP                 = "gm8-margin-map";
 	public static final String LAYOUT_TABLE_CELL_PADDING_PADDING = "gm8-table-cell-padding";
 	public static final String LAYOUT_SELECT_BUTTON_COMBO        = "gm8-select-button-combo";
 	public static final String LAYOUT_FLOAT_INITIAL              = "gm8-float-initial";

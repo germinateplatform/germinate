@@ -174,7 +174,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	{
 		tablePanel = new FlowPanel();
 		mapPanel = new SimplePanel();
-		mapPanel.addStyleName(Style.LAYOUT_BUTTON_MARGIN);
+		mapPanel.addStyleName(Style.LAYOUT_MARGIN_MAP);
 		buttonPanel = new FlowPanel();
 
 		panel.add(tablePanel);
@@ -415,7 +415,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 			});
 			continueButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
 			continueButton.setType(ButtonType.PRIMARY);
-			continueButton.addStyleName(Style.LAYOUT_BUTTON_MARGIN);
 
 			buttonPanel.add(continueButton);
 		}

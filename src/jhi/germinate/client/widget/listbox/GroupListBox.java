@@ -118,7 +118,7 @@ public class GroupListBox extends GerminateValueListBox<Group>
 		if (groupCreationInterface != null && type != null && !CollectionUtils.isEmpty(MarkedItemList.get(type)) && ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
 		{
 			// Create a new button that users can use to create a new group from this page
-			Button createGroup = new Button(Text.LANG.buttonCreateGroupFromCart());
+			Button createGroup = new Button(Text.LANG.buttonCreateGroupFromCart() + " (" + MarkedItemList.get(type).size() + ")");
 			createGroup.addStyleName(Style.mdiLg(Style.MDI_PLUS_BOX));
 			createGroup.setType(ButtonType.DEFAULT);
 			createGroup.addClickHandler(event ->

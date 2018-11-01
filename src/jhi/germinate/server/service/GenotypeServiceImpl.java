@@ -97,7 +97,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	}
 
 	@Override
-	public ServerResult<String> convertHdf5ToText(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, jhi.germinate.shared.exception.IOException, FlapjackException, InvalidArgumentException
+	public ServerResult<String> convertHdf5ToText(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -116,9 +116,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	}
 
 	@Override
-	public ServerResult<List<CreatedFile>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId,
-																boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, FlapjackException,
-			MissingPropertyException, InvalidArgumentException
+	public ServerResult<List<CreatedFile>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -138,7 +136,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 			exporter.exportResult(result.flapjackLinks);
 
 			/* Store the deleted markers */
-			List<String> keptMarkers = exporter.getKeptMarkers();
+//			List<String> keptMarkers = exporter.getKeptMarkers();
 
 			/* Get the map */
 			File filename = createTemporaryFile("map", datasetId, "map");
@@ -146,7 +144,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 
 			/* Write the map file */
 			// TODO: Once filtering is supported, add the lists
-			mapFile = FlapjackUtils.writeTemporaryMapFile(filename, mapData, null, null);
+			mapFile = FlapjackUtils.writeTemporaryMapFile(filename, mapData, settings.colNames, null);
 		}
 		catch (java.io.IOException e)
 		{

@@ -46,7 +46,7 @@ import jhi.germinate.shared.search.operators.*;
 /**
  * @author Sebastian Raubach
  */
-public class MarkerPage extends Composite implements HasHyperlinkButton
+public class MarkerPage extends Composite implements HasHyperlinkButton, HasHelp
 {
 	interface MarkerPageUiBinder extends UiBinder<HTMLPanel, MarkerPage>
 	{
@@ -157,5 +157,11 @@ public class MarkerPage extends Composite implements HasHyperlinkButton
 		return new HyperlinkPopupOptions()
 				.setPage(Page.MARKER_DETAILS)
 				.addParam(Parameter.markerId);
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new HTML(Text.LANG.markersHelp());
 	}
 }

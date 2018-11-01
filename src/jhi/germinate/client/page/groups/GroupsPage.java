@@ -74,7 +74,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 	@UiField
 	SimplePanel    groupMembersPanel;
 	@UiField
-	FlowPanel      newGroupMembersPanel;
+	PanelGroup     newGroupMembersPanel;
 	@UiField
 	SimplePanel    newGroupMembersTable;
 	@UiField
@@ -146,7 +146,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 							}
 
 							if (group != null)
-								updateGroupMembers(false);
+								updateGroupMembers(true);
 						}
 
 						initialLoad = false;
@@ -384,7 +384,11 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			table.getPanel().addAttachHandler(event ->
 			{
 				if (event.isAttached())
-					JavaScript.smoothScrollTo(groupMembersWrapper.getElement());
+				{
+					Scheduler.get().scheduleDeferred(() -> {
+						JavaScript.smoothScrollTo(groupMembersWrapper.getElement());
+					});
+				}
 			});
 		}
 		groupMembersPanel.add(table);

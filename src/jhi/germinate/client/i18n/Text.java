@@ -2348,7 +2348,7 @@ public interface Text extends Messages
 	String groupsNewMembersSubtitle();
 
 	@Key("widget.table.filter.info")
-	@DefaultMessage("<b>Table filtering supports many different comparisons. ''Equal'' searches for exact matches, while 'Like', by default, looks for matches starting or ending with the query, but also support the wildcard character ''%''.</b>")
+	@DefaultMessage("<b>Table filtering supports many different comparisons. ''Equal'' searches for exact matches, while ''Like'', by default, looks for matches starting or ending with the query, but also support the wildcard character ''%''.</b>")
 	SafeHtml tableFilterInfo();
 
 	@Key("wizard.license.title")
@@ -2687,4 +2687,16 @@ public interface Text extends Messages
 	@Key("page.trialsites.title")
 	@DefaultMessage("Trial Site Details")
 	String trialSitesTitle();
+
+	@Key("help.maps")
+	@DefaultMessage("<p>This page shows a table with information about all the genetic/physical maps that are stored in Germinate. Selecting a map in the table will show all markers on this map. Clicking on a marker in the table redirects to a page with detailed information about the selected marker.</p><p>For smaller maps, a heatmap marker distribution map is shown below the table that illustrates where the markers are located on each chromosome/linkage group.</p><p>The final section of this page allows you to download the selected map in a number of formats. You can also filter the markers on the map down by using the export options. As long as the export options are open (not collapsed), the downloads will be restricted to the selection in the options.</p>")
+	SafeHtml mapsHelp();
+
+	@Key("help.markers")
+	@DefaultMessage("<p>The marker details page shows all the information associated with the selected marker. This includes which datasets the marker has been used in, which genetic/physical maps it''s part of, etc.</p>")
+	SafeHtml markersHelp();
+
+	@Key("help.genotypic.export")
+	@DefaultMessage("<p>Genotypic data is exported for either the whole dataset or a subselection of accessions or markers. This page allows you to select which accession and marker groups should be included in the output and which genetic/physical map they should be exported against. To export the data for all accessions/markers, simply select the first item in the lists.</p><p>If you have items in your marked item list, a button below the selection box can be used to create a group from the list and then use that new group for the export.</p>")
+	SafeHtml genotypicExportHelp();
 }

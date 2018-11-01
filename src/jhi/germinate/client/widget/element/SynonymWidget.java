@@ -83,7 +83,7 @@ public class SynonymWidget extends GerminateComposite
 
 						for (Synonym synonym : result.getServerResult())
 						{
-							ulPanel.add(new Label(synonym.getSynonym()));
+							ulPanel.add(new Label(synonym.getSynonyms()));
 						}
 
 						panel.add(ulPanel);

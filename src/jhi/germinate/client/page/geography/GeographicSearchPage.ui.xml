@@ -70,7 +70,7 @@
 			</b:TabPane>
 		</b:TabContent>
 
-		<b:Button addStyleNames="{LAYOUT_BUTTON_MARGIN} {MDI} {MDI_LG} {MDI_ARROW_RIGHT_BOLD}" text="{msg.generalConfirm}" type="PRIMARY"
+		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_ARROW_RIGHT_BOLD}" text="{msg.generalConfirm}" type="PRIMARY"
 				  ui:field="continueButton"/>
 
 		<g:FlowPanel visible="false" ui:field="resultPanel">

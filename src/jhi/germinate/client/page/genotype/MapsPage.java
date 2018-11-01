@@ -46,7 +46,7 @@ import jhi.germinate.shared.search.operators.*;
 /**
  * @author Sebastian Raubach
  */
-public class MapsPage extends Composite implements HasHyperlinkButton
+public class MapsPage extends Composite implements HasHyperlinkButton, HasHelp
 {
 	interface MapsPageUiBinder extends UiBinder<HTMLPanel, MapsPage>
 	{
@@ -204,5 +204,11 @@ public class MapsPage extends Composite implements HasHyperlinkButton
 		return new HyperlinkPopupOptions()
 				.setPage(Page.MAP_DETAILS)
 				.addParam(Parameter.mapId);
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new HTML(Text.LANG.mapsHelp());
 	}
 }

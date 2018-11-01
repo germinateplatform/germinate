@@ -27,6 +27,8 @@ import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.constants.*;
 
+import java.util.*;
+
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
@@ -34,7 +36,7 @@ import jhi.germinate.shared.*;
 /**
  * @author Sebastian Raubach
  */
-public class SearchSection extends Composite
+public class SearchSection extends Composite implements HasWidgets
 {
 	private static final NumberFormat FORMAT = NumberFormat.getFormat(Text.LANG.pagerNumberFormat());
 
@@ -91,6 +93,18 @@ public class SearchSection extends Composite
 		body.clear();
 		setLabel(0);
 		progress.setVisible(false);
+	}
+
+	@Override
+	public Iterator<Widget> iterator()
+	{
+		return body.iterator();
+	}
+
+	@Override
+	public boolean remove(Widget w)
+	{
+		return body.remove(w);
 	}
 
 	public void add(Widget widget)

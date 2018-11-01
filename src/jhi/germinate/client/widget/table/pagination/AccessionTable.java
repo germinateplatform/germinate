@@ -439,7 +439,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 				@Override
 				public String getCellStyle()
 				{
-					return Style.combine(Style.TEXT_CENTER_ALIGN, Style.LAYOUT_V_ALIGN_MIDDLE);
+					return Style.combine(Style.TEXT_CENTER_ALIGN, Style.LAYOUT_V_ALIGN_MIDDLE, Style.LAYOUT_WHITE_SPACE_NO_WRAP);
 				}
 
 				@Override

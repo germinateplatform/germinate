@@ -17,6 +17,8 @@
 
 package jhi.germinate.util.importer.mcpd;
 
+import com.google.gson.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -446,26 +448,28 @@ public class McpdImporter extends DataImporter<Accession>
 
 		String[] synonyms = entry.getOtherNumb().split(";");
 
-		for (String syn : synonyms)
+		for (int i = 0; i < synonyms.length; i++)
+			synonyms[i] = synonyms[i].trim();
+
+		Gson gson = new Gson();
+		String json = gson.toJson(synonyms);
+
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM synonyms WHERE foreign_id = ? AND synonymtype_id = " + SynonymType.germinatebase.getId() + " AND synonym = ?");
+		int i = 1;
+		stmt.setLong(i++, entry.getId());
+		stmt.setString(i++, json);
+
+		DatabaseResult rs = stmt.query();
+
+		if (!rs.next())
 		{
-			syn = syn.trim();
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM synonyms WHERE foreign_id = ? AND synonymtype_id = " + SynonymType.germinatebase.getId() + " AND synonym = ?");
-			int i = 1;
-			stmt.setLong(i++, entry.getId());
-			stmt.setString(i++, syn);
+			Synonym synonym = new Synonym().setForeignId(entry.getId())
+										   .setType(SynonymType.germinatebase)
+										   .setSynonyms(json)
+										   .setCreatedOn(new Date());
 
-			DatabaseResult rs = stmt.query();
-
-			if (!rs.next())
-			{
-				Synonym synonym = new Synonym().setForeignId(entry.getId())
-											   .setType(SynonymType.germinatebase)
-											   .setSynonym(syn)
-											   .setCreatedOn(new Date());
-
-				Synonym.Writer.Inst.get().write(databaseConnection, synonym);
-				createdSynonymIds.add(synonym.getId());
-			}
+			Synonym.Writer.Inst.get().write(databaseConnection, synonym);
+			createdSynonymIds.add(synonym.getId());
 		}
 	}
 

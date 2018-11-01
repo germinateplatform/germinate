@@ -136,8 +136,8 @@ td span.mdi:nth-child(2) {
 	padding: 8px;
 }
 
-.<%= Style.LAYOUT_BUTTON_MARGIN %> {
-	margin: 20px 0;
+.<%= Style.LAYOUT_MARGIN_MAP %> {
+	margin: 15px 0;
 }
 
 .<%= Style.LAYOUT_LOGO_SECTION %> {

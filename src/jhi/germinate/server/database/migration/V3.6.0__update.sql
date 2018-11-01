@@ -40,3 +40,27 @@ DROP TABLE `subtaxa`;
 
 INSERT INTO synonymtypes (`id`, `target_table`, `name`, `description`) VALUES (4, "phenotypes", "Phenotypes", "Phenotype synonyms");
 INSERT INTO imagetypes (`description`, `reference_table`) VALUES ("phenotype images", "phenotypes");
+
+
+/* Add a json column */
+ALTER TABLE `synonyms`
+ADD COLUMN `synonyms` json NULL COMMENT 'The synonyms as a json array.' AFTER `synonymtype_id`;
+
+/* Create a temporary table from a group_concat select */
+DROP TABLE IF EXISTS `temp_synonyms`;
+CREATE TABLE `temp_synonyms` SELECT `foreign_id`, `synonymtype_id`, CONCAT("[", GROUP_CONCAT(JSON_QUOTE(`synonym`) SEPARATOR ","),"]") AS synonyms FROM `synonyms` GROUP BY `foreign_id`, `synonymtype_id`;
+
+/* Change the column type to Json */
+ALTER TABLE `temp_synonyms` CHANGE `synonyms` `synonyms` JSON NULL;
+
+/* Update the original table */
+UPDATE `synonyms` SET `synonyms` = (SELECT `synonyms` FROM `temp_synonyms` t WHERE t.`foreign_id` = `synonyms`.`foreign_id` AND t.`synonymtype_id` = `synonyms`.`synonymtype_id`);
+
+/* Delete duplicates */
+DELETE s1 FROM `synonyms` s1 INNER JOIN `synonyms` s2 WHERE s1.`id` < s2.`id` AND s1.`foreign_id` = s2.`foreign_id` AND s1.`synonymtype_id` = s2.`synonymtype_id`;
+
+/* Drop original synonym column */
+ALTER TABLE `synonyms` DROP COLUMN `synonym`;
+
+/* Drop temporary table */
+DROP TABLE IF EXISTS `temp_synonyms`;

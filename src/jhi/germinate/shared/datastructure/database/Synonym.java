@@ -41,13 +41,13 @@ public class Synonym extends DatabaseObject
 	public static final String ID             = "synonyms.id";
 	public static final String FOREIGN_ID     = "synonyms.foreign_id";
 	public static final String SYNONYMTYPE_ID = "synonyms.synonymtype_id";
-	public static final String SYNONYM        = "synonyms.synonym";
+	public static final String SYNONYM        = "synonyms.synonyms";
 	public static final String CREATED_ON     = "synonyms.created_on";
 	public static final String UPDATED_ON     = "synonyms.updated_on";
 
 	private Long        foreignId;
 	private SynonymType type;
-	private String      synonym;
+	private String      synonyms;
 	private Long        createdOn;
 	private Long        updatedOn;
 
@@ -82,14 +82,14 @@ public class Synonym extends DatabaseObject
 		return this;
 	}
 
-	public String getSynonym()
+	public String getSynonyms()
 	{
-		return synonym;
+		return synonyms;
 	}
 
-	public Synonym setSynonym(String synonym)
+	public Synonym setSynonyms(String synonyms)
 	{
-		this.synonym = synonym;
+		this.synonyms = synonyms;
 		return this;
 	}
 
@@ -170,7 +170,7 @@ public class Synonym extends DatabaseObject
 				return new Synonym(id)
 						.setForeignId(row.getLong(FOREIGN_ID))
 						.setType(SynonymType.getById(row.getLong(SYNONYMTYPE_ID)))
-						.setSynonym(row.getString(SYNONYM))
+						.setSynonyms(row.getString(SYNONYM))
 						.setCreatedOn(row.getTimestamp(CREATED_ON))
 						.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 
@@ -187,7 +187,7 @@ public class Synonym extends DatabaseObject
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `synonyms` (" + FOREIGN_ID + ", " + SYNONYMTYPE_ID + ", " + SYNONYM + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setLong(object.getForeignId())
 					.setLong(object.getType().getId())
-					.setString(object.getSynonym());
+					.setString(object.getSynonyms());
 
 			if (object.getCreatedOn() != null)
 				query.setTimestamp(new Date(object.getCreatedOn()));

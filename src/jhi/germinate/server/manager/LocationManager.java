@@ -243,6 +243,7 @@ public class LocationManager extends AbstractManager<Location>
 
 		String formatted = String.format(SELECT_BY_IDS, StringUtils.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
 		return new DatabaseObjectQuery<Location>(formatted, userAuth)
+				.setFetchesCount(pagination.getResultSize())
 				.setStrings(ids)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

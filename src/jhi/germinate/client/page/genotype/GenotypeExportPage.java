@@ -46,7 +46,7 @@ import jhi.germinate.shared.exception.*;
 /**
  * @author Sebastian Raubach
  */
-public class GenotypeExportPage extends GerminateComposite implements HasHyperlinkButton, ParallaxBannerPage
+public class GenotypeExportPage extends GerminateComposite implements HasHyperlinkButton, ParallaxBannerPage, HasHelp
 {
 	private FlowPanel resultPanel = new FlowPanel();
 
@@ -256,5 +256,11 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 	public String getParallaxStyle()
 	{
 		return ParallaxResource.INSTANCE.css().parallaxGenotype();
+	}
+
+	@Override
+	public Widget getHelpContent()
+	{
+		return new HTML(Text.LANG.genotypicExportHelp());
 	}
 }
