@@ -756,6 +756,11 @@ public class Accession extends DatabaseObject
 
 		public static final class Inst
 		{
+			public static MinimalParser get()
+			{
+				return InstanceHolder.INSTANCE;
+			}
+
 			/**
 			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
 			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
@@ -766,12 +771,7 @@ public class Accession extends DatabaseObject
 			 */
 			private static final class InstanceHolder
 			{
-				private static final Parser INSTANCE = new Parser();
-			}
-
-			public static Parser get()
-			{
-				return InstanceHolder.INSTANCE;
+				private static final MinimalParser INSTANCE = new MinimalParser();
 			}
 		}
 	}

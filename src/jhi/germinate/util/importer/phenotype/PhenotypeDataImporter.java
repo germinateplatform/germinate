@@ -57,23 +57,23 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port, String readerName)
+	public void run(File input, String server, String database, String username, String password, String port)
 	{
 		// Import the meta-data first. Get the created dataset
 		metadataImporter = new MetadataImporter(ExperimentType.trials);
-		metadataImporter.run(input, server, database, username, password, port, ExcelMetadataReader.class.getCanonicalName());
+		metadataImporter.run(input, server, database, username, password, port);
 		dataset = metadataImporter.getDataset();
 
 		// Then import the phenotypes
 		phenotypeImporter = new PhenotypeImporter();
-		phenotypeImporter.run(input, server, database, username, password, port, ExcelPhenotypeReader.class.getCanonicalName());
+		phenotypeImporter.run(input, server, database, username, password, port);
 
 		// Then run the rest of this importer
-		super.run(input, server, database, username, password, port, readerName);
+		super.run(input, server, database, username, password, port);
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelPhenotypeDataReader();
 	}

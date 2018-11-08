@@ -44,7 +44,7 @@ public class ExcelMapImporter extends DataImporter<Map>
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelMapReader();
 	}

@@ -18,10 +18,10 @@
 package jhi.germinate.util.importer.marker;
 
 import java.io.*;
-import java.sql.*;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.datastructure.database.Map;
@@ -37,32 +37,51 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 {
 	protected ExcelMapImporter        mapImporter;
 	protected ExcelMarkerTypeImporter markerTypeImporter;
-	protected Map            map;
-	protected MarkerType     markerType;
-	protected MapFeatureType mapFeatureType;
-	private List<MapDefinition> cache = new ArrayList<>();
-	private Set<Long> createdMarkerIds        = new HashSet<>();
-	private Set<Long> createdMapDefinitionIds = new HashSet<>();
-	private Set<Long> createdDatasetMemberIds = new HashSet<>();
+	protected Map                     map;
+	protected MarkerType              markerType;
+	protected MapFeatureType          mapFeatureType;
+	protected List<MapDefinition>     cache                   = new ArrayList<>();
+	protected Set<Long>               createdMarkerIds        = new HashSet<>();
+	protected Set<Long>               createdMapDefinitionIds = new HashSet<>();
+	protected Set<Long>               createdDatasetMemberIds = new HashSet<>();
+
+	protected java.util.Map<String, Long> markers        = new HashMap<>();
+	protected List<Long>                  datasetMembers = new ArrayList<>();
+	protected List<Long>                  mapdefinitions = new ArrayList<>();
+
 	private Dataset dataset;
 
-	@Override
-	public void run(File input, String server, String database, String username, String password, String port, String readerName)
+	private String mapName;
+	private String markerTypeName;
+
+	public TabDelimitedMarkerImporter(String mapName, String markerTypeName)
 	{
-		mapImporter = new FilenameMapImporter();
-		mapImporter.run(input, server, database, username, password, port, null);
-		map = mapImporter.getMap();
-
-		markerTypeImporter = new SNPMarkerTypeImporter();
-		markerTypeImporter.run(input, server, database, username, password, port, null);
-		markerType = markerTypeImporter.getMarkerType();
-		mapFeatureType = markerTypeImporter.getMapFeatureType();
-
-		super.run(input, server, database, username, password, port, readerName);
+		this.mapName = mapName;
+		this.markerTypeName = markerTypeName;
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	public void run(File input, String server, String database, String username, String password, String port)
+	{
+		preImport(input, server, database, username, password, port);
+
+		super.run(input, server, database, username, password, port);
+	}
+
+	protected void preImport(File input, String server, String database, String username, String password, String port)
+	{
+		mapImporter = new TabDelimitedMapImporter(mapName);
+		mapImporter.run(input, server, database, username, password, port);
+		map = mapImporter.getMap();
+
+		markerTypeImporter = new TabDelimitedMarkerTypeImporter(markerTypeName);
+		markerTypeImporter.run(input, server, database, username, password, port);
+		markerType = markerTypeImporter.getMarkerType();
+		mapFeatureType = markerTypeImporter.getMapFeatureType();
+	}
+
+	@Override
+	protected IDataReader getReader()
 	{
 		return new TabDelimitedMarkerReader();
 	}
@@ -80,13 +99,60 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 	}
 
 	@Override
+	protected void prepareReader(IDataReader reader)
+	{
+		super.prepareReader(reader);
+
+		try
+		{
+			// Get all the markers of this type in one go
+			DatabaseObjectStreamer<Marker> streamer = new DatabaseObjectQuery<Marker>("SELECT * FROM `markers` WHERE `markertype_id` = ?", null)
+					.setDatabase(databaseConnection)
+					.setLong(markerType.getId())
+					.getStreamer(Marker.Parser.Inst.get(), null, true);
+
+			// Remember them to be able to look them up later
+			Marker marker;
+			while ((marker = streamer.next()) != null)
+				markers.put(marker.getName(), marker.getId());
+
+			// Then get all the dataset members (markers)
+			datasetMembers = new ValueQuery("SELECT `markers`.`id` FROM `datasetmembers` LEFT JOIN `markers` ON (`datasetmembers`.`datasetmembertype_id` = 1 AND `markers`.`id` = `datasetmembers`.`foreign_id`) WHERE `dataset_id` = ?")
+					.setDatabase(databaseConnection)
+					.setLong(dataset.getId())
+					.run("id")
+					.getLongs()
+					.getServerResult();
+
+			if (datasetMembers == null)
+				datasetMembers = new ArrayList<>();
+
+			// And all the mapdefinitions for this map
+			mapdefinitions = new ValueQuery("SELECT `markers`.`id` FROM `mapdefinitions` LEFT JOIN `markers` ON (`mapdefinitions`.`marker_id` = `markers`.`id`) WHERE `map_id` = ?")
+					.setDatabase(databaseConnection)
+					.setLong(map.getId())
+					.run("id")
+					.getLongs()
+					.getServerResult();
+
+			if (mapdefinitions == null)
+				mapdefinitions = new ArrayList<>();
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	protected void write(MapDefinition entry) throws DatabaseException
 	{
 		if (!StringUtils.isEmpty(entry.getMarker().getName()))
 		{
-			// Write the marker type first
+			// Add to the cache
 			cache.add(entry);
 
+			// If cache full, write
 			if (cache.size() >= 10000)
 				writeCache();
 		}
@@ -109,9 +175,7 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 			writeCacheMapDefinitions();
 
 			if (dataset != null)
-			{
 				writeDatasetMembers();
-			}
 
 			databaseConnection.setAutoCommit(previous);
 		}
@@ -124,9 +188,13 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 	{
 		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO datasetmembers (dataset_id, foreign_id, datasetmembertype_id) VALUES (?, ?, 1)");
 
+		// Import the dataset members if they don't exist yet
 		for (MapDefinition entry : cache)
 		{
 			if (map == null || StringUtils.isEmpty(entry.getChromosome()) || entry.getDefinitionStart() == null)
+				continue;
+
+			if (datasetMembers.contains(entry.getMarker().getId()))
 				continue;
 
 			int i = 1;
@@ -141,35 +209,21 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 
 	private void writeCacheMapDefinitions() throws DatabaseException
 	{
-		DatabaseStatement select = databaseConnection.prepareStatement("SELECT * FROM mapdefinitions WHERE mapfeaturetype_id = ? AND marker_id = ? AND map_id = ? AND definition_start <=> ? AND definition_end <=> ? AND chromosome <=> ?");
 		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO mapdefinitions (" + MapDefinition.MAPFEATURETYPE_ID + ", " + MapDefinition.MARKER_ID + ", " + MapDefinition.MAP_ID + ", " + MapDefinition.DEFINITION_START + ", " + MapDefinition.DEFINITION_END + ", " + MapDefinition.CHROMOSOME + ") VALUES (?, ?, ?, ?, ?, ?)");
 
+		// Import the map definitions if they don't exist yet
 		for (MapDefinition entry : cache)
 		{
 			if (map == null || StringUtils.isEmpty(entry.getChromosome()) || entry.getDefinitionStart() == null)
 				continue;
 
+			if (mapdefinitions.contains(entry.getMarker().getId()))
+				continue;
+
 			entry.setType(mapFeatureType)
 				 .setMap(map);
 
-			int i = 1;
-			if (mapFeatureType != null)
-				select.setLong(i++, mapFeatureType.getId());
-			else
-				select.setNull(i++, Types.INTEGER);
-
-			select.setLong(i++, entry.getMarker().getId());
-			select.setLong(i++, map.getId());
-			select.setDouble(i++, entry.getDefinitionStart());
-			select.setDouble(i++, entry.getDefinitionEnd());
-			select.setString(i++, entry.getChromosome());
-
-			DatabaseResult rs = select.query();
-
-			if (!rs.next())
-			{
-				MapDefinition.Writer.Inst.get().writeBatched(insert, entry);
-			}
+			MapDefinition.Writer.Inst.get().writeBatched(insert, entry);
 		}
 
 		List<Long> ids = insert.executeBatch();
@@ -178,36 +232,29 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 
 	private void writeCacheMarkers() throws DatabaseException
 	{
-		DatabaseStatement select = databaseConnection.prepareStatement("SELECT * FROM markers WHERE marker_name = ? AND markertype_id = ?");
 		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO markers (" + Marker.MARKER_NAME + ", " + Marker.MARKERTYPE_ID + ", " + Marker.CREATED_ON + ", " + Marker.UPDATED_ON + ") VALUES (?, ?, ?, ?)");
 
+		// Import the markers if they don't exist yet
 		for (MapDefinition entry : cache)
 		{
+			Long marker = markers.get(entry.getMarker().getName());
+
 			entry.getMarker().setType(markerType);
 
-			int i = 1;
-			select.setString(i++, entry.getMarker().getName());
-
-			if (markerType != null)
-				select.setLong(i++, markerType.getId());
-			else
-				select.setNull(i++, Types.INTEGER);
-
-			DatabaseResult rs = select.query();
-
-			if (rs.next())
-				entry.setMarker(Marker.Parser.Inst.get().parse(rs, null, true));
-			else
+			if (marker == null)
 				Marker.Writer.Inst.get().writeBatched(insert, entry.getMarker());
+			else
+				entry.getMarker().setId(marker);
+
 		}
 
 		List<Long> ids = insert.executeBatch();
 		int counter = 0;
-		for (MapDefinition md : cache)
+		for (MapDefinition entry : cache)
 		{
-			if (md.getMarker().getId() == null)
+			if (entry.getMarker().getId() == null)
 			{
-				md.getMarker().setId(ids.get(counter++));
+				entry.getMarker().setId(ids.get(counter++));
 			}
 		}
 		createdMarkerIds.addAll(ids);

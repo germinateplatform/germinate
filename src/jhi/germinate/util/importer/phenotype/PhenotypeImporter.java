@@ -23,7 +23,6 @@ import jhi.germinate.server.database.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
-import jhi.germinate.util.importer.mcpd.*;
 import jhi.germinate.util.importer.reader.*;
 
 /**
@@ -43,9 +42,9 @@ public class PhenotypeImporter extends DataImporter<Phenotype>
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
-		return new TabDelimitedMcpdReader();
+		return new ExcelPhenotypeReader();
 	}
 
 	@Override

@@ -22,12 +22,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.*;
 
-import jhi.germinate.server.database.*;
 import jhi.germinate.server.util.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
-import jhi.germinate.util.importer.common.*;
 import jhi.germinate.util.importer.marker.*;
 import jhi.germinate.util.importer.reader.*;
 
@@ -36,16 +33,10 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelGenotypeDataImporter extends DataImporter<String[]>
+public class ExcelGenotypeDataImporter extends TabDelimitedGenotypeDataImporter
 {
-	protected GenotypeMetadataImporter metadataImporter;
-	protected ExcelMarkerImporter      markerImporter;
-	protected File           tempFile;
-	protected File           hdf5File;
-	protected Dataset dataset;
-	private Set<Long> createdDatasetMemberIds = new HashSet<>();
 	private BufferedWriter bw;
-	private boolean firstRow = true;
+	private File           tempFile = null;
 
 	public static void main(String[] args)
 	{
@@ -54,18 +45,8 @@ public class ExcelGenotypeDataImporter extends DataImporter<String[]>
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port, String readerName)
+	public void run(File input, String server, String database, String username, String password, String port)
 	{
-		// Import the meta-data first. Get the created dataset
-		metadataImporter = new GenotypeMetadataImporter(ExperimentType.genotype);
-		metadataImporter.run(input, server, database, username, password, port, ExcelMetadataReader.class.getCanonicalName());
-		hdf5File = metadataImporter.getHdf5File();
-		dataset = metadataImporter.getDataset();
-
-		markerImporter = new ExcelMarkerImporter();
-		markerImporter.setDataset(dataset);
-		markerImporter.run(input, server, database, username, password, port, ExcelMarkerReader.class.getCanonicalName());
-
 		try
 		{
 			tempFile = File.createTempFile("germinate_genotype_", ".txt");
@@ -74,13 +55,8 @@ public class ExcelGenotypeDataImporter extends DataImporter<String[]>
 			{
 				this.bw = bw;
 				// Then run the rest of this importer
-				super.run(input, server, database, username, password, port, readerName);
+				super.run(input, server, database, username, password, port);
 			}
-
-			FJTabbedToHdf5Converter converter = new FJTabbedToHdf5Converter(tempFile, hdf5File);
-			converter.convertToHdf5();
-
-			System.out.println("HDF5 file created. Move this file to your instance's genotype folder: " + hdf5File.getAbsolutePath());
 
 			tempFile.delete();
 		}
@@ -96,18 +72,39 @@ public class ExcelGenotypeDataImporter extends DataImporter<String[]>
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected void beforeRun(File input, String server, String database, String username, String password, String port)
 	{
-		return new ExcelGenotypeDataReader();
+		// Import the meta-data first. Get the created dataset
+		metadataImporter = new GenotypeMetadataImporter(ExperimentType.genotype);
+		metadataImporter.run(input, server, database, username, password, port);
+		hdf5File = metadataImporter.getHdf5File();
+		dataset = metadataImporter.getDataset();
+
+		markerImporter = new ExcelMarkerImporter(null, null);
+		markerImporter.setDataset(dataset);
+		markerImporter.run(input, server, database, username, password, port);
 	}
 
 	@Override
-	protected void deleteInsertedItems()
+	protected void writeHdf5(File input, File hdf5File)
 	{
-		metadataImporter.deleteInsertedItems();
-		markerImporter.deleteInsertedItems();
+		try
+		{
+			bw.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 
-		deleteItems(createdDatasetMemberIds, "datasetmembers");
+		FJTabbedToHdf5Converter converter = new FJTabbedToHdf5Converter(tempFile, hdf5File);
+		converter.convertToHdf5();
+	}
+
+	@Override
+	protected IDataReader getReader()
+	{
+		return new ExcelGenotypeDataReader();
 	}
 
 	@Override
@@ -118,9 +115,6 @@ public class ExcelGenotypeDataImporter extends DataImporter<String[]>
 			if (firstRow)
 			{
 				firstRow = false;
-
-				// Check that the marker exists
-				checkMarkers(entry);
 
 				writeToTempFile(entry);
 			}
@@ -150,72 +144,5 @@ public class ExcelGenotypeDataImporter extends DataImporter<String[]>
 		{
 			e.printStackTrace();
 		}
-	}
-
-	private void checkDatasetMember(Accession entry) throws DatabaseException
-	{
-		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO datasetmembers (dataset_id, foreign_id, datasetmembertype_id) VALUES (?, ?, 2)");
-
-		int i = 1;
-		insert.setLong(i++, dataset.getId());
-		insert.setLong(i++, entry.getId());
-
-		List<Long> ids = insert.execute();
-		createdDatasetMemberIds.addAll(ids);
-	}
-
-	/**
-	 * Checks if the {@link Accession} object exists.
-	 *
-	 * @param entry The {@link String[]} containing the {@link Accession} information.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private Accession checkAccession(String[] entry) throws DatabaseException
-	{
-		if (StringUtils.isEmpty(entry[0]))
-			throw new DatabaseException("ACCENUMB cannot be empty!");
-
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM germinatebase WHERE general_identifier = ?");
-		int i = 1;
-		stmt.setString(i++, entry[0]);
-
-		DatabaseResult rs = stmt.query();
-
-		if (rs.next())
-			return Accession.Parser.Inst.get().parse(rs, null, true);
-		else
-			throw new DatabaseException("Accession not found: " + entry[0]);
-	}
-
-	/**
-	 * Checks if the {@link Marker} object exists.
-	 *
-	 * @param entry The {@link String[]} containing the {@link Marker} information.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private void checkMarkers(String[] entry) throws DatabaseException
-	{
-		String markers = Arrays.stream(entry)
-							   .skip(1)
-							   .map(s -> "?")
-							   .collect(Collectors.joining(",", "(", ")"));
-
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT COUNT(DISTINCT id) AS count FROM markers WHERE marker_name IN " + markers);
-
-		for (int m = 1; m < entry.length; m++)
-			stmt.setString(m, entry[m]);
-
-		DatabaseResult rs = stmt.query();
-
-		boolean correct = false;
-		if (rs.next())
-		{
-			long count = rs.getLong("count");
-
-			correct = count == entry.length - 1;
-		}
-
-		if (!correct)
-			throw new DatabaseException("Check that all markers are imported before running this importer!");
 	}
 }

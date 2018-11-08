@@ -46,7 +46,7 @@ public class AttributeDataImporter extends DataImporter<AttributeData>
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelAttributeDataReader();
 	}

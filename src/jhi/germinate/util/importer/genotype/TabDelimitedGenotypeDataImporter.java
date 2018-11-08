@@ -20,10 +20,11 @@ package jhi.germinate.util.importer.genotype;
 import java.io.*;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.*;
+import java.util.Map;
 
-import jhi.flapjack.io.cmd.*;
 import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.*;
+import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -42,11 +43,12 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 	protected GenotypeMetadataImporter   metadataImporter;
 	protected TabDelimitedMarkerImporter markerImporter;
 
-	protected File           tempFile;
-	protected File           hdf5File;
+	protected File    hdf5File;
 	protected Dataset dataset;
-	private   BufferedWriter bw;
-	private   boolean firstRow = true;
+	protected boolean firstRow = true;
+
+	protected Map<String, Accession> cachedAccessions     = new HashMap<>();
+	protected List<Long>             cachedDatasetMembers = new ArrayList<>();
 
 	public static void main(String[] args)
 	{
@@ -55,49 +57,116 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port, String readerName)
+	public void run(File input, String server, String database, String username, String password, String port)
 	{
-		// Import the meta-data first. Get the created dataset
-		metadataImporter = new FilenameMetadataImporter(ExperimentType.genotype);
-		metadataImporter.run(input, server, database, username, password, port, null);
-		hdf5File = metadataImporter.getHdf5File();
-		dataset = metadataImporter.getDataset();
-
-		markerImporter = new TabDelimitedMarkerImporter();
-		markerImporter.setDataset(dataset);
-		markerImporter.run(input, server, database, username, password, port, TabDelimitedMarkerReader.class.getCanonicalName());
+		beforeRun(input, server, database, username, password, port);
 
 		try
 		{
-			tempFile = File.createTempFile("germinate_genotype_", ".txt");
-
-			try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile)))
-			{
-				this.bw = bw;
-				// Then run the rest of this importer
-				super.run(input, server, database, username, password, port, readerName);
-			}
-
-			FJTabbedToHdf5Converter converter = new FJTabbedToHdf5Converter(tempFile, hdf5File);
-			converter.convertToHdf5();
-
+			// Then run the rest of this importer
+			super.run(input, server, database, username, password, port);
+			writeHdf5(input, hdf5File);
 			System.out.println("HDF5 file created. Move this file to your instance's genotype folder: " + hdf5File.getAbsolutePath());
-
-			tempFile.delete();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-
-			if (tempFile != null && tempFile.exists())
-				tempFile.delete();
-
 			deleteInsertedItems();
 		}
 	}
 
+	protected void beforeRun(File input, String server, String database, String username, String password, String port)
+	{
+		String datasetName = null;
+		String markerType = null;
+		String map = null;
+		try (BufferedReader br = new BufferedReader(new FileReader(input)))
+		{
+			String line;
+
+			while ((line = br.readLine()) != null && line.startsWith("#"))
+			{
+				String[] parts = line.split("=", -1);
+
+				if (parts.length == 2)
+				{
+					parts[0] = parts[0].replace("#", "").trim();
+					parts[1] = parts[1].trim();
+
+					switch (parts[0])
+					{
+						case "dataset":
+							datasetName = parts[1];
+							break;
+						case "map":
+							map = parts[1];
+							break;
+						case "markerType":
+							markerType = parts[1];
+							break;
+					}
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		// Import the meta-data first. Get the created dataset
+		metadataImporter = new TabDelimitedMetadataImporter(datasetName, ExperimentType.genotype);
+		metadataImporter.run(input, server, database, username, password, port);
+		hdf5File = metadataImporter.getHdf5File();
+		dataset = metadataImporter.getDataset();
+
+		markerImporter = new TabDelimitedMarkerImporter(map, markerType);
+		markerImporter.setDataset(dataset);
+		markerImporter.run(input, server, database, username, password, port);
+	}
+
+	protected void writeHdf5(File input, File hdf5File)
+	{
+		FJTabbedToHdf5Converter converter = new FJTabbedToHdf5Converter(input, hdf5File);
+		converter.setSkipLines(2);
+		converter.convertToHdf5();
+	}
+
 	@Override
-	protected IDataReader getFallbackReader()
+	protected void prepareReader(IDataReader reader)
+	{
+		super.prepareReader(reader);
+
+		try
+		{
+			// Get all the accessions in one go
+			DatabaseObjectStreamer<Accession> streamer = new DatabaseObjectQuery<Accession>("SELECT * FROM `germinatebase`", null)
+					.setDatabase(databaseConnection)
+					.getStreamer(Accession.MinimalParser.Inst.get(), null, true);
+
+			// Add them to the cache for faster lookup
+			Accession accession;
+			while ((accession = streamer.next()) != null)
+				cachedAccessions.put(accession.getGeneralIdentifier(), accession);
+
+			// Then get all the dataset members (accessions) for this dataset
+			cachedDatasetMembers = new ValueQuery("SELECT `germinatebase`.`id` FROM `datasetmembers` LEFT JOIN `germinatebase` ON (`datasetmembers`.`datasetmembertype_id` = 2 AND `germinatebase`.`id` = `datasetmembers`.`foreign_id`) WHERE `dataset_id` = ?")
+					.setDatabase(databaseConnection)
+					.setLong(dataset.getId())
+					.run("id")
+					.getLongs()
+					.getServerResult();
+
+			if (cachedDatasetMembers == null)
+				cachedDatasetMembers = new ArrayList<>();
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected IDataReader getReader()
 	{
 		return new TabDelimitedGenotypeDataReader();
 	}
@@ -119,11 +188,7 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 			if (firstRow)
 			{
 				firstRow = false;
-
-				// Check that the marker exists
-				checkMarkers(entry);
-
-				writeToTempFile(entry);
+				// Ignore the first row, the markers have already been checked
 			}
 			else
 			{
@@ -131,30 +196,15 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 				Accession accession = checkAccession(entry);
 
 				checkDatasetMember(accession);
-
-				// Insert the cell value
-				writeToTempFile(entry);
 			}
 		}
 	}
 
-	private void writeToTempFile(String[] entry)
+	protected void checkDatasetMember(Accession entry) throws DatabaseException
 	{
-		try
-		{
-			bw.write(Arrays.stream(entry)
-						   .map(s -> s == null ? "" : s)
-						   .collect(Collectors.joining("\t")));
-			bw.newLine();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
+		if (cachedDatasetMembers.contains(entry.getId()))
+			return;
 
-	private void checkDatasetMember(Accession entry) throws DatabaseException
-	{
 		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO datasetmembers (dataset_id, foreign_id, datasetmembertype_id) VALUES (?, ?, 2)");
 
 		int i = 1;
@@ -171,65 +221,20 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 	 * @param entry The {@link String[]} containing the {@link Accession} information.
 	 * @throws DatabaseException Thrown if the interaction with the database fails.
 	 */
-	private Accession checkAccession(String[] entry) throws DatabaseException
+	protected Accession checkAccession(String[] entry) throws DatabaseException
 	{
 		if (StringUtils.isEmpty(entry[0]))
 			throw new DatabaseException("ACCENUMB cannot be empty!");
 
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM germinatebase WHERE general_identifier = ?");
-		int i = 1;
-		stmt.setString(i++, entry[0]);
+		Accession acc = cachedAccessions.get(entry[0]);
 
-		DatabaseResult rs = stmt.query();
-
-		if (rs.next())
-			return Accession.Parser.Inst.get().parse(rs, null, true);
-		else
-			throw new DatabaseException("Accession not found: " + entry[0]);
-	}
-
-	/**
-	 * Checks if the {@link Marker} object exists.
-	 *
-	 * @param entry The {@link String[]} containing the {@link Marker} information.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private void checkMarkers(String[] entry) throws DatabaseException
-	{
-		long counter = 0;
-		int position = 1;
-		while (position < entry.length)
+		if (acc != null)
 		{
-			int max = Math.min(5000, entry.length - position);
-			String markers = IntStream.range(position, position + max)
-									  .mapToObj(i -> "?")
-									  .collect(Collectors.joining(",", "(", ")"));
-
-//			String markers = Arrays.stream(entry)
-//								   .skip(1)
-//								   .map(s -> "?")
-//								   .collect(Collectors.joining(",", "(", ")"));
-
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT COUNT(DISTINCT id) AS count FROM markers WHERE marker_name IN " + markers);
-
-			for (int m = position ; m < position + max; m++)
-				stmt.setString(m - position + 1, entry[m]);
-
-			DatabaseResult rs = stmt.query();
-
-			if (rs.next())
-			{
-				long count = rs.getLong("count");
-
-				counter += count;
-			}
-
-			position += max;
+			return acc;
 		}
-
-		System.out.println(counter + " =?= " + (entry.length - 1));
-
-		if (counter != entry.length - 1)
-			throw new DatabaseException("Check that all markers are imported before running this importer!");
+		else
+		{
+			throw new DatabaseException("Accession not found: " + entry[0]);
+		}
 	}
 }

@@ -18,6 +18,7 @@
 <project name="ProjectBuild" basedir="." default="deploy">
 
 	<property name="src.dir" value="src"/>
+	<property name="test.dir" value="test/"/>
 	<property name="build.dir" value="war"/>
 	<property file="build.properties"/>
 	<property name="target" value="1.8"/>
@@ -175,12 +176,10 @@
 			<src path="${src.dir}"/>
 			<classpath refid="compile.classpath"/>
 		</javac>
-	</target>
 
-	<target name="build-importer-jar" depends="build-project">
 		<jar destfile="germinate-importer.jar">
 			<manifest>
-				<attribute name="Main-Class" value="jhi.germinate.util.importer.reader.DataImporter"/>
+				<attribute name="Main-Class" value="jhi.germinate.util.ui.TemplateImporter"/>
 				<attribute name="Class-Path" value="${manifest.classpath}"/>
 			</manifest>
 			<fileset dir="${build.dir}/WEB-INF/classes">
@@ -191,7 +190,9 @@
 				<include name="**/germinate/server/**" />
 			</fileset>
 		</jar>
+	</target>
 
+	<target name="build-importer-jar" depends="build-project">
 		<antcall target="clean"/>
 	</target>
 
@@ -235,7 +236,7 @@
 
 			<lib dir="${build.dir}/WEB-INF/lib-temp"/>
 
-			<classes dir="${build.dir}/WEB-INF/classes"/>
+			<classes dir="${build.dir}/WEB-INF/classes" excludes="**/germinate/util/**"/>
 		</war>
 	</target>
 

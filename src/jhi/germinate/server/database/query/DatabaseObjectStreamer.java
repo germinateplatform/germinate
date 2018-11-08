@@ -37,17 +37,19 @@ public final class DatabaseObjectStreamer<T extends DatabaseObject>
 	private       DebugInfo               info;
 	private       DatabaseObjectParser<T> parser;
 	private       UserAuth                user;
+	private       boolean                 preventClose;
 	private       boolean                 foreignKeysFromResult;
 
-	DatabaseObjectStreamer(Database database, DebugInfo info, DatabaseStatement stmt, DatabaseObjectParser<T> parser, UserAuth user, boolean foreignKeysFromResult) throws DatabaseException
+	DatabaseObjectStreamer(Database database, DebugInfo info, DatabaseStatement stmt, DatabaseObjectParser<T> parser, UserAuth user, boolean preventClose, boolean foreignKeysFromResult) throws DatabaseException
 	{
 		this.database = database;
 		this.info = info;
 		this.parser = parser;
 		this.user = user;
+		this.preventClose = preventClose;
 		this.foreignKeysFromResult = foreignKeysFromResult;
 
-        /* Run the query */
+		/* Run the query */
 		info.add(stmt.getStringRepresentation());
 		stmt.setFetchSize(Integer.MIN_VALUE);
 		res = stmt.query();
@@ -73,7 +75,8 @@ public final class DatabaseObjectStreamer<T extends DatabaseObject>
 			{
 				parser.clearCache();
 				/* Else close the database connection */
-				database.close();
+				if(!preventClose)
+					database.close();
 			}
 		}
 		else

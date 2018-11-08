@@ -37,6 +37,7 @@ public class FJTabbedToHdf5Converter
 
 	private File genotypeFile;
 	private File hdf5File;
+	private int  skipLines = 0;
 
 	public FJTabbedToHdf5Converter(File genotypeFile, File hdf5File)
 	{
@@ -44,23 +45,15 @@ public class FJTabbedToHdf5Converter
 		this.hdf5File = hdf5File;
 	}
 
-	private static void printHelp()
+	public void setSkipLines(int skipLines)
 	{
-		System.out.println("Usage: fj2hdf5 <options>\n"
-				+ " where valid options are:\n"
-				+ "   -genotypes=<genotypes_file>    (required input file)\n"
-				+ "   -hdf5=<hdf5_file>              (required output file)\n");
-
-		System.exit(1);
+		this.skipLines = skipLines;
 	}
 
 	private void checkFileExists(File file)
 	{
 		if (!file.exists())
-		{
 			System.err.println("Genotype file doesn't exist. Please specify a valid genotype file.");
-			printHelp();
-		}
 	}
 
 	public void convertToHdf5()
@@ -86,6 +79,12 @@ public class FJTabbedToHdf5Converter
 			int offset = 0;
 			String line = reader.readLine();
 			while (line.length() == 0 || line.startsWith("#"))
+			{
+				offset++;
+				line = reader.readLine();
+			}
+
+			for(int i = 0; i < skipLines; i++)
 			{
 				offset++;
 				line = reader.readLine();

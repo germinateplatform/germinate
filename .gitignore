@@ -1,8 +1,10 @@
 /.idea/
+/out/
 
 # Package Files #
 /*.jar
 /*.war
+!germinate-importer.jar
 
 # gwt caches and compiled units #
 gwt-unitCache/

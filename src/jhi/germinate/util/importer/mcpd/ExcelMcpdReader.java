@@ -34,19 +34,19 @@ public class ExcelMcpdReader extends TabDelimitedMcpdReader
 {
 	private XSSFSheet dataSheet;
 
-	private int rowCount   = 0;
-	private int currentRow = 0;
+	private int          rowCount   = 0;
+	private int          currentRow = 0;
 	private XSSFRow      row;
 	private XSSFWorkbook wb;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		return ++currentRow < rowCount;
 	}
 
 	@Override
-	public Accession next() throws IOException
+	public Accession next()
 	{
 		row = dataSheet.getRow(currentRow);
 		return parse();

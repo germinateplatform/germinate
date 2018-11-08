@@ -389,7 +389,66 @@ public class Dataset extends DatabaseObject
 	}
 
 	@GwtIncompatible
-	public static class Parser extends DatabaseObjectParser<Dataset>
+	public static class Parser extends MinimalParser
+	{
+		private Parser()
+		{
+			super();
+		}
+
+		@Override
+		public Dataset parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
+		{
+			Dataset dataset = super.parse(row, user, foreignsFromResultSet);
+
+			try
+			{
+				PartialSearchQuery filter = new PartialSearchQuery();
+				filter.add(new SearchCondition(Dataset.ID, new Equal(), Long.toString(dataset.getId()), Long.class));
+
+				dataset.setAttributeData(AttributeDataManager.getAllForDatasetFilter(user, filter, Pagination.getDefault(), false).getServerResult());
+			}
+			catch (Exception e)
+			{
+				// Ignore this
+			}
+
+			try
+			{
+				dataset.setCollaborators(CollaboratorManager.getForDatasetId(user, dataset.id).getServerResult());
+			}
+			catch (Exception e)
+			{
+				// Ignore this
+			}
+
+			return dataset;
+		}
+
+		public static final class Inst
+		{
+			public static Parser get()
+			{
+				return InstanceHolder.INSTANCE;
+			}
+
+			/**
+			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
+			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
+			 * holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
+			 * <code>synchronized</code>).
+			 *
+			 * @author Sebastian Raubach
+			 */
+			private static final class InstanceHolder
+			{
+				private static final Parser INSTANCE = new Parser();
+			}
+		}
+	}
+
+	@GwtIncompatible
+	public static class MinimalParser extends DatabaseObjectParser<Dataset>
 	{
 		@Override
 		public Dataset parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
@@ -440,27 +499,6 @@ public class Dataset extends DatabaseObject
 						// Ignore this
 					}
 
-					try
-					{
-						PartialSearchQuery filter = new PartialSearchQuery();
-						filter.add(new SearchCondition(Dataset.ID, new Equal(), Long.toString(dataset.getId()), Long.class));
-
-						dataset.setAttributeData(AttributeDataManager.getAllForDatasetFilter(user, filter, Pagination.getDefault(), false).getServerResult());
-					}
-					catch (Exception e)
-					{
-						// Ignore this
-					}
-
-					try
-					{
-						dataset.setCollaborators(CollaboratorManager.getForDatasetId(user, dataset.id).getServerResult());
-					}
-					catch (Exception e)
-					{
-						// Ignore this
-					}
-
 					return dataset;
 				}
 			}
@@ -474,7 +512,7 @@ public class Dataset extends DatabaseObject
 		private static DatabaseObjectCache<Location>   LOCATION_CACHE;
 		private static DatabaseObjectCache<License>    LICENSE_CACHE;
 
-		private Parser()
+		private MinimalParser()
 		{
 			EXPERIMENT_CACHE = createCache(Experiment.class, ExperimentManager.class);
 			LOCATION_CACHE = createCache(Location.class, LocationManager.class);
@@ -483,22 +521,14 @@ public class Dataset extends DatabaseObject
 
 		public static final class Inst
 		{
-			/**
-			 * {@link InstanceHolder} is loaded on the first execution of {@link Inst#get()} or the first access to {@link InstanceHolder#INSTANCE},
-			 * not before. <p/> This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand
-			 * holder idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or
-			 * <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
-			private static final class InstanceHolder
-			{
-				private static final Parser INSTANCE = new Parser();
-			}
-
-			public static Parser get()
+			public static MinimalParser get()
 			{
 				return InstanceHolder.INSTANCE;
+			}
+
+			private static final class InstanceHolder
+			{
+				private static final MinimalParser INSTANCE = new MinimalParser();
 			}
 		}
 	}
@@ -522,7 +552,7 @@ public class Dataset extends DatabaseObject
 		@Override
 		public void write(Database database, Dataset object) throws DatabaseException
 		{
-			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasets` (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + NAME + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasets` (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + NAME + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getExperiment().getId())
 					.setLong(object.getLocation() == null ? null : object.getLocation().getId())
 					.setString(object.getName())

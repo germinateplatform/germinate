@@ -17,8 +17,6 @@
 
 package jhi.germinate.util.importer.genotype;
 
-import org.apache.poi.openxml4j.exceptions.*;
-
 import java.io.*;
 
 import jhi.germinate.shared.*;
@@ -32,7 +30,7 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class TabDelimitedGenotypeDataReader implements IStreamableReader<String[]>
 {
-	private String[]            parts;
+	private String[] parts;
 
 	private BufferedReader br;
 
@@ -48,11 +46,17 @@ public class TabDelimitedGenotypeDataReader implements IStreamableReader<String[
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(File input) throws IOException
 	{
 		br = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
 
-		br.readLine();
+		String line;
+
+		while ((line = br.readLine()) != null && line.startsWith("#"))
+		{
+			// Do nothing here, we just need to move down the file
+		}
+
 		br.readLine();
 	}
 
@@ -70,7 +74,7 @@ public class TabDelimitedGenotypeDataReader implements IStreamableReader<String[
 	}
 
 	@Override
-	public String[] next() throws IOException
+	public String[] next()
 	{
 		parts = currentLine.split("\t", -1);
 

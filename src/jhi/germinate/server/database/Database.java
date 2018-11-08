@@ -42,6 +42,11 @@ public final class Database
 		new ViewInitializer().initialize();
 	}
 
+	public Connection getConnection()
+	{
+		return connection;
+	}
+
 	public void setAutoCommit(boolean autoCommit) throws DatabaseException
 	{
 		try
@@ -214,7 +219,7 @@ public final class Database
 	 */
 	public enum DatabaseType
 	{
-		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true");
+		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8");
 		//		MYSQL_BATCH_ENABLED("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
 
 		private final String classForName;

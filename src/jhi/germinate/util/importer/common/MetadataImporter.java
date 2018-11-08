@@ -50,19 +50,19 @@ public class MetadataImporter extends DataImporter<Dataset>
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port, String readerName)
+	public void run(File input, String server, String database, String username, String password, String port)
 	{
 		// Import the meta-data first. Get the created dataset
 		collaboratorImporter = new CollaboratorImporter();
-		collaboratorImporter.run(input, server, database, username, password, port, ExcelCollaboratorReader.class.getCanonicalName());
+		collaboratorImporter.run(input, server, database, username, password, port);
 		collaborators = collaboratorImporter.getCollaborators();
 
 		// Then run the rest of this importer
-		super.run(input, server, database, username, password, port, readerName);
+		super.run(input, server, database, username, password, port);
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelMetadataReader(type);
 	}
@@ -70,7 +70,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 	@Override
 	public void deleteInsertedItems()
 	{
-		if(collaboratorImporter != null)
+		if (collaboratorImporter != null)
 			collaboratorImporter.deleteInsertedItems();
 		deleteItems(createdExperimentIds, "experiments");
 		deleteItems(createdDatasetIds, "datasets");
@@ -177,7 +177,6 @@ public class MetadataImporter extends DataImporter<Dataset>
 	/**
 	 * Imports the {@link Experiment} object into the database if it doesn't already exist, otherwise returns the existing object from the database.
 	 *
-	 * @param entry The {@link Dataset} object containing the {@link Experiment} to import.
 	 * @throws DatabaseException Thrown if the interaction with the database fails.
 	 */
 	protected void createOrGetExperiment() throws DatabaseException
@@ -206,7 +205,6 @@ public class MetadataImporter extends DataImporter<Dataset>
 	/**
 	 * Imports the {@link Dataset} object into the database if it doesn't already exist, otherwise returns the existing object from the database.
 	 *
-	 * @param entry The {@link Dataset} object to import.
 	 * @throws DatabaseException Thrown if the interaction with the database fails.
 	 */
 	protected void createOrGetDataset() throws DatabaseException
@@ -230,7 +228,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 
 		if (rs.next())
 		{
-			dataset = Dataset.Parser.Inst.get().parse(rs, null, true);
+			dataset = Dataset.MinimalParser.Inst.get().parse(rs, null, true);
 		}
 		else
 		{

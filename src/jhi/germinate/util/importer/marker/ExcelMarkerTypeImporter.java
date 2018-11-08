@@ -45,7 +45,7 @@ public class ExcelMarkerTypeImporter extends DataImporter<MarkerType>
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelMarkerTypeReader();
 	}

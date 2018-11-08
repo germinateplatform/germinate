@@ -44,7 +44,7 @@ public class CollaboratorImporter extends DataImporter<Collaborator>
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelCollaboratorReader();
 	}

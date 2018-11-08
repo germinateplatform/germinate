@@ -46,7 +46,7 @@ public class PedigreeImporter extends DataImporter<List<Pedigree>>
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelPedigreeReader();
 	}

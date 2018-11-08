@@ -39,8 +39,6 @@ public class ReaderOptions extends Options
 	private static final String PASSWORD_LONG = "password";
 	private static final String PORT          = "t";
 	private static final String PORT_LONG     = "port";
-	private static final String READER        = "r";
-	private static final String READER_LONG   = "reader";
 
 
 	ReaderOptions withInputFile(boolean required)
@@ -71,11 +69,6 @@ public class ReaderOptions extends Options
 	ReaderOptions withPort(boolean required)
 	{
 		return addOption(PORT, PORT_LONG, true, "PORT", "Database server port", required);
-	}
-
-	ReaderOptions withReader(boolean required)
-	{
-		return addOption(READER, READER_LONG, true, "READER", "Data import reader", required);
 	}
 
 	private ReaderOptions addOption(String opt, String longOpt, boolean hasArg, String argName, String description, boolean required)
@@ -148,10 +141,5 @@ public class ReaderOptions extends Options
 	public static String getPort(CommandLine line)
 	{
 		return line.getOptionValue(PORT);
-	}
-
-	public static String getReader(CommandLine line)
-	{
-		return line.getOptionValue(READER);
 	}
 }

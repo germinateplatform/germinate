@@ -78,6 +78,7 @@ public class ExcelPedigreeReader implements IStreamableReader<List<Pedigree>>
 				.setAccession(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 0)))
 				.setParent(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 1)))
 				.setRelationShipDescription(IExcelReader.getCellValue(wb, row, 3))
+				.setRelationshipType("OTHER") // TODO: Add to templates
 				.setPedigreeDescription(new PedigreeDescription().setName(IExcelReader.getCellValue(wb, row, 4)).setDescription(IExcelReader.getCellValue(wb, row, 4)).setAuthor(IExcelReader.getCellValue(wb, row, 5))
 																 .setCreatedOn(new Date())
 																 .setUpdatedOn(new Date())
@@ -90,6 +91,7 @@ public class ExcelPedigreeReader implements IStreamableReader<List<Pedigree>>
 				.setAccession(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 0)))
 				.setParent(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 2)))
 				.setRelationShipDescription(IExcelReader.getCellValue(wb, row, 3))
+				.setRelationshipType("OTHER") // TODO: Add to templates
 				.setPedigreeDescription(new PedigreeDescription().setName(IExcelReader.getCellValue(wb, row, 4)).setDescription(IExcelReader.getCellValue(wb, row, 4)).setAuthor(IExcelReader.getCellValue(wb, row, 5))
 																 .setCreatedOn(new Date())
 																 .setUpdatedOn(new Date())

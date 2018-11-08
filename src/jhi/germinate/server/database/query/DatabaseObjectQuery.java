@@ -51,10 +51,10 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 		return new ExecutedDatabaseObjectQuery(database, stmt, previousCount);
 	}
 
-	public DatabaseObjectStreamer getStreamer(DatabaseObjectParser<T> parser, UserAuth user, boolean foreignKeysFromResult) throws DatabaseException
+	public DatabaseObjectStreamer<T> getStreamer(DatabaseObjectParser<T> parser, UserAuth user, boolean foreignKeysFromResult) throws DatabaseException
 	{
 		init();
-		return new DatabaseObjectStreamer<>(database, sqlDebug, stmt, parser, user, foreignKeysFromResult);
+		return new DatabaseObjectStreamer<>(database, sqlDebug, stmt, parser, user, preventClose, foreignKeysFromResult);
 	}
 
 	public DatabaseObjectQuery<T> setFetchesCount(Integer previousCount) throws DatabaseException
@@ -99,12 +99,14 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 			if (rs.next())
 			{
 				T obj = parser.parse(rs, userAuth, foreignsFromResultSet);
-				database.close();
+				if(!preventClose)
+					database.close();
 				return new ServerResult<>(sqlDebug, obj);
 			}
 			else
 			{
-				database.close();
+				if(!preventClose)
+					database.close();
 				return new ServerResult<>(sqlDebug, null);
 			}
 		}
@@ -140,7 +142,8 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 
 			parser.clearCache();
 
-			database.close();
+			if(!preventClose)
+				database.close();
 			return new ServerResult<>(sqlDebug, result);
 		}
 
@@ -167,7 +170,8 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 
 			Integer count = previousCount == null ? stmt.getCount() : previousCount;
 
-			database.close();
+			if(!preventClose)
+				database.close();
 			return new PaginatedServerResult<>(sqlDebug, result, count);
 		}
 
@@ -180,7 +184,8 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 		{
 			if (rs == null)
 			{
-				database.close();
+				if(!preventClose)
+					database.close();
 				throw new DatabaseException("You need to run the query before requesting result values!");
 			}
 		}

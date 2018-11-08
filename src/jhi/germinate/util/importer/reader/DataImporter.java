@@ -21,7 +21,6 @@ import org.apache.commons.cli.*;
 import org.apache.poi.openxml4j.util.*;
 
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.*;
 
 import jhi.germinate.server.database.*;
@@ -37,12 +36,12 @@ public abstract class DataImporter<T>
 	protected Database databaseConnection;
 
 	/**
-	 * If the reader passed to the {@link #run(File, String, String, String, String, String, String)} method cannot be instantiated, this fallback
+	 * If the reader passed to the {@link #run(File, String, String, String, String, String)} method cannot be instantiated, this fallback
 	 * reader will be used to import the data instead.
 	 *
 	 * @return
 	 */
-	protected abstract IDataReader getFallbackReader();
+	protected abstract IDataReader getReader();
 
 	/**
 	 * This method is called when an error occurs during the data export. Deletes the items that have been inserted before the error occurred.
@@ -75,8 +74,7 @@ public abstract class DataImporter<T>
 				.withDatabase(true)
 				.withUsername(true)
 				.withPassword(false)
-				.withPort(false)
-				.withReader(false);
+				.withPort(false);
 
 		try
 		{
@@ -87,8 +85,7 @@ public abstract class DataImporter<T>
 					options.getDatabase(line),
 					options.getUsername(line),
 					options.getPassword(line),
-					options.getPort(line),
-					options.getReader(line));
+					options.getPort(line));
 		}
 		catch (Exception e)
 		{
@@ -106,15 +103,14 @@ public abstract class DataImporter<T>
 	/**
 	 * Starts the import process using the given database access parameters and the name of the {@link IDataReader}.
 	 *
-	 * @param input      The input file containing the actual data
-	 * @param server     The database server
-	 * @param database   The database name
-	 * @param username   The database username
-	 * @param password   The database password
-	 * @param port       The port or <code>null</code>
-	 * @param readerName The fully qualified path to the {@link IDataReader}
+	 * @param input    The input file containing the actual data
+	 * @param server   The database server
+	 * @param database The database name
+	 * @param username The database username
+	 * @param password The database password
+	 * @param port     The port or <code>null</code>
 	 */
-	public void run(File input, String server, String database, String username, String password, String port, String readerName)
+	public void run(File input, String server, String database, String username, String password, String port)
 	{
 		this.server = server;
 		this.database = database;
@@ -124,37 +120,20 @@ public abstract class DataImporter<T>
 
 		BaseException.printExceptions = true;
 
-		Constructor<?> constructor = null;
-
-		if (readerName != null)
-		{
-			// Try to create an instance of the specified reader class
-			try
-			{
-				Class<?> clazz = Class.forName(readerName);
-				constructor = clazz.getConstructor();
-			}
-			catch (ClassNotFoundException | NoSuchMethodException e)
-			{
-				e.printStackTrace();
-				throw new RuntimeException("Invalid reader class specified");
-			}
-		}
-
 		// We're going to assume that the files that are being imported are not Zip bombs, so we reduce the threshold.
 		ZipSecureFile.setMinInflateRatio(0.001);
 
-		// If we've got a reflection constructor, use it. Otherwise use the #getFallbackReader() as a fallback.
-		try (IDataReader reader = constructor == null ? getFallbackReader() : (IDataReader) constructor.newInstance())
+		// Use the #getReader() as a fallback.
+		try (IDataReader reader = getReader())
 		{
-			// Pass the InputStream to it
-			reader.init(input);
-			prepareReader(reader);
-
 			try
 			{
 				// Connect to the database
 				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+
+				// Pass the InputStream to it
+				reader.init(input);
+				prepareReader(reader);
 
 				// Now check which reader type we're using
 				if (reader instanceof IStreamableReader)

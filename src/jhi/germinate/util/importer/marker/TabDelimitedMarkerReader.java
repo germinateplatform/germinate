@@ -59,7 +59,14 @@ public class TabDelimitedMarkerReader implements IStreamableReader<MapDefinition
 	{
 		br = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
 
-		chromosomes = br.readLine().split("\t", -1);
+		String line;
+
+		while ((line = br.readLine()) != null && line.startsWith("#"))
+		{
+			// Do nothing here, just skip headers.
+		}
+
+		chromosomes = line.split("\t", -1);
 		positions = br.readLine().split("\t", -1);
 		markerNames = br.readLine().split("\t", -1);
 

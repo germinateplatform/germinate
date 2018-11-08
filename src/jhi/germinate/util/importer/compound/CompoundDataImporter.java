@@ -52,23 +52,23 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port, String readerName)
+	public void run(File input, String server, String database, String username, String password, String port)
 	{
 		// Import the meta-data first. Get the created dataset
 		metadataImporter = new MetadataImporter(ExperimentType.compound);
-		metadataImporter.run(input, server, database, username, password, port, ExcelMetadataReader.class.getCanonicalName());
+		metadataImporter.run(input, server, database, username, password, port);
 		dataset = metadataImporter.getDataset();
 
 		// Then import the phenotypes
 		compoundImporter = new CompoundImporter();
-		compoundImporter.run(input, server, database, username, password, port, ExcelCompoundReader.class.getCanonicalName());
+		compoundImporter.run(input, server, database, username, password, port);
 
 		// Then run the rest of this importer
-		super.run(input, server, database, username, password, port, readerName);
+		super.run(input, server, database, username, password, port);
 	}
 
 	@Override
-	protected IDataReader getFallbackReader()
+	protected IDataReader getReader()
 	{
 		return new ExcelCompoundDataReader();
 	}
