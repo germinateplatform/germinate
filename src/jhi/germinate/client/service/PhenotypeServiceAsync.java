@@ -93,6 +93,16 @@ public interface PhenotypeServiceAsync
 	Request getDataForFilter(RequestProperties properties, Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback);
 
 	/**
+	 * Returns the histogram data for the given {@link Phenotype} id and {@link Dataset} id.
+	 *
+	 * @param properties  The {@link RequestProperties}
+	 * @param phenotypeId The {@link Phenotype} id
+	 * @param datasetId   The {@link Dataset} id
+	 * @param callback    The {@link AsyncCallback}
+	 */
+	void getHistogramData(RequestProperties properties, Long phenotypeId, Long datasetId, AsyncCallback<ServerResult<String>> callback);
+
+	/**
 	 * Exports all the data associated with {@link PhenotypeData}s mathing the given {@link PartialSearchQuery}.
 	 *
 	 * @param properties The {@link RequestProperties}

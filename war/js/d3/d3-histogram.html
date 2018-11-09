@@ -56,7 +56,8 @@ d3.tsv("d3-histogram.tsv", function(data) {
             .margin(margin)
             .width(width)
             .height(height)
-            .x(function(d)
+            .nrOfBars(10)
+            .y(function(d)
             {
                 return parseFloat(d.value);
             })

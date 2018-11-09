@@ -81,7 +81,7 @@ public class Bundles
 	}
 
 	/**
-	 * The {@link ClientBundle} used for styling the d3 histogram and bar chart
+	 * The {@link ClientBundle} used for styling the d3 scatter plots
 	 *
 	 * @author Sebastian Raubach
 	 */
@@ -99,6 +99,28 @@ public class Bundles
 		interface MyResources extends CssResource
 		{
 			String dot();
+		}
+	}
+
+	/**
+	 * The {@link ClientBundle} used for styling the d3 histogram chart
+	 *
+	 * @author Sebastian Raubach
+	 */
+	public interface HistogramChartBundle extends ClientBundle
+	{
+		HistogramChartBundle INSTANCE = GWT.create(HistogramChartBundle.class);
+
+		String  STYLE_BAR   = INSTANCE.css().bar();
+		/* Make sure the resource is injected */
+		Boolean IS_INJECTED = INSTANCE.css().ensureInjected();
+
+		@Source("histogram-chart.css")
+		MyResources css();
+
+		interface MyResources extends CssResource
+		{
+			String bar();
 		}
 	}
 

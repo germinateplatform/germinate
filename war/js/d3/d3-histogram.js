@@ -26,12 +26,13 @@ function histogram() {
         height = 500,
         xScale = d3.scale.linear(),
         yScale = d3.scale.linear(),
-        xValue = function (d) {
+        yValue = function (d) {
             return d[0];
         },
         tooltip = function (d) {
             return null;
         },
+		yTickFormat = d3.format(".2s"),
         color = "steelblue",
         xAxis = d3.svg.axis().scale(xScale).orient("bottom"),
         yAxis = d3.svg.axis().scale(yScale).orient("left"),
@@ -49,26 +50,32 @@ function histogram() {
             height = height - margin.bottom - margin.top;
             width = width - margin.left - margin.right;
 
-            data = data.map(function(d) { return xValue(d); });
+            data = data.map(function(d) { return yValue(d); });
+
+            var min = Math.floor(d3.min(data));
+            var max = Math.ceil(d3.max(data));
+
+            console.log(min, max);
 
             // Update the x-scale.
-            xScale.domain([Math.floor(d3.min(data, function(d) {
-                return d;
-            })), Math.ceil(d3.max(data, function(d) {
-                return d;
-            }))])
-            .range([0, width]);
+            xScale.domain([min, max])
+                .range([0, width]);
 
             if(nrOfBars == -1)
                 data = d3.layout.histogram().bins(xScale.ticks())(data);
             else
                 data = d3.layout.histogram().bins(xScale.ticks(nrOfBars))(data);
 
+            console.log(data);
+
             // Update the y-scale.
             yScale.domain([0, d3.max(data, function(d) {
                 return d.y;
             })])
             .range([height, 0]);
+
+			if (yTickFormat)
+				yAxis.tickFormat(yTickFormat);
 
             // Select the svg element, if it exists.
             var svg = d3.select(this).selectAll("svg").data([data]);
@@ -97,7 +104,10 @@ function histogram() {
             bars.append("rect")
                 .attr("class", "bar " + barStyle)
                 .attr("x", 1)
-                .attr("width", function(d) { return xScale(d.dx) - 1; })
+                .attr("width", function(d) {
+                    // return xScale(d.x) - 1;
+                    return (xScale(d.dx) - xScale(0)) - 1;
+                })
                 .attr("height", function(d) { return height - yScale(d.y); })
                 .style("fill", color);
 
@@ -133,7 +143,7 @@ function histogram() {
                     .offset([-10, 0])
                     .html(
                         function (d) {
-                            return tooltip(d.orig);
+                            return tooltip(d);
                         });
 
                 gEnter.call(tip);
@@ -163,9 +173,9 @@ function histogram() {
         return chart;
     };
 
-    chart.x = function (_) {
-        if (!arguments.length) return xValue;
-        xValue = _;
+    chart.y = function (_) {
+        if (!arguments.length) return yValue;
+        yValue = _;
         return chart;
     };
 
@@ -216,6 +226,12 @@ function histogram() {
         nrOfBars = _;
         return chart;
     };
+
+	chart.yTickFormat = function (_) {
+		if (!arguments.length) return yTickFormat;
+		yTickFormat = _;
+		return chart;
+	};
 
     return chart;
 }

@@ -18,6 +18,9 @@
 package jhi.germinate.shared.datastructure;
 
 import java.io.*;
+import java.util.*;
+
+import jhi.germinate.shared.*;
 
 /**
  * {@link ServerResult} is a wrapper for results returned from the server. They contain the (potentially empty) {@link DebugInfo} and the actual
@@ -48,6 +51,18 @@ public class ServerResult<T> implements Serializable
 	{
 		this.debugInfo = debugInfo;
 		this.serverResult = serverResult;
+	}
+
+	public boolean hasData()
+	{
+		if (serverResult instanceof Collection)
+			return !CollectionUtils.isEmpty((Collection) serverResult);
+		else if (serverResult instanceof Map)
+			return ((Map) serverResult).size() > 0;
+		else if (serverResult instanceof String)
+			return StringUtils.isEmpty((String) serverResult);
+		else
+			return serverResult != null;
 	}
 
 	/**

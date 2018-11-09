@@ -17,9 +17,13 @@
 
 package jhi.germinate.client.page.trial;
 
+import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.http.client.*;
+import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -27,14 +31,16 @@ import org.gwtbootstrap3.client.ui.*;
 
 import java.util.*;
 
-import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -148,6 +154,57 @@ public class TraitDetailsPage extends Composite
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
 			{
 				return DatasetService.Inst.get().getForFilterAndTrait(Cookie.getRequestProperties(), filter, ExperimentType.trials, phenotype.getId(), pagination, callback);
+			}
+
+			@Override
+			protected void createColumns()
+			{
+				super.createColumns();
+
+				SafeHtmlCell clickCell = new SafeHtmlCell()
+				{
+					@Override
+					public Set<String> getConsumedEvents()
+					{
+						Set<String> events = new HashSet<>();
+						events.add(BrowserEvents.CLICK);
+						return events;
+					}
+				};
+
+				// Add the histogram column
+				addColumn(new Column<Dataset, SafeHtml>(clickCell)
+				{
+					@Override
+					public String getCellStyleNames(Cell.Context context, Dataset row)
+					{
+						return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
+					}
+
+					@Override
+					public SafeHtml getValue(Dataset row)
+					{
+						return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_CHART_BAR, Text.LANG.datasetHistogramTitle(), UriUtils.fromString(""), "");
+					}
+
+					@Override
+					public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
+					{
+						if (BrowserEvents.CLICK.equals(event.getType()))
+						{
+							event.preventDefault();
+
+							new AlertDialog(Text.LANG.datasetHistogramTitle(), new HistogramChart(phenotype.getId(), object.getId()))
+									.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
+									.setSize(ModalSize.LARGE)
+									.open();
+						}
+						else
+						{
+							super.onBrowserEvent(context, elem, object, event);
+						}
+					}
+				}, "", false);
 			}
 		});
 	}

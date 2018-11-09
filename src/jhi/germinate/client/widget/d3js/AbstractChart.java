@@ -111,7 +111,8 @@ public abstract class AbstractChart extends GerminateComposite
 		{
 			/* If the chart needs to update, then notify it */
 			removeD3(panelId);
-			updateChart(chartPanel.getOffsetWidth());
+			if(chartPanel != null)
+				updateChart(chartPanel.getOffsetWidth());
 
 			if (!StringUtils.isEmpty(getPhotoExportFilename()))
 				addDownloadButton();
@@ -201,6 +202,7 @@ public abstract class AbstractChart extends GerminateComposite
 
 			// Create the context menu
 			final PopupPanel popup = new PopupPanel(true);
+			popup.getElement().getStyle().setZIndex(9999);
 			popup.setAutoHideOnHistoryEventsEnabled(true);
 			popup.setPreviewingAllNativeEvents(true);
 

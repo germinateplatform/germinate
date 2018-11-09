@@ -169,6 +169,7 @@ public class Style
 	public static final String MDI_EMAIL                           = "mdi-email";
 	public static final String MDI_EYE                             = "mdi-eye";
 	public static final String MDI_CHART_SCATTERPLOT_HEXBIN        = "mdi-chart-scatterplot-hexbin";
+	public static final String MDI_CHART_BAR                       = "mdi-chart-bar";
 	public static final String MDI_VIEW_GRID                       = "mdi-view-grid";
 	public static final String MDI_WEB                             = "mdi-web";
 	public static final String MDI_GITHUB_CIRCLE                   = "mdi-github-circle";

@@ -43,6 +43,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 	private static final String SELECT_DATA_FOR_FILTER_EXPORT = "SELECT `germinatebase`.`id` AS germinatebase_id, `germinatebase`.`name` AS germinatebase_name, `germinatebase`.`general_identifier` AS germinatebase_gid, `datasets`.`name` AS datasets_name, `datasets`.`description` AS datasets_description, `experimenttypes`.`description` AS experimenttypes_description, `phenotypes`.`name` AS phenotypes_name, `phenotypes`.`short_name` AS phenotypes_short_name, `units`.`unit_name` AS units_name, `phenotypedata`.`phenotype_value` AS phenotypedata_value FROM " + COMMON_TABLES + " {{FILTER}} AND `datasets`.`id` IN (%s) %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_FILTER         = "SELECT DISTINCT `germinatebase`.`id` FROM " + COMMON_TABLES + " {{FILTER}} AND `datasets`.`id` IN (%s)";
 	private static final String SELECT_ALL_FOR_FILTER         = "SELECT `phenotypes`.*, `units`.*, COUNT(1) AS count FROM " + COMMON_TABLES_MIN + " {{FILTER}} GROUP BY `phenotypes`.`id` %s LIMIT ?, ?";
+	private static final String SELECT_HISTOGRAM_DATA         = "SELECT phenotype_value FROM phenotypedata WHERE phenotype_id = ? AND dataset_id = ? ";
 
 	private static final String[] COLUMNS_PHENOTYPE_DATA_EXPORT = {"germinatebase_id", "germinatebase_name", "germinatebase_gid", "dataset_description", "experimenttypes_description", "phenotypes_name", "phenotypes_short_name", "units_name", "phenotypedata_value"};
 
@@ -141,5 +142,22 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 				.setLongs(datasetIds)
 				.run(Accession.ID)
 				.getStrings();
+	}
+
+	public static DefaultStreamer getStreamerForHistogramData(UserAuth userAuth, Long phenotypeId, Long datasetId) throws DatabaseException
+	{
+		ServerResult<Boolean> canAccess = DatasetManager.userHasAccessToDataset(userAuth, datasetId);
+
+		if (canAccess.getServerResult())
+		{
+			return new DefaultQuery(SELECT_HISTOGRAM_DATA, userAuth)
+					.setLong(phenotypeId)
+					.setLong(datasetId)
+					.getStreamer();
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

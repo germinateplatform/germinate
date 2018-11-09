@@ -29,6 +29,7 @@
 	background: rgba(0, 0, 0, 0.8);
 	color: #fff;
 	pointer-events: none !important;
+	z-index: 9999;
 }
 
 .d3TipRight:before, .d3TipTop:after {

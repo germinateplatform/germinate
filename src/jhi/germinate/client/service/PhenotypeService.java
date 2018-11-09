@@ -152,6 +152,19 @@ public interface PhenotypeService extends RemoteService
 	ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException;
 
 	/**
+	 * Returns the histogram data for the given {@link Phenotype} id and {@link Dataset} id.
+	 *
+	 * @param properties  The {@link RequestProperties}
+	 * @param phenotypeId The {@link Phenotype} id
+	 * @param datasetId   The {@link Dataset} id
+	 * @return The name of the generated file.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 * @throws IOException             Thrown if an I/O operation fails
+	 */
+	ServerResult<String> getHistogramData(RequestProperties properties, Long phenotypeId, Long datasetId) throws InvalidSessionException, DatabaseException, IOException;
+
+	/**
 	 * Returns the ids of the {@link Accession}s that match the given {@link PartialSearchQuery}.
 	 *
 	 * @param properties The {@link RequestProperties} The {@link RequestProperties}

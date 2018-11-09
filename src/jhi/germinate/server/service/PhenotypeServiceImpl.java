@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.sql.*;
 import java.util.*;
 
@@ -96,9 +97,9 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 	public static void exportDataToFile(String header, List<String> phenotypes, GerminateTable result, File file) throws java.io.IOException
 	{
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")))
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))
 		{
-			if(!StringUtils.isEmpty(header))
+			if (!StringUtils.isEmpty(header))
 			{
 				bw.write(header);
 				bw.newLine();
@@ -159,6 +160,41 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		}
 
 		return new ServerResult<>(streamer.getDebugInfo(), result.getName());
+	}
+
+	@Override
+	public ServerResult<String> getHistogramData(RequestProperties properties, Long phenotypeId, Long datasetId) throws InvalidSessionException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		File file = createTemporaryFile("phenotype-histogram", datasetId, FileType.txt.name());
+
+		try (DefaultStreamer streamer = PhenotypeManager.getStreamerForHistogramData(userAuth, phenotypeId, datasetId);
+			 PrintWriter bw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))))
+		{
+			if (streamer != null)
+			{
+				bw.println("value");
+
+				DatabaseResult rs;
+
+				while ((rs = streamer.next()) != null)
+				{
+					bw.println(rs.getDouble("phenotype_value"));
+				}
+
+				return new ServerResult<>(streamer.getDebugInfo(), file.getName());
+			}
+			else
+			{
+				return new ServerResult<>(null, null);
+			}
+		}
+		catch (java.io.IOException e)
+		{
+			throw new IOException(e.getLocalizedMessage());
+		}
 	}
 
 	@Override

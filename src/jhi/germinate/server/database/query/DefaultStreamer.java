@@ -27,7 +27,7 @@ import jhi.germinate.shared.exception.*;
  *
  * @author Sebastian Raubach
  */
-public final class DefaultStreamer
+public final class DefaultStreamer implements AutoCloseable
 {
 	private final Database       database;
 	private       DatabaseResult res;
@@ -83,6 +83,7 @@ public final class DefaultStreamer
 	/**
 	 * Closes the database
 	 */
+	@Override
 	public void close()
 	{
 		if (!database.isClosed())

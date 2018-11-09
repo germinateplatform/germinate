@@ -2379,6 +2379,10 @@ public interface Text extends Messages
 	@DefaultMessage("Collaborators")
 	String datasetCollaboratorsTitle();
 
+	@Key("page.datasets.histogram.title")
+	@DefaultMessage("Value histogram")
+	String datasetHistogramTitle();
+
 	@Key("page.experiment.details.title")
 	@DefaultMessage("Experiment details")
 	String experimentDetailsTitle();

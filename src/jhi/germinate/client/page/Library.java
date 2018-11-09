@@ -55,6 +55,7 @@ public enum Library
 	D3_DOWNLOAD(""),
 	D3_DAGRE("./js/d3/dagre-d3.min.js"),
 	D3_PEDIGREE_CHART("./js/d3/d3-pedigree-chart.js"),
+	D3_HISTOGRAM("./js/d3/d3-histogram.js"),
 	D3_TOOLTIP("./js/d3/d3-tip.js"),
 	D3_LEGEND("./js/d3/d3-legend.js"),
 	D3_LASSO("./js/d3/d3-lasso.js"),
