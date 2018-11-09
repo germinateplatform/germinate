@@ -23,7 +23,6 @@ import com.google.gwt.user.client.rpc.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.Tuple.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
 
@@ -82,7 +81,7 @@ public interface ClimateService extends RemoteService
 	 * @throws IOException               Thrown if the file interaction fails
 	 * @throws InvalidSelectionException Thrown if there is no data for the given selection
 	 */
-	ServerResult<Pair<String, String>> getMinAvgMaxFile(RequestProperties properties, List<Long> datasetIds, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException;
+	ServerResult<String> getMinAvgMaxFile(RequestProperties properties, List<Long> datasetIds, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException;
 
 	/**
 	 * Returns a paginated list of {@link ClimateYearData} for the given {@link Climate} and {@link Group} ids.

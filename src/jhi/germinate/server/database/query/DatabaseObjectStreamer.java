@@ -19,13 +19,12 @@ package jhi.germinate.server.database.query;
 
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.parser.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
 
 /**
- * {@link DatabaseObjectStreamer} is a utility class allowing to "stream" {@link GerminateRow}s, i.e., this class will return one {@link GerminateRow}
+ * {@link DatabaseObjectStreamer} is a utility class allowing to "stream" {@link DatabaseObject}s, i.e., this class will return one {@link DatabaseObject}
  * at a time.
  *
  * @author Sebastian Raubach
@@ -58,9 +57,9 @@ public final class DatabaseObjectStreamer<T extends DatabaseObject>
 	}
 
 	/**
-	 * Returns the next {@link GerminateRow} or <code>null</code> if there is no next item
+	 * Returns the next {@link DatabaseObject} or <code>null</code> if there is no next item
 	 *
-	 * @return The next {@link GerminateRow} or <code>null</code> if there is no next item
+	 * @return The next {@link DatabaseObject} or <code>null</code> if there is no next item
 	 * @throws DatabaseException Thrown if either {@link DatabaseResult#next()} or {@link DatabaseResult#getString(String)} fails
 	 */
 	public T next() throws DatabaseException
@@ -75,7 +74,7 @@ public final class DatabaseObjectStreamer<T extends DatabaseObject>
 			{
 				parser.clearCache();
 				/* Else close the database connection */
-				if(!preventClose)
+				if (!preventClose)
 					database.close();
 			}
 		}

@@ -80,13 +80,13 @@ public class PedigreeManager extends AbstractManager<Pedigree>
 				.getObjectsPaginated(Pedigree.Parser.Inst.get(), false);
 	}
 
-	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
+	public static DefaultStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws DatabaseException, InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException
 	{
 		pagination.updateSortColumn(PedigreeService.COLUMNS_PEDIGREE_SORTABLE, Pedigree.GERMINATEBASE_ID);
 
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, PedigreeService.COLUMNS_PEDIGREE_SORTABLE, COLUMNS_PEDIGREE_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, PedigreeService.COLUMNS_PEDIGREE_SORTABLE)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();

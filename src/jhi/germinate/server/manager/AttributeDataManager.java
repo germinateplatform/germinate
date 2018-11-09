@@ -75,12 +75,12 @@ public class AttributeDataManager extends AbstractManager<AttributeData>
 				.getStrings();
 	}
 
-	public static GerminateTableStreamer getStreamerForAccessionFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	public static DefaultStreamer getStreamerForAccessionFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		pagination.updateSortColumn(AttributeService.COLUMNS_SORTABLE_ACCESSION, Accession.ID);
 		String formatted = String.format(SELECT_ALL_FOR_ACCESSION_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, AttributeService.COLUMNS_SORTABLE_ACCESSION, COLUMNS_ATTRIBUTE_ACCESSION_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, AttributeService.COLUMNS_SORTABLE_ACCESSION)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
@@ -98,12 +98,12 @@ public class AttributeDataManager extends AbstractManager<AttributeData>
 				.getObjectsPaginated(recursive ? AttributeData.DatasetParser.Inst.get() : AttributeData.NonRecursiveDatasetParser.Inst.get(), true);
 	}
 
-	public static GerminateTableStreamer getStreamerForDatasetFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	public static DefaultStreamer getStreamerForDatasetFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		pagination.updateSortColumn(AttributeService.COLUMNS_SORTABLE_DATASET, Dataset.ID);
 		String formatted = String.format(SELECT_ALL_FOR_DATASET_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, AttributeService.COLUMNS_SORTABLE_DATASET, COLUMNS_ATTRIBUTE_DATASET_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, AttributeService.COLUMNS_SORTABLE_DATASET)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();

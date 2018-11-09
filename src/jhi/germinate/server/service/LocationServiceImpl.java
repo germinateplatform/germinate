@@ -170,13 +170,13 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = LocationManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
+		DefaultStreamer streamer = LocationManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
 
 		File result = createTemporaryFile("download-locations", FileType.txt.name());
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 		}
 		catch (java.io.IOException e)
 		{

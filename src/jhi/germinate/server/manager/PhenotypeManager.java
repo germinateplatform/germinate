@@ -115,14 +115,14 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 				.getObjectsPaginated(PhenotypeData.Parser.Inst.get(), true);
 	}
 
-	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	public static DefaultStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		pagination.updateSortColumn(PhenotypeService.COLUMNS_DATA_SORTABLE, Accession.ID);
 		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(userAuth, true).getServerResult());
 
 		String formatted = String.format(SELECT_DATA_FOR_FILTER_EXPORT, StringUtils.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, PhenotypeService.COLUMNS_DATA_SORTABLE, COLUMNS_PHENOTYPE_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, PhenotypeService.COLUMNS_DATA_SORTABLE)
 				.setLongs(datasetIds)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

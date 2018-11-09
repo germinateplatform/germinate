@@ -81,7 +81,7 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 		Set<String> years = new TreeSet<>();
 		Map<TrialsRow.TrialsAttribute, String> chartFiles = new HashMap<>();
 
-		DatabaseResult streamer = new GerminateTableQuery(formatted, userAuth, null)
+		DatabaseResult streamer = new DefaultQuery(formatted, userAuth)
 				.setLongs(datasetIds)
 				.setLongs(phenotypes)
 				.setInts(selectedYears)

@@ -176,12 +176,12 @@ public class AccessionManager extends AbstractManager<Accession>
 				.getObjectsPaginated(Accession.Parser.Inst.get(), true);
 	}
 
-	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	public static DefaultStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		pagination.updateSortColumn(AccessionService.COLUMNS_SORTABLE, null);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, AccessionService.COLUMNS_SORTABLE, COLUMNS_ACCESSION_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, AccessionService.COLUMNS_SORTABLE)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
@@ -382,11 +382,11 @@ public class AccessionManager extends AbstractManager<Accession>
 		}
 	}
 
-	public static GerminateTableStreamer getStreamerForIds(UserAuth userAuth, List<String> ids) throws DatabaseException
+	public static DefaultStreamer getStreamerForIds(UserAuth userAuth, List<String> ids) throws DatabaseException
 	{
 		String formatted = String.format(SELECT_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
 
-		return new GerminateTableQuery(formatted, userAuth, null)
+		return new DefaultQuery(formatted, userAuth)
 				.setStrings(ids)
 				.getStreamer();
 	}

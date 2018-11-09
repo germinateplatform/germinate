@@ -28,7 +28,6 @@ import jhi.germinate.server.manager.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.Tuple.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -66,18 +65,18 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 	}
 
 	@Override
-	public ServerResult<Pair<String, String>> getMinAvgMaxFile(RequestProperties properties, List<Long> datasetIds, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException
+	public ServerResult<String> getMinAvgMaxFile(RequestProperties properties, List<Long> datasetIds, Long climateId, Long groupId) throws InvalidSessionException, DatabaseException, IOException, InvalidSelectionException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableQuery query;
+		DefaultQuery query;
 
 		if (groupId == null)
 		{
 			String placeholder = StringUtils.generateSqlPlaceholderString(datasetIds.size());
 			String formatted = String.format(QUERY_MIN_AVG_MAX_COLLSITE, placeholder, placeholder, placeholder, placeholder, placeholder);
-			query = new GerminateTableQuery(formatted, userAuth, COLUMNS_MIN_AVG_MAX_COLLSITE)
+			query = new DefaultQuery(formatted, userAuth)
 					.setLong(climateId)
 					.setLongs(datasetIds)
 					.setLong(climateId)
@@ -93,7 +92,7 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 		{
 			String placeholder = StringUtils.generateSqlPlaceholderString(datasetIds.size());
 			String formatted = String.format(QUERY_GROUP_MIN_AVG_MAX_COLLSITE, placeholder, placeholder, placeholder, placeholder, placeholder);
-			query = new GerminateTableQuery(formatted, userAuth, COLUMNS_MIN_AVG_MAX_COLLSITE)
+			query = new DefaultQuery(formatted, userAuth)
 					.setLong(climateId)
 					.setLong(groupId)
 					.setLongs(datasetIds)
@@ -111,7 +110,7 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 					.setLongs(datasetIds);
 		}
 
-		GerminateTableStreamer tempResult = query.getStreamer();
+		DefaultStreamer tempResult = query.getStreamer();
 
         /* If there is no data, there is no need to continue */
 		if (tempResult == null)
@@ -122,24 +121,18 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 
 		File file = createTemporaryFile("climate", datasetIds, FileType.txt.name());
 
-		Pair<Integer, GerminateRow> stats;
+		Integer stats;
 
 		try
 		{
-			stats = Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), COLUMNS_MIN_AVG_MAX_COLLSITE, tempResult, file);
+			stats = Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), COLUMNS_MIN_AVG_MAX_COLLSITE, tempResult, file);
 		}
 		catch (java.io.IOException e)
 		{
 			throw new jhi.germinate.shared.exception.IOException(e);
 		}
 
-		String unit = null;
-		if (stats != null && stats.getFirst() > 0)
-		{
-			unit = stats.getSecond().get("unit_abbreviation");
-		}
-
-		return new ServerResult<>(tempResult.getDebugInfo(), new Pair<>(unit, file.getName()));
+		return new ServerResult<>(tempResult.getDebugInfo(), file.getName());
 	}
 
 	@Override
@@ -164,13 +157,13 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		try (GerminateTableStreamer streamer = LocationManager.getStreamerForClimateYearData(userAuth, datasetIds, climateId, groupId, new Pagination(0, Integer.MAX_VALUE)))
+		try (DefaultStreamer streamer = LocationManager.getStreamerForClimateYearData(userAuth, datasetIds, climateId, groupId, new Pagination(0, Integer.MAX_VALUE)))
 		{
 			File result = createTemporaryFile("download-climate", datasetIds, FileType.txt.name());
 
 			try
 			{
-				Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+				Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 			}
 			catch (java.io.IOException e)
 			{

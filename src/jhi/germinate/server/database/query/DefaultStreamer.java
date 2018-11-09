@@ -100,4 +100,8 @@ public final class DefaultStreamer implements AutoCloseable
 		return info;
 	}
 
+	public String[] getColumnNames() throws DatabaseException
+	{
+		return res.getColumnNames();
+	}
 }

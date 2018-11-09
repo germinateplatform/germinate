@@ -93,7 +93,7 @@ public class AttributeServiceImpl extends BaseRemoteServiceServlet implements At
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = null;
+		DefaultStreamer streamer = null;
 
 		switch (target)
 		{
@@ -112,7 +112,7 @@ public class AttributeServiceImpl extends BaseRemoteServiceServlet implements At
 
 			try
 			{
-				Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+				Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 			}
 			catch (java.io.IOException e)
 			{

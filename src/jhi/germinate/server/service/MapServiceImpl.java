@@ -101,7 +101,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	/**
 	 * Writes a map file in flapjack format
 	 *
-	 * @param table The {@link GerminateTableStreamer} containing the data
+	 * @param table The {@link DatabaseResult} containing the data
 	 * @param bw    The buffered writer to use
 	 * @throws java.io.IOException Thrown if writing the file fails
 	 * @throws DatabaseException   Thrown if the interaction with the database fails
@@ -129,7 +129,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	/**
 	 * Writes a map file in mapchart format
 	 *
-	 * @param table   The {@link GerminateTableStreamer} containing the data
+	 * @param table   The {@link DatabaseResult} containing the data
 	 * @param bw      The buffered writer to use
 	 * @param mapName The name of the map
 	 * @throws java.io.IOException Thrown if writing the file fails
@@ -169,7 +169,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 	/**
 	 * Writes a map file in strudel format
 	 *
-	 * @param table   The {@link GerminateTableStreamer} containing the data
+	 * @param table   The {@link DatabaseResult} containing the data
 	 * @param bw      The buffered writer to use
 	 * @param mapName The name of the map
 	 * @param mapId   The id of the map
@@ -282,7 +282,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 
 		HttpServletRequest req = getThreadLocalRequest();
 
-		GerminateTableQuery dataQuery;
+		DefaultQuery dataQuery;
 
 		if (options != null)
 		{
@@ -293,7 +293,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 				/* Create the query for the actual data */
 				String dataString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_CHROMOSOMES_APPENDIX);
 				dataString = String.format(dataString, StringUtils.generateSqlPlaceholderString(chromosomes.size()));
-				dataQuery = new GerminateTableQuery(dataString, userAuth, COLUMNS_MAP_EXPORT)
+				dataQuery = new DefaultQuery(dataString, userAuth)
 						.setLong(mapId);
 
 				for (String chromosome : chromosomes)
@@ -307,7 +307,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 				java.util.Map<String, List<Region>> regions = options.getRegions();
 				/* Create the query for the actual data */
 				String dataString = String.format(QUERY_MAP_EXPORT, getMapExportChromosomePlaceholder(regions));
-				dataQuery = new GerminateTableQuery(dataString, userAuth, COLUMNS_MAP_EXPORT)
+				dataQuery = new DefaultQuery(dataString, userAuth)
 						.setLong(mapId);
 
 				List<String> keys = new ArrayList<>(regions.keySet());
@@ -327,7 +327,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 			{
 				/* Create the query for the actual data */
 				String queryString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_INTERVAL_APPENDIX);
-				dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
+				dataQuery = new DefaultQuery(queryString, userAuth)
 						.setLong(mapId);
 
 				String f = options.getInterval().getFirst();
@@ -348,7 +348,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 			{
 				/* Create the query for the actual data */
 				String queryString = String.format(QUERY_MAP_EXPORT, QUERY_MAP_EXPORT_RADIUS_APPENDIX);
-				dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
+				dataQuery = new DefaultQuery(queryString, userAuth)
 						.setLong(mapId);
 
 				String marker = options.getRadius().getFirst();
@@ -369,7 +369,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 			{
 				/* Create the query for the actual data */
 				String queryString = String.format(QUERY_MAP_EXPORT, "");
-				dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
+				dataQuery = new DefaultQuery(queryString, userAuth)
 						.setLong(mapId);
 			}
 		}
@@ -378,7 +378,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		{
 			/* Create the query for the actual data */
 			String queryString = String.format(QUERY_MAP_EXPORT, "");
-			dataQuery = new GerminateTableQuery(queryString, userAuth, COLUMNS_MAP_EXPORT)
+			dataQuery = new DefaultQuery(queryString, userAuth)
 					.setLong(mapId);
 		}
 

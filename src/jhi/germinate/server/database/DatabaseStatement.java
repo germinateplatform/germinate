@@ -21,7 +21,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.exception.*;
 
 /**
@@ -315,39 +314,6 @@ public final class DatabaseStatement
 	{
 		// return stmt.toString();
 		return stmt.toString().replaceAll("^[a-zA-Z0-9\\.]+@[a-zA-Z0-9]{1,8}:\\s", "");
-	}
-
-	/**
-	 * Runs the query and parses the result
-	 *
-	 * @param columnNames The list of columns to extract from the result
-	 * @return Each database row in as a Map<String, String> in a List. The column names are the keys of the map.
-	 * @throws DatabaseException Thrown if the query fails on the database
-	 */
-	public GerminateTable runQuery(String[] columnNames) throws DatabaseException
-	{
-		/* Run the query */
-		DatabaseResult res = this.query();
-
-        /* Assemble result */
-		GerminateTable result = new GerminateTable();
-
-		if (columnNames == null)
-			columnNames = res.getColumnNames();
-
-		while (res.next())
-		{
-			GerminateRow item = new GerminateRow();
-
-			for (String column : columnNames)
-			{
-				item.put(column, res.getString(column));
-			}
-
-			result.add(item);
-		}
-
-		return result;
 	}
 
 	/**

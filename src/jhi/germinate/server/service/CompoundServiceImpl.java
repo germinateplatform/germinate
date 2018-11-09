@@ -154,14 +154,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		if (containsAllItemsGroup(groupIds))
 			groupIds = null;
 
-		DatabaseStatement stmt;
-
-		/*
-		 * Create a query that checks if there actually is data available. If
-		 * not, the prepared statement from the sql file will fail. Connect to
-		 * the database and check the session id
-		 */
-		Database database = Database.connectAndCheckSession(properties, this);
+		DefaultQuery stmt;
 
 		/* If both are empty, return everything */
 		if (CollectionUtils.isEmpty(groupIds) && CollectionUtils.isEmpty(compoundIds))
@@ -176,12 +169,10 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 			sqlDebug.addAll(temp.getDebugInfo());
 			names.addAll(temp.getServerResult());
 
-			stmt = database.prepareStatement(QUERY_DATA);
-
-			int i = 1;
-			stmt.setNull(i++, Types.VARCHAR);
-			stmt.setString(i++, datasets);
-			stmt.setNull(i++, Types.VARCHAR);
+			stmt = new DefaultQuery(QUERY_DATA, userAuth)
+					.setNull(Types.VARCHAR)
+					.setString(datasets)
+					.setNull(Types.VARCHAR);
 		}
 		/* If just one is empty, return nothing */
 		else if (CollectionUtils.isEmpty(datasetIds, compoundIds))
@@ -205,45 +196,43 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 			formatted = String.format(QUERY_CHECK_NUMBER, datasets, phenotypes);
 
-			stmt = database.prepareStatement(formatted);
+			stmt = new DefaultQuery(formatted, userAuth);
+
+			DatabaseResult rs = stmt.getResult();
 
 			sqlDebug.add(stmt.getStringRepresentation());
 
-			DatabaseResult rs = stmt.query();
-
 			if (rs.next())
 			{
-				int number = rs.getInt(AbstractManager.COUNT);
+				Integer number = rs.getInt(AbstractManager.COUNT);
 
-				if (number > 0)
+				if (number != null && number > 0)
 				{
-					stmt = database.prepareStatement(QUERY_DATA);
+					stmt = new DefaultQuery(QUERY_DATA, userAuth);
 
 					int i = 1;
 					if (!CollectionUtils.isEmpty(groupIds))
-						stmt.setString(i++, groups);
+						stmt.setString(groups);
 					else
-						stmt.setNull(i++, Types.VARCHAR);
-					stmt.setString(i++, datasets);
-					stmt.setString(i++, phenotypes);
+						stmt.setNull(Types.VARCHAR);
+					stmt.setString(datasets);
+					stmt.setString(phenotypes);
 				}
 			}
 		}
 
-
-		sqlDebug.add(stmt.getStringRepresentation());
-
-		GerminateTable result;
+		DefaultStreamer result;
 
 		try
 		{
-			result = stmt.runQuery(names.toArray(new String[names.size()]));
+			result = stmt.getStreamer();
 		}
 		catch (DatabaseException e)
 		{
-			database.close();
 			return new ServerResult<>(sqlDebug, null);
 		}
+
+		sqlDebug.add(stmt.getStringRepresentation());
 
 		String filePath;
 
@@ -260,8 +249,6 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 			filePath = null;
 		}
 
-		database.close();
-
 		/*
 		 * Return the debug information, the path to the temporary file
 		 * and the resulting GerminateTable
@@ -275,7 +262,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = new GerminateTableQuery(QUERY_COMPOUND_DATA, userAuth, null)
+		DefaultStreamer streamer = new DefaultQuery(QUERY_COMPOUND_DATA, userAuth)
 				.setLong(compoundId)
 				.setLong(datasetId)
 				.getStreamer();
@@ -284,7 +271,7 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 		}
 		catch (java.io.IOException e)
 		{
@@ -300,13 +287,13 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = CompoundDataManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
+		DefaultStreamer streamer = CompoundDataManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
 
 		File result = createTemporaryFile("download-compounds", FileType.txt.name());
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 		}
 		catch (java.io.IOException e)
 		{

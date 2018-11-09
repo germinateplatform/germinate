@@ -52,13 +52,13 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = MapDefinitionManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
+		DefaultStreamer streamer = MapDefinitionManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
 
 		File result = createTemporaryFile("download-markers", FileType.txt.name());
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 		}
 		catch (java.io.IOException e)
 		{
@@ -93,7 +93,7 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 
 		String query = String.format(QUERY_MARKER_DATA_WITH_NAMES, StringUtils.generateSqlPlaceholderString(markerNames.size()));
 
-		GerminateTableStreamer data = new GerminateTableQuery(query, userAuth, null)
+		DefaultStreamer data = new DefaultQuery(query, userAuth)
 				.setLong(properties.getUserId())
 				.setStrings(markerNames)
 				.getStreamer();
@@ -102,7 +102,7 @@ public class MarkerServiceImpl extends BaseRemoteServiceServlet implements Marke
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, data, file);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, data, file);
 		}
 		catch (java.io.IOException e)
 		{

@@ -62,23 +62,26 @@ public class ClimateChart extends AbstractChart
 	{
 		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		/* Set up the callback object for the min max avg data */
-		ClimateService.Inst.get().getMinAvgMaxFile(Cookie.getRequestProperties(), ids, climate.getId(), (group == null || group.getId() == -1) ? null : group.getId(), new DefaultAsyncCallback<ServerResult<Tuple.Pair<String, String>>>(true)
+		ClimateService.Inst.get().getMinAvgMaxFile(Cookie.getRequestProperties(), ids, climate.getId(), (group == null || group.getId() == -1) ? null : group.getId(), new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override
-			public void onSuccessImpl(ServerResult<Tuple.Pair<String, String>> result)
+			public void onSuccessImpl(ServerResult<String> result)
 			{
-				if (!StringUtils.isEmpty(result.getServerResult().getSecond()))
+				if (result.hasData())
 				{
 					/* Build the path to the chart file */
 					filePath = new ServletConstants.Builder().setUrl(GWT.getModuleBaseURL())
 															 .setPath(ServletConstants.SERVLET_FILES)
 															 .setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
 															 .setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-															 .setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult().getSecond())
+															 .setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult())
 															 .build();
 
 					/* Set up the chart */
-					yAxisTitle = climate.getName() + " [" + result.getServerResult().getFirst() + "]";
+					if (climate.getUnit() != null)
+						yAxisTitle = climate.getName() + " [" + climate.getUnit().getName() + "]";
+					else
+						yAxisTitle = climate.getName();
 					onResize(true);
 				}
 				else

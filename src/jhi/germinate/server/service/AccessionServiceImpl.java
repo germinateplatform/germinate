@@ -59,13 +59,13 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		try (GerminateTableStreamer streamer = AccessionManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE)))
+		try (DefaultStreamer streamer = AccessionManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE)))
 		{
 			File result = createTemporaryFile("download-accessions", FileType.txt.name());
 
 			try
 			{
-				Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+				Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 			}
 			catch (java.io.IOException e)
 			{
@@ -122,7 +122,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 
 		String idString = Util.joinCollection(accessionIds, ",", true);
 
-		GerminateTableQuery query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth, null)
+		DefaultQuery query = new DefaultQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth)
 				.setBoolean(includeAttributes)
 				.setNull(Types.VARCHAR)
 				.setString(idString);
@@ -142,7 +142,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 
-		GerminateTableQuery query;
+		DefaultQuery query;
 
 		if (groupId != null && groupId != -1)
 		{
@@ -152,7 +152,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 			{
 				/* If we get here, the user either has permissions to edit the group
 				 * or the group is public */
-				query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth, null)
+				query = new DefaultQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth)
 						.setBoolean(includeAttributes)
 						.setLong(groupId)
 						.setNull(Types.VARCHAR);
@@ -165,7 +165,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		}
 		else
 		{
-			query = new GerminateTableQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth, null)
+			query = new DefaultQuery("call " + StoredProcedureInitializer.GERMINATEBASE_ATTRIBUTE_DATA + "(?, ?, ?)", userAuth)
 					.setBoolean(includeAttributes)
 					.setNull(Types.VARCHAR)
 					.setNull(Types.VARCHAR);
@@ -174,12 +174,12 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		return exportData(query, idColumn, sqlDebug);
 	}
 
-	private ServerResult<String> exportData(GerminateTableQuery query, String idColumn, DebugInfo sqlDebug) throws DatabaseException, IOException
+	private ServerResult<String> exportData(DefaultQuery query, String idColumn, DebugInfo sqlDebug) throws DatabaseException, IOException
 	{
 		/* Create the result file */
 		File file = createTemporaryFile("germinatebase", FileType.txt.name());
 
-		try (GerminateTableStreamer streamer = query.getStreamer();
+		try (DefaultStreamer streamer = query.getStreamer();
 			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")))
 		{
 			String[] columnNames = streamer.getColumnNames();
@@ -199,12 +199,12 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 			bw.newLine();
 
 			/* Write the actual data */
-			GerminateRow row;
+			DatabaseResult row;
 			String cellValue;
 			while ((row = streamer.next()) != null)
 			{
 				/* Write the id column separately */
-				cellValue = row.get(idColumn);
+				cellValue = row.getString(idColumn);
 				if (StringUtils.isEmpty(cellValue))
 					bw.write("");
 				else
@@ -216,7 +216,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 					if (columnName.equals(idColumn))
 						continue;
 
-					cellValue = row.get(columnName);
+					cellValue = row.getString(columnName);
 					if (StringUtils.isEmpty(cellValue))
 						bw.write("\t");
 					else

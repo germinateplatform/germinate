@@ -230,7 +230,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		{
 			case markers:
 				formatted = String.format(QUERY_MARKERS_DATA_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
-				try (GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
+				try (DefaultStreamer streamer = new DefaultQuery(formatted, userAuth)
 						.setLong(userAuth.getId())
 						.setStrings(ids)
 						.getStreamer())
@@ -239,7 +239,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 
 					try
 					{
-						Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
+						Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
 					}
 					catch (java.io.IOException e)
 					{
@@ -250,13 +250,13 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 				}
 
 			case germinatebase:
-				try (GerminateTableStreamer streamer = AccessionManager.getStreamerForIds(userAuth, ids))
+				try (DefaultStreamer streamer = AccessionManager.getStreamerForIds(userAuth, ids))
 				{
 					File output = createTemporaryFile("export_accession_group", FileType.txt.name());
 
 					try
 					{
-						Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
+						Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
 					}
 					catch (java.io.IOException e)
 					{
@@ -268,7 +268,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 
 			case locations:
 				formatted = String.format(QUERY_COLLSITES_BY_IDS_DOWNLOAD, StringUtils.generateSqlPlaceholderString(ids.size()));
-				try (GerminateTableStreamer streamer = new GerminateTableQuery(formatted, userAuth, null)
+				try (DefaultStreamer streamer = new DefaultQuery(formatted, userAuth)
 						.setStrings(ids)
 						.getStreamer())
 				{
@@ -276,7 +276,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 
 					try
 					{
-						Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
+						Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, output);
 					}
 					catch (java.io.IOException e)
 					{

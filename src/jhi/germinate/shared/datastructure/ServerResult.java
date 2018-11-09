@@ -60,7 +60,7 @@ public class ServerResult<T> implements Serializable
 		else if (serverResult instanceof Map)
 			return ((Map) serverResult).size() > 0;
 		else if (serverResult instanceof String)
-			return StringUtils.isEmpty((String) serverResult);
+			return !StringUtils.isEmpty((String) serverResult);
 		else
 			return serverResult != null;
 	}

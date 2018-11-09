@@ -95,9 +95,10 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 				.getObjects(DataStats.Parser.Inst.get(), true);
 	}
 
-	public static void exportDataToFile(String header, List<String> phenotypes, GerminateTable result, File file) throws java.io.IOException
+	public static void exportDataToFile(String header, List<String> phenotypes, DefaultStreamer result, File file) throws java.io.IOException, DatabaseException
 	{
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
+			 DefaultStreamer streamer = result)
 		{
 			if (!StringUtils.isEmpty(header))
 			{
@@ -113,22 +114,22 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 			bw.newLine();
 
-			for (GerminateRow row : result)
+			DatabaseResult rs;
+			while ((rs = streamer.next()) != null)
 			{
-				String zero = row.get(phenotypes.get(0));
+				String zero = rs.getString(phenotypes.get(0));
 				String value;
 				bw.write(zero == null ? "" : zero);
 
 				for (int i = 1; i < phenotypes.size(); i++)
 				{
-					String ii = row.get(phenotypes.get(i));
+					String ii = rs.getString(phenotypes.get(i));
 					value = ii == null ? "" : ii;
 					bw.write("\t" + value);
 				}
 
 				bw.newLine();
 			}
-
 		}
 	}
 
@@ -146,13 +147,13 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = PhenotypeManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
+		DefaultStreamer streamer = PhenotypeManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
 
 		File result = createTemporaryFile("download-phenotypes", FileType.txt.name());
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 		}
 		catch (java.io.IOException e)
 		{
@@ -226,14 +227,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		if (containsAllItemsGroup(groupIds))
 			groupIds = null;
 
-		DatabaseStatement stmt;
-
-		/*
-		 * Create a query that checks if there actually is data available. If
-		 * not, the prepared statement from the sql file will fail. Connect to
-		 * the database and check the session id
-		 */
-		Database database = Database.connectAndCheckSession(properties, this);
+		DefaultQuery stmt;
 
 		/* If both are empty, return everything */
 		if (CollectionUtils.isEmpty(groupIds) && CollectionUtils.isEmpty(phenotypeIds))
@@ -249,12 +243,10 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 			if (!CollectionUtils.isEmpty(temp.getServerResult()))
 				names.addAll(temp.getServerResult());
 
-			stmt = database.prepareStatement(QUERY_DATA);
-
-			int i = 1;
-			stmt.setNull(i++, Types.VARCHAR);
-			stmt.setString(i++, datasets);
-			stmt.setNull(i++, Types.VARCHAR);
+			stmt = new DefaultQuery(QUERY_DATA, userAuth)
+					.setNull(Types.VARCHAR)
+					.setString(datasets)
+					.setNull(Types.VARCHAR);
 		}
 		/* If just one is empty, return nothing */
 		else if (CollectionUtils.isEmpty(datasetIds, phenotypeIds))
@@ -278,45 +270,42 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 			formatted = String.format(QUERY_CHECK_NUMBER, datasets, phenotypes);
 
-			stmt = database.prepareStatement(formatted);
+			stmt = new DefaultQuery(formatted, userAuth);
+
+			DatabaseResult rs = stmt.getResult();
 
 			sqlDebug.add(stmt.getStringRepresentation());
 
-			DatabaseResult rs = stmt.query();
-
 			if (rs.next())
 			{
-				int number = rs.getInt(AbstractManager.COUNT);
+				Integer number = rs.getInt(AbstractManager.COUNT);
 
-				if (number > 0)
+				if (number != null && number > 0)
 				{
-					stmt = database.prepareStatement(QUERY_DATA);
+					stmt = new DefaultQuery(QUERY_DATA, userAuth);
 
-					int i = 1;
 					if (!CollectionUtils.isEmpty(groupIds))
-						stmt.setString(i++, groups);
+						stmt.setString(groups);
 					else
-						stmt.setNull(i++, Types.NULL);
-					stmt.setString(i++, datasets);
-					stmt.setString(i++, phenotypes);
+						stmt.setNull(Types.NULL);
+					stmt.setString(datasets);
+					stmt.setString(phenotypes);
 				}
 			}
 		}
 
-
-		sqlDebug.add(stmt.getStringRepresentation());
-
-		GerminateTable result;
+		DefaultStreamer result;
 
 		try
 		{
-			result = stmt.runQuery(names.toArray(new String[0]));
+			result = stmt.getStreamer();
 		}
 		catch (DatabaseException e)
 		{
-			database.close();
 			return new ServerResult<>(sqlDebug, null);
 		}
+
+		sqlDebug.add(stmt.getStringRepresentation());
 
 		String filePath;
 
@@ -332,8 +321,6 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 		{
 			filePath = null;
 		}
-
-		database.close();
 
 		/*
 		 * Return the debug information, the path to the temporary file

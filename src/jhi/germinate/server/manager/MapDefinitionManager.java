@@ -77,12 +77,12 @@ public class MapDefinitionManager extends AbstractManager<MapDefinition>
 				.getObjectsPaginated(MapDefinition.Parser.Inst.get(), true);
 	}
 
-	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	public static DefaultStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		pagination.updateSortColumn(MarkerService.COLUMNS_MAPDEFINITION_TABLE, null);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, MarkerService.COLUMNS_MAPDEFINITION_TABLE, COLUMNS_MARKER_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, MarkerService.COLUMNS_MAPDEFINITION_TABLE)
 				.setLong(userAuth.getId())
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

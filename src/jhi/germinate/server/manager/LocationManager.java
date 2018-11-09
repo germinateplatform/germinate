@@ -95,12 +95,12 @@ public class LocationManager extends AbstractManager<Location>
 				.getObjectsPaginated(Location.Parser.Inst.get(), true);
 	}
 
-	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
+	public static DefaultStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
 	{
 		pagination.updateSortColumn(LocationService.COLUMNS_LOCATION_SORTABLE, Location.ID);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, LocationService.COLUMNS_LOCATION_SORTABLE, COLUMNS_LOCATION_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, LocationService.COLUMNS_LOCATION_SORTABLE)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
 				.getStreamer();
@@ -332,7 +332,7 @@ public class LocationManager extends AbstractManager<Location>
 					.getObjectsPaginated(ClimateYearData.Parser.Inst.get(), true);
 	}
 
-	public static GerminateTableStreamer getStreamerForClimateYearData(UserAuth userAuth, List<Long> datasetIds, Long climateId, Long groupId, Pagination pagination) throws DatabaseException, InsufficientPermissionsException, InvalidColumnException
+	public static DefaultStreamer getStreamerForClimateYearData(UserAuth userAuth, List<Long> datasetIds, Long climateId, Long groupId, Pagination pagination) throws DatabaseException, InsufficientPermissionsException, InvalidColumnException
 	{
 		if (!GroupManager.hasAccessToGroup(userAuth, groupId, false))
 			throw new InsufficientPermissionsException();
@@ -348,7 +348,7 @@ public class LocationManager extends AbstractManager<Location>
 		else
 			formatted = String.format(SELECT_CLIMATE_DATA, "", StringUtils.generateSqlPlaceholderString(datasetIds.size()), "", pagination.getSortQuery());
 
-		GerminateTableQuery query = new GerminateTableQuery(formatted, userAuth, null)
+		DefaultQuery query = new DefaultQuery(formatted, userAuth)
 				.setLongs(datasetIds)
 				.setLong(climateId);
 

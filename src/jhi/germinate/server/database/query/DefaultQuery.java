@@ -18,7 +18,6 @@
 package jhi.germinate.server.database.query;
 
 import jhi.germinate.server.database.*;
-import jhi.germinate.server.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.exception.*;
 
@@ -41,9 +40,9 @@ public class DefaultQuery extends GerminateQuery<DefaultQuery>
 	}
 
 	/**
-	 * Returns the {@link GerminateTableStreamer} to stream {@link GerminateRow} s
+	 * Returns the {@link DefaultStreamer} to stream {@link DatabaseResult}s
 	 *
-	 * @return The {@link GerminateTableStreamer} to stream {@link GerminateRow} s
+	 * @return The {@link DefaultStreamer} to stream {@link DatabaseResult}s
 	 * @throws DatabaseException Thrown if the communication with the database fails.
 	 */
 	public DefaultStreamer getStreamer() throws DatabaseException

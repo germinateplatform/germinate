@@ -60,13 +60,13 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = DatasetManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
+		DefaultStreamer streamer = DatasetManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
 
 		File result = createTemporaryFile("download-datasets", FileType.txt.name());
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 		}
 		catch (java.io.IOException e)
 		{
@@ -159,30 +159,29 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 			formatted = String.format(QUERY_DATASET_STATS, DatasetManager.BITS_PUBLIC);
 		}
 
-		GerminateTableQuery q = new GerminateTableQuery(formatted, userAuth, null);
-
+		DefaultQuery q = new DefaultQuery(formatted, userAuth);
 
 		/* If the user isn't an admin, we have to add the user id twice more to the query */
 		if (isPrivate && !details.isAdmin())
-			q.setLong(userAuth.getId());
+			q.setLong(userAuth.getId())
+			 .setLong(userAuth.getId())
+			 .setLong(userAuth.getId());
 
-		ServerResult<GerminateTable> table = q.run();
+		DefaultStreamer streamer = q.getStreamer();
 
 		/* Get the distinct years */
-		TreeSet<String> years = table.getServerResult()
-									 .stream()
-									 .map(r -> r.get("theYear"))
-									 .collect(Collectors.toCollection(TreeSet::new));
-
+		Set<String> years = new TreeSet<>();
 		Map<String, DatasetStats> stats = new TreeMap<>();
+		DatabaseResult rs;
 
-		/* For each row in the result */
-		for (GerminateRow row : table.getServerResult())
+		while ((rs = streamer.next()) != null)
 		{
+			years.add(rs.getString("theYear"));
+
 			/* Get the stats */
-			String experimentType = row.get("experimentType");
-			String year = row.get("theYear");
-			String value = row.get("nrOfDataPoints");
+			String experimentType = rs.getString("experimentType");
+			String year = rs.getString("theYear");
+			String value = rs.getString("nrOfDataPoints");
 
 			/* Store them in the POJO */
 			DatasetStats stat = stats.get(experimentType);
@@ -234,7 +233,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		if (!hasResult)
 			throw new IOException();
 		else
-			return new ServerResult<>(table.getDebugInfo(), file.getName());
+			return new ServerResult<>(streamer.getDebugInfo(), file.getName());
 	}
 
 	@Override
@@ -317,14 +316,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		names.add(PhenotypeService.DATASET_VERSION);
 		names.add(PhenotypeService.LICENSE_NAME);
 
-		DatabaseStatement stmt;
-
-		/*
-		 * Create a query that checks if there actually is data available. If
-		 * not, the prepared statement from the sql file will fail. Connect to
-		 * the database and check the session id
-		 */
-		Database database = Database.connectAndCheckSession(properties, this);
+		DefaultQuery stmt;
 
 		ServerResult<List<Attribute>> attributeList = null;
 
@@ -348,7 +340,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 			attributes = Util.joinCollection(attributeIds, ", ", true);
 		}
 
-		if(attributeList != null)
+		if (attributeList != null)
 		{
 			sqlDebug.addAll(attributeList.getDebugInfo());
 			if (!CollectionUtils.isEmpty(attributeList.getServerResult()))
@@ -359,28 +351,27 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 			}
 		}
 
-		stmt = database.prepareStatement(QUERY_ATTRIBUTE_DATA);
+		stmt = new DefaultQuery(QUERY_ATTRIBUTE_DATA, null);
 
 		int i = 1;
-		stmt.setString(i++, datasets);
+		stmt.setString(datasets);
 		if (attributes == null)
-			stmt.setNull(i++, Types.VARCHAR);
+			stmt.setNull(Types.VARCHAR);
 		else
-			stmt.setString(i++, attributes);
+			stmt.setString(attributes);
 
-		sqlDebug.add(stmt.getStringRepresentation());
-
-		GerminateTable result;
+		DefaultStreamer result;
 
 		try
 		{
-			result = stmt.runQuery(names.toArray(new String[0]));
+			result = stmt.getStreamer();
 		}
 		catch (DatabaseException e)
 		{
-			database.close();
 			return new ServerResult<>(sqlDebug, null);
 		}
+
+		sqlDebug.add(stmt.getStringRepresentation());
 
 		String filePath;
 
@@ -396,8 +387,6 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		{
 			filePath = null;
 		}
-
-		database.close();
 
 		/*
 		 * Return the debug information, the path to the temporary file

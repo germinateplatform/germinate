@@ -115,13 +115,12 @@ public class StatisticsServlet extends HttpServlet
 
 	public static File getStatistics(HttpServletRequest req, ViewInitializer.View view) throws DatabaseException, IOException
 	{
-		GerminateTable table = new GerminateTableQuery("SELECT * FROM " + view.getViewName(), view.getColumns())
-				.run()
-				.getServerResult();
+		DefaultStreamer table = new DefaultQuery("SELECT * FROM " + view.getViewName(), null)
+				.getStreamer();
 
 		File file = BaseHttpServlet.createTemporaryFile(req, "stats", FileType.txt.name());
 
-		Util.writeGerminateTableToFile(Util.getOperatingSystem(req), view.getColumns(), table, file);
+		Util.writeDefaultToFile(Util.getOperatingSystem(req), view.getColumns(), table, file);
 
 		return file;
 	}

@@ -195,12 +195,12 @@ public class DatasetManager extends AbstractManager<Dataset>
 				.getObjectsPaginated(Dataset.Parser.Inst.get(), true);
 	}
 
-	public static GerminateTableStreamer getStreamerForFilter(UserAuth user, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException, InsufficientPermissionsException, DatabaseException
+	public static DefaultStreamer getStreamerForFilter(UserAuth user, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, InvalidArgumentException, InvalidSearchQueryException, InsufficientPermissionsException, DatabaseException
 	{
 		pagination.updateSortColumn(COLUMNS_TABLE, Dataset.ID);
 
 		String formatted = SELECT_ALL_EXPORT.replace("{{SORT_BITS}}", pagination.getSortQuery());
-		return getGerminateTableQuery(formatted, user, filter, null, COLUMNS_DATASET_DATA_EXPORT)
+		return getDefaultQuery(formatted, user, filter, null, COLUMNS_DATASET_DATA_EXPORT)
 				.setBoolean(false)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())
@@ -285,7 +285,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 	 * @throws DatabaseException                Thrown if the interaction with the database failed
 	 * @throws InsufficientPermissionsException Thrown if the use doesn't have sufficient permissions to access the data
 	 */
-	private static GerminateTableQuery getGerminateTableQuery(String query, UserAuth user, PartialSearchQuery filter, ExperimentType type, String[] columnNames) throws DatabaseException, InvalidArgumentException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidColumnException
+	private static DefaultQuery getDefaultQuery(String query, UserAuth user, PartialSearchQuery filter, ExperimentType type, String[] columnNames) throws DatabaseException, InvalidArgumentException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidColumnException
 	{
 		boolean isPrivate = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION);
 
@@ -296,7 +296,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 
 		String formatted = getFormattedQuery(query, isPrivate, details, Collections.singletonList(type));
 
-		GerminateTableQuery result = getFilteredGerminateTableQuery(user, filter, formatted, COLUMNS_TABLE, columnNames);
+		DefaultQuery result = getFilteredDefaultQuery(user, filter, formatted, COLUMNS_TABLE);
 
 		setParameters(result, isPrivate, details, user);
 

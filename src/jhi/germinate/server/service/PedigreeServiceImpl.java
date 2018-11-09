@@ -20,7 +20,6 @@ package jhi.germinate.server.service;
 import java.io.*;
 import java.util.*;
 import java.util.Map;
-import java.util.stream.*;
 
 import javax.servlet.annotation.*;
 
@@ -133,19 +132,41 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		/* Get the parent data; mapping: node -> [parents] */
-		ServerResult<GerminateTable> parents = new GerminateTableQuery(SELECT_PEDIGREE_PARENTS, userAuth, null).run();
+		DefaultStreamer parents = new DefaultQuery(SELECT_PEDIGREE_PARENTS, userAuth)
+				.getStreamer();
 		/* Get the child data; mapping: node -> [children] */
-		ServerResult<GerminateTable> children = new GerminateTableQuery(SELECT_PEDIGREE_CHILDREN, userAuth, null).run();
+		DefaultStreamer children = new DefaultQuery(SELECT_PEDIGREE_CHILDREN, userAuth)
+				.getStreamer();
 
 		/* Map the data into a nice data structure */
-		Map<String, List<PedigreePair>> parentPairData = parents.getServerResult()
-																.parallelStream()
-																.collect(Collectors.groupingByConcurrent(r -> r.get("node"),
-																		Collectors.mapping(r -> new PedigreePair(r.get("parent"), r.get("type")), Collectors.toList())));
-		Map<String, List<PedigreePair>> childPairData = children.getServerResult()
-																.parallelStream()
-																.collect(Collectors.groupingByConcurrent(r -> r.get("node"),
-																		Collectors.mapping(r -> new PedigreePair(r.get("child"), r.get("type")), Collectors.toList())));
+		Map<String, List<PedigreePair>> parentPairData = new HashMap<>();
+		DatabaseResult rs;
+		while((rs = parents.next()) != null)
+		{
+			String node = rs.getString("node");
+			List<PedigreePair> list = parentPairData.get(node);
+
+			if(list == null)
+				list = new ArrayList<>();
+
+			list.add(new PedigreePair(rs.getString("parent"), rs.getString("type")));
+
+			parentPairData.put(node, list);
+		}
+
+		Map<String, List<PedigreePair>> childPairData = new HashMap<>();
+		while((rs = children.next()) != null)
+		{
+			String node = rs.getString("node");
+			List<PedigreePair> list = childPairData.get(node);
+
+			if(list == null)
+				list = new ArrayList<>();
+
+			list.add(new PedigreePair(rs.getString("child"), rs.getString("type")));
+
+			childPairData.put(node, list);
+		}
 
 		File resultFile = createTemporaryFile("helium", "helium");
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(resultFile)))
@@ -187,13 +208,13 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		GerminateTableStreamer streamer = PedigreeManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
+		DefaultStreamer streamer = PedigreeManager.getStreamerForFilter(userAuth, filter, new Pagination(0, Integer.MAX_VALUE));
 
 		File result = createTemporaryFile("download-pedigree", FileType.txt.name());
 
 		try
 		{
-			Util.writeGerminateTableToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
 		}
 		catch (java.io.IOException e)
 		{

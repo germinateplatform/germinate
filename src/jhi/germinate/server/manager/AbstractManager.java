@@ -237,11 +237,11 @@ public abstract class AbstractManager<T extends DatabaseObject>
 	 *                                     parameter
 	 * @throws InvalidArgumentException    Thrown if any part of the {@link PartialSearchQuery} is invalid
 	 */
-	public static GerminateTableQuery getFilteredGerminateTableQuery(UserAuth userAuth, PartialSearchQuery filter, String input, String[] allowedColumns, String[] columnNames) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
+	public static DefaultQuery getFilteredDefaultQuery(UserAuth userAuth, PartialSearchQuery filter, String input, String[] allowedColumns) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
 	{
 		String formatted = getFormattedString(filter, input, allowedColumns);
 
-		GerminateTableQuery query = new GerminateTableQuery(formatted, userAuth, columnNames);
+		DefaultQuery query = new DefaultQuery(formatted, userAuth);
 
 		if (filter != null)
 			setParameters(query, filter);

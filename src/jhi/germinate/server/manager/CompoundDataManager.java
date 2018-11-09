@@ -99,14 +99,14 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 				.getStrings();
 	}
 
-	public static GerminateTableStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	public static DefaultStreamer getStreamerForFilter(UserAuth userAuth, PartialSearchQuery filter, Pagination pagination) throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		pagination.updateSortColumn(COLUMNS_DATA_SORTABLE, Accession.ID);
 		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(userAuth, true).getServerResult());
 
 		String formatted = String.format(SELECT_ALL_FOR_FILTER_EXPORT, StringUtils.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
-		return getFilteredGerminateTableQuery(userAuth, filter, formatted, COLUMNS_DATA_SORTABLE, COLUMNS_COMPOUND_DATA_EXPORT)
+		return getFilteredDefaultQuery(userAuth, filter, formatted, COLUMNS_DATA_SORTABLE)
 				.setLongs(datasetIds)
 				.setInt(pagination.getStart())
 				.setInt(pagination.getLength())

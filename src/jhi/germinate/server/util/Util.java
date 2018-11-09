@@ -19,6 +19,7 @@ package jhi.germinate.server.util;
 
 import java.io.*;
 import java.io.IOException;
+import java.nio.charset.*;
 import java.text.*;
 import java.util.*;
 import java.util.regex.*;
@@ -26,9 +27,9 @@ import java.util.stream.*;
 
 import javax.servlet.http.*;
 
+import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.Tuple.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
@@ -190,83 +191,82 @@ public class Util
 		throw new InvalidColumnException(searchColumn + " is not a valid column.");
 	}
 
+	//	/**
+	//	 * Writes the given {@link GerminateTable} to the given {@link File}.
+	//	 *
+	//	 * @param os      The {@link OperatingSystem}
+	//	 * @param columns The columns to export (data will be exported in this get)
+	//	 * @param table   The {@link GerminateTable} to export
+	//	 * @param file    The {@link File} to create
+	//	 * @throws IOException Thrown if the file interaction fails
+	//	 */
+	//	public static void writeDefaultToFile(OperatingSystem os, String[] columns, DefaultQuery table, File file) throws IOException
+	//	{
+	//		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")))
+	//		{
+	//			if (ArrayUtils.isEmpty(columns))
+	//				columns = table.getColumnNames();
+	//
+	//			bw.write(Arrays.stream(columns)
+	//						   .collect(Collectors.joining("\t")));
+	//			bw.write(os.newLine);
+	//
+	//			for (GerminateRow row : table)
+	//			{
+	//				String value;
+	//				bw.write(row.get(columns[0]) == null ? "" : row.get(columns[0]));
+	//
+	//				for (int i = 1; i < columns.length; i++)
+	//				{
+	//					value = row.get(columns[i]) == null ? "" : row.get(columns[i]);
+	//					bw.write("\t" + value);
+	//				}
+	//
+	//				// bw.newLine();
+	//				bw.write(os.newLine);
+	//			}
+	//		}
+	//	}
+
 	/**
-	 * Writes the given {@link GerminateTable} to the given {@link File}.
+	 * Writes the given {@link DefaultStreamer} to the given {@link File}
 	 *
 	 * @param os      The {@link OperatingSystem}
 	 * @param columns The columns to export (data will be exported in this get)
-	 * @param table   The {@link GerminateTable} to export
+	 * @param table   The {@link DefaultStreamer} to export
 	 * @param file    The {@link File} to create
-	 * @throws IOException Thrown if the file interaction fails
-	 */
-	public static void writeGerminateTableToFile(OperatingSystem os, String[] columns, GerminateTable table, File file) throws IOException
-	{
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")))
-		{
-			if (ArrayUtils.isEmpty(columns))
-				columns = table.getColumnNames();
-
-			bw.write(Arrays.stream(columns)
-						   .collect(Collectors.joining("\t")));
-			bw.write(os.newLine);
-
-			for (GerminateRow row : table)
-			{
-				String value;
-				bw.write(row.get(columns[0]) == null ? "" : row.get(columns[0]));
-
-				for (int i = 1; i < columns.length; i++)
-				{
-					value = row.get(columns[i]) == null ? "" : row.get(columns[i]);
-					bw.write("\t" + value);
-				}
-
-				// bw.newLine();
-				bw.write(os.newLine);
-			}
-		}
-	}
-
-	/**
-	 * Writes the given {@link GerminateTableStreamer} to the given {@link File}
-	 *
-	 * @param os      The {@link OperatingSystem}
-	 * @param columns The columns to export (data will be exported in this get)
-	 * @param table   The {@link GerminateTableStreamer} to export
-	 * @param file    The {@link File} to create
-	 * @return The number or rows that have been exported and the first exported {@link GerminateRow}
+	 * @return The number or rows that have been exported.
 	 * @throws IOException       Thrown if the file interaction fails
 	 * @throws DatabaseException Thrown if the interaction with the database fails
 	 */
-	public static Pair<Integer, GerminateRow> writeGerminateTableToFile(OperatingSystem os, String[] columns, GerminateTableStreamer table, File file) throws IOException,
+	public static Integer writeDefaultToFile(OperatingSystem os, String[] columns, DefaultStreamer table, File file) throws IOException,
 			DatabaseException
 	{
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
-			 GerminateTableStreamer streamer = table)
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
+			 DefaultStreamer streamer = table)
 		{
 			if (ArrayUtils.isEmpty(columns))
 				columns = streamer.getColumnNames();
 
-			bw.write(Arrays.stream(columns)
-						   .collect(Collectors.joining("\t")));
+			bw.write(String.join("\t", columns));
 			bw.write(os.newLine);
 
 			int counter = 0;
 
-			GerminateRow first = null;
-			GerminateRow row;
+			DatabaseResult first = null;
+			DatabaseResult row;
 			while ((row = streamer.next()) != null)
 			{
 				if (first == null)
 					first = row;
 
-				String value;
-				bw.write(row.get(columns[0]) == null ? "" : row.get(columns[0]));
+				String value = row.getString(columns[0]);
+				bw.write(value == null ? "" : value);
 
 				for (int i = 1; i < columns.length; i++)
 				{
-					value = row.get(columns[i]) == null ? "" : row.get(columns[i]);
-					bw.write("\t" + value);
+					value = row.getString(columns[i]);
+					bw.write("\t" + (value == null ? "" : value));
 				}
 
 				// bw.newLine();
@@ -274,7 +274,7 @@ public class Util
 				counter++;
 			}
 
-			return new Pair<>(counter, first);
+			return counter;
 		}
 	}
 
