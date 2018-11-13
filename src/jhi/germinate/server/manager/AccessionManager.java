@@ -46,7 +46,10 @@ public class AccessionManager extends AbstractManager<Accession>
 
 	private static final String SELECT_ALL_FOR_FILTER_EXPORT  = "SELECT `germinatebase`.`id` AS germinatebase_id, `germinatebase`.`general_identifier` AS germinatebase_gid, `germinatebase`.`name` AS germinatebase_name, `germinatebase`.`number` AS germinatebase_number, `germinatebase`.`collnumb` AS germinatebase_collnumb, `taxonomies`.`genus` AS taxonomies_genus, `taxonomies`.`species` AS taxomonies_species, `locations`.`latitude` AS locations_latitude, `locations`.`longitude` AS locations_longitude, `locations`.`elevation` AS locations_elevation, `countries`.`country_name` AS countries_country_name, `germinatebase`.`colldate` AS germinatebase_colldate, `synonyms`.`synonyms` AS synonyms_synonym, `germinatebase`.`pdci` AS pdci FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_FILTER         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} %s LIMIT ?, ?";
-	private static final String SELECT_ALL_FOR_PDCI           = "SELECT *, ( SELECT 1 FROM `pedigreedefinitions` WHERE `pedigreedefinitions`.`germinatebase_id` = `germinatebase`.`id` LIMIT 1 ) AS has_pedigree_def, ( SELECT 1 FROM `pedigrees` WHERE `pedigrees`.`germinatebase_id` = `germinatebase`.`id` LIMIT 1 ) AS has_pedigree, ( SELECT 1 FROM `storagedata` WHERE `storagedata`.`germinatebase_id` = `germinatebase`.`id` LIMIT 1 ) as has_storage, ( SELECT 1 FROM `links` LEFT JOIN `linktypes` ON `links`.`linktype_id` = `linktypes`.`id` WHERE `linktypes`.`target_table` = 'germinatebase' AND (`links`.`foreign_id` = `germinatebase`.`id` OR NOT ISNULL(`linktypes`.`placeholder`)) LIMIT 1) as has_url FROM " + COMMON_TABLES + " WHERE `entitytype_id` = 1";
+	private static final String SELECT_ALL_FOR_PDCI           = "SELECT * FROM " + COMMON_TABLES + " WHERE `entitytype_id` = 1";
+	private static final String SELECT_PDCI_HAS_LINKS         = "SELECT DISTINCT `germinatebase`.`id` FROM `germinatebase`\tLEFT JOIN `links` ON `germinatebase`.`id` = `links`.`foreign_id` LEFT JOIN `linktypes` ON `links`.`linktype_id` = `linktypes`.`id` WHERE `linktypes`.`target_table` = 'germinatebase' AND `links`.`foreign_id` = `germinatebase`.`id`";
+	private static final String SELECT_PDCI_HAS_PEDIGREE      = "SELECT DISTINCT `id` FROM ((SELECT DISTINCT `germinatebase_id` AS id FROM `pedigreedefinitions`) UNION (SELECT DISTINCT `germinatebase_id` AS id FROM `pedigrees`)) c";
+	private static final String SELECT_PDCI_HAS_STORAGE       = "SELECT DISTINCT `germinatebase_id` AS id FROM `storagedata`";
 	private static final String SELECT_BY_IDS                 = "SELECT * FROM " + COMMON_TABLES + " WHERE `germinatebase`.`id` IN (%s) %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_MEGA_ENV       = "SELECT DISTINCT(`germinatebase`.`id`) FROM " + COMMON_TABLES + " LEFT JOIN `megaenvironmentdata` ON `megaenvironmentdata`.`location_id` = `locations`.`id` LEFT JOIN `megaenvironments` ON `megaenvironments`.`id` = `megaenvironmentdata`.`megaenvironment_id` WHERE `megaenvironments`.`id` = ?";
 	private static final String SELECT_IDS_FOR_MEGA_ENV_UNK   = "SELECT DISTINCT(`germinatebase`.`id`) FROM " + COMMON_TABLES + " WHERE `location_id` IS NOT NULL AND NOT EXISTS (SELECT 1 FROM `megaenvironmentdata` WHERE `megaenvironmentdata`.`location_id` = `locations`.`id`)";
@@ -66,8 +69,6 @@ public class AccessionManager extends AbstractManager<Accession>
 
 	private static final String SELECT_IDS           = "SELECT `germinatebase`.`id` FROM `germinatebase`";
 	private static final String SELECT_IDS_FOR_GROUP = "SELECT `germinatebase`.`id` FROM " + COMMON_TABLES + " LEFT JOIN `groupmembers` ON `germinatebase`.`id` = `groupmembers`.`foreign_id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` WHERE `groups`.`id` = ?";
-
-	private static final String[] COLUMNS_ACCESSION_DATA_EXPORT = {"germinatebase_id", "germinatebase_gid", "germinatebase_name", "germinatebase_number", "germinatebase_collnumb", "taxonomies_genus", "taxomonies_species", "locations_latitude", "locations_longitude", "locations_elevation", "countries_country_name", "germinatebase_colldate", "synonyms_synonym"};
 
 	@Override
 	protected String getTable()
@@ -187,10 +188,10 @@ public class AccessionManager extends AbstractManager<Accession>
 				.getStreamer();
 	}
 
-	public static DatabaseObjectStreamer getObjectStreamerForPDCI() throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
+	public static DatabaseObjectStreamer<Accession> getObjectStreamerForPDCI() throws InvalidColumnException, DatabaseException, InvalidSearchQueryException, InvalidArgumentException
 	{
 		return AccessionManager.<Accession>getFilteredDatabaseObjectQuery(null, null, SELECT_ALL_FOR_PDCI, AccessionService.COLUMNS_SORTABLE, 0)
-				.getStreamer(Accession.PDCIParser.Inst.get(), null, true);
+				.getStreamer(Accession.Parser.Inst.get(), null, true);
 	}
 
 	public static ServerResult<List<String>> getNamesForGroups(UserAuth userAuth, List<Long> groupIds) throws DatabaseException
@@ -411,5 +412,35 @@ public class AccessionManager extends AbstractManager<Accession>
 				.setDouble(value)
 				.setLong(id)
 				.execute();
+	}
+
+	public static List<Long> getIdsWithLink() throws DatabaseException
+	{
+		List<Long> result = new ValueQuery(SELECT_PDCI_HAS_LINKS)
+				.run("id")
+				.getLongs()
+				.getServerResult();
+
+		return result == null ? new ArrayList<>() : result;
+	}
+
+	public static List<Long> getIdsWithPedigree() throws DatabaseException
+	{
+		List<Long> result = new ValueQuery(SELECT_PDCI_HAS_PEDIGREE)
+				.run("id")
+				.getLongs()
+				.getServerResult();
+
+		return result == null ? new ArrayList<>() : result;
+	}
+
+	public static List<Long> getIdsWithStorage() throws DatabaseException
+	{
+		List<Long> result = new ValueQuery(SELECT_PDCI_HAS_STORAGE)
+				.run("id")
+				.getLongs()
+				.getServerResult();
+
+		return result == null ? new ArrayList<>() : result;
 	}
 }

@@ -39,7 +39,7 @@
 	</ui:style>
 
 	<g:HTMLPanel>
-		<b:PageHeader ui:field="pageHeader"/>
+		<g8:MarkedItemPageHeader ui:field="pageHeader"/>
 		<g:HTML ui:field="html"/>
 
 		<g:FlowPanel visible="false" ui:field="pdciWrapper">

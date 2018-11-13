@@ -166,6 +166,10 @@ td span.mdi:nth-child(2) {
 	cursor: default;
 }
 
+.<%= Style.CURSER_POINTER %> {
+	cursor: pointer;
+}
+
 .<%= Style.TEXT_BOLD %> {
 	font-weight: bold;
 }

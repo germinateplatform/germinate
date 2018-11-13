@@ -32,7 +32,7 @@ public final class DefaultStreamer implements AutoCloseable
 	private final Database       database;
 	private       DatabaseResult res;
 	private       DebugInfo      info;
-	private       boolean                 preventClose;
+	private       boolean        preventClose;
 
 	DefaultStreamer(Database database, boolean preventClose, DebugInfo info, DatabaseStatement stmt) throws DatabaseException
 	{

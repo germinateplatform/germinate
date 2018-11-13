@@ -17,13 +17,15 @@
 
 package jhi.germinate.server.database;
 
+import java.util.*;
 import java.util.logging.*;
 
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.manager.*;
 import jhi.germinate.shared.*;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.exception.*;
+import jhi.germinate.shared.enums.*;
 
 /**
  * Calculates Passport Data Completeness Index (PDCI) for all accessions.
@@ -35,10 +37,9 @@ import jhi.germinate.shared.exception.*;
  */
 public class PDCIRunnable implements Runnable
 {
-	public static final String HAS_PEDIGREE     = "has_pedigree";
-	public static final String HAS_PEDIGREE_DEF = "has_pedigree_def";
-	public static final String HAS_STORAGE      = "has_storage";
-	public static final String HAS_URL          = "has_url";
+	public static final String HAS_URL      = "has_url";
+	public static final String HAS_PEDIGREE = "has_pedigree";
+	public static final String HAS_STORAGE  = "has_storage";
 
 	@Override
 	public void run()
@@ -46,12 +47,56 @@ public class PDCIRunnable implements Runnable
 		try
 		{
 			long start = System.currentTimeMillis();
+			List<Long> hasLink = new ArrayList<>();
+			boolean hasGenericLink = false;
+
+			// First, check if there's a generic link for all accessions
+			ServerResult<List<LinkType>> types = LinkTypeManager.getForTargetTable(GerminateDatabaseTable.germinatebase, null);
+			if (types.hasData())
+			{
+				for (LinkType type : types.getServerResult())
+				{
+					if (!StringUtils.isEmpty(type.getPlaceholder()))
+					{
+						hasGenericLink = true;
+						break;
+					}
+				}
+			}
+
+			// If there isn't then check individuals
+			if (!hasGenericLink)
+				hasLink = AccessionManager.getIdsWithLink();
+
+			List<Long> hasPedigree = AccessionManager.getIdsWithPedigree();
+			List<Long> hasStorage = AccessionManager.getIdsWithStorage();
+			Logger.getLogger("").log(Level.INFO, "PDCI calculation caches created in " + (System.currentTimeMillis() - start) + "ms");
+			Logger.getLogger("").log(Level.INFO, "PDCI calculation generic link: " + hasGenericLink);
+			Logger.getLogger("").log(Level.INFO, "PDCI calculation link cache: " + hasLink.size());
+			Logger.getLogger("").log(Level.INFO, "PDCI calculation pedigree cache: " + hasPedigree.size());
+			Logger.getLogger("").log(Level.INFO, "PDCI calculation storage cache: " + hasStorage.size());
 			DatabaseObjectStreamer<Accession> streamer = AccessionManager.getObjectStreamerForPDCI();
 
 			Accession acc;
 
 			while ((acc = streamer.next()) != null)
 			{
+				if (hasGenericLink || hasLink.contains(acc.getId()))
+				{
+					hasLink.remove(acc.getId());
+					acc.setExtra(HAS_URL, "1");
+				}
+				if (hasPedigree.contains(acc.getId()))
+				{
+					hasPedigree.remove(acc.getId());
+					acc.setExtra(HAS_PEDIGREE, "1");
+				}
+				if (hasStorage.contains(acc.getId()))
+				{
+					hasStorage.remove(acc.getId());
+					acc.setExtra(HAS_STORAGE, "1");
+				}
+
 				// Calculate the generic score for this accession
 				float value = getGeneric(acc);
 
@@ -82,11 +127,9 @@ public class PDCIRunnable implements Runnable
 				AccessionManager.updatePDCI(acc.getId(), value);
 			}
 
-			start = System.currentTimeMillis() - start;
-
-			Logger.getLogger("").log(Level.INFO, "PDCI calculation complete in " + start + "ms");
+			Logger.getLogger("").log(Level.INFO, "PDCI calculation complete in " + (System.currentTimeMillis() - start) + "ms");
 		}
-		catch (InvalidColumnException | DatabaseException | InvalidSearchQueryException | InvalidArgumentException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -155,7 +198,7 @@ public class PDCIRunnable implements Runnable
 	{
 		int value = 0;
 
-		if(acc.getLocation() != null)
+		if (acc.getLocation() != null)
 		{
 			if (acc.getLocation().getCountry() != null)
 				value += 40;
@@ -183,7 +226,7 @@ public class PDCIRunnable implements Runnable
 		else if (!StringUtils.isEmpty(acc.getBreedersName()))
 			value += 10;
 
-		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)) || !StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
+		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
 			value += 40;
 
 		if (acc.getCollSrc() != null)
@@ -215,7 +258,7 @@ public class PDCIRunnable implements Runnable
 		else if (!StringUtils.isEmpty(acc.getBreedersName()))
 			value += 40;
 
-		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)) || !StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
+		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
 			value += 100;
 
 		if (acc.getCollSrc() != null)
@@ -239,7 +282,7 @@ public class PDCIRunnable implements Runnable
 		else if (!StringUtils.isEmpty(acc.getBreedersName()))
 			value += 55;
 
-		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)) || !StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
+		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
 			value += 150;
 
 		if (acc.getCollSrc() != null)
@@ -255,7 +298,7 @@ public class PDCIRunnable implements Runnable
 	{
 		int value = 0;
 
-		if(acc.getLocation() != null)
+		if (acc.getLocation() != null)
 		{
 			if (acc.getLocation().getCountry() != null)
 				value += 80;
@@ -278,7 +321,7 @@ public class PDCIRunnable implements Runnable
 		if (acc.getCollDate() != null)
 			value += 30;
 
-		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)) || !StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
+		if (!StringUtils.isEmpty(acc.getExtra(HAS_PEDIGREE)))
 			value += 10;
 
 		if (acc.getCollSrc() != null)
@@ -302,7 +345,7 @@ public class PDCIRunnable implements Runnable
 	{
 		int value = 0;
 
-		if(acc.getLocation() != null)
+		if (acc.getLocation() != null)
 		{
 			if (acc.getLocation().getCountry() != null)
 				value += 80;

@@ -17,14 +17,22 @@
 
 package jhi.germinate.server.manager;
 
+import java.util.*;
+
+import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.exception.*;
 
 /**
  * @author Sebastian Raubach
  */
 public class LinkTypeManager extends AbstractManager<LinkType>
 {
+	private static final String SELECT_ALL_FOR_TARGET_TABLE = "SELECT * FROM `linktypes` WHERE linktypes.target_table = ?";
+
 	@Override
 	protected String getTable()
 	{
@@ -35,5 +43,14 @@ public class LinkTypeManager extends AbstractManager<LinkType>
 	protected DatabaseObjectParser<LinkType> getParser()
 	{
 		return LinkType.Parser.Inst.get();
+	}
+
+	public static ServerResult<List<LinkType>> getForTargetTable(GerminateDatabaseTable table, UserAuth auth) throws DatabaseException
+	{
+		return new DatabaseObjectQuery<LinkType>(SELECT_ALL_FOR_TARGET_TABLE, auth)
+				.setString(table.name())
+				.run()
+				.getObjects(LinkType.Parser.Inst.get());
+
 	}
 }

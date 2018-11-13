@@ -78,6 +78,7 @@ public class Style
 	public static final String TEXT_CENTER_ALIGN = "gm8-text-center-align";
 
 	public static final String CURSOR_DEFAULT = "gm8-cursor-default";
+	public static final String CURSER_POINTER = "gm8-cursor-pointer";
 
 	public static final String NO_POINTER_EVENTS = "gm8-no-pointer-events";
 

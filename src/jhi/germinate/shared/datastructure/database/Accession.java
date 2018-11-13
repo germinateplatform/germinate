@@ -586,39 +586,6 @@ public class Accession extends DatabaseObject
 	}
 
 	@GwtIncompatible
-	public static class PDCIParser extends Parser
-	{
-		@Override
-		public Accession parse(DatabaseResult row, UserAuth user, boolean foreignsFromResultSet) throws DatabaseException
-		{
-			Accession acc = super.parse(row, user, foreignsFromResultSet);
-
-			if (acc != null)
-			{
-				acc.setExtra(PDCIRunnable.HAS_PEDIGREE, row.getString(PDCIRunnable.HAS_PEDIGREE));
-				acc.setExtra(PDCIRunnable.HAS_PEDIGREE_DEF, row.getString(PDCIRunnable.HAS_PEDIGREE_DEF));
-				acc.setExtra(PDCIRunnable.HAS_STORAGE, row.getString(PDCIRunnable.HAS_STORAGE));
-				acc.setExtra(PDCIRunnable.HAS_URL, row.getString(PDCIRunnable.HAS_URL));
-			}
-
-			return acc;
-		}
-
-		public static final class Inst
-		{
-			public static PDCIParser get()
-			{
-				return PDCIParser.Inst.InstanceHolder.INSTANCE;
-			}
-
-			private static final class InstanceHolder
-			{
-				private static final PDCIParser INSTANCE = new PDCIParser();
-			}
-		}
-	}
-
-	@GwtIncompatible
 	public static class ImportParser extends DatabaseObjectParser<Accession>
 	{
 		protected static DatabaseObjectCache<Taxonomy>         TAXONOMY_CACHE;

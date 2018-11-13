@@ -72,15 +72,15 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 	private static PassportPageUiBinder ourUiBinder = GWT.create(PassportPageUiBinder.class);
 
 	@UiField
-	PageHeader pageHeader;
+	MarkedItemPageHeader pageHeader;
 	@UiField
-	HTML       html;
+	HTML                 html;
 	@UiField
-	FlowPanel  pdciWrapper;
+	FlowPanel            pdciWrapper;
 	@UiField
-	HTML       pdci;
+	HTML                 pdci;
 	@UiField
-	Anchor     pdciInfo;
+	Anchor               pdciInfo;
 
 	@UiField
 	Row topWrapper;
@@ -560,6 +560,8 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 
 		pageHeader.setText(toDisplay);
 		pageHeader.setSubText(accession.getEntityType().getName());
+		pageHeader.setType(MarkedItemList.ItemType.ACCESSION);
+		pageHeader.setId(Long.toString(accession.getId()));
 
 		if (!GerminateSettingsHolder.get().pdciEnabled.getValue() || accession.getPdci() == null)
 		{
