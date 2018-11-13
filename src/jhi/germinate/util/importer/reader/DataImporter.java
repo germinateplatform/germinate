@@ -129,7 +129,7 @@ public abstract class DataImporter<T>
 			try
 			{
 				// Connect to the database
-				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+				databaseConnection = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
 
 				// Pass the InputStream to it
 				reader.init(input);
@@ -193,7 +193,7 @@ public abstract class DataImporter<T>
 		{
 			// Recreate the database connection
 			if (databaseConnection == null || databaseConnection.isClosed())
-				databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+				databaseConnection = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
 
 			// Delete all items with the given ids
 			new ValueQuery(databaseConnection, "DELETE FROM " + table + " WHERE id IN (" + StringUtils.generateSqlPlaceholderString(ids.size()) + ")")

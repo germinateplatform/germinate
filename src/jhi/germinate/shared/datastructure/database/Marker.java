@@ -188,7 +188,7 @@ public class Marker extends DatabaseObject
 	}
 
 	@GwtIncompatible
-	public static class Writer implements DatabaseObjectWriter<Marker>
+	public static class Writer implements BatchedDatabaseObjectWriter<Marker>
 	{
 		public static final class Inst
 		{
@@ -225,6 +225,13 @@ public class Marker extends DatabaseObject
 				object.setId(ids.getServerResult().get(0));
 		}
 
+		@Override
+		public DatabaseStatement getBatchedStatement(Database database) throws DatabaseException
+		{
+			return database.prepareStatement("INSERT INTO markers (" + Marker.MARKER_NAME + ", " + Marker.MARKERTYPE_ID + ", " + Marker.CREATED_ON + ", " + Marker.UPDATED_ON + ") VALUES (?, ?, ?, ?)");
+		}
+
+		@Override
 		public void writeBatched(DatabaseStatement stmt, Marker object) throws DatabaseException
 		{
 			int i = 1;

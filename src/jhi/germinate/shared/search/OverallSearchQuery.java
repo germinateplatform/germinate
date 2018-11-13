@@ -154,7 +154,7 @@ public class OverallSearchQuery<T extends HasToSqlString> implements Serializabl
 				return " 1=1 ";
 			}
 		}
-		else if (conditions.size() > 1)
+		else
 		{
 			StringBuilder conditionsQuery = new StringBuilder();
 			for (int i = 0; i < conditions.size(); i++)
@@ -187,7 +187,6 @@ public class OverallSearchQuery<T extends HasToSqlString> implements Serializabl
 			}
 			return conditionsQuery.toString();
 		}
-		return null;
 	}
 
 	@Override

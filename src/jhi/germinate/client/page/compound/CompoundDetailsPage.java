@@ -17,9 +17,13 @@
 
 package jhi.germinate.client.page.compound;
 
+import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.http.client.*;
+import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -27,14 +31,17 @@ import org.gwtbootstrap3.client.ui.*;
 
 import java.util.*;
 
-import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
+import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
+import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -51,7 +58,7 @@ public class CompoundDetailsPage extends Composite
 {
 
 	@UiField
-	PageHeader           pageHeader;
+	PageHeader pageHeader;
 
 	interface CompoundDetailsPageUiBinder extends UiBinder<HTMLPanel, CompoundDetailsPage>
 	{
@@ -143,6 +150,72 @@ public class CompoundDetailsPage extends Composite
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
 			{
 				return DatasetService.Inst.get().getForFilterAndTrait(Cookie.getRequestProperties(), filter, ExperimentType.compound, compound.getId(), pagination, callback);
+			}
+
+			@Override
+			protected void createColumns()
+			{
+				super.createColumns();
+
+				SafeHtmlCell clickCell = new SafeHtmlCell()
+				{
+					@Override
+					public Set<String> getConsumedEvents()
+					{
+						Set<String> events = new HashSet<>();
+						events.add(BrowserEvents.CLICK);
+						return events;
+					}
+				};
+
+				// Add the histogram column
+				addColumn(new Column<Dataset, SafeHtml>(clickCell)
+				{
+					@Override
+					public String getCellStyleNames(Cell.Context context, Dataset row)
+					{
+						return jhi.germinate.shared.Style.combine(jhi.germinate.shared.Style.TEXT_CENTER_ALIGN, jhi.germinate.shared.Style.CURSOR_DEFAULT);
+					}
+
+					@Override
+					public SafeHtml getValue(Dataset row)
+					{
+						return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(jhi.germinate.shared.Style.MDI_CHART_BAR, Text.LANG.datasetHistogramTitle(), UriUtils.fromString(""), "");
+					}
+
+					@Override
+					public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
+					{
+						if (BrowserEvents.CLICK.equals(event.getType()))
+						{
+							event.preventDefault();
+
+							String file = object.getExtra("CHART_FILE");
+							SimplePanel panel = new SimplePanel();
+							HistogramChart chart;
+							if (StringUtils.isEmpty(file))
+								chart = new HistogramChart(compound.getId(), object.getId(), ExperimentType.compound);
+							else
+								chart = new HistogramChart(file);
+
+							new AlertDialog(Text.LANG.datasetHistogramTitle(), panel)
+									.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
+									.setSize(ModalSize.LARGE)
+									.addShownHandler(modalShownEvent -> {
+										panel.add(chart);
+									})
+									.addHideHandler(modalHideEvent -> {
+										String path = chart.getFilePath();
+										object.setExtra("CHART_FILE", path);
+									})
+									.open();
+						}
+						else
+						{
+							super.onBrowserEvent(context, elem, object, event);
+						}
+					}
+				}, "", false);
 			}
 		});
 	}

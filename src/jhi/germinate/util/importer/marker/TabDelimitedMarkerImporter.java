@@ -209,7 +209,7 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 
 	private void writeCacheMapDefinitions() throws DatabaseException
 	{
-		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO mapdefinitions (" + MapDefinition.MAPFEATURETYPE_ID + ", " + MapDefinition.MARKER_ID + ", " + MapDefinition.MAP_ID + ", " + MapDefinition.DEFINITION_START + ", " + MapDefinition.DEFINITION_END + ", " + MapDefinition.CHROMOSOME + ") VALUES (?, ?, ?, ?, ?, ?)");
+		DatabaseStatement insert = MapDefinition.Writer.Inst.get().getBatchedStatement(databaseConnection);
 
 		// Import the map definitions if they don't exist yet
 		for (MapDefinition entry : cache)
@@ -232,7 +232,7 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 
 	private void writeCacheMarkers() throws DatabaseException
 	{
-		DatabaseStatement insert = databaseConnection.prepareStatement("INSERT INTO markers (" + Marker.MARKER_NAME + ", " + Marker.MARKERTYPE_ID + ", " + Marker.CREATED_ON + ", " + Marker.UPDATED_ON + ") VALUES (?, ?, ?, ?)");
+		DatabaseStatement insert = Marker.Writer.Inst.get().getBatchedStatement(databaseConnection);
 
 		// Import the markers if they don't exist yet
 		for (MapDefinition entry : cache)

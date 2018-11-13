@@ -18,11 +18,11 @@
 package jhi.germinate.util.importer.compound;
 
 import java.io.*;
-import java.sql.*;
-import java.util.Date;
 import java.util.*;
+import java.util.Map;
 
 import jhi.germinate.server.database.*;
+import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.exception.*;
@@ -38,10 +38,14 @@ import jhi.germinate.util.importer.reader.*;
 public class CompoundDataImporter extends DataImporter<CompoundData>
 {
 	private static Dataset dataset;
-	private HashMap<String, Accession> accessionCache = new HashMap<>();
-	private HashMap<String, Compound>  compoundCache  = new HashMap<>();
+	protected List<CompoundData> cache = new ArrayList<>();
+	private Map<String, Accession> accessions    = new HashMap<>();
+
 	private Set<Long> createdCompoundDataIds = new HashSet<>();
 	private Set<Long> createdAccessionIds    = new HashSet<>();
+	private Map<String, Long>      compounds     = new HashMap<>();
+	private Map<String, Long>      compoundDatas = new HashMap<>();
+
 	private MetadataImporter metadataImporter;
 	private CompoundImporter compoundImporter;
 
@@ -83,125 +87,127 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 	}
 
 	@Override
+	protected void prepareReader(IDataReader reader)
+	{
+		super.prepareReader(reader);
+
+		try
+		{
+			DatabaseObjectStreamer<Accession> accessionStreamer = new DatabaseObjectQuery<Accession>("SELECT * FROM `germinatebase`", null)
+					.setDatabase(databaseConnection)
+					.getStreamer(Accession.MinimalParser.Inst.get(), null, true);
+
+			Accession accession;
+			while ((accession = accessionStreamer.next()) != null)
+				accessions.put(accession.getGeneralIdentifier(), accession);
+
+			DatabaseObjectStreamer<Compound> compoundStreamer = new DatabaseObjectQuery<Compound>("SELECT * FROM `compounds`", null)
+					.setDatabase(databaseConnection)
+					.getStreamer(Compound.Parser.Inst.get(), null, true);
+
+			Compound compound;
+			while ((compound = compoundStreamer.next()) != null)
+				compounds.put(compound.getName(), compound.getId());
+
+			DefaultStreamer compoundDataStreamer = new DefaultQuery("SELECT * FROM `compounddata` WHERE dataset_id = ?", null)
+					.setDatabase(databaseConnection)
+					.setLong(dataset.getId())
+					.getStreamer();
+
+			DatabaseResult compoundData;
+			while ((compoundData = compoundDataStreamer.next()) != null)
+				compoundDatas.put(compoundData.getString("germinatebase_id") + "-" + compoundData.getString("compound_id"), compoundData.getLong("id"));
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	protected void write(CompoundData entry) throws DatabaseException
 	{
 		if (entry.getValue() != null)
 		{
-			// First, make sure the actual accession exists
-			Accession accession = getAccession(entry.getAccession(), false);
+			cache.add(entry);
 
-			entry.setAccession(accession);
-
-			// Get the phenotype for this column
-			getCompound(entry);
-
-			// Insert the cell value
-			createCompoundData(entry);
+			// If cache full, write
+			if (cache.size() >= 10000)
+				writeCache();
 		}
 	}
 
-	/**
-	 * Import the {@link PhenotypeData} object into the database.
-	 *
-	 * @param entry The {@link PhenotypeData} object to import.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private void createCompoundData(CompoundData entry) throws DatabaseException
+	@Override
+	protected void flush() throws DatabaseException
 	{
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM `compounddata` WHERE `compound_id` = ? AND `germinatebase_id` = ? AND `dataset_id` <=> ? AND `compound_value` = ? AND `recording_date` <=> ?");
-		int i = 1;
-		stmt.setLong(i++, entry.getCompound().getId());
-		stmt.setLong(i++, entry.getAccession().getId());
-		stmt.setLong(i++, dataset.getId());
-		stmt.setDouble(i++, entry.getValue());
+		writeCache();
+	}
 
-		if (entry.getRecordingDate() != null)
-			stmt.setDate(i++, new Date(entry.getRecordingDate()));
-		else
-			stmt.setNull(i++, Types.TIMESTAMP);
-
-		DatabaseResult rs = stmt.query();
-
-		if (!rs.next())
+	private void writeCache() throws DatabaseException
+	{
+		if (!CollectionUtils.isEmpty(cache))
 		{
+			boolean previous = databaseConnection.getAutoCommit();
+			databaseConnection.setAutoCommit(false);
+
+			write();
+
+			databaseConnection.setAutoCommit(previous);
+		}
+
+
+		cache.clear();
+	}
+
+	private void write() throws DatabaseException
+	{
+		checkAccessions();
+		checkCompounds();
+		writeCachedCompoundData();
+	}
+
+	private void checkAccessions() throws DatabaseException
+	{
+		for (CompoundData entry : cache)
+		{
+			Accession cached = accessions.get(entry.getAccession().getGeneralIdentifier());
+
+			if (cached == null)
+				throw new DatabaseException("Accession not found: " + entry.getAccession().getGeneralIdentifier() + " Please make sure it is imported before trying to import the data.");
+			else
+				entry.getAccession().setId(cached.getId());
+		}
+	}
+
+	private void checkCompounds() throws DatabaseException
+	{
+		for (CompoundData entry : cache)
+		{
+			Long cached = compounds.get(entry.getCompound().getName());
+
+			if (cached == null)
+				throw new DatabaseException("Compound not found: " + entry.getCompound().getName() + " Please make sure it is imported before trying to import the data.");
+			else
+				entry.getCompound().setId(cached);
+		}
+	}
+
+	private void writeCachedCompoundData() throws DatabaseException
+	{
+		DatabaseStatement insert = CompoundData.Writer.Inst.get().getBatchedStatement(databaseConnection);
+
+		// Import the markers if they don't exist yet
+		for (CompoundData entry : cache)
+		{
+			Long cached = compoundDatas.get(entry.getAccession().getId() + "-" + entry.getCompound().getId());
 			entry.setDataset(dataset);
 
-			CompoundData.Writer.Inst.get().write(databaseConnection, entry);
-			createdCompoundDataIds.add(entry.getId());
-		}
-	}
-
-	/**
-	 * Get the {@link Accession} object for this {@link CompoundData}
-	 *
-	 * @param entry The {@link CompoundData} containing the {@link Accession} object to import.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private Accession getAccession(Accession entry, boolean isRep) throws DatabaseException
-	{
-		if (StringUtils.isEmpty(entry.getGeneralIdentifier()))
-			throw new DatabaseException("ACCENUMB cannot be empty!");
-
-		Accession cached = accessionCache.get(entry.getGeneralIdentifier());
-
-		if (cached == null)
-		{
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM `germinatebase` WHERE `general_identifier` = ?");
-			int i = 1;
-			stmt.setString(i++, entry.getGeneralIdentifier());
-
-			DatabaseResult rs = stmt.query();
-
-			if (rs.next())
-			{
-				cached = Accession.ImportParser.Inst.get().parse(rs, null, true);
-			}
-			else if (isRep)
-			{
-				cached = entry;
-				Accession.Writer.Inst.get().write(databaseConnection, cached);
-				createdAccessionIds.add(cached.getId());
-			}
-			else
-			{
-				throw new DatabaseException("Accession not found: " + entry.getGeneralIdentifier() + " Please make sure it is imported before trying to import the data.");
-			}
+			// If there isn't a value for this combination
+			if (cached == null)
+				CompoundData.Writer.Inst.get().writeBatched(insert, entry);
 		}
 
-		accessionCache.put(entry.getGeneralIdentifier(), cached);
-		return cached;
-	}
-
-	/**
-	 * Get the {@link Phenotype} object for this {@link CompoundData}
-	 *
-	 * @param entry The {@link CompoundData} containing the {@link Compound} object to import.
-	 * @throws DatabaseException Thrown if the interaction with the database fails.
-	 */
-	private void getCompound(CompoundData entry) throws DatabaseException
-	{
-		String name = entry.getCompound().getName();
-
-		if (StringUtils.isEmpty(name))
-			return;
-
-		Compound cached = compoundCache.get(name);
-
-		if (cached == null)
-		{
-			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT `id` FROM `compounds` WHERE `name` = ?");
-			stmt.setString(1, name);
-
-			DatabaseResult rs = stmt.query();
-
-			if (rs.next())
-				cached = Compound.Parser.Inst.get().parse(rs, null, true);
-			else
-				throw new DatabaseException("Compound not found: " + name + " Please make sure to include all compounds in the compounds tab.");
-		}
-
-		entry.setCompound(cached);
-
-		compoundCache.put(name, cached);
+		List<Long> ids = insert.executeBatch();
+		createdCompoundDataIds.addAll(ids);
 	}
 }

@@ -160,6 +160,12 @@ public class AlertDialog
 			dialog.hide();
 	}
 
+	public AlertDialog addHideHandler(ModalHideHandler handler)
+	{
+		dialog.addHideHandler(handler);
+		return this;
+	}
+
 	/**
 	 * Set to true if you don't want the {@link AlertDialog} to automatically close after the user pressed one of the buttons
 	 *

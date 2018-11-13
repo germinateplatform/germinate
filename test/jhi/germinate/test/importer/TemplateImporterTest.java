@@ -20,7 +20,6 @@ package jhi.germinate.test.importer;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
-import java.util.*;
 
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.datastructure.*;
@@ -37,7 +36,7 @@ import jhi.germinate.util.importer.phenotype.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TemplateImporterTest extends DatabaseTest
 {
-	@Test
+	@RepeatedTest(2)
 	public void importMcpdData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-germplasm-mcpd.xlsx");
@@ -50,28 +49,28 @@ public class TemplateImporterTest extends DatabaseTest
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 2000L);
+		assert count.getServerResult() == 2000L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `locations`")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 10L);
+		assert count.getServerResult() == 10L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `synonyms`")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 8L);
+		assert count.getServerResult() == 8L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `attributedata`")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 32L);
+		assert count.getServerResult() == 32L;
 	}
 
-	@Test
+	@RepeatedTest(2)
 	public void importExcelGenotypicData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-allele-calls.xlsx");
@@ -86,24 +85,24 @@ public class TemplateImporterTest extends DatabaseTest
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 1000L);
+		assert count.getServerResult() == 1000L;
 
 		// Count the number of markers on the map
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM mapdefinitions")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 1000L);
+		assert count.getServerResult() == 1000L;
 
 		// Count the number of dataset members
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM datasetmembers")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 1500L);
+		assert count.getServerResult() == 1500L;
 	}
 
-	@Test
+	@RepeatedTest(2)
 	public void importTabDelimitedGenotypicData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-allele-calls-text.txt");
@@ -117,45 +116,45 @@ public class TemplateImporterTest extends DatabaseTest
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 1L);
+		assert count.getServerResult() == 1L;
 
 		// Check if there's a map with the correct name
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM maps WHERE name = 'Map name here'")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 1L);
+		assert count.getServerResult() == 1L;
 
 		// Check if there's a marker type with the correct name
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM markertypes WHERE description = 'SNP'")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 1L);
+		assert count.getServerResult() == 1L;
 
 		// Count the number of markers
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM markers")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 5000L);
+		assert count.getServerResult() == 5000L;
 
 		// Count the number of markers on the map
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM mapdefinitions")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 6000L);
+		assert count.getServerResult() == 6000L;
 
 		// Count the number of dataset members
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM datasetmembers")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 8500L);
+		assert count.getServerResult() == 8500L;
 	}
 
-	@Test
+	@RepeatedTest(2)
 	public void importTrialsData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-trials-data.xlsx");
@@ -169,31 +168,31 @@ public class TemplateImporterTest extends DatabaseTest
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 33513L);
+		assert count.getServerResult() == 33513L;
 
 		// Check the number of rows with recording dates
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `phenotypedata` WHERE NOT ISNULL(recording_date)")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 31951L);
+		assert count.getServerResult() == 31951L;
 
 		// Check if the dataset is there and also the location
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `datasets` LEFT JOIN `locations` ON `locations`.`id` = `datasets`.`location_id` WHERE name = 'Trials dataset' AND `locations`.`site_name` = 'Balruddery Farm' AND NOT ISNULL(JSON_SEARCH(dublin_core, 'one', 'CC-BY-SA'))")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 1L);
+		assert count.getServerResult() == 1L;
 
 		// Check the number of non-accessions
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `germinatebase` WHERE `entitytype_id` > 1")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 826L);
+		assert count.getServerResult() == 826L;
 	}
 
-	@Test
+	@RepeatedTest(2)
 	public void importCompoundData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-compound-data.xlsx");
@@ -207,10 +206,10 @@ public class TemplateImporterTest extends DatabaseTest
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 9998L);
+		assert count.getServerResult() == 10000L;
 	}
 
-	@Test
+	@RepeatedTest(2)
 	public void importPedigreeData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-pedigree-data.xlsx");
@@ -226,12 +225,12 @@ public class TemplateImporterTest extends DatabaseTest
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 9L);
+		assert count.getServerResult() == 9L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `pedigreedefinitions`")
 				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
-		assert Objects.equals(count.getServerResult(), 20L);
+		assert count.getServerResult() == 20L;
 	}
 }

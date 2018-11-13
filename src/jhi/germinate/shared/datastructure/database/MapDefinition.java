@@ -274,7 +274,7 @@ public class MapDefinition extends DatabaseObject
 	}
 
 	@GwtIncompatible
-	public static class Writer implements DatabaseObjectWriter<MapDefinition>
+	public static class Writer implements BatchedDatabaseObjectWriter<MapDefinition>
 	{
 		public static final class Inst
 		{
@@ -315,6 +315,13 @@ public class MapDefinition extends DatabaseObject
 				object.setId(ids.getServerResult().get(0));
 		}
 
+		@Override
+		public DatabaseStatement getBatchedStatement(Database database) throws DatabaseException
+		{
+			return database.prepareStatement("INSERT INTO `mapdefinitions` (" + MAPFEATURETYPE_ID + ", " + MARKER_ID + ", " + MAP_ID + ", " + DEFINITION_START + ", " + DEFINITION_END + ", " + CHROMOSOME + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		}
+
+		@Override
 		public void writeBatched(DatabaseStatement stmt, MapDefinition object) throws DatabaseException
 		{
 			int i = 1;
@@ -324,6 +331,16 @@ public class MapDefinition extends DatabaseObject
 			stmt.setDouble(i++, object.getDefinitionStart());
 			stmt.setDouble(i++, object.getDefinitionEnd());
 			stmt.setString(i++, object.getChromosome());
+
+			if (object.getCreatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getCreatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getUpdatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+
 			stmt.addBatch();
 		}
 	}

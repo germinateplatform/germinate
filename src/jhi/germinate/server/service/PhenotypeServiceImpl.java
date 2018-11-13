@@ -181,9 +181,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 				DatabaseResult rs;
 
 				while ((rs = streamer.next()) != null)
-				{
 					bw.println(rs.getDouble("phenotype_value"));
-				}
 
 				return new ServerResult<>(streamer.getDebugInfo(), file.getName());
 			}

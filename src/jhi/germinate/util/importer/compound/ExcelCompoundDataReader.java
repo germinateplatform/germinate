@@ -42,7 +42,7 @@ public class ExcelCompoundDataReader implements IStreamableReader<CompoundData>
 	private int rowCount   = 0;
 	private int colCount   = 0;
 	private int currentRow = 0;
-	private int currentCol = 2;
+	private int currentCol = 0;
 	private XSSFRow      rowData;
 	private XSSFRow      rowDates;
 	private XSSFRow      headerRow;

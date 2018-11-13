@@ -238,8 +238,40 @@ public class CompoundData extends DatabaseObject
 	}
 
 	@GwtIncompatible
-	public static class Writer implements DatabaseObjectWriter<CompoundData>
+	public static class Writer implements BatchedDatabaseObjectWriter<CompoundData>
 	{
+		@Override
+		public DatabaseStatement getBatchedStatement(Database database) throws DatabaseException
+		{
+			return database.prepareStatement("INSERT INTO `compounddata` (" + COMPOUND_ID + ", " + GERMINATEBASE_ID + ", " + DATASET_ID + ", " + COMPOUND_VALUE + ", " + RECORDING_DATE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)");
+		}
+
+		@Override
+		public void writeBatched(DatabaseStatement stmt, CompoundData object) throws DatabaseException
+		{
+			int i = 1;
+
+			stmt.setLong(i++, object.getCompound().getId());
+			stmt.setLong(i++, object.getAccession().getId());
+			stmt.setLong(i++, object.getDataset().getId());
+			stmt.setDouble(i++, object.getValue());
+
+			if (object.getRecordingDate() != null)
+				stmt.setTimestamp(i++, new Date(object.getRecordingDate()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+			if (object.getCreatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getCreatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getUpdatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+
+			stmt.addBatch();
+		}
+
 		@Override
 		public void write(Database database, CompoundData object) throws DatabaseException
 		{

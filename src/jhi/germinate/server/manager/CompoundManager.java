@@ -32,13 +32,15 @@ import jhi.germinate.shared.search.*;
  */
 public class CompoundManager extends AbstractManager<Compound>
 {
-	private static final String[] COLUMNS_SORTABLE      = {Compound.ID, Compound.NAME, Compound.DESCRIPTION, Compound.MOLECULAR_FORMULA, Compound.AVERAGE_MASS, Compound.MONOISOTOPIC_MASS, Compound.COMPOUND_CLASS, Compound.CREATED_ON, Compound.UPDATED_ON, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION, Compound.COUNT};
+	private static final String[] COLUMNS_SORTABLE = {Compound.ID, Compound.NAME, Compound.DESCRIPTION, Compound.MOLECULAR_FORMULA, Compound.AVERAGE_MASS, Compound.MONOISOTOPIC_MASS, Compound.COMPOUND_CLASS, Compound.CREATED_ON, Compound.UPDATED_ON, Unit.NAME, Unit.ABBREVIATION, Unit.DESCRIPTION, Compound.COUNT};
 
 	private static final String COMMON_TABLES = " `compounds` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` LEFT JOIN `compounddata` ON `compounddata`.`compound_id` = `compounds`.`id` ";
 
 	private static final String SELECT_ALL_FOR_FILTER = "SELECT `compounds`.*, `units`.*, COUNT(1) AS count FROM " + COMMON_TABLES + " {{FILTER}} GROUP BY `compounds`.`id` %s LIMIT ?, ?";
 
 	private static final String SELECT_ALL_FOR_DATASET = "SELECT `compounds`.*, `units`.*, COUNT(1) AS count FROM " + COMMON_TABLES + " WHERE `compounddata`.`dataset_id` IN (%s) GROUP BY `compounds`.`id`";
+
+	private static final String SELECT_HISTOGRAM_DATA = "SELECT compound_value FROM compounddata WHERE compound_id = ? AND dataset_id = ? ";
 
 	@Override
 	protected String getTable()
@@ -92,5 +94,22 @@ public class CompoundManager extends AbstractManager<Compound>
 				.setLongs(datasetIds)
 				.run()
 				.getObjects(Compound.Parser.Inst.get());
+	}
+
+	public static DefaultStreamer getStreamerForHistogramData(UserAuth userAuth, Long compoundId, Long datasetId) throws DatabaseException
+	{
+		ServerResult<Boolean> canAccess = DatasetManager.userHasAccessToDataset(userAuth, datasetId);
+
+		if (canAccess.getServerResult())
+		{
+			return new DefaultQuery(SELECT_HISTOGRAM_DATA, userAuth)
+					.setLong(compoundId)
+					.setLong(datasetId)
+					.getStreamer();
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

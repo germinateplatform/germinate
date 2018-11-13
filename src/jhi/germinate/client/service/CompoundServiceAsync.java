@@ -99,16 +99,6 @@ public interface CompoundServiceAsync
 	void getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> compoundIds, boolean includeId, AsyncCallback<ServerResult<String>> callback);
 
 	/**
-	 * Exports the {@link CompoundData} information for the given {@link Compound} id and {@link Dataset} id and returns the name of the result file.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param compoundId The {@link Compound} id
-	 * @param datasetId  The {@link Dataset} id
-	 * @param callback   The {@link AsyncCallback}
-	 */
-	void getBarChartData(RequestProperties properties, Long compoundId, Long datasetId, AsyncCallback<ServerResult<String>> callback);
-
-	/**
 	 * Exports all the data associated with {@link CompoundData} objects mathing the given {@link PartialSearchQuery}.
 	 *
 	 * @param properties The {@link RequestProperties}
@@ -116,4 +106,14 @@ public interface CompoundServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	void export(RequestProperties properties, PartialSearchQuery filter, AsyncCallback<ServerResult<String>> callback);
+
+	/**
+	 * Returns the histogram data for the given {@link Compound} id and {@link Dataset} id.
+	 *
+	 * @param properties  The {@link RequestProperties}
+	 * @param compoundId The {@link Compound} id
+	 * @param datasetId   The {@link Dataset} id
+	 * @param callback    The {@link AsyncCallback}
+	 */
+	void getHistogramData(RequestProperties properties, Long compoundId, Long datasetId, AsyncCallback<ServerResult<String>> callback);
 }

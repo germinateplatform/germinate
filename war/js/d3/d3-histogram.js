@@ -55,8 +55,6 @@ function histogram() {
             var min = Math.floor(d3.min(data));
             var max = Math.ceil(d3.max(data));
 
-            console.log(min, max);
-
             // Update the x-scale.
             xScale.domain([min, max])
                 .range([0, width]);
@@ -65,8 +63,6 @@ function histogram() {
                 data = d3.layout.histogram().bins(xScale.ticks())(data);
             else
                 data = d3.layout.histogram().bins(xScale.ticks(nrOfBars))(data);
-
-            console.log(data);
 
             // Update the y-scale.
             yScale.domain([0, d3.max(data, function(d) {
@@ -106,7 +102,9 @@ function histogram() {
                 .attr("x", 1)
                 .attr("width", function(d) {
                     // return xScale(d.x) - 1;
-                    return (xScale(d.dx) - xScale(0)) - 1;
+                    var result = Math.abs(xScale(data[0].dx) - xScale(0)) - 1;
+
+                    return result;
                 })
                 .attr("height", function(d) { return height - yScale(d.y); })
                 .style("fill", color);

@@ -813,7 +813,7 @@ public class Accession extends DatabaseObject
 	}
 
 	@GwtIncompatible
-	public static class Writer implements DatabaseObjectWriter<Accession>
+	public static class Writer implements BatchedDatabaseObjectWriter<Accession>
 	{
 		public static final class Inst
 		{
@@ -874,6 +874,58 @@ public class Accession extends DatabaseObject
 
 			if (ids != null && !CollectionUtils.isEmpty(ids.getServerResult()))
 				object.setId(ids.getServerResult().get(0));
+		}
+
+		@Override
+		public DatabaseStatement getBatchedStatement(Database database) throws DatabaseException
+		{
+			return database.prepareStatement("INSERT INTO `germinatebase` (" + GENERAL_IDENTIFIER + ", " + NUMBER + ", " + NAME + ", " + BANK_NUMBER + ", " + BREEDERS_CODE + ", " + BREEDERS_NAME + ", " + TAXONOMY_ID + ", " + INSTITUTION_ID + ", " + PLANT_PASSPORT + ", " + DONOR_CODE + ", " + DONOR_NAME + ", " + DONOR_NUMBER + ", " + ACQDATE + ", " + COLLNUMB + ", " + COLLDATE + ", " + COLLCODE + ", " + COLLNAME + ", " + COLLMISSID + ", " + OTHERNUMB + ", " + DUPLSITE + ", " + DUPLINSTNAME + ", " + MLSSTATUS + ", " + PUID + ", " + BIOLOGICALSTATUS_ID + ", " + COLLSRC_ID + ", " + LOCATION_ID + ", " + ENTITYTYPE_ID + ", " + ENTITYPARENT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		}
+
+		@Override
+		public void writeBatched(DatabaseStatement stmt, Accession object) throws DatabaseException
+		{
+			int i = 1;
+
+			stmt.setString(i++, object.getGeneralIdentifier());
+			stmt.setString(i++, object.getNumber());
+			stmt.setString(i++, object.getName());
+			stmt.setString(i++, object.getBankNumber());
+			stmt.setString(i++, object.getBreedersCode());
+			stmt.setString(i++, object.getBreedersName());
+			stmt.setLong(i++, object.getTaxonomy() != null ? object.getTaxonomy().getId() : null);
+			stmt.setLong(i++, object.getInstitution() != null ? object.getInstitution().getId() : null);
+			stmt.setString(i++, object.getPlantPassport());
+			stmt.setString(i++, object.getDonorCode());
+			stmt.setString(i++, object.getDonorName());
+			stmt.setString(i++, object.getDonorNumber());
+			stmt.setString(i++, object.getAcqDate());
+			stmt.setString(i++, object.getCollNumb());
+			stmt.setDate(i++, object.getCollDate() != null ? new Date(object.getCollDate()) : null);
+			stmt.setString(i++, object.getCollCode());
+			stmt.setString(i++, object.getCollName());
+			stmt.setString(i++, object.getCollMissId());
+			stmt.setString(i++, object.getOtherNumb());
+			stmt.setString(i++, object.getDuplSite());
+			stmt.setString(i++, object.getDuplInstName());
+			stmt.setLong(i++, object.getMlsStatus() != null ? object.getMlsStatus().getId() : null);
+			stmt.setString(i++, object.getPuid());
+			stmt.setLong(i++, object.getBiologicalStatus() != null ? object.getBiologicalStatus().getId() : null);
+			stmt.setLong(i++, object.getCollSrc() != null ? object.getCollSrc().getId() : null);
+			stmt.setLong(i++, object.getLocation() != null ? object.getLocation().getId() : null);
+			stmt.setLong(i++, object.getEntityType() != null ? object.getEntityType().getId() : null);
+			stmt.setLong(i++, object.getEntityParentId());
+
+			if (object.getCreatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getCreatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getUpdatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+
+			stmt.addBatch();
 		}
 	}
 }

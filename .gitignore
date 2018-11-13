@@ -48,3 +48,4 @@ build-dev.properties
 /war/favicon.ico
 
 FindMissingProperties.java
+HistogramBuilder.java

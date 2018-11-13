@@ -140,19 +140,6 @@ public interface CompoundService extends RemoteService
 	ServerResult<String> getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> compoundIds, boolean includeId) throws InvalidSessionException, DatabaseException;
 
 	/**
-	 * Exports the {@link CompoundData} information for the given {@link Compound} id and {@link Dataset} id and returns the name of the result file.
-	 *
-	 * @param properties The {@link RequestProperties}
-	 * @param compoundId The {@link Compound} id
-	 * @param datasetId  The {@link Dataset} id
-	 * @return The {@link CompoundData} information for the given {@link Compound} id and {@link Dataset} ids and returns the name of the result file.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
-	 * @throws IOException             Thrown if the file creation fails
-	 */
-	ServerResult<String> getBarChartData(RequestProperties properties, Long compoundId, Long datasetId) throws InvalidSessionException, DatabaseException, IOException;
-
-	/**
 	 * Exports all the data associated with {@link CompoundData} objects mathing the given {@link PartialSearchQuery}.
 	 *
 	 * @param properties The {@link RequestProperties}
@@ -166,4 +153,17 @@ public interface CompoundService extends RemoteService
 	 * @throws InvalidArgumentException    Thrown if one of the provided arguments for the filtering is invalid
 	 */
 	ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException;
+
+	/**
+	 * Returns the histogram data for the given {@link Compound} id and {@link Dataset} id.
+	 *
+	 * @param properties  The {@link RequestProperties}
+	 * @param compoundId The {@link Compound} id
+	 * @param datasetId   The {@link Dataset} id
+	 * @return The name of the generated file.
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 * @throws IOException             Thrown if an I/O operation fails
+	 */
+	ServerResult<String> getHistogramData(RequestProperties properties, Long compoundId, Long datasetId) throws InvalidSessionException, DatabaseException, IOException;
 }

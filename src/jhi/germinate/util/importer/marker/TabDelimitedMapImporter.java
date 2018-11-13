@@ -60,7 +60,7 @@ public class TabDelimitedMapImporter extends ExcelMapImporter
 
 		try
 		{
-			databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+			databaseConnection = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
 			createOrGetMap(map);
 		}
 		catch (DatabaseException e)

@@ -32,10 +32,12 @@ public final class DefaultStreamer implements AutoCloseable
 	private final Database       database;
 	private       DatabaseResult res;
 	private       DebugInfo      info;
+	private       boolean                 preventClose;
 
-	DefaultStreamer(Database database, DebugInfo info, DatabaseStatement stmt) throws DatabaseException
+	DefaultStreamer(Database database, boolean preventClose, DebugInfo info, DatabaseStatement stmt) throws DatabaseException
 	{
 		this.database = database;
+		this.preventClose = preventClose;
 		this.info = info;
 
 		/* Run the query */
@@ -61,7 +63,8 @@ public final class DefaultStreamer implements AutoCloseable
 			else
 			{
 				/* Else close the database connection */
-				database.close();
+				if (!preventClose)
+					database.close();
 			}
 		}
 

@@ -40,6 +40,7 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
@@ -161,50 +162,68 @@ public class TraitDetailsPage extends Composite
 			{
 				super.createColumns();
 
-				SafeHtmlCell clickCell = new SafeHtmlCell()
+				if (phenotype.isNumeric())
 				{
-					@Override
-					public Set<String> getConsumedEvents()
+					SafeHtmlCell clickCell = new SafeHtmlCell()
 					{
-						Set<String> events = new HashSet<>();
-						events.add(BrowserEvents.CLICK);
-						return events;
-					}
-				};
-
-				// Add the histogram column
-				addColumn(new Column<Dataset, SafeHtml>(clickCell)
-				{
-					@Override
-					public String getCellStyleNames(Cell.Context context, Dataset row)
-					{
-						return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
-					}
-
-					@Override
-					public SafeHtml getValue(Dataset row)
-					{
-						return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_CHART_BAR, Text.LANG.datasetHistogramTitle(), UriUtils.fromString(""), "");
-					}
-
-					@Override
-					public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
-					{
-						if (BrowserEvents.CLICK.equals(event.getType()))
+						@Override
+						public Set<String> getConsumedEvents()
 						{
-							event.preventDefault();
+							Set<String> events = new HashSet<>();
+							events.add(BrowserEvents.CLICK);
+							return events;
+						}
+					};
 
-							new AlertDialog(Text.LANG.datasetHistogramTitle(), new HistogramChart(phenotype.getId(), object.getId()))
-									.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
-									.setSize(ModalSize.LARGE)
-									.open();
-						}
-						else
+					// Add the histogram column
+					addColumn(new Column<Dataset, SafeHtml>(clickCell)
+					{
+						@Override
+						public String getCellStyleNames(Cell.Context context, Dataset row)
 						{
-							super.onBrowserEvent(context, elem, object, event);
+							return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
 						}
-					}
-				}, "", false);
+
+						@Override
+						public SafeHtml getValue(Dataset row)
+						{
+							return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_CHART_BAR, Text.LANG.datasetHistogramTitle(), UriUtils.fromString(""), "");
+						}
+
+						@Override
+						public void onBrowserEvent(Cell.Context context, Element elem, Dataset object, NativeEvent event)
+						{
+							if (BrowserEvents.CLICK.equals(event.getType()))
+							{
+								event.preventDefault();
+
+								String file = object.getExtra("CHART_FILE");
+								SimplePanel panel = new SimplePanel();
+								HistogramChart chart;
+								if (StringUtils.isEmpty(file))
+									chart = new HistogramChart(phenotype.getId(), object.getId(), ExperimentType.trials);
+								else
+									chart = new HistogramChart(file);
+
+								new AlertDialog(Text.LANG.datasetHistogramTitle(), panel)
+										.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
+										.setSize(ModalSize.LARGE)
+										.addShownHandler(modalShownEvent -> {
+											panel.add(chart);
+										})
+										.addHideHandler(modalHideEvent -> {
+											String path = chart.getFilePath();
+											object.setExtra("CHART_FILE", path);
+										})
+										.open();
+							}
+							else
+							{
+								super.onBrowserEvent(context, elem, object, event);
+							}
+						}
+					}, "", false);
+				}
 			}
 		});
 	}

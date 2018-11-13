@@ -33,14 +33,13 @@ import java.util.regex.*;
  */
 public class ScriptRunner
 {
-
 	/**
 	 * regex to detect delimiter.
 	 * ignores spaces, allows delimiter in comment, allows an equals-sign
 	 */
-	public static final  Pattern delimP            = Pattern.compile("^\\s*(--)?\\s*delimiter\\s*=?\\s*([^\\s]+)+\\s*.*$", Pattern.CASE_INSENSITIVE);
-	private static final String  DEFAULT_DELIMITER = ";";
-	private final Connection connection;
+	public static final  Pattern    delimP            = Pattern.compile("^\\s*(--)?\\s*delimiter\\s*=?\\s*([^\\s]+)+\\s*.*$", Pattern.CASE_INSENSITIVE);
+	private static final String     DEFAULT_DELIMITER = ";";
+	private final        Connection connection;
 
 	private final boolean stopOnError;
 	private final boolean autoCommit;

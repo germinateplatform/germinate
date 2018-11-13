@@ -19,6 +19,7 @@ package jhi.germinate.client.widget.d3js;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.page.*;
@@ -27,20 +28,45 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.database.*;
 
 /**
  * @author Sebastian Raubach
  */
 public class HistogramChart extends AbstractChart
 {
-	private Long phenotypeId;
-	private Long datasetId;
+	private Long           id;
+	private Long           datasetId;
+	private ExperimentType type;
 
-	public HistogramChart(Long phenotypeId, Long datasetId)
+	private AsyncCallback<ServerResult<String>> callback = new DefaultAsyncCallback<ServerResult<String>>()
+	{
+		@Override
+		public void onSuccessImpl(ServerResult<String> result)
+		{
+			filePath = new ServletConstants.Builder()
+					.setUrl(GWT.getModuleBaseURL())
+					.setPath(ServletConstants.SERVLET_FILES)
+					.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+					.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+					.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
+
+			onResize(true);
+		}
+	};
+
+	public HistogramChart(String filePath)
 	{
 		super();
-		this.phenotypeId = phenotypeId;
+		this.filePath = filePath;
+	}
+
+	public HistogramChart(Long id, Long datasetId, ExperimentType type)
+	{
+		super();
+		this.id = id;
 		this.datasetId = datasetId;
+		this.type = type;
 	}
 
 	@Override
@@ -48,26 +74,25 @@ public class HistogramChart extends AbstractChart
 	{
 		panel.add(chartPanel);
 
-		getData();
+		Scheduler.get().scheduleDeferred(() -> {
+			if(StringUtils.isEmpty(filePath))
+				getData();
+			else
+				onResize(true);
+		});
 	}
 
 	private void getData()
 	{
-		PhenotypeService.Inst.get().getHistogramData(Cookie.getRequestProperties(), phenotypeId, datasetId, new DefaultAsyncCallback<ServerResult<String>>()
+		switch (type)
 		{
-			@Override
-			public void onSuccessImpl(ServerResult<String> result)
-			{
-				filePath = new ServletConstants.Builder()
-						.setUrl(GWT.getModuleBaseURL())
-						.setPath(ServletConstants.SERVLET_FILES)
-						.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-						.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-						.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
-
-				onResize(true);
-			}
-		});
+			case trials:
+				PhenotypeService.Inst.get().getHistogramData(Cookie.getRequestProperties(), id, datasetId, callback);
+				break;
+			case compound:
+				CompoundService.Inst.get().getHistogramData(Cookie.getRequestProperties(), id, datasetId, callback);
+				break;
+		}
 	}
 
 	@Override
@@ -106,6 +131,8 @@ public class HistogramChart extends AbstractChart
 		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
 		var barStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.HistogramChartBundle::STYLE_BAR;
 
+		console.log(width);
+
 		$wnd.d3.tsv(filePath, function (data) {
 			$wnd.d3.select("#" + panelId)
 				.datum(data)
@@ -119,7 +146,7 @@ public class HistogramChart extends AbstractChart
 					.tooltip(function (d) {
 						return d.length + "";
 					})
-					.nrOfBars(10)
+					.nrOfBars(30)
 					.barStyle(barStyle)
 					.axisStyle(axisStyle)
 					.tooltipStyle(tooltipStyle)

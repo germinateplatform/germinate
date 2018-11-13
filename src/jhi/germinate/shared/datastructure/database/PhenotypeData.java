@@ -270,7 +270,7 @@ public class PhenotypeData extends DatabaseObject
 	}
 
 	@GwtIncompatible
-	public static class Writer implements DatabaseObjectWriter<PhenotypeData>
+	public static class Writer implements BatchedDatabaseObjectWriter<PhenotypeData>
 	{
 		public static final class Inst
 		{
@@ -283,6 +283,40 @@ public class PhenotypeData extends DatabaseObject
 			{
 				return Writer.Inst.InstanceHolder.INSTANCE;
 			}
+		}
+
+		@Override
+		public DatabaseStatement getBatchedStatement(Database database) throws DatabaseException
+		{
+			return database.prepareStatement("INSERT INTO `phenotypedata` (" + PHENOTYPE_ID + ", " + GERMINATEBASE_ID + ", " + DATASET_ID + ", " + TREATMENT_ID + ", " + LOCATION_ID + ", " + TRIALSERIES_ID + ", " + PHENOTYPE_VALUE + ", " + RECORDING_DATE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		}
+
+		@Override
+		public void writeBatched(DatabaseStatement stmt, PhenotypeData object) throws DatabaseException
+		{
+			int i = 1;
+			stmt.setLong(i++, object.getPhenotype().getId());
+			stmt.setLong(i++, object.getAccession().getId());
+			stmt.setLong(i++, object.getDataset().getId());
+			stmt.setLong(i++, object.getTreatment() == null ? null : object.getTreatment().getId());
+			stmt.setLong(i++, object.getLocation() == null ? null : object.getLocation().getId());
+			stmt.setLong(i++, object.getTrialseries() == null ? null : object.getTrialseries().getId());
+			stmt.setString(i++, object.getValue());
+
+			if (object.getRecordingDate() != null)
+				stmt.setTimestamp(i++, new Date(object.getRecordingDate()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+			if (object.getCreatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getCreatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+			if (object.getUpdatedOn() != null)
+				stmt.setTimestamp(i++, new Date(object.getUpdatedOn()));
+			else
+				stmt.setNull(i++, Types.TIMESTAMP);
+
+			stmt.addBatch();
 		}
 
 		@Override

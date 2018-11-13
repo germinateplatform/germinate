@@ -76,6 +76,11 @@ public abstract class AbstractChart extends GerminateComposite
 		this.message = message;
 	}
 
+	public String getFilePath()
+	{
+		return filePath;
+	}
+
 	/**
 	 * Child classes need to create their content here.
 	 *

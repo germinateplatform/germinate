@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.sql.*;
 import java.util.*;
 
@@ -47,8 +48,6 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	private static final long serialVersionUID = 1512922584501563921L;
 
 	private static final String QUERY_CHECK_NUMBER = "SELECT COUNT(1) as count FROM `compounddata` JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` JOIN `germinatebase` ON `germinatebase`.`id` = `compounddata`.`germinatebase_id` WHERE `compounddata`.`dataset_id` IN (%s) AND `compound_id` IN (%s)";
-
-	private static final String QUERY_COMPOUND_DATA = "SELECT `germinatebase`.`name` AS name, `compounddata`.`compound_value` AS value FROM `compounddata` INNER JOIN `compounds` ON `compounddata`.`compound_id` = `compounds`.`id` INNER JOIN `germinatebase` ON `compounddata`.`germinatebase_id` = `germinatebase`.`id` WHERE `compounds`.`id` = ? AND `compounddata`.`dataset_id` = ? ORDER BY `germinatebase`.`name`";
 
 	private static final String QUERY_COMPOUND_STATS = "SELECT `compounds`.`id`, `compounds`.`name`, `compounds`.`description`, 1 AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS min, MAX( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS max, AVG( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS avg, STD( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS std, `datasets`.`name` AS datasets_name, `datasets`.`description` AS datasets_description FROM `datasets` LEFT JOIN `compounddata` ON `datasets`.`id` = `compounddata`.`dataset_id` LEFT JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `experimenttypes`.`description` = 'compound' AND `datasets`.`id` IN (%s) GROUP BY `compounds`.`id`, `datasets`.`id`";
 
@@ -257,31 +256,6 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	}
 
 	@Override
-	public ServerResult<String> getBarChartData(RequestProperties properties, Long compoundId, Long datasetId) throws InvalidSessionException, DatabaseException, IOException
-	{
-		Session.checkSession(properties, this);
-		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-
-		DefaultStreamer streamer = new DefaultQuery(QUERY_COMPOUND_DATA, userAuth)
-				.setLong(compoundId)
-				.setLong(datasetId)
-				.getStreamer();
-
-		File result = createTemporaryFile("compounds-data", datasetId, FileType.txt.name());
-
-		try
-		{
-			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), null, streamer, result);
-		}
-		catch (java.io.IOException e)
-		{
-			throw new IOException(e);
-		}
-
-		return new ServerResult<>(streamer.getDebugInfo(), result.getName());
-	}
-
-	@Override
 	public ServerResult<String> export(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, jhi.germinate.shared.exception.IOException, InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException
 	{
 		Session.checkSession(properties, this);
@@ -301,5 +275,40 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 		}
 
 		return new ServerResult<>(streamer.getDebugInfo(), result.getName());
+	}
+
+	@Override
+	public ServerResult<String> getHistogramData(RequestProperties properties, Long compoundId, Long datasetId) throws InvalidSessionException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		File file = createTemporaryFile("compound-histogram", datasetId, FileType.txt.name());
+
+		try (DefaultStreamer streamer = CompoundManager.getStreamerForHistogramData(userAuth, compoundId, datasetId);
+			 PrintWriter bw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))))
+		{
+			if (streamer != null)
+			{
+				bw.println("value");
+
+				DatabaseResult rs;
+
+				while ((rs = streamer.next()) != null)
+				{
+					bw.println(rs.getDouble("compound_value"));
+				}
+
+				return new ServerResult<>(streamer.getDebugInfo(), file.getName());
+			}
+			else
+			{
+				return new ServerResult<>(null, null);
+			}
+		}
+		catch (java.io.IOException e)
+		{
+			throw new IOException(e.getLocalizedMessage());
+		}
 	}
 }

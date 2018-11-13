@@ -21,6 +21,7 @@ import com.google.gson.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.server.database.*;
 import jhi.germinate.shared.*;
@@ -451,13 +452,16 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		for (int i = 0; i < synonyms.length; i++)
 			synonyms[i] = synonyms[i].trim();
 
+		String joinedSynonyms = Arrays.stream(synonyms)
+				.map(s -> "\"" + s + "\"")
+				.collect(Collectors.joining(","));
+
 		Gson gson = new Gson();
 		String json = gson.toJson(synonyms);
 
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM synonyms WHERE foreign_id = ? AND synonymtype_id = " + SynonymType.germinatebase.getId() + " AND synonyms = ?");
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM synonyms WHERE foreign_id = ? AND synonymtype_id = " + SynonymType.germinatebase.getId() + " AND synonyms = JSON_ARRAY(" + joinedSynonyms + ")");
 		int i = 1;
 		stmt.setLong(i++, entry.getId());
-		stmt.setString(i++, json);
 
 		DatabaseResult rs = stmt.query();
 

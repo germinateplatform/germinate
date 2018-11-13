@@ -67,7 +67,7 @@ public class TabDelimitedMetadataImporter extends GenotypeMetadataImporter
 
 		try
 		{
-			databaseConnection = Database.connect(Database.DatabaseType.MYSQL, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+			databaseConnection = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
 			createOrGetExperiment();
 			createOrGetDataset();
 		}

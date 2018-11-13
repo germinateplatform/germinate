@@ -44,7 +44,7 @@ public class DatabaseTest
 	@BeforeAll
 	public void initDatabase() throws DatabaseException, IOException, SQLException
 	{
-		db = Database.connect(Database.DatabaseType.MYSQL, server, username, password);
+		db = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server, username, password);
 
 		// Drop old version of db (if exists)
 		new ValueQuery("DROP DATABASE IF EXISTS `" + database + "`")
@@ -57,7 +57,7 @@ public class DatabaseTest
 
 		// Change connection to the specific db
 		db.close();
-		db = Database.connect(Database.DatabaseType.MYSQL, server + "/" + database, username, password);
+		db = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + "/" + database, username, password);
 
 		// Import the db creation script
 		File databaseScript = new File("database/germinate_template.sql");
@@ -74,7 +74,7 @@ public class DatabaseTest
 	{
 		// Close current connection, then connect to parent
 		db.close();
-		db = Database.connect(Database.DatabaseType.MYSQL, server, username, password);
+		db = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server, username, password);
 
 		// Drop table
 		new ValueQuery("DROP DATABASE IF EXISTS `" + database + "`")

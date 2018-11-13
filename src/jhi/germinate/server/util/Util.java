@@ -191,43 +191,6 @@ public class Util
 		throw new InvalidColumnException(searchColumn + " is not a valid column.");
 	}
 
-	//	/**
-	//	 * Writes the given {@link GerminateTable} to the given {@link File}.
-	//	 *
-	//	 * @param os      The {@link OperatingSystem}
-	//	 * @param columns The columns to export (data will be exported in this get)
-	//	 * @param table   The {@link GerminateTable} to export
-	//	 * @param file    The {@link File} to create
-	//	 * @throws IOException Thrown if the file interaction fails
-	//	 */
-	//	public static void writeDefaultToFile(OperatingSystem os, String[] columns, DefaultQuery table, File file) throws IOException
-	//	{
-	//		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")))
-	//		{
-	//			if (ArrayUtils.isEmpty(columns))
-	//				columns = table.getColumnNames();
-	//
-	//			bw.write(Arrays.stream(columns)
-	//						   .collect(Collectors.joining("\t")));
-	//			bw.write(os.newLine);
-	//
-	//			for (GerminateRow row : table)
-	//			{
-	//				String value;
-	//				bw.write(row.get(columns[0]) == null ? "" : row.get(columns[0]));
-	//
-	//				for (int i = 1; i < columns.length; i++)
-	//				{
-	//					value = row.get(columns[i]) == null ? "" : row.get(columns[i]);
-	//					bw.write("\t" + value);
-	//				}
-	//
-	//				// bw.newLine();
-	//				bw.write(os.newLine);
-	//			}
-	//		}
-	//	}
-
 	/**
 	 * Writes the given {@link DefaultStreamer} to the given {@link File}
 	 *

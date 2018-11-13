@@ -151,7 +151,7 @@ public class DatabasePage extends JWizardPage
 	{
 		try
 		{
-			Database.connect(Database.DatabaseType.MYSQL, server.getText() + (StringUtils.isEmpty(port.getText()) ? "" : (":" + port.getText())) + "/" + database.getText(), username.getText(), new String(password.getPassword()));
+			Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server.getText() + (StringUtils.isEmpty(port.getText()) ? "" : (":" + port.getText())) + "/" + database.getText(), username.getText(), new String(password.getPassword()));
 			return true;
 		}
 		catch (Exception e)
