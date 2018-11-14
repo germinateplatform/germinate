@@ -107,8 +107,7 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 		init();
 		sqlDebug.add(stmt.getStringRepresentation());
 
-		return new ExecutedValueQuery(column, database, stmt.query(), sqlDebug)
-				.setCloseConnection(!preventClose);
+		return new ExecutedValueQuery(column, database, stmt.query(), sqlDebug);
 	}
 
 	/**

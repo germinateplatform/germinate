@@ -17,10 +17,7 @@
 
 package jhi.germinate.util.importer.attribute;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
-
-import java.io.*;
+import org.apache.poi.ss.usermodel.*;
 
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -32,20 +29,19 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelAttributeDataReader implements IStreamableReader<AttributeData>
+public class ExcelAttributeDataReader extends ExcelStreamableReader<AttributeData>
 {
-	private XSSFSheet dataSheet;
+	private Sheet dataSheet;
+	private Row   row;
+	private Row   headerRow;
 
 	private int rowCount   = 0;
 	private int colCount   = 0;
 	private int currentRow = 0;
 	private int currentCol = 0;
-	private XSSFRow      row;
-	private XSSFRow      headerRow;
-	private XSSFWorkbook wb;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		if (++currentCol == colCount)
 		{
@@ -57,17 +53,15 @@ public class ExcelAttributeDataReader implements IStreamableReader<AttributeData
 	}
 
 	@Override
-	public AttributeData next() throws IOException
+	public AttributeData next()
 	{
 		row = dataSheet.getRow(currentRow);
 		return parse();
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		dataSheet = wb.getSheet("ADDITIONAL_ATTRIBUTES");
 
 		rowCount = dataSheet.getPhysicalNumberOfRows();
@@ -78,26 +72,19 @@ public class ExcelAttributeDataReader implements IStreamableReader<AttributeData
 		currentRow++;
 	}
 
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
-	}
-
 	private AttributeData parse()
 	{
 		return new AttributeData()
-				.setForeign(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 0)))
+				.setForeign(new Accession().setGeneralIdentifier(utils.getCellValue(row, 0)))
 				.setAttribute(parseAttribute())
-				.setValue(IExcelReader.getCellValue(wb, row, currentCol));
+				.setValue(utils.getCellValue(row, currentCol));
 	}
 
 	private Attribute parseAttribute()
 	{
 		return new Attribute()
-				.setName(IExcelReader.getCellValue(wb, headerRow, currentCol))
-				.setDescription(IExcelReader.getCellValue(wb, headerRow, currentCol))
+				.setName(utils.getCellValue(headerRow, currentCol))
+				.setDescription(utils.getCellValue(headerRow, currentCol))
 				.setTargetTable(GerminateDatabaseTable.germinatebase.name())
 				.setDataType("char");
 	}

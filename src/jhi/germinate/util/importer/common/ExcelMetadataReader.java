@@ -19,10 +19,8 @@ package jhi.germinate.util.importer.common;
 
 import com.eclipsesource.json.*;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
 import jhi.germinate.shared.*;
@@ -34,17 +32,12 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelMetadataReader implements IBatchReader<Dataset>
+public class ExcelMetadataReader extends ExcelBatchReader<Dataset>
 {
-	protected XSSFSheet    dataSheet;
-	protected XSSFWorkbook wb;
+	protected Sheet dataSheet;
+	private   Sheet locationSheet;
 
 	private ExperimentType type;
-
-	public ExcelMetadataReader()
-	{
-
-	}
 
 	public ExcelMetadataReader(ExperimentType type)
 	{
@@ -63,14 +56,14 @@ public class ExcelMetadataReader implements IBatchReader<Dataset>
 	}
 
 	@Override
-	public List<Dataset> readAll() throws IOException
+	public List<Dataset> readAll()
 	{
 		List<Dataset> result = new ArrayList<>();
 
 		result.add(new Dataset()
-				.setName(IExcelReader.getCellValue(wb, dataSheet.getRow(2), 2))
-				.setDateStart(IDataReader.getDate(IExcelReader.getCellValue(wb, dataSheet.getRow(4), 2)))
-				.setContact(IExcelReader.getCellValue(wb, dataSheet.getRow(11), 2))
+				.setName(utils.getCellValue(dataSheet.getRow(2), 2))
+				.setDateStart(IDataReader.getDate(utils.getCellValue(dataSheet.getRow(4), 2)))
+				.setContact(utils.getCellValue(dataSheet.getRow(11), 2))
 				.setDublinCore(parseDublinCore())
 				.setLocation(parseLocation())
 				.setVersion("1")
@@ -87,40 +80,38 @@ public class ExcelMetadataReader implements IBatchReader<Dataset>
 	{
 		int i = 1;
 		return new JsonBuilder()
-				.add("title", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("description", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("rights", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("date", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("publisher", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("format", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("language", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("source", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("type", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
-				.add("subject", IExcelReader.getJson(wb, dataSheet.getRow(i++), 2))
+				.add("title", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("description", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("rights", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("date", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("publisher", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("format", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("language", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("source", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("type", utils.getJson(dataSheet.getRow(i++), 2))
+				.add("subject", utils.getJson(dataSheet.getRow(i++), 2))
 				.toString();
 	}
 
 	private Location parseLocation()
 	{
-		XSSFSheet locationSheet = wb.getSheet("LOCATION");
-
 		Location result = null;
 
 		if (locationSheet != null)
 		{
-			XSSFRow row = locationSheet.getRow(1);
+			Row row = locationSheet.getRow(1);
 
 			int i = 0;
 
 			result = new Location()
-					.setName(IExcelReader.getCellValue(wb, row, i++))
-					.setShortName(IExcelReader.getCellValue(wb, row, i++))
+					.setName(utils.getCellValue(row, i++))
+					.setShortName(utils.getCellValue(row, i++))
 					.setType(LocationType.datasets)
 					.setCountry(new Country()
-							.setCountryCode2(IExcelReader.getCellValue(wb, row, i++)))
-					.setElevation(IExcelReader.getCellValue(wb, row, i++))
-					.setLatitude(IExcelReader.getCellValue(wb, row, i++))
-					.setLongitude(IExcelReader.getCellValue(wb, row, i++));
+							.setCountryCode2(utils.getCellValue(row, i++)))
+					.setElevation(utils.getCellValue(row, i++))
+					.setLatitude(utils.getCellValue(row, i++))
+					.setLongitude(utils.getCellValue(row, i++));
 		}
 
 		return result;
@@ -128,26 +119,18 @@ public class ExcelMetadataReader implements IBatchReader<Dataset>
 
 	private Experiment parseExperiment()
 	{
-		return new Experiment().setName(IExcelReader.getCellValue(wb, dataSheet.getRow(1), 2))
-							   .setDescription(IExcelReader.getCellValue(wb, dataSheet.getRow(2), 2))
+		return new Experiment().setName(utils.getCellValue(dataSheet.getRow(1), 2))
+							   .setDescription(utils.getCellValue(dataSheet.getRow(2), 2))
 							   .setType(type)
 							   .setCreatedOn(new Date())
 							   .setUpdatedOn(new Date());
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		dataSheet = wb.getSheet("METADATA");
-	}
-
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
+		locationSheet = wb.getSheet("LOCATION");
 	}
 
 	private class JsonBuilder

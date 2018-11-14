@@ -17,10 +17,7 @@
 
 package jhi.germinate.util.importer.genotype;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
-
-import java.io.*;
+import org.apache.poi.ss.usermodel.*;
 
 import jhi.germinate.util.importer.reader.*;
 
@@ -30,45 +27,35 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
+public class ExcelGenotypeDataReader extends ExcelStreamableReader<String[]>
 {
-	private XSSFSheet dataSheet;
+	private Sheet dataSheet;
+	private Row   row;
 
 	private int rowCount   = 0;
 	private int colCount   = 0;
 	private int currentRow = 1;
-	private XSSFRow      row;
-	private XSSFWorkbook wb;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		return ++currentRow < rowCount;
 	}
 
 	@Override
-	public String[] next() throws IOException
+	public String[] next()
 	{
 		row = dataSheet.getRow(currentRow);
 		return parse();
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		dataSheet = wb.getSheet("DATA");
 
 		rowCount = dataSheet.getPhysicalNumberOfRows();
 		colCount = dataSheet.getRow(2).getPhysicalNumberOfCells();
-	}
-
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
 	}
 
 	private String[] parse()
@@ -76,7 +63,7 @@ public class ExcelGenotypeDataReader implements IStreamableReader<String[]>
 		String[] result = new String[colCount];
 
 		for (int i = 0; i < colCount; i++)
-			result[i] = IExcelReader.getCellValue(wb, row, i);
+			result[i] = utils.getCellValue(row, i);
 
 		return result;
 	}

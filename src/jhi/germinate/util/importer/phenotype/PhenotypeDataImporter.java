@@ -88,7 +88,6 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 		try
 		{
 			DatabaseObjectStreamer<Accession> accessionStreamer = new DatabaseObjectQuery<Accession>("SELECT * FROM `germinatebase`", null)
-					.setDatabase(databaseConnection)
 					.getStreamer(Accession.MinimalParser.Inst.get(), null, true);
 
 			Accession accession;
@@ -96,7 +95,6 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 				accessions.put(accession.getGeneralIdentifier(), accession);
 
 			DatabaseObjectStreamer<Treatment> treatmentStreamer = new DatabaseObjectQuery<Treatment>("SELECT * FROM `treatments`", null)
-					.setDatabase(databaseConnection)
 					.getStreamer(Treatment.Parser.Inst.get(), null, true);
 
 			Treatment treatment;
@@ -104,7 +102,6 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 				treatments.put(treatment.getName(), treatment.getId());
 
 			DatabaseObjectStreamer<Phenotype> phenotypeStreamer = new DatabaseObjectQuery<Phenotype>("SELECT * FROM `phenotypes`", null)
-					.setDatabase(databaseConnection)
 					.getStreamer(Phenotype.Parser.Inst.get(), null, true);
 
 			Phenotype phenotype;
@@ -112,7 +109,6 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 				phenotypes.put(phenotype.getName(), phenotype.getId());
 
 			DefaultStreamer phenotypeDataStreamer = new DefaultQuery("SELECT * FROM `phenotypedata` WHERE dataset_id = ?", null)
-					.setDatabase(databaseConnection)
 					.setLong(dataset.getId())
 					.getStreamer();
 

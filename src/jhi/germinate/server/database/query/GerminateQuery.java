@@ -47,7 +47,6 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	protected int               i            = 1;
 	protected Database          database     = null;
 	protected UserAuth          userAuth;
-	protected boolean           preventClose = false;
 
 	GerminateQuery(Database database, String query)
 	{
@@ -80,7 +79,7 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 
 				case DATA:
 				default:
-					database = Database.connect(DatabaseType.MYSQL);
+					database = Database.connect();
 					break;
 			}
 
@@ -98,12 +97,6 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	public T setQueryType(QueryType queryType)
 	{
 		this.queryType = queryType;
-		return (T) this;
-	}
-
-	public T setPreventClose(boolean preventClose)
-	{
-		this.preventClose = preventClose;
 		return (T) this;
 	}
 
@@ -330,13 +323,6 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	public T printTo(Logger logger)
 	{
 		logger.log(Level.INFO, getStringRepresentation());
-		return (T) this;
-	}
-
-	public T setDatabase(Database database)
-	{
-		this.database = database;
-		this.preventClose = true;
 		return (T) this;
 	}
 

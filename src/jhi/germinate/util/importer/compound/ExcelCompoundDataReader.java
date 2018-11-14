@@ -17,10 +17,8 @@
 
 package jhi.germinate.util.importer.compound;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.database.*;
@@ -32,24 +30,21 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelCompoundDataReader implements IStreamableReader<CompoundData>
+public class ExcelCompoundDataReader extends ExcelStreamableReader<CompoundData>
 {
-	private static final int COLUMN_DATA_START = 0;
-
-	private XSSFSheet dataSheetData;
-	private XSSFSheet dataSheetDates;
+	private Sheet dataSheetData;
+	private Sheet dataSheetDates;
+	private Row   rowData;
+	private Row   rowDates;
+	private Row   headerRow;
 
 	private int rowCount   = 0;
 	private int colCount   = 0;
 	private int currentRow = 0;
 	private int currentCol = 0;
-	private XSSFRow      rowData;
-	private XSSFRow      rowDates;
-	private XSSFRow      headerRow;
-	private XSSFWorkbook wb;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		if (++currentCol == colCount)
 		{
@@ -61,7 +56,7 @@ public class ExcelCompoundDataReader implements IStreamableReader<CompoundData>
 	}
 
 	@Override
-	public CompoundData next() throws IOException
+	public CompoundData next()
 	{
 		rowData = dataSheetData.getRow(currentRow);
 		rowDates = dataSheetDates.getRow(currentRow);
@@ -70,10 +65,8 @@ public class ExcelCompoundDataReader implements IStreamableReader<CompoundData>
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		// We need information from both data sheets
 		dataSheetData = wb.getSheet("DATA");
 		dataSheetDates = wb.getSheet("RECORDING_DATES");
@@ -86,20 +79,13 @@ public class ExcelCompoundDataReader implements IStreamableReader<CompoundData>
 		currentRow++;
 	}
 
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
-	}
-
 	private CompoundData parse()
 	{
 		return new CompoundData()
 				.setAccession(getAccession())
-				.setCompound(new Compound().setName(IExcelReader.getCellValue(wb, headerRow, currentCol)))
-				.setValue(IExcelReader.getCellValueAsDouble(wb, rowData, currentCol))
-				.setRecordingDate(IDataReader.getDate(IExcelReader.getCellValue(wb, rowDates, currentCol)))
+				.setCompound(new Compound().setName(utils.getCellValue(headerRow, currentCol)))
+				.setValue(utils.getCellValueAsDouble(rowData, currentCol))
+				.setRecordingDate(IDataReader.getDate(utils.getCellValue(rowDates, currentCol)))
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
 	}
@@ -107,6 +93,6 @@ public class ExcelCompoundDataReader implements IStreamableReader<CompoundData>
 	private Accession getAccession()
 	{
 		return new Accession()
-				.setGeneralIdentifier(IExcelReader.getCellValue(wb, rowData, 0));
+				.setGeneralIdentifier(utils.getCellValue(rowData, 0));
 	}
 }

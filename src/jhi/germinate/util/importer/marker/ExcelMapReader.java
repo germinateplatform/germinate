@@ -17,10 +17,8 @@
 
 package jhi.germinate.util.importer.marker;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.database.Map;
@@ -31,37 +29,26 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelMapReader implements IBatchReader<Map>
+public class ExcelMapReader extends ExcelBatchReader<Map>
 {
-	private XSSFSheet dataSheet;
-
-	private XSSFWorkbook wb;
+	private Sheet dataSheet;
 
 	@Override
-	public List<Map> readAll() throws IOException
+	public List<Map> readAll()
 	{
 		List<Map> result = new ArrayList<>();
 
 		result.add(new Map()
 				.setVisibility(true)
-				.setName(IExcelReader.getCellValue(wb, dataSheet.getRow(12), 2))
-				.setDescription(IExcelReader.getCellValue(wb, dataSheet.getRow(12), 2)));
+				.setName(utils.getCellValue(dataSheet.getRow(12), 2))
+				.setDescription(utils.getCellValue(dataSheet.getRow(12), 2)));
 
 		return result;
 	}
 
 	@Override
-	public void init(File file) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(file);
-
 		dataSheet = wb.getSheet("METADATA");
-	}
-
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
 	}
 }

@@ -32,11 +32,11 @@ import jhi.germinate.shared.*;
  */
 public interface IDataReader extends AutoCloseable
 {
-	public static final SimpleDateFormat SDF_FULL_DASH  = new SimpleDateFormat("yyyy-MM-dd");
-	public static final SimpleDateFormat SDF_FULL       = new SimpleDateFormat("yyyyMMdd");
-	public static final SimpleDateFormat SDF_YEAR_MONTH = new SimpleDateFormat("yyyyMM");
-	public static final SimpleDateFormat SDF_YEAR_DAY   = new SimpleDateFormat("yyyydd");
-	public static final SimpleDateFormat SDF_YEAR       = new SimpleDateFormat("yyyy");
+	SimpleDateFormat SDF_FULL_DASH  = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat SDF_FULL       = new SimpleDateFormat("yyyyMMdd");
+	SimpleDateFormat SDF_YEAR_MONTH = new SimpleDateFormat("yyyyMM");
+	SimpleDateFormat SDF_YEAR_DAY   = new SimpleDateFormat("yyyydd");
+	SimpleDateFormat SDF_YEAR       = new SimpleDateFormat("yyyy");
 
 	/**
 	 * Passes the {@link File} to the {@link IDataReader} for initial preparations.

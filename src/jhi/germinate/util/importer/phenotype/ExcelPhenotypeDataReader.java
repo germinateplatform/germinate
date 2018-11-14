@@ -17,10 +17,8 @@
 
 package jhi.germinate.util.importer.phenotype;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
 import jhi.germinate.shared.*;
@@ -33,28 +31,27 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData>
+public class ExcelPhenotypeDataReader extends ExcelStreamableReader<PhenotypeData>
 {
-	public static final  String EXTRA_REP         = "EXTRA_REP";
-	public static final  String EXTRA_TREATMENT   = "EXTRA_TREATMENT";
+	public static final String EXTRA_REP       = "EXTRA_REP";
+	public static final String EXTRA_TREATMENT = "EXTRA_TREATMENT";
 
-	private XSSFSheet dataSheetData;
-	private XSSFSheet dataSheetDates;
+	private Sheet dataSheetData;
+	private Sheet dataSheetDates;
+	private Row   rowData;
+	private Row   rowDates;
+	private Row   headerRow;
 
 	private int rowCount   = 0;
 	private int colCount   = 0;
 	private int currentRow = 0;
 	private int currentCol = 2;
-	private XSSFRow      rowData;
-	private XSSFRow      rowDates;
-	private XSSFRow      headerRow;
-	private XSSFWorkbook wb;
 
 	private String treatment;
 	private String rep;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		if (++currentCol == colCount)
 		{
@@ -66,25 +63,23 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 	}
 
 	@Override
-	public PhenotypeData next() throws IOException
+	public PhenotypeData next()
 	{
 		rowData = dataSheetData.getRow(currentRow);
 		rowDates = dataSheetDates.getRow(currentRow);
 
 		if (currentCol == 3)
 		{
-			rep = IExcelReader.getCellValue(wb, rowData, 1);
-			treatment = IExcelReader.getCellValue(wb, rowData, 2);
+			rep = utils.getCellValue(rowData, 1);
+			treatment = utils.getCellValue(rowData, 2);
 		}
 
 		return parse();
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		// We need information from both data sheets
 		dataSheetData = wb.getSheet("DATA");
 		dataSheetDates = wb.getSheet("RECORDING_DATES");
@@ -97,20 +92,13 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 		currentRow++;
 	}
 
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
-	}
-
 	private PhenotypeData parse()
 	{
 		return new PhenotypeData()
 				.setAccession(getAccession())
-				.setPhenotype(new Phenotype().setName(IExcelReader.getCellValue(wb, headerRow, currentCol)))
-				.setValue(IExcelReader.getCellValue(wb, rowData, currentCol))
-				.setRecordingDate(IDataReader.getDate(IExcelReader.getCellValue(wb, rowDates, currentCol)))
+				.setPhenotype(new Phenotype().setName(utils.getCellValue(headerRow, currentCol)))
+				.setValue(utils.getCellValue(rowData, currentCol))
+				.setRecordingDate(IDataReader.getDate(utils.getCellValue(rowDates, currentCol)))
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
 	}
@@ -118,7 +106,7 @@ public class ExcelPhenotypeDataReader implements IStreamableReader<PhenotypeData
 	private Accession getAccession()
 	{
 		Accession accession = new Accession()
-				.setGeneralIdentifier(IExcelReader.getCellValue(wb, rowData, 0));
+				.setGeneralIdentifier(utils.getCellValue(rowData, 0));
 
 		if (!StringUtils.isEmpty(rep))
 			accession.setExtra(EXTRA_REP, rep);

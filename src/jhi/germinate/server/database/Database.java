@@ -21,6 +21,7 @@ import java.sql.*;
 
 import jhi.germinate.server.util.*;
 import jhi.germinate.server.watcher.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
@@ -32,7 +33,13 @@ import jhi.germinate.shared.exception.*;
  */
 public final class Database
 {
-	private Connection connection;
+	private static DatabaseType type = DatabaseType.MYSQL;
+	private static String       server;
+	private static String       database;
+	private static String       port;
+	private static String       username;
+	private static String       password;
+	private        Connection   connection;
 
 	/* Initialize the stored procedures and views */
 	public static void initialize()
@@ -40,6 +47,10 @@ public final class Database
 		new DatabaseUpdater().initialize();
 		new StoredProcedureInitializer().initialize();
 		new ViewInitializer().initialize();
+	}
+
+	private Database()
+	{
 	}
 
 	public Connection getConnection()
@@ -118,10 +129,6 @@ public final class Database
 		}
 
 		return database;
-	}
-
-	private Database()
-	{
 	}
 
 	/**
@@ -209,7 +216,7 @@ public final class Database
 	 */
 	public static Database connectAndCheckSession(RequestProperties requestProperties, BaseRemoteServiceServlet servlet) throws InvalidSessionException, DatabaseException
 	{
-		return connectAndCheckSession(DatabaseType.MYSQL, requestProperties, servlet);
+		return connectAndCheckSession(type, requestProperties, servlet);
 	}
 
 	/**
@@ -248,7 +255,7 @@ public final class Database
 	 */
 	public static Database connect() throws DatabaseException
 	{
-		return connect(DatabaseType.MYSQL);
+		return connect(type);
 	}
 
 	/**
@@ -263,9 +270,46 @@ public final class Database
 		switch (type)
 		{
 			case MYSQL:
-				return connect(type, PropertyWatcher.getServerString(type), PropertyWatcher.get(ServerProperty.DATABASE_USERNAME), PropertyWatcher.get(ServerProperty.DATABASE_PASSWORD));
+			case MYSQL_DATA_IMPORT:
+				return connect(type, getServerString(type), username, password);
 			default:
 				throw new InvalidDatabaseTypeException();
+		}
+	}
+
+	public static void setDefaults(DatabaseType type, String server, String database, String port, String username, String password)
+	{
+		Database.type = type;
+		Database.server = server;
+		Database.database = database;
+		Database.port = port;
+		Database.username = username;
+		Database.password = password;
+	}
+
+	/**
+	 * Returns a String of the form &lt;SERVER&gt;:&lt;PORT&gt;/&lt;DATABASE&gt;
+	 *
+	 * @param type The {@link DatabaseType} of the server
+	 * @return A String of the form &lt;SERVER&gt;:&lt;PORT&gt;/&lt;DATABASE&gt;
+	 * @throws InvalidDatabaseTypeException Thrown if the requested {@link DatabaseType} is invalid
+	 */
+	public static String getServerString(DatabaseType type) throws InvalidDatabaseTypeException
+	{
+		switch (type)
+		{
+			case MYSQL:
+			case MYSQL_DATA_IMPORT:
+				if (!StringUtils.isEmpty(port))
+				{
+					return server + ":" + port + "/" + database;
+				}
+				else
+				{
+					return server + "/" + database;
+				}
+			default:
+				throw new InvalidDatabaseTypeException("Invalid database type: " + type);
 		}
 	}
 }

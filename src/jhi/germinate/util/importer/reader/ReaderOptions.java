@@ -108,7 +108,7 @@ public class ReaderOptions extends Options
 		}
 	}
 
-	public static File getInput(CommandLine line)
+	public File getInput(CommandLine line)
 	{
 		File input = null;
 
@@ -118,27 +118,27 @@ public class ReaderOptions extends Options
 		return input;
 	}
 
-	public static String getServer(CommandLine line)
+	public String getServer(CommandLine line)
 	{
 		return line.getOptionValue(SERVER);
 	}
 
-	public static String getDatabase(CommandLine line)
+	public String getDatabase(CommandLine line)
 	{
 		return line.getOptionValue(DATABASE);
 	}
 
-	public static String getUsername(CommandLine line)
+	public String getUsername(CommandLine line)
 	{
 		return line.getOptionValue(USERNAME);
 	}
 
-	public static String getPassword(CommandLine line)
+	public String getPassword(CommandLine line)
 	{
 		return line.getOptionValue(PASSWORD);
 	}
 
-	public static String getPort(CommandLine line)
+	public String getPort(CommandLine line)
 	{
 		return line.getOptionValue(PORT);
 	}

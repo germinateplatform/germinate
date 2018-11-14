@@ -550,7 +550,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 
 	public static boolean addTracking(UserAuth userAuth, Long dataset, UnapprovedUser user) throws DatabaseException
 	{
-		Database database = Database.connect(Database.DatabaseType.MYSQL);
+		Database database = Database.connect();
 
 		DatasetAccessLog log = new DatasetAccessLog()
 				.setDataset(new Dataset(dataset))

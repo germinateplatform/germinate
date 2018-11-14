@@ -54,7 +54,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 	public DatabaseObjectStreamer<T> getStreamer(DatabaseObjectParser<T> parser, UserAuth user, boolean foreignKeysFromResult) throws DatabaseException
 	{
 		init();
-		return new DatabaseObjectStreamer<>(database, sqlDebug, stmt, parser, user, preventClose, foreignKeysFromResult);
+		return new DatabaseObjectStreamer<>(database, sqlDebug, stmt, parser, user, foreignKeysFromResult);
 	}
 
 	public DatabaseObjectQuery<T> setFetchesCount(Integer previousCount) throws DatabaseException
@@ -77,7 +77,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 		private final Database          database;
 		private final DatabaseStatement stmt;
 		private final DatabaseResult    rs;
-		private Integer previousCount = null;
+		private       Integer           previousCount = null;
 
 		public ExecutedDatabaseObjectQuery(Database database, DatabaseStatement stmt, Integer previousCount) throws DatabaseException
 		{
@@ -99,14 +99,12 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 			if (rs.next())
 			{
 				T obj = parser.parse(rs, userAuth, foreignsFromResultSet);
-				if(!preventClose)
-					database.close();
+				database.close();
 				return new ServerResult<>(sqlDebug, obj);
 			}
 			else
 			{
-				if(!preventClose)
-					database.close();
+				database.close();
 				return new ServerResult<>(sqlDebug, null);
 			}
 		}
@@ -142,8 +140,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 
 			parser.clearCache();
 
-			if(!preventClose)
-				database.close();
+			database.close();
 			return new ServerResult<>(sqlDebug, result);
 		}
 
@@ -170,8 +167,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 
 			Integer count = previousCount == null ? stmt.getCount() : previousCount;
 
-			if(!preventClose)
-				database.close();
+			database.close();
 			return new PaginatedServerResult<>(sqlDebug, result, count);
 		}
 
@@ -184,8 +180,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 		{
 			if (rs == null)
 			{
-				if(!preventClose)
-					database.close();
+				database.close();
 				throw new DatabaseException("You need to run the query before requesting result values!");
 			}
 		}

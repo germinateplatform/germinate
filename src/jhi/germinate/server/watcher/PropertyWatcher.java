@@ -26,7 +26,7 @@ import java.util.*;
 
 import javax.servlet.http.*;
 
-import jhi.germinate.server.database.Database.*;
+import jhi.germinate.server.database.*;
 import jhi.germinate.server.service.*;
 import jhi.germinate.server.util.*;
 import jhi.germinate.shared.*;
@@ -116,6 +116,9 @@ public class PropertyWatcher
 
 		BaseException.printExceptions = getBoolean(ServerProperty.GERMINATE_SERVER_LOGGING_ENABLED);
 		BaseException.isDebugging = getBoolean(ServerProperty.GERMINATE_DEBUG);
+
+		// Set the defaults
+		Database.setDefaults(Database.DatabaseType.MYSQL, get(ServerProperty.DATABASE_SERVER), get(ServerProperty.DATABASE_NAME), get(ServerProperty.DATABASE_PORT), get(ServerProperty.DATABASE_USERNAME), get(ServerProperty.DATABASE_PASSWORD));
 	}
 
 	public static void stopFileWatcher()
@@ -517,31 +520,6 @@ public class PropertyWatcher
 		}
 
 		return result;
-	}
-
-	/**
-	 * Returns a String of the form &lt;SERVER&gt;:&lt;PORT&gt;/&lt;DATABASE&gt;
-	 *
-	 * @param type The {@link DatabaseType} of the server
-	 * @return A String of the form &lt;SERVER&gt;:&lt;PORT&gt;/&lt;DATABASE&gt;
-	 * @throws InvalidDatabaseTypeException Thrown if the requested {@link DatabaseType} is invalid
-	 */
-	public static String getServerString(DatabaseType type) throws InvalidDatabaseTypeException
-	{
-		switch (type)
-		{
-			case MYSQL:
-				if (!StringUtils.isEmpty(get(ServerProperty.DATABASE_PORT)))
-				{
-					return get(ServerProperty.DATABASE_SERVER) + ":" + get(ServerProperty.DATABASE_PORT) + "/" + get(ServerProperty.DATABASE_NAME);
-				}
-				else
-				{
-					return get(ServerProperty.DATABASE_SERVER) + "/" + get(ServerProperty.DATABASE_NAME);
-				}
-			default:
-				throw new InvalidDatabaseTypeException("Invalid database type: " + type);
-		}
 	}
 
 	/**

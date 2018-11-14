@@ -94,7 +94,6 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 		try
 		{
 			DatabaseObjectStreamer<Accession> accessionStreamer = new DatabaseObjectQuery<Accession>("SELECT * FROM `germinatebase`", null)
-					.setDatabase(databaseConnection)
 					.getStreamer(Accession.MinimalParser.Inst.get(), null, true);
 
 			Accession accession;
@@ -102,7 +101,6 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 				accessions.put(accession.getGeneralIdentifier(), accession);
 
 			DatabaseObjectStreamer<Compound> compoundStreamer = new DatabaseObjectQuery<Compound>("SELECT * FROM `compounds`", null)
-					.setDatabase(databaseConnection)
 					.getStreamer(Compound.Parser.Inst.get(), null, true);
 
 			Compound compound;
@@ -110,7 +108,6 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 				compounds.put(compound.getName(), compound.getId());
 
 			DefaultStreamer compoundDataStreamer = new DefaultQuery("SELECT * FROM `compounddata` WHERE dataset_id = ?", null)
-					.setDatabase(databaseConnection)
 					.setLong(dataset.getId())
 					.getStreamer();
 

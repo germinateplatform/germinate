@@ -35,53 +35,46 @@ import jhi.germinate.util.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DatabaseTest
 {
-	protected Database db;
-	protected String   server   = "localhost";
-	protected String   database = "germinate_template_test";
-	protected String   username = "root";
-	protected String   password = "";
+	protected String server   = "localhost";
+	protected String database = "germinate_template_test";
+	protected String username = "root";
+	protected String password = "";
 
 	@BeforeAll
 	public void initDatabase() throws DatabaseException, IOException, SQLException
 	{
-		db = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server, username, password);
+		Database.setDefaults(Database.DatabaseType.MYSQL_DATA_IMPORT, server, "", "", username, password);
 
 		// Drop old version of db (if exists)
 		new ValueQuery("DROP DATABASE IF EXISTS `" + database + "`")
-				.setDatabase(db)
 				.execute(false);
 		// Create the db
 		new ValueQuery("CREATE DATABASE `" + database + "`")
-				.setDatabase(db)
 				.execute(false);
 
 		// Change connection to the specific db
-		db.close();
-		db = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + "/" + database, username, password);
+		Database.setDefaults(Database.DatabaseType.MYSQL_DATA_IMPORT, server, database, "", username, password);
 
 		// Import the db creation script
 		File databaseScript = new File("database/germinate_template.sql");
 		assert databaseScript.exists();
 
-		ScriptRunner runner = new ScriptRunner(db.getConnection(), false, true);
+		Database database = Database.connect();
+		ScriptRunner runner = new ScriptRunner(database.getConnection(), false, true);
 		runner.setLogWriter(new PrintWriter(System.out));
 		runner.setErrorLogWriter(new PrintWriter(System.err));
 		runner.runScript(new BufferedReader(new InputStreamReader(new FileInputStream(databaseScript), StandardCharsets.UTF_8)));
+		database.close();
 	}
 
 	@AfterAll
 	public void closeDatabase() throws DatabaseException
 	{
-		// Close current connection, then connect to parent
-		db.close();
-		db = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server, username, password);
+		// Connect to parent
+		Database.setDefaults(Database.DatabaseType.MYSQL_DATA_IMPORT, server, "", "", username, password);
 
 		// Drop table
 		new ValueQuery("DROP DATABASE IF EXISTS `" + database + "`")
-				.setDatabase(db)
 				.execute(false);
-
-		// Disconnect
-		db.close();
 	}
 }

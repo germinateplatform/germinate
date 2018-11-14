@@ -48,7 +48,7 @@ public class DefaultQuery extends GerminateQuery<DefaultQuery>
 	public DefaultStreamer getStreamer() throws DatabaseException
 	{
 		init();
-		return new DefaultStreamer(database, preventClose, sqlDebug, stmt);
+		return new DefaultStreamer(database, sqlDebug, stmt);
 	}
 
 	public DatabaseResult getResult() throws DatabaseException

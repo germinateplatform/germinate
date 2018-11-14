@@ -140,7 +140,6 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 		{
 			// Get all the accessions in one go
 			DatabaseObjectStreamer<Accession> streamer = new DatabaseObjectQuery<Accession>("SELECT * FROM `germinatebase`", null)
-					.setDatabase(databaseConnection)
 					.getStreamer(Accession.MinimalParser.Inst.get(), null, true);
 
 			// Add them to the cache for faster lookup
@@ -150,7 +149,6 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 
 			// Then get all the dataset members (accessions) for this dataset
 			cachedDatasetMembers = new ValueQuery("SELECT `germinatebase`.`id` FROM `datasetmembers` LEFT JOIN `germinatebase` ON (`datasetmembers`.`datasetmembertype_id` = 2 AND `germinatebase`.`id` = `datasetmembers`.`foreign_id`) WHERE `dataset_id` = ?")
-					.setDatabase(databaseConnection)
 					.setLong(dataset.getId())
 					.run("id")
 					.getLongs()

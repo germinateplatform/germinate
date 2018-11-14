@@ -17,10 +17,8 @@
 
 package jhi.germinate.util.importer.common;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.database.*;
@@ -29,14 +27,12 @@ import jhi.germinate.util.importer.reader.*;
 /**
  * @author Sebastian Raubach
  */
-public class ExcelCollaboratorReader implements IBatchReader<Collaborator>
+public class ExcelCollaboratorReader extends ExcelBatchReader<Collaborator>
 {
-	private XSSFSheet dataSheet;
-
-	private XSSFWorkbook wb;
+	private Sheet    dataSheet;
 
 	@Override
-	public List<Collaborator> readAll() throws IOException
+	public List<Collaborator> readAll()
 	{
 		List<Collaborator> result = new ArrayList<>();
 
@@ -49,33 +45,24 @@ public class ExcelCollaboratorReader implements IBatchReader<Collaborator>
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		dataSheet = wb.getSheet("COLLABORATORS");
 	}
 
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
-	}
-
-	private Collaborator parse(XSSFRow row)
+	private Collaborator parse(Row row)
 	{
 		int i = 0;
 		return new Collaborator()
-				.setLastName(IExcelReader.getCellValue(wb, row, i++))
-				.setFirstName(IExcelReader.getCellValue(wb, row, i++))
-				.setEmail(IExcelReader.getCellValue(wb, row, i++))
-				.setPhone(IExcelReader.getCellValue(wb, row, i++))
+				.setLastName(utils.getCellValue(row, i++))
+				.setFirstName(utils.getCellValue(row, i++))
+				.setEmail(utils.getCellValue(row, i++))
+				.setPhone(utils.getCellValue(row, i++))
 				.setInstitution(new Institution()
-						.setName(IExcelReader.getCellValue(wb, row, i++))
-						.setAddress(IExcelReader.getCellValue(wb, row, i++))
+						.setName(utils.getCellValue(row, i++))
+						.setAddress(utils.getCellValue(row, i++))
 						.setCountry(new Country()
-								.setCountryCode2(IExcelReader.getCellValue(wb, row, i++)))
+								.setCountryCode2(utils.getCellValue(row, i++)))
 						.setCreatedOn(new Date())
 						.setUpdatedOn(new Date()))
 				.setCreatedOn(new Date())

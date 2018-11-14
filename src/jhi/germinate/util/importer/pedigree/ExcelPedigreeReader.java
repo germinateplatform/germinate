@@ -17,10 +17,8 @@
 
 package jhi.germinate.util.importer.pedigree;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.database.*;
@@ -31,43 +29,33 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelPedigreeReader implements IStreamableReader<List<Pedigree>>
+public class ExcelPedigreeReader extends ExcelStreamableReader<List<Pedigree>>
 {
-	private XSSFSheet dataSheet;
+	private Sheet dataSheet;
+	private Row   row;
 
 	private int rowCount   = 0;
 	private int currentRow = 0;
-	private XSSFRow      row;
-	private XSSFWorkbook wb;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		return ++currentRow < rowCount;
 	}
 
 	@Override
-	public List<Pedigree> next() throws IOException
+	public List<Pedigree> next()
 	{
 		row = dataSheet.getRow(currentRow);
 		return parse();
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		dataSheet = wb.getSheet("DATA");
 
 		rowCount = dataSheet.getPhysicalNumberOfRows();
-	}
-
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
 	}
 
 	private List<Pedigree> parse()
@@ -75,11 +63,11 @@ public class ExcelPedigreeReader implements IStreamableReader<List<Pedigree>>
 		List<Pedigree> result = new ArrayList<>();
 
 		result.add(new Pedigree()
-				.setAccession(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 0)))
-				.setParent(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 1)))
-				.setRelationShipDescription(IExcelReader.getCellValue(wb, row, 3))
+				.setAccession(new Accession().setGeneralIdentifier(utils.getCellValue(row, 0)))
+				.setParent(new Accession().setGeneralIdentifier(utils.getCellValue(row, 1)))
+				.setRelationShipDescription(utils.getCellValue(row, 3))
 				.setRelationshipType("OTHER") // TODO: Add to templates
-				.setPedigreeDescription(new PedigreeDescription().setName(IExcelReader.getCellValue(wb, row, 4)).setDescription(IExcelReader.getCellValue(wb, row, 4)).setAuthor(IExcelReader.getCellValue(wb, row, 5))
+				.setPedigreeDescription(new PedigreeDescription().setName(utils.getCellValue(row, 4)).setDescription(utils.getCellValue(row, 4)).setAuthor(utils.getCellValue(row, 5))
 																 .setCreatedOn(new Date())
 																 .setUpdatedOn(new Date())
 				)
@@ -88,11 +76,11 @@ public class ExcelPedigreeReader implements IStreamableReader<List<Pedigree>>
 		);
 
 		result.add(new Pedigree()
-				.setAccession(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 0)))
-				.setParent(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 2)))
-				.setRelationShipDescription(IExcelReader.getCellValue(wb, row, 3))
+				.setAccession(new Accession().setGeneralIdentifier(utils.getCellValue(row, 0)))
+				.setParent(new Accession().setGeneralIdentifier(utils.getCellValue(row, 2)))
+				.setRelationShipDescription(utils.getCellValue(row, 3))
 				.setRelationshipType("OTHER") // TODO: Add to templates
-				.setPedigreeDescription(new PedigreeDescription().setName(IExcelReader.getCellValue(wb, row, 4)).setDescription(IExcelReader.getCellValue(wb, row, 4)).setAuthor(IExcelReader.getCellValue(wb, row, 5))
+				.setPedigreeDescription(new PedigreeDescription().setName(utils.getCellValue(row, 4)).setDescription(utils.getCellValue(row, 4)).setAuthor(utils.getCellValue(row, 5))
 																 .setCreatedOn(new Date())
 																 .setUpdatedOn(new Date())
 				)

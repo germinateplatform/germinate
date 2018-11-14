@@ -46,25 +46,21 @@ public class TemplateImporterTest extends DatabaseTest
 				.run(template, server, database, username, password, null);
 
 		ServerResult<Long> count = new ValueQuery("SELECT COUNT(1) AS count FROM `germinatebase`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 2000L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `locations`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 10L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `synonyms`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 8L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `attributedata`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 32L;
@@ -82,21 +78,18 @@ public class TemplateImporterTest extends DatabaseTest
 
 		// Count the number of markers
 		ServerResult<Long> count = new ValueQuery("SELECT COUNT(1) AS count FROM markers")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 1000L;
 
 		// Count the number of markers on the map
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM mapdefinitions")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 1000L;
 
 		// Count the number of dataset members
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM datasetmembers")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 1500L;
@@ -113,42 +106,36 @@ public class TemplateImporterTest extends DatabaseTest
 
 		// Check if there's a dataset with the correct name
 		ServerResult<Long> count = new ValueQuery("SELECT COUNT(1) AS count FROM datasets WHERE name = 'Dataset name goes here'")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 1L;
 
 		// Check if there's a map with the correct name
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM maps WHERE name = 'Map name here'")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 1L;
 
 		// Check if there's a marker type with the correct name
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM markertypes WHERE description = 'SNP'")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 1L;
 
 		// Count the number of markers
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM markers")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 5000L;
 
 		// Count the number of markers on the map
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM mapdefinitions")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 6000L;
 
 		// Count the number of dataset members
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM datasetmembers")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 8500L;
@@ -165,28 +152,24 @@ public class TemplateImporterTest extends DatabaseTest
 
 		// Check the overall number of rows
 		ServerResult<Long> count = new ValueQuery("SELECT COUNT(1) AS count FROM `phenotypedata`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 33513L;
 
 		// Check the number of rows with recording dates
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `phenotypedata` WHERE NOT ISNULL(recording_date)")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 31951L;
 
 		// Check if the dataset is there and also the location
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `datasets` LEFT JOIN `locations` ON `locations`.`id` = `datasets`.`location_id` WHERE name = 'Trials dataset' AND `locations`.`site_name` = 'Balruddery Farm' AND NOT ISNULL(JSON_SEARCH(dublin_core, 'one', 'CC-BY-SA'))")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 1L;
 
 		// Check the number of non-accessions
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `germinatebase` WHERE `entitytype_id` > 1")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 826L;
@@ -203,7 +186,6 @@ public class TemplateImporterTest extends DatabaseTest
 
 		// Check the overall number of rows
 		ServerResult<Long> count = new ValueQuery("SELECT COUNT(1) AS count FROM `compounddata`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 10000L;
@@ -222,13 +204,11 @@ public class TemplateImporterTest extends DatabaseTest
 
 		// Check the overall number of rows
 		ServerResult<Long> count = new ValueQuery("SELECT COUNT(1) AS count FROM `pedigrees`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 9L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `pedigreedefinitions`")
-				.setDatabase(db)
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 20L;

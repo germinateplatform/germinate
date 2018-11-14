@@ -17,10 +17,7 @@
 
 package jhi.germinate.util.importer.marker;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
-
-import java.io.*;
+import org.apache.poi.ss.usermodel.*;
 
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -31,36 +28,33 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
+public class ExcelMarkerReader extends ExcelStreamableReader<MapDefinition>
 {
 	private static final String CHROMOSOME_UNKNOWN = "UNK";
 
-	private XSSFSheet dataSheet;
+	private Sheet dataSheet;
+	private Row   chromosomes;
+	private Row   positions;
+	private Row   markerNames;
 
 	private int colCount   = 0;
 	private int currentCol = 0;
-	private XSSFWorkbook wb;
-	private XSSFRow      chromosomes;
-	private XSSFRow      positions;
-	private XSSFRow      markerNames;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		return ++currentCol <= colCount;
 	}
 
 	@Override
-	public MapDefinition next() throws IOException
+	public MapDefinition next()
 	{
 		return parse();
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		dataSheet = wb.getSheet("DATA");
 
 		chromosomes = dataSheet.getRow(0);
@@ -70,17 +64,10 @@ public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
 		colCount = markerNames.getPhysicalNumberOfCells();
 	}
 
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
-	}
-
 	private MapDefinition parse()
 	{
-		String chromosome = IExcelReader.getCellValue(wb, chromosomes, currentCol);
-		String position = IExcelReader.getCellValue(wb, positions, currentCol);
+		String chromosome = utils.getCellValue(chromosomes, currentCol);
+		String position = utils.getCellValue(positions, currentCol);
 
 		if (StringUtils.isEmpty(chromosome))
 			chromosome = CHROMOSOME_UNKNOWN;
@@ -92,6 +79,6 @@ public class ExcelMarkerReader implements IStreamableReader<MapDefinition>
 				.setDefinitionStart(position)
 				.setDefinitionEnd(position)
 				.setMarker(new Marker()
-						.setName(IExcelReader.getCellValue(wb, markerNames, currentCol)));
+						.setName(utils.getCellValue(markerNames, currentCol)));
 	}
 }

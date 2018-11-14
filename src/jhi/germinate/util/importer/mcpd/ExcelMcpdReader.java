@@ -18,6 +18,7 @@
 package jhi.germinate.util.importer.mcpd;
 
 import org.apache.poi.openxml4j.exceptions.*;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
@@ -32,12 +33,13 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelMcpdReader extends TabDelimitedMcpdReader
 {
-	private XSSFSheet dataSheet;
+	private Workbook   wb;
+	private Sheet      dataSheet;
+	private Row        row;
+	private ExcelUtils utils;
 
-	private int          rowCount   = 0;
-	private int          currentRow = 0;
-	private XSSFRow      row;
-	private XSSFWorkbook wb;
+	private int rowCount   = 0;
+	private int currentRow = 0;
 
 	@Override
 	public boolean hasNext()
@@ -56,6 +58,7 @@ public class ExcelMcpdReader extends TabDelimitedMcpdReader
 	public void init(File input) throws IOException, InvalidFormatException
 	{
 		wb = new XSSFWorkbook(input);
+		utils = new ExcelUtils(wb);
 
 		dataSheet = wb.getSheet("DATA");
 
@@ -74,6 +77,6 @@ public class ExcelMcpdReader extends TabDelimitedMcpdReader
 	{
 		int column = field.ordinal();
 
-		return IExcelReader.getCellValue(wb, row, column);
+		return utils.getCellValue(row, column);
 	}
 }

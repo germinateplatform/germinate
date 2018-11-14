@@ -39,7 +39,7 @@ public abstract class DataImporter<T>
 	 * If the reader passed to the {@link #run(File, String, String, String, String, String)} method cannot be instantiated, this fallback
 	 * reader will be used to import the data instead.
 	 *
-	 * @return
+	 * @return The reader
 	 */
 	protected abstract IDataReader getReader();
 
@@ -59,12 +59,6 @@ public abstract class DataImporter<T>
 	protected void flush() throws DatabaseException
 	{
 	}
-
-	private String server;
-	private String database;
-	private String username;
-	private String password;
-	private String port;
 
 	protected void run(String[] args)
 	{
@@ -112,12 +106,6 @@ public abstract class DataImporter<T>
 	 */
 	public void run(File input, String server, String database, String username, String password, String port)
 	{
-		this.server = server;
-		this.database = database;
-		this.username = username;
-		this.password = password;
-		this.port = port;
-
 		BaseException.printExceptions = true;
 
 		// We're going to assume that the files that are being imported are not Zip bombs, so we reduce the threshold.
@@ -129,7 +117,8 @@ public abstract class DataImporter<T>
 			try
 			{
 				// Connect to the database
-				databaseConnection = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+				Database.setDefaults(Database.DatabaseType.MYSQL_DATA_IMPORT, server, database, port, username, password);
+				databaseConnection = Database.connect();
 
 				// Pass the InputStream to it
 				reader.init(input);
@@ -193,7 +182,7 @@ public abstract class DataImporter<T>
 		{
 			// Recreate the database connection
 			if (databaseConnection == null || databaseConnection.isClosed())
-				databaseConnection = Database.connect(Database.DatabaseType.MYSQL_DATA_IMPORT, server + (StringUtils.isEmpty(port) ? "" : (":" + port)) + "/" + database, username, password);
+				databaseConnection = Database.connect();
 
 			// Delete all items with the given ids
 			new ValueQuery(databaseConnection, "DELETE FROM " + table + " WHERE id IN (" + StringUtils.generateSqlPlaceholderString(ids.size()) + ")")

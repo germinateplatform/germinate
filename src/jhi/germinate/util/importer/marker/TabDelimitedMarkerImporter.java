@@ -107,7 +107,6 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 		{
 			// Get all the markers of this type in one go
 			DatabaseObjectStreamer<Marker> streamer = new DatabaseObjectQuery<Marker>("SELECT * FROM `markers` WHERE `markertype_id` = ?", null)
-					.setDatabase(databaseConnection)
 					.setLong(markerType.getId())
 					.getStreamer(Marker.Parser.Inst.get(), null, true);
 
@@ -118,7 +117,6 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 
 			// Then get all the dataset members (markers)
 			datasetMembers = new ValueQuery("SELECT `markers`.`id` FROM `datasetmembers` LEFT JOIN `markers` ON (`datasetmembers`.`datasetmembertype_id` = 1 AND `markers`.`id` = `datasetmembers`.`foreign_id`) WHERE `dataset_id` = ?")
-					.setDatabase(databaseConnection)
 					.setLong(dataset.getId())
 					.run("id")
 					.getLongs()
@@ -129,7 +127,6 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 
 			// And all the mapdefinitions for this map
 			mapdefinitions = new ValueQuery("SELECT `markers`.`id` FROM `mapdefinitions` LEFT JOIN `markers` ON (`mapdefinitions`.`marker_id` = `markers`.`id`) WHERE `map_id` = ?")
-					.setDatabase(databaseConnection)
 					.setLong(map.getId())
 					.run("id")
 					.getLongs()

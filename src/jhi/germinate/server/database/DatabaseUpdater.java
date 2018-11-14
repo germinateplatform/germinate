@@ -45,7 +45,7 @@ public class DatabaseUpdater
 				Flyway flyway = new Flyway();
 				flyway.setTable("schema_version");
 				flyway.setValidateOnMigrate(false);
-				flyway.setDataSource(Database.DatabaseType.MYSQL.getUrl(PropertyWatcher.getServerString(Database.DatabaseType.MYSQL)), PropertyWatcher.get(ServerProperty.DATABASE_USERNAME), PropertyWatcher.get(ServerProperty.DATABASE_PASSWORD));
+				flyway.setDataSource(Database.DatabaseType.MYSQL.getUrl(Database.getServerString(Database.DatabaseType.MYSQL)), PropertyWatcher.get(ServerProperty.DATABASE_USERNAME), PropertyWatcher.get(ServerProperty.DATABASE_PASSWORD));
 				flyway.setLocations("classpath:jhi.germinate.server.database.migration");
 				flyway.setBaselineOnMigrate(true);
 				flyway.migrate();

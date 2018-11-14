@@ -17,10 +17,8 @@
 
 package jhi.germinate.util.importer.pedigree;
 
-import org.apache.poi.openxml4j.exceptions.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
 import jhi.germinate.shared.datastructure.database.*;
@@ -31,53 +29,43 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class ExcelPedigreeStringReader implements IStreamableReader<PedigreeDefinition>
+public class ExcelPedigreeStringReader extends ExcelStreamableReader<PedigreeDefinition>
 {
-	private XSSFSheet dataSheet;
+	private Sheet dataSheet;
+	private Row   row;
 
 	private int rowCount   = 0;
 	private int currentRow = 0;
-	private XSSFRow      row;
-	private XSSFWorkbook wb;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		return ++currentRow < rowCount;
 	}
 
 	@Override
-	public PedigreeDefinition next() throws IOException
+	public PedigreeDefinition next()
 	{
 		row = dataSheet.getRow(currentRow);
 		return parse();
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(Workbook wb)
 	{
-		wb = new XSSFWorkbook(input);
-
 		dataSheet = wb.getSheet("DATA-STRING");
 
 		rowCount = dataSheet.getPhysicalNumberOfRows();
 	}
 
-	@Override
-	public void close() throws IOException
-	{
-		if (wb != null)
-			wb.close();
-	}
-
 	private PedigreeDefinition parse()
 	{
 		return new PedigreeDefinition()
-				.setAccession(new Accession().setGeneralIdentifier(IExcelReader.getCellValue(wb, row, 0)))
-				.setDefinition(IExcelReader.getCellValue(wb, row, 1))
+				.setAccession(new Accession().setGeneralIdentifier(utils.getCellValue(row, 0)))
+				.setDefinition(utils.getCellValue(row, 1))
 				.setNotation(new PedigreeNotation()
-						.setName(IExcelReader.getCellValue(wb, row, 2))
-						.setDescription(IExcelReader.getCellValue(wb, row, 2))
+						.setName(utils.getCellValue(row, 2))
+						.setDescription(utils.getCellValue(row, 2))
 						.setCreatedOn(new Date())
 						.setUpdatedOn(new Date()))
 				.setCreatedOn(new Date())
