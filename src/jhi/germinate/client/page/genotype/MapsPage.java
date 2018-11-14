@@ -113,7 +113,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton, HasHelp
 				@Override
 				protected void onSuccessImpl(ServerResult<Map> result)
 				{
-					if (result.getServerResult() != null)
+					if (result.hasData())
 					{
 						map = result.getServerResult();
 						updateMapDetails();

@@ -88,7 +88,7 @@ public class MarkerPage extends Composite implements HasHyperlinkButton, HasHelp
 				@Override
 				protected void onSuccessImpl(PaginatedServerResult<List<Marker>> result)
 				{
-					if (!CollectionUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 					{
 						marker = result.getServerResult().get(0);
 						setUpDetails();

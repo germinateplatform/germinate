@@ -186,10 +186,8 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			@Override
 			protected void onSuccessImpl(ServerResult<String> result)
 			{
-				if (!StringUtils.isEmpty(result.getServerResult()))
-				{
+				if (result.hasData())
 					JavaScript.invokeGerminateDownload(result.getServerResult());
-				}
 			}
 		});
 	}
@@ -487,9 +485,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 						selectPageHeader.setValue(result.getResultSize());
 
 						for (T item : result.getServerResult())
-						{
 							selectionModel.setSelected(item, value);
-						}
 					}
 				});
 			});

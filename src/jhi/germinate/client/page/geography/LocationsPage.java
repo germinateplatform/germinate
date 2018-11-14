@@ -70,7 +70,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 	HTML                clusteredText;
 	@UiField
 	HTML                heatmapText;
-	@UiField
+	@UiField(provided = true)
 	LocationTypeListBox locationTypeBox;
 	@UiField
 	FormGroup           climateSection;
@@ -130,6 +130,8 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 				return LocationService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, callback);
 			}
 		};
+
+		locationTypeBox = new LocationTypeListBox(true, false);
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -269,7 +271,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 				@Override
 				public void onSuccessImpl(ServerResult<List<ClimateOverlay>> result)
 				{
-					if (result.getServerResult().size() > 0)
+					if (result.hasData())
 					{
 						clusteredClimateOverlays = LeafletUtils.addClimateOverlays(clusteredMap.getMap(), result.getServerResult());
 						heatmapClimateOverlays = LeafletUtils.addClimateOverlays(heatmapMap.getMap(), result.getServerResult());
@@ -334,7 +336,7 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 				@Override
 				public void onSuccessImpl(ServerResult<String> result)
 				{
-					if (!StringUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 					{
 						/* Construct the path to the json file */
 						chart.setLocationType(type);

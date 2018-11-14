@@ -111,7 +111,7 @@ public class CommentWidget extends Composite
 				{
 					annotationTypes.clear();
 
-					if (result.getServerResult().size() > 0)
+					if (result.hasData())
 					{
 						annotationTypes = result.getServerResult();
 
@@ -191,7 +191,6 @@ public class CommentWidget extends Composite
 			@Override
 			public void onSuccessImpl(DebugInfo result)
 			{
-
 				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.ANNOTATIONS, "add", Long.toString(id));
 
 				commentTable.refreshTable();

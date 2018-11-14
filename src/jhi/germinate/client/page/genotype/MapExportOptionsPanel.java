@@ -179,7 +179,7 @@ public class MapExportOptionsPanel extends Composite
 			@Override
 			public void onSuccessImpl(ServerResult<List<String>> result)
 			{
-				if (result.getServerResult() != null)
+				if (result.hasData())
 				{
 					chromosomes = result.getServerResult();
 					exportOptionsPanel.setVisible(true);

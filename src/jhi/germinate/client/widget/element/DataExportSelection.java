@@ -32,7 +32,6 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.listbox.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 
@@ -129,7 +128,7 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 			public void onSuccessImpl(ServerResult<String> result)
 			{
 				// Add a download link if the result file creation was successful
-				if (!StringUtils.isEmpty(result.getServerResult()))
+				if (result.hasData())
 				{
 					// Click it
 					JavaScript.invokeGerminateDownload(result.getServerResult());

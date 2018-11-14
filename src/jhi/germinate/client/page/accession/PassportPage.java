@@ -228,7 +228,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 				@Override
 				public void onSuccessImpl(PaginatedServerResult<List<Accession>> result)
 				{
-					if (!CollectionUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 					{
 						accession = result.getServerResult().get(0);
 						updateContent();
@@ -382,7 +382,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			@Override
 			protected void onSuccessImpl(ServerResult<List<PedigreeDefinition>> result)
 			{
-				if (!CollectionUtils.isEmpty(result.getServerResult()))
+				if (result.hasData())
 				{
 					ULPanel list = new ULPanel();
 
@@ -587,7 +587,7 @@ public class PassportPage extends Composite implements HasLibraries, HasHelp, Ha
 			@Override
 			protected void onSuccessImpl(ServerResult<Mcpd> result)
 			{
-				if (result.getServerResult() != null)
+				if (result.hasData())
 				{
 					topWrapper.setVisible(true);
 					new DescriptionWidget(mcpdPanel, Text.LANG.passportColumnGID(), accession.getGeneralIdentifier());

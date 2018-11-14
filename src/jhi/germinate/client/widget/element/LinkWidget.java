@@ -76,7 +76,7 @@ public class LinkWidget extends GerminateComposite
 				@Override
 				public void onSuccessImpl(ServerResult<List<Link>> result)
 				{
-					if (!CollectionUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 					{
 						ULPanel ulPanel = new ULPanel();
 

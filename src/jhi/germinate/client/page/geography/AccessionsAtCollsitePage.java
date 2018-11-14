@@ -35,7 +35,6 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -83,7 +82,7 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 				@Override
 				protected void onSuccessImpl(PaginatedServerResult<List<Location>> result)
 				{
-					if (!CollectionUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 					{
 						String collsiteName = result.getServerResult().get(0).getName();
 						header.setText(Text.LANG.geographyTitle(HTMLUtils.stripHtmlTags(collsiteName)));

@@ -66,7 +66,7 @@ public class AlleleFreqExportPage extends GerminateComposite implements HasHyper
 					@Override
 					public void onSuccessImpl(ServerResult<FlapjackAllelefreqBinningResult> result)
 					{
-						if (result != null)
+						if (result.hasData())
 						{
 							DebugInfoParameterStore.Inst.get().put(Parameter.debugInfo, result.getDebugInfo());
 							FlapjackAllelefreqBinningResultParameterStore.Inst.get().put(Parameter.flapjackExportResult, result.getServerResult());

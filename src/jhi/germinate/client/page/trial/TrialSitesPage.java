@@ -32,7 +32,6 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
@@ -69,7 +68,7 @@ public class TrialSitesPage extends Composite
 				@Override
 				protected void onSuccessImpl(ServerResult<List<Location>> result)
 				{
-					if (!CollectionUtils.isEmpty(result.getServerResult()) && result.getServerResult().size() > 0)
+					if (result.hasData())
 					{
 						location = result.getServerResult().get(0);
 

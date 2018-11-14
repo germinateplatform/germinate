@@ -70,7 +70,7 @@ public class DatasetMetadataDownload<T extends DatabaseObject> extends Composite
 				@Override
 				protected void onSuccessImpl(PaginatedServerResult<List<Attribute>> result)
 				{
-					if (result != null && !CollectionUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 						attributesListBox.setAcceptableValues(result.getServerResult());
 					else
 						panel.setVisible(false);
@@ -97,10 +97,8 @@ public class DatasetMetadataDownload<T extends DatabaseObject> extends Composite
 				@Override
 				protected void onSuccessImpl(ServerResult<String> result)
 				{
-					if (!StringUtils.isEmpty(result.getServerResult()))
-					{
+					if (result.hasData())
 						JavaScript.invokeGerminateDownload(result.getServerResult());
-					}
 				}
 			});
 		}

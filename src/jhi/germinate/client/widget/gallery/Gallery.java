@@ -145,7 +145,7 @@ public abstract class Gallery extends GerminateComposite
 				top.clear();
 				row.clear();
 
-				if (!CollectionUtils.isEmpty(result.getServerResult()))
+				if (result.hasData())
 				{
 					/* Update the pagination object */
 					pagination.setResultSize(result.getResultSize());

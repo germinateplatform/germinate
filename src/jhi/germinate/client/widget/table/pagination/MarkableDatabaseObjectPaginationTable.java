@@ -239,7 +239,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				popupPanel.hide();
 				callback.updateTable(id);
 			});
-			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
 		}
 
@@ -250,7 +250,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			popupPanel.hide();
 			callback.updateTable(ids);
 		});
-		menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+		menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 		menuBar.addItem(menuItem);
 
 		if (supportsFullIdMarking())
@@ -260,7 +260,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				@Override
 				protected void onSuccessImpl(ServerResult<List<String>> result)
 				{
-					if (result != null)
+					if (result.hasData())
 					{
 						MarkedItemList.add(itemType, result.getServerResult());
 						popupPanel.hide();
@@ -268,7 +268,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 					}
 				}
 			}));
-			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
 		}
 
@@ -281,7 +281,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				popupPanel.hide();
 				callback.updateTable(id);
 			});
-			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
 		}
 
@@ -292,7 +292,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			popupPanel.hide();
 			callback.updateTable(ids);
 		});
-		menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+		menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 		menuBar.addItem(menuItem);
 
 		if (supportsFullIdMarking())
@@ -302,12 +302,15 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				@Override
 				protected void onSuccessImpl(ServerResult<List<String>> result)
 				{
-					MarkedItemList.remove(itemType, result.getServerResult());
-					popupPanel.hide();
-					callback.updateTable(result.getServerResult());
+					if(result.hasData())
+					{
+						MarkedItemList.remove(itemType, result.getServerResult());
+						popupPanel.hide();
+						callback.updateTable(result.getServerResult());
+					}
 				}
 			}));
-			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
 		}
 
@@ -327,7 +330,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 					AbstractCartView.askForGroupNameAndCreate(new ArrayList<>(ids), itemType, null);
 				}
 			});
-			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
 		}
 

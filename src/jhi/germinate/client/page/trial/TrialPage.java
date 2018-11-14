@@ -233,12 +233,12 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			@Override
 			protected void onSuccessImpl(ServerResult<List<Integer>> result)
 			{
-				// If there are no years or if there's just one, then just plot the basics
-				if (result.getServerResult() == null || result.getServerResult().size() <= 1)
-					getBasicOverviewStats();
-					// Otherwise show the development over time
-				else
+				// Otherwise show the development over time
+				if (result.hasData())
 					overviewPanel.add(new TrialOverviewWidget(phenotypes, result.getServerResult()));
+				else
+					// If there are no years or if there's just one, then just plot the basics
+					getBasicOverviewStats();
 			}
 		});
 	}
@@ -257,10 +257,8 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			@Override
 			protected void onSuccessImpl(ServerResult<List<DataStats>> result)
 			{
-				if (result.getServerResult() != null && result.getServerResult().size() > 0)
-				{
+				if (result.hasData())
 					overviewPanel.add(new DataStatsTable(result.getServerResult()));
-				}
 			}
 		});
 	}

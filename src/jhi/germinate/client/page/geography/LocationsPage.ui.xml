@@ -34,10 +34,6 @@
 	<g:HTMLPanel>
 		<b:PageHeader text="{msg.geographyCollsiteTitle}"/>
 
-		<b:FormGroup>
-			<b:FormLabel for="formLocationType" text="{msg.locationTypesSelect}"/>
-			<g8:LocationTypeListBox b:id="formLocationType" ui:field="locationTypeBox"/>
-		</b:FormGroup>
 		<b:FormGroup ui:field="climateSection" visible="false">
 			<b:FormLabel for="formClimate" text="{msg.climateSelectClimate}"/>
 			<g8:ClimateListBox b:id="formClimate" ui:field="climateBox"/>
@@ -49,6 +45,11 @@
 		<b:FormGroup>
 			<b:FormLabel for="formSynchronize" text="{msg.geographySynchronizeMaps}"/>
 			<t:ToggleSwitch b:id="formSynchronize" ui:field="synchonizeToggle"/>
+		</b:FormGroup>
+
+		<b:FormGroup>
+			<b:FormLabel for="formLocationType" text="{msg.locationTypesSelect}"/>
+			<g8:LocationTypeListBox b:id="formLocationType" ui:field="locationTypeBox"/>
 		</b:FormGroup>
 
 		<b:Heading size="H2" text="{msg.geographyCollsiteHeadingClustered}"/>

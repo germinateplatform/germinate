@@ -29,7 +29,6 @@ import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -77,7 +76,7 @@ public class SynonymWidget extends GerminateComposite
 				@Override
 				protected void onSuccessImpl(ServerResult<List<Synonym>> result)
 				{
-					if (!CollectionUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 					{
 						ULPanel ulPanel = new ULPanel();
 

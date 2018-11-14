@@ -17,6 +17,8 @@
 
 package jhi.germinate.client.widget.listbox;
 
+import java.util.*;
+
 import jhi.germinate.shared.datastructure.database.*;
 
 /**
@@ -28,10 +30,10 @@ public class LocationTypeListBox extends GerminateValueListBox<LocationType>
 {
 	public LocationTypeListBox()
 	{
-		this(false);
+		this(true, false);
 	}
 
-	public LocationTypeListBox(boolean multiSelect)
+	public LocationTypeListBox(boolean includeAll, boolean multiSelect)
 	{
 		super(new GerminateUnitRenderer<LocationType>()
 		{
@@ -56,7 +58,14 @@ public class LocationTypeListBox extends GerminateValueListBox<LocationType>
 
 		setMultipleSelect(multiSelect);
 
-		setValue(LocationType.all, false);
-		setAcceptableValues(LocationType.values());
+		List<LocationType> types = new ArrayList<>(Arrays.asList(LocationType.values()));
+
+		if (!includeAll)
+		{
+			types.remove(LocationType.all);
+		}
+
+		setValue(types.get(0), false);
+		setAcceptableValues(types);
 	}
 }

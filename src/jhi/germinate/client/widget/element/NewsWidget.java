@@ -64,7 +64,7 @@ public class NewsWidget extends Composite
 			@Override
 			public void onSuccessImpl(ServerResult<List<News>> result)
 			{
-				if (!CollectionUtils.isEmpty(result.getServerResult()))
+				if (result.hasData())
 				{
 					projectColumn = new Column(ColumnSize.XS_12, ColumnSize.MD_3);
 					projectColumn.addStyleName(Style.COL_XXS_12);

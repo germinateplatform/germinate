@@ -158,8 +158,8 @@ public class FilterRow extends Composite
 		}
 		else if (Objects.equals(type, LocationType.class))
 		{
-			firstDbObject = new LocationTypeListBox(false);
-			secondDbObject = new LocationTypeListBox(false);
+			firstDbObject = new LocationTypeListBox(false, false);
+			secondDbObject = new LocationTypeListBox(false, false);
 			firstDbObjectPanel.add(firstDbObject);
 			secondDbObjectPanel.add(secondDbObject);
 		}

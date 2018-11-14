@@ -56,7 +56,7 @@ public class TaxonomyPieChart extends AbstractChart
 			@Override
 			protected void onSuccessImpl(ServerResult<String> result)
 			{
-				if (!StringUtils.isEmpty(result.getServerResult()))
+				if (result.hasData())
 				{
 					filePath = new ServletConstants.Builder()
 							.setUrl(GWT.getModuleBaseURL())

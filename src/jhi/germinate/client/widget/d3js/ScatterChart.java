@@ -153,7 +153,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 					chartPanel.clear();
 					chartPanel.getElement().removeAllChildren();
 
-					if (!StringUtils.isEmpty(result.getServerResult()))
+					if (result.hasData())
 					{
 						filePath = new ServletConstants.Builder()
 								.setUrl(GWT.getModuleBaseURL())

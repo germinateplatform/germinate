@@ -207,10 +207,8 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 				@Override
 				protected void onSuccessImpl(PaginatedServerResult<List<Dataset>> result)
 				{
-					if (!CollectionUtils.isEmpty(result.getServerResult()))
-					{
+					if (result.hasData())
 						createMap(result.getServerResult());
-					}
 				}
 			});
 		}

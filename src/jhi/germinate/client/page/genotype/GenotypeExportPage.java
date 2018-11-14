@@ -90,7 +90,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 					@Override
 					public void onSuccessImpl(ServerResult<List<CreatedFile>> result)
 					{
-						if (result.getServerResult() != null)
+						if (result.hasData())
 						{
 							resultPanel.clear();
 

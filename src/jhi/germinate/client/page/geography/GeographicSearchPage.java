@@ -524,7 +524,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				@Override
 				public void onSuccessImpl(ServerResult<List<ClimateOverlay>> result)
 				{
-					if (result.getServerResult().size() > 0)
+					if (result.hasData())
 					{
 						pointClimateOverlays = LeafletUtils.addClimateOverlays(pointMap.getMap(), result.getServerResult());
 						polygonClimateOverlays = LeafletUtils.addClimateOverlays(polygonMap.getMap(), result.getServerResult());
