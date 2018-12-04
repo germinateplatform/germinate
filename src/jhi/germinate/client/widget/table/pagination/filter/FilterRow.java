@@ -145,15 +145,22 @@ public class FilterRow extends Composite
 
 	private void updateOperators()
 	{
-		Class<?> type = column.getSelection().getDataType();
+		if (column.getSelection() != null)
+		{
+			Class<?> type = column.getSelection().getDataType();
 
-		if(Objects.equals(type, EntityType.class))
-		{
-			operator.setData(Arrays.asList(new Like(), new Equal()), true);
-		}
-		else if(Objects.equals(type, Boolean.class))
-		{
-			operator.setData(Collections.singletonList(new Equal()), true);
+			if (Objects.equals(type, EntityType.class))
+			{
+				operator.setData(Arrays.asList(new Like(), new Equal()), true);
+			}
+			else if (Objects.equals(type, Boolean.class))
+			{
+				operator.setData(Collections.singletonList(new Equal()), true);
+			}
+			else
+			{
+				operator.setData(Arrays.asList(new Like(), new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between(), new InSet()), true);
+			}
 		}
 		else
 		{
@@ -166,21 +173,24 @@ public class FilterRow extends Composite
 		firstDbObjectPanel.clear();
 		secondDbObjectPanel.clear();
 
-		Class<?> type = column.getSelection().getDataType();
+		if (column.getSelection() != null)
+		{
+			Class<?> type = column.getSelection().getDataType();
 
-		if (Objects.equals(type, EntityType.class))
-		{
-			firstDbObject = new EntityTypeListBox(false);
-			secondDbObject = new EntityTypeListBox(false);
-			firstDbObjectPanel.add(firstDbObject);
-			secondDbObjectPanel.add(secondDbObject);
-		}
-		else if (Objects.equals(type, LocationType.class))
-		{
-			firstDbObject = new LocationTypeListBox(false, false);
-			secondDbObject = new LocationTypeListBox(false, false);
-			firstDbObjectPanel.add(firstDbObject);
-			secondDbObjectPanel.add(secondDbObject);
+			if (Objects.equals(type, EntityType.class))
+			{
+				firstDbObject = new EntityTypeListBox(false);
+				secondDbObject = new EntityTypeListBox(false);
+				firstDbObjectPanel.add(firstDbObject);
+				secondDbObjectPanel.add(secondDbObject);
+			}
+			else if (Objects.equals(type, LocationType.class))
+			{
+				firstDbObject = new LocationTypeListBox(false, false);
+				secondDbObject = new LocationTypeListBox(false, false);
+				firstDbObjectPanel.add(firstDbObject);
+				secondDbObjectPanel.add(secondDbObject);
+			}
 		}
 	}
 

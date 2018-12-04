@@ -18,6 +18,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:g8="urn:import:jhi.germinate.client.widget.element"
+			 xmlns:t='urn:import:jhi.germinate.client.widget.table.pagination'
 			 xmlns:c='urn:import:jhi.germinate.client.widget.d3js'
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
@@ -31,16 +32,19 @@
 		<g8:DatasetListWidget ui:field="datasetList"/>
 
 		<b:Row ui:field="content" visible="false">
-			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+			<b:Column addStyleNames="{COL_XXS_12} {COL_LG_5THS}" size="XS_6,SM_6">
 				<g8:CategoryPanel icon="{MDI_EYE}" text="{msg.phenotypeOverview}" ui:field="overviewTab"/>
 			</b:Column>
-			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+			<b:Column addStyleNames="{COL_XXS_12} {COL_LG_5THS}" size="XS_6,SM_6">
 				<g8:CategoryPanel icon="{MDI_CHART_SCATTERPLOT_HEXBIN}" text="{msg.trialsPByPTitle}" ui:field="scatterTab"/>
 			</b:Column>
-			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+			<b:Column addStyleNames="{COL_XXS_12} {COL_LG_5THS}" size="XS_6,SM_6">
 				<g8:CategoryPanel icon="{MDI_VIEW_GRID}" text="{msg.trialsMatrix}" ui:field="matrixTab"/>
 			</b:Column>
-			<b:Column addStyleNames="{COL_XXS_12}" size="XS_6,SM_6,LG_3">
+			<b:Column addStyleNames="{COL_XXS_12} {COL_LG_5THS}" size="XS_6,SM_6">
+				<g8:CategoryPanel icon="{MDI_TABLE_SEARCH}" text="{msg.trialsDataTable}" ui:field="dataTab"/>
+			</b:Column>
+			<b:Column addStyleNames="{COL_XXS_12} {COL_LG_5THS}" size="XS_6,SM_6">
 				<g8:CategoryPanel icon="{MDI_DOWNLOAD}" text="{msg.generalDownload}" ui:field="downloadTab"/>
 			</b:Column>
 		</b:Row>
@@ -49,6 +53,7 @@
 			<g:FlowPanel ui:field="overviewPanel"/>
 			<c:ScatterChart ui:field="phenotypeByPhenotypeChart"/>
 			<c:MatrixChart ui:field="matrixChart"/>
+			<t:PhenotypeDataTable ui:field="phenotypeDataTable" />
 			<g:FlowPanel>
 				<g8:DataExportSelection ui:field="exportSelection"/>
 				<g8:DatasetMetadataDownload ui:field="metadataDownload"/>

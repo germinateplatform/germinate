@@ -363,6 +363,9 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 	public boolean forceFilter(PartialSearchQuery query, boolean isAnd)
 	{
+		if(!supportsFiltering())
+			return false;
+
 		/* Cancel any currently running request */
 		if (currentRequest != null && currentRequest.isPending())
 			currentRequest.cancel();

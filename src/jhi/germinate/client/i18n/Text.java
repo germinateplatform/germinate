@@ -1473,6 +1473,14 @@ public interface Text extends Messages
 	@DefaultMessage("Matrix")
 	String trialsMatrix();
 
+	@Key("page.trials.data.table.title")
+	@DefaultMessage("Data table")
+	String trialsDataTable();
+
+	@Key("page.compounds.data.table.title")
+	@DefaultMessage("Data table")
+	String compoundDataDataTable();
+
 	@Key("page.trials.phenotype.by.phenotype.text")
 	SafeHtml trialsPByPText();
 

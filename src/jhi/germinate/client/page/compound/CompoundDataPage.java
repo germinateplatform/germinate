@@ -18,15 +18,18 @@
 package jhi.germinate.client.page.compound;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.http.client.*;
 import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
@@ -37,9 +40,13 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.basic.*;
+import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -69,6 +76,8 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	@UiField
 	CategoryPanel     matrixTab;
 	@UiField
+	CategoryPanel     dataTab;
+	@UiField
 	CategoryPanel     downloadTab;
 
 	@UiField
@@ -77,6 +86,8 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	ScatterChart<Compound>        compoundByCompoundChart;
 	@UiField(provided = true)
 	MatrixChart<Compound>         compoundMatrixChart;
+	@UiField(provided = true)
+	CompoundDataTable             compoundDataTable;
 	@UiField(provided = true)
 	DataExportSelection<Compound> exportSelection;
 
@@ -98,6 +109,25 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 		exportSelection = new DataExportSelection<>(ExperimentType.compound);
 
 		metadataDownload = new DatasetMetadataDownload(selectedDatasets);
+
+		compoundDataTable = new CompoundDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		{
+			{
+				preventInitialDataLoad = true;
+			}
+
+			@Override
+			protected boolean supportsFiltering()
+			{
+				return true;
+			}
+
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<CompoundData>>> callback)
+			{
+				return CompoundService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+			}
+		};
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -123,6 +153,7 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 			overviewTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			scatterTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			matrixTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+			dataTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			downloadTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 
 			GQuery.$(overviewTab.getAnchor()).click(new Function()
@@ -152,12 +183,32 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 					return false;
 				}
 			});
-			GQuery.$(downloadTab.getAnchor()).click(new Function()
+			GQuery.$(dataTab.getAnchor()).click(new Function()
 			{
 				@Override
 				public boolean f(Event e)
 				{
 					deck.showWidget(3);
+
+					if (!compoundDataTable.isFiltered())
+					{
+						PartialSearchQuery query = new PartialSearchQuery();
+						String search = selectedDatasets.stream()
+														.map(Dataset::getName)
+														.collect(Collectors.joining(", "));
+						query.add(new SearchCondition(Dataset.NAME, new InSet(), search, String.class));
+						compoundDataTable.forceFilter(query, true);
+					}
+
+					return false;
+				}
+			});
+			GQuery.$(downloadTab.getAnchor()).click(new Function()
+			{
+				@Override
+				public boolean f(Event e)
+				{
+					deck.showWidget(4);
 					return false;
 				}
 			});

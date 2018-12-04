@@ -211,8 +211,14 @@ public class Style
 	public static final String MDI_ACCOUNT_KEY                     = "mdi-account-key";
 	public static final String MDI_PRINTER                         = "mdi-printer";
 	public static final String MDI_JSON                            = "mdi-json";
+	public static final String MDI_TABLE_SEARCH                    = "mdi-table-search";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
-	public static final String COL_XXS_12                          = "col-xxs-12";
+
+	public static final String COL_XXS_12  = "col-xxs-12";
+	public static final String COL_XS_5THS = "col-xs-5ths";
+	public static final String COL_SM_5THS = "col-sm-5ths";
+	public static final String COL_MD_5THS = "col-md-5ths";
+	public static final String COL_LG_5THS = "col-lg-5ths";
 
 	/**
 	 * Returns the combined style string

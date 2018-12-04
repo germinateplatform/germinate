@@ -1655,3 +1655,41 @@ td.datePickerYear {
 		top: 0 !important;
 	}
 }
+
+
+/* BS 5 column layout */
+.<%= Style.COL_XS_5THS %>,
+.<%= Style.COL_SM_5THS %>,
+.<%= Style.COL_MD_5THS %>,
+.<%= Style.COL_LG_5THS %> {
+	position: relative;
+	min-height: 1px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.<%= Style.COL_XS_5THS %> {
+	width: 20%;
+	float: left;
+}
+
+@media (min-width: 768px) {
+	.<%= Style.COL_SM_5THS %> {
+		width: 20%;
+		float: left;
+	}
+}
+
+@media (min-width: 992px) {
+	.<%= Style.COL_MD_5THS %> {
+		width: 20%;
+		float: left;
+	}
+}
+
+@media (min-width: 1200px) {
+	.<%= Style.COL_LG_5THS %> {
+		width: 20%;
+		float: left;
+	}
+}

@@ -64,7 +64,6 @@ public class SearchPanel extends Composite
 			RootPanel p = RootPanel.get(Id.STRUCTURE_SEARCH_PANEL);
 			p.setVisible(true);
 			p.add(searchPanel);
-//			p.removeFromParent();
 		}
 	}
 

@@ -18,9 +18,11 @@
 package jhi.germinate.client.page.trial;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.http.client.*;
 import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
@@ -39,9 +41,13 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.basic.*;
+import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.operators.*;
 
 /**
  * @author Sebastian Raubach
@@ -67,6 +73,8 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	@UiField
 	CategoryPanel     matrixTab;
 	@UiField
+	CategoryPanel     dataTab;
+	@UiField
 	CategoryPanel     downloadTab;
 
 	@UiField
@@ -75,6 +83,8 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	ScatterChart<Phenotype>        phenotypeByPhenotypeChart;
 	@UiField(provided = true)
 	MatrixChart<Phenotype>         matrixChart;
+	@UiField(provided = true)
+	PhenotypeDataTable             phenotypeDataTable;
 	@UiField(provided = true)
 	DataExportSelection<Phenotype> exportSelection;
 
@@ -97,6 +107,19 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 		phenotypeByPhenotypeChart = new ScatterChart<>();
 		exportSelection = new DataExportSelection<>(ExperimentType.trials);
 		metadataDownload = new DatasetMetadataDownload(selectedDatasets);
+
+		phenotypeDataTable = new PhenotypeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		{
+			{
+				preventInitialDataLoad = true;
+			}
+
+			@Override
+			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback)
+			{
+				return PhenotypeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
+			}
+		};
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 
@@ -122,6 +145,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			overviewTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			scatterTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			matrixTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
+			dataTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			downloadTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 
 			GQuery.$(overviewTab.getAnchor()).click(new Function()
@@ -151,12 +175,32 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 					return false;
 				}
 			});
-			GQuery.$(downloadTab.getAnchor()).click(new Function()
+			GQuery.$(dataTab.getAnchor()).click(new Function()
 			{
 				@Override
 				public boolean f(Event e)
 				{
 					deck.showWidget(3);
+
+					if (!phenotypeDataTable.isFiltered())
+					{
+						PartialSearchQuery query = new PartialSearchQuery();
+						String search = selectedDatasets.stream()
+														.map(Dataset::getName)
+														.collect(Collectors.joining(", "));
+						query.add(new SearchCondition(Dataset.NAME, new InSet(), search, String.class));
+						phenotypeDataTable.forceFilter(query, true);
+					}
+
+					return false;
+				}
+			});
+			GQuery.$(downloadTab.getAnchor()).click(new Function()
+			{
+				@Override
+				public boolean f(Event e)
+				{
+					deck.showWidget(4);
 					return false;
 				}
 			});
