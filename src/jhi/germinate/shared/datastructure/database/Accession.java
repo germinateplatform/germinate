@@ -74,7 +74,8 @@ public class Accession extends DatabaseObject
 	public static final String CREATED_ON          = "germinatebase.created_on";
 	public static final String UPDATED_ON          = "germinatebase.updated_on";
 
-	public static final String SYNONYMS = "synonyms";
+	public static final String SYNONYMS  = "synonyms";
+	public static final String HAS_IMAGE = "hasImage";
 
 	private String           generalIdentifier;
 	private String           number;
@@ -521,7 +522,8 @@ public class Accession extends DatabaseObject
 				if (id == null)
 					return null;
 				else
-					return new Accession(id)
+				{
+					Accession accession = new Accession(id)
 							.setGeneralIdentifier(row.getString(GENERAL_IDENTIFIER))
 							.setNumber(row.getString(NUMBER))
 							.setName(row.getString(NAME))
@@ -554,6 +556,18 @@ public class Accession extends DatabaseObject
 							.setPdci(row.getDouble(PDCI))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
+
+					try
+					{
+						accession.setExtra(HAS_IMAGE, row.getString(HAS_IMAGE));
+					}
+					catch (Exception e)
+					{
+
+					}
+
+					return accession;
+				}
 			}
 			catch (InsufficientPermissionsException e)
 			{

@@ -61,7 +61,8 @@ public class ExcelMetadataReader extends ExcelBatchReader<Dataset>
 		List<Dataset> result = new ArrayList<>();
 
 		result.add(new Dataset()
-				.setName(utils.getCellValue(dataSheet.getRow(2), 2))
+				.setName(utils.getCellValue(dataSheet.getRow(1), 2))
+				.setDescription(utils.getCellValue(dataSheet.getRow(2), 2))
 				.setDateStart(IDataReader.getDate(utils.getCellValue(dataSheet.getRow(4), 2)))
 				.setContact(utils.getCellValue(dataSheet.getRow(11), 2))
 				.setDublinCore(parseDublinCore())

@@ -798,14 +798,15 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final String headerString, final boolean sortable, final boolean filterable)
 	{
 		if (supportsFiltering() && filterable)
-			columns.add(new FilterRow.Column(column.getDataStoreName(), headerString, column.getType()));
+			columns.add(new FilterRow.Column(column.getDataStoreName(), StringUtils.isEmpty(headerString) ? column.getDataStoreName() : headerString, column.getType()));
 
 		table.addColumn(column, headerString);
 
 		if (sortable)
 			addSortBits(column);
 
-		setColumnStyleName(headerString, column, table.getHeader(table.getColumnCount() - 1));
+		if(!StringUtils.isEmpty(headerString))
+			setColumnStyleName(headerString, column, table.getHeader(table.getColumnCount() - 1));
 	}
 
 	protected void addColumn(Column<T, ?> column, String headerString)

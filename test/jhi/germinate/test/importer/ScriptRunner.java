@@ -21,7 +21,7 @@
  *  limitations under the License.
  */
 
-package jhi.germinate.util;
+package jhi.germinate.test.importer;
 
 import java.io.*;
 import java.sql.*;

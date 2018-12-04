@@ -145,6 +145,12 @@ public class AlertDialog
 		return this;
 	}
 
+	public AlertDialog addShowHandler(ModalShowHandler handler)
+	{
+		dialog.addShowHandler(handler);
+		return this;
+	}
+
 	public AlertDialog addShownHandler(ModalShownHandler handler)
 	{
 		dialog.addShownHandler(handler);

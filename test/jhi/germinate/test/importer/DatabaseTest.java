@@ -27,7 +27,6 @@ import java.sql.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.exception.*;
-import jhi.germinate.util.*;
 
 /**
  * @author Sebastian Raubach
@@ -47,10 +46,10 @@ public class DatabaseTest
 
 		// Drop old version of db (if exists)
 		new ValueQuery("DROP DATABASE IF EXISTS `" + database + "`")
-				.execute(false);
+				.execute();
 		// Create the db
 		new ValueQuery("CREATE DATABASE `" + database + "`")
-				.execute(false);
+				.execute();
 
 		// Change connection to the specific db
 		Database.setDefaults(Database.DatabaseType.MYSQL_DATA_IMPORT, server, database, "", username, password);
@@ -75,6 +74,6 @@ public class DatabaseTest
 
 		// Drop table
 		new ValueQuery("DROP DATABASE IF EXISTS `" + database + "`")
-				.execute(false);
+				.execute();
 	}
 }

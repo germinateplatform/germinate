@@ -30,6 +30,7 @@ function pedigreeChart() {
 		onClick = function (d) {
 			// do nothing
 		},
+		zoom,
 		tooltipStyle = "",
 		nodeStyle = "",
 		edgeStyle = "",
@@ -87,21 +88,20 @@ function pedigreeChart() {
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			// Set up zoom support
-			var zoom = d3.behavior.zoom()
-			//        .xExtent([-960 / 2, 960 / 2])
+			zoom = d3.behavior.zoom()
 				.scaleExtent([0.5, 3])
 				.on("zoom", function () {
-					//                    var w = inner[0][0].getBBox().width;
-					//                    var h = inner[0][0].getBBox().height;
-					//
-					//                    var t = d3.event.translate;
-					//                    t[0] = Math.min(width - w / 2, Math.max(0, t[0]));
-					//                    t[1] = Math.min(height - h / 2, Math.max(0, t[1]));
-					//                    zoom.translate(t);
-
 					inner.attr("transform", "translate(" + d3.event.translate + ")" + "scale(" + d3.event.scale + ")");
 				});
-			svg.call(zoom);
+
+			// Handle zooming only when the SVG has focus, otherwise don't zoom.
+			svg.on("focus", function (e) {
+				svg.call(zoom);
+			});
+
+			svg.on("blur", function (e) {
+				svg.on('.zoom', null);
+			});
 
 			// Create the renderer
 			var render = new dagreD3.render();

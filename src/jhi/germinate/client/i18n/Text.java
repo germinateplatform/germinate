@@ -734,6 +734,10 @@ public interface Text extends Messages
 	@Key("column.accessions.name")
 	String accessionsColumnName();
 
+	@Key("column.accessions.has.image")
+	@DefaultMessage("Has image")
+	String accessionColumnHasImage();
+
 	@Key("column.accessions.number")
 	String accessionsColumnNumber();
 

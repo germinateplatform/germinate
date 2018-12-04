@@ -432,6 +432,33 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		column.setDataStoreName(Accession.COLLDATE);
 		addColumn(column, Text.LANG.passportColumnColldate(), sortingEnabled);
 
+		/* Add the has image column */
+		column = new SafeHtmlColumn()
+		{
+			@Override
+			public Class getType()
+			{
+				return Boolean.class;
+			}
+
+			@Override
+			public String getCellStyle()
+			{
+				return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
+			}
+
+			@Override
+			public SafeHtml getValue(Accession row)
+			{
+				if (row.getExtra(Accession.HAS_IMAGE) != null)
+					return SimpleHtmlTemplate.INSTANCE.materialIconFixedWidth(Style.MDI_CAMERA, Text.LANG.accessionColumnHasImage());
+				else
+					return SimpleHtmlTemplate.INSTANCE.empty();
+			}
+		};
+		column.setDataStoreName(Accession.HAS_IMAGE);
+		addColumn(column, "", true, false);
+
 		if (GerminateSettingsHolder.get().pdciEnabled.getValue())
 		{
 			column = new SafeHtmlColumn()

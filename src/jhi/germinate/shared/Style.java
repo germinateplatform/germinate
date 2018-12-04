@@ -147,6 +147,7 @@ public class Style
 	public static final String MDI_ACCOUNT                         = "mdi-account";
 	public static final String MDI_ACCOUNT_SETTINGS                = "mdi-account-settings";
 	public static final String MDI_ACCOUNT_MULTIPLE                = "mdi-account-multiple";
+	public static final String MDI_CAMERA                          = "mdi-camera";
 	public static final String MDI_ACCOUNT_PLUS                    = "mdi-account-plus";
 	public static final String MDI_LOCK_RESET                      = "mdi-lock-reset";
 	public static final String MDI_MAGNIFY                         = "mdi-magnify";

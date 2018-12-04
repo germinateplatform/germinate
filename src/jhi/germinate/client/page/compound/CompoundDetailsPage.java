@@ -201,9 +201,7 @@ public class CompoundDetailsPage extends Composite
 							new AlertDialog(Text.LANG.datasetHistogramTitle(), panel)
 									.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
 									.setSize(ModalSize.LARGE)
-									.addShownHandler(modalShownEvent -> {
-										panel.add(chart);
-									})
+									.addShownHandler(modalShownEvent -> panel.add(chart))
 									.addHideHandler(modalHideEvent -> {
 										String path = chart.getFilePath();
 										object.setExtra("CHART_FILE", path);

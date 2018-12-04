@@ -56,6 +56,11 @@ public abstract class DropdownInputButton<T> extends Composite
 		this.data.clear();
 		this.data = new ArrayList<>(data);
 
+		// Remove all old children
+		for (int i = menu.getWidgetCount() - 1; i >= 0; i--)
+			menu.remove(i);
+
+		// Then add new ones
 		for (int i = 0; i < data.size(); i++)
 		{
 			final int index = i;

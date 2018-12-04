@@ -113,6 +113,7 @@ public class FilterRow extends Composite
 					dbObject.setVisible(false);
 				}
 
+				updateOperators();
 				updateDbObjects();
 			}
 		};
@@ -136,10 +137,28 @@ public class FilterRow extends Composite
 
 		column.setData(columns, true);
 
-		operator.setData(Arrays.asList(new Like(), new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between(), new InSet()), true);
+		updateOperators();
 		deleteButton.setEnabled(canDelete);
 
 		updateDbObjects();
+	}
+
+	private void updateOperators()
+	{
+		Class<?> type = column.getSelection().getDataType();
+
+		if(Objects.equals(type, EntityType.class))
+		{
+			operator.setData(Arrays.asList(new Like(), new Equal()), true);
+		}
+		else if(Objects.equals(type, Boolean.class))
+		{
+			operator.setData(Collections.singletonList(new Equal()), true);
+		}
+		else
+		{
+			operator.setData(Arrays.asList(new Like(), new Equal(), new GreaterThan(), new GreaterThanEquals(), new LessThan(), new LessThanEquals(), new Between(), new InSet()), true);
+		}
 	}
 
 	private void updateDbObjects()

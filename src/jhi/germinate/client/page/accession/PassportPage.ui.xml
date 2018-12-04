@@ -145,15 +145,6 @@
 			<g:FlowPanel ui:field="attributePanel"/>
 		</g:FlowPanel>
 
-		<g:FlowPanel ui:field="commentWrapper" visible="false">
-			<g:HTMLPanel>
-				<hr/>
-			</g:HTMLPanel>
-
-			<g8:MdiHeading mdi="{MDI_COMMENT_TEXT_OUTLINE}" size="H3" text="{msg.generalAnnotations}"/>
-			<g8:CommentWidget headingVisible="false" ui:field="commentWidget"/>
-		</g:FlowPanel>
-
 		<g:FlowPanel ui:field="linkWrapper" visible="false">
 			<g:HTMLPanel>
 				<hr/>
@@ -170,6 +161,15 @@
 
 			<g8:MdiHeading mdi="{MDI_DOWNLOAD}" size="H3" text="{msg.downloadHeading}"/>
 			<g:SimplePanel ui:field="downloadPanel"/>
+		</g:FlowPanel>
+
+		<g:FlowPanel visible="false" ui:field="commentWrapper">
+			<g:HTMLPanel>
+				<hr/>
+			</g:HTMLPanel>
+
+			<g8:MdiHeading mdi="{MDI_COMMENT_TEXT_OUTLINE}" size="H3" text="{msg.generalAnnotations}"/>
+			<g8:CommentWidget headingVisible="false" ui:field="commentWidget"/>
 		</g:FlowPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>
