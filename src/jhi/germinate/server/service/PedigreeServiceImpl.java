@@ -45,8 +45,8 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 {
 	private static final long serialVersionUID = 8785242708560655262L;
 
-	private static final String SELECT_PEDIGREE_PARENTS  = "SELECT A.`name` AS node, B.`name` AS parent, `pedigrees`.`relationship_type` AS type FROM `pedigrees` LEFT JOIN `germinatebase` A ON A.`id` = `pedigrees`.`germinatebase_id` LEFT JOIN `germinatebase` B ON B.`id` = `pedigrees`.`parent_id` ORDER BY node, `pedigrees`.`relationship_type`";
-	private static final String SELECT_PEDIGREE_CHILDREN = "SELECT A.`name` AS node, B.`name` AS child,  `pedigrees`.`relationship_type` AS type FROM `pedigrees` LEFT JOIN `germinatebase` A ON A.`id` = `pedigrees`.`parent_id` LEFT JOIN `germinatebase` B ON B.`id` = `pedigrees`.`germinatebase_id` ORDER BY node, `pedigrees`.`relationship_type`";
+	private static final String SELECT_PEDIGREE_PARENTS  = "SELECT A.`name` AS node, B.`name` AS parent, `pedigrees`.`relationship_type` AS type FROM `pedigrees` LEFT JOIN `germinatebase` A ON A.`id` = `pedigrees`.`germinatebase_id` LEFT JOIN `germinatebase` B ON B.`id` = `pedigrees`.`parent_id` ORDER BY node, type DESC";
+	private static final String SELECT_PEDIGREE_CHILDREN = "SELECT A.`name` AS node, B.`name` AS child,  `pedigrees`.`relationship_type` AS type FROM `pedigrees` LEFT JOIN `germinatebase` A ON A.`id` = `pedigrees`.`parent_id` LEFT JOIN `germinatebase` B ON B.`id` = `pedigrees`.`germinatebase_id` ORDER BY node, type DESC";
 
 	@Override
 	public ServerResult<List<PedigreeDefinition>> getPedigreeDefinitions(RequestProperties properties, Long accessionId) throws InvalidSessionException, DatabaseException
