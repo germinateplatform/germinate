@@ -359,7 +359,7 @@ public abstract class AbstractChart extends GerminateComposite
 
 				buttonGroup = new ButtonGroup();
 				buttonGroup.setPull(Pull.RIGHT);
-				panel.insert(buttonGroup, panel.getWidgetIndex(chartPanel));
+				panel.insert(buttonGroup, 0);
 				buttonGroup.add(button);
 
 				Button[] additionalButtons = getAdditionalButtons();

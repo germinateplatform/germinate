@@ -137,7 +137,8 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 
 		FlapjackProjectCreationResult fjExportResult = new FlapjackProjectCreationResult()
 				.setMapFile(new CreatedFile(mapFile))
-				.setRawDataFile(new CreatedFile(binnedFile))
+				.setRawDataFile(new CreatedFile(subsetForFlapjack))
+				.setTabDelimitedFile(new CreatedFile(binnedFile))
 				.setProjectFile(new CreatedFile(flapjackResultFile));
 
 		return new Pair<>(debugOutput, fjExportResult);

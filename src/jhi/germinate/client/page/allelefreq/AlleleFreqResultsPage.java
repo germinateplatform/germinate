@@ -219,7 +219,8 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 				resultPanel.clear();
 
 				List<DownloadWidget.FileConfig> files = new ArrayList<>();
-				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadBinned(), result.getSecond().getRawDataFile()).setStyle(FileType.IconStyle.IMAGE));
+				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadUnbinned(), result.getSecond().getRawDataFile()).setStyle(FileType.IconStyle.IMAGE));
+				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadBinned(), result.getSecond().getTabDelimitedFile()).setStyle(FileType.IconStyle.IMAGE));
 				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadMap(), result.getSecond().getMapFile()).setStyle(FileType.IconStyle.IMAGE));
 				files.add(new DownloadWidget.FileConfig(FileLocation.temporary, Text.LANG.allelefreqResultDownloadFlapjack(), result.getSecond().getProjectFile()).setStyle(FileType.IconStyle.IMAGE));
 

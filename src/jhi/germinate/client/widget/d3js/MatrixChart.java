@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 
@@ -52,51 +51,54 @@ import jhi.germinate.shared.exception.*;
  */
 public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 {
-	private List<Dataset>  selectedDatasets;
-	private List<Group>    groups;
-	private List<T>        objects;
-	private ExperimentType experimentType;
+	private String         coloringValue;
 
-	private FlowPanel               chartPanel;
-	private MatrixChartSelection<T> parameterSelection;
-	private Button                  deleteButton;
-	private Button                  badgeButton;
+	private FlowPanel chartPanel;
+	private Button    deleteButton;
+	private Button    badgeButton;
 
 	public MatrixChart()
 	{
 	}
 
-	public MatrixChart(ExperimentType experimentType, List<T> objects, List<Group> groups)
-	{
-		super();
-		this.experimentType = experimentType;
-		if (objects != null)
-			this.objects = new ArrayList<>(objects);
-		if (groups != null)
-			this.groups = new ArrayList<>(groups);
-	}
-
-	public void update(ExperimentType experimentType, List<T> objects, List<Group> groups)
-	{
-		this.experimentType = experimentType;
-		if (objects != null)
-			this.objects = new ArrayList<>(objects);
-		if (groups != null)
-			this.groups = new ArrayList<>(groups);
-
-		initPlotButton();
-	}
-
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
+		panel.add(chartPanel);
+
 		this.chartPanel = chartPanel;
+	}
+
+	public void update(ExperimentType experimentType, List<Long> datasetIds, List<Long> objectIds, List<Long> groupIds, String color)
+	{
+		this.coloringValue = color;
+		getData(experimentType, datasetIds, groupIds, objectIds, new DefaultAsyncCallback<ServerResult<String>>(true)
+		{
+			@Override
+			protected void onSuccessImpl(ServerResult<String> result)
+			{
+				if (result.hasData())
+				{
+					filePath = new ServletConstants.Builder()
+							.setUrl(GWT.getModuleBaseURL())
+							.setPath(ServletConstants.SERVLET_FILES)
+							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
+
+					MatrixChart.this.onResize(true);
+				}
+				else
+				{
+					Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
+				}
+			}
+		});
 	}
 
 	@Override
 	protected void updateChart(int width)
 	{
-		String coloringValue = parameterSelection.getColor();
 		create(coloringValue.equals(Text.LANG.trialsPByPColorByTreatment()), coloringValue.equals(Text.LANG.trialsPByPColorByDataset()), coloringValue.equals(Text.LANG.trialsPByPColorByYear()), width);
 	}
 
@@ -129,92 +131,18 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 		return new Button[]{deleteButton, badgeButton};
 	}
 
-	private void initPlotButton()
+	private void getData(ExperimentType experimentType, List<Long> datasetIds, List<Long> groupIds, List<Long> objectIds, AsyncCallback<ServerResult<String>> callback)
 	{
-		if (parameterSelection == null && objects != null)
-		{
-			switch (experimentType)
-			{
-				case trials:
-					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
-					break;
-				case compound:
-					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
-					break;
-			}
-
-			Button plot = new Button(Text.LANG.trialsPlot(), e ->
-			{
-				List<Long> groupIds = DatabaseObject.getIds(parameterSelection.getGroups());
-				List<Long> objectIds = DatabaseObject.getIds(parameterSelection.getObjects());
-
-				if (CollectionUtils.isEmpty(groupIds, objectIds))
-				{
-					Notification.notify(Notification.Type.ERROR, Text.LANG.phenotypeMatrixSelectGroupAndPhenotype());
-					return;
-				}
-
-				if (objectIds.size() > MatrixChartSelection.MAX_NR_OF_OBJECTS)
-				{
-					Notification.notify(Notification.Type.ERROR, Text.LANG.phenotypeMatrixAtMost(MatrixChartSelection.MAX_NR_OF_OBJECTS));
-					return;
-				}
-
-				getData(groupIds, objectIds, new DefaultAsyncCallback<ServerResult<String>>(true)
-				{
-					@Override
-					protected void onSuccessImpl(ServerResult<String> result)
-					{
-						if (result.hasData())
-						{
-							filePath = new ServletConstants.Builder()
-									.setUrl(GWT.getModuleBaseURL())
-									.setPath(ServletConstants.SERVLET_FILES)
-									.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-									.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-									.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
-
-							MatrixChart.this.onResize(true);
-						}
-						else
-						{
-							Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
-						}
-					}
-				});
-			});
-			plot.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
-			plot.setType(ButtonType.PRIMARY);
-
-			if (CollectionUtils.isEmpty(objects))
-			{
-				panel.clear();
-				panel.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));
-				return;
-			}
-
-			parameterSelection = new MatrixChartSelection<>(experimentType, objects, groups);
-
-			panel.add(parameterSelection);
-			panel.add(plot);
-			panel.add(chartPanel);
-		}
-	}
-
-	private void getData(List<Long> groupIds, List<Long> objectIds, AsyncCallback<ServerResult<String>> callback)
-	{
-		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		switch (experimentType)
 		{
 			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, groupIds, objectIds, true, callback);
+				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
 				break;
 
 			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, groupIds, objectIds, true, callback);
+				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
 				break;
 		}
-
 	}
 
 	@Override

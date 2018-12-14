@@ -30,6 +30,7 @@ public class FlapjackProjectCreationResult implements Serializable
 	private String      debugOutput;
 	private CreatedFile projectFile;
 	private CreatedFile mapFile;
+	private CreatedFile tabDelimitedFile;
 	private CreatedFile rawDataFile;
 	private Set<String> deletedMarkers;
 
@@ -71,14 +72,14 @@ public class FlapjackProjectCreationResult implements Serializable
 		return this;
 	}
 
-	public CreatedFile getRawDataFile()
+	public CreatedFile getTabDelimitedFile()
 	{
-		return rawDataFile;
+		return tabDelimitedFile;
 	}
 
-	public FlapjackProjectCreationResult setRawDataFile(CreatedFile rawDataFile)
+	public FlapjackProjectCreationResult setTabDelimitedFile(CreatedFile tabDelimitedFile)
 	{
-		this.rawDataFile = rawDataFile;
+		this.tabDelimitedFile = tabDelimitedFile;
 		return this;
 	}
 
@@ -90,6 +91,17 @@ public class FlapjackProjectCreationResult implements Serializable
 	public FlapjackProjectCreationResult setDeletedMarkers(Set<String> deletedMarkers)
 	{
 		this.deletedMarkers = deletedMarkers;
+		return this;
+	}
+
+	public CreatedFile getRawDataFile()
+	{
+		return rawDataFile;
+	}
+
+	public FlapjackProjectCreationResult setRawDataFile(CreatedFile rawDataFile)
+	{
+		this.rawDataFile = rawDataFile;
 		return this;
 	}
 }

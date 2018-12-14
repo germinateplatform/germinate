@@ -21,7 +21,6 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.query.client.*;
-import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -60,46 +59,28 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	private String         xAxisTitle = "";
 	private String         yAxisTitle = "";
 	private JsArrayInteger size       = null;
-	private ExperimentType experimentType;
+	private String         coloringValue;
 
-	private List<Dataset> selectedDatasets;
-	private List<T>       objects;
-	private List<Group>   groups;
-
-	private FlowPanel                chartPanel;
-	private ScatterChartSelection<T> parameterSelection;
-	private Button                   deleteButton;
-	private Button                   badgeButton;
+	private FlowPanel chartPanel;
+	private Button    deleteButton;
+	private Button    badgeButton;
 
 	public ScatterChart()
 	{
 	}
 
-	public void update(ExperimentType expertimentType, List<T> objects, List<Group> groups, SafeHtml message)
-	{
-		setMessage(message);
-
-		this.experimentType = expertimentType;
-		if (objects != null)
-			this.objects = new ArrayList<>(objects);
-		if (groups != null)
-			this.groups = new ArrayList<>(groups);
-
-		initComboBoxes();
-	}
-
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
+		panel.add(chartPanel);
+
 		this.chartPanel = chartPanel;
-		initComboBoxes();
 	}
 
 	@Override
 	protected void updateChart(int width)
 	{
 		computeChartSize(width);
-		String coloringValue = parameterSelection.getColor();
 		create(coloringValue.equals(Text.LANG.trialsPByPColorByTreatment()), coloringValue.equals(Text.LANG.trialsPByPColorByDataset()), coloringValue.equals(Text.LANG.trialsPByPColorByYear()), GerminateSettingsHolder.getCategoricalColor(0));
 	}
 
@@ -136,40 +117,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	{
 		Button plot = new Button(Text.LANG.trialsPlot(), e ->
 		{
-			// JavaScript.D3.removeD3();
-			T first = parameterSelection.getFirstObject().get(0);
-			T second = parameterSelection.getSecondObject().get(0);
-			Long groupId = parameterSelection.getGroup().getId();
-			Long firstId = first.getId();
-			Long secondId = second.getId();
 
-			setNames(first, second);
-
-			getData(groupId, firstId, secondId, new DefaultAsyncCallback<ServerResult<String>>(true)
-			{
-				@Override
-				protected void onSuccessImpl(ServerResult<String> result)
-				{
-					chartPanel.clear();
-					chartPanel.getElement().removeAllChildren();
-
-					if (result.hasData())
-					{
-						filePath = new ServletConstants.Builder()
-								.setUrl(GWT.getModuleBaseURL())
-								.setPath(ServletConstants.SERVLET_FILES)
-								.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-								.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-								.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
-
-						ScatterChart.this.onResize(true);
-					}
-					else
-					{
-						Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
-					}
-				}
-			});
 		});
 		plot.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
 		plot.setType(ButtonType.PRIMARY);
@@ -178,7 +126,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 		panel.add(chartPanel);
 	}
 
-	private void setNames(T f, T s)
+	private void setNames(ExperimentType experimentType, T f, T s)
 	{
 		switch (experimentType)
 		{
@@ -211,41 +159,18 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 	}
 
-	private void getData(Long groupId, Long firstId, Long secondId, AsyncCallback<ServerResult<String>> callback)
+	private void getData(ExperimentType experimentType, List<Long> datasetIds, List<Long> groupIds, Long firstId, Long secondId, AsyncCallback<ServerResult<String>> callback)
 	{
-		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		switch (experimentType)
 		{
 			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
+				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, Arrays.asList(firstId, secondId), true, callback);
 				break;
 			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, Collections.singletonList(groupId), Arrays.asList(firstId, secondId), true, callback);
+				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, Arrays.asList(firstId, secondId), true, callback);
 				break;
 		}
 
-	}
-
-	private void initComboBoxes()
-	{
-		if (objects != null && parameterSelection == null)
-		{
-			switch (experimentType)
-			{
-				case trials:
-					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
-					break;
-				case compound:
-					selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
-					break;
-			}
-
-			parameterSelection = new ScatterChartSelection<>(experimentType, objects, groups);
-
-			panel.add(parameterSelection);
-
-			initPlotButton();
-		}
 	}
 
 	/**
@@ -428,5 +353,44 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	public Library[] getLibraries()
 	{
 		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LASSO, Library.D3_LEGEND, Library.D3_SCATTER_PLOT, Library.D3_DOWNLOAD};
+	}
+
+	public void update(ExperimentType experimentType, List<Long> selectedDatasetIds, List<T> objects, List<Long> groupIds, String color)
+	{
+		this.coloringValue = color;
+
+		// JavaScript.D3.removeD3();
+		T first = objects.get(0);
+		T second = objects.get(1);
+		Long firstId = first.getId();
+		Long secondId = second.getId();
+
+		setNames(experimentType, first, second);
+
+		getData(experimentType, selectedDatasetIds, groupIds, firstId, secondId, new DefaultAsyncCallback<ServerResult<String>>(true)
+		{
+			@Override
+			protected void onSuccessImpl(ServerResult<String> result)
+			{
+				chartPanel.clear();
+				chartPanel.getElement().removeAllChildren();
+
+				if (result.hasData())
+				{
+					filePath = new ServletConstants.Builder()
+							.setUrl(GWT.getModuleBaseURL())
+							.setPath(ServletConstants.SERVLET_FILES)
+							.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
+
+					ScatterChart.this.onResize(true);
+				}
+				else
+				{
+					Notification.notify(Notification.Type.ERROR, Text.LANG.notificationNoDataFound());
+				}
+			}
+		});
 	}
 }

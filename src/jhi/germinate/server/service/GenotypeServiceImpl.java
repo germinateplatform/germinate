@@ -89,7 +89,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		FlapjackProjectCreationResult fjExport = new FlapjackProjectCreationResult()
 				.setDebugOutput(debugOutput)
 				.setProjectFile(new CreatedFile(flapjackResultFile))
-				.setRawDataFile(new CreatedFile(genotypeFile))
+				.setTabDelimitedFile(new CreatedFile(genotypeFile))
 				.setMapFile(new CreatedFile(mapFile))
 				.setDeletedMarkers(deletedMarkers);
 

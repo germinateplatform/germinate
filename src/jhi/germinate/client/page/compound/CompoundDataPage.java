@@ -37,7 +37,6 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
-import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.basic.*;
 import jhi.germinate.client.widget.table.pagination.*;
@@ -72,8 +71,6 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	@UiField
 	CategoryPanel     overviewTab;
 	@UiField
-	CategoryPanel     scatterTab;
-	@UiField
 	CategoryPanel     matrixTab;
 	@UiField
 	CategoryPanel     dataTab;
@@ -83,9 +80,7 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	@UiField
 	FlowPanel                     overviewPanel;
 	@UiField(provided = true)
-	ScatterChart<Compound>        compoundByCompoundChart;
-	@UiField(provided = true)
-	MatrixChart<Compound>         compoundMatrixChart;
+	MatrixScatterPanel<Compound>  compoundMatrixChart;
 	@UiField(provided = true)
 	CompoundDataTable             compoundDataTable;
 	@UiField(provided = true)
@@ -104,8 +99,7 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 		/* See if there are selected datasets in the parameter store */
 		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.compoundDatasets);
 
-		compoundMatrixChart = new MatrixChart<>();
-		compoundByCompoundChart = new ScatterChart<>();
+		compoundMatrixChart = new MatrixScatterPanel<>();
 		exportSelection = new DataExportSelection<>(ExperimentType.compound);
 
 		metadataDownload = new DatasetMetadataDownload(selectedDatasets);
@@ -151,7 +145,6 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 
 			int i = 0;
 			overviewTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
-			scatterTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			matrixTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			dataTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			downloadTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
@@ -165,7 +158,7 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 					return false;
 				}
 			});
-			GQuery.$(scatterTab.getAnchor()).click(new Function()
+			GQuery.$(matrixTab.getAnchor()).click(new Function()
 			{
 				@Override
 				public boolean f(Event e)
@@ -174,21 +167,12 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 					return false;
 				}
 			});
-			GQuery.$(matrixTab.getAnchor()).click(new Function()
-			{
-				@Override
-				public boolean f(Event e)
-				{
-					deck.showWidget(2);
-					return false;
-				}
-			});
 			GQuery.$(dataTab.getAnchor()).click(new Function()
 			{
 				@Override
 				public boolean f(Event e)
 				{
-					deck.showWidget(3);
+					deck.showWidget(2);
 
 					if (!compoundDataTable.isFiltered())
 					{
@@ -208,7 +192,7 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 				@Override
 				public boolean f(Event e)
 				{
-					deck.showWidget(4);
+					deck.showWidget(3);
 					return false;
 				}
 			});
@@ -250,7 +234,6 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 
 				getOverviewStats();
 
-				compoundByCompoundChart.update(ExperimentType.compound, compounds, groups, null);
 				compoundMatrixChart.update(ExperimentType.compound, compounds, groups);
 				exportSelection.update(ids, compounds, groups);
 			}

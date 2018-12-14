@@ -61,14 +61,14 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	private static final String GATEKEEPER_ERROR_EMAIL        = "GATEKEEPER_ERROR_EMAIL";
 	private static final String GATEKEEPER_ERROR_INVALID_DATA = "GATEKEEPER_ERROR_INVALID_DATA";
 
-	private static final String INSERT_UNAPPROVED_USER = "INSERT INTO `unapproved_users` (`user_username`, `user_password`, `user_full_name`, `user_email_address`, `institution_id`, `institution_name`, `institution_acronym`, `institution_address`, `database_system_id`, `created_on`, `activation_key`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT `id` FROM `database_systems` WHERE `server_name` = ? AND `system_name` = ?), NOW(), ?)";
+	private static final String INSERT_UNAPPROVED_USER = "INSERT INTO `unapproved_users` (`user_username`, `user_password`, `user_full_name`, `user_email_address`, `institution_id`, `institution_name`, `institution_acronym`, `institution_address`, `database_system_id`, `created_on`, `activation_key`, `needs_approval`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, (SELECT `id` FROM `database_systems` WHERE `server_name` = ? AND `system_name` = ?), NOW(), ?, ?)";
 	private static final String DELETE_UNAPPROVED_USER = "DELETE FROM `unapproved_users` WHERE `id` IN (%s)";
 
-	private static final String QUERY_USER_HAS_ACCESS_TO_DATABASE  = "SELECT 1 AS `exists` FROM `user_has_access_to_databases` WHERE `user_id` = ?       AND `database_id` =        (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?)";
-	private static final String QUERY_USER_HAS_REQUESTED_ACCESS    = "SELECT 1 AS `exists` FROM `unapproved_users`             WHERE `user_username` = ? AND `database_system_id` = (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?)";
-	private static final String INSERT_USER_HAS_ACCESS_TO_DATABASE = "INSERT INTO `user_has_access_to_databases` (`user_id`, `database_id`, `user_type_id`) VALUES (?, (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?), 2)";
-	private static final String INSERT_ACCESS_REQUEST              = "INSERT INTO `access_requests` (`user_id`, `database_system_id`, `activation_key`, `created_on`) VALUE (?, (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?), ?, NOW())";
-	private static final String DELETE_ACCESS_REQUEST              = "DELETE FROM `access_requests` WHERE `id` IN (%s)";
+	private static final String QUERY_USER_HAS_ACCESS_TO_DATABASE = "SELECT 1 AS `exists` FROM `user_has_access_to_databases` WHERE `user_id` = ?       AND `database_id` =        (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?)";
+	private static final String QUERY_USER_HAS_REQUESTED_ACCESS   = "SELECT 1 AS `exists` FROM `unapproved_users`             WHERE `user_username` = ? AND `database_system_id` = (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?)";
+	//	private static final String INSERT_USER_HAS_ACCESS_TO_DATABASE = "INSERT INTO `user_has_access_to_databases` (`user_id`, `database_id`, `user_type_id`) VALUES (?, (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?), 2)";
+	private static final String INSERT_ACCESS_REQUEST             = "INSERT INTO `access_requests` (`user_id`, `database_system_id`, `activation_key`, `needs_approval`, `created_on`) VALUE (?, (SELECT `id` FROM `database_systems` WHERE `system_name` = ? AND `server_name` = ?), ?, ?, NOW())";
+	private static final String DELETE_ACCESS_REQUEST             = "DELETE FROM `access_requests` WHERE `id` IN (%s)";
 
 	private static final String QUERY_USERNAME_EXISTS = "(SELECT DISTINCT `username` FROM `users`) UNION (SELECT DISTINCT `user_username` FROM `unapproved_users` WHERE `has_been_rejected` != 1)";
 
@@ -257,6 +257,9 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 		/* Check if we actually allow registration */
 		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) && PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_ENABLED))
 		{
+			// Check if it needs approval
+			boolean needsApproval = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL);
+
 			List<String> usernames = new ValueQuery(QUERY_USERNAME_EXISTS)
 					.setQueryType(QueryType.AUTHENTICATION)
 					.run("username")
@@ -271,8 +274,6 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 			Integer rounds = PropertyWatcher.getInteger(ServerProperty.GERMINATE_GATEKEEPER_BCRYPT_ROUNDS);
 			String hashed = BCrypt.hashpw(user.userPassword, BCrypt.gensalt(rounds == null ? BCrypt.GENSALT_DEFAULT_LOG2_ROUNDS : rounds));
 
-			/* If the registration needs approval, insert into the
-			 * unapproved_users table */
 			ValueQuery query = new ValueQuery(INSERT_UNAPPROVED_USER)
 					.setQueryType(QueryType.AUTHENTICATION)
 					.setString(user.userUsername)
@@ -297,16 +298,16 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
 			String uuid = UUID.randomUUID().toString();
 
+			// Try and insert the new user request
 			List<Long> ids = query.setString(PropertyWatcher.get(ServerProperty.DATABASE_SERVER))
 								  .setString(PropertyWatcher.get(ServerProperty.DATABASE_NAME))
 								  .setString(uuid)
+								  .setBoolean(needsApproval)
 								  .execute()
 								  .getServerResult();
 
 			if (CollectionUtils.isEmpty(ids))
 				throw new DatabaseException("Registration failed");
-
-			boolean needsApproval = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL);
 
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpPost post = new HttpPost(gatekeeperUrl);
@@ -520,80 +521,67 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 
 			boolean needsApproval = PropertyWatcher.getBoolean(ServerProperty.GERMINATE_GATEKEEPER_REGISTRATION_NEEDS_APPROVAL);
 
-			if (needsApproval)
+			String gatekeeperUrl = getGatekeeperUrl();
+
+			// Insert the access request
+			List<Long> ids = new ValueQuery(INSERT_ACCESS_REQUEST)
+					.setQueryType(QueryType.AUTHENTICATION)
+					.setLong(userDetails.getId())
+					.setString(database)
+					.setString(server)
+					.setString(uuid)
+					.setBoolean(needsApproval)
+					.execute()
+					.getServerResult();
+
+			HttpClient client = HttpClientBuilder.create()
+												 .setRedirectStrategy(new LaxRedirectStrategy())
+												 .build();
+
+			HttpPost post = new HttpPost(gatekeeperUrl);
+			try
 			{
-				String gatekeeperUrl = getGatekeeperUrl();
+				List<NameValuePair> nameValuePairs = new ArrayList<>(4);
+				nameValuePairs.add(new BasicNameValuePair("activationKey", uuid));
+				nameValuePairs.add(new BasicNameValuePair("needsApproval", Boolean.toString(needsApproval)));
+				nameValuePairs.add(new BasicNameValuePair("userId", Long.toString(userDetails.getId())));
+				nameValuePairs.add(new BasicNameValuePair("isNewUser", Boolean.toString(false)));
+				nameValuePairs.add(new BasicNameValuePair("locale", properties.getLocale()));
+				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-				/* If the registration needs approval, insert into the
-				 * access_requests table */
-				List<Long> ids = new ValueQuery(INSERT_ACCESS_REQUEST)
-						.setQueryType(QueryType.AUTHENTICATION)
-						.setLong(userDetails.getId())
-						.setString(database)
-						.setString(server)
-						.setString(uuid)
-						.execute()
-						.getServerResult();
+				HttpResponse response = client.execute(post);
 
-				HttpClient client = HttpClientBuilder.create()
-													 .setRedirectStrategy(new LaxRedirectStrategy())
-													 .build();
+				StatusLine status = response.getStatusLine();
 
-				HttpPost post = new HttpPost(gatekeeperUrl);
-				try
+				if (status.getStatusCode() != HttpStatus.SC_OK)
 				{
-					List<NameValuePair> nameValuePairs = new ArrayList<>(4);
-					nameValuePairs.add(new BasicNameValuePair("activationKey", uuid));
-					nameValuePairs.add(new BasicNameValuePair("needsApproval", Boolean.toString(needsApproval)));
-					nameValuePairs.add(new BasicNameValuePair("userId", Long.toString(userDetails.getId())));
-					nameValuePairs.add(new BasicNameValuePair("isNewUser", Boolean.toString(false)));
-					nameValuePairs.add(new BasicNameValuePair("locale", properties.getLocale()));
-					post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+					/* Get the response message */
+					HttpEntity entity = response.getEntity();
 
-					HttpResponse response = client.execute(post);
+					BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
+					String line;
 
-					StatusLine status = response.getStatusLine();
+					StringBuilder builder = new StringBuilder();
 
-					if (status.getStatusCode() != HttpStatus.SC_OK)
+					while ((line = reader.readLine()) != null)
 					{
-						/* Get the response message */
-						HttpEntity entity = response.getEntity();
-
-						BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-						String line;
-
-						StringBuilder builder = new StringBuilder();
-
-						while ((line = reader.readLine()) != null)
-						{
-							builder.append(line);
-						}
-
-						reader.close();
-
-						String msg = builder.toString();
-
-						undoRequestInsert(ids);
-
-						handleError(msg);
+						builder.append(line);
 					}
-				}
-				catch (IOException e)
-				{
+
+					reader.close();
+
+					String msg = builder.toString();
+
 					undoRequestInsert(ids);
-					e.printStackTrace();
-					throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_UNAVAILABLE);
+
+					handleError(msg);
 				}
 			}
-			else
+			catch (IOException e)
 			{
-				/* Insert the permissions straight away */
-				new ValueQuery(INSERT_USER_HAS_ACCESS_TO_DATABASE)
-						.setQueryType(QueryType.AUTHENTICATION)
-						.setLong(userDetails.getId())
-						.setString(database)
-						.setString(server)
-						.execute();
+				undoRequestInsert(ids);
+				e.printStackTrace();
+				throw new LoginRegistrationException(LoginRegistrationException.Reason.GATEKEEPER_UNAVAILABLE);
 			}
 		}
 		else

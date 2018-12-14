@@ -1384,6 +1384,10 @@ public interface Text extends Messages
 	@Key("page.allele.frequency.download.binned")
 	String allelefreqResultDownloadBinned();
 
+	@Key("page.allele.frequency.download.unbinned")
+	@DefaultMessage("Unbinned data file")
+	String allelefreqResultDownloadUnbinned();
+
 	@Key("page.allele.frequency.download.map")
 	String allelefreqResultDownloadMap();
 

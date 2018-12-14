@@ -45,7 +45,7 @@ import jhi.germinate.shared.enums.*;
 public class BootstrapPager extends AbstractPager implements HasWidgets
 {
 	public static final  int   DEFAULT_PAGE_SIZE = 25;
-	private static final int[] SIZES             = {10, 25, 50, 100};
+	private static final int[] SIZES             = {10, 25, 50, 100, 250, 500};
 
 	private NumberFormat formatter;
 

@@ -37,7 +37,6 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
-import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.basic.*;
@@ -69,8 +68,6 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	@UiField
 	CategoryPanel     overviewTab;
 	@UiField
-	CategoryPanel     scatterTab;
-	@UiField
 	CategoryPanel     matrixTab;
 	@UiField
 	CategoryPanel     dataTab;
@@ -80,9 +77,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	@UiField
 	FlowPanel                      overviewPanel;
 	@UiField(provided = true)
-	ScatterChart<Phenotype>        phenotypeByPhenotypeChart;
-	@UiField(provided = true)
-	MatrixChart<Phenotype>         matrixChart;
+	MatrixScatterPanel<Phenotype>  matrixChart;
 	@UiField(provided = true)
 	PhenotypeDataTable             phenotypeDataTable;
 	@UiField(provided = true)
@@ -103,10 +98,10 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 		/* See if there are selected datasets in the parameter store */
 		selectedDatasets = DatasetListParameterStore.Inst.get().get(Parameter.trialsDatasets);
 
-		matrixChart = new MatrixChart<>();
-		phenotypeByPhenotypeChart = new ScatterChart<>();
 		exportSelection = new DataExportSelection<>(ExperimentType.trials);
 		metadataDownload = new DatasetMetadataDownload(selectedDatasets);
+
+		matrixChart = new MatrixScatterPanel<>();
 
 		phenotypeDataTable = new PhenotypeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
@@ -143,7 +138,6 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 			int i = 0;
 			overviewTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
-			scatterTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			matrixTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			dataTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			downloadTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
@@ -157,7 +151,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 					return false;
 				}
 			});
-			GQuery.$(scatterTab.getAnchor()).click(new Function()
+			GQuery.$(matrixTab.getAnchor()).click(new Function()
 			{
 				@Override
 				public boolean f(Event e)
@@ -166,21 +160,12 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 					return false;
 				}
 			});
-			GQuery.$(matrixTab.getAnchor()).click(new Function()
-			{
-				@Override
-				public boolean f(Event e)
-				{
-					deck.showWidget(2);
-					return false;
-				}
-			});
 			GQuery.$(dataTab.getAnchor()).click(new Function()
 			{
 				@Override
 				public boolean f(Event e)
 				{
-					deck.showWidget(3);
+					deck.showWidget(2);
 
 					if (!phenotypeDataTable.isFiltered())
 					{
@@ -200,7 +185,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 				@Override
 				public boolean f(Event e)
 				{
-					deck.showWidget(4);
+					deck.showWidget(3);
 					return false;
 				}
 			});
@@ -243,7 +228,6 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 
 				getYearOverviewStats();
 
-				phenotypeByPhenotypeChart.update(ExperimentType.trials, getNumericalPhenotypes(), groups, Text.LANG.trialsPByPText());
 				matrixChart.update(ExperimentType.trials, getNumericalPhenotypes(), groups);
 				exportSelection.update(ids, phenotypes, groups);
 			}

@@ -48,6 +48,9 @@ public class DatasetDownloadCallback extends SimpleCallback<Dataset>
 			case genotype:
 				downloadGenotypes(dataset);
 				break;
+			case allelefreq:
+				downloadAllelefreq(dataset);
+				break;
 			case trials:
 				downloadTrials(dataset);
 				break;
@@ -62,6 +65,7 @@ public class DatasetDownloadCallback extends SimpleCallback<Dataset>
 		{
 			case compound:
 			case genotype:
+			case allelefreq:
 			case trials:
 				return true;
 			default:
@@ -126,9 +130,14 @@ public class DatasetDownloadCallback extends SimpleCallback<Dataset>
 			}
 			else
 			{
-				invokeDownload(FileLocation.data, dataset.getSourceFile());
+				invokeDownload(FileLocation.data, ReferenceFolder.genotype.name() + "/" + dataset.getSourceFile());
 			}
 		}
+	}
+
+	private void downloadAllelefreq(Dataset dataset)
+	{
+		invokeDownload(FileLocation.data, ReferenceFolder.allelefreq.name() + "/" + dataset.getSourceFile());
 	}
 
 	private void downloadCompounds(Dataset dataset)

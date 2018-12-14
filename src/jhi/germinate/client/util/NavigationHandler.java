@@ -161,40 +161,35 @@ public class NavigationHandler
 		// GENOTYPE DATASETS
 		else if (Page.GENOTYPE_DATASETS.is(page))
 		{
-			GWT.runAsync(new RunAsyncNotifyCallback()
-			{
-				@Override
-				public void onSuccess()
+			GWT.runAsync((RunAsyncNotifyCallback) () -> {
+				final DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
 				{
-					final DatasetWidget widget = new DatasetWidget(new DatasetWidget.DatasetCallback()
+					@Override
+					public boolean isContinueButtonAvailable()
 					{
-						@Override
-						public boolean isContinueButtonAvailable()
-						{
-							return GerminateSettingsHolder.isPageAvailable(Page.GENOTYPE_EXPORT);
-						}
+						return GerminateSettingsHolder.isPageAvailable(Page.GENOTYPE_EXPORT);
+					}
 
-						@Override
-						public void onContinuePressed()
-						{
-							History.newItem(Page.GENOTYPE_EXPORT.name());
-						}
-					}, ExperimentType.genotype, true)
+					@Override
+					public void onContinuePressed()
 					{
-						@Override
-						public String getParallaxStyle()
-						{
-							return ParallaxResource.INSTANCE.css().parallaxGenotype();
-						}
-					};
-					widget.setShowMap(true);
-					widget.setLinkToExportPage(false);
-					widget.setTitle(Text.LANG.genotypeDatasetHeader());
-					widget.setText(Text.LANG.genotypeDatasetText());
-					widget.setShowDownload(true);
+						History.newItem(Page.GENOTYPE_EXPORT.name());
+					}
+				}, ExperimentType.genotype, true)
+				{
+					@Override
+					public String getParallaxStyle()
+					{
+						return ParallaxResource.INSTANCE.css().parallaxGenotype();
+					}
+				};
+				widget.setShowMap(true);
+				widget.setLinkToExportPage(false);
+				widget.setTitle(Text.LANG.genotypeDatasetHeader());
+				widget.setText(Text.LANG.genotypeDatasetText());
+				widget.setShowDownload(true);
 
-					ContentHolder.getInstance().setContent(page, page, widget);
-				}
+				ContentHolder.getInstance().setContent(page, page, widget);
 			});
 
 		}
@@ -340,6 +335,7 @@ public class NavigationHandler
 				widget.setText(Text.LANG.allelefreqDatasetText());
 				widget.setShowMap(true);
 				widget.setLinkToExportPage(false);
+				widget.setShowDownload(true);
 
 				ContentHolder.getInstance().setContent(page, page, widget);
 			});
