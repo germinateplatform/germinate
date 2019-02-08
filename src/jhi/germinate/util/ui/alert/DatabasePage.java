@@ -106,7 +106,7 @@ public class DatabasePage extends JWizardPage
 		c.gridx = (c.gridx + 1) % 2;
 		add(password, c);
 
-		if(properties == null)
+		if (properties == null)
 			properties = DatabaseProperties.readProperties();
 		server.setText(properties.getServer());
 		database.setText(properties.getDatabase());

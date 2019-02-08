@@ -20,12 +20,18 @@ package jhi.germinate.client.page.markeditemlist;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.rpc.*;
 
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.*;
+
 import java.util.*;
 
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
@@ -72,10 +78,37 @@ public class AccessionCartView extends AbstractCartView<Accession>
 			}
 
 			@Override
+			protected boolean preventAllItemMarking()
+			{
+				return true;
+			}
+
+			@Override
 			protected boolean supportsFiltering()
 			{
 				return false;
 			}
 		};
+	}
+
+	@Override
+	protected void setUpContent()
+	{
+		super.setUpContent();
+		String markedIds = getItemType().getMarkedIdString();
+
+		String url = GerminateSettingsHolder.get().templateMarkedAccessionUrl.getValue();
+
+		if (!StringUtils.isEmpty(url, markedIds))
+		{
+			url = url.replace("{{IDS}}", markedIds);
+			panel.add(new Heading(HeadingSize.H3, Text.LANG.markedItemsAccessionExport()));
+			Anchor anchor = new Anchor();
+			anchor.setText(Text.LANG.markedItemsAccessionExport());
+			anchor.addStyleName(Style.combine(Styles.BTN, ButtonType.PRIMARY.getCssName(), Style.mdiLg(Style.MDI_EXPORT)));
+			anchor.setHref(url);
+			anchor.setTarget("_blank");
+			panel.add(anchor);
+		}
 	}
 }

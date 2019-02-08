@@ -23,7 +23,6 @@ import com.google.gwt.safehtml.shared.*;
 import java.sql.*;
 import java.util.Date;
 import java.util.*;
-import java.util.regex.*;
 
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
@@ -183,8 +182,8 @@ public class Compound extends DatabaseObject
 	{
 		try
 		{
-			Pattern pattern = Pattern.compile("([A-Z][a-z]*)(\\d+)");
-			Matcher matcher = pattern.matcher(molecularFormula);
+			java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("([A-Z][a-z]*)(\\d+)");
+			java.util.regex.Matcher matcher = pattern.matcher(molecularFormula);
 
 			StringBuilder output = new StringBuilder();
 			boolean atLeastOne = false;

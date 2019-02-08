@@ -349,7 +349,7 @@ public class FilterRow extends Composite
 		if (comparator == null)
 			return null;
 
-		SearchCondition value = new SearchCondition(column.getSelection().databaseColumn, comparator, getFirst(), String.class);
+		SearchCondition value = new SearchCondition(column.getSelection().databaseColumn, comparator, getFirst(), column.getSelection().dataType);
 
 		if (secondInput.isVisible())
 			value.addConditionValue(getSecond());

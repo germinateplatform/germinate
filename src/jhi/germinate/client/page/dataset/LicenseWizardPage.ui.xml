@@ -45,7 +45,7 @@
 			<g:Label text="{msg.licenseWizardDeclineMeaning}"/>
 			<b:ButtonGroup addStyleNames="{PULL_RIGHT}">
 				<b:ButtonGroup dropUp="true">
-					<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DOWNLOAD}" dataToggle="DROPDOWN" text="{msg.generalSave}" toggleCaret="true" />
+					<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DOWNLOAD}" dataToggle="DROPDOWN" text="{msg.generalSave}" toggleCaret="true"/>
 					<b:DropDownMenu>
 						<g8:MdiAnchorListItem mdi="{MDI_PRINTER}" text="{msg.generalPrint}" ui:field="print"/>
 						<g8:MdiAnchorListItem mdi="{MDI_FILE_XML}" text="{msg.downloadFileAsHtml}" ui:field="html"/>

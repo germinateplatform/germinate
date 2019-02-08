@@ -59,7 +59,9 @@ public class CollaboratorImporter extends DataImporter<Collaborator>
 	@Override
 	protected void write(Collaborator entry) throws DatabaseException
 	{
-		collaborators.add(createOrGetCollaborator(entry));
+		Collaborator collaborator = createOrGetCollaborator(entry);
+		if(collaborator != null)
+			collaborators.add(collaborator);
 	}
 
 	/**

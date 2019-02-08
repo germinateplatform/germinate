@@ -63,7 +63,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 		{
 			PaginatedServerResult<List<Map>> maps = get(properties, null);
 
-			for(Map map : maps.getServerResult())
+			for (Map map : maps.getServerResult())
 			{
 				if (Objects.equals(map.getId(), mapId))
 					return new ServerResult<>(maps.getDebugInfo(), map);

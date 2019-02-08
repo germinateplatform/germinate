@@ -158,21 +158,21 @@ public class FlapjackUtils
 	{
 		try
 		{
-//			if (USE_FLAPJACK_API)
-//			{
-//				File map = new File(params.getParam(FlapjackParams.Param.map));
-//				File genotypes = new File(params.getParam(FlapjackParams.Param.genotypes));
-//				FlapjackFile project = new FlapjackFile(params.getParam(FlapjackParams.Param.project));
-//				CreateProjectSettings cps = new CreateProjectSettings(genotypes, map, null, null, project, null);
-//				DataImportSettings dis = new DataImportSettings();
-//				CreateProject cp = new CreateProject(cps, dis);
-//
-//				return handleOutput(cp.doProjectCreation());
-//
-////				throw new FlapjackException("API for CreateProject not implemented yet.");
-//			}
-//			else
-//			{
+			//			if (USE_FLAPJACK_API)
+			//			{
+			//				File map = new File(params.getParam(FlapjackParams.Param.map));
+			//				File genotypes = new File(params.getParam(FlapjackParams.Param.genotypes));
+			//				FlapjackFile project = new FlapjackFile(params.getParam(FlapjackParams.Param.project));
+			//				CreateProjectSettings cps = new CreateProjectSettings(genotypes, map, null, null, project, null);
+			//				DataImportSettings dis = new DataImportSettings();
+			//				CreateProject cp = new CreateProject(cps, dis);
+			//
+			//				return handleOutput(cp.doProjectCreation());
+			//
+			////				throw new FlapjackException("API for CreateProject not implemented yet.");
+			//			}
+			//			else
+			//			{
 			String javaPath = PropertyWatcher.getJavaPath();
 
 			List<String> parameters = new ArrayList<>();
@@ -185,7 +185,7 @@ public class FlapjackUtils
 			ProcessBuilder processBuilder = new ProcessBuilder(parameters);
 
 			return runAndCaptureOutput(processBuilder);
-//			}
+			//			}
 		}
 		catch (Exception e)
 		{

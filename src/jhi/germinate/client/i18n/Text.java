@@ -1546,6 +1546,22 @@ public interface Text extends Messages
 	@DefaultMessage("Unmark selected items")
 	String cartRemoveSelectedFromCartButton();
 
+	@Key("page.cart.button.add.entity.parents")
+	@DefaultMessage("Mark entity parents")
+	String cartAddEntityParents();
+
+	@Key("page.cart.button.remove.entity.parents")
+	@DefaultMessage("Unmark entity parents")
+	String cartRemoveEntityParents();
+
+	@Key("page.cart.button.add.entity.children")
+	@DefaultMessage("Mark entity children")
+	String cartAddEntityChildren();
+
+	@Key("page.cart.button.remove.entity.children")
+	@DefaultMessage("Unmark entity children")
+	String cartRemoveEntityChildren();
+
 	@Key("page.cart.button.clear")
 	String cartEmpty();
 
@@ -2353,7 +2369,7 @@ public interface Text extends Messages
 
 	@Key("widget.pager.jump.to.page.page.number")
 	@DefaultMessage("Page number (1 - {0})")
-	String pagerPageNumberInput(int maxPage);
+	String pagerPageNumberInput(String maxPage);
 
 	@Key("page.groups.search.result")
 	@DefaultMessage("Search for items")
@@ -2522,6 +2538,10 @@ public interface Text extends Messages
 	@Key("widget.group.member.upload.select.column")
 	@DefaultMessage("Select database column")
 	String groupMemberUploadSelectColumn();
+
+	@Key("widget.marked.item.list.accession.export")
+	@DefaultMessage("Export accessions")
+	String markedItemsAccessionExport();
 
 	@Key("widget.marked.item.list.clear.confirm")
 	@DefaultMessage("Are you sure you want to clear the marked item list?")
@@ -2719,4 +2739,6 @@ public interface Text extends Messages
 	@Key("help.genotypic.export")
 	@DefaultMessage("<p>Genotypic data is exported for either the whole dataset or a subselection of accessions or markers. This page allows you to select which accession and marker groups should be included in the output and which genetic/physical map they should be exported against. To export the data for all accessions/markers, simply select the first item in the lists.</p><p>If you have items in your marked item list, a button below the selection box can be used to create a group from the list and then use that new group for the export.</p>")
 	SafeHtml genotypicExportHelp();
+
+
 }

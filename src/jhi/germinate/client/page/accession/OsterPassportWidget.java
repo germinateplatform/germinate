@@ -35,12 +35,12 @@ import jhi.germinate.shared.datastructure.database.Image;
 import jhi.germinate.shared.enums.*;
 
 /**
- * The {@link OsterPassportPage} is a special version of the {@link PassportPage} that shows information about very rare accessions.
+ * The {@link OsterPassportWidget} is a special version of the {@link PassportWidget} that shows information about very rare accessions.
  *
  * @author Sebastian Raubach
  * @see Parameter#accessionId
  */
-public class OsterPassportPage extends PassportPage
+public class OsterPassportWidget extends PassportWidget
 {
 	private static final String URL   = "URL";
 	private static final String IMAGE = "IMAGE";
@@ -112,6 +112,11 @@ public class OsterPassportPage extends PassportPage
 		PAUL_SHAW.setExtra(IMAGE, "img/shaw-paul.png");
 	}
 
+	public OsterPassportWidget()
+	{
+		super(null);
+	}
+
 	@Override
 	protected void updateDownloads()
 	{
@@ -180,12 +185,6 @@ public class OsterPassportPage extends PassportPage
 	}
 
 	@Override
-	public HyperlinkPopupOptions getHyperlinkOptions()
-	{
-		return null;
-	}
-
-	@Override
 	protected void onLoad()
 	{
 		Long id = LongParameterStore.Inst.get().get(Parameter.accessionId);
@@ -193,7 +192,7 @@ public class OsterPassportPage extends PassportPage
 
 		if (accession != null)
 		{
-			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "easteregg", "found", id.intValue());
+			GoogleAnalytics.trackEvent(GoogleAnalytics.Category.UI, "easteregg", "found", id.intValue());
 			super.updateContent();
 		}
 		else

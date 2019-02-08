@@ -67,7 +67,7 @@ public class TrialsCellTable extends GerminateComposite
 			float minValue = Float.MAX_VALUE;
 			float maxValue = -Float.MAX_VALUE;
 
-            /* And each column */
+			/* And each column */
 			for (String year : years)
 			{
 				if (year.equals("phenotype"))
@@ -84,7 +84,7 @@ public class TrialsCellTable extends GerminateComposite
 					continue;
 				}
 
-                /* Check for min/max */
+				/* Check for min/max */
 				if (value < minValue)
 					minValue = value;
 				if (value > maxValue)
@@ -108,7 +108,7 @@ public class TrialsCellTable extends GerminateComposite
 
 			StringBuilder builder = new StringBuilder();
 
-//			builder.append("<div class='").append(Style.combine(StyleConstants.FONT_80_PERCENT, StyleConstants.TRIALS_CELL)).append("'>");
+			//			builder.append("<div class='").append(Style.combine(StyleConstants.FONT_80_PERCENT, StyleConstants.TRIALS_CELL)).append("'>");
 			builder.append("<div>");
 
 			String minAnchor = "<a href='javascript:void(0);' style='color: " + textColor + ";' onclick=\"javascript:accessionLinkFunction('" + cell.getMinAccessionId() + "');\">" + cell.getMinAccessionName() + "</a>";
@@ -195,7 +195,7 @@ public class TrialsCellTable extends GerminateComposite
 			table.addSafeHtmlColumn(c, theYear);
 		}
 
-        /* Determine min and max values and set the gradients */
+		/* Determine min and max values and set the gradients */
 		determineMinMaxValues(data, years);
 
 		/* Wrap everything in a scrollable composite */

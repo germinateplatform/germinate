@@ -116,12 +116,12 @@ public class SearchPanel extends Composite
 		else
 		{
 
-        	/* Save the parameter in the parameter store */
+			/* Save the parameter in the parameter store */
 			StringParameterStore.Inst.get().put(Parameter.searchString, searchString);
 			/* Clear the focus */
 			searchBox.setFocus(false);
 
-        	/* Either update the search page of navigate to it */
+			/* Either update the search page of navigate to it */
 			String historyToken = History.getToken();
 			if (Page.SEARCH.name().equals(historyToken))
 				History.fireCurrentHistoryState();

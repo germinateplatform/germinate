@@ -59,8 +59,8 @@ public abstract class BaseException extends Exception implements Serializable
 		if (printExceptions)
 			/*
 			 * HOWEVER, we allow subclasses to still handle the actual exception
-             * on the server. This can be used for logging purposes.
-             */
+			 * on the server. This can be used for logging purposes.
+			 */
 			logException(e);
 	}
 

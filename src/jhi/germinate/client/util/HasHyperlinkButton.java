@@ -37,7 +37,7 @@ public interface HasHyperlinkButton
 	 */
 	final class HyperlinkPopupOptions
 	{
-		private Page page;
+		private       Page            page;
 		private final List<Parameter> relevantParameters = new ArrayList<>();
 
 		public HyperlinkPopupOptions()

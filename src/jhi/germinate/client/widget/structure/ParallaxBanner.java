@@ -19,7 +19,6 @@ package jhi.germinate.client.widget.structure;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -37,7 +36,7 @@ public class ParallaxBanner
 
 	private static ParallaxBannerUiBinder ourUiBinder = GWT.create(ParallaxBannerUiBinder.class);
 
-	private static boolean isInitialized = false;
+	private static boolean        isInitialized = false;
 	private static ParallaxBanner INSTANCE;
 
 	@UiField
@@ -71,12 +70,10 @@ public class ParallaxBanner
 			INSTANCE.parallax.addClassName(style);
 		INSTANCE.currentStyle = style;
 
-		GQuery el = GQuery.$("#" + Id.STRUCTURE_PARALLAX);
-
 		if (style == null)
-			el.hide();
+			JavaScript.hide("#" + Id.STRUCTURE_PARALLAX);
 		else
-			el.show();
+			JavaScript.show("#" + Id.STRUCTURE_PARALLAX);
 	}
 
 	public static void init()

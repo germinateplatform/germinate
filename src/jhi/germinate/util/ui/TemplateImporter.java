@@ -53,49 +53,6 @@ public class TemplateImporter extends JFrame
 			TemplateImporter ex = new TemplateImporter();
 			ex.setVisible(true);
 		});
-
-		//		try
-		//		{
-		//			String[] snps = new String[]{"A", "C", "G", "T", "C/G", "A/T", ""};
-		//
-		//			File file = Files.createTempFile("genotype", ".txt").toFile();
-		//			Random random = new Random();
-		//			int lines = 3000;
-		//			int markers = 1000000;
-		//
-		//			try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file))))
-		//			{
-		//				pw.println(IntStream.range(0, markers)
-		//					.mapToObj(i -> "1")
-		//					.collect(Collectors.joining("\t", "Linkage Group / Chromosome\t", "")));
-		//
-		//				pw.println(IntStream.range(0, markers)
-		//									.mapToObj(i -> "1")
-		//									.collect(Collectors.joining("\t", "Position\t", "")));
-		//
-		//				pw.println(IntStream.range(0, markers)
-		//									.mapToObj(i -> "m" + i)
-		//									.collect(Collectors.joining("\t", "\t", "")));
-		//
-		//				for (int line = 0; line < lines; line++)
-		//				{
-		//					pw.print("acc" + line);
-		//
-		//					pw.println(IntStream.range(0, markers)
-		//										.mapToObj(i -> {
-		//											int index = random.nextInt(snps.length);
-		//											return snps[index];
-		//										})
-		//										.collect(Collectors.joining("\t", "\t", "")));
-		//				}
-		//			}
-		//
-		//			System.out.println(file.getAbsolutePath());
-		//		}
-		//		catch (IOException e)
-		//		{
-		//			e.printStackTrace();
-		//		}
 	}
 
 	private void initUI()

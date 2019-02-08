@@ -68,8 +68,6 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		this.itemType = itemType;
 	}
 
-	public abstract boolean supportsFullIdMarking();
-
 	public final void getIds(AsyncCallback<ServerResult<List<String>>> callback)
 	{
 		getIds(getSearchFilter(false), callback);
@@ -77,10 +75,16 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 
 	public abstract void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback);
 
+	protected boolean preventAllItemMarking()
+	{
+		return false;
+	}
+
 	@Override
 	protected void onPostLoad()
 	{
 		super.onPostLoad();
+
 
 		makeTableMarkable();
 
@@ -133,7 +137,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				else
 				{
 					/* Otherwise show a popup menu */
-					return showPopupMenu(x, y, row != null, new MarkedItemListCallback()
+					return showPopupMenu(x, y, row, new MarkedItemListCallback()
 					{
 						private Long getId(DatabaseObject object)
 						{
@@ -192,10 +196,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 							{
 								Long id = getId(rows.get(i));
 								if (id != null && newId.equals(Long.toString(id)))
-								{
 									redrawRow(i);
-//										break;
-								}
 							}
 						}
 					});
@@ -205,7 +206,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			/* Add the new column */
 			addMarkedStatusColumn(handler);
 
-        	/* Handle the context menu */
+			/* Handle the context menu */
 			setContextMenuHandler(handler);
 		}
 	}
@@ -214,46 +215,24 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 	 * Shows a {@link PopupPanel} as a context menu at the given location. Uses {@link Accession#ID} to retrieve the id from the {@link
 	 * DatabaseObject}
 	 *
-	 * @param showIndividual Should the menu items for individual marking be shown?
-	 * @param x              The x position of the {@link PopupPanel}
-	 * @param y              The y position of the {@link PopupPanel}
-	 * @param callback       The {@link MarkedItemListCallback}
+	 * @param x        The x position of the {@link PopupPanel}
+	 * @param y        The y position of the {@link PopupPanel}
+	 * @param callback The {@link MarkedItemListCallback}
 	 * @return <code>true</code> if the panel will be shown
 	 */
-	private boolean showPopupMenu(final int x, final int y, boolean showIndividual, final MarkedItemListCallback callback)
+	private boolean showPopupMenu(final int x, final int y, T row, final MarkedItemListCallback callback)
 	{
-		if (callback == null)
+		if (callback == null || (row == null && preventAllItemMarking()))
 			return false;
 
 		final PopupPanel popupPanel = new PopupPanel(true);
 
 		final MenuBar menuBar = new MenuBar(true);
 		MenuItem menuItem;
+		int itemCount = 0;
 
-		if (showIndividual)
-		{
-			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MARKED, Text.LANG.cartAddToCartButton()), (Command) () ->
-			{
-				String id = callback.getId(true);
-				MarkedItemList.add(itemType, id);
-				popupPanel.hide();
-				callback.updateTable(id);
-			});
-			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
-			menuBar.addItem(menuItem);
-		}
-
-		menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MULTIPLE_MARKED, Text.LANG.cartAddPageToCartButton()), (Command) () ->
-		{
-			List<String> ids = callback.getIds(true);
-			MarkedItemList.add(itemType, ids);
-			popupPanel.hide();
-			callback.updateTable(ids);
-		});
-		menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
-		menuBar.addItem(menuItem);
-
-		if (supportsFullIdMarking())
+		// We only show the "mark all" items if it's the header that's clicked and if the child class doesn't request to prevent it
+		if (row == null && !preventAllItemMarking())
 		{
 			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MULTIPLE_MARKED, Text.LANG.cartAddAllToCartButton()), () -> getIds(new DefaultAsyncCallback<ServerResult<List<String>>>(true)
 			{
@@ -270,39 +249,14 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			}));
 			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
-		}
+			itemCount++;
 
-		if (showIndividual)
-		{
-			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_BLANK_OUTLINE, Text.LANG.cartRemoveFromCartButton()), (Command) () ->
-			{
-				String id = callback.getId(false);
-				MarkedItemList.remove(itemType, id);
-				popupPanel.hide();
-				callback.updateTable(id);
-			});
-			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
-			menuBar.addItem(menuItem);
-		}
-
-		menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MULTIPLE_BLANK_OUTLINE, Text.LANG.cartRemovePageToCartButton()), (Command) () ->
-		{
-			List<String> ids = callback.getIds(false);
-			MarkedItemList.remove(itemType, ids);
-			popupPanel.hide();
-			callback.updateTable(ids);
-		});
-		menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
-		menuBar.addItem(menuItem);
-
-		if (supportsFullIdMarking())
-		{
 			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHECKBOX_MULTIPLE_BLANK_OUTLINE, Text.LANG.cartRemoveAllFromCartButton()), () -> getIds(new DefaultAsyncCallback<ServerResult<List<String>>>(true)
 			{
 				@Override
 				protected void onSuccessImpl(ServerResult<List<String>> result)
 				{
-					if(result.hasData())
+					if (result.hasData())
 					{
 						MarkedItemList.remove(itemType, result.getServerResult());
 						popupPanel.hide();
@@ -312,10 +266,11 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			}));
 			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
+			itemCount++;
 		}
 
-		// Add the "Create group from selection" button
-		if (ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
+		// Add the "Create group from selection" button for the header
+		if (row == null && ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
 		{
 			menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_GROUP, Text.LANG.buttonCreateGroupFromSelection()), (Command) () ->
 			{
@@ -332,6 +287,32 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			});
 			menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
 			menuBar.addItem(menuItem);
+			itemCount++;
+		}
+
+		MenuItem[] additionalItems = getAdditionalItems(row, popupPanel, callback);
+		// If there are other items to add
+		if (!ArrayUtils.isEmpty(additionalItems))
+		{
+			if(itemCount > 0)
+			{
+				// Add a separator
+				menuBar.addSeparator();
+			}
+
+			// For each item
+			for (MenuItem m : additionalItems)
+			{
+				final Scheduler.ScheduledCommand old = m.getScheduledCommand();
+				m.setScheduledCommand(() ->
+				{
+					old.execute();
+					popupPanel.hide();
+				});
+				m.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Style.LAYOUT_WHITE_SPACE_NO_WRAP, Emphasis.PRIMARY.getCssName()));
+				menuBar.addItem(m);
+				itemCount++;
+			}
 		}
 
 		menuBar.setVisible(true);
@@ -393,19 +374,16 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 
 					String idString = Long.toString(id);
 
-                    /* Change the marked state of the item */
+					/* Change the marked state of the item */
 					MarkedItemList.toggle(itemType, idString);
 
-                    /* Update the row */
+					/* Update the row */
 					List<T> rows = getVisibleItems();
 					for (int i = 0; i < rows.size(); i++)
 					{
 						Long itemId = DatabaseObject.getGroupSpecificId(rows.get(i));
 						if (itemId != null && id.longValue() == itemId.longValue())
-						{
 							redrawRow(i);
-//							break;
-						}
 					}
 				}
 				else
@@ -450,7 +428,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			}
 		};
 
-        /* Adds a column header for the new checkbox column that will toggle the checkbox state of the rows */
+		/* Adds a column header for the new checkbox column that will toggle the checkbox state of the rows */
 		Header<Boolean> header = new Header<Boolean>(new FACheckboxCell<T>(false, true, handler)
 		{
 			@Override
@@ -469,7 +447,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 				/* On click events */
 				if (BrowserEvents.CLICK.equals(event.getType()))
 				{
-					showPopupMenu(event.getClientX(), event.getClientY(), false, new MarkedItemListCallback()
+					showPopupMenu(event.getClientX(), event.getClientY(), null, new MarkedItemListCallback()
 					{
 						private Long getId(DatabaseObject object)
 						{
@@ -523,10 +501,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 							{
 								Long id = getId(rows.get(i));
 								if (id != null && newId.equals(Long.toString(id)))
-								{
 									redrawRow(i);
-//										break;
-								}
 							}
 						}
 					});
@@ -612,7 +587,12 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		topPager.add(group);
 	}
 
-	private interface MarkedItemListCallback
+	protected MenuItem[] getAdditionalItems(T row, PopupPanel popupPanel, MarkedItemListCallback callback)
+	{
+		return null;
+	}
+
+	protected interface MarkedItemListCallback
 	{
 		String getId(boolean toBeMarked);
 

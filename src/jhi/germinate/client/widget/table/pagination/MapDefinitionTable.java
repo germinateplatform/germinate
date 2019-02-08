@@ -52,12 +52,6 @@ public abstract class MapDefinitionTable extends MarkableDatabaseObjectPaginatio
 	}
 
 	@Override
-	public boolean supportsFullIdMarking()
-	{
-		return false;
-	}
-
-	@Override
 	protected boolean supportsFiltering()
 	{
 		return false;

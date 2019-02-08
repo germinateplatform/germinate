@@ -207,7 +207,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 										Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
 										groupTable.refreshTable();
 
-										JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "delete", Long.toString(group.getId()));
+										GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "delete", Long.toString(group.getId()));
 
 										if (group != null && Objects.equals(object.getId(), group.getId()))
 										{
@@ -320,12 +320,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					}
 
 					@Override
-					public boolean supportsFullIdMarking()
-					{
-						return true;
-					}
-
-					@Override
 					protected boolean supportsFiltering()
 					{
 						return false;
@@ -346,12 +340,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					{
 						GroupService.Inst.get().getLocationItemIds(Cookie.getRequestProperties(), group.getId(), callback);
 					}
-
-					@Override
-					public boolean supportsFullIdMarking()
-					{
-						return true;
-					}
 				};
 				break;
 			case markers:
@@ -367,12 +355,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 					{
 						GroupService.Inst.get().getMarkerItemIds(Cookie.getRequestProperties(), group.getId(), callback);
-					}
-
-					@Override
-					public boolean supportsFullIdMarking()
-					{
-						return true;
 					}
 				};
 				break;
@@ -429,7 +411,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 						@Override
 						public void onSuccessImpl(DebugInfo result)
 						{
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "deleteItems", Long.toString(group.getId()), ids.size());
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "deleteItems", Long.toString(group.getId()), ids.size());
 
 							Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupItemsDeleted());
 
@@ -488,12 +470,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					}
 
 					@Override
-					public boolean supportsFullIdMarking()
-					{
-						return true;
-					}
-
-					@Override
 					protected boolean supportsFiltering()
 					{
 						return true;
@@ -516,12 +492,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					}
 
 					@Override
-					public boolean supportsFullIdMarking()
-					{
-						return true;
-					}
-
-					@Override
 					protected boolean supportsFiltering()
 					{
 						return true;
@@ -541,12 +511,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 					public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 					{
 						LocationService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
-					}
-
-					@Override
-					public boolean supportsFullIdMarking()
-					{
-						return true;
 					}
 
 					@Override
@@ -580,7 +544,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				{
 					GerminateEventBus.BUS.fireEvent(new GroupMemberChangeEvent());
 
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(group.getId()), result.getServerResult().size());
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(group.getId()), result.getServerResult().size());
 				}
 			});
 		});
@@ -654,7 +618,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", Long.toString(result.getServerResult().getId()));
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "create", Long.toString(result.getServerResult().getId()));
 				group = result.getServerResult();
 				groupTable.refreshTable();
 				updateGroupMembers(true);
@@ -673,7 +637,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 				protected void onFailureImpl(Throwable caught)
 				{
 					group.setVisibility(!group.getVisibility());
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "changeVisibility", Long.toString(group.getId()), group.getVisibility() ? 1 : 0);
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "changeVisibility", Long.toString(group.getId()), group.getVisibility() ? 1 : 0);
 
 					super.onFailureImpl(caught);
 				}
@@ -685,7 +649,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 	void onDownloadClicked(ClickEvent event)
 	{
 		GroupService.Inst.get().exportForGroupId(Cookie.getRequestProperties(), group.getId(), group.getType().getTargetTable(), new FileDownloadCallback(true));
-		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "download", Long.toString(group.getId()));
+		GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "download", Long.toString(group.getId()));
 	}
 
 	@Override

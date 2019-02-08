@@ -87,6 +87,6 @@
 			</b:PanelGroup>
 		</g:FlowPanel>
 
-		<ge:AdditionalDataWidget visible="false" ui:field="additionalDataPanel" />
+		<ge:AdditionalDataWidget visible="false" ui:field="additionalDataPanel"/>
 	</g:FlowPanel>
 </ui:UiBinder>

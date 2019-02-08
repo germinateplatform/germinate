@@ -47,8 +47,8 @@
 
 		<g:DeckPanel ui:field="deck">
 			<g:FlowPanel ui:field="overviewPanel"/>
-			<g8:MatrixScatterPanel ui:field="matrixChart" />
-			<t:PhenotypeDataTable ui:field="phenotypeDataTable" />
+			<g8:MatrixScatterPanel ui:field="matrixChart"/>
+			<t:PhenotypeDataTable ui:field="phenotypeDataTable"/>
 			<g:FlowPanel>
 				<g8:DataExportSelection ui:field="exportSelection"/>
 				<g8:DatasetMetadataDownload ui:field="metadataDownload"/>

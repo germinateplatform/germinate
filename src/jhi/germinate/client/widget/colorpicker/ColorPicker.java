@@ -19,7 +19,6 @@ package jhi.germinate.client.widget.colorpicker;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.resources.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -38,8 +37,8 @@ public class ColorPicker extends Widget
 	private static final String CONFIRM = Text.LANG.generalConfirm();
 	private static final String CANCEL  = Text.LANG.generalCancel();
 
-	private String color      = "#ffffff";
-	private String innerStyle = "";
+	private       String         color      = "#ffffff";
+	private       String         innerStyle = "";
 	private final InputElement   element;
 	private       ChangeCallback callback;
 
@@ -99,14 +98,18 @@ public class ColorPicker extends Widget
 
 		init(element);
 
-		GQuery button = GQuery.$(".sp-choose");
+		setClasses(ButtonType.DEFAULT.getCssName());
+	}
+
+	private native void setClasses(String cssClass) /*-{
+		var button = $wnd.$(".sp-choose");
 
 		button.removeClass("sp-choose")
-			  .addClass(Styles.BTN)
-			  .addClass(ButtonType.DEFAULT.getCssName());
+			.addClass(@org.gwtbootstrap3.client.ui.constants.Styles::BTN)
+			.addClass(cssClass);
 
 		button.css("padding", "4px 5px");
-	}
+	}-*/;
 
 	@Override
 	protected void onUnload()

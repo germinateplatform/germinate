@@ -133,15 +133,15 @@ public class TableUtils
 		if (value == null)
 			value = "";
 
-            /*
-			 * If the hyperlink is empty, emulate a link and let the
-             * <code>handleSelectionEvent()</code> method handle the navigation
-             */
+		/*
+		 * If the hyperlink is empty, emulate a link and let the
+		 * <code>handleSelectionEvent()</code> method handle the navigation
+		 */
 		if (StringUtils.isEmpty(hyperlink))
 		{
 			return SimpleHtmlTemplate.INSTANCE.dummyAnchor(value);
 		}
-			/* Else add a real anchor */
+		/* Else add a real anchor */
 		else
 		{
 			SafeUri href = UriUtils.fromString(hyperlink);

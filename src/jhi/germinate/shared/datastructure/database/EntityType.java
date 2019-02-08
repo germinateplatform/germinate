@@ -17,14 +17,16 @@
 
 package jhi.germinate.shared.datastructure.database;
 
+import jhi.germinate.shared.*;
+
 /**
  * @author Sebastian Raubach
  */
 public enum EntityType
 {
-	ACCESSION(1L, "Accession", "The basic working unit of conservation in the genebanks."),
-	PLANT_PLOT(2L, "Plant/Plot", "An individual grown from an accession OR a plot of individuals from the same accession."),
-	SAMPLE(3L, "Sample", "A sample from a plant. An example would be taking multiple readings for the same phenotype from a plant.");
+	ACCESSION(1L, "Accession", "The basic working unit of conservation in the genebanks.", Style.MDI_ALPHA_A_BOX),
+	PLANT_PLOT(2L, "Plant/Plot", "An individual grown from an accession OR a plot of individuals from the same accession.", Style.MDI_ALPHA_P_BOX),
+	SAMPLE(3L, "Sample", "A sample from a plant. An example would be taking multiple readings for the same phenotype from a plant.", Style.MDI_ALPHA_S_BOX);
 
 	public static final String ID          = "entitytypes.id";
 	public static final String NAME        = "entitytypes.name";
@@ -35,12 +37,14 @@ public enum EntityType
 	private final Long   id;
 	private final String name;
 	private final String description;
+	private final String mdi;
 
-	EntityType(Long id, String name, String description)
+	EntityType(Long id, String name, String description, String mdi)
 	{
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.mdi = mdi;
 	}
 
 	public static EntityType getById(Long id)
@@ -81,5 +85,10 @@ public enum EntityType
 	public String getDescription()
 	{
 		return description;
+	}
+
+	public String getMdi()
+	{
+		return mdi;
 	}
 }

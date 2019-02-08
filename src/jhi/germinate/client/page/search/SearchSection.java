@@ -22,6 +22,7 @@ import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.shared.event.*;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Label;
 import org.gwtbootstrap3.client.ui.Panel;
@@ -93,6 +94,11 @@ public class SearchSection extends Composite implements HasWidgets
 		body.clear();
 		setLabel(0);
 		progress.setVisible(false);
+	}
+
+	public void addShownHandler(ShownHandler handler)
+	{
+		target.addShownHandler(handler);
 	}
 
 	@Override

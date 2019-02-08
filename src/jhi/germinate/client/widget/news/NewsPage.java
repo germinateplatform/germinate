@@ -52,7 +52,7 @@ public class NewsPage extends Composite
 	private static NewsPageUiBinder ourUiBinder = GWT.create(NewsPageUiBinder.class);
 
 	private Long newsId;
-	private int perPage = DEFAULT_NEWS_PER_PAGE;
+	private int  perPage = DEFAULT_NEWS_PER_PAGE;
 
 	protected List<News> storedResult;
 

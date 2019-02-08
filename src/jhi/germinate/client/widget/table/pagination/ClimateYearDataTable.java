@@ -170,7 +170,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 				{
 					Double doubleValue = object.getYearToValues().get(theYear);
 
-					if(doubleValue != null)
+					if (doubleValue != null)
 					{
 						SafeStyles textColor = SafeStylesUtils.forTrustedColor(gradient.getTextColor(doubleValue).toRGBValue());
 						SafeStyles backgroundColor = SafeStylesUtils.forTrustedBackgroundColor(gradient.getColor(doubleValue).toRGBValue());
@@ -211,7 +211,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 		/* The maximal value of the color coded table */
 		double maxValue = -Float.MAX_VALUE;
 
-        /* For each row */
+		/* For each row */
 		for (ClimateYearData row : table)
 		{
 			/* And each column */
@@ -219,7 +219,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 			{
 				Double value = row.getYearToValues().get(i);
 
-				if(value != null)
+				if (value != null)
 				{
 					/* Check for min/max */
 					if (value < minValue)
@@ -230,7 +230,7 @@ public abstract class ClimateYearDataTable extends DatabaseObjectPaginationTable
 			}
 		}
 
-        /* Update the gradient */
+		/* Update the gradient */
 		gradient.setMin(minValue);
 		gradient.setMax(maxValue);
 	}

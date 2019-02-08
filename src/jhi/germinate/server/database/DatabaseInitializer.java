@@ -43,7 +43,7 @@ public abstract class DatabaseInitializer
 			String[] names = getNames();
 			String[] queries = getQueries();
 
-            /* Drop and recreate the views */
+			/* Drop and recreate the views */
 			for (int i = 0; i < Math.min(names.length, queries.length); i++)
 			{
 				try

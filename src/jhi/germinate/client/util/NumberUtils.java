@@ -43,23 +43,23 @@ public class NumberUtils
 	 */
 	public static final NumberFormat INTEGER_FORMAT             = NumberFormat.getFormat("#,###").overrideFractionDigits(0, 0);
 
-	private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
+	private static final NavigableMap<Long, String> suffixes    = new TreeMap<>();
 	private static final NavigableMap<Long, String> suffixesBit = new TreeMap<>();
 
 	static
 	{
-		suffixes.put(               1000L, "k");
-		suffixes.put(            1000000L, "M");
-		suffixes.put(         1000000000L, "G");
-		suffixes.put(      1000000000000L, "T");
-		suffixes.put(   1000000000000000L, "P");
+		suffixes.put(1000L, "k");
+		suffixes.put(1000000L, "M");
+		suffixes.put(1000000000L, "G");
+		suffixes.put(1000000000000L, "T");
+		suffixes.put(1000000000000000L, "P");
 		suffixes.put(1000000000000000000L, "E");
 
-		suffixesBit.put(               1024L, "k");
-		suffixesBit.put(            1048576L, "M");
-		suffixesBit.put(         1073741824L, "G");
-		suffixesBit.put(      1099511627776L, "T");
-		suffixesBit.put(   1125899906842624L, "P");
+		suffixesBit.put(1024L, "k");
+		suffixesBit.put(1048576L, "M");
+		suffixesBit.put(1073741824L, "G");
+		suffixesBit.put(1099511627776L, "T");
+		suffixesBit.put(1125899906842624L, "P");
 		suffixesBit.put(1152921504606846976L, "E");
 	}
 

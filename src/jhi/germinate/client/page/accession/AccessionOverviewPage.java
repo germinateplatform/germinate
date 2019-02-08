@@ -85,12 +85,6 @@ public class AccessionOverviewPage extends GerminateComposite implements Paralla
 			}
 
 			@Override
-			public boolean supportsFullIdMarking()
-			{
-				return true;
-			}
-
-			@Override
 			protected boolean supportsFiltering()
 			{
 				return true;

@@ -49,7 +49,7 @@ public class FileListServiceImpl extends BaseRemoteServiceServlet implements Fil
 
 		List<CreatedFile> result = new ArrayList<>();
 
-        /* First add the localized files */
+		/* First add the localized files */
 		if (folderLocale != null && folderLocale.exists() && folderLocale.isDirectory())
 		{
 			File[] files = folderLocale.listFiles();

@@ -215,13 +215,19 @@
   }
 
   out$.saveLegendAsPng = function(e1, name) {
-    var data = {};
-
-    data.overflow = e1.style.overflowY;
-    data.height = e1.style.height;
-    data.maxHeight = e1.style.maxHeight;
+    var data = {
+      overflowY: e1.style.overflowY,
+	  overflowX: e1.style.overflowX,
+	  width:     e1.style.width,
+	  maxWidth:  e1.style.maxWidth,
+	  height:    e1.style.height,
+	  maxHeight: e1.style.maxHeight
+    };
 
     e1.style.overflowY = "visible";
+    e1.style.overflowX = "visible";
+    e1.style.width = e1.scrollWidth + "px";
+    e1.style.maxWidth = e1.scrollWidth + "px";
     e1.style.height = e1.scrollHeight + "px";
     e1.style.maxHeight = e1.scrollHeight + "px";
 
@@ -234,7 +240,10 @@
         a.click();
         document.body.removeChild(a);
 
-        e1.style.overflowY = data.overflow;
+        e1.style.overflowY = data.overflowY;
+        e1.style.overflowX = data.overflowX;
+        e1.style.width = data.width;
+        e1.style.maxWidth = data.maxWidth;
         e1.style.height = data.height;
         e1.style.maxHeight = data.maxHeight;
       }

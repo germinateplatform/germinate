@@ -172,8 +172,8 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		List<String> colNames = getColumnNames(sqlDebug, markerGroups, mapId, userAuth);
 
 		/* If we specified accession and marker groups, but one of them is empty, then there is no data */
-//		if (!CollectionUtils.isEmpty(accessionGroups, markerGroups) && CollectionUtils.isEmpty(rowNames, colNames))
-//			throw new InvalidArgumentException();
+		//		if (!CollectionUtils.isEmpty(accessionGroups, markerGroups) && CollectionUtils.isEmpty(rowNames, colNames))
+		//			throw new InvalidArgumentException();
 
 		/* Set the filter values */
 		int qualityHetero = heterozygousFilter ? QUALITY_HETERO : 100;

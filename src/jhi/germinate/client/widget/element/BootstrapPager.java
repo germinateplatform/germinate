@@ -51,14 +51,14 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 
 	private final FlowPanel         panel;
 	private final UnorderedList     ul;
-	private       MdiAnchorListItem firstPage   = new MdiAnchorListItem();
-	private       MdiAnchorListItem prevPage    = new MdiAnchorListItem();
-	private       AnchorListItem    currentPage = new AnchorListItem();
-	private       MdiAnchorListItem nextPage    = new MdiAnchorListItem();
-	private       MdiAnchorListItem lastPage    = new MdiAnchorListItem();
-	private       ButtonGroup       group       = new ButtonGroup();
-	private       Button            toggle      = new Button();
-	private       DropDownMenu      menu        = new DropDownMenu();
+	private       MdiAnchorListItem firstPage     = new MdiAnchorListItem();
+	private       MdiAnchorListItem prevPage      = new MdiAnchorListItem();
+	private       MdiAnchorListItem totalCount    = new MdiAnchorListItem();
+	private       MdiAnchorListItem currentPage   = new MdiAnchorListItem();
+	private       MdiAnchorListItem nextPage      = new MdiAnchorListItem();
+	private       MdiAnchorListItem lastPage      = new MdiAnchorListItem();
+	private       ButtonGroup       pageSizeGroup = new ButtonGroup();
+	private       Button            toggle        = new Button();
 
 	public BootstrapPager()
 	{
@@ -79,22 +79,28 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 
 		toggle.getElement().getStyle().setProperty("borderRight", "0");
 
-		group.add(toggle);
-		group.add(menu);
+		pageSizeGroup.add(toggle);
+		DropDownMenu menu = new DropDownMenu();
+		pageSizeGroup.add(menu);
 
-		panel.insert(group, 0);
+		panel.insert(pageSizeGroup, 0);
 
 		ul.add(firstPage);
 		ul.add(prevPage);
+		ul.add(totalCount);
 		ul.add(currentPage);
 		ul.add(nextPage);
 		ul.add(lastPage);
 
 		firstPage.setMdi(Style.MDI_CHEVRON_DOUBLE_LEFT);
 		prevPage.setMdi(Style.MDI_CHEVRON_LEFT);
-		currentPage.setHiddenOn(DeviceSize.XS);
+//		totalCount.setMdi(Style.MDI_POUND);
+		currentPage.setMdi(Style.MDI_BOOK_OPEN_PAGE_VARIANT);
 		nextPage.setMdi(Style.MDI_CHEVRON_RIGHT);
 		lastPage.setMdi(Style.MDI_CHEVRON_DOUBLE_RIGHT);
+
+		totalCount.setHiddenOn(DeviceSize.XS);
+		currentPage.setHiddenOn(DeviceSize.XS);
 
 		ul.addStyleName(Style.combine(Style.LAYOUT_NO_PADDING, Style.LAYOUT_NO_MARGIN, Style.LAYOUT_V_ALIGN_MIDDLE, Styles.PAGINATION));
 
@@ -110,7 +116,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 
 				IntegerParameterStore.Inst.get().put(Parameter.paginationPageSize, value);
 
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "set", "itemsPerPage", value);
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.UI, "set", "itemsPerPage", value);
 
 				GerminateEventBus.BUS.fireEvent(new TableRowCountChangeEvent());
 			});
@@ -128,7 +134,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 	public void setVisible(boolean visible)
 	{
 		ul.setVisible(visible);
-		group.setVisible(visible);
+		pageSizeGroup.setVisible(visible);
 	}
 
 	@Override
@@ -170,7 +176,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 		RangedIntegerTextBox box = new RangedIntegerTextBox(1, getPageCount());
 		box.setText(Integer.toString(getPage() + 1));
 		FormLabel label = new FormLabel();
-		label.setText(Text.LANG.pagerPageNumberInput(getPageCount()));
+		label.setText(Text.LANG.pagerPageNumberInput(formatter.format(getPageCount())));
 		group.add(label);
 		group.add(box);
 
@@ -180,7 +186,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 			if (box.validate(true))
 			{
 				setPage(box.getIntegerValue() - 1);
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "jump", "toPage", box.getIntegerValue() - 1);
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.UI, "jump", "toPage", box.getIntegerValue() - 1);
 				dialog.close();
 			}
 		}))
@@ -217,27 +223,16 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 			setNextPageButtonsDisabled(!hasNextPage());
 		}
 
-		Range range = display.getVisibleRange();
-
-		int pageStart = range.getStart() + 1;
-		int pageSize = range.getLength();
 		int dataSize = display.getRowCount();
-		int endIndex = Math.min(dataSize, pageStart + pageSize - 1);
-
-		endIndex = Math.max(pageStart, endIndex);
-
 		boolean exact = display.isRowCountExact();
 
-		String text;
+		String itemText = formatter.format(dataSize);
+		String pageText = formatter.format(getPage() + 1) + (exact ? Text.LANG.pagerOf() : Text.LANG.pagerOfOver()) + formatter.format(getPageCount());
 
-		/* Use the internationalized text */
-		if (pageStart == endIndex)
-			text = formatter.format(pageStart) + (exact ? Text.LANG.pagerOf() : Text.LANG.pagerOfOver()) + formatter.format(dataSize);
-		else
-			text = formatter.format(pageStart) + "-" + formatter.format(endIndex) + (exact ? Text.LANG.pagerOf() : Text.LANG.pagerOfOver()) + formatter.format(dataSize);
-
-		currentPage.setText(text);
-		currentPage.setVisible(!StringUtils.isEmpty(text));
+		currentPage.setText(pageText);
+		currentPage.setVisible(!StringUtils.isEmpty(pageText));
+		totalCount.setText(itemText);
+		totalCount.setVisible(!StringUtils.isEmpty(itemText));
 	}
 
 	@Override

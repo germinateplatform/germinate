@@ -33,7 +33,7 @@ import jhi.germinate.util.importer.reader.*;
 public class CompoundImporter extends DataImporter<Compound>
 {
 	private static Set<Long> createdCompoundIds = new HashSet<>();
-	private static Set<Long> createdUnitIds      = new HashSet<>();
+	private static Set<Long> createdUnitIds     = new HashSet<>();
 
 	public static void main(String[] args)
 	{
@@ -99,8 +99,12 @@ public class CompoundImporter extends DataImporter<Compound>
 	 */
 	private void createOrGetUnit(Compound entry) throws DatabaseException
 	{
-		if (entry.getUnit() == null || StringUtils.isEmpty(entry.getUnit().getName()))
+		Unit unit = entry.getUnit();
+		if (unit == null || StringUtils.isEmpty(unit.getName()))
 			return;
+
+		if(StringUtils.isEmpty(unit.getAbbreviation()))
+			unit.setAbbreviation(unit.getName().substring(0, Math.min(unit.getName().length(), 10)));
 
 		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM units WHERE unit_name = ? AND unit_abbreviation = ?");
 		stmt.setString(1, entry.getUnit().getName());

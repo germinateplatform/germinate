@@ -82,7 +82,7 @@ public class ImageWatcher
 				fileWatcherThread = new Thread(fileWatcher, "ImageFileWatcher-" + counter++);
 				fileWatcherThread.start();
 
-            	/* Register events */
+				/* Register events */
 				watchKey = fullSizeFolder.register(service, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_CREATE);
 			}
 			catch (IOException e)
@@ -196,10 +196,10 @@ public class ImageWatcher
 					return;
 				}
 
-                /*
+				/*
 				 * We have a polled event, now we traverse it and receive all
-                 * the states from it
-                 */
+				 * the states from it
+				 */
 				for (WatchEvent<?> event : key.pollEvents())
 				{
 					WatchEvent.Kind<?> kind = event.kind();
@@ -209,9 +209,9 @@ public class ImageWatcher
 						continue;
 					}
 
-                    /*
+					/*
 					 * The filename is the context of the event
-                     */
+					 */
 					@SuppressWarnings("unchecked")
 					WatchEvent<Path> ev = (WatchEvent<Path>) event;
 					Path filename = ev.context();
@@ -219,11 +219,11 @@ public class ImageWatcher
 					scaleImages(new File(folder, filename.toFile().getName()).getParentFile());
 				}
 
-                /*
+				/*
 				 * Reset the key -- this step is critical if you want to receive
-                 * further watch events. If the key is no longer valid, the
-                 * directory is inaccessible so exit the loop.
-                 */
+				 * further watch events. If the key is no longer valid, the
+				 * directory is inaccessible so exit the loop.
+				 */
 				boolean valid = key.reset();
 
 				try

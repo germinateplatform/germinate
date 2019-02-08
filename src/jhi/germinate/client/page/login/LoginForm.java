@@ -21,7 +21,6 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -34,6 +33,7 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.login.registration.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.structure.*;
 import jhi.germinate.shared.*;
 
@@ -146,26 +146,22 @@ public class LoginForm extends Composite
 		if (GerminateSettingsHolder.get().gatekeeperRegistrationEnabled.getValue())
 		{
 			registerAnchor.setVisible(true);
-			GQuery.$(registerAnchor).click(new Function()
+			JavaScript.click(registerAnchor.getElement(), new ClickCallback()
 			{
 				@Override
-				public boolean f(Event e)
+				public void onSuccess(Event event)
 				{
 					new RegistrationWizard().open();
-
-					return false;
 				}
 			});
 		}
 
-		GQuery.$(forgotPasswordAnchor).click(new Function()
+		JavaScript.click(forgotPasswordAnchor, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				HelpWidget.show(page);
-
-				return false;
 			}
 		});
 
@@ -175,13 +171,12 @@ public class LoginForm extends Composite
 		else
 			emailAnchorParent.removeFromParent();
 
-		GQuery.$(helpAnchor).click(new Function()
+		JavaScript.click(helpAnchor, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				HelpWidget.show(page);
-				return false;
 			}
 		});
 

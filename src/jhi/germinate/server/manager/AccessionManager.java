@@ -58,10 +58,13 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_FOR_GROUP              = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN `groupmembers` ON `germinatebase`.`id` = `groupmembers`.`foreign_id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` WHERE `groups`.`id` = ? %s LIMIT ?, ?";
 	private static final String SELECT_NAMES_FOR_GROUPS       = "SELECT DISTINCT `name` FROM `germinatebase` LEFT JOIN `groupmembers` ON `groupmembers`.`foreign_id` = `germinatebase`.`id` WHERE `groupmembers`.`group_id` IN (%s)";
 	private static final String SELECT_ALL_SORTED_BY_DISTANCE = "SELECT " + SELECT_SYNONYMS + " , CAST(REPLACE(FORMAT(6378.7 * ACOS(SIN(RADIANS(`latitude`)) * SIN(RADIANS(?)) + COS(RADIANS(`latitude`)) * COS(RADIANS(?)) * COS(RADIANS(?) - RADIANS(`longitude`))),   2), ',','') AS DECIMAL(10,4)) AS distance FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = 'collectingsites' AND `locations`.`latitude` IS NOT NULL AND `locations`.`longitude` IS NOT NULL %s LIMIT ?, ?";
-	private static final String SELECT_IDS_IN_POLYGON         = "SELECT DISTINCT(`germinatebase`.`id`) FROM " + COMMON_TABLES + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')')))";
-	private static final String SELECT_ALL_IN_POLYGON         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')'))) %s LIMIT ?, ?";
+	private static final String SELECT_IDS_IN_POLYGON         = "SELECT DISTINCT(`germinatebase`.`id`) FROM " + COMMON_TABLES + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_GeomFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')')))";
+	private static final String SELECT_ALL_IN_POLYGON         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_GeomFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')'))) %s LIMIT ?, ?";
 	private static final String SELECT_IDS_DOWNLOAD           = "SELECT `germinatebase`.*, `taxonomies`.`genus` AS taxonomies_genus, `taxonomies`.`species` AS taxonomies_species, `taxonomies`.`subtaxa` AS taxonomies_subtaxa, `taxonomies`.`species_author` AS taxonomies_species_author, `taxonomies`.`subtaxa_author` AS taxonomies_subtaxa_author, `taxonomies`.`cropname` AS taxonomies_crop_name, `taxonomies`.`ploidy` AS taxonomies_ploidy, `locations`.`state` AS locations_state, `locations`.`region` AS locations_region, `locations`.`site_name` AS locations_site_name, `locations`.`elevation` AS locations_elevation, `locations`.`latitude` AS locations_latitude, `locations`.`longitude` AS locations_longitude, `countries`.`country_name` AS countries_country_name, `institutions`.`code` AS institutions_code, `institutions`.`name` AS institutions_name, `institutions`.`acronym` AS institutions_acronym, `institutions`.`phone` AS institutions_phone, `institutions`.`email` AS institutions_email, `institutions`.`address` AS institutions_address, `synonyms`.`synonyms` AS synonyms FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " WHERE `germinatebase`.`id` IN (%s)";
 	private static final String SELECT_ENTITY_PAIRS           = "SELECT child.id, parent.id FROM `germinatebase` child LEFT JOIN `germinatebase` parent ON child.entityparent_id = parent.id WHERE ( child.id = ? OR parent.id = ? ) AND child.entitytype_id > 1 %s LIMIT ?, ?";
+
+	private static final String SELECT_ENTITY_PARENT_IDS = "SELECT DISTINCT `entityparent_id` FROM `germinatebase` WHERE `id` IN (%s) AND NOT ISNULL(`entityparent_id`)";
+	private static final String SELECT_ENTITY_CHILD_IDS = "SELECT DISTINCT `germinatebase`.`id` FROM `germinatebase` WHERE `entityparent_id` IN (%s)";
 
 	private static final String UPDATE_PDCI = "UPDATE `germinatebase` SET `pdci` = ? WHERE `id` = ?";
 
@@ -151,6 +154,40 @@ public class AccessionManager extends AbstractManager<Accession>
 		return getFilteredValueQuery(filter, user, SELECT_IDS_FOR_FILTER, AccessionService.COLUMNS_SORTABLE)
 				.run(Accession.ID)
 				.getStrings();
+	}
+
+	public static ServerResult<List<String>> getEntityParentIds(UserAuth userAuth, List<String> ids) throws DatabaseException
+	{
+		if (!CollectionUtils.isEmpty(ids))
+		{
+			String formatted = String.format(SELECT_ENTITY_PARENT_IDS, StringUtils.generateSqlPlaceholderString(ids.size()));
+
+			return new ValueQuery(formatted, userAuth)
+					.setStrings(ids)
+					.run(Accession.ENTITYPARENT_ID)
+					.getStrings();
+		}
+		else
+		{
+			return new ServerResult<>(null, new ArrayList<>());
+		}
+	}
+
+	public static ServerResult<List<String>> getEntityChildIds(UserAuth userAuth, List<String> ids) throws DatabaseException
+	{
+		if (!CollectionUtils.isEmpty(ids))
+		{
+			String formatted = String.format(SELECT_ENTITY_CHILD_IDS, StringUtils.generateSqlPlaceholderString(ids.size()));
+
+			return new ValueQuery(formatted, userAuth)
+					.setStrings(ids)
+					.run(Accession.ID)
+					.getStrings();
+		}
+		else
+		{
+			return new ServerResult<>(null, new ArrayList<>());
+		}
 	}
 
 	/**
@@ -334,7 +371,7 @@ public class AccessionManager extends AbstractManager<Accession>
 				.getObjectsPaginated(Accession.DistanceParser.Inst.get(), true);
 	}
 
-	public static PaginatedServerResult<List<Accession>> getAllInPolygon(UserAuth userAuth, List<LatLngPoint> bounds, Pagination pagination) throws DatabaseException, InvalidColumnException
+	public static PaginatedServerResult<List<Accession>> getAllInPolygon(UserAuth userAuth, List<List<LatLngPoint>> bounds, Pagination pagination) throws DatabaseException, InvalidColumnException
 	{
 		pagination.updateSortColumn(COLUMNS_TABLE, null);
 
@@ -351,7 +388,7 @@ public class AccessionManager extends AbstractManager<Accession>
 				.getObjectsPaginated(Accession.Parser.Inst.get(), true);
 	}
 
-	public static ServerResult<List<String>> getIdsInPolygon(UserAuth userAuth, List<LatLngPoint> bounds) throws DatabaseException
+	public static ServerResult<List<String>> getIdsInPolygon(UserAuth userAuth, List<List<LatLngPoint>> bounds) throws DatabaseException
 	{
 		String polygon = LocationManager.getPolygon(bounds);
 		return new ValueQuery(SELECT_IDS_IN_POLYGON, userAuth)

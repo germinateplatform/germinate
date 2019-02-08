@@ -52,10 +52,10 @@ public class Session
 		String cookieSessionId = null;
 		String sessionSessionId = null;
 
-        /*
+		/*
 		 * For IE and Chrome we have to make sure the HTTPServletRequest and the
-         * Cookies are really set
-         */
+		 * Cookies are really set
+		 */
 		if (request != null)
 		{
 			sessionSessionId = (String) request.getSession().getAttribute(SID);
@@ -71,7 +71,7 @@ public class Session
 			}
 		}
 
-        /* Check if one of the properties is missing altogether */
+		/* Check if one of the properties is missing altogether */
 		if (StringUtils.isEmpty(cookieSessionId))
 			throw new InvalidSessionException(InvalidProperty.INVALID_COOKIE);
 		else if (StringUtils.isEmpty(payloadSessionId))
@@ -79,15 +79,15 @@ public class Session
 		else if (StringUtils.isEmpty(sessionSessionId))
 			throw new InvalidSessionException(InvalidProperty.INVALID_SESSION);
 
-        /* If they are all identical, just return */
+			/* If they are all identical, just return */
 		else if (StringUtils.areEqual(payloadSessionId, cookieSessionId, sessionSessionId))
 			return;
 
-        /* If they are all distinct, we don't know which one is the wrong one */
+			/* If they are all distinct, we don't know which one is the wrong one */
 		else if (StringUtils.areDistinct(payloadSessionId, cookieSessionId, sessionSessionId))
 			throw new InvalidSessionException(InvalidProperty.UNKNOWN);
 
-        /* Else one of them has to be the odd one, find out which one */
+			/* Else one of them has to be the odd one, find out which one */
 		else if (StringUtils.areEqual(payloadSessionId, payloadSessionId))
 			throw new InvalidSessionException(InvalidProperty.INVALID_COOKIE);
 		else if (StringUtils.areEqual(cookieSessionId, sessionSessionId))
@@ -95,7 +95,7 @@ public class Session
 		else if (StringUtils.areEqual(cookieSessionId, payloadSessionId))
 			throw new InvalidSessionException(InvalidProperty.INVALID_SESSION);
 
-        /* If we get here, everything is fine... */
+		/* If we get here, everything is fine... */
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class Session
 		GatekeeperUserWithPassword userGlobal = GatekeeperUserManager.getForUsernameGlobal(username);
 		GatekeeperUserWithPassword userLocal = GatekeeperUserManager.getForUsernameAndSystem(username);
 
-        /* Check if the user exists at all */
+		/* Check if the user exists at all */
 		if (userGlobal == null)
 		{
 			throw new LoginRegistrationException(LoginRegistrationException.Reason.USERNAME_PASSWORD_WRONG);

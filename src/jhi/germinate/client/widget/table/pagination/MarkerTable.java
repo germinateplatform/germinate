@@ -43,12 +43,6 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 	}
 
 	@Override
-	public boolean supportsFullIdMarking()
-	{
-		return false;
-	}
-
-	@Override
 	protected boolean supportsFiltering()
 	{
 		return false;

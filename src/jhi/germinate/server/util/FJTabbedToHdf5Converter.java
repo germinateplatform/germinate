@@ -84,7 +84,7 @@ public class FJTabbedToHdf5Converter
 				line = reader.readLine();
 			}
 
-			for(int i = 0; i < skipLines; i++)
+			for (int i = 0; i < skipLines; i++)
 			{
 				offset++;
 				line = reader.readLine();

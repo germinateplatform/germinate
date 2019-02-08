@@ -45,12 +45,6 @@ public abstract class CompoundDataTable extends MarkableDatabaseObjectPagination
 	}
 
 	@Override
-	public boolean supportsFullIdMarking()
-	{
-		return false;
-	}
-
-	@Override
 	public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 	{
 		callback.onSuccess(null);

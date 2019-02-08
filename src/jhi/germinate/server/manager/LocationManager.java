@@ -18,6 +18,7 @@
 package jhi.germinate.server.manager;
 
 import java.util.*;
+import java.util.stream.*;
 
 import jhi.germinate.client.service.*;
 import jhi.germinate.server.database.query.*;
@@ -39,7 +40,7 @@ public class LocationManager extends AbstractManager<Location>
 
 	private static final String SELECT_BY_IDS = "SELECT `locations`.* FROM `locations` LEFT JOIN `countries` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE `locations`.`id` IN (%s) %s LIMIT ?, ?";
 
-	private static final String COMMON_TABLES = " `locations` LEFT JOIN `countries` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id`";
+	private static final String COMMON_TABLES = " `locations` LEFT JOIN `countries` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` ";
 
 	private static final String SELECT_ALL_FOR_GROUP         = "SELECT `locations`.* FROM `locations` LEFT JOIN `groupmembers` ON `locations`.`id` = `groupmembers`.`foreign_id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` LEFT JOIN `countries` ON `locations`.`country_id` = `countries`.`id` WHERE `groups`.`id` = ? %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_MEGA_ENV      = "SELECT `locations`.*, COUNT(DISTINCT `germinatebase`.`id`) AS count FROM `locations` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` LEFT JOIN `germinatebase` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `megaenvironmentdata` ON `locations`.`id` = `megaenvironmentdata`.`location_id` WHERE `megaenvironmentdata`.`is_final` = 1 AND `locationtypes`.`name` = 'collectingsites' AND `megaenvironmentdata`.`megaenvironment_id` = ? GROUP BY `locations`.`id` %s LIMIT ?, ?";
@@ -57,12 +58,10 @@ public class LocationManager extends AbstractManager<Location>
 
 	private static final String SELECT_IDS_FOR_GROUP = "SELECT `locations`.`id` FROM `locations` LEFT JOIN `groupmembers` ON `locations`.`id` = `groupmembers`.`foreign_id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` LEFT JOIN `countries` ON `locations`.`country_id` = `countries`.`id` WHERE `groups`.`id` = ?";
 
-	private static final String SELECT_ALL_IN_POLYGON = "SELECT * FROM " + COMMON_TABLES + " WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')'))) %s LIMIT ?, ?";
-	private static final String SELECT_IDS_IN_POLYGON = "SELECT DISTINCT(`locations`.`id`) FROM " + COMMON_TABLES + " WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_PolygonFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')')))";
+	private static final String SELECT_ALL_IN_POLYGON = "SELECT * FROM " + COMMON_TABLES + " WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_GeomFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')'))) %s LIMIT ?, ?";
+	private static final String SELECT_IDS_IN_POLYGON = "SELECT DISTINCT(`locations`.`id`) FROM " + COMMON_TABLES + " WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_GeomFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')')))";
 
 	private static final String SELECT_COUNT = "SELECT COUNT(1) AS count FROM `locations`";
-
-	private static final String[] COLUMNS_LOCATION_DATA_EXPORT = {"locations_id", "locations_site_name", "locations_region", "locations_state", "locations_latitude", "locations_longitude", "locations_elevation", "countries_country_name"};
 
 	@Override
 	protected String getTable()
@@ -123,7 +122,7 @@ public class LocationManager extends AbstractManager<Location>
 		}
 	}
 
-	public static ServerResult<List<String>> getIdsInPolygon(UserAuth userAuth, List<LatLngPoint> bounds) throws DatabaseException
+	public static ServerResult<List<String>> getIdsInPolygon(UserAuth userAuth, List<List<LatLngPoint>> bounds) throws DatabaseException
 	{
 		String polygon = getPolygon(bounds);
 
@@ -251,38 +250,49 @@ public class LocationManager extends AbstractManager<Location>
 				.getObjects(Location.Parser.Inst.get());
 	}
 
-	public static String getPolygon(List<LatLngPoint> bounds)
+	public static String getPolygon(List<List<LatLngPoint>> bounds)
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("POLYGON((");
+		builder.append("MULTIPOLYGON(");
 
 		if (!CollectionUtils.isEmpty(bounds))
 		{
-			builder.append(bounds.get(0).longitude)
-				   .append(" ")
-				   .append(bounds.get(0).latitude);
+			builder.append("((");
 
-			for (int i = 1; i < bounds.size(); i++)
-			{
-				builder.append(", ")
-					   .append(bounds.get(i).longitude)
-					   .append(" ")
-					   .append(bounds.get(i).latitude);
-			}
+			// Add the start as end point
+			bounds.forEach(l -> l.add(l.get(0)));
 
-			builder.append(", ")
-				   .append(bounds.get(0).longitude)
-				   .append(" ")
-				   .append(bounds.get(0).latitude);
+			builder.append(bounds.stream()
+								 .map(p -> p.stream().map(l -> l.longitude + " " + l.latitude).collect(Collectors.joining(", ")))
+								 .collect(Collectors.joining(")), ((")));
+
+			builder.append("))");
+
+			//			builder.append(bounds.get(0).longitude)
+			//				   .append(" ")
+			//				   .append(bounds.get(0).latitude);
+			//
+			//			for (int i = 1; i < bounds.size(); i++)
+			//			{
+			//				builder.append(", ")
+			//					   .append(bounds.get(i).longitude)
+			//					   .append(" ")
+			//					   .append(bounds.get(i).latitude);
+			//			}
+			//
+			//			builder.append(", ")
+			//				   .append(bounds.get(0).longitude)
+			//				   .append(" ")
+			//				   .append(bounds.get(0).latitude);
 		}
 
-		builder.append("))");
+		builder.append(")");
 
 		return builder.toString();
 	}
 
-	public static PaginatedServerResult<List<Location>> getInPolygon(UserAuth userAuth, List<LatLngPoint> bounds, Pagination pagination) throws DatabaseException, InvalidColumnException
+	public static PaginatedServerResult<List<Location>> getInPolygon(UserAuth userAuth, List<List<LatLngPoint>> bounds, Pagination pagination) throws DatabaseException, InvalidColumnException
 	{
 		pagination.updateSortColumn(COLUMNS_TABLE, Location.ID);
 

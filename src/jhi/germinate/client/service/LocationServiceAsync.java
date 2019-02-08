@@ -129,7 +129,7 @@ public interface LocationServiceAsync
 	 * @param bounds     The list of {@link LatLngPoint}s defining the polygon
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	Request getInPolygon(RequestProperties properties, Pagination pagination, List<LatLngPoint> bounds, AsyncCallback<PaginatedServerResult<List<Location>>> callback);
+	Request getInPolygon(RequestProperties properties, Pagination pagination, List<List<LatLngPoint>> bounds, AsyncCallback<PaginatedServerResult<List<Location>>> callback);
 
 	/**
 	 * Returns a list of {@link Location} ids that are located in the polygon defined by the given list of {@link LatLngPoint}s.
@@ -138,7 +138,7 @@ public interface LocationServiceAsync
 	 * @param polygon    The list of {@link LatLngPoint}s defining the polygon
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void getIdsInPolygon(RequestProperties properties, List<LatLngPoint> polygon, AsyncCallback<ServerResult<List<String>>> callback);
+	void getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
 	 * Exports all the data associated with {@link Location}s mathing the given {@link PartialSearchQuery}.

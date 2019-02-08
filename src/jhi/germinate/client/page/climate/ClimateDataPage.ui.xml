@@ -29,7 +29,7 @@
 	<g:HTMLPanel>
 		<b:PageHeader text="{msg.climateTitle}"/>
 
-		<g8:DatasetListWidget ui:field="datasetList" />
+		<g8:DatasetListWidget ui:field="datasetList"/>
 
 		<g:FlowPanel ui:field="content">
 			<b:Row>

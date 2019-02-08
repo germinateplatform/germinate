@@ -33,7 +33,7 @@ import jhi.germinate.shared.Style;
 public class MdiHeading extends Heading
 {
 	private String mdi;
-	private Span text = new Span();
+	private Span   text = new Span();
 
 	/**
 	 * Creates a Heading with the passed in size.
@@ -41,7 +41,8 @@ public class MdiHeading extends Heading
 	 * @param size size of the heading
 	 */
 	@UiConstructor
-	public MdiHeading(final HeadingSize size) {
+	public MdiHeading(final HeadingSize size)
+	{
 		super(size);
 	}
 
@@ -51,7 +52,8 @@ public class MdiHeading extends Heading
 	 * @param size size of the heading
 	 * @param text text for the heading
 	 */
-	public MdiHeading(final HeadingSize size, final String text) {
+	public MdiHeading(final HeadingSize size, final String text)
+	{
 		this(size);
 		setText(text);
 	}
@@ -63,7 +65,8 @@ public class MdiHeading extends Heading
 	 * @param text    text for the heading
 	 * @param subText subtext for the heading
 	 */
-	public MdiHeading(final HeadingSize size, final String text, final String subText) {
+	public MdiHeading(final HeadingSize size, final String text, final String subText)
+	{
 		this(size, text);
 		setSubText(subText);
 	}
@@ -72,7 +75,8 @@ public class MdiHeading extends Heading
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getText() {
+	public String getText()
+	{
 		return text.getText();
 	}
 
@@ -80,7 +84,8 @@ public class MdiHeading extends Heading
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setText(final String text) {
+	public void setText(final String text)
+	{
 		this.text.setText(text);
 		insert(this.text, 0);
 	}
@@ -100,11 +105,11 @@ public class MdiHeading extends Heading
 	{
 		super.onAttach();
 
-		if(!StringUtils.isEmpty(mdi))
+		if (!StringUtils.isEmpty(mdi))
 		{
 			Element i = Document.get().createElement("i");
 			i.addClassName(Style.combine(Style.MDI, Style.FA_FIXED_WIDTH, mdi));
-//			i.getStyle().setMarginLeft(6, com.google.gwt.dom.client.Style.Unit.PX);
+			//			i.getStyle().setMarginLeft(6, com.google.gwt.dom.client.Style.Unit.PX);
 			i.getStyle().setMarginRight(6, com.google.gwt.dom.client.Style.Unit.PX);
 			i.addClassName(Style.LAYOUT_V_ALIGN_MIDDLE);
 			i.addClassName(Emphasis.PRIMARY.getCssName());

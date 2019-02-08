@@ -43,7 +43,7 @@ public class AutomaticBinningWidget extends Composite
 	private static EqualWidthBinningWidgetUiBinder ourUiBinder = GWT.create(EqualWidthBinningWidgetUiBinder.class);
 
 	@UiField
-	RangedIntegerTextBox        nrOfBins;
+	RangedIntegerTextBox   nrOfBins;
 	@UiField
 	AlleleFreqBinningChart chart;
 

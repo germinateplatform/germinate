@@ -233,8 +233,8 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	/**
 	 * Creates a span element with the given text and Material Design Icon styling
 	 *
-	 * @param mdi The Material Design Icon style
-	 * @param text        The text
+	 * @param mdi  The Material Design Icon style
+	 * @param text The text
 	 * @return A span element with the given text and Material Design Icon styling
 	 */
 	@Template("<span class='text-primary " + Style.MDI + " " + Style.FA_FIXED_WIDTH + " " + Style.MDI_LG + " " + Style.LAYOUT_V_ALIGN_MIDDLE

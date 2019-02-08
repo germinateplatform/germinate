@@ -55,7 +55,7 @@ public class FileServlet extends BaseHttpServlet
 
 		boolean deleteAfterSend = false;
 
-        /* Check if the locale is a valid one */
+		/* Check if the locale is a valid one */
 		if (fileLocale != null)
 		{
 			if (!LocaleUtils.isValid(LocaleUtils.parseLocale(fileLocale)))
@@ -89,15 +89,15 @@ public class FileServlet extends BaseHttpServlet
 			return;
 		}
 
-        /* Get the file extension */
+		/* Get the file extension */
 		String extension = filePath.substring(filePath.lastIndexOf(".") + 1);
 
-        /* Determine the file type */
+		/* Determine the file type */
 		try
 		{
 			FileType type = FileType.valueOf(extension);
 
-            /* Set the content type */
+			/* Set the content type */
 			resp.setContentType(type.getContentType());
 		}
 		catch (Exception e)
@@ -106,7 +106,7 @@ public class FileServlet extends BaseHttpServlet
 			resp.setContentType("text/plain");
 		}
 
-        /* Determine the file location */
+		/* Determine the file location */
 		FileLocation location;
 		try
 		{
@@ -117,7 +117,7 @@ public class FileServlet extends BaseHttpServlet
 			location = FileLocation.temporary;
 		}
 
-        /* Get the absolute file path */
+		/* Get the absolute file path */
 		File file = getFile(req, location, fileLocale, filePath);
 
 		if (file == null || !file.exists())
@@ -126,14 +126,14 @@ public class FileServlet extends BaseHttpServlet
 			return;
 		}
 
-        /* Set the filename that will be used for file download */
+		/* Set the filename that will be used for file download */
 		String filename = file.getName();
 
-        /* Set the header */
+		/* Set the header */
 		/* Suggest a filename */
 		resp.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
 
-        /* Delete old temporary files */
+		/* Delete old temporary files */
 		Long timeInHours = PropertyWatcher.getLong(ServerProperty.GERMINATE_KEEP_TEMPORARY_FILES_FOR_HOURS);
 		new DeleteOldFilesThread(getTemporaryFileFolder(req), timeInHours).start();
 
@@ -141,11 +141,11 @@ public class FileServlet extends BaseHttpServlet
 
 		resp.setContentLength((int) file.length());
 
-        /* Open the file and output streams */
+		/* Open the file and output streams */
 		FileInputStream in = new FileInputStream(file);
 		OutputStream out = resp.getOutputStream();
 
-        /* Copy the contents of the file to the output stream */
+		/* Copy the contents of the file to the output stream */
 		byte[] buf = new byte[1024];
 		int count;
 		while ((count = in.read(buf)) >= 0)

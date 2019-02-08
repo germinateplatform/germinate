@@ -71,7 +71,7 @@ public class Location extends DatabaseObject
 	private String       georeferencingMethod;
 	private Long         createdOn;
 	private Long         updatedOn;
-	private Long size = 0L;
+	private Long         size = 0L;
 
 	public Location()
 	{

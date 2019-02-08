@@ -73,7 +73,7 @@ public class GradientUtils
 
 			CanvasGradient cGradient = context.createLinearGradient(5, 0, overallWidth - 5, 0);
 
-            /* Add an intermediate step for each color */
+			/* Add an intermediate step for each color */
 			int size = gradient.getColors().length;
 			for (int i = 0; i < size; i++)
 			{
@@ -101,7 +101,7 @@ public class GradientUtils
 
 		FlowPanel legend = new FlowPanel();
 
-        /* Add the text legend */
+		/* Add the text legend */
 		String lowValue = Text.LANG.generalLow();
 
 		if (showActualValues)

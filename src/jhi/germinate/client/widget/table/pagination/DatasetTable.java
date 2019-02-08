@@ -335,65 +335,65 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Dataset.DATATYPE);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDatatype(), sortingEnabled);
 
-//		if (experimentType == ExperimentType.trials)
-//		{
-			// Add the site name column
-			column = new TextColumn()
+		//		if (experimentType == ExperimentType.trials)
+		//		{
+		// Add the site name column
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Dataset dataset)
 			{
-				@Override
-				public String getValue(Dataset dataset)
-				{
-					if (dataset.getLocation() != null)
-						return dataset.getLocation().getName();
-					else
-						return null;
-				}
+				if (dataset.getLocation() != null)
+					return dataset.getLocation().getName();
+				else
+					return null;
+			}
 
-				@Override
-				public Class getType()
-				{
-					return String.class;
-				}
-			};
-			column.setDataStoreName(Location.SITE_NAME);
-			addColumn(column, Text.LANG.datasetsColumnSiteName(), sortingEnabled);
-
-			/* Add the country column */
-			column = new TextColumn()
+			@Override
+			public Class getType()
 			{
-				@Override
-				public String getValue(Dataset object)
-				{
-					if (object.getLocation() != null && object.getLocation().getCountry() != null)
-						return object.getLocation().getCountry().getName();
-					else
-						return null;
-				}
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Location.SITE_NAME);
+		addColumn(column, Text.LANG.datasetsColumnSiteName(), sortingEnabled);
 
-				@Override
-				public Class getType()
-				{
-					return String.class;
-				}
+		/* Add the country column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Dataset object)
+			{
+				if (object.getLocation() != null && object.getLocation().getCountry() != null)
+					return object.getLocation().getCountry().getName();
+				else
+					return null;
+			}
 
-				@Override
-				public void render(Cell.Context context, Dataset object, SafeHtmlBuilder sb)
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+
+			@Override
+			public void render(Cell.Context context, Dataset object, SafeHtmlBuilder sb)
+			{
+				String value = getValue(object);
+				if (value != null)
 				{
-					String value = getValue(object);
-					if (value != null)
-					{
-						sb.appendHtmlConstant("<span class=\"" + Style.COUNTRY_FLAG + " " + object.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "\"></span>");
-						sb.append(SafeHtmlUtils.fromString(value));
-					}
-					else
-					{
-						super.render(context, object, sb);
-					}
+					sb.appendHtmlConstant("<span class=\"" + Style.COUNTRY_FLAG + " " + object.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "\"></span>");
+					sb.append(SafeHtmlUtils.fromString(value));
 				}
-			};
-			column.setDataStoreName(Country.COUNTRY_NAME);
-			addColumn(column, Text.LANG.datasetsColumnCountry(), sortingEnabled);
-//		}
+				else
+				{
+					super.render(context, object, sb);
+				}
+			}
+		};
+		column.setDataStoreName(Country.COUNTRY_NAME);
+		addColumn(column, Text.LANG.datasetsColumnCountry(), sortingEnabled);
+		//		}
 
 		/* Add the license description column */
 		column = new ClickableSafeHtmlColumn()

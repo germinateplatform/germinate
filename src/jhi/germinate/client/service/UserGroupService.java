@@ -66,8 +66,8 @@ public interface UserGroupService extends RemoteService
 	/**
 	 * Creates a new group of the given type
 	 *
-	 * @param properties     The {@link RequestProperties}
-	 * @param group          The new group
+	 * @param properties The {@link RequestProperties}
+	 * @param group      The new group
 	 * @return The id of the new group
 	 * @throws InvalidSessionException       Thrown if the current session is invalid
 	 * @throws DatabaseException             Thrown if the query fails on the server

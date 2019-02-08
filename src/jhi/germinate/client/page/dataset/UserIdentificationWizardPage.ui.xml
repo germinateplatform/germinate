@@ -45,23 +45,23 @@
 
 	<g:HTMLPanel addStyleNames="{style.margin}">
 		<g:HTML ui:field="heading"/>
-		<g:HTML ui:field="privacyPolicy" />
+		<g:HTML ui:field="privacyPolicy"/>
 		<b:Form action="javascript:void(0);" addStyleNames="{style.height}" submitOnEnter="false" ui:field="form">
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
-				<b:FormLabel for="formName" text="{msg.userTrackingName}" />
+				<b:FormLabel for="formName" text="{msg.userTrackingName}"/>
 				<b:TextBox name="name" b:id="formName" ui:field="name"/>
 			</b:FormGroup>
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
-				<b:FormLabel for="formEmail" text="{msg.userTrackingEmail}" />
+				<b:FormLabel for="formEmail" text="{msg.userTrackingEmail}"/>
 				<b:TextBox name="email" b:id="formEmail" ui:field="email"/>
 			</b:FormGroup>
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
-				<b:FormLabel for="formInstitution" text="{msg.userTrackingInstitution}" />
+				<b:FormLabel for="formInstitution" text="{msg.userTrackingInstitution}"/>
 				<b:TextBox name="address" b:id="formInstitution" ui:field="institution"/>
 			</b:FormGroup>
 			<b:FormGroup>
 				<b:FormLabel for="formExplanation" text="{msg.userTrackingExplanation}"/>
-				<lb:DatasetUseListBox b:id="formExplanation" ui:field="selection" />
+				<lb:DatasetUseListBox b:id="formExplanation" ui:field="selection"/>
 				<b:TextArea visible="false" visibleLines="3" ui:field="explanation"/>
 			</b:FormGroup>
 		</b:Form>

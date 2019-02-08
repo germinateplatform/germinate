@@ -141,12 +141,12 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		/* Map the data into a nice data structure */
 		Map<String, List<PedigreePair>> parentPairData = new HashMap<>();
 		DatabaseResult rs;
-		while((rs = parents.next()) != null)
+		while ((rs = parents.next()) != null)
 		{
 			String node = rs.getString("node");
 			List<PedigreePair> list = parentPairData.get(node);
 
-			if(list == null)
+			if (list == null)
 				list = new ArrayList<>();
 
 			list.add(new PedigreePair(rs.getString("parent"), rs.getString("type")));
@@ -155,12 +155,12 @@ public class PedigreeServiceImpl extends BaseRemoteServiceServlet implements Ped
 		}
 
 		Map<String, List<PedigreePair>> childPairData = new HashMap<>();
-		while((rs = children.next()) != null)
+		while ((rs = children.next()) != null)
 		{
 			String node = rs.getString("node");
 			List<PedigreePair> list = childPairData.get(node);
 
-			if(list == null)
+			if (list == null)
 				list = new ArrayList<>();
 
 			list.add(new PedigreePair(rs.getString("child"), rs.getString("type")));

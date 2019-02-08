@@ -22,12 +22,12 @@ import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.maps.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
 
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.enums.*;
@@ -93,8 +93,12 @@ public class JavaScript
 
 	public static void printObject(String elementId)
 	{
-		printString(GQuery.$("#" + elementId).html());
+		printString(html("#" + elementId));
 	}
+
+	public static native String html(String selector) /*-{
+		return $wnd.$(selector).html();
+	}-*/;
 
 	public static void printHtml(HTML html)
 	{
@@ -112,6 +116,83 @@ public class JavaScript
 
 		Scheduler.get().scheduleDeferred(element::removeFromParent);
 	}
+
+	public static native void hide(String selector) /*-{
+		$wnd.$(selector).hide();
+	}-*/;
+
+	public static native void show(String selector) /*-{
+		$wnd.$(selector).show();
+	}-*/;
+
+	public static void click(Widget widget, ClickCallback callback)
+	{
+		click(widget.getElement(), callback);
+	}
+
+	public static native void click(String selector, ClickCallback callback) /*-{
+		$wnd.$(selector).click(function (e) {
+			callback.@jhi.germinate.client.util.callback.ClickCallback::onSuccess(Lcom/google/gwt/user/client/Event;)(e);
+			return false;
+		});
+	}-*/;
+
+	public static native void click(Element element, ClickCallback callback) /*-{
+		$wnd.$(element).click(function (e) {
+			callback.@jhi.germinate.client.util.callback.ClickCallback::onSuccess(Lcom/google/gwt/user/client/Event;)(e);
+			return false;
+		});
+	}-*/;
+
+	public static native void click(Element element, boolean prevent, ClickCallback callback) /*-{
+		$wnd.$(element).click(function (e) {
+			callback.@jhi.germinate.client.util.callback.ClickCallback::onSuccess(Lcom/google/gwt/user/client/Event;)(e);
+			return !prevent;
+		});
+	}-*/;
+
+	public static native void click(String selector, boolean prevent, ClickCallback callback) /*-{
+		$wnd.$(selector).click(function (e) {
+			callback.@jhi.germinate.client.util.callback.ClickCallback::onSuccess(Lcom/google/gwt/user/client/Event;)(e);
+			return !prevent;
+		});
+	}-*/;
+
+	public static native void click(String selector) /*-{
+		$wnd.$(selector)[0].click();
+	}-*/;
+
+	public static native boolean isVisible(Element element) /*-{
+		return $wnd.$(element).isVisible();
+	}-*/;
+
+	public static native void remove(String selector) /*-{
+		$wnd.$(selector).remove();
+	}-*/;
+
+	public static native boolean isEmpty(String selector) /*-{
+		return $wnd.$(selector).isEmpty();
+	}-*/;
+
+	public static native void show(Element element) /*-{
+		$wnd.$(element).show();
+	}-*/;
+
+	public static native void hide(Element element) /*-{
+		$wnd.$(element).hide();
+	}-*/;
+
+	public static native void toggleClass(String selector, String clazz) /*-{
+		$wnd.$(selector).toggleClass(clazz);
+	}-*/;
+
+	public static native void removeClass(String selector, String clazz) /*-{
+		$wnd.$(selector).removeClass(clazz);
+	}-*/;
+
+	public static native void addClass(String selector, String clazz) /*-{
+		$wnd.$(selector).addClass(clazz);
+	}-*/;
 
 	/**
 	 * {@link D3} is a utility class containing constants and utility methods for D3
@@ -221,7 +302,7 @@ public class JavaScript
 				.setParam(ServletConstants.PARAM_FILE_PATH, uri)
 				.build();
 
-		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), uri);
+		GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), uri);
 
 		invokeDownload(path);
 	}
@@ -283,7 +364,7 @@ public class JavaScript
 	public static void highlight(final Element element, final boolean scrollTo)
 	{
 		/* The highlight effect changes the display cs property, so make sure it's not hidden */
-		if (element != null && GQuery.$(element).isVisible())
+		if (element != null && isVisible(element))
 		{
 			Scheduler.get().scheduleDeferred(() ->
 			{
@@ -328,124 +409,6 @@ public class JavaScript
 			jsArrayNumbers.push(s);
 		}
 		return jsArrayNumbers;
-	}
-
-	/**
-	 * {@link GoogleAnalytics} provides functionality to track user events and page views to GoogleAnalytics.
-	 *
-	 * @author Sebastian Raubach
-	 */
-	public static final class GoogleAnalytics
-	{
-		public enum Category
-		{
-			GET_HYPERLINK("get-hyperlink"),
-			LOGIN("login"),
-			LOGOUT("logout"),
-			HELP("help"),
-			UI("ui"),
-			ADMIN("admin"),
-			SHARE("share"),
-			GROUPS("groups"),
-			USER_GROUPS("user-groups"),
-			DATASET("datasets"),
-			LICENSE("license"),
-			DATASET_PERMISSIONS("dataset-permissions"),
-			ANNOTATIONS("annotations"),
-			SEARCH("search"),
-			DOWNLOAD("download"),
-			MARKED_ITEMS("marked-items");
-
-			private final String category;
-
-			Category(String category)
-			{
-				this.category = category;
-			}
-		}
-
-		/**
-		 * Sends information about pageviews to Google Analytics
-		 *
-		 * @param page The page that has been viewed
-		 */
-		public static void trackPageview(String page)
-		{
-			if (isGoogleAnalyticsLoaded() && GerminateSettingsHolder.get().googleAnalyticsEnabled.getValue())
-			{
-				trackPageviewNative(page);
-			}
-		}
-
-		private static native void trackPageviewNative(String page) /*-{
-			$wnd.ga('send', 'pageview', '/#' + page);
-		}-*/;
-
-		/**
-		 * Sends information about tracked events to Google Analytics
-		 *
-		 * @param category The category of the event
-		 * @param action   The action
-		 */
-		public static void trackEvent(Category category, String action)
-		{
-			if (isGoogleAnalyticsLoaded() && GerminateSettingsHolder.get().googleAnalyticsEnabled.getValue())
-			{
-				trackEventNative(category.category, action);
-			}
-		}
-
-		private static native void trackEventNative(String category, String action) /*-{
-			$wnd.ga('send', 'event', category, action);
-		}-*/;
-
-		/**
-		 * Sends information about tracked events to Google Analytics
-		 *
-		 * @param category The category of the event
-		 * @param action   The action
-		 * @param label    The label
-		 */
-		public static void trackEvent(Category category, String action, String label)
-		{
-			if (isGoogleAnalyticsLoaded() && GerminateSettingsHolder.get().googleAnalyticsEnabled.getValue())
-			{
-				trackEventNative(category.category, action, label);
-			}
-		}
-
-		private static native void trackEventNative(String category, String action, String label) /*-{
-			$wnd.ga('send', 'event', category, action, label);
-		}-*/;
-
-		/**
-		 * Sends information about tracked events to Google Analytics
-		 *
-		 * @param category The category of the event
-		 * @param action   The action
-		 * @param label    The label
-		 * @param value    The value
-		 */
-		public static void trackEvent(Category category, String action, String label, int value)
-		{
-			if (isGoogleAnalyticsLoaded() && GerminateSettingsHolder.get().googleAnalyticsEnabled.getValue())
-			{
-				trackEventNative(category.category, action, label, value);
-			}
-		}
-
-		private static native void trackEventNative(String category, String action, String label, int value) /*-{
-			$wnd.ga('send', 'event', category, action, label, value);
-		}-*/;
-
-		/**
-		 * Checks if the GoogleAnalytics API was loaded and initialized successfully by trying to access it in JavaScript
-		 *
-		 * @return <code>true</code> if the GoogleAnalytics API was loaded and initialized successfully
-		 */
-		public static native boolean isGoogleAnalyticsLoaded()/*-{
-			return $wnd['ga'] !== undefined;
-		}-*/;
 	}
 
 	/**

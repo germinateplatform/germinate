@@ -98,6 +98,22 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
+	public ServerResult<List<String>> getEntityParentIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		return AccessionManager.getEntityParentIds(userAuth, ids);
+	}
+
+	@Override
+	public ServerResult<List<String>> getEntityChildIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+		return AccessionManager.getEntityChildIds(userAuth, ids);
+	}
+
+	@Override
 	public ServerResult<List<Accession>> getByIds(RequestProperties properties, Pagination pagination, List<String> ids) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		if (pagination == null)
@@ -376,7 +392,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public PaginatedServerResult<List<Accession>> getInPolygon(RequestProperties properties, Pagination pagination, List<LatLngPoint> bounds) throws InvalidSessionException, DatabaseException, InvalidColumnException
+	public PaginatedServerResult<List<Accession>> getInPolygon(RequestProperties properties, Pagination pagination, List<List<LatLngPoint>> bounds) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		if (pagination == null)
 			pagination = Pagination.getDefault();
@@ -387,7 +403,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<LatLngPoint> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException
+	public ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);

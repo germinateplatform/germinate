@@ -106,6 +106,12 @@ public class GroupPreviewPage extends Composite
 			{
 				return AccessionService.Inst.get().getForGroupPreview(Cookie.getRequestProperties(), pagination, filename, callback);
 			}
+
+			@Override
+			protected boolean preventAllItemMarking()
+			{
+				return true;
+			}
 		};
 
 		resultPanel.setVisible(true);

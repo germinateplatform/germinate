@@ -64,6 +64,7 @@ public enum ServerProperty
 	GERMINATE_TEMPLATE_EMAIL_ADDRESS("Germinate.Template.EmailAddress", null, false),
 	GERMINATE_TEMPLATE_DATABASE_NAME("Germinate.Template.DatabaseName", "Germinate Database", false),
 	GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER("Germinate.Template.Show.Parallax.Banner", "true", false),
+	GERMINATE_TEMPLATE_MARKED_ACCESSIONS_URL("Germinate.Template.Marked.Accessions.Url", null, false),
 	GERMINATE_SERVER_LOGGING_ENABLED("Germinate.Server.Logging.Enabled", "false", false),
 	GERMINATE_IS_UNDER_MAINTENANCE("Germinate.IsUnderMaintenance", "false", false),
 	GERMINATE_IS_READ_ONLY("Germinate.IsReadOnly", "false", false),

@@ -28,12 +28,12 @@
 	</ui:style>
 
 	<g:FlowPanel ui:field="panel">
-		<b:Heading size="H3" text="{msg.datasetMetadataDownloadTitle}" />
-		<g8:ParagraphPanel text="{msg.datasetMetadataDownloadText}" />
+		<b:Heading size="H3" text="{msg.datasetMetadataDownloadTitle}"/>
+		<g8:ParagraphPanel text="{msg.datasetMetadataDownloadText}"/>
 
-		<lb:AttributeListBox ui:field="attributesListBox" />
+		<lb:AttributeListBox ui:field="attributesListBox"/>
 
-		<g8:ParagraphPanel />
+		<g8:ParagraphPanel/>
 
 		<b:Button addStyleNames="{MDI} {MDI_LG} {MDI_DOWNLOAD}" text="{msg.generalDownload}" type="PRIMARY" ui:field="download"/>
 	</g:FlowPanel>

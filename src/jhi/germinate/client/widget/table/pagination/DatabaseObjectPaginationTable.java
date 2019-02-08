@@ -363,7 +363,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 	public boolean forceFilter(PartialSearchQuery query, boolean isAnd)
 	{
-		if(!supportsFiltering())
+		if (!supportsFiltering())
 			return false;
 
 		/* Cancel any currently running request */
@@ -373,7 +373,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		filterPanel.setVisible(false);
 		filterPanel.add(query, isAnd);
 
-		if(query != null)
+		if (query != null)
 			filterButton.setType(ButtonType.SUCCESS);
 
 		refreshTable();
@@ -751,14 +751,14 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 				if (item.getValue())
 				{
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "showTableColumn", column.getDataStoreName());
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.UI, "showTableColumn", column.getDataStoreName());
 					StringListParameterStore.Inst.get().remove(Parameter.invisibleTableColumns, cellStyle);
 					column.setCellStyleNames(column.getCellStyle());
 					header.setHeaderStyleNames(Style.combine(headerStyle, column.getHeaderStyle()));
 				}
 				else
 				{
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "hideTableColumn", column.getDataStoreName());
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.UI, "hideTableColumn", column.getDataStoreName());
 					StringListParameterStore.Inst.get().add(Parameter.invisibleTableColumns, cellStyle);
 					column.setCellStyleNames(Style.combine(Style.LAYOUT_DISPLAY_NONE, column.getCellStyle()));
 					header.setHeaderStyleNames(Style.combine(headerStyle, Style.LAYOUT_DISPLAY_NONE, column.getHeaderStyle()));
@@ -808,7 +808,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		if (sortable)
 			addSortBits(column);
 
-		if(!StringUtils.isEmpty(headerString))
+		if (!StringUtils.isEmpty(headerString))
 			setColumnStyleName(headerString, column, table.getHeader(table.getColumnCount() - 1));
 	}
 
@@ -886,7 +886,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		SetSelectionModel<T> model = (SetSelectionModel<T>) selectionModel;
 		model.clear();
 
-		if(items != null)
+		if (items != null)
 		{
 			for (T item : items)
 				model.setSelected(item, true);

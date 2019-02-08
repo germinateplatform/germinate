@@ -274,7 +274,7 @@ public class RegistrationForm extends Composite implements Validator<String>
 				Notification.notify(Notification.Type.ERROR, Text.LANG.notificationRegistrationPasswordsDontMatch());
 				return false;
 			}
-			else if(passwordStrength < 2)
+			else if (passwordStrength < 2)
 			{
 				password.addStyleName(ValidationState.ERROR.getCssName());
 				passwordConfirm.addStyleName(ValidationState.ERROR.getCssName());

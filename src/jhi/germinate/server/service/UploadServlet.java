@@ -152,7 +152,7 @@ public class UploadServlet extends BaseHttpServlet
 
 			long nowNum100Ks = bytesRead / 100000;
 
-            /* Only run this code once every 100K */
+			/* Only run this code once every 100K */
 			if (nowNum100Ks >= num100Ks)
 			{
 				num100Ks = nowNum100Ks;

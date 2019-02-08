@@ -140,6 +140,10 @@ public class Style
 	public static final String MDI_CHECKBOX_MULTIPLE_BLANK_OUTLINE = "mdi-checkbox-multiple-blank-outline";
 	public static final String MDI_CHECKBOX_MARKED                 = "mdi-checkbox-marked";
 	public static final String MDI_CHECKBOX_MULTIPLE_MARKED        = "mdi-checkbox-multiple-marked";
+	public static final String MDI_CHEVRON_DOWN_BOX                = "mdi-chevron-down-box";
+	public static final String MDI_CHEVRON_DOWN_BOX_OUTLINE        = "mdi-chevron-down-box-outline";
+	public static final String MDI_CHEVRON_UP_BOX                  = "mdi-chevron-up-box";
+	public static final String MDI_CHEVRON_UP_BOX_OUTLINE          = "mdi-chevron-up-box-outline";
 	public static final String MDI_FILE_IMAGE                      = "mdi-file-image";
 	public static final String MDI_FILE_XML                        = "mdi-file-xml";
 	public static final String MDI_FILE_DOCUMENT                   = "mdi-file-document";
@@ -212,6 +216,12 @@ public class Style
 	public static final String MDI_PRINTER                         = "mdi-printer";
 	public static final String MDI_JSON                            = "mdi-json";
 	public static final String MDI_TABLE_SEARCH                    = "mdi-table-search";
+	public static final String MDI_BOOK_OPEN_PAGE_VARIANT          = "mdi-book-open-page-variant";
+	public static final String MDI_POUND                           = "mdi-pound";
+	public static final String MDI_ALPHA_A_BOX                     = "mdi-alpha-a-box";
+	public static final String MDI_ALPHA_P_BOX                     = "mdi-alpha-p-box";
+	public static final String MDI_ALPHA_S_BOX                     = "mdi-alpha-s-box";
+	public static final String MDI_EXPORT                          = "mdi-export";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
 
 	public static final String COL_XXS_12  = "col-xxs-12";

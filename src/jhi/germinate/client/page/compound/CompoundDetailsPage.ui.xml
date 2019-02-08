@@ -32,11 +32,11 @@
 			<b:Heading size="H3" text="{msg.searchSectionCompoundData}"/>
 			<g:SimplePanel ui:field="compoundDataTablePanel"/>
 
-			<g8:AdditionalDataWidget visible="false" ui:field="additionalDatasetWidget" />
+			<g8:AdditionalDataWidget visible="false" ui:field="additionalDatasetWidget"/>
 
-			<b:Heading size="H3" text="{msg.compoundDetailsDatasetTitle}" />
-			<g8:ParagraphPanel text="{msg.compoundDetailsDatasetText}" />
-			<g:SimplePanel ui:field="datasetPanel" />
+			<b:Heading size="H3" text="{msg.compoundDetailsDatasetTitle}"/>
+			<g8:ParagraphPanel text="{msg.compoundDetailsDatasetText}"/>
+			<g:SimplePanel ui:field="datasetPanel"/>
 
 			<b:Heading size="H3" text="{msg.compoundDetailsImageTitle}"/>
 			<g:SimplePanel ui:field="galleryPanel"/>

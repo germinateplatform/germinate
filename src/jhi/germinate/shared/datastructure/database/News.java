@@ -50,10 +50,10 @@ public class News extends DatabaseObject
 	private String   content;
 	private String   image;
 	private String   hyperlink;
-	private String user = GatekeeperUser.UNKNOWN.getFullName();
-	private Long createdBy;
-	private Long createdOn;
-	private Long updatedOn;
+	private String   user = GatekeeperUser.UNKNOWN.getFullName();
+	private Long     createdBy;
+	private Long     createdOn;
+	private Long     updatedOn;
 
 	public News()
 	{

@@ -19,7 +19,6 @@ package jhi.germinate.client.management;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -116,7 +115,7 @@ public class ContentHolder
 
 		AbstractChart.removeD3();
 		DebugInfoPanel.clear();
-//		removeGoogleMapsLeftovers();
+		//		removeGoogleMapsLeftovers();
 
 		closeDropdownAndMenu();
 		closeGalleryModal();
@@ -133,7 +132,7 @@ public class ContentHolder
 			loginPanel.clear();
 			loginPanel.add(newContent);
 
-			GQuery.$("#" + Id.STRUCTURE_PAGE).hide();
+			JavaScript.hide("#" + Id.STRUCTURE_PAGE);
 			loginPanel.setVisible(true);
 		}
 		else
@@ -163,7 +162,7 @@ public class ContentHolder
 				navigateToPage(page, parentPage, newContent);
 			}
 
-			GQuery.$("#" + Id.STRUCTURE_PAGE).show();
+			JavaScript.show("#" + Id.STRUCTURE_PAGE);
 			loginPanel.setVisible(false);
 		}
 

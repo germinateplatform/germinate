@@ -94,7 +94,7 @@ public class ULPanel extends ComplexPanel
 		list.appendChild(li);
 		super.add(child, li);
 
-		if(longRunning)
+		if (longRunning)
 		{
 			Element i = Document.get().createElement("i");
 			i.setClassName(Style.combine(Style.MDI, Style.MDI_LG, Style.LAYOUT_V_ALIGN_MIDDLE, Style.MDI_TIMER_SAND));
@@ -115,8 +115,8 @@ public class ULPanel extends ComplexPanel
 	/**
 	 * Adds the given widget as a new li to the ul with the given Material Design Icon style
 	 *
-	 * @param child   The widget to add
-	 * @param mdi The Material Design Icon style
+	 * @param child The widget to add
+	 * @param mdi   The Material Design Icon style
 	 */
 	public void add(Widget child, String mdi)
 	{
@@ -127,7 +127,7 @@ public class ULPanel extends ComplexPanel
 		i.getStyle().setPaddingRight(7, com.google.gwt.dom.client.Style.Unit.PX);
 
 		li.appendChild(i);
-//		li.addClassName(Style.FA_ICONLIST);
+		//		li.addClassName(Style.FA_ICONLIST);
 		child.addStyleName(Style.LAYOUT_V_ALIGN_MIDDLE);
 
 		list.appendChild(li);

@@ -40,11 +40,11 @@ public class License extends DatabaseObject
 	public static final String CREATED_ON  = "licenses.created_on";
 	public static final String UPDATED_ON  = "licenses.updated_on";
 
-	private String     name;
-	private String     description;
-	private LicenseLog licenseLog;
-	private Long       createdOn;
-	private Long       updatedOn;
+	private String                   name;
+	private String                   description;
+	private LicenseLog               licenseLog;
+	private Long                     createdOn;
+	private Long                     updatedOn;
 	private Map<Locale, LicenseData> licenseDataMap = new HashMap<>();
 
 	public License()

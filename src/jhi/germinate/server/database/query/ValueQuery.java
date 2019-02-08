@@ -121,7 +121,7 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 		private final Database       database;
 		private final DatabaseResult rs;
 		private final DebugInfo      sqlDebug;
-		private boolean closeConnection = true;
+		private       boolean        closeConnection = true;
 
 		private ExecutedValueQuery(String column, Database database, DatabaseResult rs, DebugInfo sqlDebug)
 		{

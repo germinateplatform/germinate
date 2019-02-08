@@ -20,7 +20,6 @@ package jhi.germinate.client.widget.d3js;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -301,25 +300,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	}-*/;
 
 	/**
-	 * Returns the ids of the selected data points (by lasso selection)
-	 *
-	 * @return The ids of the selected data points (by lasso selection)
-	 */
-	private Set<String> getSelectedDataPoints()
-	{
-		List<String> ids = GQuery.$(chartPanel).find("." + Bundles.LassoBundle.STYLE_SELECTED).map(new Function()
-		{
-			@Override
-			public String f(Element e, int i)
-			{
-				return e.getId().replace("item-", "");
-			}
-		});
-
-		return new HashSet<>(ids);
-	}
-
-	/**
 	 * Handles selection of data points. Will redirect to {@link Page#PASSPORT}
 	 *
 	 * @param id The accession id
@@ -338,7 +318,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 				modal.setSize(ModalSize.LARGE);
 
 				ModalBody modalBody = new ModalBody();
-				modalBody.add(new PassportPage());
+				modalBody.add(new PassportPage(false));
 				modal.add(modalBody);
 
 				modal.show();
@@ -348,6 +328,31 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 			}
 		}
 	}
+
+	/**
+	 * Returns the ids of the selected data points (by lasso selection)
+	 *
+	 * @return The ids of the selected data points (by lasso selection)
+	 */
+	private Set<String> getSelectedDataPoints()
+	{
+		Set<String> result = new HashSet<>();
+
+		JsArrayString idList = getIds(chartPanel.getElement(), "." + Bundles.LassoBundle.STYLE_SELECTED);
+
+		for (int i = 0; i < idList.length(); i++)
+			result.add(idList.get(i));
+
+		return result;
+	}
+
+	private native JsArrayString getIds(Element element, String selector) /*-{
+		return $wnd.$(element)
+			.find(selector)
+			.map(function () {
+				return $wnd.$(this).attr("id").replace("item-", "");
+			});
+	}-*/;
 
 	@Override
 	public Library[] getLibraries()

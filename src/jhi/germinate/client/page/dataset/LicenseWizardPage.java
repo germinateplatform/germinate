@@ -116,7 +116,7 @@ public class LicenseWizardPage extends ModalWizardPage
 	@UiHandler("print")
 	void onPrintButtonClicked(ClickEvent e)
 	{
-		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LICENSE, "print", Long.toString(data.getLicense()));
+		GoogleAnalytics.trackEvent(GoogleAnalytics.Category.LICENSE, "print", Long.toString(data.getLicense()));
 		JavaScript.printString(data.getContent());
 	}
 
@@ -126,7 +126,7 @@ public class LicenseWizardPage extends ModalWizardPage
 		String url = JavaScript.getOctetStreamBase64Data(data.getContent());
 		String downloadFileName = datasetId + "-" + license.getName() + ".html";
 		downloadFileName = downloadFileName.replace(' ', '-');
-		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LICENSE, "saveHtml", Long.toString(data.getLicense()));
+		GoogleAnalytics.trackEvent(GoogleAnalytics.Category.LICENSE, "saveHtml", Long.toString(data.getLicense()));
 		JavaScript.invokeDownload(url, downloadFileName);
 	}
 

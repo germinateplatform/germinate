@@ -39,8 +39,8 @@
 			<g8:ClimateListBox b:id="formClimate" ui:field="climateBox"/>
 		</b:FormGroup>
 
-		<b:Heading size="H2" text="{msg.geographyLocationHeadingTable}" />
-		<gt:LocationTable ui:field="locationTable" />
+		<b:Heading size="H2" text="{msg.geographyLocationHeadingTable}"/>
+		<gt:LocationTable ui:field="locationTable"/>
 
 		<b:FormGroup>
 			<b:FormLabel for="formSynchronize" text="{msg.geographySynchronizeMaps}"/>

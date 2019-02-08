@@ -34,7 +34,7 @@ public class UserAuth implements Serializable
 {
 	private static final long serialVersionUID = -4829970355425355192L;
 
-	private Long id = -1000L;
+	private Long    id = -1000L;
 	private String  username;
 	private boolean isAdmin;
 	private String  sessionId;

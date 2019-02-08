@@ -169,7 +169,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		try
 		{
-			long id = OsterPassportPage.isOsterEi(searchString);
+			long id = OsterPassportWidget.isOsterEi(searchString);
 
 			LongParameterStore.Inst.get().put(Parameter.accessionId, id);
 			StringParameterStore.Inst.get().remove(Parameter.searchString);
@@ -269,12 +269,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				}
 
 				@Override
-				public boolean supportsFullIdMarking()
-				{
-					return true;
-				}
-
-				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
 					AccessionService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
@@ -311,12 +305,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 				@Override
 				protected boolean supportsFiltering()
-				{
-					return true;
-				}
-
-				@Override
-				public boolean supportsFullIdMarking()
 				{
 					return true;
 				}
@@ -404,12 +392,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				}
 
 				@Override
-				public boolean supportsFullIdMarking()
-				{
-					return true;
-				}
-
-				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
 					CompoundService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
@@ -446,12 +428,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 				@Override
 				protected boolean supportsFiltering()
-				{
-					return true;
-				}
-
-				@Override
-				public boolean supportsFullIdMarking()
 				{
 					return true;
 				}
@@ -611,12 +587,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				}
 
 				@Override
-				public boolean supportsFullIdMarking()
-				{
-					return true;
-				}
-
-				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
 					LocationService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
@@ -643,7 +613,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 			{
 				experimentTypes.clear();
 				experimentTypes = new ArrayList<>();
-				if (section == SearchType.ACCESSION_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.ACCESSION_DATA))
 				{
 					PartialSearchQuery query = new PartialSearchQuery();
 					query.add(new SearchCondition(Accession.GENERAL_IDENTIFIER, operator.getSelection(), searchString, String.class));
@@ -657,7 +627,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(Synonym.SYNONYM, operator.getSelection(), searchString, String.class));
 					accessionDataTable.forceFilter(query, false);
 				}
-				if (section == SearchType.ACCESSION_ATTRIBUTE_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.ACCESSION_ATTRIBUTE_DATA))
 				{
 					PartialSearchQuery query = new PartialSearchQuery();
 					query.add(new SearchCondition(Accession.GENERAL_IDENTIFIER, operator.getSelection(), searchString, String.class));
@@ -667,7 +637,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(AttributeData.VALUE, operator.getSelection(), searchString, String.class));
 					accessionAttributeDataTable.forceFilter(query, false);
 				}
-				if (section == SearchType.PHENOTYPE_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.PHENOTYPE_DATA))
 				{
 					experimentTypes.add(ExperimentType.trials);
 					PartialSearchQuery query = new PartialSearchQuery();
@@ -681,7 +651,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(Country.COUNTRY_NAME, operator.getSelection(), searchString, String.class));
 					phenotypeDataTable.forceFilter(query, false);
 				}
-				if (section == SearchType.COMPOUND_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.COMPOUND_DATA))
 				{
 					experimentTypes.add(ExperimentType.compound);
 					PartialSearchQuery query = new PartialSearchQuery();
@@ -690,7 +660,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(Compound.NAME, operator.getSelection(), searchString, String.class));
 					compoundDataTable.forceFilter(query, false);
 				}
-				if (section == SearchType.MAPDEFINITION_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.MAPDEFINITION_DATA))
 				{
 					PartialSearchQuery query = new PartialSearchQuery();
 					query.add(new SearchCondition(Marker.MARKER_NAME, operator.getSelection(), searchString, String.class));
@@ -700,17 +670,19 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(Synonym.SYNONYM, operator.getSelection(), searchString, String.class));
 					mapDefinitionTable.forceFilter(query, false);
 				}
-				if (section == SearchType.DATASETS || section == SearchType.ALL)
+				if (section.is(SearchType.DATASETS))
 				{
 					PartialSearchQuery query = new PartialSearchQuery();
 					query.add(new SearchCondition(Dataset.NAME, operator.getSelection(), searchString, String.class));
 					query.add(new SearchCondition(Dataset.DESCRIPTION, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Location.SITE_NAME, operator.getSelection(), searchString, String.class));
+					query.add(new SearchCondition(Country.COUNTRY_NAME, operator.getSelection(), searchString, String.class));
 					query.add(new SearchCondition(ExperimentType.DESCRIPTION, operator.getSelection(), searchString, String.class));
 					query.add(new SearchCondition(Experiment.EXPERIMENT_NAME, operator.getSelection(), searchString, String.class));
 					query.add(new SearchCondition(Dataset.CONTACT, operator.getSelection(), searchString, String.class));
 					datasetTable.forceFilter(query, false);
 				}
-				if (section == SearchType.DATASET_ATTRIBUTE_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.DATASET_ATTRIBUTE_DATA))
 				{
 					PartialSearchQuery query = new PartialSearchQuery();
 					query.add(new SearchCondition(Dataset.NAME, operator.getSelection(), searchString, String.class));
@@ -720,7 +692,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(AttributeData.VALUE, operator.getSelection(), searchString, String.class));
 					datasetAttributeDataTable.forceFilter(query, false);
 				}
-				if (section == SearchType.PEDIGREE_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.PEDIGREE_DATA))
 				{
 					PartialSearchQuery query = new PartialSearchQuery();
 					query.add(new SearchCondition(PedigreeService.CHILD_GID, operator.getSelection(), searchString, String.class));
@@ -729,7 +701,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 					query.add(new SearchCondition(PedigreeService.PARENT_NAME, operator.getSelection(), searchString, String.class));
 					pedigreeTable.forceFilter(query, false);
 				}
-				if (section == SearchType.LOCATION_DATA || section == SearchType.ALL)
+				if (section.is(SearchType.LOCATION_DATA))
 				{
 					PartialSearchQuery query = new PartialSearchQuery();
 					query.add(new SearchCondition(Location.SITE_NAME, operator.getSelection(), searchString, String.class));
@@ -744,8 +716,6 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 				additionalDataPanel.setExperimentTypes(experimentTypes);
 			});
 		}
-
-		//		additionalDataTable.refreshTable();
 	}
 
 	private void updateTables()
@@ -810,6 +780,11 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 		public String getTitle()
 		{
 			return title;
+		}
+
+		public boolean is(SearchType other)
+		{
+			return this == other || this == ALL;
 		}
 	}
 

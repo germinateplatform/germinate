@@ -19,13 +19,13 @@ package jhi.germinate.client.widget.structure;
 
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.Style;
@@ -62,24 +62,22 @@ public class MarkedItemListItem
 
 		anchor.setTitle(display);
 		anchor.setHref("#");
-		GQuery.$(anchor).click(new Function()
+		JavaScript.click(anchor, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				ItemTypeParameterStore.Inst.get().put(Parameter.markedItemType, type);
 				History.newItem(Page.MARKED_ITEMS.name());
-				return false;
 			}
 		});
 
-		GQuery.$(trash).click(new Function()
+		JavaScript.click(trash, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				MarkedItemList.clear(type);
-				return false;
 			}
 		});
 

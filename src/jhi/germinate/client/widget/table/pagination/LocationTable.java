@@ -54,12 +54,6 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 	}
 
 	@Override
-	public boolean supportsFullIdMarking()
-	{
-		return false;
-	}
-
-	@Override
 	protected boolean supportsFiltering()
 	{
 		return false;

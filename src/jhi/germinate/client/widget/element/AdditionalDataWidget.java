@@ -50,7 +50,7 @@ public class AdditionalDataWidget extends Composite
 	HTML        additionalDataText;
 	@UiField
 	SimplePanel additionalDataTablePanel;
-	private DatasetTable additionalDataTable;
+	private DatasetTable         additionalDataTable;
 	private UpdateCallback       updateCallback;
 	private List<ExperimentType> experimentTypes = new ArrayList<>();
 
@@ -140,7 +140,7 @@ public class AdditionalDataWidget extends Composite
 							updateCallback.onDataUpdate();
 						additionalDataTable.refreshTable();
 
-						JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DATASET, "additionalDatasets", "show", selectedItems.size());
+						GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DATASET, "additionalDatasets", "show", selectedItems.size());
 					}
 				});
 			}

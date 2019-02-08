@@ -18,7 +18,6 @@
 package jhi.germinate.client.widget.element;
 
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
 
@@ -264,7 +263,7 @@ public class AlertDialog
 			html.setText(Text.LANG.downloadFileAsHtml());
 			html.setMdi(Style.MDI_FILE_XML);
 			html.addClickHandler(event -> {
-				String url = JavaScript.getOctetStreamBase64Data(GQuery.$("#" + printableId).html());
+				String url = JavaScript.getOctetStreamBase64Data(JavaScript.html("#" + printableId));
 				String filename = StringUtils.isEmpty(downloadFileName) ? "download.txt" : downloadFileName;
 				JavaScript.invokeDownload(url, filename);
 			});

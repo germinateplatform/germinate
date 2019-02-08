@@ -91,7 +91,7 @@ public class DatasetDownloadCallback extends SimpleCallback<Dataset>
 
 			String path = builder.build();
 
-			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), filename);
+			GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), filename);
 
 			/* Click it */
 			JavaScript.invokeDownload(path);

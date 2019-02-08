@@ -219,7 +219,8 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 
 					section.add(box);
 
-					DownloadWidget widget = new DownloadWidget() {
+					DownloadWidget widget = new DownloadWidget()
+					{
 						@Override
 						protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 						{

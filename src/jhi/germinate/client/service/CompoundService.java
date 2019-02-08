@@ -157,9 +157,9 @@ public interface CompoundService extends RemoteService
 	/**
 	 * Returns the histogram data for the given {@link Compound} id and {@link Dataset} id.
 	 *
-	 * @param properties  The {@link RequestProperties}
+	 * @param properties The {@link RequestProperties}
 	 * @param compoundId The {@link Compound} id
-	 * @param datasetId   The {@link Dataset} id
+	 * @param datasetId  The {@link Dataset} id
 	 * @return The name of the generated file.
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server

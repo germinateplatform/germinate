@@ -54,7 +54,7 @@ public class TemplateWatcher
 		/* Start to listen for file changes within the full scale image folder */
 		File folder = FileUtils.getFromExternalDataDirectory(FileLocation.template, null, null, null);
 
-		if(folder != null && folder.exists() && folder.isDirectory())
+		if (folder != null && folder.exists() && folder.isDirectory())
 		{
 			Path path = folder.toPath();
 
@@ -106,7 +106,7 @@ public class TemplateWatcher
 
 	private static void copy(File source)
 	{
-		if(source.exists() && source.isFile())
+		if (source.exists() && source.isFile())
 		{
 			String target = filesToWatch.get(source.getName());
 

@@ -19,12 +19,13 @@ package jhi.germinate.client.widget.structure;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.query.client.*;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
 
 import jhi.germinate.client.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
@@ -70,19 +71,13 @@ public class UserPanel
 
 			if (!ModuleCore.getUseAuthentication())
 			{
-				GQuery selection = GQuery.$("#" + Id.STRUCTURE_ACCOUNT_SETTINGS_UL);
-
-				if (selection != null && !selection.isEmpty())
-					selection.remove();
-
+				JavaScript.remove("#" + Id.STRUCTURE_ACCOUNT_SETTINGS_UL);
 				return;
 			}
 
 			if (auth != null)
 			{
-				GQuery.$("#" + Id.STRUCTURE_ACCOUNT_SETTINGS_UL)
-					  .css("display", "inline-block")
-					  .append(INSTANCE.root);
+				add("#" + Id.STRUCTURE_ACCOUNT_SETTINGS_UL, INSTANCE.root);
 
 				INSTANCE.update(auth);
 			}
@@ -92,6 +87,12 @@ public class UserPanel
 			INSTANCE.update(auth);
 		}
 	}
+
+	private static native void add(String selector, Element root) /*-{
+		$wnd.$(selector)
+			.css("display", "inline-block")
+			.append(root);
+	}-*/;
 
 	private void update(UserAuth auth)
 	{
@@ -116,24 +117,22 @@ public class UserPanel
 		}
 
 		if (show)
-			GQuery.$(adminContainer).show();
+			JavaScript.show(adminContainer);
 		else
-			GQuery.$(adminContainer).hide();
+			JavaScript.hide(adminContainer);
 
 		username.setInnerText(auth.getUsername());
 		gatekeeperLink.setHref(GerminateSettingsHolder.get().gatekeeperUrl.getValue());
-		GQuery.$(logoutLink).click(new Function()
+		JavaScript.click(logoutLink, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				/* Track information using Google Analytics */
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LOGOUT, "logout");
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.LOGOUT, "logout");
 
 				/* Clear the parameter store and show the login page */
 				GerminateEventBus.BUS.fireEvent(new LogoutEvent());
-
-				return false;
 			}
 		});
 	}

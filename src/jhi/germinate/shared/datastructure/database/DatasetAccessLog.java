@@ -38,21 +38,21 @@ import jhi.germinate.shared.exception.*;
  */
 public class DatasetAccessLog extends DatabaseObject
 {
-	public static final String ID               = "datasetaccesslogs.id";
-	public static final String USER_ID          = "datasetaccesslogs.user_id";
-	public static final String USER_NAME        = "datasetaccesslogs.user_name";
-	public static final String USER_EMAIL       = "datasetaccesslogs.user_email";
-	public static final String USER_INSTITUTION = "datasetaccesslogs.user_institution";
-	public static final String DATASET_ID       = "datasetaccesslogs.dataset_id";
-	public static final String REASON           = "datasetaccesslogs.reason";
-	public static final String CREATED_ON       = "datasetaccesslogs.created_on";
-	public static final String UPDATED_ON       = "datasetaccesslogs.updated_on";
-	private static final long serialVersionUID = -6786321095022860722L;
-	private UnapprovedUser user;
-	private Dataset        dataset;
-	private String         reason;
-	private Long           createdOn;
-	private Long           updatedOn;
+	public static final  String         ID               = "datasetaccesslogs.id";
+	public static final  String         USER_ID          = "datasetaccesslogs.user_id";
+	public static final  String         USER_NAME        = "datasetaccesslogs.user_name";
+	public static final  String         USER_EMAIL       = "datasetaccesslogs.user_email";
+	public static final  String         USER_INSTITUTION = "datasetaccesslogs.user_institution";
+	public static final  String         DATASET_ID       = "datasetaccesslogs.dataset_id";
+	public static final  String         REASON           = "datasetaccesslogs.reason";
+	public static final  String         CREATED_ON       = "datasetaccesslogs.created_on";
+	public static final  String         UPDATED_ON       = "datasetaccesslogs.updated_on";
+	private static final long           serialVersionUID = -6786321095022860722L;
+	private              UnapprovedUser user;
+	private              Dataset        dataset;
+	private              String         reason;
+	private              Long           createdOn;
+	private              Long           updatedOn;
 
 	public DatasetAccessLog()
 	{
@@ -136,6 +136,7 @@ public class DatasetAccessLog extends DatabaseObject
 	{
 		private static DatabaseObjectCache<GatekeeperUser> GATEKEEPER_USER_CACHE;
 		private static DatabaseObjectCache<Dataset>        DATASET_CACHE;
+
 		private Parser()
 		{
 			GATEKEEPER_USER_CACHE = createCache(GatekeeperUser.class, GatekeeperUserManager.class);

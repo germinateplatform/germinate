@@ -112,7 +112,7 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 
 		DefaultStreamer tempResult = query.getStreamer();
 
-        /* If there is no data, there is no need to continue */
+		/* If there is no data, there is no need to continue */
 		if (tempResult == null)
 		{
 			query.close();

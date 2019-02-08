@@ -53,6 +53,12 @@ public class CollectingsiteCartView extends AbstractCartView<Location>
 		return new LocationTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
+			protected boolean preventAllItemMarking()
+			{
+				return true;
+			}
+
+			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Location>>> callback)
 			{
 				return LocationService.Inst.get().getByIds(Cookie.getRequestProperties(), pagination, markedIds, new AsyncCallback<ServerResult<List<Location>>>()

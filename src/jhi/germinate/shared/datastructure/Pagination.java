@@ -166,7 +166,7 @@ public class Pagination implements Serializable
 	@GwtIncompatible
 	public void updateSortColumn(String[] columns, String fallback) throws InvalidColumnException
 	{
-//		if (!StringUtils.isEmpty(this.sortColumn))
+		//		if (!StringUtils.isEmpty(this.sortColumn))
 		this.sortColumn = Util.checkSortColumn(sortColumn, columns, fallback);
 	}
 

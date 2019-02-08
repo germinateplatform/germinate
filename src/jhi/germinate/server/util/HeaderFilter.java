@@ -50,8 +50,8 @@ public class HeaderFilter implements Filter
 	{
 		/*
 		 * Makes sure that the browser document mode for Internet Explorer is
-         * set to IE edge
-         */
+		 * set to IE edge
+		 */
 		HttpServletResponse httpRes = (HttpServletResponse) res;
 		httpRes.addHeader("X-UA-Compatible", "IE=edge");
 		if (chain != null)

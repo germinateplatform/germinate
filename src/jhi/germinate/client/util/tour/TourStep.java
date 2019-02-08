@@ -18,7 +18,8 @@
 package jhi.germinate.client.util.tour;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.query.client.*;
+
+import jhi.germinate.client.util.*;
 
 /**
  * @author Sebastian Raubach
@@ -47,7 +48,7 @@ public class TourStep extends JavaScriptObject
 
 	public static TourStep newInstance(String element, String intro, Position position)
 	{
-		if (!GQuery.$(element).isEmpty())
+		if (!JavaScript.isEmpty(element))
 			return createJson(element, intro, position.position).cast();
 		else
 			return createJson(intro, position.position).cast();
@@ -60,7 +61,7 @@ public class TourStep extends JavaScriptObject
 
 	public static TourStep newInstance(String element, String intro)
 	{
-		if (element == null || !GQuery.$(element).isEmpty())
+		if (element == null || !JavaScript.isEmpty(element))
 			return newInstance(element, intro, Position.AUTO);
 		else
 			return null;

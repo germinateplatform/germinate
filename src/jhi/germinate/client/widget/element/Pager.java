@@ -116,10 +116,10 @@ public class Pager extends Composite
 
 		position = (int) Math.floor(newPosition / pageSize) * pageSize;
 
-        /*
+		/*
 		 * If there aren't pages to the "left" of the current page, disable
-         * first and prev button
-         */
+		 * first and prev button
+		 */
 		if (position - pageSize < 0)
 		{
 			setEnabled(PagerButton.FIRST, false);
@@ -147,7 +147,7 @@ public class Pager extends Composite
 		/* Update the page text with the current selection */
 		updatePagerText();
 
-        /* Notify the handler */
+		/* Notify the handler */
 		if (handler != null)
 			handler.onButtonClicked(PagerButton.FIRST, position);
 	}
@@ -272,11 +272,11 @@ public class Pager extends Composite
 	{
 		updatePagerText();
 
-        /* Initially, disable first and prev buttons */
+		/* Initially, disable first and prev buttons */
 		setEnabled(PagerButton.FIRST, position >= pageSize);
 		setEnabled(PagerButton.PREV, position >= pageSize);
 
-        /* Set state of next and last button based on number of items */
+		/* Set state of next and last button based on number of items */
 		setEnabled(PagerButton.NEXT, position + pageSize < nrOfItems);
 		setEnabled(PagerButton.LAST, position + pageSize < nrOfItems);
 	}
@@ -289,11 +289,11 @@ public class Pager extends Composite
 		/* Get the localized number formatter */
 		NumberFormat formatter = NumberFormat.getFormat(Text.LANG.pagerNumberFormat());
 
-        /* Determine lower and upper bound */
+		/* Determine lower and upper bound */
 		int lower = position + 1;
 		int upper = Math.min(position + pageSize, nrOfItems);
 
-        /* Use the internationalized text */
+		/* Use the internationalized text */
 		String text;
 
 		if (lower == upper)

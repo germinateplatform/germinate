@@ -83,8 +83,8 @@
 			<g:SimplePanel ui:field="pedigreeDownloadPanel"/>
 
 			<g:FlowPanel ui:field="pedigreeChartPanel">
-				<b:Heading size="H4" text="{msg.passportPedigreeChart}" />
-				<g:Label text="{msg.passportPedigreeChartSub}" />
+				<b:Heading size="H4" text="{msg.passportPedigreeChart}"/>
+				<g:Label text="{msg.passportPedigreeChartSub}"/>
 				<g:SimplePanel ui:field="pedigreeChart"/>
 			</g:FlowPanel>
 		</g:FlowPanel>

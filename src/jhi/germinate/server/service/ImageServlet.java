@@ -56,7 +56,7 @@ public class ImageServlet extends BaseHttpServlet
 		String fileLocale = req.getParameter(ServletConstants.PARAM_FILE_LOCALE);
 		ReferenceFolder subFolder = null;
 
-        /* Check if the locale is a valid one */
+		/* Check if the locale is a valid one */
 		if (fileLocale != null)
 		{
 			if (!LocaleUtils.isValid(LocaleUtils.parseLocale(fileLocale)))
@@ -121,15 +121,15 @@ public class ImageServlet extends BaseHttpServlet
 			file = getFile(req, FileLocation.download, fileLocale, ReferenceFolder.images, imageSizeFolder + File.separator + imagePath);
 		}
 
-        /* Set the filename that will be used for file download */
+		/* Set the filename that will be used for file download */
 		String extension = imagePath.substring(imagePath.lastIndexOf(".") + 1).toLowerCase();
 
 		ImageMimeType type = ImageMimeType.valueOf(extension);
 
-        /* Set the content type */
+		/* Set the content type */
 		resp.setContentType(type.getContentType());
 
-        /* If the image doesn't exist, use the missing/placeholder image instead */
+		/* If the image doesn't exist, use the missing/placeholder image instead */
 		if (file == null || !file.exists())
 		{
 			file = getFile(req, FileLocation.download, fileLocale, ReferenceFolder.images, ImageService.MISSING_IMAGE);

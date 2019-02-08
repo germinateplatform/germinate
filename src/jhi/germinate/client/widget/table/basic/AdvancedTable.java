@@ -62,7 +62,7 @@ public class AdvancedTable<T> extends Composite
 		scrollPanel.addStyleName("table-responsive");
 		scrollPanel.add(table);
 
-        /* Take care of sorting */
+		/* Take care of sorting */
 		/* Data provider based on a list */
 		ListDataProvider<T> dataProvider = new ListDataProvider<>();
 		dataProvider.addDataDisplay(table);
@@ -100,22 +100,22 @@ public class AdvancedTable<T> extends Composite
 		/* Handle null values */
 		if (first == null && second == null)
 			return 0;
-		/* Sort null values to the end */
+			/* Sort null values to the end */
 		else if (first == null)
 			return 1;
 		else if (second == null)
 			return -1;
 
-        /* Handle question marks */
+		/* Handle question marks */
 		if (first.equals("?") && second.equals("?"))
 			return 0;
-		/* Sort question marks to the end */
+			/* Sort question marks to the end */
 		else if (first.equals("?"))
 			return -1;
 		else if (second.equals("?"))
 			return 1;
 
-        /* Try to parse it as a number */
+		/* Try to parse it as a number */
 		boolean numbers = true;
 		boolean dates = true;
 		double firstNumber = 0;
@@ -145,7 +145,7 @@ public class AdvancedTable<T> extends Composite
 
 		int result;
 
-        /* If it's a number, compare numbers */
+		/* If it's a number, compare numbers */
 		if (numbers)
 		{
 			result = (int) Math.signum(firstNumber - secondNumber);

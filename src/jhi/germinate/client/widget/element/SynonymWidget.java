@@ -17,6 +17,7 @@
 
 package jhi.germinate.client.widget.element;
 
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
 
 import org.gwtbootstrap3.client.ui.*;
@@ -25,7 +26,6 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import java.util.*;
 
 import jhi.germinate.client.i18n.*;
-import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -36,13 +36,16 @@ import jhi.germinate.shared.enums.*;
 /**
  * @author Sebastian Raubach
  */
-public class SynonymWidget extends GerminateComposite
+public class SynonymWidget extends Composite
 {
 	private GerminateDatabaseTable referenceTable;
 	private Long                   referenceId;
 
+	private FlowPanel panel = new FlowPanel();
+
 	public SynonymWidget()
 	{
+		initWidget(panel);
 	}
 
 	public SynonymWidget(GerminateDatabaseTable referenceTable, Long referenceId)
@@ -59,13 +62,6 @@ public class SynonymWidget extends GerminateComposite
 		setUpContent();
 	}
 
-	@Override
-	public Library[] getLibraries()
-	{
-		return null;
-	}
-
-	@Override
 	protected void setUpContent()
 	{
 		panel.clear();
@@ -86,6 +82,8 @@ public class SynonymWidget extends GerminateComposite
 						}
 
 						panel.add(ulPanel);
+
+						onDataChanged();
 					}
 					else
 					{
@@ -94,5 +92,10 @@ public class SynonymWidget extends GerminateComposite
 				}
 			});
 		}
+	}
+
+	protected void onDataChanged()
+	{
+
 	}
 }

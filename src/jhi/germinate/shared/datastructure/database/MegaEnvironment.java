@@ -42,7 +42,7 @@ public class MegaEnvironment extends DatabaseObject
 	private String name;
 	private Long   createdOn;
 	private Long   updatedOn;
-	private Long size = 0L;
+	private Long   size = 0L;
 
 	public MegaEnvironment()
 	{

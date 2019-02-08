@@ -20,7 +20,6 @@ package jhi.germinate.client.widget.d3js;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -51,7 +50,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 {
-	private String         coloringValue;
+	private String coloringValue;
 
 	private FlowPanel chartPanel;
 	private Button    deleteButton;
@@ -161,24 +160,6 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 		return menuItems;
 	}
 
-	private Set<String> getSelectedDataPoints()
-	{
-		List<String> ids = GQuery.$(chartPanel)
-								 .find(".cell")
-								 .first()
-								 .find(".selected")
-								 .map(new Function()
-								 {
-									 @Override
-									 public String f(Element e, int i)
-									 {
-										 return e.getId().replace("item-", "");
-									 }
-								 });
-
-		return new HashSet<>(ids);
-	}
-
 	/**
 	 * Handles selection of data points. Will redirect to {@link Page#PASSPORT}
 	 *
@@ -198,7 +179,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 				modal.setSize(ModalSize.LARGE);
 
 				ModalBody modalBody = new ModalBody();
-				modalBody.add(new PassportPage());
+				modalBody.add(new PassportPage(false));
 				modal.add(modalBody);
 
 				modal.show();
@@ -208,6 +189,27 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 			}
 		}
 	}
+
+	private Set<String> getSelectedDataPoints()
+	{
+		JsArrayString idList = getIds(chartPanel.getElement());
+		HashSet<String> result = new HashSet<>();
+
+		for (int i = 0; i < idList.length(); i++)
+			result.add(idList.get(i));
+
+		return result;
+	}
+
+	private native JsArrayString getIds(Element element) /*-{
+		return $wnd.$(element)
+			.find(".cell")
+			.eq(1)
+			.find(".selected")
+			.map(function () {
+				return $wnd.$(this).attr("id").replace("item-", "");
+			});
+	}-*/;
 
 	private native void create(boolean colorByTreatment, boolean colorByDataset, boolean colorByYear, int widthHint)/*-{
 

@@ -65,7 +65,7 @@ public class KMLCreatorLocation extends KMLCreator
 						   .withName("Accessions for collecting site: " + id);
 
 
-        /* Get the accessions */
+		/* Get the accessions */
 		List<Accession> accessions = getAccessions(id);
 
 		for (Accession accession : accessions)
@@ -118,7 +118,7 @@ public class KMLCreatorLocation extends KMLCreator
 		zos.closeEntry();
 		zos.close();
 
-        /* Delete the temporary file */
+		/* Delete the temporary file */
 		tempFile.delete();
 	}
 

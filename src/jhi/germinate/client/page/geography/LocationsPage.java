@@ -113,12 +113,6 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 			}
 
 			@Override
-			public boolean supportsFullIdMarking()
-			{
-				return true;
-			}
-
-			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
 				LocationService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);

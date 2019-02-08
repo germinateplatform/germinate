@@ -51,12 +51,6 @@ public abstract class AccessionAttributeDataTable extends MarkableDatabaseObject
 	}
 
 	@Override
-	public boolean supportsFullIdMarking()
-	{
-		return false;
-	}
-
-	@Override
 	protected boolean supportsDownload()
 	{
 		return false;

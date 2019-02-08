@@ -63,7 +63,7 @@ public class NavigationHandler
 	{
 		final Page page = event.getPage();
 
-		JavaScript.GoogleAnalytics.trackPageview(page.name());
+		GoogleAnalytics.trackPageview(page.name());
 
 		// ABOUT GERMINATE
 		if (Page.ABOUT_GERMINATE.is(page))
@@ -246,12 +246,12 @@ public class NavigationHandler
 		// PASSPORT
 		else if (Page.PASSPORT.is(page))
 		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ACCESSION_OVERVIEW, new PassportPage()));
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(page, Page.ACCESSION_OVERVIEW, new PassportPage(false)));
 		}
 		// OSTEREI
 		else if (Page.OSTEREI.is(page))
 		{
-			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new OsterPassportPage()));
+			GWT.runAsync((RunAsyncNotifyCallback) () -> ContentHolder.getInstance().setContent(Page.PASSPORT, Page.ACCESSION_OVERVIEW, new PassportPage(true)));
 		}
 		// SEARCH
 		else if (Page.SEARCH.is(page))

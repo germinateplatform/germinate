@@ -110,10 +110,10 @@ public interface CompoundServiceAsync
 	/**
 	 * Returns the histogram data for the given {@link Compound} id and {@link Dataset} id.
 	 *
-	 * @param properties  The {@link RequestProperties}
+	 * @param properties The {@link RequestProperties}
 	 * @param compoundId The {@link Compound} id
-	 * @param datasetId   The {@link Dataset} id
-	 * @param callback    The {@link AsyncCallback}
+	 * @param datasetId  The {@link Dataset} id
+	 * @param callback   The {@link AsyncCallback}
 	 */
 	void getHistogramData(RequestProperties properties, Long compoundId, Long datasetId, AsyncCallback<ServerResult<String>> callback);
 }

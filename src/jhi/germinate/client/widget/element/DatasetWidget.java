@@ -78,7 +78,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	private DatasetDownloadCallback downloadCallback = null;
 
 	private DatasetTable.SelectionMode selectionMode                 = null;
-	private Button                     continueButton;
 	private boolean                    alreadyAskedUserAboutLicenses = false;
 
 	/**
@@ -156,7 +155,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 						@Override
 						public void onSuccess(ServerResult<Boolean> result)
 						{
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.LICENSE, "accepted", licenses.stream().map(l -> Long.toString(l.getId())).collect(Collectors.joining(", ")));
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.LICENSE, "accepted", licenses.stream().map(l -> Long.toString(l.getId())).collect(Collectors.joining(", ")));
 							callback.onSuccess(toSelect);
 						}
 					});
@@ -375,7 +374,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 		{
 			/* Handle "continue" click events */
 			/* Get the selected items *//* Get their ids *//* Save the ids to the parameter store *//* Notify the callback */
-			continueButton = new Button(Text.LANG.generalContinue(), event ->
+			Button continueButton = new Button(Text.LANG.generalContinue(), event ->
 			{
 				/* Get the selected items */
 				Set<Dataset> selectedItems = table.getSelection();
@@ -485,11 +484,11 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	/**
 	 * Sets the text above the table
 	 *
-	 * @param headerText The text to display above the dataset table)
+	 * @param text The text to display above the dataset table)
 	 */
-	public void setText(SafeHtml headerText)
+	public void setText(SafeHtml text)
 	{
-		this.text = headerText;
+		this.text = text;
 	}
 
 	public void setText(String headerText)

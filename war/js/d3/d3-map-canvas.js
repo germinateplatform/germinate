@@ -22,7 +22,7 @@ function mapCanvas() {
 				return obj.chromosome;
 			});
 			chromosomes = chromosomes.filter(function (v, i) {
-				return chromosomes.indexOf(v) == i;
+				return chromosomes.indexOf(v) === i;
 			});
 
 			// Add the tooltip
@@ -51,7 +51,7 @@ function mapCanvas() {
 			chromosomes.forEach(function (d, i) {
 				// Determine all markers on said chromosome
 				var localData = data.filter(function (d) {
-					return d.chromosome == chromosomes[i];
+					return d.chromosome === chromosomes[i];
 				});
 
 				// Get the minimum on the chromosome
@@ -120,10 +120,10 @@ function mapCanvas() {
 
 			// Add the axis
 			ctx.beginPath();
-			ctx.moveTo(margin.left - 0.5, height - individualHeight + 0.5 + 10 + margin.top - margin.bottom);
+			ctx.moveTo(margin.left - 0.5, height - individualHeight + 0.5 + 5 + margin.top - margin.bottom);
 			ctx.lineTo(margin.left - 0.5, height - individualHeight + 0.5 + margin.top - margin.bottom);
 			ctx.lineTo(margin.left + width - margin.right + 0.5, height - individualHeight + 0.5 + margin.top - margin.bottom);
-			ctx.lineTo(margin.left + width - margin.right + 0.5, height - individualHeight + 0.5 + 10 + margin.top - margin.bottom);
+			ctx.lineTo(margin.left + width - margin.right + 0.5, height - individualHeight + 0.5 + 5 + margin.top - margin.bottom);
 			ctx.stroke();
 
 			// Add the text
@@ -154,9 +154,9 @@ function mapCanvas() {
 
 					var isInPath = ctx.isPointInPath(ex, ey);
 
+					// It's this chromosome we're hovering over
 					if (isInPath) {
-
-						splitData[c].forEach(function (d, j) {
+						splitData[c].forEach(function (d) {
 							// Get closest data point
 							var x = margin.left + (d.position - mins[c]) / (maxs[c] - mins[c]) * ((width - margin.right) * maxs[c] / max);
 							var dex = Math.abs(x - ex);

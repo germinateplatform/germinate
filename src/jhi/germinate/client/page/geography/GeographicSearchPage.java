@@ -21,7 +21,6 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.http.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -147,7 +146,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 		polygonMap = new LeafletUtils.ClusteredMarkerCreator(polygonMapPanel, null, (mapPanel, map) ->
 		{
 			draw = LeafletDraw.newInstance(map, LeafletControlPosition.TOP_RIGHT);
-			GQuery.$(".leaflet-draw-draw-polygon").click();
+			JavaScript.click(".leaflet-draw-draw-polygon");
 		});
 
 		Float lat = FloatParameterStore.Inst.get().get(Parameter.latitude);
@@ -267,12 +266,6 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				}
 
 				@Override
-				public boolean supportsFullIdMarking()
-				{
-					return true;
-				}
-
-				@Override
 				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 				{
 					if (filter == null)
@@ -335,14 +328,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 
 			AccessionTable accessionTable = new AccessionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 			{
-				@Override
-				public boolean supportsFullIdMarking()
-				{
-					return true;
-				}
-
-				@Override
-				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+				private PartialSearchQuery addToFilter(PartialSearchQuery filter)
 				{
 					if (filter == null)
 						filter = new PartialSearchQuery();
@@ -351,6 +337,14 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 
 					if (filter.getAll().size() > 1)
 						filter.addLogicalOperator(new And());
+
+					return filter;
+				}
+
+				@Override
+				public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+				{
+					filter = addToFilter(filter);
 
 					AccessionService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);
 				}
@@ -436,11 +430,21 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 		{
 			if (draw != null)
 			{
-				List<LatLngPoint> bounds = new ArrayList<>();
-				JsArray<LeafletLatLng> latLng = draw.getPolygon();
+				List<List<LatLngPoint>> bounds = new ArrayList<>();
 
-				for (int i = 0; i < latLng.length(); i++)
-					bounds.add(new LatLngPoint(latLng.get(i).getLatitude(), latLng.get(i).getLongitude()));
+				int polygons = draw.getPolygonCount();
+
+				for (int index = 0; index < polygons; index++)
+				{
+					List<LatLngPoint> poly = new ArrayList<>();
+
+					JsArray<LeafletLatLng> latLng = draw.getPolygon(index);
+
+					for (int i = 0; i < latLng.length(); i++)
+						poly.add(new LatLngPoint(latLng.get(i).getLatitude(), latLng.get(i).getLongitude()));
+
+					bounds.add(poly);
+				}
 
 				if (bounds.size() > 0)
 				{
@@ -456,12 +460,6 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 					locationSection.add(new LocationTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 					{
 						@Override
-						public boolean supportsFullIdMarking()
-						{
-							return true;
-						}
-
-						@Override
 						public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 						{
 							LocationService.Inst.get().getIdsInPolygon(Cookie.getRequestProperties(), bounds, callback);
@@ -476,12 +474,6 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 
 					accessionSection.add(new AccessionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 					{
-						@Override
-						public boolean supportsFullIdMarking()
-						{
-							return true;
-						}
-
 						@Override
 						public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 						{

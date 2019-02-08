@@ -154,8 +154,8 @@ public class PedigreeDefinition extends DatabaseObject
 			}
 		}
 
-		private static DatabaseObjectCache<Accession>           ACCESSION_CACHE;
-		private static DatabaseObjectCache<PedigreeNotation>    PEDIGREENOTATION_CACHE;
+		private static DatabaseObjectCache<Accession>        ACCESSION_CACHE;
+		private static DatabaseObjectCache<PedigreeNotation> PEDIGREENOTATION_CACHE;
 
 		private Parser()
 		{

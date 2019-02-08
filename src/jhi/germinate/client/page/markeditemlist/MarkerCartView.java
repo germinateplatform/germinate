@@ -53,6 +53,12 @@ public class MarkerCartView extends AbstractCartView<Marker>
 		return new MarkerTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
+			protected boolean preventAllItemMarking()
+			{
+				return true;
+			}
+
+			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
 			}

@@ -47,7 +47,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 {
 	private static final long serialVersionUID = -534823136023353625L;
 
-	private static final String SELECT_TREEMAP_DATA_COLLSITE  = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT(`germinatebase`.`id`) AS count FROM `countries` LEFT JOIN `locations` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `germinatebase` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL(`site_name`) AND `locationtypes`.`name` = 'collectingsites' GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT(`germinatebase`.`id`) > 0";
+	private static final String SELECT_TREEMAP_DATA_COLLSITE  = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT( `germinatebase`.`id` ) AS count FROM `countries` LEFT JOIN `locations` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `germinatebase` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL(`site_name`) AND `locationtypes`.`name` = 'collectingsites' GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT(`germinatebase`.`id`) > 0";
 	private static final String SELECT_TREEMAP_DATA_TRIALSITE = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT( `phenotypedata`.`id` ) AS count FROM `phenotypedata` LEFT JOIN `locations` ON `locations`.`id` = `phenotypedata`.`location_id` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL( `site_name` ) AND `locationtypes`.`name` LIKE 'trialsite' GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT( `phenotypedata`.`id` ) > 0";
 	private static final String SELECT_TREEMAP_DATA_DATASETS  = "SELECT `countries`.*, `locations`.*, `locationtypes`.*, COUNT( `datasets`.`id` ) AS count FROM `datasets` LEFT JOIN `locations` ON `locations`.`id` = `datasets`.`location_id` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` LEFT JOIN `locationtypes` ON `locationtypes`.`id` = `locations`.`locationtype_id` WHERE NOT ISNULL( `site_name` ) AND `locationtypes`.`name` LIKE 'datasets' GROUP BY `countries`.`id`, `locations`.`id` HAVING COUNT( `datasets`.`id` ) > 0";
 
@@ -75,7 +75,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	}
 
 	@Override
-	public ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<LatLngPoint> polygon) throws InvalidSessionException, DatabaseException
+	public ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -145,7 +145,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	}
 
 	@Override
-	public PaginatedServerResult<List<Location>> getInPolygon(RequestProperties properties, Pagination pagination, List<LatLngPoint> bounds) throws InvalidSessionException, DatabaseException, InvalidColumnException
+	public PaginatedServerResult<List<Location>> getInPolygon(RequestProperties properties, Pagination pagination, List<List<LatLngPoint>> bounds) throws InvalidSessionException, DatabaseException, InvalidColumnException
 	{
 		if (pagination == null)
 			pagination = Pagination.getDefault();

@@ -136,7 +136,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 			exporter.exportResult(result.flapjackLinks);
 
 			/* Store the deleted markers */
-//			List<String> keptMarkers = exporter.getKeptMarkers();
+			//			List<String> keptMarkers = exporter.getKeptMarkers();
 
 			/* Get the map */
 			File filename = createTemporaryFile("map", datasetId, "map");

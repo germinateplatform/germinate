@@ -20,12 +20,12 @@ package jhi.germinate.client.widget.news;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
@@ -90,10 +90,10 @@ public class NewsPanelItem extends Composite
 
 		anchor.setHref(news.getHyperlink());
 
-		GQuery.$(anchor).click(new Function()
+		JavaScript.click(anchor, false, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				boolean preventDefault = false;
 				String link = news.getHyperlink();
@@ -116,7 +116,11 @@ public class NewsPanelItem extends Composite
 					}
 				}
 
-				return !preventDefault;
+				if (preventDefault)
+				{
+					event.stopPropagation();
+					event.preventDefault();
+				}
 			}
 		});
 	}

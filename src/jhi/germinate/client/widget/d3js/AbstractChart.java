@@ -21,7 +21,6 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -109,19 +108,23 @@ public abstract class AbstractChart extends GerminateComposite
 	 */
 	protected abstract MenuItem[] getAdditionalMenuItems();
 
-	@Override
-	public void onResize(boolean containerResize)
+	/**
+	 * Removes d3 from the current page.
+	 */
+	public static void removeD3()
 	{
-		if (containerResize)
-		{
-			/* If the chart needs to update, then notify it */
-			removeD3(panelId);
-			if(chartPanel != null)
-				updateChart(chartPanel.getOffsetWidth());
+		JavaScript.remove("." + Id.CHART_D3_TOOLTIP);
+		JavaScript.remove("." + Id.CHART_D3_LEGEND);
 
-			if (!StringUtils.isEmpty(getPhotoExportFilename()))
-				addDownloadButton();
-		}
+		removeD3JS();
+
+		popupPanels.values().forEach(Widget::removeFromParent);
+
+		popupPanels.clear();
+
+		handlers.values().forEach(HandlerRegistration::removeHandler);
+
+		handlers.clear();
 	}
 
 	@Override
@@ -156,12 +159,19 @@ public abstract class AbstractChart extends GerminateComposite
 			messageHtml.setHTML(message);
 	}
 
-	public void setFilePath(String filePath)
+	@Override
+	public void onResize(boolean containerResize)
 	{
-		this.filePath = filePath;
+		if (containerResize)
+		{
+			/* If the chart needs to update, then notify it */
+			removeD3(panelId);
+			if (chartPanel != null)
+				updateChart(chartPanel.getOffsetWidth());
 
-		if(filePath != null)
-			onResize(true);
+			if (!StringUtils.isEmpty(getPhotoExportFilename()))
+				addDownloadButton();
+		}
 	}
 
 	public void clear()
@@ -176,6 +186,19 @@ public abstract class AbstractChart extends GerminateComposite
 	{
 		clear();
 		super.onUnload();
+	}
+
+	public void setFilePath(String filePath)
+	{
+		this.filePath = filePath;
+
+		if (filePath != null)
+			onResize(true);
+	}
+
+	protected Button[] getAdditionalButtons()
+	{
+		return null;
 	}
 
 	/**
@@ -197,8 +220,6 @@ public abstract class AbstractChart extends GerminateComposite
 
 			if (handlers.containsKey(chartPanel))
 				handlers.get(chartPanel).removeHandler();
-
-			final GQuery parent = GQuery.$(chartPanel.getElement());
 
 			// Get the button text
 			SafeHtml downloadImage = Text.LANG.d3DownloadImageButton();
@@ -238,8 +259,22 @@ public abstract class AbstractChart extends GerminateComposite
 						public void onSuccess(String result)
 						{
 							// Track the download
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "png", result);
-							GQuery svg = parent.children("svg");
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "png", result);
+							Element chart = chartPanel.getElement();
+							Element svg = null;
+							Element legend = null;
+							for (int i = 0; i < chart.getChildCount(); i++)
+							{
+								Element el = DOM.getChild(chart, i);
+								if (el.getTagName().equals("svg"))
+								{
+									svg = el;
+								}
+								else if (el.hasClassName(Id.CHART_D3_LEGEND))
+								{
+									legend = el;
+								}
+							}
 
 							int index = result.indexOf(".png");
 
@@ -251,12 +286,13 @@ public abstract class AbstractChart extends GerminateComposite
 								name = result;
 
 							// Download the png
-							downloadImage(svg.get(0), name + ".png");
+							downloadImage(svg, name + ".png");
 
-							GQuery legend = parent.children("." + Id.CHART_D3_LEGEND);
-
-							if (!legend.isEmpty())
-								Scheduler.get().scheduleDeferred(() -> downloadLegend(legend.get(0), name + "-legend.png"));
+							if (legend != null)
+							{
+								final Element el = legend;
+								Scheduler.get().scheduleDeferred(() -> downloadLegend(el, name + "-legend.png"));
+							}
 
 							popup.hide();
 						}
@@ -282,8 +318,22 @@ public abstract class AbstractChart extends GerminateComposite
 						public void onSuccess(String result)
 						{
 							// Track the download
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "svg", result);
-							GQuery svg = parent.children("svg");
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "svg", result);
+							Element chart = chartPanel.getElement();
+							Element svg = null;
+							Element legend = null;
+							for (int i = 0; i < chart.getChildCount(); i++)
+							{
+								Element el = DOM.getChild(chart, i);
+								if (el.getTagName().equals("svg"))
+								{
+									svg = el;
+								}
+								else if (el.hasClassName(Id.CHART_D3_LEGEND))
+								{
+									legend = el;
+								}
+							}
 
 							int index = result.indexOf(".svg");
 
@@ -296,12 +346,13 @@ public abstract class AbstractChart extends GerminateComposite
 
 
 							// Download the svg
-							downloadSvg(svg.get(0), name + ".svg");
+							downloadSvg(svg, name + ".svg");
 
-							GQuery legend = parent.children("." + Id.CHART_D3_LEGEND);
-
-							if (!legend.isEmpty())
-								Scheduler.get().scheduleDeferred(() -> downloadLegend(legend.get(0), name + "-legend.png"));
+							if (legend != null)
+							{
+								final Element el = legend;
+								Scheduler.get().scheduleDeferred(() -> downloadLegend(el, name + "-legend.png"));
+							}
 
 							popup.hide();
 						}
@@ -317,7 +368,7 @@ public abstract class AbstractChart extends GerminateComposite
 				// Invoke the download based on the path
 				JavaScript.invokeDownload(filePath);
 				// Track the event
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "txt", filename);
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "txt", filename);
 
 				popup.hide();
 			});
@@ -359,7 +410,8 @@ public abstract class AbstractChart extends GerminateComposite
 
 				buttonGroup = new ButtonGroup();
 				buttonGroup.setPull(Pull.RIGHT);
-				panel.insert(buttonGroup, 0);
+				buttonGroup.getElement().getStyle().setZIndex(10);
+				panel.insert(buttonGroup, panel.getWidgetIndex(chartPanel));
 				buttonGroup.add(button);
 
 				Button[] additionalButtons = getAdditionalButtons();
@@ -374,31 +426,6 @@ public abstract class AbstractChart extends GerminateComposite
 			/* Listen for context menu events */
 			handlers.put(chartPanel, chartPanel.addDomHandler(event -> handleEvent(event, null, popup), ContextMenuEvent.getType()));
 		}
-	}
-
-	protected Button[] getAdditionalButtons()
-	{
-		return null;
-	}
-
-	private void handleEvent(DomEvent event, Widget relativeTo, PopupPanel popup)
-	{
-		event.preventDefault();
-		event.stopPropagation();
-
-		popup.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
-		{
-			int popupX = event.getNativeEvent().getClientX() + Window.getScrollLeft();
-			if (popupX + offsetWidth > Window.getClientWidth() + Window.getScrollLeft())
-				popupX = Window.getClientWidth() + Window.getScrollLeft() - offsetWidth;
-
-			int popupY = event.getNativeEvent().getClientY() + Window.getScrollTop();
-
-			if (relativeTo != null)
-				popupY = relativeTo.getAbsoluteTop() + relativeTo.getOffsetHeight() + Window.getScrollTop();
-
-			popup.setPopupPosition(popupX, popupY);
-		});
 	}
 
 	/**
@@ -485,6 +512,27 @@ public abstract class AbstractChart extends GerminateComposite
 		}
 	}-*/;
 
+	private void handleEvent(DomEvent event, Widget relativeTo, PopupPanel popup)
+	{
+		event.preventDefault();
+		event.stopPropagation();
+
+		popup.setPopupPositionAndShow((offsetWidth, offsetHeight) ->
+		{
+			int popupX = event.getNativeEvent().getClientX() + Window.getScrollLeft();
+			if (popupX + offsetWidth > Window.getClientWidth() + Window.getScrollLeft())
+				popupX = Window.getClientWidth() + Window.getScrollLeft() - offsetWidth;
+
+			int popupY;
+			if (relativeTo != null)
+				popupY = relativeTo.getAbsoluteTop() + relativeTo.getOffsetHeight();
+			else
+				popupY = event.getNativeEvent().getClientY() + Window.getScrollTop();
+
+			popup.setPopupPosition(popupX, popupY);
+		});
+	}
+
 	/**
 	 * Opens the svg in the form a uri in a new tab
 	 *
@@ -495,26 +543,7 @@ public abstract class AbstractChart extends GerminateComposite
 		/* Click it */
 		JavaScript.invokeDownload(uri, filename);
 
-		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "svg", filename);
-	}
-
-	/**
-	 * Removes d3 from the current page.
-	 */
-	public static void removeD3()
-	{
-		GQuery.$("." + Id.CHART_D3_TOOLTIP).remove();
-		GQuery.$("." + Id.CHART_D3_LEGEND).remove();
-
-		removeD3JS();
-
-		popupPanels.values().forEach(Widget::removeFromParent);
-
-		popupPanels.clear();
-
-		handlers.values().forEach(HandlerRegistration::removeHandler);
-
-		handlers.clear();
+		GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "svg", filename);
 	}
 
 	/**
@@ -522,12 +551,11 @@ public abstract class AbstractChart extends GerminateComposite
 	 */
 	protected void removeD3(String panelId)
 	{
-		if(StringUtils.isEmpty(panelId))
+		if (StringUtils.isEmpty(panelId))
 			return;
 
-		GQuery.$("#" + panelId + " ." + Id.CHART_D3_TOOLTIP).remove();
-		GQuery g = GQuery.$("#" + panelId + " ." + Id.CHART_D3_LEGEND);
-		g.remove();
+		JavaScript.remove("#" + panelId + " ." + Id.CHART_D3_TOOLTIP);
+		JavaScript.remove("#" + panelId + " ." + Id.CHART_D3_LEGEND);
 
 		removeD3JS(panelId);
 

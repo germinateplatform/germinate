@@ -187,7 +187,7 @@ public interface LocationService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 * @throws InvalidColumnException  Thrown if the specified sort column isn't valid
 	 */
-	PaginatedServerResult<List<Location>> getInPolygon(RequestProperties properties, Pagination pagination, List<LatLngPoint> bounds) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+	PaginatedServerResult<List<Location>> getInPolygon(RequestProperties properties, Pagination pagination, List<List<LatLngPoint>> bounds) throws InvalidSessionException, DatabaseException, InvalidColumnException;
 
 	/**
 	 * Returns a list of {@link Location} ids that are located in the polygon defined by the given list of {@link LatLngPoint}s.
@@ -198,7 +198,7 @@ public interface LocationService extends RemoteService
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
-	ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<LatLngPoint> polygon) throws InvalidSessionException, DatabaseException;
+	ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Exports all the data associated with {@link Location}s mathing the given {@link PartialSearchQuery}.

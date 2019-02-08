@@ -37,14 +37,14 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class CompoundDataImporter extends DataImporter<CompoundData>
 {
-	private static Dataset dataset;
-	protected List<CompoundData> cache = new ArrayList<>();
-	private Map<String, Accession> accessions    = new HashMap<>();
+	private static Dataset                dataset;
+	protected      List<CompoundData>     cache      = new ArrayList<>();
+	private        Map<String, Accession> accessions = new HashMap<>();
 
-	private Set<Long> createdCompoundDataIds = new HashSet<>();
-	private Set<Long> createdAccessionIds    = new HashSet<>();
-	private Map<String, Long>      compounds     = new HashMap<>();
-	private Map<String, Long>      compoundDatas = new HashMap<>();
+	private Set<Long>         createdCompoundDataIds = new HashSet<>();
+	private Set<Long>         createdAccessionIds    = new HashSet<>();
+	private Map<String, Long> compounds              = new HashMap<>();
+	private Map<String, Long> compoundDatas          = new HashMap<>();
 
 	private MetadataImporter metadataImporter;
 	private CompoundImporter compoundImporter;

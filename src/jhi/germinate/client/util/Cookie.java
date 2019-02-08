@@ -168,7 +168,7 @@ public class Cookie
 	}
 
 	/**
-	 * Extends the cookie lifespan of {@link #SID} and {@link #USER_ID}.
+	 * Extends the cookie lifespan of {@link #SID}.
 	 */
 	public static void extend()
 	{

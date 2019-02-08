@@ -61,7 +61,7 @@ public class LogoutHandler implements LogoutEvent.LogoutEventHandler
 
 		if (ModuleCore.getUseAuthentication())
 		{
-//			History.newItem("");
+			//			History.newItem("");
 			ContentHolder.getInstance().setContent(Page.HOME, null, new LoginPage());
 		}
 		else

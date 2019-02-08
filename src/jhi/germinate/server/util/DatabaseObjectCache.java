@@ -76,7 +76,7 @@ public class DatabaseObjectCache<T extends DatabaseObject>
 			/* Either get it from the DatabaseResult */
 			if (fromResult)
 				result = getFromManager(user, res);
-			/* Or get it from the database based on the id */
+				/* Or get it from the database based on the id */
 			else
 				result = getFromManager(user, id);
 
@@ -158,7 +158,7 @@ public class DatabaseObjectCache<T extends DatabaseObject>
 
 		if (result == null)
 		{
-			/* Let's do some reflection magic here. We get the AbstractManager my looking for the 'get' method and then invoke it. Then we can use the manager to get the actual object. */
+			/* Let's do some reflection magic here. We get the AbstractManager by looking for the 'get' method and then invoke it. Then we can use the manager to get the actual object. */
 			try
 			{
 				result = (AbstractManager) managerClazz.newInstance();

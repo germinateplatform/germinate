@@ -235,12 +235,6 @@ public class CompoundDetailsPage extends Composite
 		compoundDataTable = new CompoundDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
-			public boolean supportsFullIdMarking()
-			{
-				return true;
-			}
-
-			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
 				CompoundService.Inst.get().getIdsForFilter(Cookie.getRequestProperties(), filter, callback);

@@ -80,8 +80,8 @@
 		</g:FlowPanel>
 
 		<g:FlowPanel visible="false" ui:field="dbObject">
-			<g:SimplePanel addStyleNames="{style.entity}"  ui:field="firstDbObjectPanel" />
-			<g:SimplePanel addStyleNames="{style.entity}" visible="false" ui:field="secondDbObjectPanel" />
+			<g:SimplePanel addStyleNames="{style.entity}" ui:field="firstDbObjectPanel"/>
+			<g:SimplePanel addStyleNames="{style.entity}" visible="false" ui:field="secondDbObjectPanel"/>
 		</g:FlowPanel>
 
 		<b:InputGroupButton>

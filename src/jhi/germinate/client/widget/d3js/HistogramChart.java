@@ -75,7 +75,7 @@ public class HistogramChart extends AbstractChart
 		panel.add(chartPanel);
 
 		Scheduler.get().scheduleDeferred(() -> {
-			if(StringUtils.isEmpty(filePath))
+			if (StringUtils.isEmpty(filePath))
 				getData();
 			else
 				onResize(true);

@@ -44,7 +44,7 @@ import jhi.germinate.shared.exception.*;
  */
 public abstract class Gallery extends GerminateComposite
 {
-	private Pagination pagination = Pagination.getDefault();
+	private Pagination  pagination = Pagination.getDefault();
 	private List<Image> storedResult;
 
 	private SimplePanel top = new SimplePanel();
@@ -172,9 +172,14 @@ public abstract class Gallery extends GerminateComposite
 		});
 	}
 
+	protected void onDataChanged()
+	{
+
+	}
+
 	private void fillContent()
 	{
-		if(setUp)
+		if (setUp)
 			jsniDestroy();
 
 		if (storedResult == null || storedResult.size() < 1)
@@ -183,7 +188,7 @@ public abstract class Gallery extends GerminateComposite
 		top.clear();
 		row.clear();
 
-        /* Create a GalleryItem for each image */
+		/* Create a GalleryItem for each image */
 		int counter = 0;
 		for (Image image : storedResult)
 		{
@@ -206,6 +211,8 @@ public abstract class Gallery extends GerminateComposite
 
 		jsniRun(panel.getElement().getId());
 		setUp = true;
+
+		onDataChanged();
 	}
 
 	@Override
@@ -221,7 +228,7 @@ public abstract class Gallery extends GerminateComposite
 	}-*/;
 
 	private native void jsniDestroy()/*-{
-		if($wnd.baguetteBox) {
+		if ($wnd.baguetteBox) {
 			$wnd.baguetteBox.destroy();
 		}
 	}-*/;

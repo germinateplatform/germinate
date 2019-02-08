@@ -45,7 +45,7 @@ public class TabDelimitedMetadataImporter extends GenotypeMetadataImporter
 	@Override
 	public void run(File input, String server, String database, String username, String password, String port)
 	{
-		if(StringUtils.isEmpty(datasetName))
+		if (StringUtils.isEmpty(datasetName))
 		{
 			datasetName = input.getName();
 			if (datasetName.contains("."))

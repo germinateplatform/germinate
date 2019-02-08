@@ -30,7 +30,7 @@
 			<g:HTML ui:field="html"/>
 			<g:SimplePanel ui:field="datasetTablePanel"/>
 
-			<g8:DatasetMetadataDownload ui:field="metadataDownload" />
+			<g8:DatasetMetadataDownload ui:field="metadataDownload"/>
 		</g:FlowPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

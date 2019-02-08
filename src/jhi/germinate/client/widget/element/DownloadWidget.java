@@ -104,7 +104,7 @@ public class DownloadWidget extends GerminateComposite
 					String url = getLinkURL(config);
 
 					// Track the click event
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, config.getLocation().name(), config.getPath().getName());
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, config.getLocation().name(), config.getPath().getName());
 
 					// Then, actually invoke the download
 					JavaScript.invokeDownload(url);

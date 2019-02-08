@@ -59,7 +59,7 @@ public interface MapService extends RemoteService
 	 * @param mapId      The id of the {@link Map}
 	 * @return The {@link Map} with the given id.
 	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException Thrown if the query fails on the server
+	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	ServerResult<Map> getById(RequestProperties properties, Long mapId) throws InvalidSessionException, DatabaseException;
 

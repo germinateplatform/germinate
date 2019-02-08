@@ -31,7 +31,7 @@ import jhi.germinate.shared.*;
 public class ExcelUtils
 {
 	private final FormulaEvaluator formulaEval;
-	private DataFormatter formatter = new DataFormatter();
+	private       DataFormatter    formatter = new DataFormatter();
 
 	public ExcelUtils(Workbook wb)
 	{

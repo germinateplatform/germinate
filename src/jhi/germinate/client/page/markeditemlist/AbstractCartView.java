@@ -50,8 +50,7 @@ import jhi.germinate.shared.enums.*;
  */
 public abstract class AbstractCartView<T extends DatabaseObject> extends GerminateComposite
 {
-	private DatabaseObjectPaginationTable<T> table;
-	private HandlerRegistration              groupRegistration;
+	private HandlerRegistration groupRegistration;
 
 	protected static List<GroupType> types;
 
@@ -143,7 +142,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 			@Override
 			public void onSuccessImpl(ServerResult<Group> result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "create", Long.toString(result.getServerResult().getId()));
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "create", Long.toString(result.getServerResult().getId()));
 
 				if (!CollectionUtils.isEmpty(newGroupMembers))
 					addGroupMembers(newGroupMembers, result.getServerResult().getId(), type);
@@ -166,7 +165,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 			public void onSuccessImpl(ServerResult<Set<Long>> result)
 			{
 				Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupItemsAdded());
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(groupId), result.getServerResult().size());
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(groupId), result.getServerResult().size());
 
 				MarkedItemList.clear(type);
 
@@ -226,7 +225,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 			final FlowPanel tablePanel = new FlowPanel();
 			content.add(tablePanel);
 
-			table = getTable(markedIds);
+			DatabaseObjectPaginationTable<T> table = getTable(markedIds);
 			tablePanel.add(table);
 
 			DownloadWidget widget = new DownloadWidget(Text.LANG.downloadHeading())
@@ -234,7 +233,7 @@ public abstract class AbstractCartView<T extends DatabaseObject> extends Germina
 				@Override
 				protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 				{
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.MARKED_ITEMS, "download", getItemType().getDisplayName());
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.MARKED_ITEMS, "download", getItemType().getDisplayName());
 					writeToFile(new ArrayList<>(MarkedItemList.get(getItemType())), callback);
 				}
 			};

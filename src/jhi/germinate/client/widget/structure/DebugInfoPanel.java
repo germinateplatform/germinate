@@ -48,7 +48,7 @@ public class DebugInfoPanel extends Composite
 		initWidget(ourUiBinder.createAndBindUi(this));
 	}
 
-	private static boolean isInitialized = false;
+	private static boolean        isInitialized = false;
 	private static DebugInfoPanel INSTANCE;
 
 	public static void init()

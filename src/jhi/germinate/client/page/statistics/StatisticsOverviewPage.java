@@ -72,10 +72,14 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 		header.setText(Text.LANG.dataStatisticsTitle());
 		panel.add(header);
 
+		// Add the taxonomy pie chart
 		panel.add(new TaxonomyPieChart());
-		if(GerminateSettingsHolder.get().pdciEnabled.getValue())
+
+		// Add the PDCI chart (if enabled)
+		if (GerminateSettingsHolder.get().pdciEnabled.getValue())
 			panel.add(new PDCIStatsChart());
 
+		// Add the geographic distribution map
 		final FlowPanel geoChartPanel = new FlowPanel();
 		panel.add(geoChartPanel);
 		CommonService.Inst.get().getCountryStats(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<Country>>>()
@@ -106,6 +110,7 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 			}
 		});
 
+		// Add the dataset statistics chart
 		panel.add(new DatasetStatsChart());
 	}
 

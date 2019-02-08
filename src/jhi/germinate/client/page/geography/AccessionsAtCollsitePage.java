@@ -116,12 +116,6 @@ public class AccessionsAtCollsitePage extends Composite implements HasHyperlinkB
 		accessionTablePanel.add(new AccessionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
-			public boolean supportsFullIdMarking()
-			{
-				return true;
-			}
-
-			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
 				filter = addToFilter(filter);

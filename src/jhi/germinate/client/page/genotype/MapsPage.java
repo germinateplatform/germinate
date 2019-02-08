@@ -148,12 +148,6 @@ public class MapsPage extends Composite implements HasHyperlinkButton, HasHelp
 				}
 
 				@Override
-				public boolean supportsFullIdMarking()
-				{
-					return true;
-				}
-
-				@Override
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<MapDefinition>>> callback)
 				{
 					filter = addToFilter(filter);

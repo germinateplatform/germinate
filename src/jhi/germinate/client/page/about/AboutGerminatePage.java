@@ -44,19 +44,19 @@ public class AboutGerminatePage extends Composite implements HasLibraries
 {
 	private static AboutGerminatePageUiBinder ourUiBinder = GWT.create(AboutGerminatePageUiBinder.class);
 	@UiField
-	SimplePanel       banner;
+	SimplePanel   banner;
 	@UiField
-	CategoryPanel     homepage;
+	CategoryPanel homepage;
 	@UiField
-	CategoryPanel     github;
+	CategoryPanel github;
 	@UiField
-	CategoryPanel     publication;
+	CategoryPanel publication;
 	@UiField
-	CategoryPanel     documentation;
+	CategoryPanel documentation;
 	@UiField
-	HTML              content;
+	HTML          content;
 	@UiField
-	SimplePanel       map;
+	SimplePanel   map;
 
 	public AboutGerminatePage()
 	{

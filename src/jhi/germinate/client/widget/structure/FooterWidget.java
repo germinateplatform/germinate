@@ -84,7 +84,7 @@ public class FooterWidget extends Composite
 
 			RootPanel p = RootPanel.get(Id.STRUCTURE_FOOTER);
 			p.add(INSTANCE);
-//			p.removeFromParent();
+			//			p.removeFromParent();
 
 			GerminateEventBus.BUS.addHandler(MainContentChangeEvent.TYPE, event ->
 			{

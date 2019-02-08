@@ -43,9 +43,9 @@ import jhi.germinate.shared.enums.*;
  */
 public class GroupUploadWidget extends Composite
 {
-	private static final int UPDATE_INTERVAL = 500;
-	private static final int UPDATE_START    = 0;
-	private LoadingIndicator indicator;
+	private static final int              UPDATE_INTERVAL = 500;
+	private static final int              UPDATE_START    = 0;
+	private              LoadingIndicator indicator;
 
 	interface GroupUploadWidgetUiBinder extends UiBinder<HTMLPanel, GroupUploadWidget>
 	{

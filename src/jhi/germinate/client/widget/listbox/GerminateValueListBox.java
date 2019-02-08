@@ -216,10 +216,10 @@ public class GerminateValueListBox<T> extends Composite implements Focusable, Ha
 
 	public void setValues(List<T> value, boolean fireEvents)
 	{
-//		if (value == this.selected || (this.selected != null && this.selected.equals(value)))
-//		{
-//			return;
-//		}
+		//		if (value == this.selected || (this.selected != null && this.selected.equals(value)))
+		//		{
+		//			return;
+		//		}
 
 		List<T> before = this.selected == null ? null : new ArrayList<>(this.selected);
 		this.selected = value;

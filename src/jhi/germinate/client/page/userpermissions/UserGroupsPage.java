@@ -57,7 +57,7 @@ import jhi.germinate.shared.search.*;
 public class UserGroupsPage extends Composite
 {
 	private static GroupsPageUiBinder ourUiBinder = GWT.create(GroupsPageUiBinder.class);
-	private final UserGroupTable groupTable;
+	private final  UserGroupTable     groupTable;
 	@UiField
 	HTML        userGroupsHtml;
 	@UiField
@@ -156,7 +156,7 @@ public class UserGroupsPage extends Composite
 									protected void onSuccessImpl(DebugInfo result)
 									{
 										Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationGroupDeleted());
-//										groupTable.refreshTable();
+										//										groupTable.refreshTable();
 
 										if (group != null && Objects.equals(object.getId(), group.getId()))
 										{
@@ -164,7 +164,7 @@ public class UserGroupsPage extends Composite
 											updateGroupMembers();
 										}
 
-										JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "delete", Long.toString(object.getId()));
+										GoogleAnalytics.trackEvent(GoogleAnalytics.Category.USER_GROUPS, "delete", Long.toString(object.getId()));
 
 										GerminateEventBus.BUS.fireEvent(new UserGroupChangeEvent());
 									}
@@ -260,9 +260,9 @@ public class UserGroupsPage extends Composite
 							super.onSuccessImpl(result);
 
 							userTable.refreshTable();
-//							groupTable.refreshTable();
+							//							groupTable.refreshTable();
 
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "removeItems", Long.toString(group.getId()), ids.size());
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.USER_GROUPS, "removeItems", Long.toString(group.getId()), ids.size());
 
 							GerminateEventBus.BUS.fireEvent(new UserGroupChangeEvent());
 						}
@@ -308,10 +308,10 @@ public class UserGroupsPage extends Composite
 							super.onSuccessImpl(result);
 
 							userTable.refreshTable();
-//							groupTable.refreshTable();
+							//							groupTable.refreshTable();
 							newUserTable.setSelection(null);
 
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "addItems", Long.toString(group.getId()), ids.size());
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.USER_GROUPS, "addItems", Long.toString(group.getId()), ids.size());
 
 							GerminateEventBus.BUS.fireEvent(new UserGroupChangeEvent());
 						}
@@ -349,9 +349,9 @@ public class UserGroupsPage extends Composite
 			@Override
 			public void onSuccessImpl(ServerResult<UserGroup> result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.USER_GROUPS, "create", Long.toString(result.getServerResult().getId()));
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.USER_GROUPS, "create", Long.toString(result.getServerResult().getId()));
 				group = result.getServerResult();
-//				groupTable.refreshTable();
+				//				groupTable.refreshTable();
 
 				GerminateEventBus.BUS.fireEvent(new UserGroupChangeEvent());
 			}

@@ -41,8 +41,8 @@ public class AlleleFrequencyDataExporter
 	private int linesToExport = 0;
 
 	private DataExporter.DataExporterParameters parameters;
-	private boolean allLines   = false;
-	private boolean allMarkers = false;
+	private boolean                             allLines   = false;
+	private boolean                             allMarkers = false;
 
 	/**
 	 * Creates a new instance of the AlleleFrequencyDataExporter
@@ -119,10 +119,10 @@ public class AlleleFrequencyDataExporter
 			String headerRow = br.readLine();
 			String[] markers = headerRow.split("\t", -1);
 
-        	/* Top left header */
+			/* Top left header */
 			bw.write("Line/marker");
 
-        	/* Column headers */
+			/* Column headers */
 			for (int i = 0; i < qualityMissing.length; i++)
 			{
 				if ((!allMarkers && !parameters.colNames.contains(markers[i + 1])) || qualityMissing[i] > localMissingValue)

@@ -21,7 +21,6 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -29,6 +28,7 @@ import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
@@ -185,18 +185,22 @@ public final class MainMenu
 
 	private static void addToggleFunctionality()
 	{
-		GQuery.$(".navbar-toggle").on("click", new Function()
+		JavaScript.click(".navbar-toggle", false, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				// Toggle the class name on the main page div
-				GQuery.$("#" + Id.STRUCTURE_PAGE).toggleClass(Style.LAYOUT_SIDEBAR_TOGGLED);
+				JavaScript.toggleClass("#" + Id.STRUCTURE_PAGE, Style.LAYOUT_SIDEBAR_TOGGLED);
 
 				ResizeRegister.triggerResize();
 
 				// Supress the event propagation if the window is big
-				return Window.getClientWidth() < 992;
+				if (Window.getClientWidth() >= 992)
+				{
+					event.stopPropagation();
+					event.preventDefault();
+				}
 			}
 		});
 	}
@@ -244,8 +248,7 @@ public final class MainMenu
 	 */
 	public static void removeActiveStateMenuItems()
 	{
-		GQuery.$("#" + Id.STRUCTURE_MAIN_MENU_UL + " li a")
-			  .removeClass(Style.STATE_ACTIVE);
+		JavaScript.removeClass("#" + Id.STRUCTURE_MAIN_MENU_UL + " li a", Style.STATE_ACTIVE);
 	}
 
 	public static boolean highlightMenuItem(Page page)
@@ -258,7 +261,7 @@ public final class MainMenu
 		{
 			if (item.thisElement != null)
 			{
-				GQuery.$(item.thisElement).children("a").addClass(Style.STATE_ACTIVE);
+				JavaScript.addClass("#" + item.thisElement.getId() + " > a", Style.STATE_ACTIVE);
 				atLeastOneActivated = true;
 			}
 
@@ -398,6 +401,7 @@ public final class MainMenu
 				String identifier = page == null ? null : page.name();
 
 				thisElement = Document.get().createLIElement();
+				thisElement.setId(RandomUtils.generateRandomId());
 
 				if (identifier != null)
 					thisElement.setId(identifier);

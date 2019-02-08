@@ -150,7 +150,7 @@ public class Page implements Serializable
 
 	public boolean is(Page page)
 	{
-		return Objects.equals(name, page.name) || legacyNames.contains(page.name);
+		return name.equals(page.name) || legacyNames.contains(page.name);
 	}
 
 	@Override

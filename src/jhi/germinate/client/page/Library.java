@@ -71,7 +71,7 @@ public enum Library
 	D3_TREEMAP("./js/d3/d3-treemap.js"),
 	D3_FLAPJACK_BINNING("./js/d3/d3-flapjack-binning.js");
 
-	private String jsPath;
+	private String  jsPath;
 	private String  cssPath = null;
 	private boolean loaded  = false;
 
@@ -227,7 +227,7 @@ public enum Library
 			{
 				/* This one is a bit tricky. We load all at once in an iterative
 				 * fashion. GoogleMaps first, then the others. We need to make
-                 * sure that we mark all sub-items as loaded as well. */
+				 * sure that we mark all sub-items as loaded as well. */
 				if (isLoaded() || (LEAFLET.isLoaded() && LEAFLET_MINIMAP.isLoaded() && LEAFLET_HEATMAP.isLoaded()) && LEAFLET_PRUNE_CLUSTER.isLoaded() && LEAFLET_DRAW.isLoaded() && LEAFLET_GEODESIC.isLoaded() && LEAFLET_SYNC.isLoaded())
 				{
 					return null;

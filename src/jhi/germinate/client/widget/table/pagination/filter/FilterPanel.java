@@ -36,6 +36,7 @@ import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.datatype.*;
 import jhi.germinate.shared.search.operators.*;
 
 /**
@@ -119,7 +120,7 @@ public class FilterPanel implements KeyPressHandler
 	{
 		clear();
 
-		if(query != null)
+		if (query != null)
 		{
 			for (int i = 0; i < query.getAll().size(); i++)
 			{
@@ -238,7 +239,15 @@ public class FilterPanel implements KeyPressHandler
 
 			try
 			{
-				query.add(row.getSearchCondition());
+				SearchCondition cond = row.getSearchCondition();
+
+				// If we're dealing with a json like search
+				if (cond.getComp() instanceof Like && Json.class.getSimpleName().equals(cond.getType()))
+					cond = new SearchCondition(cond.getColumnName(), new LikeJson(), cond.getValues(), cond.getType());
+				else if (cond.getComp() instanceof Equal && Json.class.getSimpleName().equals(cond.getType()))
+					cond = new SearchCondition(cond.getColumnName(), new EqualJson(), cond.getValues(), cond.getType());
+
+				query.add(cond);
 			}
 			catch (InvalidArgumentException | InvalidSearchQueryException e)
 			{
@@ -247,7 +256,7 @@ public class FilterPanel implements KeyPressHandler
 			}
 		}
 
-		JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "tableFilter", "filter", query.getAll().size());
+		GoogleAnalytics.trackEvent(GoogleAnalytics.Category.UI, "tableFilter", "filter", query.getAll().size());
 
 		return query;
 	}

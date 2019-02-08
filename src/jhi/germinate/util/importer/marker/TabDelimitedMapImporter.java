@@ -43,7 +43,7 @@ public class TabDelimitedMapImporter extends ExcelMapImporter
 	@Override
 	public void run(File input, String server, String database, String username, String password, String port)
 	{
-		if(StringUtils.isEmpty(mapName))
+		if (StringUtils.isEmpty(mapName))
 		{
 			mapName = input.getName();
 			if (mapName.contains("."))

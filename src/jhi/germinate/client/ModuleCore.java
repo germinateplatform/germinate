@@ -219,7 +219,7 @@ public class ModuleCore implements EntryPoint
 							useAuthentication = true;
 							TypedParameterStore.clearAllStores();
 
-//							ContentHolder.getInstance().initContent();
+							//							ContentHolder.getInstance().initContent();
 
 							try
 							{

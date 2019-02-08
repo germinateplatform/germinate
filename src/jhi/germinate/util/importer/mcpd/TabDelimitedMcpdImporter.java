@@ -453,8 +453,8 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 			synonyms[i] = synonyms[i].trim();
 
 		String joinedSynonyms = Arrays.stream(synonyms)
-				.map(s -> "\"" + s + "\"")
-				.collect(Collectors.joining(","));
+									  .map(s -> "\"" + s + "\"")
+									  .collect(Collectors.joining(","));
 
 		Gson gson = new Gson();
 		String json = gson.toJson(synonyms);

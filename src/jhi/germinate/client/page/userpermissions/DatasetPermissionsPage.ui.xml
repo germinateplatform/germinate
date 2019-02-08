@@ -31,7 +31,7 @@
 		<g:SimplePanel ui:field="datasetTablePanel"/>
 
 		<g:FlowPanel visible="false" ui:field="datasetPermissionsWrapper">
-			<g:HTMLPanel tag="hr" />
+			<g:HTMLPanel tag="hr"/>
 			<b:Heading size="H1" text="{msg.datasetPermissionsDataset}" ui:field="datasetName"/>
 			<b:Heading size="H2" text="{msg.datasetPermissionsUsersTitle}"/>
 			<b:Row>
@@ -45,7 +45,7 @@
 				</b:Column>
 			</b:Row>
 
-			<g:HTMLPanel tag="hr" />
+			<g:HTMLPanel tag="hr"/>
 			<b:Heading size="H2" text="{msg.datasetPermissionsGroupsTitle}"/>
 			<b:Row>
 				<b:Column size="XS_12, LG_6">

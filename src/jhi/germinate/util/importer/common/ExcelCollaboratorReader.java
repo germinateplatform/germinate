@@ -29,7 +29,7 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelCollaboratorReader extends ExcelBatchReader<Collaborator>
 {
-	private Sheet    dataSheet;
+	private Sheet dataSheet;
 
 	@Override
 	public List<Collaborator> readAll()

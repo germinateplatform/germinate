@@ -56,9 +56,9 @@ public interface UserGroupServiceAsync
 	/**
 	 * Creates a new group of the given type
 	 *
-	 * @param properties     The {@link RequestProperties}
-	 * @param group          The new group
-	 * @param callback       The {@link AsyncCallback}
+	 * @param properties The {@link RequestProperties}
+	 * @param group      The new group
+	 * @param callback   The {@link AsyncCallback}
 	 */
 	void createNew(RequestProperties properties, UserGroup group, AsyncCallback<ServerResult<UserGroup>> callback);
 

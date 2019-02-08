@@ -114,6 +114,34 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		}
 	}
 
+	public static List<String> getColors(String colorString)
+	{
+		List<String> parsedColors = new ArrayList<>();
+
+		/* Parse the categorical colors */
+		if (!StringUtils.isEmpty(colorString))
+		{
+			parsedColors.addAll(Arrays.stream(colorString.split(",")) /* Split the string */
+									  .filter(color -> !StringUtils.isEmpty(color)) /* Ignore empty strings */
+									  .map(String::trim) /* Trim white spaces */
+									  .map(s -> s.startsWith("#") ? s : "#" + s) /* Prepend hash if necessary */
+									  .filter(Color::isHexColor) /* Check if it's a valid color */
+									  .collect(Collectors.toList()));
+		}
+
+		/* If there is no color, add at least one default one */
+		if (parsedColors.isEmpty())
+			parsedColors.add("#1f77b4");
+
+		return parsedColors;
+	}
+
+	@Override
+	public GerminateSettings getSettings()
+	{
+		return getBaseSettings();
+	}
+
 	@Override
 	public void setAdminSettings(RequestProperties properties, GerminateSettings settings) throws DatabaseException, InvalidSessionException, InsufficientPermissionsException, IOException
 	{
@@ -140,6 +168,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 			PropertyWatcher.setBoolean(settings.templateLogoContainsLink.getServerProperty(), settings.templateLogoContainsLink.getValue());
 			PropertyWatcher.setBoolean(settings.templateShowParallaxBanner.getServerProperty(), settings.templateShowParallaxBanner.getValue());
 			PropertyWatcher.set(settings.templateCustomMenu.getServerProperty(), settings.templateCustomMenu.getValue());
+			PropertyWatcher.set(settings.templateMarkedAccessionUrl.getServerProperty(), settings.templateMarkedAccessionUrl.getValue());
 
 			PropertyWatcher.setBoolean(settings.googleAnalyticsEnabled.getServerProperty(), settings.googleAnalyticsEnabled.getValue());
 			PropertyWatcher.set(settings.googleAnalyticsTrackingId.getServerProperty(), settings.googleAnalyticsTrackingId.getValue());
@@ -181,12 +210,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		}
 	}
 
-	@Override
-	public GerminateSettings getSettings()
-	{
-		return getBaseSettings();
-	}
-
 	private GerminateSettings getBaseSettings()
 	{
 		GerminateSettings settings = new GerminateSettings();
@@ -212,6 +235,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		settings.templateShowParallaxBanner = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SHOW_PARALLAX_BANNER));
 		settings.templateTitle = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_TITLE, PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_TITLE));
 		settings.downloadTrackingEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED));
+		settings.templateMarkedAccessionUrl = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_MARKED_ACCESSIONS_URL, PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_MARKED_ACCESSIONS_URL));
 
 		settings.supportsAdvancedGeography = checkDatabaseVersion();
 
@@ -238,28 +262,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		settings.templateGradientColors = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS, getColors(PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_GRADIENT_COLORS)));
 
 		return settings;
-	}
-
-	public static List<String> getColors(String colorString)
-	{
-		List<String> parsedColors = new ArrayList<>();
-
-        /* Parse the categorical colors */
-		if (!StringUtils.isEmpty(colorString))
-		{
-			parsedColors.addAll(Arrays.stream(colorString.split(",")) /* Split the string */
-									  .filter(color -> !StringUtils.isEmpty(color)) /* Ignore empty strings */
-									  .map(String::trim) /* Trim white spaces */
-									  .map(s -> s.startsWith("#") ? s : "#" + s) /* Prepend hash if necessary */
-									  .filter(Color::isHexColor) /* Check if it's a valid color */
-									  .collect(Collectors.toList()));
-		}
-
-        /* If there is no color, add at least one default one */
-		if (parsedColors.isEmpty())
-			parsedColors.add("#1f77b4");
-
-		return parsedColors;
 	}
 
 	@Override

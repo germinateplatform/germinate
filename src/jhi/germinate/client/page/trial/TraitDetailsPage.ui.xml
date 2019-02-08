@@ -32,11 +32,11 @@
 			<b:Heading size="H3" text="{msg.searchSectionPhenotypeData}"/>
 			<g:SimplePanel ui:field="phenotypeDataTablePanel"/>
 
-			<g8:AdditionalDataWidget visible="false" ui:field="additionalDatasetWidget" />
+			<g8:AdditionalDataWidget visible="false" ui:field="additionalDatasetWidget"/>
 
-			<b:Heading size="H3" text="{msg.traitDetailsDatasetTitle}" />
-			<g8:ParagraphPanel text="{msg.traitDetailsDatasetText}" />
-			<g:SimplePanel ui:field="datasetPanel" />
+			<b:Heading size="H3" text="{msg.traitDetailsDatasetTitle}"/>
+			<g8:ParagraphPanel text="{msg.traitDetailsDatasetText}"/>
+			<g:SimplePanel ui:field="datasetPanel"/>
 
 			<b:Heading size="H3" text="{msg.traitDetailsImageTitle}"/>
 			<g:SimplePanel ui:field="galleryPanel"/>

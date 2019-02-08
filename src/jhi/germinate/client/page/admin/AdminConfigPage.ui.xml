@@ -112,6 +112,10 @@
 					<b:FormLabel for="formTemplateEmail" ui:field="templateEmailLabel"/>
 					<b:TextBox b:id="formTemplateEmail" ui:field="templateEmail"/>
 				</b:FormGroup>
+				<b:FormGroup>
+					<b:FormLabel for="formTemplateMarkedAccessionUrl" ui:field="templateMarkedAccessionUrlLabel"/>
+					<b:TextBox b:id="formTemplateMarkedAccessionUrl" ui:field="templateMarkedAccessionUrl"/>
+				</b:FormGroup>
 
 				<b:FormGroup>
 					<b:FormLabel addStyleNames="{style.block}" for="formCategories" ui:field="categoriesLabel"/>

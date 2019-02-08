@@ -68,10 +68,10 @@ public class KMLCreatorMegaEnv extends KMLCreator
 						   .withDescription(getDescription(id))
 						   .withName(getDescription(id));
 
-        /* Get the collectingsite ids */
+		/* Get the collectingsite ids */
 		List<Location> locations = getLocations(id);
 
-        /* Pre-fetch the description data in one database query instead of
+		/* Pre-fetch the description data in one database query instead of
 		 * multiple individual queries */
 		getData(locations);
 
@@ -127,7 +127,7 @@ public class KMLCreatorMegaEnv extends KMLCreator
 		zos.closeEntry();
 		zos.close();
 
-        /* Delete the temporary file */
+		/* Delete the temporary file */
 		tempFile.delete();
 	}
 

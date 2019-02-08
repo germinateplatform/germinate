@@ -43,9 +43,9 @@ public abstract class GerminateQuery<T extends GerminateQuery<?>>
 	protected String            query;
 	protected DatabaseStatement stmt;
 	protected DebugInfo         sqlDebug;
-	protected QueryType         queryType    = QueryType.DATA;
-	protected int               i            = 1;
-	protected Database          database     = null;
+	protected QueryType         queryType = QueryType.DATA;
+	protected int               i         = 1;
+	protected Database          database  = null;
 	protected UserAuth          userAuth;
 
 	GerminateQuery(Database database, String query)

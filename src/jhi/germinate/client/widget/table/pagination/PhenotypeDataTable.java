@@ -53,12 +53,6 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 	}
 
 	@Override
-	public boolean supportsFullIdMarking()
-	{
-		return true;
-	}
-
-	@Override
 	protected boolean supportsDownload()
 	{
 		return false;

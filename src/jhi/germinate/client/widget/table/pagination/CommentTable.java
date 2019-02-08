@@ -19,7 +19,6 @@ package jhi.germinate.client.widget.table.pagination;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.rpc.*;
@@ -161,7 +160,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				return String.class;
 			}
 		};
-//		column.setDataStoreName(CommentType.NAME);
+		//		column.setDataStoreName(CommentType.NAME);
 		addColumn(column, Text.LANG.commentColumnUser(), false);
 
 		/* Add the created on */
@@ -226,7 +225,7 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 						@Override
 						public void onSuccessImpl(Void result)
 						{
-							JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.ANNOTATIONS, "delete", Long.toString(object.getId()));
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.ANNOTATIONS, "delete", Long.toString(object.getId()));
 
 							refreshTable();
 						}
@@ -249,14 +248,18 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 				{
 					for (int i = 0; i < table.getRowCount(); i++)
 					{
-						GQuery.$(table.getRowElement(i))
-							  .find("td")
-							  .css("vertical-align", "middle");
+						align(table.getRowElement(i));
 					}
 				});
 			}
 		});
 	}
+
+	private native void align(Element element) /*-{
+		$wnd.$(element)
+			.find("td")
+			.css("vertical-align", "middle");
+	}-*/;
 
 	@Override
 	protected void onItemSelected(NativeEvent event, Comment object, int column)

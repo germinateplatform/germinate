@@ -20,13 +20,13 @@ package jhi.germinate.client.widget.structure;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
 
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.shared.*;
@@ -59,16 +59,15 @@ public class ShareWidgetItem
 
 		anchor.setTitle(display);
 		anchor.setHref("#");
-		GQuery.$(anchor).click(new Function()
+		JavaScript.click(anchor, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				/* Track that the user clicked help */
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.SHARE, "#" + History.getToken(), type.name());
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.SHARE, "#" + History.getToken(), type.name());
 
 				ShareUtils.openUrl(type, getHyperlinkURL());
-				return false;
 			}
 		});
 

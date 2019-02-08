@@ -31,7 +31,7 @@ public class RegistrationWizard extends ModalWizard
 {
 	private RegistrationLicense license;
 	private RegistrationForm    form;
-	private NavigationStatus status = new NavigationStatus(false, true, null);
+	private NavigationStatus    status = new NavigationStatus(false, true, null);
 
 	public RegistrationWizard()
 	{

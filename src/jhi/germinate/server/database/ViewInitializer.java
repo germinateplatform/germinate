@@ -27,14 +27,17 @@ import java.util.*;
 public class ViewInitializer extends DatabaseInitializer
 {
 	private static final String QUERY_ACCESSIONS_PER_COUNTRY  = "SELECT IFNULL(`countries`.`country_code3`,'UNK') AS `country_code3`, IFNULL(`countries`.`country_name`,'UNKNOWN COUNTRY ORIGIN') AS `country_name`, count(1) AS `count` FROM ((`germinatebase` LEFT JOIN `locations` ON((`germinatebase`.`location_id` = `locations`.`id`))) LEFT JOIN `countries` ON((`countries`.`id` = `locations`.`country_id`))) WHERE entitytype_id = 1 GROUP BY `countries`.`id` ORDER BY count(1) DESC";
-	private static final String QUERY_ACCESSIONS_PER_TAXONOMY = "SELECT IF(ISNULL(`taxonomies`.`genus`) AND ISNULL(`taxonomies`.`species`), 'No genus/species information found', CONCAT(`taxonomies`.`genus`,' ', LCASE(`taxonomies`.`species`))) AS `taxonomy`, count(0) AS `count` FROM (`germinatebase` LEFT JOIN `taxonomies` ON((`taxonomies`.`id` = `germinatebase`.`taxonomy_id`))) WHERE entitytype_id = 1 GROUP BY `taxonomies`.`id` ORDER BY count(0) DESC";
+	private static final String QUERY_ACCESSIONS_PER_TAXONOMY = "SELECT `taxonomies`.`genus`, `taxonomies`.`species`, `taxonomies`.`subtaxa`, COUNT( 1 ) AS `count` FROM `germinatebase` LEFT JOIN `taxonomies` ON `taxonomies`.`id` = `germinatebase`.`taxonomy_id` WHERE entitytype_id = 1 GROUP BY `taxonomies`.`id` ORDER BY COUNT(1) DESC";
 	private static final String QUERY_DATA_OVERVIEW           = "SELECT ( SELECT count(1) FROM germinatebase ) AS accessions, ( SELECT count(1) FROM markers ) AS markers, ( SELECT count(1) FROM locations LEFT JOIN locationtypes ON locations.locationtype_id = locationtypes.id WHERE ( locationtypes.name = 'collectingsites' ) ) AS collectingsites, ( SELECT count(1) FROM phenotypedata LEFT JOIN datasets ON datasets.id = phenotypedata.dataset_id LEFT JOIN experiments ON experiments.id = datasets.experiment_id LEFT JOIN experimenttypes ON experimenttypes.id = experiments.experiment_type_id WHERE experimenttypes.description = 'phenotype' ) AS phenotypes";
 	private static final String QUERY_PDCI                    = "select '0-1' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 0 AND pdci < 1 AND entitytype_id = 1 UNION select '1-2' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 1 AND pdci < 2 AND entitytype_id = 1 UNION select '2-3' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 2 AND pdci < 3 AND entitytype_id = 1 UNION select '3-4' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 3 AND pdci < 4 AND entitytype_id = 1 UNION select '4-5' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 4 AND pdci < 5 AND entitytype_id = 1 UNION select '5-6' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 5 AND pdci < 6 AND entitytype_id = 1 UNION select '6-7' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 6 AND pdci < 7 AND entitytype_id = 1 UNION select '7-8' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 7 AND pdci < 8 AND entitytype_id = 1 UNION select '8-9' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 8 AND pdci < 9 AND entitytype_id = 1 UNION select '9-10' AS bin, COUNT(1) AS count FROM germinatebase WHERE pdci >= 9 AND pdci <= 10 AND entitytype_id = 1";
 
 	private static final String[] COLUMNS_ACCESSIONS_PER_COUNTRY  = {"country_code3", "country_name", "count"};
-	private static final String[] COLUMNS_ACCESSIONS_PER_TAXONOMY = {"taxonomy", "count"};
+	private static final String[] COLUMNS_ACCESSIONS_PER_TAXONOMY = {"genus", "species", "subtaxa", "count"};
 	private static final String[] COLUMNS_DATA_OVERVIEW           = {"accessions", "markers", "collectingsites", "phenotypes"};
 	private static final String[] COLUMNS_PDCI                    = {"bin", "count"};
+
+	private static final String DROP_VIEW   = "DROP VIEW IF EXISTS %s";
+	private static final String CREATE_VIEW = "CREATE VIEW %s AS %s";
 
 	@Override
 	protected String[] getNames()
@@ -43,9 +46,6 @@ public class ViewInitializer extends DatabaseInitializer
 					 .map(View::getViewName)
 					 .toArray(String[]::new);
 	}
-
-	private static final String DROP_VIEW   = "DROP VIEW IF EXISTS %s";
-	private static final String CREATE_VIEW = "CREATE VIEW %s AS %s";
 
 	@Override
 	protected String[] getQueries()

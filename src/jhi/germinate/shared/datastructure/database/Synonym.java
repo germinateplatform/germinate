@@ -153,7 +153,8 @@ public class Synonym extends DatabaseObject
 			}
 		}
 
-		private Parser(){
+		private Parser()
+		{
 		}
 
 		@Override

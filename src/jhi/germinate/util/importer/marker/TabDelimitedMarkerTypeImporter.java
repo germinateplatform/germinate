@@ -43,7 +43,7 @@ public class TabDelimitedMarkerTypeImporter extends ExcelMarkerTypeImporter
 	@Override
 	public void run(File input, String server, String database, String username, String password, String port)
 	{
-		if(StringUtils.isEmpty(markerTypeName))
+		if (StringUtils.isEmpty(markerTypeName))
 			markerTypeName = "SNP";
 
 		MarkerType type = new MarkerType()

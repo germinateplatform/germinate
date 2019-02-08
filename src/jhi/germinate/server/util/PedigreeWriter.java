@@ -28,8 +28,8 @@ import jhi.germinate.shared.*;
  */
 public class PedigreeWriter
 {
-	private Set<String> visitedIds = new HashSet<>();
-	private Set<Edge>   edges      = new HashSet<>();
+	private Set<String>                                         visitedIds = new HashSet<>();
+	private Set<Edge>                                           edges      = new HashSet<>();
 	private BufferedWriter                                      bw;
 	private Map<String, List<PedigreeServiceImpl.PedigreePair>> data;
 	private boolean                                             up;

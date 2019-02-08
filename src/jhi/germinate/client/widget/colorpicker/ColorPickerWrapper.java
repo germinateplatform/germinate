@@ -54,10 +54,10 @@ public class ColorPickerWrapper extends Composite
 		}
 	}
 
-	private ColorPicker    colorPicker;
-	private FlowPanel      content;
-	private DeleteCallback callback;
-	private String color = "white";
+	private ColorPicker                colorPicker;
+	private FlowPanel                  content;
+	private DeleteCallback             callback;
+	private String                     color = "white";
 	private ColorPicker.ChangeCallback changeCallback;
 
 	public ColorPickerWrapper(final DeleteCallback callback)

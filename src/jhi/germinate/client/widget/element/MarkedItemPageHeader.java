@@ -18,7 +18,6 @@
 package jhi.germinate.client.widget.element;
 
 import com.google.gwt.event.shared.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -27,6 +26,7 @@ import org.gwtbootstrap3.client.ui.base.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.shared.*;
 
@@ -36,15 +36,14 @@ import jhi.germinate.shared.*;
 public class MarkedItemPageHeader extends Composite implements HasText, HasSubText
 {
 	private Heading                 checkbox;
-	private PageHeader              header;
+	private Heading                 header;
 	private MarkedItemList.ItemType type = MarkedItemList.ItemType.ACCESSION;
 	private String                  id;
 	private HandlerRegistration     register;
 
 	public MarkedItemPageHeader()
 	{
-		header = new PageHeader();
-
+		header = new Heading(HeadingSize.H2);
 		checkbox = new Heading(HeadingSize.H2);
 		checkbox.addStyleName(Style.combine(Style.LAYOUT_DISPLAY_INLINE_BLOCK, Emphasis.PRIMARY.getCssName(), Style.CURSER_POINTER, Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_CHECKBOX_BLANK_OUTLINE));
 		header.addStyleName(Style.LAYOUT_DISPLAY_INLINE_BLOCK);
@@ -75,17 +74,15 @@ public class MarkedItemPageHeader extends Composite implements HasText, HasSubTe
 	{
 		super.onLoad();
 
-		GQuery.$(checkbox).click(new Function()
+		JavaScript.click(checkbox, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
 				if (MarkedItemList.contains(type, id))
 					MarkedItemList.remove(type, id);
 				else
 					MarkedItemList.add(type, id);
-
-				return false;
 			}
 		});
 

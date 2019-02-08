@@ -35,23 +35,27 @@
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
 		}
+
 		.password {
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
 		}
+
 		.inlineBlock {
 			display: inline-block;
 		}
+
 		.help {
 			margin-left: 5px;
 		}
+
 		.help:hover {
 			cursor: default;
 		}
 	</ui:style>
 
 	<g:FlowPanel>
-		<g:HTML ui:field="privacyPolicy" />
+		<g:HTML ui:field="privacyPolicy"/>
 		<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 			<b:FormLabel for="formGatekeeper" text="{msg.registrationAlreadyHaveAccount}"/>
 			<b:Tooltip placement="BOTTOM" text="{msg.registrationGatekeeperInfo}">
@@ -76,7 +80,7 @@
 		<g:FlowPanel visible="false" ui:field="newAccountPanel">
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formPasswordConfirm" text="{msg.registrationConfirmPassword}"/>
-				<b:Input addStyleNames="{style.password}" type="PASSWORD" b:id="formPasswordConfirm"  ui:field="passwordConfirm"/>
+				<b:Input addStyleNames="{style.password}" type="PASSWORD" b:id="formPasswordConfirm" ui:field="passwordConfirm"/>
 			</b:FormGroup>
 			<b:FormGroup addStyleNames="{FORM_REQUIRED}">
 				<b:FormLabel for="formName" text="{msg.registrationFullName}"/>

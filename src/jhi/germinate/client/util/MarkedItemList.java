@@ -18,7 +18,6 @@
 package jhi.germinate.client.util;
 
 import com.google.gwt.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.constants.*;
@@ -41,6 +40,53 @@ import jhi.germinate.shared.enums.*;
  */
 public final class MarkedItemList
 {
+	/**
+	 * Initializes the {@link MarkedItemList}. This includes handling of click events on the label and reading the previously marked items from the
+	 * {@link TypedParameterStore}.
+	 */
+	public static void init()
+	{
+		if (GerminateSettingsHolder.isPageAvailable(Page.MARKED_ITEMS))
+		{
+			reset();
+
+			/* Check if the method has already been called before */
+			if (!initialized)
+			{
+				initialized = true;
+
+				UListElement list = Document.get().createULElement();
+
+				list.addClassName(Style.combine(Styles.DROPDOWN_MENU, Style.BOOTSTRAP_DROPDOWN_ALERT));
+
+				for (final MarkedItemList.ItemType type : MarkedItemList.ItemType.values())
+				{
+					MarkedItemListItem item = new MarkedItemListItem(type);
+
+					list.appendChild(item.getElement());
+				}
+
+				RootPanel p = RootPanel.get(Id.STRUCTURE_MARKED_ITEM_UL);
+				p.setVisible(true);
+				p.getElement().appendChild(list);
+				p.removeFromParent();
+			}
+		}
+		else
+		{
+			JavaScript.remove("#" + Id.STRUCTURE_MARKED_ITEM_UL);
+		}
+	}
+
+	private static boolean initialized = false;
+
+	private static Map<ItemType, Set<String>> IDS = new HashMap<>();
+
+	private MarkedItemList()
+	{
+
+	}
+
 	public enum ItemType
 	{
 		ACCESSION(Parameter.markedAccessionIds, Text.LANG.searchAccessions(), GerminateDatabaseTable.germinatebase, Style.MDI_FLOWER),
@@ -68,6 +114,10 @@ public final class MarkedItemList
 		public List<String> getMarkedIds()
 		{
 			return StringListParameterStore.Inst.get().get(parameter);
+		}
+
+		public String getMarkedIdString() {
+			return StringParameterStore.Inst.get().get(parameter);
 		}
 
 		public Parameter getParameter()
@@ -103,53 +153,6 @@ public final class MarkedItemList
 				default:
 					return null;
 			}
-		}
-	}
-
-	private static boolean initialized = false;
-
-	private static Map<ItemType, Set<String>> IDS = new HashMap<>();
-
-	private MarkedItemList()
-	{
-
-	}
-
-	/**
-	 * Initializes the {@link MarkedItemList}. This includes handling of click events on the label and reading the previously marked items from the
-	 * {@link TypedParameterStore}.
-	 */
-	public static void init()
-	{
-		if (GerminateSettingsHolder.isPageAvailable(Page.MARKED_ITEMS))
-		{
-			reset();
-
-			/* Check if the method has already been called before */
-			if (!initialized)
-			{
-				initialized = true;
-
-				UListElement list = Document.get().createULElement();
-
-				list.addClassName(Style.combine(Styles.DROPDOWN_MENU, Style.BOOTSTRAP_DROPDOWN_ALERT));
-
-				for (final MarkedItemList.ItemType type : MarkedItemList.ItemType.values())
-				{
-					MarkedItemListItem item = new MarkedItemListItem(type);
-
-					list.appendChild(item.getElement());
-				}
-
-				RootPanel p = RootPanel.get(Id.STRUCTURE_MARKED_ITEM_UL);
-				p.setVisible(true);
-				p.getElement().appendChild(list);
-				p.removeFromParent();
-			}
-		}
-		else
-		{
-			GQuery.$("#" + Id.STRUCTURE_MARKED_ITEM_UL).remove();
 		}
 	}
 

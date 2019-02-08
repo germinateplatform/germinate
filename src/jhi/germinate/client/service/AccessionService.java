@@ -80,6 +80,26 @@ public interface AccessionService extends RemoteService
 	ServerResult<List<String>> getIdsForFilter(RequestProperties properties, PartialSearchQuery filter) throws InvalidSessionException, DatabaseException, InvalidColumnException, InvalidSearchQueryException, InvalidArgumentException;
 
 	/**
+	 * Returns the ids of the entity parents of the {@link Accession}s with the given ids.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param ids        The ids of the {@link Accession}s
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	ServerResult<List<String>> getEntityParentIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException;
+
+	/**
+	 * Returns the ids of the entity children of the {@link Accession}s with the given ids.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param ids        The ids of the {@link Accession}s
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	ServerResult<List<String>> getEntityChildIds(RequestProperties properties, List<String> ids) throws InvalidSessionException, DatabaseException;
+
+	/**
 	 * Returns the {@link Accession}s with the given ids.
 	 *
 	 * @param properties The {@link RequestProperties}
@@ -220,7 +240,7 @@ public interface AccessionService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 * @throws InvalidColumnException  Thrown if an invalid sort column is specified
 	 */
-	PaginatedServerResult<List<Accession>> getInPolygon(RequestProperties properties, Pagination pagination, List<LatLngPoint> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+	PaginatedServerResult<List<Accession>> getInPolygon(RequestProperties properties, Pagination pagination, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException;
 
 	/**
 	 * Returns the ids of the {@link Accession}s that are located in the provided polygon.
@@ -232,7 +252,7 @@ public interface AccessionService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 * @throws InvalidColumnException  Thrown if an invalid sort column is specified
 	 */
-	ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<LatLngPoint> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+	ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException;
 
 	/**
 	 * Returns the {@link Mcpd} object for the {@link Accession} with the given id.

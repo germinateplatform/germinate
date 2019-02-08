@@ -35,8 +35,8 @@ public class TrialsRow implements Serializable
 {
 	private static final long serialVersionUID = 5399469724834737633L;
 
-	private Gradient  gradient;
-	private Phenotype phenotype;
+	private Gradient                gradient;
+	private Phenotype               phenotype;
 	private Map<String, TrialsCell> yearsToValues = new HashMap<>();
 
 	public Phenotype getPhenotype()
@@ -101,10 +101,10 @@ public class TrialsRow implements Serializable
 	{
 		private static final long serialVersionUID = -8092860182098589073L;
 
-		private long  count = 0;
-		private float min   = Float.MAX_VALUE;
-		private float max   = -Float.MAX_VALUE;
-		private float avg   = 0;
+		private long   count = 0;
+		private float  min   = Float.MAX_VALUE;
+		private float  max   = -Float.MAX_VALUE;
+		private float  avg   = 0;
 		private String maxAccessionId;
 		private String minAccessionId;
 		private String maxAccessionName;

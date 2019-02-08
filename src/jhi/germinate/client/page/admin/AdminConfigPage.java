@@ -122,6 +122,11 @@ public class AdminConfigPage extends Composite implements HasHelp
 	TextBox   templateEmail;
 
 	@UiField
+	FormLabel templateMarkedAccessionUrlLabel;
+	@UiField
+	TextBox   templateMarkedAccessionUrl;
+
+	@UiField
 	FormLabel categoriesLabel;
 	@UiField
 	FlowPanel categories;
@@ -274,6 +279,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 		updateString(settings.templateTitle, templateTitle, templateTitleLabel);
 		updateString(settings.templateDatabaseName, templateDatabaseName, templateDatabaseNameLabel);
 		updateString(settings.templateContactEmail, templateEmail, templateEmailLabel);
+		updateString(settings.templateMarkedAccessionUrl, templateMarkedAccessionUrl, templateMarkedAccessionUrlLabel);
 
 		updateColorList(settings.templateCategoricalColors, categories, categoriesLabel, templateCategoricalColors, null, categoryDeleteCallback, null);
 		updateColorList(settings.templateGradientColors, gradients, gradientLabel, templateGradientColors, gradientChangeCallback, gradientDeleteCallback, gradientAddCallback);
@@ -467,6 +473,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 			settings.templateTitle.setValue(templateTitle.getValue());
 			settings.templateDatabaseName.setValue(templateDatabaseName.getValue());
 			settings.templateContactEmail.setValue(templateEmail.getValue());
+			settings.templateMarkedAccessionUrl.setValue(templateMarkedAccessionUrl.getValue());
 			settings.templateLogoContainsLink.setValue(logoLinks.getValue());
 			settings.templateShowParallaxBanner.setValue(parallax.getValue());
 
@@ -523,7 +530,7 @@ public class AdminConfigPage extends Composite implements HasHelp
 				protected void onSuccessImpl(Void result)
 				{
 					Notification.notify(Notification.Type.SUCCESS, Text.LANG.notificationAdminConfigChangesApplied());
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.ADMIN, "changeSettings");
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.ADMIN, "changeSettings");
 				}
 			});
 		}

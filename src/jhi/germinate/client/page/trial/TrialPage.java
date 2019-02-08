@@ -19,7 +19,6 @@ package jhi.germinate.client.page.trial;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.http.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
@@ -142,28 +141,27 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 			dataTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 			downloadTab.setColor(GerminateSettingsHolder.getCategoricalColor(i++));
 
-			GQuery.$(overviewTab.getAnchor()).click(new Function()
+			JavaScript.click(overviewTab.getAnchor(), new ClickCallback()
 			{
 				@Override
-				public boolean f(Event e)
+				public void onSuccess(Event event)
 				{
 					deck.showWidget(0);
-					return false;
 				}
 			});
-			GQuery.$(matrixTab.getAnchor()).click(new Function()
+			JavaScript.click(matrixTab.getAnchor(), new ClickCallback()
 			{
 				@Override
-				public boolean f(Event e)
+				public void onSuccess(Event event)
 				{
 					deck.showWidget(1);
-					return false;
 				}
 			});
-			GQuery.$(dataTab.getAnchor()).click(new Function()
+
+			JavaScript.click(dataTab.getAnchor(), new ClickCallback()
 			{
 				@Override
-				public boolean f(Event e)
+				public void onSuccess(Event event)
 				{
 					deck.showWidget(2);
 
@@ -176,17 +174,14 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 						query.add(new SearchCondition(Dataset.NAME, new InSet(), search, String.class));
 						phenotypeDataTable.forceFilter(query, true);
 					}
-
-					return false;
 				}
 			});
-			GQuery.$(downloadTab.getAnchor()).click(new Function()
+			JavaScript.click(downloadTab.getAnchor(), new ClickCallback()
 			{
 				@Override
-				public boolean f(Event e)
+				public void onSuccess(Event event)
 				{
 					deck.showWidget(3);
-					return false;
 				}
 			});
 

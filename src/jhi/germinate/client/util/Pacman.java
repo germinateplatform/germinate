@@ -197,8 +197,8 @@ public class Pacman
 		LEFT(180),
 		TOP_LEFT(225);
 
-		private int    degree;
-		private String style;
+		private int     degree;
+		private String  style;
 		private boolean injected = false;
 
 		Rotation(int degree)

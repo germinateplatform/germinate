@@ -131,9 +131,11 @@
 													type="PRIMARY" ui:field="button"/>
 								</g:FlowPanel>
 							</g:FormPanel>
-							<b:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_ACCOUNT_PLUS} {style.block}" href="#" text="{msg.loginRegistrationLink}" visible="false" ui:field="registerAnchor"/>
-							<b:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_LOCK_RESET} {style.block}" href="#" text="{msg.loginForgotPasswordLink}" ui:field="forgotPasswordAnchor"/>
-							<g:Image url="img/logo-horizontal.svg" />
+							<b:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_ACCOUNT_PLUS} {style.block}" href="#" text="{msg.loginRegistrationLink}"
+									  visible="false" ui:field="registerAnchor"/>
+							<b:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_LOCK_RESET} {style.block}" href="#" text="{msg.loginForgotPasswordLink}"
+									  ui:field="forgotPasswordAnchor"/>
+							<g:Image url="img/logo-horizontal.svg"/>
 						</g:FlowPanel>
 					</b:Well>
 					<b:Well>

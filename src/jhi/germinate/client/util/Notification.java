@@ -121,10 +121,10 @@ public class Notification
 		/* Strip potentially malicious content */
 		message = HTMLUtils.stripHtmlTags(message);
 
-        /*
+		/*
 		 * Check if the same notification has already been issued within a
-         * certain amount of time. If so, ignore this one, if not, show it.
-         */
+		 * certain amount of time. If so, ignore this one, if not, show it.
+		 */
 		long now = System.currentTimeMillis();
 
 		Pair<String, Long> lastMessage = lastMessages.get(type);
@@ -138,11 +138,11 @@ public class Notification
 			}
 		}
 
-        /* Save the new last message */
+		/* Save the new last message */
 		lastMessages.put(type, new Pair<>(message, now));
 
 		NotifySettings settings = NotifySettings.newSettings();
-//		settings.setShowProgressbar(true);
+		//		settings.setShowProgressbar(true);
 		settings.setPauseOnMouseOver(true);
 		settings.setOffset(0, 60);
 		settings.setAllowDismiss(false);

@@ -66,8 +66,8 @@ public class ExceptionHandler
 		{
 			/*
 			 * Show notification and set logged-in status to false -> login page
-             * will be shown
-             */
+			 * will be shown
+			 */
 			String notificationMessage;
 
 			InvalidProperty property = ((InvalidSessionException) caught).getInvalidProperty();
@@ -92,8 +92,8 @@ public class ExceptionHandler
 		{
 			/*
 			 * Show notification and set logged-in status to false -> login page
-             * will be shown
-             */
+			 * will be shown
+			 */
 			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationInsufficientPermissions());
 			GerminateEventBus.BUS.fireEvent(new LogoutEvent(caught));
 		}
@@ -126,7 +126,7 @@ public class ExceptionHandler
 		{
 			/* We redirect the user to the login page */
 			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationPageUnavailable());
-//			ContentHolder.getInstance().setContent(Page.LOGIN, null, new HomeText());
+			//			ContentHolder.getInstance().setContent(Page.LOGIN, null, new HomeText());
 		}
 		else if (caught instanceof InvalidOptionsException)
 		{
@@ -148,9 +148,9 @@ public class ExceptionHandler
 		{
 			/*
 			 * Something went really wrong... Just show a notification (we don't
-             * really know what happened, so logging the user out might be too
-             * much)
-             */
+			 * really know what happened, so logging the user out might be too
+			 * much)
+			 */
 			Notification.notify(Notification.Type.ERROR, Text.LANG.notificationUnknownError(caught.getClass().getName()));
 		}
 	}

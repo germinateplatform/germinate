@@ -99,19 +99,16 @@ public class TaxonomyPieChart extends AbstractChart
 		return new Library[]{Library.D3_V3, Library.D3_PIE, Library.D3_DOWNLOAD};
 	}
 
-	private void onClickSegment(String genusSpecies)
+	private void onClickSegment(String genus, String species, String subtaxa)
 	{
 		try
 		{
-			/* Split on the first space */
-			int index = genusSpecies.indexOf(" ");
-			String genus = genusSpecies.substring(0, index);
-			String species = genusSpecies.substring(index + 1);
-
-			/* Create the mapping */
 			PartialSearchQuery query = new PartialSearchQuery();
 			query.add(new SearchCondition(Taxonomy.GENUS, new Equal(), genus, String.class));
-			query.add(new SearchCondition(Taxonomy.SPECIES, new Equal(), species, String.class));
+			if (!StringUtils.isEmpty(species))
+				query.add(new SearchCondition(Taxonomy.SPECIES, new Equal(), species, String.class));
+			if (!StringUtils.isEmpty(subtaxa))
+				query.add(new SearchCondition(Taxonomy.SUBTAXA, new Equal(), subtaxa, String.class));
 
 			/* Save it to the parameter store and change to the browse page */
 			FilterMappingParameterStore.Inst.get().put(Parameter.tableFilterMapping, query);
@@ -119,7 +116,6 @@ public class TaxonomyPieChart extends AbstractChart
 		}
 		catch (Exception e)
 		{
-
 		}
 	}
 
@@ -137,8 +133,18 @@ public class TaxonomyPieChart extends AbstractChart
 			var newData = [];
 
 			data.forEach(function (d) {
+				var label = d.genus;
+
+				if (d.species) {
+					label += " " + d.species;
+				}
+				if (d.subtaxa) {
+					label += " " + d.subtaxa;
+				}
+
 				newData.push({
-					label: d.taxonomy,
+					datum: d,
+					label: label,
 					value: parseFloat(d.count)
 				});
 			});
@@ -172,7 +178,7 @@ public class TaxonomyPieChart extends AbstractChart
 				},
 				callbacks: {
 					onClickSegment: function (a) {
-						that.@jhi.germinate.client.widget.d3js.TaxonomyPieChart::onClickSegment(*)(a.data.label);
+						that.@jhi.germinate.client.widget.d3js.TaxonomyPieChart::onClickSegment(*)(a.data.datum.genus, a.data.datum.species, a.data.datum.subtaxa);
 					}
 				}
 			});

@@ -135,12 +135,6 @@ public class MegaEnvironmentsPage extends Composite implements ParallaxBannerPag
 			}
 
 			@Override
-			public boolean supportsFullIdMarking()
-			{
-				return true;
-			}
-
-			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
 				if (megaEnvironment != null)
@@ -179,12 +173,6 @@ public class MegaEnvironmentsPage extends Composite implements ParallaxBannerPag
 			}
 
 			@Override
-			public boolean supportsFullIdMarking()
-			{
-				return true;
-			}
-
-			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
 				if (megaEnvironment != null)
@@ -201,7 +189,8 @@ public class MegaEnvironmentsPage extends Composite implements ParallaxBannerPag
 		};
 		accessionSection.add(accessionTable);
 
-		DownloadWidget widget = new DownloadWidget(Text.LANG.downloadHeading()){
+		DownloadWidget widget = new DownloadWidget(Text.LANG.downloadHeading())
+		{
 			@Override
 			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
 			{

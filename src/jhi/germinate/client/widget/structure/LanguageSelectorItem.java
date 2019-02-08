@@ -20,10 +20,10 @@ package jhi.germinate.client.widget.structure;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.shared.Style;
 
 /**
@@ -50,14 +50,13 @@ public class LanguageSelectorItem
 		anchor.setHref("#");
 		anchor.setTitle(display);
 
-		GQuery.$(anchor).click(new Function()
+		JavaScript.click(anchor, new ClickCallback()
 		{
 			@Override
-			public boolean f(Event e)
+			public void onSuccess(Event event)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.UI, "language", locale);
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.UI, "language", locale);
 				Window.Location.replace(Window.Location.createUrlBuilder().setParameter(LocaleInfo.getLocaleQueryParam(), locale).buildString());
-				return false;
 			}
 		});
 

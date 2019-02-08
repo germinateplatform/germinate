@@ -191,7 +191,7 @@ public class CommentWidget extends Composite
 			@Override
 			public void onSuccessImpl(DebugInfo result)
 			{
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.ANNOTATIONS, "add", Long.toString(id));
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.ANNOTATIONS, "add", Long.toString(id));
 
 				commentTable.refreshTable();
 

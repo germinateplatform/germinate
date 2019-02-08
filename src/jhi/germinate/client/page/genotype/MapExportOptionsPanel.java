@@ -59,37 +59,37 @@ public class MapExportOptionsPanel extends Composite
 
 	private static MapsPageUiBinder ourUiBinder = GWT.create(MapsPageUiBinder.class);
 	@UiField
-	FlowPanel panel;
+	FlowPanel         panel;
 	@UiField
-	Panel         exportOptionsPanel;
+	Panel             exportOptionsPanel;
 	@UiField
-	PanelCollapse collapsePanel;
+	PanelCollapse     collapsePanel;
 	@UiField
-	HTML          chromosomeHtml;
+	HTML              chromosomeHtml;
 	@UiField
-	ListBox       chromosomeBox;
+	ListBox           chromosomeBox;
 	@UiField
-	HTML          regionHtml;
+	HTML              regionHtml;
 	@UiField
-	TextBox       intervalFirstMarker;
+	TextBox           intervalFirstMarker;
 	@UiField
-	TextBox       intervalSecondMarker;
+	TextBox           intervalSecondMarker;
 	@UiField
-	HTML          intervalHtml;
+	HTML              intervalHtml;
 	@UiField
-	HTML          radiusHtml;
+	HTML              radiusHtml;
 	@UiField
-	HTML          panelHtml;
+	HTML              panelHtml;
 	@UiField
-	Button        closeOptions;
+	Button            closeOptions;
 	@UiField
-	TabListItem chromosomeTab;
+	TabListItem       chromosomeTab;
 	@UiField
-	TabListItem regionTab;
+	TabListItem       regionTab;
 	@UiField
-	TabListItem intervalTab;
+	TabListItem       intervalTab;
 	@UiField
-	TabListItem radiusTab;
+	TabListItem       radiusTab;
 	@UiField
 	TextBox           radiusMarker;
 	@UiField
@@ -97,15 +97,15 @@ public class MapExportOptionsPanel extends Composite
 	@UiField
 	RangedLongTextBox radiusRight;
 	@UiField
-	SimplePanel regionTable;
+	SimplePanel       regionTable;
 	@UiField
-	SimplePanel markerDownloadPanel;
-	private DownloadWidget downloadWidget;
+	SimplePanel       markerDownloadPanel;
+	private DownloadWidget                 downloadWidget;
 	/* Range controls */
 	private CellTable<MappingEntry>        table;
 	private ListDataProvider<MappingEntry> dataProvider;
 	private List<String>                   chromosomes;
-	private Map map;
+	private Map                            map;
 
 	public MapExportOptionsPanel()
 	{

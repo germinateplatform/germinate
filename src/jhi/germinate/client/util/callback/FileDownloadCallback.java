@@ -53,7 +53,7 @@ public class FileDownloadCallback extends DefaultAsyncCallback<ServerResult<Stri
 		if (result.getServerResult() != null)
 		{
 			/* Create a new invisible dummy link on the page */
-			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), result.getServerResult());
+			GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, FileLocation.temporary.name(), result.getServerResult());
 
 			/* Click it */
 			JavaScript.invokeGerminateDownload(result.getServerResult());

@@ -34,7 +34,7 @@
 
 		<b:PageHeader ui:field="pageHeader"/>
 
-		<g8:DatasetListWidget ui:field="selectedDatasetPanel" />
+		<g8:DatasetListWidget ui:field="selectedDatasetPanel"/>
 
 		<b:Row>
 			<b:Column size="XS_12,MD_6">

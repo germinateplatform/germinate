@@ -40,7 +40,7 @@ import jhi.germinate.shared.enums.*;
  */
 public class PedigreeChart extends AbstractChart
 {
-	private Long      accessionId;
+	private Long accessionId;
 
 	public PedigreeChart(Long accessionId)
 	{
@@ -158,7 +158,7 @@ public class PedigreeChart extends AbstractChart
 
 				var style = "";
 
-				if(d.ParentType === 'F')
+				if (d.ParentType === 'F')
 					style = femaleStyle;
 				else if (d.ParentType === 'M')
 					style = maleStyle;

@@ -159,7 +159,7 @@ public interface AccessionServiceAsync
 	 * @param polygon    The list of {@link LatLngPoint}s defining the polygon
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	Request getInPolygon(RequestProperties properties, Pagination pagination, List<LatLngPoint> polygon, AsyncCallback<PaginatedServerResult<List<Accession>>> callback);
+	Request getInPolygon(RequestProperties properties, Pagination pagination, List<List<LatLngPoint>> polygon, AsyncCallback<PaginatedServerResult<List<Accession>>> callback);
 
 	/**
 	 * Returns the ids of the {@link Accession}s that are located in the provided polygon.
@@ -168,7 +168,7 @@ public interface AccessionServiceAsync
 	 * @param polygon    The list of {@link LatLngPoint}s defining the polygon
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void getIdsInPolygon(RequestProperties properties, List<LatLngPoint> polygon, AsyncCallback<ServerResult<List<String>>> callback);
+	void getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon, AsyncCallback<ServerResult<List<String>>> callback);
 
 	/**
 	 * Returns the {@link Mcpd} object for the {@link Accession} with the given id.
@@ -196,4 +196,22 @@ public interface AccessionServiceAsync
 	 * @param callback   The {@link AsyncCallback}
 	 */
 	void getPDCIStats(RequestProperties properties, AsyncCallback<ServerResult<String>> callback);
+
+	/**
+	 * Returns the ids of the entity parents of the {@link Accession}s with the given ids.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param ids        The ids of the {@link Accession}s
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void getEntityParentIds(RequestProperties properties, List<String> ids, AsyncCallback<ServerResult<List<String>>> callback);
+
+	/**
+	 * Returns the ids of the entity children of the {@link Accession}s with the given ids.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param ids        The ids of the {@link Accession}s
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void getEntityChildIds(RequestProperties properties, List<String> ids, AsyncCallback<ServerResult<List<String>>> callback);
 }

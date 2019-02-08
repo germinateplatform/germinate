@@ -19,7 +19,6 @@ package jhi.germinate.client.widget.structure;
 
 
 import com.google.gwt.dom.client.*;
-import com.google.gwt.query.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
@@ -27,6 +26,7 @@ import org.gwtbootstrap3.client.ui.constants.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
@@ -59,14 +59,13 @@ public class HelpWidget
 			{
 			}
 
-			GQuery.$(helpAnchor).click(new Function()
+			JavaScript.click(helpAnchor, new ClickCallback()
 			{
 				@Override
-				public boolean f(Event e)
+				public void onSuccess(Event event)
 				{
 					if (!helpAnchor.getElement().getParentElement().hasClassName(Styles.DISABLED))
 						show();
-					return false;
 				}
 			});
 
@@ -105,7 +104,7 @@ public class HelpWidget
 		}
 		else
 		{
-			JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.HELP, History.getToken());
+			GoogleAnalytics.trackEvent(GoogleAnalytics.Category.HELP, History.getToken());
 			Notification.notify(Notification.Type.INFO, Text.LANG.notificationHelpNotAvailable());
 		}
 	}

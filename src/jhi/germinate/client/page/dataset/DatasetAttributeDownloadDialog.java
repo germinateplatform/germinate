@@ -69,7 +69,7 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 				@Override
 				protected void onSuccessImpl(ServerResult<String> result)
 				{
-					JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "txt", dataset.getId().intValue());
+					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "txt", dataset.getId().intValue());
 					JavaScript.invokeGerminateDownload(result.getServerResult());
 				}
 			});
@@ -84,7 +84,7 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 				String url = JavaScript.getJsonData(dataset.getDublinCore());
 				String downloadFileName = dataset.getId() + "-dublin-core.json";
 				downloadFileName = downloadFileName.replace(' ', '-');
-				JavaScript.GoogleAnalytics.trackEvent(JavaScript.GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "json", dataset.getId().intValue());
+				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "json", dataset.getId().intValue());
 				JavaScript.invokeDownload(url, downloadFileName);
 			});
 		}

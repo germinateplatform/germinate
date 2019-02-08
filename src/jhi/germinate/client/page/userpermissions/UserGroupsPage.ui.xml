@@ -31,7 +31,7 @@
 		<g:SimplePanel ui:field="groupTablePanel"/>
 
 		<g:FlowPanel visible="false" ui:field="groupMembersWrapper">
-			<g:HTMLPanel tag="hr" />
+			<g:HTMLPanel tag="hr"/>
 			<b:Heading size="H2" text="{msg.groupMembersTitle}" ui:field="groupName"/>
 			<b:Row>
 				<b:Column size="XS_12, LG_6">

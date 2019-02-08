@@ -241,8 +241,8 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 		if (climate == null || climate.getId() == -1)
 		{
 			resultPanel.setVisible(false);
-//			climateChart.clear();
-//			map.updateData(null);
+			//			climateChart.clear();
+			//			map.updateData(null);
 			return;
 		}
 

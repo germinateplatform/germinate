@@ -105,6 +105,11 @@ public class SearchCondition implements Serializable, HasToSqlString
 
 	public SearchCondition(String columnName, ComparisonOperator comp, List<?> conditionValues, Class<?> clazz)
 	{
+		this(columnName, comp, conditionValues, clazz.getSimpleName());
+	}
+
+	public SearchCondition(String columnName, ComparisonOperator comp, List<?> conditionValues, String clazz)
+	{
 		this.columnName = columnName;
 		this.comp = comp;
 		for (Object value : conditionValues)
@@ -118,7 +123,7 @@ public class SearchCondition implements Serializable, HasToSqlString
 				e.printStackTrace();
 			}
 		}
-		this.type = clazz.getSimpleName();
+		this.type = clazz;
 	}
 
 	public SearchCondition(String columnName, ComparisonOperator comp, Object conditionValue, Class<?> clazz)

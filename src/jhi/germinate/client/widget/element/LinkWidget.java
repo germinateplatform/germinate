@@ -18,6 +18,7 @@
 package jhi.germinate.client.widget.element;
 
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
@@ -25,7 +26,6 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import java.util.*;
 
 import jhi.germinate.client.i18n.*;
-import jhi.germinate.client.page.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -37,25 +37,22 @@ import jhi.germinate.shared.enums.*;
 /**
  * @author Sebastian Raubach
  */
-public class LinkWidget extends GerminateComposite
+public class LinkWidget extends Composite
 {
 	private GerminateDatabaseTable referenceTable;
 	private Long                   referenceId;
 
+	private FlowPanel panel = new FlowPanel();
+
 	public LinkWidget()
 	{
+		initWidget(panel);
 	}
 
 	public LinkWidget(GerminateDatabaseTable referenceTable, Long referenceId)
 	{
 		this.referenceTable = referenceTable;
 		this.referenceId = referenceId;
-	}
-
-	@Override
-	public Library[] getLibraries()
-	{
-		return null;
 	}
 
 	public void update(GerminateDatabaseTable referenceTable, Long referenceId)
@@ -66,7 +63,6 @@ public class LinkWidget extends GerminateComposite
 		setUpContent();
 	}
 
-	@Override
 	protected void setUpContent()
 	{
 		if (referenceId != null && referenceTable != null)
@@ -94,9 +90,14 @@ public class LinkWidget extends GerminateComposite
 						}
 
 						if (ulPanel.getWidgetCount() > 0)
+						{
 							panel.add(ulPanel);
+							onDataChanged();
+						}
 						else
+						{
 							panel.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));
+						}
 					}
 					else
 					{
@@ -105,5 +106,10 @@ public class LinkWidget extends GerminateComposite
 				}
 			});
 		}
+	}
+
+	protected void onDataChanged()
+	{
+
 	}
 }

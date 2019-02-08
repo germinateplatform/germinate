@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,664 +17,193 @@
 
 package jhi.germinate.client.page.accession;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.http.client.*;
-import com.google.gwt.query.client.*;
-import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.*;
 
+import org.gwtbootstrap3.client.shared.event.*;
 import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
-import java.util.Locale;
-import java.util.stream.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.page.search.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
-import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
-import jhi.germinate.client.widget.gallery.*;
-import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
-import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.datastructure.database.Image;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
 
 /**
- * The {@link PassportPage} shows all the information about a single {@link Accession}.
- *
  * @author Sebastian Raubach
  * @see Parameter#accessionId
  * @see Parameter#accessionName
  */
-public class PassportPage extends Composite implements HasLibraries, HasHelp, HasHyperlinkButton, ParallaxBannerPage
+public class PassportPage extends GerminateComposite implements HasLibraries, HasHelp, HasHyperlinkButton, ParallaxBannerPage
 {
-	interface PassportPageUiBinder extends UiBinder<HTMLPanel, PassportPage>
+	private Accession accession;
+	private boolean   isOsterei;
+
+	public PassportPage(boolean isOsterei)
 	{
-	}
-
-	private static PassportPageUiBinder ourUiBinder = GWT.create(PassportPageUiBinder.class);
-
-	@UiField
-	MarkedItemPageHeader pageHeader;
-	@UiField
-	HTML                 html;
-	@UiField
-	FlowPanel            pdciWrapper;
-	@UiField
-	HTML                 pdci;
-	@UiField
-	Anchor               pdciInfo;
-
-	@UiField
-	Row topWrapper;
-
-	@UiField
-	FlowPanel mcpdPanel;
-	@UiField
-	FlowPanel institutionPanel;
-
-	@UiField
-	FlowPanel     synonymsWrapper;
-	@UiField
-	SynonymWidget synonyms;
-
-	@UiField
-	FlowPanel   pedigreeWrapper;
-	@UiField
-	SimplePanel pedigreeListPanel;
-	@UiField
-	SimplePanel pedigreeTablePanel;
-	@UiField
-	SimplePanel pedigreeDownloadPanel;
-	@UiField
-	FlowPanel   pedigreeChartPanel;
-	@UiField
-	SimplePanel pedigreeChart;
-
-	@UiField
-	FlowPanel   entityWrapper;
-	@UiField
-	SimplePanel entityTablePanel;
-
-	@UiField
-	FlowPanel locationWrapper;
-	@UiField
-	FlowPanel locationPanel;
-
-	@UiField
-	FlowPanel imageWrapper;
-	@UiField
-	FlowPanel imagePanel;
-
-	@UiField
-	FlowPanel groupWrapper;
-	@UiField
-	HTML      groupHtml;
-	@UiField
-	FlowPanel groupPanel;
-
-	@UiField
-	FlowPanel datasetWrapper;
-	@UiField
-	HTML      datasetHtml;
-	@UiField
-	FlowPanel datasetPanel;
-
-	@UiField
-	FlowPanel attributeWrapper;
-	@UiField
-	FlowPanel attributePanel;
-
-	@UiField
-	FlowPanel     commentWrapper;
-	@UiField
-	CommentWidget commentWidget;
-
-	@UiField
-	FlowPanel  linkWrapper;
-	@UiField
-	LinkWidget linkWidget;
-
-	@UiField
-	FlowPanel   downloadWrapper;
-	@UiField
-	SimplePanel downloadPanel;
-
-	protected Accession accession;
-
-	public PassportPage()
-	{
-		initWidget(ourUiBinder.createAndBindUi(this));
+		this.isOsterei = isOsterei;
 	}
 
 	@Override
-	protected void onLoad()
+	protected void setUpContent()
 	{
-		super.onLoad();
+		PageHeader pageHeader = new PageHeader();
+		pageHeader.setText(Text.LANG.passportPassportData());
+		HTML html = new HTML();
+		panel.add(pageHeader);
+		panel.add(html);
 
-		Library.Queue.load(new DefaultAsyncCallback<Void>()
+		if (isOsterei)
 		{
-			@Override
-			protected void onSuccessImpl(Void result)
+			panel.add(new OsterPassportWidget());
+		}
+		else
+		{
+			/* See if there is information about the selected accession */
+			Long stateAccessionId = LongParameterStore.Inst.get().get(Parameter.accessionId);
+			String stateGeneralId = StringParameterStore.Inst.get().get(Parameter.generalId);
+			String accessionName = StringParameterStore.Inst.get().get(Parameter.accessionName);
+
+			/* Remove these parameters as they are only used to get here */
+			StringParameterStore.Inst.get().remove(Parameter.generalId);
+			StringParameterStore.Inst.get().remove(Parameter.accessionName);
+
+			/*
+			 * We prefer the generalId, since it's only used for hard links to
+			 * Germinate. In this case we don't want to use internally stored
+			 * accession ids, but rather use the external one
+			 */
+			PartialSearchQuery filter = null;
+			if (stateGeneralId != null)
+				filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Equal(), stateGeneralId, Long.class));
+				/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
+			else if (!StringUtils.isEmpty(accessionName))
+				filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Equal(), accessionName, String.class));
+			else if (stateAccessionId != null)
+				filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Equal(), Long.toString(stateAccessionId), Long.class));
+
+			if (filter != null)
 			{
-				loadContent();
+				AccessionService.Inst.get().getForFilter(Cookie.getRequestProperties(), Pagination.getDefault(), filter, new DefaultAsyncCallback<PaginatedServerResult<List<Accession>>>()
+				{
+					@Override
+					public void onFailureImpl(Throwable caught)
+					{
+						if (caught instanceof DatabaseException)
+						{
+							html.setText(Text.LANG.errorNoParameterAccession());
+						}
+						else
+						{
+							super.onFailureImpl(caught);
+						}
+					}
+
+					@Override
+					public void onSuccessImpl(PaginatedServerResult<List<Accession>> result)
+					{
+						if (result.hasData())
+						{
+							accession = result.getServerResult().get(0);
+
+							createContent();
+						}
+					}
+				});
 			}
-		}, getLibraries());
+			else
+			{
+				html.setText(Text.LANG.errorNoParameterAccession());
+			}
+		}
 	}
 
-	private void loadContent()
+	private void createContent()
 	{
-		html.setHTML(Text.LANG.passportText());
-		groupHtml.setHTML(Text.LANG.passportGroupsOverviewText());
-		datasetHtml.setHTML(Text.LANG.passportDatasetsOverviewText());
-
-		/* See if there is information about the selected accession */
-		Long stateAccessionId = LongParameterStore.Inst.get().get(Parameter.accessionId);
-		String stateGeneralId = StringParameterStore.Inst.get().get(Parameter.generalId);
-		String accessionName = StringParameterStore.Inst.get().get(Parameter.accessionName);
-
-		/* Remove these parameters as they are only used to get here */
-		StringParameterStore.Inst.get().remove(Parameter.generalId);
-		StringParameterStore.Inst.get().remove(Parameter.accessionName);
-
-		/*
-		 * We prefer the generalId, since it's only used for hard links to
-		 * Germinate. In this case we don't want to use internally stored
-		 * accession ids, but rather use the external one
-		 */
-		PartialSearchQuery filter = null;
-		if (stateGeneralId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Accession.GENERAL_IDENTIFIER, new Equal(), stateGeneralId, Long.class));
-			/* We also prefer the "default display name" as this is the new way of representing an accession during export to Flapjack etc. */
-		else if (!StringUtils.isEmpty(accessionName))
-			filter = new PartialSearchQuery(new SearchCondition(Accession.NAME, new Equal(), accessionName, String.class));
-		else if (stateAccessionId != null)
-			filter = new PartialSearchQuery(new SearchCondition(Accession.ID, new Equal(), Long.toString(stateAccessionId), Long.class));
-
-		if (filter != null)
+		// We've got a parent entity, go and get their data
+		if (accession.getEntityParentId() != null)
 		{
-			AccessionService.Inst.get().getForFilter(Cookie.getRequestProperties(), Pagination.getDefault(), filter, new DefaultAsyncCallback<PaginatedServerResult<List<Accession>>>()
+			List<String> ids = new ArrayList<>();
+			ids.add(Long.toString(accession.getEntityParentId()));
+			AccessionService.Inst.get().getByIds(Cookie.getRequestProperties(), Pagination.getDefault(), ids, new DefaultAsyncCallback<ServerResult<List<Accession>>>()
 			{
 				@Override
-				public void onFailureImpl(Throwable caught)
-				{
-					if (caught instanceof DatabaseException)
-					{
-						html.setText(Text.LANG.errorNoParameterAccession());
-					}
-					else
-					{
-						super.onFailureImpl(caught);
-					}
-				}
-
-				@Override
-				public void onSuccessImpl(PaginatedServerResult<List<Accession>> result)
+				protected void onSuccessImpl(ServerResult<List<Accession>> result)
 				{
 					if (result.hasData())
 					{
-						accession = result.getServerResult().get(0);
-						updateContent();
+						createTwinPanel(result.getServerResult().get(0));
 					}
 				}
 			});
 		}
 		else
 		{
-			html.setText(Text.LANG.errorNoParameterAccession());
+			// Get the information for this entity
+			panel.add(new PassportWidget(accession));
 		}
 	}
 
-	protected void updateContent()
+	private void createTwinPanel(Accession parent)
 	{
-		if (accession != null)
-		{
-			updateHeader();
-			updateMcpd();
-			updateInstitution();
-			updateSynonyms();
-			updatePedigree();
-			updateEntityData();
-			updateLocation();
-			updateImages();
-			updateGroups();
-			updateDatasets();
-			updateAttributes();
-			updateComments();
-			updateExternalLinks();
-			updateDownloads();
-		}
-	}
+		PanelGroup group = new PanelGroup();
+		group.setId("accordion");
+		panel.add(group);
 
-	protected void updateDownloads()
-	{
-		FileListService.Inst.get().getForFolder(Cookie.getRequestProperties(), FileLocation.download, ReferenceFolder.passport, new DefaultAsyncCallback<List<CreatedFile>>()
+		// Add the current accession
+		final SearchSection section = new SearchSection();
+		section.setPreventHideSibling(true);
+		section.setHeading(accession.getEntityType().getName() + ": " + accession.getGeneralIdentifier());
+		section.setMdi(Style.combine(Style.MDI_LG, accession.getEntityType().getMdi()));
+		section.addShownHandler(new ShownHandler()
 		{
+			private boolean isInit = false;
+
 			@Override
-			public void onSuccessImpl(List<CreatedFile> files)
+			public void onShown(ShownEvent shownEvent)
 			{
-				if (!CollectionUtils.isEmpty(files))
+				if (!isInit)
 				{
-					downloadWrapper.setVisible(true);
-
-					List<DownloadWidget.FileConfig> conf = files.stream()
-																.map(s -> {
-																	String orig = s.getName();
-																	s.setName(ReferenceFolder.passport.name() + "/" + orig);
-																	return new DownloadWidget.FileConfig()
-																			.setLocation(FileLocation.download)
-																			.setName(orig)
-																			.setPath(s);
-																})
-																.collect(Collectors.toList());
-
-					downloadPanel.add(new DownloadWidget().addAll(conf));
+					isInit = true;
+					section.add(new PassportWidget(accession));
 				}
 			}
 		});
-	}
+		group.add(section);
 
-	protected void updateExternalLinks()
-	{
-		linkWrapper.setVisible(true);
-		linkWidget.update(GerminateDatabaseTable.germinatebase, accession.getId());
-	}
-
-	protected void updateComments()
-	{
-		commentWrapper.setVisible(true);
-		commentWidget.update(accession.getId(), GerminateDatabaseTable.germinatebase);
-	}
-
-	protected void updateAttributes()
-	{
-		attributeWrapper.setVisible(true);
-		attributePanel.add(new AttributeDataForAccessionTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		// Add the parent
+		final SearchSection parentSection = new SearchSection();
+		parentSection.setPreventHideSibling(true);
+		parentSection.setHeading(parent.getEntityType().getName() + ": " + parent.getGeneralIdentifier());
+		parentSection.setMdi(Style.combine(Style.MDI_LG, parent.getEntityType().getMdi()));
+		parentSection.addShownHandler(new ShownHandler()
 		{
+			private boolean isInit = false;
+
 			@Override
-			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<AttributeData>>> callback)
+			public void onShown(ShownEvent shownEvent)
 			{
-				if (filter == null)
-					filter = new PartialSearchQuery();
-				SearchCondition condition = new SearchCondition(Accession.ID, new Equal(), Long.toString(accession.getId()), Long.class);
-				filter.add(condition);
-
-				if (filter.getAll().size() > 1)
-					filter.addLogicalOperator(new And());
-
-				return AttributeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, GerminateDatabaseTable.germinatebase, filter, callback);
-			}
-		});
-	}
-
-	protected void updateDatasets()
-	{
-		datasetWrapper.setVisible(true);
-		DatasetTable datasetTable = new DatasetTable(DatasetTable.SelectionMode.NONE, true, true, null)
-		{
-			@Override
-			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
-			{
-				return DatasetService.Inst.get().getForAccession(Cookie.getRequestProperties(), accession.getId(), pagination, callback);
-			}
-		};
-		datasetTable.setShowDownload(true);
-		datasetPanel.add(datasetTable);
-	}
-
-	protected void updateGroups()
-	{
-		groupWrapper.setVisible(true);
-		groupPanel.add(new GroupTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
-		{
-			@Override
-			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Group>>> callback)
-			{
-				return GroupService.Inst.get().getForAccession(Cookie.getRequestProperties(), accession.getId(), pagination, callback);
-			}
-		});
-	}
-
-	protected void updateImages()
-	{
-		imageWrapper.setVisible(true);
-		imagePanel.add(new Gallery(false, false)
-		{
-			@Override
-			protected void getData(Pagination pagination, AsyncCallback<PaginatedServerResult<List<Image>>> callback)
-			{
-				ImageService.Inst.get().getForId(Cookie.getRequestProperties(), GerminateDatabaseTable.germinatebase, accession.getId(), pagination, callback);
-			}
-		});
-	}
-
-	private void updateLocation()
-	{
-		if (accession.getLocation() != null && accession.getLocation().getLatitude() != null && accession.getLocation().getLongitude() != null)
-		{
-			locationWrapper.setVisible(true);
-			new LeafletUtils.IndividualMarkerCreator(locationPanel, Collections.singletonList(accession.getLocation()), null);
-		}
-	}
-
-	protected void updatePedigree()
-	{
-		pedigreeWrapper.setVisible(true);
-		PedigreeService.Inst.get().getPedigreeDefinitions(Cookie.getRequestProperties(), accession.getId(), new DefaultAsyncCallback<ServerResult<List<PedigreeDefinition>>>()
-		{
-			@Override
-			protected void onSuccessImpl(ServerResult<List<PedigreeDefinition>> result)
-			{
-				if (result.hasData())
+				if (!isInit)
 				{
-					ULPanel list = new ULPanel();
-
-					for (PedigreeDefinition def : result.getServerResult())
-					{
-						if (!StringUtils.isEmpty(def.getNotation().getReferenceUrl()))
-						{
-							HTML html = new HTML("<a target='_blank' href='" + def.getNotation().getReferenceUrl() + "'>" + def.getNotation().getName() + "</a>: " + def.getDefinition());
-							html.getElement().getStyle().setDisplay(com.google.gwt.dom.client.Style.Display.INLINE_BLOCK);
-							list.add(html, Style.MDI_SITEMAP);
-						}
-						else
-						{
-							list.add(new InlineLabel(def.getNotation().getName() + ": " + def.getDefinition()), Style.MDI_SITEMAP);
-						}
-					}
-
-					pedigreeListPanel.add(list);
+					isInit = true;
+					parentSection.add(new PassportWidget(parent));
 				}
 			}
 		});
-
-		pedigreeTablePanel.add(new PedigreeTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
-		{
-			boolean chartInitialized = false;
-
-			@Override
-			protected boolean supportsFiltering()
-			{
-				return false;
-			}
-
-			@Override
-			protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Pedigree>>> callback)
-			{
-				filter = new PartialSearchQuery();
-
-				SearchCondition condition = new SearchCondition("Child.id", new Equal(), Long.toString(accession.getId()), Long.class);
-				filter.add(condition);
-
-				filter.addLogicalOperator(new Or());
-
-				condition = new SearchCondition("Parent.id", new Equal(), Long.toString(accession.getId()), Long.class);
-				filter.add(condition);
-
-				return PedigreeService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, pagination, new AsyncCallback<PaginatedServerResult<List<Pedigree>>>()
-				{
-					@Override
-					public void onFailure(Throwable caught)
-					{
-						pedigreeDownloadPanel.clear();
-
-						callback.onFailure(caught);
-					}
-
-					@Override
-					public void onSuccess(PaginatedServerResult<List<Pedigree>> result)
-					{
-						if (result.getResultSize() < 1)
-							pedigreeDownloadPanel.clear();
-
-						callback.onSuccess(result);
-
-						if (!chartInitialized && result.getResultSize() > 0)
-						{
-							pedigreeChart.add(new PedigreeChart(accession.getId()));
-							chartInitialized = true;
-						}
-						else
-						{
-							pedigreeChartPanel.clear();
-						}
-					}
-				});
-
-
-			}
-		});
-
-		DownloadWidget widget = new DownloadWidget()
-		{
-			@Override
-			protected void onItemClicked(ClickEvent event, FileConfig config, AsyncCallback<ServerResult<String>> callback)
-			{
-				PedigreeService.Inst.get().exportToHelium(Cookie.getRequestProperties(), Collections.singletonList(accession.getId()), Pedigree.PedigreeQuery.UP_DOWN_RECURSIVE, callback);
-			}
-		};
-		widget.add(new DownloadWidget.FileConfig(Text.LANG.downloadPedigreeHelium())
-				.setType(FileType.helium)
-				.setLongRunning(true)
-				.setStyle(FileType.IconStyle.IMAGE));
-		pedigreeDownloadPanel.add(widget);
-	}
-
-	private void updateEntityData()
-	{
-		entityWrapper.setVisible(true);
-
-		entityTablePanel.add(new EntityPairTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
-		{
-			@Override
-			protected boolean supportsFiltering()
-			{
-				return false;
-			}
-
-			@Override
-			protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<EntityPair>>> callback)
-			{
-				return AccessionService.Inst.get().getEntityPairs(Cookie.getRequestProperties(), accession.getId(), pagination, callback);
-			}
-		});
-	}
-
-	private void updateSynonyms()
-	{
-		synonymsWrapper.setVisible(true);
-		synonyms.update(GerminateDatabaseTable.germinatebase, accession.getId());
-	}
-
-	private void updateInstitution()
-	{
-		final Institution institution = accession.getInstitution();
-
-		if (institution != null)
-		{
-			topWrapper.setVisible(true);
-			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnId(), Long.toString(institution.getId()));
-			if (GerminateSettingsHolder.isPageAvailable(Page.INSTITUTIONS))
-			{
-				Anchor anchor = new Anchor(institution.getName());
-				GQuery.$(anchor).click(new Function()
-				{
-					@Override
-					public boolean f(Event e)
-					{
-						LongParameterStore.Inst.get().put(Parameter.institutionId, institution.getId());
-						History.newItem(Page.INSTITUTIONS.name());
-						return false;
-					}
-				});
-				new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnName(), anchor, true);
-			}
-			else
-			{
-				new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnName(), institution.getName());
-			}
-
-			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnAcronym(), institution.getAcronym());
-			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnCode(), institution.getCode());
-
-			if (institution.getCountry() != null)
-				new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnCountry(), "<span class='" + Style.COUNTRY_FLAG + " " + institution.getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "'>" + institution.getCountry().getName() + "</span>", true);
-
-			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnContact(), institution.getContact());
-			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnPhone(), institution.getPhone());
-
-			if (!StringUtils.isEmpty(institution.getEmail()))
-				new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnEmail(), SimpleHtmlTemplate.INSTANCE.mailto(institution.getEmail()).asString(), true);
-			new DescriptionWidget(institutionPanel, Text.LANG.institutionsColumnAddress(), institution.getAddress());
-		}
-		else
-		{
-			institutionPanel.add(new Heading(HeadingSize.H4, Text.LANG.notificationNoDataFound()));
-		}
-	}
-
-	private void updateHeader()
-	{
-		String name = accession.getName();
-		String number = accession.getNumber();
-		String gid = accession.getGeneralIdentifier() == null ? "" : accession.getGeneralIdentifier();
-
-		String toDisplay = StringUtils.join(" / ", name, number, gid);
-
-		pageHeader.setText(toDisplay);
-		pageHeader.setSubText(accession.getEntityType().getName());
-		pageHeader.setType(MarkedItemList.ItemType.ACCESSION);
-		pageHeader.setId(Long.toString(accession.getId()));
-
-		if (!GerminateSettingsHolder.get().pdciEnabled.getValue() || accession.getPdci() == null)
-		{
-			pdciWrapper.removeFromParent();
-		}
-		else
-		{
-			pdciWrapper.setVisible(true);
-			pdci.setHTML(Text.LANG.passportPDCIScore(NumberUtils.DECIMAL_FORMAT_TWO_PLACES.format(accession.getPdci())));
-		}
-	}
-
-	private void updateMcpd()
-	{
-		AccessionService.Inst.get().getMcpd(Cookie.getRequestProperties(), accession.getId(), new DefaultAsyncCallback<ServerResult<Mcpd>>()
-		{
-			@Override
-			protected void onFailureImpl(Throwable caught)
-			{
-				super.onFailureImpl(caught);
-			}
-
-			@Override
-			protected void onSuccessImpl(ServerResult<Mcpd> result)
-			{
-				if (result.hasData())
-				{
-					topWrapper.setVisible(true);
-					new DescriptionWidget(mcpdPanel, Text.LANG.passportColumnGID(), accession.getGeneralIdentifier());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAccename(), accession.getNumber());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdPuid(), accession.getPuid());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAccenumb(), accession.getName());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollnumb(), accession.getCollNumb());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollcode(), accession.getCollCode());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollname(), accession.getCollName());
-					if (accession.getInstitution() != null)
-					{
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdInstcode(), accession.getInstitution().getCode());
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollinstaddress(), accession.getInstitution().getAddress());
-					}
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollmissid(), accession.getCollMissId());
-
-					if (accession.getTaxonomy() != null)
-					{
-						if (!StringUtils.isEmpty(accession.getTaxonomy().getGenus()))
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdGenus(), "<i>" + accession.getTaxonomy().getGenus() + "</i>", true);
-						if (!StringUtils.isEmpty(accession.getTaxonomy().getSpecies()))
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSpecies(), "<i>" + accession.getTaxonomy().getSpecies() + "</i>", true);
-
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCropname(), accession.getTaxonomy().getCropName());
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSpauthor(), accession.getTaxonomy().getTaxonomyAuthor());
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSubtaxa(), accession.getTaxonomy().getSubtaxa());
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSubtauthor(), accession.getTaxonomy().getSubtaxaAuthor());
-					}
-
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAcqdate(), accession.getAcqDate());
-
-					if (accession.getLocation() != null)
-					{
-						if (accession.getLocation().getCountry() != null)
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdOrigcty(), "<span class='" + Style.COUNTRY_FLAG + " " + accession.getLocation().getCountry().getCountryCode2().toLowerCase(Locale.ENGLISH) + "'></span><span class='" + Style.LAYOUT_V_ALIGN_MIDDLE + "'>" + accession.getLocation().getCountry().getName() + "</span>", true);
-
-						if (accession.getLocation().getCoordinateUncertainty() != null)
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCoorduncert(), Integer.toString(accession.getLocation().getCoordinateUncertainty()));
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCoorddatum(), accession.getLocation().getCoordinateDatum());
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdGeorefmeth(), accession.getLocation().getGeoreferencingMethod());
-					}
-
-					if (accession.getCollDate() != null)
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdColldate(), DateUtils.getLocalizedDate(accession.getCollDate()));
-
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdBredcode(), accession.getBreedersCode());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdBredname(), accession.getBreedersName());
-
-					if (accession.getBiologicalStatus() != null)
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdSampstat(), accession.getBiologicalStatus().getSampStat());
-
-					if (accession.getCollSrc() != null)
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollsrc(), accession.getCollSrc().getCollSrc());
-
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdDonorcode(), accession.getDonorCode());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdDonorname(), accession.getDonorName());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdDonornumb(), accession.getDonorNumber());
-
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdOthernumb(), accession.getOtherNumb());
-
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdDuplsite(), accession.getDuplSite());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdDuplinstname(), accession.getDuplInstName());
-
-					if (!CollectionUtils.isEmpty(result.getServerResult().getStorage()))
-					{
-						for (Storage storage : result.getServerResult().getStorage())
-						{
-							new DescriptionWidget(mcpdPanel, Text.LANG.mcpdStorage(), storage.getDescription());
-						}
-					}
-
-					if (accession.getMlsStatus() != null)
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdMlsstat(), accession.getMlsStatus().getDescription());
-
-					if (result.getServerResult().getRemarks() != null)
-						new DescriptionWidget(mcpdPanel, Text.LANG.mcpdRemarks(), result.getServerResult().getRemarks().getValue());
-				}
-			}
-		});
-	}
-
-	@UiHandler("pdciInfo")
-	void onPdcdiInfoClicked(ClickEvent e)
-	{
-		new AlertDialog(Text.LANG.passportPDCITitle(), new HTML(Text.LANG.passportPDCIExplanation()))
-				.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalDone(), Style.MDI_CHECK, null))
-				.open();
+		group.add(parentSection);
 	}
 
 	@Override

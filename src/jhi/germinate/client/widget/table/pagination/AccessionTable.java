@@ -22,12 +22,15 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
 
 import java.util.*;
 import java.util.Locale;
 
 import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
+import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
@@ -36,6 +39,7 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.datatype.*;
 
 /**
  * @author Sebastian Raubach
@@ -45,12 +49,6 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 	public AccessionTable(SelectionMode selectionMode, boolean sortingEnabled)
 	{
 		super(MarkedItemList.ItemType.ACCESSION, selectionMode, sortingEnabled);
-	}
-
-	@Override
-	public boolean supportsFullIdMarking()
-	{
-		return false;
 	}
 
 	@Override
@@ -204,7 +202,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			@Override
 			public Class getType()
 			{
-				return String.class;
+				return Json.class;
 			}
 		};
 		column.setDataStoreName(Synonym.SYNONYM);
@@ -516,5 +514,103 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 	{
 		/* Get the id */
 		LongParameterStore.Inst.get().put(Parameter.accessionId, object.getId());
+	}
+
+	@Override
+	protected MenuItem[] getAdditionalItems(Accession row, PopupPanel popupPanel, MarkedItemListCallback callback)
+	{
+		MenuItem[] menuItems = new MenuItem[4];
+		int i = 0;
+
+		if (row == null)
+		{
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_UP_BOX, Text.LANG.cartAddEntityParents()), () -> getEntityParentIds(getSearchFilter(false), new MarkingCallback(true, true, popupPanel, callback)));
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_UP_BOX_OUTLINE, Text.LANG.cartRemoveEntityParents()), () -> getEntityParentIds(getSearchFilter(false), new MarkingCallback(true, false, popupPanel, callback)));
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_DOWN_BOX, Text.LANG.cartAddEntityChildren()), () -> getEntityChildrenIds(getSearchFilter(false), new MarkingCallback(true, true, popupPanel, callback)));
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_DOWN_BOX_OUTLINE, Text.LANG.cartRemoveEntityChildren()), () -> getEntityChildrenIds(getSearchFilter(false), new MarkingCallback(true, false, popupPanel, callback)));
+		}
+		else
+		{
+			List<String> id = new ArrayList<>();
+			id.add(Long.toString(row.getId()));
+
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_UP_BOX, Text.LANG.cartAddEntityParents()), () -> AccessionService.Inst.get().getEntityParentIds(Cookie.getRequestProperties(), id, new MarkingCallback(true, true, popupPanel, callback)));
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_UP_BOX_OUTLINE, Text.LANG.cartRemoveEntityParents()), () -> AccessionService.Inst.get().getEntityParentIds(Cookie.getRequestProperties(), id, new MarkingCallback(true, false, popupPanel, callback)));
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_DOWN_BOX, Text.LANG.cartAddEntityChildren()), () -> AccessionService.Inst.get().getEntityChildIds(Cookie.getRequestProperties(), id, new MarkingCallback(true, true, popupPanel, callback)));
+			menuItems[i++] = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_CHEVRON_DOWN_BOX_OUTLINE, Text.LANG.cartRemoveEntityChildren()), () -> AccessionService.Inst.get().getEntityChildIds(Cookie.getRequestProperties(), id, new MarkingCallback(true, false, popupPanel, callback)));
+		}
+
+		return menuItems;
+	}
+
+	private void getEntityParentIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+	{
+		getIds(filter, new AsyncCallback<ServerResult<List<String>>>()
+		{
+			@Override
+			public void onFailure(Throwable throwable)
+			{
+				callback.onFailure(throwable);
+			}
+
+			@Override
+			public void onSuccess(ServerResult<List<String>> ids)
+			{
+				if (ids.hasData())
+					AccessionService.Inst.get().getEntityParentIds(Cookie.getRequestProperties(), ids.getServerResult(), callback);
+				else
+					callback.onSuccess(new ServerResult<>(null, new ArrayList<>()));
+			}
+		});
+	}
+
+	protected void getEntityChildrenIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
+	{
+		getIds(filter, new AsyncCallback<ServerResult<List<String>>>()
+		{
+			@Override
+			public void onFailure(Throwable throwable)
+			{
+				callback.onFailure(throwable);
+			}
+
+			@Override
+			public void onSuccess(ServerResult<List<String>> ids)
+			{
+				if (ids.hasData())
+					AccessionService.Inst.get().getEntityChildIds(Cookie.getRequestProperties(), ids.getServerResult(), callback);
+				else
+					callback.onSuccess(new ServerResult<>(null, new ArrayList<>()));
+			}
+		});
+	}
+
+	private class MarkingCallback extends DefaultAsyncCallback<ServerResult<List<String>>>
+	{
+		private boolean                add;
+		private PopupPanel             popupPanel;
+		private MarkedItemListCallback callback;
+
+		public MarkingCallback(boolean longRunning, boolean add, PopupPanel popupPanel, MarkedItemListCallback callback)
+		{
+			super(longRunning);
+			this.add = add;
+			this.popupPanel = popupPanel;
+			this.callback = callback;
+		}
+
+		@Override
+		protected void onSuccessImpl(ServerResult<List<String>> result)
+		{
+			if (result.hasData())
+			{
+				if (add)
+					MarkedItemList.add(MarkedItemList.ItemType.ACCESSION, result.getServerResult());
+				else
+					MarkedItemList.remove(MarkedItemList.ItemType.ACCESSION, result.getServerResult());
+				popupPanel.hide();
+				callback.updateTable(result.getServerResult());
+			}
+		}
 	}
 }

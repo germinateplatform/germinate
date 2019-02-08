@@ -71,6 +71,7 @@ public class GerminateSettings implements Serializable
 	public ClientProperty<List<String>> templateGradientColors;
 	public ClientProperty<Boolean>      templateLogoContainsLink;
 	public ClientProperty<String>       templateCustomMenu;
+	public ClientProperty<String>       templateMarkedAccessionUrl;
 
 	public ClientProperty<Boolean> loadPageOnLibraryError;
 

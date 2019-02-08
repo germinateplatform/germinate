@@ -65,11 +65,11 @@ public class ServletConstants
 
 	public static class Builder
 	{
-		private String url  = "";
-		private String path = "";
+		private String              url              = "";
+		private String              path             = "";
 		private Map<String, String> params;
-		private FragmentPosition fragmentPosition = FragmentPosition.END;
-		private String           fragment         = null;
+		private FragmentPosition    fragmentPosition = FragmentPosition.END;
+		private String              fragment         = null;
 
 		public Builder()
 		{
