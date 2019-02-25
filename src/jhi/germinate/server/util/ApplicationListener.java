@@ -70,6 +70,8 @@ public class ApplicationListener implements ServletContextListener
 		ImageWatcher.initialize();
 		// Watch external data folder for changes to template files
 		TemplateWatcher.initialize(sce.getServletContext());
+		// Watch template css image file changes
+		CssImageWatcher.initialize(sce.getServletContext());
 
 		Database.initialize();
 
@@ -91,6 +93,7 @@ public class ApplicationListener implements ServletContextListener
 		PropertyWatcher.stopFileWatcher();
 		ImageWatcher.stopFileWatcher();
 		TemplateWatcher.stopFileWatcher();
+		CssImageWatcher.stopFileWatcher();
 
 		try
 		{

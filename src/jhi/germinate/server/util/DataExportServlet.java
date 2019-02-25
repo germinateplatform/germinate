@@ -58,14 +58,16 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	{
 		// If no groups are selected
 		if (CollectionUtils.isEmpty(markerGroups))
+		{
 			return null;
-			// If it contains the "All items group"
+		}
+		// If it contains the "All items group"
 		else if (containsAllItemsGroup(markerGroups))
 		{
-
 			try
 			{
 				PartialSearchQuery q = new PartialSearchQuery();
+				// Get all markers on the map
 				SearchCondition c = new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class);
 				q.add(c);
 				ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
@@ -142,17 +144,14 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		/* Set up the flapjack links */
 		exportResult.flapjackLinks = "";
 
-		/* For genotypic files, add a link to the accession page */
-		if (type == ExperimentType.genotype)
-		{
-			if (availablePages.contains(Page.PASSPORT))
-				exportResult.flapjackLinks += "# fjDatabaseLineSearch = " + serverBase + "/?" + Parameter.accessionName + "=$LINE#" + Page.PASSPORT + "\n";
+		/* Add a link to the accession page */
+		if (availablePages.contains(Page.PASSPORT))
+			exportResult.flapjackLinks += "# fjDatabaseLineSearch = " + serverBase + "/?" + Parameter.accessionName + "=$LINE#" + Page.PASSPORT + "\n";
 
-			if (availablePages.contains(Page.GROUP_PREVIEW))
-			{
-				exportResult.flapjackLinks += "# fjDatabaseGroupPreview = " + serverBase + "/?" + Parameter.groupPreviewFile + "=$GROUP#" + Page.GROUP_PREVIEW + "\n";
-				exportResult.flapjackLinks += "# fjDatabaseGroupUpload = " + serverBase + "/germinate/" + ServletConstants.SERVLET_UPLOAD + "\n";
-			}
+		if (availablePages.contains(Page.GROUP_PREVIEW))
+		{
+			exportResult.flapjackLinks += "# fjDatabaseGroupPreview = " + serverBase + "/?" + Parameter.groupPreviewFile + "=$GROUP#" + Page.GROUP_PREVIEW + "\n";
+			exportResult.flapjackLinks += "# fjDatabaseGroupUpload = " + serverBase + "/germinate/" + ServletConstants.SERVLET_UPLOAD + "\n";
 		}
 		/* For both types, add a link to the marker page */
 		if (availablePages.contains(Page.MARKER_DETAILS))
@@ -170,10 +169,6 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, sqlDebug, accessionGroups) : new ArrayList<>();
 		/* Get the marker names to extract */
 		List<String> colNames = getColumnNames(sqlDebug, markerGroups, mapId, userAuth);
-
-		/* If we specified accession and marker groups, but one of them is empty, then there is no data */
-		//		if (!CollectionUtils.isEmpty(accessionGroups, markerGroups) && CollectionUtils.isEmpty(rowNames, colNames))
-		//			throw new InvalidArgumentException();
 
 		/* Set the filter values */
 		int qualityHetero = heterozygousFilter ? QUALITY_HETERO : 100;

@@ -211,7 +211,7 @@ public class Style
 	public static final String MDI_LG                              = "mdi-lg";
 	public static final String MDI_PLAYLIST_PLUS                   = "mdi-playlist-plus";
 	public static final String MDI_DATABASE_LOCK                   = "mdi-database-lock";
-	public static final String MDI_SECURITY_ACCOUNT                = "mdi-security-account";
+	public static final String MDI_SHIELD_ACCOUNT                  = "mdi-shield-account";
 	public static final String MDI_ACCOUNT_KEY                     = "mdi-account-key";
 	public static final String MDI_PRINTER                         = "mdi-printer";
 	public static final String MDI_JSON                            = "mdi-json";

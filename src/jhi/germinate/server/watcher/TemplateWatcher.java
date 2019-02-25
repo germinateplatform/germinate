@@ -41,7 +41,7 @@ public class TemplateWatcher
 
 	private static void setFilesToWatch(ServletContext context)
 	{
-		String base = context.getRealPath("/");
+		String base = context.getRealPath(File.separator);
 
 		filesToWatch.put("custom.css", base + "/css/custom.css");
 		filesToWatch.put("custom.html", base + "/custom.html");
