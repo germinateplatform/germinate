@@ -155,18 +155,28 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		if (entry.getLocation() == null || entry.getLocation().getCountry() == null)
 			return;
 
-		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM countries WHERE country_code3 = ?");
-		stmt.setString(1, entry.getLocation().getCountry().getCountryCode3());
+		String code = entry.getLocation().getCountry().getCountryCode3();
 
-		DatabaseResult rs = stmt.query();
-
-		if (rs.next())
+		if (StringUtils.isEmpty(code))
 		{
-			entry.getLocation().setCountry(Country.Parser.Inst.get().parse(rs, null, true));
+			System.err.println("No country code found, assuming no country information known. Setting country to 'unknown'");
+			entry.getLocation().setCountry(new Country(-1L));
 		}
 		else
 		{
-			throw new DatabaseException("Invalid 3-letter ISO 3166-1 country code: " + entry.getLocation().getCountry().getCountryCode3());
+			DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM countries WHERE country_code3 = ?");
+			stmt.setString(1, entry.getLocation().getCountry().getCountryCode3());
+
+			DatabaseResult rs = stmt.query();
+
+			if (rs.next())
+			{
+				entry.getLocation().setCountry(Country.Parser.Inst.get().parse(rs, null, true));
+			}
+			else
+			{
+				throw new DatabaseException("Invalid 3-letter ISO 3166-1 country code: " + entry.getLocation().getCountry().getCountryCode3());
+			}
 		}
 	}
 

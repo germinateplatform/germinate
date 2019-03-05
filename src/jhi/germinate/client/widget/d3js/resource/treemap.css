@@ -28,6 +28,10 @@
 	stroke: #fff;
 }
 
+.children tspan {
+	pointer-events: none;
+}
+
 .rect.parent,
 .grandparent .rect {
 	stroke-width: 2px;

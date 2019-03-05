@@ -368,7 +368,10 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		/* Cancel any currently running request */
 		if (currentRequest != null && currentRequest.isPending())
+		{
 			currentRequest.cancel();
+			currentRequest = null;
+		}
 
 		filterPanel.setVisible(false);
 		filterPanel.add(query, isAnd);
@@ -608,6 +611,12 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 					final boolean filterApplied = filterObject != null;
 
 					table.setVisibleRangeAndClearData(table.getVisibleRange(), false);
+
+					if (currentRequest != null && currentRequest.isPending())
+					{
+						currentRequest.cancel();
+						currentRequest = null;
+					}
 
 					/* Set up the callback object */
 					currentRequest = getData(pagination.update(rangeStart, length, sortColumnName, ascending), filterObject, new DefaultAsyncCallback<PaginatedServerResult<List<T>>>()
