@@ -78,10 +78,6 @@
 					<b:FormLabel for="formTwitter" ui:field="twitterLabel"/>
 					<t:ToggleSwitch b:id="formTwitter" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="twitter"/>
 				</b:FormGroup>
-				<b:FormGroup>
-					<b:FormLabel for="formGoogle" ui:field="googleLabel"/>
-					<t:ToggleSwitch b:id="formGoogle" onText="{msg.generalYes}" offText="{msg.generalNo}" ui:field="google"/>
-				</b:FormGroup>
 
 				<b:Heading size="H3" text="{msg.adminConfigHeadingUsageTracking}"/>
 				<b:FormGroup>

@@ -49,7 +49,6 @@ public class ShareUtils
 	{
 		FACEBOOK("https://www.facebook.com/sharer/sharer.php?u=" + PLACEHOLDER, Style.MDI_FACEBOOK_BOX, Text.LANG.socialFacebook()),
 		TWITTER("https://twitter.com/share?url=" + PLACEHOLDER + "&hashtags=germinate", Style.MDI_TWITTER_BOX, Text.LANG.socialTwitter()),
-		GOOGLE_PLUS("https://plus.google.com/share?url=" + PLACEHOLDER, Style.MDI_GOOGLE_PLUS_BOX, Text.LANG.socialGooglePlus()),
 		SHARE_LINK(PLACEHOLDER, Style.MDI_LINK_VARIANT, Text.LANG.generalGetLinkToPage());
 
 		private final String urlPrefix;
@@ -73,8 +72,6 @@ public class ShareUtils
 						return GerminateSettingsHolder.get().socialShowFacebook.getValue();
 					case TWITTER:
 						return GerminateSettingsHolder.get().socialShowTwitter.getValue();
-					case GOOGLE_PLUS:
-						return GerminateSettingsHolder.get().socialShowGooglePlus.getValue();
 					case SHARE_LINK:
 						return true;
 					default:

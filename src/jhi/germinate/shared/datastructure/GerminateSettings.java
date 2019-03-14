@@ -51,7 +51,6 @@ public class GerminateSettings implements Serializable
 
 	public ClientProperty<Boolean> socialShowFacebook;
 	public ClientProperty<Boolean> socialShowTwitter;
-	public ClientProperty<Boolean> socialShowGooglePlus;
 
 	public ClientProperty<Boolean> googleAnalyticsEnabled;
 	public ClientProperty<String>  googleAnalyticsTrackingId;

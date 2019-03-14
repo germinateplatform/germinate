@@ -177,7 +177,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 
 			PropertyWatcher.setBoolean(settings.socialShowFacebook.getServerProperty(), settings.socialShowFacebook.getValue());
 			PropertyWatcher.setBoolean(settings.socialShowTwitter.getServerProperty(), settings.socialShowTwitter.getValue());
-			PropertyWatcher.setBoolean(settings.socialShowGooglePlus.getServerProperty(), settings.socialShowGooglePlus.getValue());
 
 			PropertyWatcher.setBoolean(settings.hideIdColumn.getServerProperty(), settings.hideIdColumn.getValue());
 			PropertyWatcher.setBoolean(settings.pdciEnabled.getServerProperty(), settings.pdciEnabled.getValue());
@@ -225,7 +224,6 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 		settings.templateUseToggleSwitches = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES));
 		settings.socialShowFacebook = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK));
 		settings.socialShowTwitter = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER));
-		settings.socialShowGooglePlus = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS));
 		settings.hideIdColumn = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_HIDE_ID_COLUMNS, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_HIDE_ID_COLUMNS));
 		settings.pdciEnabled = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_PDCI_ENABLED, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_PDCI_ENABLED));
 		settings.isReadOnlyMode = new GerminateSettings.ClientProperty<>(ServerProperty.GERMINATE_IS_READ_ONLY, PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_READ_ONLY));

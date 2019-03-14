@@ -59,7 +59,6 @@ public enum ServerProperty
 	GERMINATE_TEMPLATE_GRADIENT_COLORS("Germinate.Template.GradientColors", "#000000,#570000,#ff0000,#ffc800,#ffff00,#ffffff", true),
 	GERMINATE_TEMPLATE_SOCIAL_SHOW_FACEBOOK("Germinate.Template.Social.ShowFacebook", "false", false),
 	GERMINATE_TEMPLATE_SOCIAL_SHOW_TWITTER("Germinate.Template.Social.ShowTwitter", "false", false),
-	GERMINATE_TEMPLATE_SOCIAL_SHOW_GOOGLE_PLUS("Germinate.Template.Social.ShowGooglePlus", "false", false),
 	GERMINATE_TEMPLATE_USE_TOGGLE_SWITCHES("Germinate.Template.UseToggleSwitches", "true", false),
 	GERMINATE_TEMPLATE_EMAIL_ADDRESS("Germinate.Template.EmailAddress", null, false),
 	GERMINATE_TEMPLATE_DATABASE_NAME("Germinate.Template.DatabaseName", "Germinate Database", false),

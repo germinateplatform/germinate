@@ -87,11 +87,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 	ToggleSwitch twitter;
 
 	@UiField
-	FormLabel    googleLabel;
-	@UiField
-	ToggleSwitch google;
-
-	@UiField
 	FormLabel    analyticsLabel;
 	@UiField
 	ToggleSwitch analytics;
@@ -269,7 +264,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 
 		updateBoolean(settings.socialShowFacebook, facebook, facebookLabel);
 		updateBoolean(settings.socialShowTwitter, twitter, twitterLabel);
-		updateBoolean(settings.socialShowGooglePlus, google, googleLabel);
 
 		updateBoolean(settings.googleAnalyticsEnabled, analytics, analyticsLabel);
 		updateString(settings.googleAnalyticsTrackingId, analyticsId, analyticsIdLabel);
@@ -463,7 +457,6 @@ public class AdminConfigPage extends Composite implements HasHelp
 
 			settings.socialShowFacebook.setValue(facebook.getValue());
 			settings.socialShowTwitter.setValue(twitter.getValue());
-			settings.socialShowGooglePlus.setValue(google.getValue());
 
 			settings.googleAnalyticsEnabled.setValue(analytics.getValue());
 			settings.googleAnalyticsTrackingId.setValue(analyticsId.getValue());
