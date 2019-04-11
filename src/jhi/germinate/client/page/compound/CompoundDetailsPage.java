@@ -144,7 +144,7 @@ public class CompoundDetailsPage extends Composite
 
 	private void showDatasetTable()
 	{
-		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, ExperimentType.compound)
+		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)

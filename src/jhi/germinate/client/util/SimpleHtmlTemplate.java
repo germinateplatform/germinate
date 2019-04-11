@@ -144,8 +144,18 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * @param title The title attribute
 	 * @return A <code>&lt;span&gt;</code> element with the given Material Design Icon style and the given title attribute
 	 */
-	@Template("<span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span></a>")
+	@Template("<span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span>")
 	SafeHtml materialIconFixedWidth(String mdi, String title);
+
+	/**
+	 * Creates a <code>&lt;span&gt;</code> element with the given Material Design Icon style and the given title attribute
+	 *
+	 * @param mdi   The MaterialDesignIcon style
+	 * @param title The title attribute
+	 * @return A <code>&lt;span&gt;</code> element with the given Material Design Icon style and the given title attribute
+	 */
+	@Template("<div class=\"" + Style.LAYOUT_WHITE_SPACE_NO_WRAP + "\"><span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span> <span style='vertical-align: middle'>{2}</span></div>")
+	SafeHtml materialIconFixedWidthWithText(String mdi, String title, String text);
 
 	/**
 	 * Creates an anchor with the given link, target, title and Material Design Icon style

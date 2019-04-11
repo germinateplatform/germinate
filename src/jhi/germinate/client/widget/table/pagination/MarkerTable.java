@@ -31,6 +31,7 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.datatype.*;
 
 /**
  * @author Sebastian Raubach
@@ -133,7 +134,7 @@ public abstract class MarkerTable extends MarkableDatabaseObjectPaginationTable<
 			@Override
 			public Class getType()
 			{
-				return String.class;
+				return Json.class;
 			}
 		};
 		column.setDataStoreName(Synonym.SYNONYM);

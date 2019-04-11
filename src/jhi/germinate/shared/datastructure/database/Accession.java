@@ -74,8 +74,8 @@ public class Accession extends DatabaseObject
 	public static final String CREATED_ON          = "germinatebase.created_on";
 	public static final String UPDATED_ON          = "germinatebase.updated_on";
 
-	public static final String SYNONYMS  = "synonyms";
-	public static final String HAS_IMAGE = "hasImage";
+	public static final String SYNONYMS    = "synonyms";
+	public static final String IMAGE_COUNT = "imageCount";
 
 	private String           generalIdentifier;
 	private String           number;
@@ -491,8 +491,39 @@ public class Accession extends DatabaseObject
 	public String toString()
 	{
 		return "Accession{" +
-				"id=" + id +
-				'}';
+				"generalIdentifier='" + generalIdentifier + '\'' +
+				", number='" + number + '\'' +
+				", name='" + name + '\'' +
+				", bankNumber='" + bankNumber + '\'' +
+				", breedersCode='" + breedersCode + '\'' +
+				", breedersName='" + breedersName + '\'' +
+				", taxonomy=" + taxonomy +
+				", institution=" + institution +
+				", plantPassport='" + plantPassport + '\'' +
+				", donorCode='" + donorCode + '\'' +
+				", donorName='" + donorName + '\'' +
+				", donorNumber='" + donorNumber + '\'' +
+				", acqDate='" + acqDate + '\'' +
+				", collNumb='" + collNumb + '\'' +
+				", collDate=" + collDate +
+				", collName='" + collName + '\'' +
+				", collCode='" + collCode + '\'' +
+				", collMissId='" + collMissId + '\'' +
+				", otherNumb='" + otherNumb + '\'' +
+				", duplSite='" + duplSite + '\'' +
+				", duplInstName='" + duplInstName + '\'' +
+				", puid='" + puid + '\'' +
+				", biologicalStatus=" + biologicalStatus +
+				", collSrc=" + collSrc +
+				", location=" + location +
+				", mlsStatus=" + mlsStatus +
+				", synonyms='" + synonyms + '\'' +
+				", entityType=" + entityType +
+				", entityParentId=" + entityParentId +
+				", pdci=" + pdci +
+				", createdOn=" + createdOn +
+				", updatedOn=" + updatedOn +
+				"} " + super.toString();
 	}
 
 	@Override
@@ -559,7 +590,7 @@ public class Accession extends DatabaseObject
 
 					try
 					{
-						accession.setExtra(HAS_IMAGE, row.getString(HAS_IMAGE));
+						accession.setExtra(IMAGE_COUNT, row.getString(IMAGE_COUNT));
 					}
 					catch (Exception e)
 					{

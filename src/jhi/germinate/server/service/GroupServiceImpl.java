@@ -226,6 +226,9 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 		String formatted;
 
+		if(CollectionUtils.isEmpty(ids))
+			return new ServerResult<>(null, null);
+
 		switch (table)
 		{
 			case markers:

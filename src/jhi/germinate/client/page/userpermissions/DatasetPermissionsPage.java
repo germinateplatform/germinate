@@ -75,12 +75,26 @@ public class DatasetPermissionsPage extends Composite
 
 		datasetPermissionsHtml.setHTML(Text.LANG.datasetPermissionsText());
 
-		DatasetTable datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, null)
+		DatasetTable datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
 			{
+				filter = addToFilter(filter);
+
 				return DatasetService.Inst.get().getForFilter(Cookie.getRequestProperties(), filter, null, pagination, callback);
+			}
+
+			private PartialSearchQuery addToFilter(PartialSearchQuery filter)
+			{
+				if (filter == null)
+					filter = new PartialSearchQuery();
+				filter.add(new SearchCondition(Dataset.IS_EXTERNAL, new Equal(), 0, Integer.class));
+
+				if (filter.getAll().size() > 1)
+					filter.addLogicalOperator(new And());
+
+				return filter;
 			}
 
 			@Override

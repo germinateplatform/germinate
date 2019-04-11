@@ -35,7 +35,7 @@ import jhi.germinate.shared.search.*;
 @RemoteServiceRelativePath("accession")
 public interface AccessionService extends RemoteService
 {
-	String[] COLUMNS_SORTABLE = {Accession.ID, EntityType.NAME, Location.ID, LocationType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Taxonomy.SUBTAXA, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI, Accession.HAS_IMAGE};
+	String[] COLUMNS_SORTABLE = {Accession.ID, EntityType.NAME, Location.ID, LocationType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, Taxonomy.GENUS, Taxonomy.SPECIES, Taxonomy.SUBTAXA, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI, Accession.IMAGE_COUNT};
 
 	final class Inst
 	{

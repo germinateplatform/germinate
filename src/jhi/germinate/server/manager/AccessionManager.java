@@ -34,11 +34,11 @@ import jhi.germinate.shared.search.*;
  */
 public class AccessionManager extends AbstractManager<Accession>
 {
-	public static final String[] COLUMNS_TABLE = {Accession.ID, EntityType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Taxonomy.GENUS, Taxonomy.SPECIES, Taxonomy.SUBTAXA, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, COUNT, LocationService.DISTANCE, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI, Accession.HAS_IMAGE};
+	public static final String[] COLUMNS_TABLE = {Accession.ID, EntityType.NAME, Accession.GENERAL_IDENTIFIER, Accession.NAME, Accession.NUMBER, Accession.COLLNUMB, Taxonomy.GENUS, Taxonomy.SPECIES, Taxonomy.SUBTAXA, Location.LATITUDE, Location.LONGITUDE, Location.ELEVATION, Accession.COLLDATE, Country.COUNTRY_NAME, COUNT, LocationService.DISTANCE, Accession.SYNONYMS, Synonym.SYNONYM, Accession.PDCI, Accession.IMAGE_COUNT};
 
 	private static final String COMMON_TABLES   = "`germinatebase` LEFT JOIN `entitytypes` ON `germinatebase`.`entitytype_id` = `entitytypes`.`id` LEFT JOIN `taxonomies` ON `germinatebase`.`taxonomy_id` = `taxonomies`.`id` LEFT JOIN `locations` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `countries` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `biologicalstatus` ON `biologicalstatus`.`id` = `germinatebase`.`biologicalstatus_id` LEFT JOIN `institutions` ON `institutions`.`id` = `germinatebase`.`institution_id` LEFT JOIN `collectingsources` ON `collectingsources`.`id` = `germinatebase`.`collsrc_id`";
 	private static final String COMMOM_SYNONYMS = "LEFT JOIN `synonyms` ON (`synonyms`.`foreign_id` = `germinatebase`.`id` AND `synonyms`.`synonymtype_id` = " + SynonymType.germinatebase.getId() + ")";
-	private static final String SELECT_SYNONYMS = "`germinatebase`.*, `entitytypes`.*, `taxonomies`.*, `locations`.*, `countries`.*, `biologicalstatus`.*, `institutions`.*, `collectingsources`.*, `synonyms`.*, (SELECT 1 FROM `images` LEFT JOIN `imagetypes` ON `imagetypes`.`id` = `images`.`imagetype_id` WHERE `images`.`foreign_id` = `germinatebase`.`id`) AS hasImage";
+	private static final String SELECT_SYNONYMS = "`germinatebase`.*, `entitytypes`.*, `taxonomies`.*, `locations`.*, `countries`.*, `biologicalstatus`.*, `institutions`.*, `collectingsources`.*, `synonyms`.*, (SELECT COUNT(1) FROM `images` LEFT JOIN `imagetypes` ON `imagetypes`.`id` = `images`.`imagetype_id` WHERE `images`.`foreign_id` = `germinatebase`.`id`) AS imageCount";
 
 	private static final String SELECT_BY_UNKNOWN_IDENTIFIER = "SELECT * FROM `germinatebase` WHERE `name` LIKE ? OR `id` LIKE ? OR `number` LIKE ? OR `general_identifier` LIKE ?";
 

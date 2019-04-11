@@ -36,10 +36,11 @@ If you have any questions or suggestions, please send us an email on [germinate@
 ## Acknowledgements
 The Germinate Team gratefully acknowledges support by the following organizations who have generously provided us with open source licenses for their software products:
 
-### Lokalise
+### Crowdin &amp; Lokalise
+<img src='https://github.com/germinateplatform/germinate/raw/master/external-resources/crowdin-logo.png' width="250">
 <img src='https://github.com/germinateplatform/germinate/raw/master/external-resources/lokalise-logo.png' width="250">
 
-We use <a href='https://lokalise.co/'>Lokalise</a> to manage Germinate's translations.
+We use <a href='https://crowdin.com/'>Crowdin</a> &amp; <a href='https://lokalise.co/'>Lokalise</a> to manage Germinate's translations.
 
 ### Dataedo
 <img src='https://github.com/germinateplatform/germinate/raw/master/external-resources/dataedo-logo.png' width="250">

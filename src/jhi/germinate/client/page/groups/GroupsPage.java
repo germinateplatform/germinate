@@ -281,6 +281,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			return;
 		}
 
+		download.setVisible(group.getSize() != null && group.getSize() > 0);
+
 		groupName.setText(group.getName());
 		groupName.setSubText(group.getType().getDescription());
 		descriptionPanel.setVisible(!StringUtils.isEmpty(group.getDescription()));

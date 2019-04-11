@@ -90,7 +90,8 @@ public class ImageWatcher
 				throw new RuntimeException(e);
 			}
 
-			scaleImages(fullSizeFolder.toFile().getParentFile());
+			// Run it once initially
+			new Thread(() -> scaleImages(fullSizeFolder.toFile().getParentFile())).start();
 		}
 	}
 

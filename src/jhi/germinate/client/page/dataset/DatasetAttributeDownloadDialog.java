@@ -69,8 +69,11 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 				@Override
 				protected void onSuccessImpl(ServerResult<String> result)
 				{
-					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "txt", dataset.getId().intValue());
-					JavaScript.invokeGerminateDownload(result.getServerResult());
+					if (result.hasData())
+					{
+						GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "txt", dataset.getId().intValue());
+						JavaScript.invokeGerminateDownload(result.getServerResult());
+					}
 				}
 			});
 		});
@@ -81,11 +84,17 @@ public class DatasetAttributeDownloadDialog extends AlertDialog
 			menu.add(json);
 			json.setMdi(Style.MDI_JSON);
 			json.addClickHandler((event) -> {
-				String url = JavaScript.getJsonData(dataset.getDublinCore());
-				String downloadFileName = dataset.getId() + "-dublin-core.json";
-				downloadFileName = downloadFileName.replace(' ', '-');
-				GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "json", dataset.getId().intValue());
-				JavaScript.invokeDownload(url, downloadFileName);
+				DatasetService.Inst.get().getDublinCoreJson(Cookie.getRequestProperties(), dataset.getId(), new DefaultAsyncCallback<ServerResult<String>>(){
+					@Override
+					protected void onSuccessImpl(ServerResult<String> result)
+					{
+						if(result.hasData())
+						{
+							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "datasetAttributes", "json", dataset.getId().intValue());
+							JavaScript.invokeGerminateDownload(result.getServerResult());
+						}
+					}
+				});
 			});
 		}
 

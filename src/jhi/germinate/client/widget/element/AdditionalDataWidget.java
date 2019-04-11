@@ -77,7 +77,7 @@ public class AdditionalDataWidget extends Composite
 
 	private void addAdditionalDatasetsTable()
 	{
-		additionalDataTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, true, false, null)
+		additionalDataTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.MULTI, true, false)
 		{
 			{
 				preventInitialDataLoad = true;

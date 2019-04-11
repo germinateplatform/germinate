@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.util.importer.reader.*;
 
@@ -40,10 +41,22 @@ public class ExcelMapReader extends ExcelBatchReader<Map>
 
 		result.add(new Map()
 				.setVisibility(true)
-				.setName(utils.getCellValue(dataSheet.getRow(12), 2))
-				.setDescription(utils.getCellValue(dataSheet.getRow(12), 2)));
+				.setName(getName())
+				.setDescription(getName())
+				.setCreatedOn(new Date())
+				.setUpdatedOn(new Date()));
 
 		return result;
+	}
+
+	private String getName()
+	{
+		String name = utils.getCellValue(dataSheet.getRow(12), 2);
+
+		if (StringUtils.isEmpty(name))
+			name = "UNKNOWN MAP";
+
+		return name;
 	}
 
 	@Override

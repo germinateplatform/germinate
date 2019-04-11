@@ -34,6 +34,7 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -448,13 +449,14 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			@Override
 			public SafeHtml getValue(Accession row)
 			{
-				if (row.getExtra(Accession.HAS_IMAGE) != null)
-					return SimpleHtmlTemplate.INSTANCE.materialIconFixedWidth(Style.MDI_CAMERA, Text.LANG.accessionColumnHasImage());
+				String count = row.getExtra(Accession.IMAGE_COUNT);
+				if (count != null && !StringUtils.areEqual(count, "0"))
+					return SimpleHtmlTemplate.INSTANCE.materialIconFixedWidthWithText(Style.MDI_CAMERA, Text.LANG.accessionColumnHasImage(), count);
 				else
 					return SimpleHtmlTemplate.INSTANCE.empty();
 			}
 		};
-		column.setDataStoreName(Accession.HAS_IMAGE);
+		column.setDataStoreName(Accession.IMAGE_COUNT);
 		addColumn(column, "", true, false);
 
 		if (GerminateSettingsHolder.get().pdciEnabled.getValue())

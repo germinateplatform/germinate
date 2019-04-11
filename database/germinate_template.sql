@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2018 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
@@ -782,7 +782,7 @@ CREATE TABLE `experimenttypes`  (
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT 'When the record was created.',
   `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of experimenttypes
@@ -792,7 +792,7 @@ INSERT INTO `experimenttypes` VALUES (1, 'genotype', '2013-08-22 14:32:06', NULL
 INSERT INTO `experimenttypes` VALUES (3, 'trials', '2013-09-02 13:16:44', NULL);
 INSERT INTO `experimenttypes` VALUES (4, 'allelefreq', '2013-10-11 09:23:15', NULL);
 INSERT INTO `experimenttypes` VALUES (5, 'climate', '2015-09-02 10:35:58', NULL);
-INSERT INTO `experimenttypes` VALUES (6, 'compound', '2015-09-02 10:35:58', NULL);
+INSERT INTO `experimenttypes` VALUES (6, 'compound', '2018-11-07 11:49:53', '2018-11-07 11:49:53');
 
 -- ----------------------------
 -- Table structure for germinatebase

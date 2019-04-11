@@ -114,7 +114,7 @@ public class ExperimentDetailsPage extends Composite
 		html.setHTML(Text.LANG.experimentDetailsText());
 		noDataHeading.removeFromParent();
 
-		DatasetTable datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, experiment.getType())
+		DatasetTable datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)

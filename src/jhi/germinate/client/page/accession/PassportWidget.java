@@ -274,7 +274,7 @@ public class PassportWidget extends Composite
 
 	protected void updateDatasets()
 	{
-		DatasetTable datasetTable = new DatasetTable(DatasetTable.SelectionMode.NONE, true, true, null)
+		DatasetTable datasetTable = new DatasetTable(DatasetTable.SelectionMode.NONE, true, true)
 		{
 			@Override
 			protected void onDataChanged()

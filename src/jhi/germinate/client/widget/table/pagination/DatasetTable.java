@@ -62,13 +62,11 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 	private boolean                 linkToExportPage;
 	private boolean                 showDownload = false;
 	private DatasetDownloadCallback downloadCallback;
-	private ExperimentType          experimentType;
 
-	public DatasetTable(SelectionMode selectionMode, boolean sortingEnabled, boolean linkToExportPage, ExperimentType experimentType)
+	public DatasetTable(SelectionMode selectionMode, boolean sortingEnabled, boolean linkToExportPage)
 	{
 		super(selectionMode, sortingEnabled);
 		this.linkToExportPage = linkToExportPage;
-		this.experimentType = experimentType;
 	}
 
 	@Override
@@ -335,8 +333,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		column.setDataStoreName(Dataset.DATATYPE);
 		addColumn(column, Text.LANG.datasetsColumnDatasetDatatype(), sortingEnabled);
 
-		//		if (experimentType == ExperimentType.trials)
-		//		{
 		// Add the site name column
 		column = new TextColumn()
 		{
@@ -393,7 +389,6 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 		};
 		column.setDataStoreName(Country.COUNTRY_NAME);
 		addColumn(column, Text.LANG.datasetsColumnCountry(), sortingEnabled);
-		//		}
 
 		/* Add the license description column */
 		column = new ClickableSafeHtmlColumn()

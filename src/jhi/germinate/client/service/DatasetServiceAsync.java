@@ -24,6 +24,7 @@ import java.util.*;
 
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -138,4 +139,15 @@ public interface DatasetServiceAsync
 	 * @param callback     The {@link AsyncCallback}
 	 */
 	void exportAttributes(RequestProperties properties, List<Long> datasetIds, List<Long> attributeIds, AsyncCallback<ServerResult<String>> callback);
+
+	/**
+	 * Exports the dataset's dublin core to a json file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetId  The {@link Dataset} id
+	 * @param async      The {@link AsyncCallback}
+	 * @throws InvalidSessionException Thrown if the current session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 */
+	void getDublinCoreJson(RequestProperties properties, Long datasetId, AsyncCallback<ServerResult<String>> async);
 }

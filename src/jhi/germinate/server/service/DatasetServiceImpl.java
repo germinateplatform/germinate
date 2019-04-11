@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.nio.file.*;
 import java.sql.*;
 import java.util.*;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 {
 	private static final long serialVersionUID = -2599538621272643710L;
 
-	private static final String QUERY_DATASET_STATS = "SELECT `experimenttypes`.`description` AS experimentType, DATE_FORMAT(`datasets`.`created_on`, '%%Y') AS theYear, SUM(`datasetmeta`.`nr_of_data_objects`) AS nrOfDataObjects, SUM(`datasetmeta`.`nr_of_data_points`) AS nrOfDataPoints FROM `datasets` LEFT JOIN `datasetmeta` ON `datasets`.`id` = `datasetmeta`.`dataset_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` LEFT JOIN `datasetpermissions` ON `datasetpermissions`.`dataset_id` = `datasets`.`id` LEFT JOIN `datasetstates` ON `datasets`.`dataset_state_id` = `datasetstates`.`id` WHERE `datasets`.`is_external` = 0 AND DATE_FORMAT(`datasets`.`created_on`, '%%Y') IS NOT NULL AND %s GROUP BY `experimenttypes`.`description`, theYear ORDER BY `experimenttypes`.`description`, theYear";
+	private static final String QUERY_DATASET_STATS = "SELECT `experimenttypes`.`description` AS experimentType, DATE_FORMAT(`datasets`.`date_start`, '%%Y') AS theYear, SUM(`datasetmeta`.`nr_of_data_objects`) AS nrOfDataObjects, SUM(`datasetmeta`.`nr_of_data_points`) AS nrOfDataPoints FROM `datasets` LEFT JOIN `datasetmeta` ON `datasets`.`id` = `datasetmeta`.`dataset_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` LEFT JOIN `datasetpermissions` ON `datasetpermissions`.`dataset_id` = `datasets`.`id` LEFT JOIN `datasetstates` ON `datasets`.`dataset_state_id` = `datasetstates`.`id` WHERE `datasets`.`is_external` = 0 AND DATE_FORMAT(`datasets`.`created_on`, '%%Y') IS NOT NULL AND %s GROUP BY `experimenttypes`.`description`, theYear ORDER BY `experimenttypes`.`description`, theYear";
 
 	private static final String QUERY_ATTRIBUTE_DATA = "call " + StoredProcedureInitializer.DATASET_ATTRIBUTES + "(?, ?)";
 
@@ -176,11 +177,15 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		while ((rs = streamer.next()) != null)
 		{
-			years.add(rs.getString("theYear"));
+			String year = rs.getString("theYear");
+
+			if (StringUtils.isEmpty(year))
+				continue;
+
+			years.add(year);
 
 			/* Get the stats */
 			String experimentType = rs.getString("experimentType");
-			String year = rs.getString("theYear");
 			String value = rs.getString("nrOfDataPoints");
 
 			/* Store them in the POJO */
@@ -353,7 +358,6 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		stmt = new DefaultQuery(QUERY_ATTRIBUTE_DATA, null);
 
-		int i = 1;
 		stmt.setString(datasets);
 		if (attributes == null)
 			stmt.setNull(Types.VARCHAR);
@@ -393,6 +397,32 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		 * and the resulting GerminateTable
 		 */
 		return new ServerResult<>(sqlDebug, filePath);
+	}
+
+	@Override
+	public ServerResult<String> getDublinCoreJson(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, IOException
+	{
+		Session.checkSession(properties, this);
+		UserAuth userAuth = UserAuth.getFromSession(this, properties);
+
+		ServerResult<Dataset> dataset = new DatasetManager().getById(userAuth, datasetId);
+
+		if (dataset.hasData())
+		{
+			File file = createTemporaryFile("dublin-core-", datasetId, FileType.json.name());
+
+			try
+			{
+				Files.write(file.toPath(), dataset.getServerResult().getDublinCore().getBytes());
+				return new ServerResult<>(dataset.getDebugInfo(), file.getName());
+			}
+			catch (java.io.IOException e)
+			{
+				throw new IOException(e);
+			}
+		}
+
+		return new ServerResult<>(dataset.getDebugInfo(), null);
 	}
 
 	private static class DatasetStats

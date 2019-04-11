@@ -449,7 +449,7 @@ public class SearchPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		if (section == SearchType.DATASETS || section == SearchType.ALL)
 		{
-			datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, null)
+			datasetTable = new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true)
 			{
 				{
 					preventInitialDataLoad = true;

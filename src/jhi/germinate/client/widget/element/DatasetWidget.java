@@ -315,7 +315,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 			}
 		}
 
-		table = new DatasetTable(selectionMode, true, linkToExportPage, experimentType)
+		table = new DatasetTable(selectionMode, true, linkToExportPage)
 		{
 			{
 				preventInitialDataLoad = !CollectionUtils.isEmpty(urlParameterDatasetIds);
@@ -525,15 +525,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	{
 		this.showDownload = showDownload;
 		this.downloadCallback = new DatasetDownloadCallback();
-
-		if (table != null)
-			table.setShowDownload(downloadCallback);
-	}
-
-	public void setShowDownload(DatasetDownloadCallback downloadCallback)
-	{
-		this.showDownload = true;
-		this.downloadCallback = downloadCallback;
 
 		if (table != null)
 			table.setShowDownload(downloadCallback);

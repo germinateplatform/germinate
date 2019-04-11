@@ -30,6 +30,7 @@ public enum FileType
 	kmz("application/vnd.google-earth.kmz", "earth", Style.MDI_GOOGLE_EARTH),
 	txt("application/txt", "txt", Style.MDI_FILE_DOCUMENT),
 	tsv("application/txt", "txt", Style.MDI_FILE_DOCUMENT),
+	json("application/json", "json", Style.MDI_FILE_DOCUMENT),
 	pdf("application/pdf", "pdf", Style.MDI_FILE_PDF),
 	flapjack("application/flapjack", "flapjack", Style.MDI_FILE_DOCUMENT),
 	helium("application/helium", "helium", Style.MDI_FILE_DOCUMENT),

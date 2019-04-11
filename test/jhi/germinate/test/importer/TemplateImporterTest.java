@@ -34,9 +34,11 @@ import jhi.germinate.util.importer.phenotype.*;
  * @author Sebastian Raubach
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TemplateImporterTest extends DatabaseTest
 {
 	@RepeatedTest(2)
+	@Order(1)
 	public void importMcpdData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-germplasm-mcpd.xlsx");
@@ -67,6 +69,7 @@ public class TemplateImporterTest extends DatabaseTest
 	}
 
 	@RepeatedTest(2)
+	@Order(2)
 	public void importExcelGenotypicData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-allele-calls.xlsx");
@@ -96,6 +99,7 @@ public class TemplateImporterTest extends DatabaseTest
 	}
 
 	@RepeatedTest(2)
+	@Order(3)
 	public void importTabDelimitedGenotypicData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-allele-calls-text.txt");
@@ -142,6 +146,7 @@ public class TemplateImporterTest extends DatabaseTest
 	}
 
 	@RepeatedTest(2)
+	@Order(4)
 	public void importTrialsData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-trials-data.xlsx");
@@ -176,6 +181,7 @@ public class TemplateImporterTest extends DatabaseTest
 	}
 
 	@RepeatedTest(2)
+	@Order(5)
 	public void importCompoundData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-compound-data.xlsx");
@@ -192,6 +198,7 @@ public class TemplateImporterTest extends DatabaseTest
 	}
 
 	@RepeatedTest(2)
+	@Order(6)
 	public void importPedigreeData() throws DatabaseException
 	{
 		File template = new File("datatemplates/example-pedigree-data.xlsx");

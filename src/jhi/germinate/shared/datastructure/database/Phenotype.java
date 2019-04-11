@@ -49,11 +49,14 @@ public class Phenotype extends DatabaseObject
 	public static final String CREATED_ON  = "phenotypes.created_on";
 	public static final String UPDATED_ON  = "phenotypes.updated_on";
 
+	public static final String SYNONYMS = "synonyms";
+
 	private String name;
 	private String shortName;
 	private String description;
 	private String dataType;
 	private Unit   unit;
+	private String synonyms;
 	private Long   createdOn;
 	private Long   updatedOn;
 
@@ -121,6 +124,17 @@ public class Phenotype extends DatabaseObject
 		return this;
 	}
 
+	public String getSynonyms()
+	{
+		return synonyms;
+	}
+
+	public Phenotype setSynonyms(String synonyms)
+	{
+		this.synonyms = synonyms;
+		return this;
+	}
+
 	public Long getCreatedOn()
 	{
 		return createdOn;
@@ -158,7 +172,7 @@ public class Phenotype extends DatabaseObject
 
 	public boolean isNumeric()
 	{
-		return !StringUtils.isEmpty(dataType) && (Objects.equals(dataType, "float") || Objects.equals(dataType, "int"));
+		return !StringUtils.isEmpty(dataType) && ("float".equals(dataType) || "int".equals(dataType));
 	}
 
 	@GwtIncompatible
@@ -210,6 +224,7 @@ public class Phenotype extends DatabaseObject
 							.setDescription(row.getString(DESCRIPTION))
 							.setDataType(row.getString(DATATYPE))
 							.setUnit(UNIT_CACHE.get(user, row.getLong(UNIT_ID), row, foreignsFromResultSet))
+							.setSynonyms(row.getString(SYNONYMS))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
 

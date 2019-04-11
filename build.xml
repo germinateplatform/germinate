@@ -145,22 +145,7 @@
 		<!-- Create a flattened (no sub-folders) temporary library folder -->
 		<mkdir dir="${build.dir}/WEB-INF/lib-temp"/>
 		<copy todir="${build.dir}/WEB-INF/lib-temp" overwrite="true" failonerror="true" verbose="true" flatten="true">
-			<fileset dir="${build.dir}/WEB-INF" includes="**/mysql-connector-java-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/sqljdbc4.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-fileupload-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-logging-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-io-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/httpclient-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/httpcore-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/commons-io-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/gwt-servlet.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/simple-xml-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/thumbnailator-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/jaxb-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/jak-*.jar"/>
-			<fileset dir="${build.dir}/WEB-INF" includes="**/flyway-core-*.jar"/>
-
-			<fileset dir="${build.dir}/WEB-INF" includes="**/flapjack/*.jar"/>
+			<fileset dir="${build.dir}/WEB-INF/lib" includes="**/*.jar"/>
 		</copy>
 	</target>
 

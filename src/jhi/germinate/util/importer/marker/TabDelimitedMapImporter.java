@@ -54,7 +54,6 @@ public class TabDelimitedMapImporter extends ExcelMapImporter
 				.setName(mapName)
 				.setDescription(mapName)
 				.setVisibility(true)
-				.setUserId(-1L)
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
 

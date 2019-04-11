@@ -76,6 +76,7 @@ a.mdi:before {
 
 .<%= Style.TABLE_BORDER %> {
   border: 1px solid #ddd;
+  overflow-y: hidden;
 }
 
 #<%= Id.STRUCTURE_LOGIN %> .navbar > .container .navbar-brand .logo,

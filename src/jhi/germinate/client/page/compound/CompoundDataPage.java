@@ -91,6 +91,8 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	@UiField
 	DeckPanel deck;
 
+	private boolean compoundDataTableShown = false;
+
 	private List<Dataset> selectedDatasets;
 
 	public CompoundDataPage()
@@ -115,9 +117,27 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 				return true;
 			}
 
+			private PartialSearchQuery addToFilter(PartialSearchQuery filter)
+			{
+				if (filter == null)
+					filter = new PartialSearchQuery();
+
+				String search = selectedDatasets.stream()
+												.map(Dataset::getName)
+												.collect(Collectors.joining(", "));
+				filter.add(new SearchCondition(Dataset.NAME, new InSet(), search, String.class));
+
+				if (filter.getAll().size() > 1)
+					filter.addLogicalOperator(new And());
+
+				return filter;
+			}
+
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<CompoundData>>> callback)
 			{
+				filter = addToFilter(filter);
+
 				return CompoundService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
 			}
 		};
@@ -171,14 +191,10 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 				{
 					deck.showWidget(2);
 
-					if (!compoundDataTable.isFiltered())
+					if (!compoundDataTableShown)
 					{
-						PartialSearchQuery query = new PartialSearchQuery();
-						String search = selectedDatasets.stream()
-														.map(Dataset::getName)
-														.collect(Collectors.joining(", "));
-						query.add(new SearchCondition(Dataset.NAME, new InSet(), search, String.class));
-						compoundDataTable.forceFilter(query, true);
+						compoundDataTableShown = true;
+						compoundDataTable.refreshTable();
 					}
 				}
 			});

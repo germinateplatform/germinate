@@ -193,4 +193,17 @@ public interface DatasetService extends RemoteService
 	 * @return The dataset attributes of the given {@link Dataset}s to a file. Only includes the {@link Attribute}s with the given ids (can be <code>null</code>).
 	 */
 	ServerResult<String> exportAttributes(RequestProperties properties, List<Long> datasetIds, List<Long> attributeIds) throws InvalidSessionException, DatabaseException;
+
+	/**
+	 * Exports the dataset's dublin core to a json file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param datasetId  The {@link Dataset} id
+	 * @return The name of the exported json file.
+	 * @throws InvalidSessionException          Thrown if the current session is invalid
+	 * @throws DatabaseException                Thrown if the query fails on the server
+	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
+	 * @throws IOException                      Thrown if an I/O operation fails
+	 */
+	ServerResult<String> getDublinCoreJson(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException, IOException;
 }

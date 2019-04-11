@@ -1822,6 +1822,10 @@ public interface Text extends Messages
 	@DefaultMessage("Description")
 	String phenotypeColumnDescription();
 
+	@Key("column.phenotype.synonyms")
+	@DefaultMessage("Synonyms")
+	String phenotypeColumnSynonym();
+
 	@Key("column.phenotype.unit.name")
 	@DefaultMessage("Unit")
 	String phenotypeColumnUnitName();

@@ -149,7 +149,7 @@ public class TraitDetailsPage extends Composite
 
 	private void showDatasetTable()
 	{
-		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true, ExperimentType.trials)
+		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true, true)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)
@@ -230,6 +230,10 @@ public class TraitDetailsPage extends Composite
 	{
 		phenotypeDataTable = new PhenotypeDataTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
+			{
+				preventInitialDataLoad = true;
+			}
+
 			@Override
 			public void getIds(PartialSearchQuery filter, AsyncCallback<ServerResult<List<String>>> callback)
 			{
@@ -239,18 +243,16 @@ public class TraitDetailsPage extends Composite
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<PhenotypeData>>> callback)
 			{
-				if (filter == null)
-					filter = new PartialSearchQuery();
-
-				if (filter.getColumnNames().size() > 0)
-					filter.addLogicalOperator(new And());
-
-				filter.add(new SearchCondition(Phenotype.NAME, new Equal(), phenotype.getName(), String.class));
-
 				return PhenotypeService.Inst.get().getDataForFilter(Cookie.getRequestProperties(), pagination, filter, callback);
 			}
 		};
 		phenotypeDataTablePanel.add(phenotypeDataTable);
+
+		Scheduler.get().scheduleDeferred(() -> {
+			PartialSearchQuery query = new PartialSearchQuery();
+			query.add(new SearchCondition(Phenotype.NAME, new Equal(), phenotype.getName(), String.class));
+			phenotypeDataTable.forceFilter(query, true);
+		});
 	}
 
 	interface CompoundDetailsPageUiBinder extends UiBinder<HTMLPanel, TraitDetailsPage>

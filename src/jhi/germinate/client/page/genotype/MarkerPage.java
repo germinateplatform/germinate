@@ -141,7 +141,7 @@ public class MarkerPage extends Composite implements HasHyperlinkButton, HasHelp
 	 */
 	private void requestMarkerDatasets()
 	{
-		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, false, true, null)
+		datasetPanel.add(new DatasetTable(DatabaseObjectPaginationTable.SelectionMode.NONE, false, true)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<Dataset>>> callback)

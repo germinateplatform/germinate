@@ -32,6 +32,7 @@ import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
+import jhi.germinate.shared.search.datatype.*;
 
 /**
  * @author Sebastian Raubach
@@ -139,6 +140,24 @@ public abstract class PhenotypeTable extends DatabaseObjectPaginationTable<Pheno
 		};
 		column.setDataStoreName(Phenotype.DESCRIPTION);
 		addColumn(column, Text.LANG.phenotypeColumnDescription(), sortingEnabled);
+
+		/* Add the synonyms column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Phenotype object)
+			{
+				return object.getSynonyms();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return Json.class;
+			}
+		};
+		column.setDataStoreName(Synonym.SYNONYM);
+		addColumn(column, Text.LANG.phenotypeColumnSynonym(), false);
 
 		/* Add the unit column */
 		column = new TextColumn()

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map;
 import java.util.stream.*;
-import java.util.zip.*;
 
 import de.micromata.opengis.kml.v_2_2_0.*;
 import jhi.germinate.server.database.query.*;
@@ -59,8 +58,6 @@ public class KMLCreatorMegaEnv extends KMLCreator
 	@Override
 	public void createKML(String baseUrl, Long id, File file) throws DatabaseException, IOException
 	{
-		File tempFile = File.createTempFile(getPrefix(), ".kml");
-
 		Kml kml = new Kml();
 
 		Folder folder = kml.createAndSetDocument()
@@ -107,28 +104,7 @@ public class KMLCreatorMegaEnv extends KMLCreator
 			}
 		}
 
-		kml.marshal(tempFile);
-
-		/* Zip temporary file */
-		FileOutputStream fos = new FileOutputStream(file);
-		ZipOutputStream zos = new ZipOutputStream(fos);
-		ZipEntry ze = new ZipEntry(tempFile.getName());
-		zos.putNextEntry(ze);
-		FileInputStream in = new FileInputStream(tempFile);
-
-		byte[] buffer = new byte[1024];
-		int len;
-		while ((len = in.read(buffer)) > 0)
-		{
-			zos.write(buffer, 0, len);
-		}
-
-		in.close();
-		zos.closeEntry();
-		zos.close();
-
-		/* Delete the temporary file */
-		tempFile.delete();
+		kml.marshalAsKmz(file.getAbsolutePath());
 	}
 
 	/**
