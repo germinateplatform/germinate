@@ -43,7 +43,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 {
 	private static final long serialVersionUID = -1828922709884114932L;
 
-	private static final String QUERY_EXPORT_MAP = "SELECT `markers`.`marker_name`, `mapdefinitions`.`chromosome`, `mapdefinitions`.`definition_start` FROM `mapdefinitions`, `mapfeaturetypes`, `markers` WHERE `mapdefinitions`.`mapfeaturetype_id` = `mapfeaturetypes`.`id` AND `mapdefinitions`.`marker_id` = `markers`.`id` AND `map_id` = ? ORDER BY `chromosome`, `definition_start`";
+	private static final String QUERY_EXPORT_MAP = "SELECT `markers`.`marker_name`, `mapdefinitions`.`chromosome`, `mapdefinitions`.`definition_start` FROM `markers` LEFT JOIN `mapdefinitions` ON (`mapdefinitions`.`map_id` = %s AND `markers`.`id` = `mapdefinitions`.`marker_id`)";
 
 	/**
 	 * Retrieves the map used for genotype export
@@ -55,8 +55,8 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	 */
 	public static DefaultStreamer getMap(UserAuth userAuth, DebugInfo sqlDebug, Long mapToUse) throws DatabaseException
 	{
-		DefaultStreamer streamer = new DefaultQuery(QUERY_EXPORT_MAP, userAuth)
-				.setLong(mapToUse)
+		String formatted = String.format(QUERY_EXPORT_MAP, Long.toString(mapToUse));
+		DefaultStreamer streamer = new DefaultQuery(formatted, userAuth)
 				.getStreamer();
 
 		sqlDebug.addAll(streamer.getDebugInfo());

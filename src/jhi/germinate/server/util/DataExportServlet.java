@@ -66,11 +66,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		{
 			try
 			{
-				PartialSearchQuery q = new PartialSearchQuery();
-				// Get all markers on the map
-				SearchCondition c = new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class);
-				q.add(c);
-				ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
+				ServerResult<List<String>> result = MarkerManager.getNamesForMap(userAuth, mapToUse);
 				sqlDebug.addAll(result.getDebugInfo());
 				return result.getServerResult();
 			}

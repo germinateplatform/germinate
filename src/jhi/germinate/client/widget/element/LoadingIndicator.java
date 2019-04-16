@@ -22,6 +22,7 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.html.*;
 
 /**
  * @author Sebastian Raubach
@@ -37,13 +38,16 @@ public class LoadingIndicator extends Composite
 	@UiField
 	Modal       modal;
 	@UiField
+	Paragraph   title;
+	@UiField
 	ProgressBar progress;
 
 	public LoadingIndicator(String message)
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
-		modal.setTitle(message);
+		modal.setTitle("Loading...");
+		title.setText(message);
 	}
 
 	public void show()

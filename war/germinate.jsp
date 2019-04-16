@@ -86,16 +86,20 @@
 		<link rel="stylesheet" href="css/prettify.css"/>
 	<% } %>
 
+	<!-- Germinate -->
 	<script type="text/javascript" src="germinate/germinate.nocache.js"></script>
 	<link href="css/germinate-css.jsp" rel="stylesheet" type="text/css">
 
+	<!-- Login screen -->
 	<script type="text/javascript" src="js/hexagon-js.jsp"></script>
 	<link href="css/hexagon.css" rel="stylesheet" type="text/css">
 
 	<!-- Custom CSS -->
 	<link type="text/css" rel="stylesheet" href="css/custom.css"/>
 
+	<!-- Additional bootstrap column sizes -->
 	<link href="css/bootstrap-xxs.css" rel="stylesheet">
+	<!-- The base template -->
 	<link href="css/template-css.jsp" rel="stylesheet">
 
 	<% if (useGoogleAnalytics) { %>
@@ -119,6 +123,7 @@
 	<% } %>
 
 	<%
+		// Custom html goes here, we just include it straight into the page
 		String customHtml = request.getServletContext().getRealPath("/") + "custom.html";
 		File file = new File(customHtml);
 
@@ -136,7 +141,6 @@
 			}
 			catch (IOException e)
 			{
-
 			}
 		}
 	%>
@@ -144,11 +148,10 @@
 
 <body>
 
-<!-- OPTIONAL: include this if you want history support -->
+<!-- GWT history support -->
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position: absolute; width: 0; height: 0; border: 0"></iframe>
 
 <div id="<%= Id.STRUCTURE_PAGE %>" style="display: none;">
-
 	<!-- Navigation -->
 	<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
 		<div class="navbar-header">
@@ -236,6 +239,7 @@
 	<div id="content-wrapper">
 
 		<%
+			// Add a big header in read only mode
 			if (readOnlyModeEnebaled)
 			{
 		%>
@@ -257,8 +261,11 @@
 			</div>
 		</div>
 
+		<!-- The div containing the debug information (if the mode is enabled) -->
 		<div id="<%= Id.STRUCTURE_DEBUG_INFO %>"></div>
+		<!-- The parallax page header -->
 		<div id="<%= Id.STRUCTURE_PARALLAX %>"></div>
+		<!-- The main page content -->
 		<div id="<%= Id.STRUCTURE_MAIN_CONTENT %>"></div>
 	</div>
 	<!-- /#page-wrapper -->

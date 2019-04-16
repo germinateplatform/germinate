@@ -64,3 +64,11 @@ ALTER TABLE `synonyms` DROP COLUMN `synonym`;
 
 /* Drop temporary table */
 DROP TABLE IF EXISTS `temp_synonyms`;
+
+/* Add new indices to improve performance of many queries */
+ALTER TABLE `datasetmembers`
+ADD INDEX(`dataset_id`, `datasetmembertype_id`) USING BTREE;
+ALTER TABLE `mapdefinitions`
+ADD INDEX(`marker_id`, `map_id`) USING BTREE;
+ALTER TABLE `phenotypedata`
+ADD INDEX(`dataset_id`, `germinatebase_id`) USING BTREE;

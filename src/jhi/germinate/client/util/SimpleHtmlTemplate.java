@@ -103,9 +103,10 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	SafeHtml text(String name);
 
 	/**
-	 * Creates a simple text
+	 * Creates a truncated text span with the original as its title
 	 *
-	 * @param name The text to display
+	 * @param text      The full text
+	 * @param truncated The shorter version
 	 * @return A simple text
 	 */
 	@Template("<span title='{0}'>{1}</span>")
@@ -260,6 +261,9 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	@Template("<a href='mailto:{0}'>{0}</a>")
 	SafeHtml mailto(String email);
 
-	@Template("<span class=" + Style.TABLE_PEITY_DONUT + "><span class='donut' style='display: none;'>{1}/{2}</span><span>&nbsp;{0}</span></span>")
+	@Template("<span class='" + Style.TABLE_PEITY_DONUT + "'><span class='donut' style='display: none;'>{1}/{2}</span><span>&nbsp;{0}</span></span>")
 	SafeHtml peityDonut(String formatted, double value, int outOf);
+
+	@Template("<span>{0} <i class='" + Style.MDI + " {1}'></span>")
+	SafeHtml mdiContent(SafeHtml content, String mdi);
 }

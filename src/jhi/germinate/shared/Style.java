@@ -222,6 +222,7 @@ public class Style
 	public static final String MDI_ALPHA_P_BOX                     = "mdi-alpha-p-box";
 	public static final String MDI_ALPHA_S_BOX                     = "mdi-alpha-s-box";
 	public static final String MDI_EXPORT                          = "mdi-export";
+	public static final String MDI_OPEN_IN_NEW                     = "mdi-open-in-new";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
 
 	public static final String COL_XXS_12  = "col-xxs-12";

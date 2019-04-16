@@ -124,7 +124,7 @@ public abstract class MapTable extends DatabaseObjectPaginationTable<Map>
 			public SafeHtml getValue(Map object)
 			{
 				if (StringUtils.isLink(object.getDescription()))
-					return SafeHtmlUtils.fromTrustedString(object.getDescription());
+					return SimpleHtmlTemplate.INSTANCE.mdiContent(SafeHtmlUtils.fromTrustedString(object.getDescription()), Style.MDI_OPEN_IN_NEW);
 				else
 					return SimpleHtmlTemplate.INSTANCE.dummyAnchor(object.getDescription());
 			}

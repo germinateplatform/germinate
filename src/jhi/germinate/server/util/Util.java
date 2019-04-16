@@ -108,7 +108,7 @@ public class Util
 		return SDF_DATE.format(new Date(System.currentTimeMillis()));
 	}
 
-	public static String formatDate(long value)
+	public static synchronized String formatDate(long value)
 	{
 		return SDF_DATE.format(new Date(value));
 	}

@@ -19,8 +19,6 @@ package jhi.germinate.client.util.callback;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.widget.element.*;
-import jhi.germinate.client.widget.structure.*;
-import jhi.germinate.shared.datastructure.*;
 
 /**
  * {@link ParallelParentAsyncCallback} is the parent of {@link ParallelCallback} objects, used when 2 or more service calls should run in parallel,
@@ -135,21 +133,10 @@ public abstract class ParallelParentAsyncCallback implements ParentCallback
 	public <T> T getCallbackData(int index)
 	{
 		if (index < 0 || index >= childCallbacks.length)
-		{
 			throw new RuntimeException("Invalid child callback index");
-		}
 
 		if (childCallbacks[index] != null)
-		{
-			T result = (T) childCallbacks[index].getData();
-			if (result instanceof ServerResult)
-			{
-				ServerResult sr = (ServerResult) result;
-				DebugInfoPanel.addDebugInfo(DefaultAsyncCallback.getName(sr), sr.getDebugInfo());
-			}
-
-			return result;
-		}
+			return (T) childCallbacks[index].getData();
 		else
 			return null;
 	}

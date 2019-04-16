@@ -73,7 +73,7 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 		if (CollectionUtils.isEmpty(datasetIds))
 			return new PaginatedServerResult<>(DebugInfo.create(userAuth), new ArrayList<>(), 0);
 
-		pagination.updateSortColumn(COLUMNS_DATA_SORTABLE, CompoundData.ID);
+		pagination.updateSortColumn(COLUMNS_DATA_SORTABLE, null);
 		String formatted = String.format(SELECT_ALL_FOR_FILTER, StringUtils.generateSqlPlaceholderString(datasetIds.size()), pagination.getSortQuery());
 
 		return AbstractManager.<CompoundData>getFilteredDatabaseObjectQuery(userAuth, filter, formatted, COLUMNS_DATA_SORTABLE, pagination.getResultSize())

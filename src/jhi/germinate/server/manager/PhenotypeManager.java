@@ -96,7 +96,7 @@ public class PhenotypeManager extends AbstractManager<Phenotype>
 
 	public static PaginatedServerResult<List<PhenotypeData>> getDataForFilter(UserAuth user, PartialSearchQuery filter, Pagination pagination) throws DatabaseException, InvalidSearchQueryException, InvalidArgumentException, InvalidColumnException
 	{
-		pagination.updateSortColumn(PhenotypeService.COLUMNS_DATA_SORTABLE, Accession.ID);
+		pagination.updateSortColumn(PhenotypeService.COLUMNS_DATA_SORTABLE, null);
 
 		List<Long> datasetIds = DatabaseObject.getIds(DatasetManager.getForUser(user, true).getServerResult());
 
