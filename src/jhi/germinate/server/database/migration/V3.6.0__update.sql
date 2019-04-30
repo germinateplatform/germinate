@@ -72,3 +72,8 @@ ALTER TABLE `mapdefinitions`
 ADD INDEX(`marker_id`, `map_id`) USING BTREE;
 ALTER TABLE `phenotypedata`
 ADD INDEX(`dataset_id`, `germinatebase_id`) USING BTREE;
+
+/* Increase the column size for dataset meta colums */
+ALTER TABLE `datasetmeta`
+MODIFY COLUMN `nr_of_data_objects` bigint(0) UNSIGNED NOT NULL COMMENT 'The number of data objects contained in this dataset.' AFTER `dataset_id`,
+MODIFY COLUMN `nr_of_data_points` bigint(0) UNSIGNED NOT NULL COMMENT 'The number of individual data points contained in this dataset.' AFTER `nr_of_data_objects`;

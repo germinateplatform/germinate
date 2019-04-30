@@ -32,13 +32,20 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class CompoundImporter extends DataImporter<Compound>
 {
-	private static Set<Long> createdCompoundIds = new HashSet<>();
-	private static Set<Long> createdUnitIds     = new HashSet<>();
+	private Set<Long> createdCompoundIds = new HashSet<>();
+	private Set<Long> createdUnitIds     = new HashSet<>();
 
 	public static void main(String[] args)
 	{
-		new CompoundImporter()
-				.run(args);
+		try
+		{
+			new CompoundImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

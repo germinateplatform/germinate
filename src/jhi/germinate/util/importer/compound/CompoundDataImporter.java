@@ -37,7 +37,7 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class CompoundDataImporter extends DataImporter<CompoundData>
 {
-	private static Dataset                dataset;
+	private Dataset                dataset;
 	protected      List<CompoundData>     cache      = new ArrayList<>();
 	private        Map<String, Accession> accessions = new HashMap<>();
 
@@ -51,12 +51,19 @@ public class CompoundDataImporter extends DataImporter<CompoundData>
 
 	public static void main(String[] args)
 	{
-		new CompoundDataImporter()
-				.run(args);
+		try
+		{
+			new CompoundDataImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		// Import the meta-data first. Get the created dataset
 		metadataImporter = new MetadataImporter(ExperimentType.compound);

@@ -101,7 +101,6 @@ function scatterMatrix() {
 				.x(xScale)
 				.y(yScale)
 				.on("brushstart", brushstart)
-				.on("brush", brushmove)
 				.on("brushend", brushend);
 
 			// Select the svg element, if it exists.
@@ -267,32 +266,29 @@ function scatterMatrix() {
 				}
 			}
 
-			// Highlight the selected circles.
-			function brushmove(p) {
-				var e = brush.extent();
-
-				// First, get the items in THIS cell that should be selected
-				var selected = d3.select(brushCell).selectAll("circle").filter(function (d) {
-					return !isNaN(d[p.x]) && !isNaN(d[p.y]) && e[0][0] <= d[p.x] && d[p.x] <= e[1][0] && e[0][1] <= d[p.y] && d[p.y] <= e[1][1];
-				});
-
-				// Then hide all circles
-				svg.selectAll("circle")
-					.classed(hiddenStyle, true);
-
-				// And then select all items with the same id as a selected item and select them as well
-				selected.each(function (d) {
-					svg.selectAll("#item-" + d[idColumn])
-						.classed(hiddenStyle, false)
-						.classed("selected", true);
-				});
-			}
-
 			// If the brush is empty, select all circles.
-			function brushend() {
+			function brushend(p) {
 				if (brush.empty()) {
 					svg.selectAll("." + hiddenStyle).classed(hiddenStyle, false);
 					svg.selectAll(".selected").classed("selected", false);
+				} else {
+					var e = brush.extent();
+
+					// First, get the items in THIS cell that should be selected
+					var selected = d3.select(brushCell).selectAll("circle").filter(function (d) {
+						return !isNaN(d[p.x]) && !isNaN(d[p.y]) && e[0][0] <= d[p.x] && d[p.x] <= e[1][0] && e[0][1] <= d[p.y] && d[p.y] <= e[1][1];
+					});
+
+					// Then hide all circles
+					svg.selectAll("circle")
+						.classed(hiddenStyle, true);
+
+					// And then select all items with the same id as a selected item and select them as well
+					selected.each(function (d) {
+						svg.selectAll("#item-" + d[idColumn])
+							.classed(hiddenStyle, false)
+							.classed("selected", true);
+					});
 				}
 			}
 

@@ -32,13 +32,20 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class PhenotypeImporter extends DataImporter<Phenotype>
 {
-	private static Set<Long> createdPhenotypeIds = new HashSet<>();
-	private static Set<Long> createdUnitIds      = new HashSet<>();
+	private Set<Long> createdPhenotypeIds = new HashSet<>();
+	private Set<Long> createdUnitIds      = new HashSet<>();
 
 	public static void main(String[] args)
 	{
-		new PhenotypeImporter()
-				.run(args);
+		try
+		{
+			new PhenotypeImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

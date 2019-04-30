@@ -40,12 +40,19 @@ public class ExcelGenotypeDataImporter extends TabDelimitedGenotypeDataImporter
 
 	public static void main(String[] args)
 	{
-		new ExcelGenotypeDataImporter()
-				.run(args);
+		try
+		{
+			new ExcelGenotypeDataImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		try
 		{
@@ -68,21 +75,30 @@ public class ExcelGenotypeDataImporter extends TabDelimitedGenotypeDataImporter
 				tempFile.delete();
 
 			deleteInsertedItems();
+
+			throw e;
 		}
 	}
 
 	@Override
 	protected void beforeRun(File input, String server, String database, String username, String password, String port)
 	{
-		// Import the meta-data first. Get the created dataset
-		metadataImporter = new GenotypeMetadataImporter(ExperimentType.genotype);
-		metadataImporter.run(input, server, database, username, password, port);
-		hdf5File = metadataImporter.getHdf5File();
-		dataset = metadataImporter.getDataset();
+		try
+		{
+			// Import the meta-data first. Get the created dataset
+			metadataImporter = new GenotypeMetadataImporter(ExperimentType.genotype);
+			metadataImporter.run(input, server, database, username, password, port);
+			hdf5File = metadataImporter.getHdf5File();
+			dataset = metadataImporter.getDataset();
 
-		markerImporter = new ExcelMarkerImporter(null, null);
-		markerImporter.setDataset(dataset);
-		markerImporter.run(input, server, database, username, password, port);
+			markerImporter = new ExcelMarkerImporter(null, null);
+			markerImporter.setDataset(dataset);
+			markerImporter.run(input, server, database, username, password, port);
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

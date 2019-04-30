@@ -39,7 +39,7 @@ public class TemplateImporterTest extends DatabaseTest
 {
 	@RepeatedTest(2)
 	@Order(1)
-	public void importMcpdData() throws DatabaseException
+	public void importMcpdData() throws Exception
 	{
 		File template = new File("datatemplates/example-germplasm-mcpd.xlsx");
 		assert template.exists();
@@ -147,7 +147,7 @@ public class TemplateImporterTest extends DatabaseTest
 
 	@RepeatedTest(2)
 	@Order(4)
-	public void importTrialsData() throws DatabaseException
+	public void importTrialsData() throws Exception
 	{
 		File template = new File("datatemplates/example-trials-data.xlsx");
 		assert template.exists();
@@ -182,7 +182,7 @@ public class TemplateImporterTest extends DatabaseTest
 
 	@RepeatedTest(2)
 	@Order(5)
-	public void importCompoundData() throws DatabaseException
+	public void importCompoundData() throws Exception
 	{
 		File template = new File("datatemplates/example-compound-data.xlsx");
 		assert template.exists();
@@ -199,7 +199,7 @@ public class TemplateImporterTest extends DatabaseTest
 
 	@RepeatedTest(2)
 	@Order(6)
-	public void importPedigreeData() throws DatabaseException
+	public void importPedigreeData() throws Exception
 	{
 		File template = new File("datatemplates/example-pedigree-data.xlsx");
 		assert template.exists();

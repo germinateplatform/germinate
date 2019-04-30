@@ -47,19 +47,26 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 	private Set<Long>         createdAccessionIds     = new HashSet<>();
 	private Map<String, Long> phenotypeDatas          = new HashMap<>();
 
-	private static Dataset dataset;
+	private Dataset dataset;
 
 	private MetadataImporter  metadataImporter;
 	private PhenotypeImporter phenotypeImporter;
 
 	public static void main(String[] args)
 	{
-		new PhenotypeDataImporter()
-				.run(args);
+		try
+		{
+			new PhenotypeDataImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		// Import the meta-data first. Get the created dataset
 		metadataImporter = new MetadataImporter(ExperimentType.trials);

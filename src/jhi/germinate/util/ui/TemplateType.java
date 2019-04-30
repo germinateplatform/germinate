@@ -56,7 +56,7 @@ public enum TemplateType
 		return description;
 	}
 
-	public void callImporter(File file, String server, String database, String port, String username, String password)
+	public void callImporter(File file, String server, String database, String port, String username, String password) throws Exception
 	{
 		switch (this)
 		{

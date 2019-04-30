@@ -42,8 +42,15 @@ public class PedigreeStringImporter extends DataImporter<PedigreeDefinition>
 
 	public static void main(String[] args)
 	{
-		new PedigreeStringImporter()
-				.run(args);
+		try
+		{
+			new PedigreeStringImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

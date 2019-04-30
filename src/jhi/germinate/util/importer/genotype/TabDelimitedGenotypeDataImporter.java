@@ -52,12 +52,19 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 
 	public static void main(String[] args)
 	{
-		new TabDelimitedGenotypeDataImporter()
-				.run(args);
+		try
+		{
+			new TabDelimitedGenotypeDataImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		beforeRun(input, server, database, username, password, port);
 
@@ -72,10 +79,11 @@ public class TabDelimitedGenotypeDataImporter extends DataImporter<String[]>
 		{
 			e.printStackTrace();
 			deleteInsertedItems();
+			throw e;
 		}
 	}
 
-	protected void beforeRun(File input, String server, String database, String username, String password, String port)
+	protected void beforeRun(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		String datasetName = null;
 		String markerType = null;

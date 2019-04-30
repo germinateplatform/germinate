@@ -34,7 +34,7 @@ public class ExcelMarkerImporter extends TabDelimitedMarkerImporter
 	}
 
 	@Override
-	protected void preImport(File input, String server, String database, String username, String password, String port)
+	protected void preImport(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		mapImporter = new ExcelMapImporter();
 		mapImporter.run(input, server, database, username, password, port);

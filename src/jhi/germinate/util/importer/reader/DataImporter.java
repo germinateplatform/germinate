@@ -60,7 +60,7 @@ public abstract class DataImporter<T>
 	{
 	}
 
-	protected void run(String[] args)
+	protected void run(String[] args) throws Exception
 	{
 		ReaderOptions options = new ReaderOptions()
 				.withInputFile(true)
@@ -104,7 +104,7 @@ public abstract class DataImporter<T>
 	 * @param password The database password
 	 * @param port     The port or <code>null</code>
 	 */
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		BaseException.printExceptions = true;
 
@@ -154,13 +154,15 @@ public abstract class DataImporter<T>
 
 				// In case there is an exception, delete all inserted items
 				deleteInsertedItems();
+
+				throw e;
 			}
 			databaseConnection.close();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new RuntimeException("Invalid reader class specified");
+			throw e;
 		}
 	}
 

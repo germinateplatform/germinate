@@ -38,7 +38,7 @@ public class CompoundManager extends AbstractManager<Compound>
 
 	private static final String SELECT_ALL_FOR_FILTER = "SELECT `compounds`.*, `units`.*, (SELECT COUNT(1) FROM `compounddata` WHERE `compounddata`.`compound_id` = `compounds`.`id`) AS count FROM " + COMMON_TABLES + " {{FILTER}} GROUP BY `compounds`.`id` %s LIMIT ?, ?";
 
-	private static final String SELECT_ALL_FOR_DATASET = "SELECT `compounds`.*, `units`.*, (SELECT COUNT(1) FROM `compounddata` WHERE `compounddata`.`compound_id` = `compounds`.`id`) AS count FROM " + COMMON_TABLES + " WHERE `compounddata`.`dataset_id` IN (%s) GROUP BY `compounds`.`id`";
+	private static final String SELECT_ALL_FOR_DATASET = "SELECT `compounds`.*, `units`.*, (SELECT COUNT(1) FROM `compounddata` WHERE `compounddata`.`compound_id` = `compounds`.`id`) AS count FROM " + COMMON_TABLES + " LEFT JOIN `compounddata` ON `compounddata`.`compound_id` = `compounds`.`id` WHERE `compounddata`.`dataset_id` IN (%s) GROUP BY `compounds`.`id`";
 
 	private static final String SELECT_HISTOGRAM_DATA = "SELECT compound_value FROM compounddata WHERE compound_id = ? AND dataset_id = ? ";
 

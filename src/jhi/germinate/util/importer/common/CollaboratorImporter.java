@@ -39,8 +39,15 @@ public class CollaboratorImporter extends DataImporter<Collaborator>
 
 	public static void main(String[] args)
 	{
-		new CollaboratorImporter()
-				.run(args);
+		try
+		{
+			new CollaboratorImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

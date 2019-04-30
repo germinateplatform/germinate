@@ -62,7 +62,7 @@ import jhi.germinate.shared.search.operators.*;
 public class PassportWidget extends Composite
 {
 	private static PassportPageUiBinder ourUiBinder = GWT.create(PassportPageUiBinder.class);
-	protected Accession accession;
+	protected      Accession            accession;
 	@UiField
 	MarkedItemPageHeader pageHeader;
 	@UiField

@@ -33,10 +33,10 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class MetadataImporter extends DataImporter<Dataset>
 {
-	private static Set<Long> createdDatasetIds             = new HashSet<>();
-	private static Set<Long> createdExperimentIds          = new HashSet<>();
-	private static Set<Long> createdLocationIds            = new HashSet<>();
-	private static Set<Long> createdDatasetCollaboratorIds = new HashSet<>();
+	private Set<Long> createdDatasetIds             = new HashSet<>();
+	private Set<Long> createdExperimentIds          = new HashSet<>();
+	private Set<Long> createdLocationIds            = new HashSet<>();
+	private Set<Long> createdDatasetCollaboratorIds = new HashSet<>();
 
 	protected ExperimentType     type;
 	protected Dataset            dataset;
@@ -50,7 +50,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		// Import the meta-data first. Get the created dataset
 		collaboratorImporter = new CollaboratorImporter();

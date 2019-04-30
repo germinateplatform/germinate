@@ -53,12 +53,19 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 
 	public static void main(String[] args)
 	{
-		new TabDelimitedMcpdImporter()
-				.run(args);
+		try
+		{
+			new TabDelimitedMcpdImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		super.run(input, server, database, username, password, port);
 

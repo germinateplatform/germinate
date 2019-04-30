@@ -39,8 +39,15 @@ public class ExcelMapImporter extends DataImporter<Map>
 
 	public static void main(String[] args)
 	{
-		new ExcelMapImporter()
-				.run(args);
+		try
+		{
+			new ExcelMapImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

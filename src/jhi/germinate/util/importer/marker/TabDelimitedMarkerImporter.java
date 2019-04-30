@@ -61,14 +61,14 @@ public class TabDelimitedMarkerImporter extends DataImporter<MapDefinition>
 	}
 
 	@Override
-	public void run(File input, String server, String database, String username, String password, String port)
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		preImport(input, server, database, username, password, port);
 
 		super.run(input, server, database, username, password, port);
 	}
 
-	protected void preImport(File input, String server, String database, String username, String password, String port)
+	protected void preImport(File input, String server, String database, String username, String password, String port) throws Exception
 	{
 		mapImporter = new TabDelimitedMapImporter(mapName);
 		mapImporter.run(input, server, database, username, password, port);

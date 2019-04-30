@@ -41,8 +41,15 @@ public class AttributeDataImporter extends DataImporter<AttributeData>
 
 	public static void main(String[] args)
 	{
-		new AttributeDataImporter()
-				.run(args);
+		try
+		{
+			new AttributeDataImporter()
+					.run(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
