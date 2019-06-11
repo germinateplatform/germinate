@@ -63,7 +63,6 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 	@UiField
 	TextArea          explanation;
 
-	private Decision                   decision      = Decision.UNKNOWN;
 	private OnDecisionChangeHandler    handler;
 	private ValueChangeHandler<String> changeHandler = e -> handler.onDecisionChanged(getDecision());
 
@@ -129,13 +128,10 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 
 	public Decision getDecision()
 	{
+		Decision decision;
 		if (name.validate() && email.validate() && institution.validate())
-			decision = Decision.ACCEPTED;
-		else
-			decision = Decision.UNKNOWN;
-
-		if (decision == Decision.ACCEPTED)
 		{
+			decision = Decision.ACCEPTED;
 			// Remember the user input for next time
 			UnapprovedUser user = new UnapprovedUser();
 			user.userFullName = name.getText();
@@ -154,6 +150,10 @@ public class UserIdentificationWizardPage extends ModalWizardPage implements Val
 
 			// "Submit" the form so that the browser can re-use the information with auto-fill next time.
 			form.onFormSubmit();
+		}
+		else
+		{
+			decision = Decision.UNKNOWN;
 		}
 
 		return decision;

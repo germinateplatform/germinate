@@ -77,3 +77,47 @@ ADD INDEX(`dataset_id`, `germinatebase_id`) USING BTREE;
 ALTER TABLE `datasetmeta`
 MODIFY COLUMN `nr_of_data_objects` bigint(0) UNSIGNED NOT NULL COMMENT 'The number of data objects contained in this dataset.' AFTER `dataset_id`,
 MODIFY COLUMN `nr_of_data_points` bigint(0) UNSIGNED NOT NULL COMMENT 'The number of individual data points contained in this dataset.' AFTER `nr_of_data_objects`;
+
+DROP PROCEDURE IF EXISTS drop_all_indexes;
+/* Create a stored procedure that we use to drop foreign keys */
+DELIMITER //
+
+CREATE PROCEDURE drop_all_indexes()
+
+BEGIN
+
+    DECLARE index_name TEXT DEFAULT NULL;
+    DECLARE done TINYINT DEFAULT FALSE;
+
+		DECLARE cursor1 CURSOR FOR SELECT constraint_name FROM information_schema.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = "groupmembers" AND CONSTRAINT_TYPE = "FOREIGN KEY";
+
+		DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+		OPEN cursor1;
+
+		my_loop:
+		LOOP
+
+		    FETCH NEXT FROM cursor1 INTO index_name;
+
+				IF done THEN
+				    LEAVE my_loop;
+				ELSE
+				    SET @query =CONCAT('ALTER TABLE `groupmembers` DROP FOREIGN KEY ', index_name );
+						PREPARE stmt FROM @query;
+						EXECUTE stmt;
+						DEALLOCATE PREPARE stmt;
+
+				END IF;
+		END LOOP;
+
+END;
+//
+
+DELIMITER ;
+
+/* Update some foreign keys. This forces the items to be deleted when referenced items are deleted. */
+call drop_all_indexes();
+ALTER TABLE `groupmembers` ADD CONSTRAINT `groupmembers_ibfk_group` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DROP PROCEDURE drop_all_indexes;

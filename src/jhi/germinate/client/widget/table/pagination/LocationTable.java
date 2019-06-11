@@ -285,7 +285,7 @@ public abstract class LocationTable extends MarkableDatabaseObjectPaginationTabl
 			}
 		};
 		column.setDataStoreName(Country.COUNTRY_NAME);
-		addColumn(column, Text.LANG.passportColumnCountry(), sortingEnabled);
+		addColumn(column, Text.LANG.locationColumnCountry(), sortingEnabled);
 	}
 
 	protected SafeHtml getLink(Location object, String value)

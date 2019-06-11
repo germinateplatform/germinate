@@ -17,6 +17,8 @@
 
 package jhi.germinate.util.importer.mcpd;
 
+import java.io.*;
+
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
@@ -27,9 +29,20 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelMcpdImporter extends TabDelimitedMcpdImporter
 {
+	private ExcelEntityParentDataImporter entityParentDataImporter;
+
 	@Override
 	protected IDataReader getReader()
 	{
 		return new ExcelMcpdReader();
+	}
+
+	@Override
+	public void run(File input, String server, String database, String username, String password, String port) throws Exception
+	{
+		super.run(input, server, database, username, password, port);
+
+		entityParentDataImporter = new ExcelEntityParentDataImporter();
+		entityParentDataImporter.run(input, server, database, username, password, port);
 	}
 }

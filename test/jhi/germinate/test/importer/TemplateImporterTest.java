@@ -23,7 +23,6 @@ import java.io.*;
 
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.util.importer.compound.*;
 import jhi.germinate.util.importer.genotype.*;
 import jhi.germinate.util.importer.mcpd.*;
@@ -70,7 +69,7 @@ public class TemplateImporterTest extends DatabaseTest
 
 	@RepeatedTest(2)
 	@Order(2)
-	public void importExcelGenotypicData() throws DatabaseException
+	public void importExcelGenotypicData() throws Exception
 	{
 		File template = new File("datatemplates/example-allele-calls.xlsx");
 		assert template.exists();
@@ -100,7 +99,7 @@ public class TemplateImporterTest extends DatabaseTest
 
 	@RepeatedTest(2)
 	@Order(3)
-	public void importTabDelimitedGenotypicData() throws DatabaseException
+	public void importTabDelimitedGenotypicData() throws Exception
 	{
 		File template = new File("datatemplates/example-allele-calls-text.txt");
 		assert template.exists();

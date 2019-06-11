@@ -562,7 +562,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.NR_OF_DATA_OBJECTS);
-		addColumn(column, Text.LANG.datasetsColumnDatasetSize(), sortingEnabled);
+		addColumn(column, new HeaderConfig(Text.LANG.datasetsColumnDatasetSize(), Text.LANG.datasetsColumnHelpDatasetSize()), sortingEnabled);
 
 		column = new TextColumn()
 		{
@@ -589,7 +589,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 			}
 		};
 		column.setDataStoreName(Dataset.NR_OF_DATA_POINTS);
-		addColumn(column, Text.LANG.datasetsColumnDatasetDataPoints(), sortingEnabled);
+		addColumn(column, new HeaderConfig(Text.LANG.datasetsColumnDatasetDataPoints(), Text.LANG.datasetsColumnHelpDatasetDataPoints()), sortingEnabled);
 
 		/* Add the collaborator column */
 		addColumn(new Column<Dataset, SafeHtml>(clickCell)

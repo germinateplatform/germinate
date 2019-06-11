@@ -189,7 +189,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(EntityType.NAME);
-		addColumn(column, Text.LANG.accessionsColumnEntityType(), sortingEnabled);
+		addColumn(column, new HeaderConfig(Text.LANG.accessionsColumnEntityType(), Text.LANG.accessionsColumnHelpEntityType()), sortingEnabled);
 
 		/* Add the synonyms column */
 		column = new TextColumn()
@@ -457,7 +457,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			}
 		};
 		column.setDataStoreName(Accession.IMAGE_COUNT);
-		addColumn(column, "", true, false);
+		addColumn(column, new HeaderConfig(""), true, false);
 
 		if (GerminateSettingsHolder.get().pdciEnabled.getValue())
 		{
@@ -499,7 +499,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 				}
 			};
 			column.setDataStoreName(Accession.PDCI);
-			addColumn(column, Text.LANG.passportColumnPDCI(), true);
+			addColumn(column, new HeaderConfig(Text.LANG.passportColumnPDCI(), Text.LANG.passportColumnHelpPDCI()), true);
 		}
 	}
 

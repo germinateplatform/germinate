@@ -54,7 +54,7 @@ public class ExcelMapReader extends ExcelBatchReader<Map>
 		String name = utils.getCellValue(dataSheet.getRow(12), 2);
 
 		if (StringUtils.isEmpty(name))
-			name = "UNKNOWN MAP";
+			name = utils.getCellValue(dataSheet.getRow(1), 2);
 
 		return name;
 	}

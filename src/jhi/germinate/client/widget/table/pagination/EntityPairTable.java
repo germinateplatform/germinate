@@ -123,7 +123,7 @@ public abstract class EntityPairTable extends DatabaseObjectPaginationTable<Enti
 			}
 		};
 		column.setDataStoreName(EntityType.NAME);
-		addColumn(column, Text.LANG.accessionsColumnEntityType(), false);
+		addColumn(column, new HeaderConfig(Text.LANG.accessionsColumnEntityType(), Text.LANG.accessionsColumnHelpEntityType()), false);
 
 		/* Add the general identifier column */
 		column = new ClickableSafeHtmlColumn()
@@ -177,7 +177,7 @@ public abstract class EntityPairTable extends DatabaseObjectPaginationTable<Enti
 			}
 		};
 		column.setDataStoreName(EntityType.NAME);
-		addColumn(column, Text.LANG.accessionsColumnEntityType(), false);
+		addColumn(column, new HeaderConfig(Text.LANG.accessionsColumnEntityType(), Text.LANG.accessionsColumnHelpEntityType()), false);
 	}
 
 	@Override

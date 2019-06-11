@@ -53,6 +53,7 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
+import jhi.germinate.client.widget.table.pagination.cell.*;
 import jhi.germinate.client.widget.table.pagination.filter.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
@@ -119,7 +120,6 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	private   int     nrOfItemsPerPage       = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_NR_OF_ITEMS_PER_PAGE);
 
 	// CURRENT STATE
-	//	private Map<DatabaseObjectFilterColumn<T, ?>, FilterCellCallback<T>> filterCallbacks = new HashMap<>();
 	private List<FilterRow.Column>          columns                  = new ArrayList<>();
 	private RefreshableAsyncDataProvider<T> dataProvider;
 	private Map<String, ClickHandler>       columnVisibilityHandlers = new HashMap<>();
@@ -796,29 +796,60 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 */
 	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final String headerString, final boolean sortable)
 	{
-		addColumn(column, headerString, sortable, true);
+		addColumn(column, new HeaderConfig(headerString), sortable, true);
 	}
 
 	/**
 	 * Adds the given column to the table
 	 *
 	 * @param column       The column
-	 * @param headerString The column header text
+	 * @param headerConfig The {@link HeaderConfig}. Will be used to determine whether to show a help icon with the given help information.
 	 * @param sortable     Should this column be sortable?
 	 */
-	@SuppressWarnings("unchecked")
-	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final String headerString, final boolean sortable, final boolean filterable)
+	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final HeaderConfig headerConfig, final boolean sortable)
+	{
+		addColumn(column, headerConfig, sortable, true);
+	}
+
+	/**
+	 * Adds the given column to the table
+	 *
+	 * @param column       The column
+	 * @param headerConfig The {@link HeaderConfig}. Will be used to determine whether to show a help icon with the given help information.
+	 * @param sortable     Should this column be sortable?
+	 */
+	public void addColumn(final DatabaseObjectFilterColumn<T, ?> column, final HeaderConfig headerConfig, final boolean sortable, final boolean filterable)
 	{
 		if (supportsFiltering() && filterable)
-			columns.add(new FilterRow.Column(column.getDataStoreName(), StringUtils.isEmpty(headerString) ? column.getDataStoreName() : headerString, column.getType()));
+			columns.add(new FilterRow.Column(column.getDataStoreName(), headerConfig == null ? column.getDataStoreName() : headerConfig.getText(), column.getType()));
 
-		table.addColumn(column, headerString);
+		if (headerConfig != null)
+		{
+			if (!StringUtils.isEmpty(headerConfig.help))
+			{
+				table.addColumn(column, new Header<String>(new HelpCell(headerConfig.help))
+				{
+					@Override
+					public String getValue()
+					{
+						return headerConfig.text;
+					}
+				});
+			}
+			else
+			{
+				table.addColumn(column, headerConfig.text);
+			}
+
+			setColumnStyleName(headerConfig.text, column, table.getHeader(table.getColumnCount() - 1));
+		}
+		else
+		{
+			table.addColumn(column);
+		}
 
 		if (sortable)
 			addSortBits(column);
-
-		if (!StringUtils.isEmpty(headerString))
-			setColumnStyleName(headerString, column, table.getHeader(table.getColumnCount() - 1));
 	}
 
 	protected void addColumn(Column<T, ?> column, String headerString)
@@ -1188,6 +1219,48 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			}
 
 			super.onBrowserEvent(context, elem, object, event);
+		}
+	}
+
+	/**
+	 * {@link HeaderConfig} is a utility class holding the text to display in a column header and some optional help text.
+	 */
+	public class HeaderConfig
+	{
+		private String text;
+		private String help;
+
+		public HeaderConfig(String text)
+		{
+			this.text = text;
+		}
+
+		public HeaderConfig(String text, String help)
+		{
+			this.text = text;
+			this.help = help;
+		}
+
+		public String getText()
+		{
+			return text;
+		}
+
+		public HeaderConfig setText(String text)
+		{
+			this.text = text;
+			return this;
+		}
+
+		public String getHelp()
+		{
+			return help;
+		}
+
+		public HeaderConfig setHelp(String help)
+		{
+			this.help = help;
+			return this;
 		}
 	}
 

@@ -293,6 +293,14 @@
 <!-- Custom Theme JavaScript -->
 <script src="js/template-js.jsp"></script>
 
+<script>
+	$(function () {
+		$("body").tooltip({
+			selector: '[data-toggle="tooltip"]'
+		})
+	})
+</script>
+
 </body>
 
 </html>

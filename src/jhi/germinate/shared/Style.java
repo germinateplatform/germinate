@@ -166,6 +166,7 @@ public class Style
 	public static final String MDI_FILE_PDF                        = "mdi-file-pdf";
 	public static final String MDI_GOOGLE_EARTH                    = "mdi-google-earth";
 	public static final String MDI_PLUS_BOX                        = "mdi-plus-box";
+	public static final String MDI_HELP_CIRCLE                     = "mdi-help-circle";
 	public static final String MDI_HELP_CIRCLE_OUTLINE             = "mdi-help-circle-outline";
 	public static final String MDI_FILTER                          = "mdi-filter";
 	public static final String MDI_ARROW_RIGHT_BOLD_CIRCLE         = "mdi-arrow-right-bold-circle";

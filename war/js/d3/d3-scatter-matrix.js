@@ -94,9 +94,6 @@ function scatterMatrix() {
 			xScale.range([padding / 2, size - padding / 2]);
 			yScale.range([size - padding / 2, padding / 2]);
 
-			// xAxis.tickSize(size * n);
-			// yAxis.tickSize(-size * n);
-
 			var brush = d3.svg.brush()
 				.x(xScale)
 				.y(yScale)

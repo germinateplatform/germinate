@@ -45,7 +45,7 @@
 		<g:FlowPanel visible="false" ui:field="pdciWrapper">
 			<g8:MdiHeading mdi="{MDI_CHART_DONUT}" size="H3" text="{msg.passportPDCITitle}"/>
 			<g:HTML addStyleNames="{style.inlineBlock}" ui:field="pdci"/>
-			<g:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_HELP_CIRCLE_OUTLINE} {style.inlineBlock} {style.help}" ui:field="pdciInfo"/>
+			<g:Anchor addStyleNames="{MDI} {MDI_LG} {MDI_HELP_CIRCLE} {style.inlineBlock} {style.help}" ui:field="pdciInfo"/>
 
 			<g:HTMLPanel>
 				<hr/>

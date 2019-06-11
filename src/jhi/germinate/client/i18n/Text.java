@@ -674,6 +674,10 @@ public interface Text extends Messages
 	@DefaultMessage("PDCI")
 	String passportColumnPDCI();
 
+	@Key("column.help.passport.pdci")
+	@DefaultMessage("Passport Data Completeness Index")
+	String passportColumnHelpPDCI();
+
 	@Key("column.passport.country")
 	String passportColumnCountry();
 
@@ -744,6 +748,10 @@ public interface Text extends Messages
 	@Key("column.accessions.entity.type")
 	@DefaultMessage("Entity type")
 	String accessionsColumnEntityType();
+
+	@Key("column.help.accessions.entityp.type")
+	@DefaultMessage("This can be \"Accession\", \"Plant/Plot\" or \"Sample\"")
+	String accessionsColumnHelpEntityType();
 
 	@Key("column.accessions.synonym")
 	@DefaultMessage("Synonyms")
@@ -822,16 +830,24 @@ public interface Text extends Messages
 	@Key("column.dataset.size")
 	String datasetsColumnDatasetSize();
 
+	@Key("column.help.dataset.size")
+	@DefaultMessage("Number of database objects")
+	String datasetsColumnHelpDatasetSize();
+
 	@Key("column.dataset.datapoints")
 	@DefaultMessage("Data points")
 	String datasetsColumnDatasetDataPoints();
+
+	@Key("column.help.dataset.datapoints")
+	@DefaultMessage("Number of individual data points")
+	String datasetsColumnHelpDatasetDataPoints();
 
 	@Key("column.compound.id")
 	@DefaultMessage("Id")
 	String compoundColumnId();
 
 	@Key("column.compound.name")
-	@DefaultMessage("Name")
+	@DefaultMessage("Compound Name")
 	String compoundColumnName();
 
 	@Key("column.compound.description")
@@ -1068,6 +1084,10 @@ public interface Text extends Messages
 	@Key("column.location.type")
 	@DefaultMessage("Type")
 	String locationColumnType();
+
+	@Key("column.location.country")
+	@DefaultMessage("Country")
+	String locationColumnCountry();
 
 	@Key("column.locations.site.name")
 	@DefaultMessage("Site name")
@@ -1811,7 +1831,7 @@ public interface Text extends Messages
 	String phenotypeColumnId();
 
 	@Key("column.phenotype.name")
-	@DefaultMessage("Name")
+	@DefaultMessage("Trait Name")
 	String phenotypeColumnName();
 
 	@Key("column.phenotype.short.name")
@@ -2006,6 +2026,10 @@ public interface Text extends Messages
 	@Key("column.pedigree.relationship.type")
 	@DefaultMessage("Relationship type")
 	String pedigreeColumnsRelationshipType();
+
+	@Key("column.help.pedigree.relationship.type")
+	@DefaultMessage("This can be \"F\" (female), \"M\" (male) or \"OTHER\"")
+	String pedigreeColumnsHelpRelationshipType();
 
 	@Key("column.pedigree.relationship.description")
 	@DefaultMessage("Relationship description")

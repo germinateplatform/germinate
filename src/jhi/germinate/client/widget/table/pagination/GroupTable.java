@@ -229,7 +229,7 @@ public abstract class GroupTable extends DatabaseObjectPaginationTable<Group>
 			}
 		};
 		column.setDataStoreName(Group.CREATED_BY);
-		addColumn(column, Text.LANG.commentColumnUser(), sortingEnabled, false);
+		addColumn(column, new HeaderConfig(Text.LANG.commentColumnUser()), sortingEnabled, false);
 
 		/* Add the size column */
 		column = new TextColumn()

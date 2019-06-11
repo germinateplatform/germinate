@@ -189,7 +189,7 @@ public abstract class PedigreeTable extends DatabaseObjectPaginationTable<Pedigr
 			}
 		};
 		column.setDataStoreName(Pedigree.RELATIONSHIP_TYPE);
-		addColumn(column, Text.LANG.pedigreeColumnsRelationshipType(), sortingEnabled);
+		addColumn(column, new HeaderConfig(Text.LANG.pedigreeColumnsRelationshipType(), Text.LANG.pedigreeColumnsHelpRelationshipType()), sortingEnabled);
 
 		/* Add the relationship description column */
 		column = new TextColumn()
