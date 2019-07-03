@@ -322,7 +322,7 @@ public class AttributeData extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, AttributeData object) throws DatabaseException
+		public void write(Database database, AttributeData object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `attributedata` (" + ATTRIBUTE_ID + ", " + FOREIGN_ID + ", " + VALUE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setLong(object.getAttribute().getId())

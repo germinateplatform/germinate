@@ -117,6 +117,17 @@ public interface CommonService extends RemoteService
 	ServerResult<List<Synonym>> getSynonyms(RequestProperties properties, GerminateDatabaseTable table, Long id) throws InvalidSessionException, DatabaseException;
 
 	/**
+	 * Exports the biological status statistics and returns the name of the result file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @return The name of the result file.
+	 * @throws InvalidSessionException Thrown if the session is invalid
+	 * @throws DatabaseException       Thrown if the query fails on the server
+	 * @throws IOException             Thrown if a file I/O fails
+	 */
+	ServerResult<String> getBiologicalStatusStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException;
+
+	/**
 	 * Exports the taxonomy statistics and returns the name of the result file.
 	 *
 	 * @param properties The {@link RequestProperties}

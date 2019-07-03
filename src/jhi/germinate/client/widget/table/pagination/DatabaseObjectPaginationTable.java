@@ -112,6 +112,9 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	@UiField
 	Heading noDataHeading;
 
+	@UiField
+	HTMLPanel message;
+
 	// CONFIGURATION
 	private SelectionMode selectionMode = SelectionMode.NONE;
 	boolean sortingEnabled = true;
@@ -261,8 +264,25 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 			refreshTable();
 		});
 
+		jsniTextTooltip(getId());
 		onPostLoad();
 	}
+
+	private native void jsniTextTooltip(String id)/*-{
+		$wnd.$('#' + id).on('mouseenter', '.text-popover[data-toggle="popover"]', function () {
+			var e = $wnd.$(this);
+			e.off('mouseenter');
+
+			e.popover({
+				html: false,
+				placement: e.data('placement') ? e.data('placement') : 'bottom',
+				trigger: 'hover',
+				content: e.data('content')
+			});
+
+			e.popover('show');
+		});
+	}-*/;
 
 	protected void onPostLoad()
 	{
@@ -413,9 +433,14 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 		/* Take care of selection */
 		if (selectionMode == SelectionMode.SINGLE)
+		{
 			selectionModel = new SingleSelectionModel<>(keyProvider);
+		}
 		else
+		{
 			selectionModel = new MultiSelectionModel<>(keyProvider);
+			message.setVisible(true);
+		}
 
 		setSelectionModel(selectionModel, DefaultSelectionEventManager.createCheckboxManager());
 
@@ -436,6 +461,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				return selectionModel.isSelected(object);
 			}
 		};
+		checkboxColumn.setCellStyleNames(ContextualBackground.INFO.getCssName());
 
 		if (selectionMode == SelectionMode.SINGLE)
 		{
@@ -451,7 +477,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				{
 					int selected = ((MultiSelectionModel<T>) selectionModel).getSelectedSet().size();
 					int size = getSize();
-					return selected != 0 ? size == selected : false;
+					return selected != 0 && size == selected;
 				}
 
 				@Override
@@ -473,7 +499,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				 */
 				ColumnSortList sortList = table.getColumnSortList();
 				String sortColumnName = (sortList != null && sortList.size() > 0) ? sortList.get(0).getColumn().getDataStoreName() : null;
-				boolean ascending = (sortList != null && sortList.size() > 0) ? sortList.get(0).isAscending() : true;
+				boolean ascending = (sortList == null || sortList.size() <= 0) || sortList.get(0).isAscending();
 
 				PartialSearchQuery filterObject = null;
 
@@ -588,7 +614,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 
 					/* Determine the name of the database column to sort by and the direction */
 					String sortColumnName = (sortList != null && sortList.size() > 0) ? sortList.get(0).getColumn().getDataStoreName() : null;
-					boolean ascending = (sortList != null && sortList.size() > 0) ? sortList.get(0).isAscending() : true;
+					boolean ascending = (sortList == null || sortList.size() <= 0) || sortList.get(0).isAscending();
 
 					if (table.getLoadingIndicator() != null)
 					{

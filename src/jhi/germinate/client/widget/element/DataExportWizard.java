@@ -110,11 +110,10 @@ public abstract class DataExportWizard extends Composite
 
 		selectedDatasetPanel.setType(type.type);
 
-		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
-
 		accessionText.setHTML(Text.LANG.genotypeExportSubtitleAccessionGroups());
 		markerText.setHTML(Text.LANG.genotypeExportSubtitleMarkerGroups());
 
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
 		accessionGroupsList.setGroupCreationInterface(callback -> GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), ids, type.type, callback));
 		markerGroupsList.setGroupCreationInterface(callback -> GroupService.Inst.get().getMarkerGroups(Cookie.getRequestProperties(), ids, type.type, callback));
 
@@ -179,12 +178,10 @@ public abstract class DataExportWizard extends Composite
 		};
 
 		if (type == ExportType.allelefreq)
-		{
-			if (type == ExportType.genotype)
-				alleleMessage.removeFromParent();
-			else
-				genotypeMessage.removeFromParent();
-		}
+			genotypeMessage.removeFromParent();
+		else if (type == ExportType.genotype)
+			alleleMessage.removeFromParent();
+
 
 		mdfToggle.setOnText(Text.LANG.generalYes());
 		mdfToggle.setOffText(Text.LANG.generalNo());
@@ -201,11 +198,17 @@ public abstract class DataExportWizard extends Composite
 		accessionGroups = DatabaseObject.getIds(accessionGroupsList.getSelections());
 		markerGroups = DatabaseObject.getIds(markerGroupsList.getSelections());
 		maps = DatabaseObject.getIds(mapsList.getSelections());
+		Set<String> markedAccessionIds = null;
+		Set<String> markedMarkerIds = null;
+		if (accessionGroups.contains(Group.ID_MARKED_ITEMS))
+			markedAccessionIds = MarkedItemList.get(MarkedItemList.ItemType.ACCESSION);
+		if (markerGroups.contains(Group.ID_MARKED_ITEMS))
+			markedMarkerIds = MarkedItemList.get(MarkedItemList.ItemType.MARKER);
 
 		if (CollectionUtils.isEmpty(accessionGroups, markerGroups, maps))
 			Notification.notify(Notification.Type.WARNING, Text.LANG.notificationGenotypeExportSelectAtLeastOne());
 		else
-			onContinuePressed(ids, accessionGroups, markerGroups, maps, mdfToggle.getValue(), false);
+			onContinuePressed(ids, accessionGroups, markedAccessionIds, markerGroups, markedMarkerIds, maps, mdfToggle.getValue(), false);
 	}
 
 	/**
@@ -219,7 +222,7 @@ public abstract class DataExportWizard extends Composite
 		overallPanel.add(new Heading(HeadingSize.H3, message));
 	}
 
-	protected abstract void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, List<Long> markerGroups, List<Long> maps, boolean missingOn, boolean heterozygousOn);
+	protected abstract void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, List<Long> maps, boolean missingOn, boolean heterozygousOn);
 
 	public enum ExportType
 	{

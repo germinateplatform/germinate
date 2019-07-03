@@ -161,6 +161,24 @@ public abstract class PhenotypeDataTable extends MarkableDatabaseObjectPaginatio
 		column.setDataStoreName(Accession.NAME);
 		addColumn(column, Text.LANG.accessionsColumnName(), sortingEnabled);
 
+		/* Add the entity type column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(PhenotypeData object)
+			{
+				return object.getAccession().getEntityType().getName();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return EntityType.class;
+			}
+		};
+		column.setDataStoreName(EntityType.NAME);
+		addColumn(column, new HeaderConfig(Text.LANG.accessionsColumnEntityType(), Text.LANG.accessionsColumnHelpEntityType()), sortingEnabled);
+
 		/* Add the dataset name column */
 		column = new SafeHtmlColumn()
 		{

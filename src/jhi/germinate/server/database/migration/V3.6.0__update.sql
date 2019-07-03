@@ -72,17 +72,21 @@ ALTER TABLE `mapdefinitions`
 ADD INDEX(`marker_id`, `map_id`) USING BTREE;
 ALTER TABLE `phenotypedata`
 ADD INDEX(`dataset_id`, `germinatebase_id`) USING BTREE;
+ALTER TABLE `groupmembers`
+ADD INDEX(`foreign_id`) USING BTREE;
+ALTER TABLE `datasetmembers`
+ADD INDEX(`foreign_id`) USING BTREE;
 
 /* Increase the column size for dataset meta colums */
 ALTER TABLE `datasetmeta`
 MODIFY COLUMN `nr_of_data_objects` bigint(0) UNSIGNED NOT NULL COMMENT 'The number of data objects contained in this dataset.' AFTER `dataset_id`,
 MODIFY COLUMN `nr_of_data_points` bigint(0) UNSIGNED NOT NULL COMMENT 'The number of individual data points contained in this dataset.' AFTER `nr_of_data_objects`;
 
-DROP PROCEDURE IF EXISTS drop_all_indexes;
+DROP PROCEDURE IF EXISTS drop_all_foreign_keys;
 /* Create a stored procedure that we use to drop foreign keys */
 DELIMITER //
 
-CREATE PROCEDURE drop_all_indexes()
+CREATE PROCEDURE drop_all_foreign_keys()
 
 BEGIN
 
@@ -117,7 +121,7 @@ END;
 DELIMITER ;
 
 /* Update some foreign keys. This forces the items to be deleted when referenced items are deleted. */
-call drop_all_indexes();
+call drop_all_foreign_keys();
 ALTER TABLE `groupmembers` ADD CONSTRAINT `groupmembers_ibfk_group` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-DROP PROCEDURE drop_all_indexes;
+DROP PROCEDURE drop_all_foreign_keys;

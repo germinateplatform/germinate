@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2019 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,24 @@
  *  limitations under the License.
  */
 
-package jhi.germinate.server.database.query.writer;
+package jhi.germinate.util;
 
-import jhi.germinate.server.database.*;
-import jhi.germinate.shared.datastructure.database.*;
-import jhi.germinate.shared.exception.*;
+import org.apache.tools.ant.*;
 
 /**
- * {@link DatabaseObjectWriter} is an interface defining how {@link DatabaseObject}s should be written do the database.
- *
  * @author Sebastian Raubach
  */
-public interface DatabaseObjectWriter<T extends DatabaseObject>
+public class GetCoresCount extends Task
 {
-	void write(Database database, T object, boolean isUpdate) throws DatabaseException;
+	private String outputProperty;
+
+	public void execute()
+	{
+		getProject().setNewProperty(outputProperty, Integer.toString(Runtime.getRuntime().availableProcessors()));
+	}
+
+	public void setOutputProperty(String prop)
+	{
+		outputProperty = prop;
+	}
 }

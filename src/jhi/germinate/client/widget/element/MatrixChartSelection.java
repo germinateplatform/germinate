@@ -27,6 +27,8 @@ import org.gwtbootstrap3.client.ui.*;
 import java.util.*;
 
 import jhi.germinate.client.i18n.*;
+import jhi.germinate.client.service.*;
+import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.datastructure.database.*;
 
@@ -61,7 +63,7 @@ public class MatrixChartSelection<T extends DatabaseObject> extends Composite
 	@UiField
 	StringListBox colors;
 
-	public MatrixChartSelection(ExperimentType type, List<T> objects, List<Group> groups)
+	public MatrixChartSelection(ExperimentType type, List<Dataset> selectedDatasets, List<T> objects, List<Group> groups)
 	{
 		switch (type)
 		{
@@ -74,6 +76,10 @@ public class MatrixChartSelection<T extends DatabaseObject> extends Composite
 		}
 
 		initWidget(ourUiBinder.createAndBindUi(this));
+
+		final List<Long> ids = DatabaseObject.getIds(selectedDatasets);
+		groupBox.setType(MarkedItemList.ItemType.ACCESSION);
+		groupBox.setGroupCreationInterface(callback -> GroupService.Inst.get().getAccessionGroups(Cookie.getRequestProperties(), ids, type, callback));
 
 		switch (type)
 		{

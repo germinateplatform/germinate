@@ -148,6 +148,12 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	@Template("<span class='" + Style.MDI + " " + Style.MDI_LG + " " + Style.FA_FIXED_WIDTH + " {0}' style='vertical-align: middle' title='{1}'></span>")
 	SafeHtml materialIconFixedWidth(String mdi, String title);
 
+	@Template("<div tabindex='-1' class='img-popover' data-toggle='popover' data-placement='{2}' data-trigger='hover' data-img='{1}'>{0}</div>")
+	SafeHtml popoverImage(SafeHtml content, String path, String placement);
+
+	@Template("<div tabindex='-1' class='text-popover' data-toggle='popover' data-placement='{2}' data-trigger='hover' data-content='{1}'>{0}</div>")
+	SafeHtml popoverText(String content, String popover, String placement);
+
 	/**
 	 * Creates a <code>&lt;span&gt;</code> element with the given Material Design Icon style and the given title attribute
 	 *

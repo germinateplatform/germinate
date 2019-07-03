@@ -87,6 +87,14 @@ public interface CommonServiceAsync
 	void getSynonyms(RequestProperties properties, GerminateDatabaseTable table, Long id, AsyncCallback<ServerResult<List<Synonym>>> callback);
 
 	/**
+	 * Exports the biological status statistics and returns the name of the result file.
+	 *
+	 * @param properties The {@link RequestProperties}
+	 * @param callback   The {@link AsyncCallback}
+	 */
+	void getBiologicalStatusStats(RequestProperties properties, AsyncCallback<ServerResult<String>> callback);
+
+	/**
 	 * Exports the taxonomy statistics and returns the name of the result file.
 	 *
 	 * @param properties The {@link RequestProperties}

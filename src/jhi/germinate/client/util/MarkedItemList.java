@@ -250,6 +250,10 @@ public final class MarkedItemList
 		return IDS.get(type);
 	}
 
+	public static int getSize(ItemType type) {
+		return IDS.get(type).size();
+	}
+
 	/**
 	 * Gets the marked accession ids
 	 *

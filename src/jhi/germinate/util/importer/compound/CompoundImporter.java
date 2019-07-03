@@ -93,7 +93,7 @@ public class CompoundImporter extends DataImporter<Compound>
 
 		if (!rs.next())
 		{
-			Compound.Writer.Inst.get().write(databaseConnection, entry);
+			Compound.Writer.Inst.get().write(databaseConnection, entry, false);
 			createdCompoundIds.add(entry.getId());
 		}
 	}
@@ -125,7 +125,7 @@ public class CompoundImporter extends DataImporter<Compound>
 		}
 		else
 		{
-			Unit.Writer.Inst.get().write(databaseConnection, entry.getUnit());
+			Unit.Writer.Inst.get().write(databaseConnection, entry.getUnit(), false);
 			createdUnitIds.add(entry.getUnit().getId());
 		}
 	}

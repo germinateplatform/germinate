@@ -27,8 +27,6 @@ import jhi.germinate.shared.*;
  */
 public class AlleleFrequencyDataExporter
 {
-	private static final boolean SORT_FILES = true;
-
 	/** Keep track of missing values per column */
 	private int[] qualityMissing;
 
@@ -55,9 +53,6 @@ public class AlleleFrequencyDataExporter
 
 		allLines = CollectionUtils.isEmpty(parameters.rowNames);
 		allMarkers = CollectionUtils.isEmpty(parameters.colNames);
-
-		if (SORT_FILES && !allLines)
-			Collections.sort(this.parameters.rowNames);
 	}
 
 	/**

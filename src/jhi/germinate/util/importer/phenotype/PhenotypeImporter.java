@@ -93,7 +93,7 @@ public class PhenotypeImporter extends DataImporter<Phenotype>
 
 		if (!rs.next())
 		{
-			Phenotype.Writer.Inst.get().write(databaseConnection, entry);
+			Phenotype.Writer.Inst.get().write(databaseConnection, entry, false);
 			createdPhenotypeIds.add(entry.getId());
 		}
 	}
@@ -125,7 +125,7 @@ public class PhenotypeImporter extends DataImporter<Phenotype>
 		}
 		else
 		{
-			Unit.Writer.Inst.get().write(databaseConnection, entry.getUnit());
+			Unit.Writer.Inst.get().write(databaseConnection, entry.getUnit(), false);
 			createdUnitIds.add(entry.getUnit().getId());
 		}
 	}

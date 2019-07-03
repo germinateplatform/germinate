@@ -195,6 +195,7 @@ public class Style
 	public static final String MDI_PENCIL_BOX_OUTLINE              = "mdi-pencil-box-outline";
 	public static final String MDI_ARROW_LEFT_BOLD                 = "mdi-arrow-left-bold";
 	public static final String MDI_ARROW_RIGHT_BOLD                = "mdi-arrow-right-bold";
+	public static final String MDI_ARROW_UP_BOLD                = "mdi-arrow-up-bold";
 	public static final String MDI_VIEW_COLUMN                     = "mdi-view-column";
 	public static final String MDI_CONTENT_SAVE                    = "mdi-content-save";
 	public static final String MDI_CONTENT_PASTE                   = "mdi-content-paste";
@@ -225,6 +226,8 @@ public class Style
 	public static final String MDI_EXPORT                          = "mdi-export";
 	public static final String MDI_OPEN_IN_NEW                     = "mdi-open-in-new";
 	public static final String BOOTSTRAP_DROPDOWN_ALERT            = "dropdown-alerts";
+
+	public static final String SELECT_GROUP_SEPARATOR = "select-group-separator";
 
 	public static final String COL_XXS_12  = "col-xxs-12";
 	public static final String COL_XS_5THS = "col-xs-5ths";

@@ -63,5 +63,5 @@ public interface AlleleFrequencyServiceAsync
 	 * @param mapId           The {@link jhi.germinate.shared.datastructure.database.Map} id
 	 * @param callback        The {@link AsyncCallback}
 	 */
-	void createHistogram(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datastId, boolean missingOn, Long mapId, int nrOfBins, AsyncCallback<ServerResult<FlapjackAllelefreqBinningResult>> callback);
+	void createHistogram(RequestProperties properties, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datastId, boolean missingOn, Long mapId, int nrOfBins, AsyncCallback<ServerResult<FlapjackAllelefreqBinningResult>> callback);
 }

@@ -44,7 +44,7 @@ public interface PhenotypeService extends RemoteService
 	String TREATMENT_DESCRIPTION = "treatments_description";
 	String YEAR                  = "year";
 
-	String[] COLUMNS_DATA_SORTABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Dataset.NAME, Dataset.DESCRIPTION, ExperimentType.DESCRIPTION, Phenotype.NAME, Phenotype.SHORT_NAME, Unit.NAME, PhenotypeData.PHENOTYPE_VALUE, PhenotypeData.RECORDING_DATE, Location.SITE_NAME, Country.COUNTRY_NAME, Synonym.SYNONYM};
+	String[] COLUMNS_DATA_SORTABLE = {Accession.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, EntityType.NAME, Dataset.NAME, Dataset.DESCRIPTION, ExperimentType.DESCRIPTION, Phenotype.NAME, Phenotype.SHORT_NAME, Unit.NAME, PhenotypeData.PHENOTYPE_VALUE, PhenotypeData.RECORDING_DATE, Location.SITE_NAME, Country.COUNTRY_NAME, Synonym.SYNONYM};
 
 	final class Inst
 	{
@@ -123,7 +123,7 @@ public interface PhenotypeService extends RemoteService
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
-	ServerResult<String> export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> phenotypeIds, boolean includeId) throws InvalidSessionException, DatabaseException;
+	ServerResult<String> export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, Set<String> markedAccessionIds, List<Long> phenotypeIds) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Returns a list of {@link DataStats} for the given {@link Dataset} ids.

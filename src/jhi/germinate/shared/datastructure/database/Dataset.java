@@ -23,6 +23,7 @@ import java.sql.*;
 import java.util.Date;
 import java.util.*;
 
+import jhi.germinate.client.*;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
@@ -347,8 +348,8 @@ public class Dataset extends DatabaseObject
 
 	public boolean hasLicenseBeenAccepted(UserAuth user)
 	{
-		if (user == null)
-			return false;
+		if (!ModuleCore.getUseAuthentication() && (user == null || user.getId() == null))
+			return license == null || license.getLicenseLog() != null && license.getLicenseLog().getUser() ==  -1;
 		else
 			return license == null || license.getLicenseLog() != null && Objects.equals(license.getLicenseLog().getUser(), user.getId());
 	}
@@ -550,7 +551,7 @@ public class Dataset extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, Dataset object) throws DatabaseException
+		public void write(Database database, Dataset object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasets` (" + EXPERIMENT_ID + ", " + LOCATION_ID + ", " + NAME + ", " + DESCRIPTION + ", " + DATE_START + ", " + DATE_END + ", " + SOURCE_FILE + ", " + DATATYPE + ", " + DUBLIN_CORE + ", " + VERSION + ", " + CREATED_BY + ", " + DATASET_STATE_ID + ", " + IS_EXTERNAL + ", " + HYPERLINK + ", " + CONTACT + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getExperiment().getId())

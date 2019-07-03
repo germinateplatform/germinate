@@ -124,6 +124,8 @@ public abstract class DataImporter<T>
 				reader.init(input);
 				prepareReader(reader);
 
+				boolean update = this instanceof IDataUpdater;
+
 				// Now check which reader type we're using
 				if (reader instanceof IStreamableReader)
 				{
@@ -132,7 +134,12 @@ public abstract class DataImporter<T>
 
 					// Then stream the items
 					while (streamer.hasNext())
-						write(streamer.next());
+					{
+						if (update)
+							((IDataUpdater) this).update(streamer.next());
+						else
+							write(streamer.next());
+					}
 
 					flush();
 				}
@@ -143,7 +150,12 @@ public abstract class DataImporter<T>
 
 					// Then iterate
 					for (T entry : entries)
-						write(entry);
+					{
+						if (update)
+							((IDataUpdater) this).update(entry);
+						else
+							write(entry);
+					}
 
 					flush();
 				}

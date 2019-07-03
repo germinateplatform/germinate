@@ -293,6 +293,21 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 	}
 
 	@Override
+	public ServerResult<String> getBiologicalStatusStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
+	{
+		Session.checkSession(properties, this);
+
+		try
+		{
+			return new ServerResult<>(null, StatisticsServlet.getStatistics(getThreadLocalRequest(), ViewInitializer.View.BIOLOGICALSTATUS).getName());
+		}
+		catch (java.io.IOException e)
+		{
+			throw new IOException(e);
+		}
+	}
+
+	@Override
 	public ServerResult<List<Country>> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);

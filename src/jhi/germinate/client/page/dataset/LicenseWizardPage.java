@@ -92,7 +92,7 @@ public class LicenseWizardPage extends ModalWizardPage
 
 		license.setLicenseLog(new LicenseLog(-1L)
 				.setLicense(license.getId())
-				.setUser(ModuleCore.getUseAuthentication() ? ModuleCore.getUserAuth().getId() : null)
+				.setUser(ModuleCore.getUseAuthentication() ? ModuleCore.getUserAuth().getId() : -1L)
 				.setAcceptedOn(System.currentTimeMillis()));
 
 		if (handler != null)

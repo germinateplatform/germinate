@@ -20,9 +20,12 @@ package jhi.germinate.client.widget.table.pagination;
 import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.i18n.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+
+import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 import java.util.Locale;
@@ -173,6 +176,24 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		column.setDataStoreName(Accession.NUMBER);
 		addColumn(column, Text.LANG.accessionsColumnNumber(), sortingEnabled);
 
+		/* Add the puid column */
+		column = new TextColumn()
+		{
+			@Override
+			public String getValue(Accession object)
+			{
+				return object.getPuid();
+			}
+
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+		};
+		column.setDataStoreName(Accession.PUID);
+		addColumn(column, new HeaderConfig(Text.LANG.accessionsColumnPuid(), Text.LANG.accessionColumnHelpPuid()), sortingEnabled);
+
 		/* Add the entity type column */
 		column = new TextColumn()
 		{
@@ -190,6 +211,34 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		};
 		column.setDataStoreName(EntityType.NAME);
 		addColumn(column, new HeaderConfig(Text.LANG.accessionsColumnEntityType(), Text.LANG.accessionsColumnHelpEntityType()), sortingEnabled);
+
+		/* Add the biological status column */
+		column = new SafeHtmlColumn()
+		{
+			@Override
+			public Class getType()
+			{
+				return String.class;
+			}
+
+			@Override
+			public SafeHtml getValue(Accession row)
+			{
+				if (row.getBiologicalStatus() != null)
+				{
+					String status = row.getBiologicalStatus().getSampStat();
+					int index = status.indexOf(" (");
+					String toDisplay = index != -1 ? status.substring(0, index) : status;
+					return SimpleHtmlTemplate.INSTANCE.popoverText(toDisplay, status, Placement.TOP.getCssName());
+				}
+				else
+				{
+					return SimpleHtmlTemplate.INSTANCE.empty();
+				}
+			}
+		};
+		column.setDataStoreName(BiologicalStatus.SAMPSTAT);
+		addColumn(column, Text.LANG.accessionColumnBiologicalStatus(), sortingEnabled);
 
 		/* Add the synonyms column */
 		column = new TextColumn()
@@ -308,48 +357,6 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		column.setDataStoreName(Taxonomy.SUBTAXA);
 		addColumn(column, Text.LANG.passportColumnSubtaxa(), sortingEnabled);
 
-		/* Add the latitude column */
-		column = new TextColumn()
-		{
-			@Override
-			public String getValue(Accession object)
-			{
-				if (object.getLocation() != null && object.getLocation().getLatitude() != null)
-					return TableUtils.getCellValueAsString(Double.toString(object.getLocation().getLatitude()), Double.class);
-				else
-					return null;
-			}
-
-			@Override
-			public Class getType()
-			{
-				return Double.class;
-			}
-		};
-		column.setDataStoreName(Location.LATITUDE);
-		addColumn(column, Text.LANG.collectingsiteLatitude(), sortingEnabled);
-
-		/* Add the longitude column */
-		column = new TextColumn()
-		{
-			@Override
-			public String getValue(Accession object)
-			{
-				if (object.getLocation() != null && object.getLocation().getLongitude() != null)
-					return TableUtils.getCellValueAsString(Double.toString(object.getLocation().getLongitude()), Double.class);
-				else
-					return null;
-			}
-
-			@Override
-			public Class getType()
-			{
-				return Double.class;
-			}
-		};
-		column.setDataStoreName(Location.LONGITUDE);
-		addColumn(column, Text.LANG.collectingsiteLongitude(), sortingEnabled);
-
 		/* Add the elevation column */
 		column = new TextColumn()
 		{
@@ -450,10 +457,27 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 			public SafeHtml getValue(Accession row)
 			{
 				String count = row.getExtra(Accession.IMAGE_COUNT);
+				String path = row.getExtra(Accession.FIRST_IMAGE_PATH);
 				if (count != null && !StringUtils.areEqual(count, "0"))
-					return SimpleHtmlTemplate.INSTANCE.materialIconFixedWidthWithText(Style.MDI_CAMERA, Text.LANG.accessionColumnHasImage(), count);
+					return SimpleHtmlTemplate.INSTANCE.popoverImage(SimpleHtmlTemplate.INSTANCE.materialIconFixedWidthWithText(Style.MDI_CAMERA, Text.LANG.accessionColumnHasImage(), count), getUrl(path), Placement.BOTTOM.getCssName());
 				else
 					return SimpleHtmlTemplate.INSTANCE.empty();
+			}
+
+			private String getUrl(String imagePath)
+			{
+				if (!imagePath.startsWith("http://") && !imagePath.startsWith("https://"))
+				{
+					imagePath = new ServletConstants.Builder().setUrl(GWT.getModuleBaseURL())
+															  .setPath(ServletConstants.SERVLET_IMAGES)
+															  .setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+															  .setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+															  .setParam(ServletConstants.PARAM_SIZE, ImageService.SIZE_SMALL)
+															  .setParam(ServletConstants.PARAM_IMAGE_PATH, imagePath)
+															  .build();
+				}
+
+				return imagePath;
 			}
 		};
 		column.setDataStoreName(Accession.IMAGE_COUNT);
@@ -503,11 +527,42 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		}
 	}
 
+	@Override
+	protected void onPostLoad()
+	{
+		super.onPostLoad();
+
+		jsniImagePreview(getId());
+	}
+
 	private native void jsniPeity(Element element)/*-{
 		var color = @jhi.germinate.client.util.GerminateSettingsHolder::getCategoricalColor(*)(0);
 		$wnd.$(element).find('.donut').peity('donut', {
 			fill: [color, "#cccccc"],
 			radius: 9
+		});
+	}-*/;
+
+	private native void jsniImagePreview(String id)/*-{
+		$wnd.$('#' + id).on('mouseenter', '.img-popover[data-toggle="popover"]', function () {
+			var e = $wnd.$(this);
+			e.off('mouseenter');
+
+			$wnd.$.ajax({
+				mimeType: "text/plain; charset=x-user-defined",
+				url: e.data('img')
+			}).done(function (d, textStatus, jqXHR) {
+				e.popover({
+					html: true,
+					placement: e.data('placement') ? e.data('placement') : 'bottom',
+					trigger: 'hover',
+					content: function() {
+						return '<img src="data:image/jpg;base64,'+ $wnd.base64Encode(d) + '" style="max-width: 100%; width: 300px; height: auto;"/>';
+					}
+				});
+
+				e.popover('show');
+			});
 		});
 	}-*/;
 

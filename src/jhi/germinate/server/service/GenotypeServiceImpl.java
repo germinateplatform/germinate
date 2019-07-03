@@ -103,7 +103,7 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, null, null, datasetId, null, false, false);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, null, null, null, null, datasetId, null, false, false);
 		CommonServiceImpl.ExportResult result = getExportResult(datasetId, ExperimentType.genotype, this);
 
 		/* Kick off the extraction process */
@@ -116,13 +116,13 @@ public class GenotypeServiceImpl extends DataExportServlet implements GenotypeSe
 	}
 
 	@Override
-	public ServerResult<List<CreatedFile>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException
+	public ServerResult<List<CreatedFile>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapId) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, accessionGroups, markerGroups, datasetId, mapId, heterozygousFilter, misingDataFilter);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.genotype, accessionGroups, markedAccessionIds, markerGroups, markedMarkerIds, datasetId, mapId, heterozygousFilter, misingDataFilter);
 		CommonServiceImpl.ExportResult result = getExportResult(datasetId, ExperimentType.genotype, this);
 
 		File mapFile;

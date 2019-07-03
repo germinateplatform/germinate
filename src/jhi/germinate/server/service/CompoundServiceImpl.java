@@ -47,14 +47,8 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 {
 	private static final long serialVersionUID = 1512922584501563921L;
 
-	private static final String QUERY_CHECK_NUMBER = "SELECT COUNT(1) as count FROM `compounddata` JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` JOIN `germinatebase` ON `germinatebase`.`id` = `compounddata`.`germinatebase_id` WHERE `compounddata`.`dataset_id` IN (%s) AND `compound_id` IN (%s)";
-
 	private static final String QUERY_COMPOUND_STATS = "SELECT `compounds`.`id`, `compounds`.`name`, `compounds`.`description`, 1 AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS min, MAX( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS max, AVG( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS avg, STD( cast( `compound_value` AS DECIMAL (30, 2) ) ) AS std, `datasets`.`name` AS datasets_name, `datasets`.`description` AS datasets_description FROM `datasets` LEFT JOIN `compounddata` ON `datasets`.`id` = `compounddata`.`dataset_id` LEFT JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `experimenttypes`.`description` = 'compound' AND `datasets`.`id` IN (%s) GROUP BY `compounds`.`id`, `datasets`.`id`";
-
-	private static final String QUERY_COMPOUND_NAMES          = "SELECT CONCAT(`name`, IF(ISNULL(`compounds`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `compounds` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` WHERE `compounds`.`id` IN (%s)";
-	private static final String QUERY_COMPOUND_NAMES_COMPLETE = "SELECT CONCAT(`name`, IF(ISNULL(`compounds`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `compounds` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` WHERE EXISTS ( SELECT 1 FROM `compounddata` LEFT JOIN `datasets` ON `datasets`.`id` = `compounddata`.`dataset_id` WHERE `compounddata`.`compound_id` = `compounds`.`id` AND `datasets`.`id` IN (%s))";
-
-	private static final String QUERY_DATA = "call " + StoredProcedureInitializer.COMPOUND_DATA + "(?, ?, ?)";
+	private static final String QUERY_DATA = "call " + StoredProcedureInitializer.COMPOUND_DATA + "(?, ?, ?, ?)";
 
 	@Override
 	public ServerResult<List<Compound>> getForDatasetIds(RequestProperties properties, List<Long> datasetIds) throws InvalidSessionException, DatabaseException
@@ -128,103 +122,53 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 	}
 
 	@Override
-	public ServerResult<String> getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> compoundIds, boolean includeId)
-			throws InvalidSessionException, DatabaseException
+	public ServerResult<String> getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, Set<String> markedAccessionIds, List<Long> compoundIds) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
-		/* Check if debugging is activated */
+		if (CollectionUtils.isEmpty(datasetIds))
+			return new ServerResult<>();
+
+		// Check if debugging is activated
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
 
-		String datasets = Util.joinCollection(datasetIds, ", ", true);
-
-		List<String> names = new ArrayList<>();
-		names.add(PhenotypeService.NAME);
-		if (includeId)
-			names.add("dbId");
-		names.add(PhenotypeService.DATASET_NAME);
-		names.add(PhenotypeService.DATASET_DESCRIPTION);
-		names.add(PhenotypeService.DATASET_VERSION);
-		names.add(PhenotypeService.LICENSE_NAME);
-
+		// If the all items group is selected, export everything
 		if (containsAllItemsGroup(groupIds))
 			groupIds = null;
 
-		DefaultQuery stmt;
+		DefaultQuery stmt = new DefaultQuery(QUERY_DATA, userAuth);
 
-		/* If both are empty, return everything */
-		if (CollectionUtils.isEmpty(groupIds) && CollectionUtils.isEmpty(compoundIds))
-		{
-			String formatted = String.format(QUERY_COMPOUND_NAMES_COMPLETE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
-
-			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
-					.setLongs(datasetIds)
-					.run(PhenotypeService.NAME)
-					.getStrings();
-
-			sqlDebug.addAll(temp.getDebugInfo());
-			names.addAll(temp.getServerResult());
-
-			stmt = new DefaultQuery(QUERY_DATA, userAuth)
-					.setNull(Types.VARCHAR)
-					.setString(datasets)
-					.setNull(Types.VARCHAR);
-		}
-		/* If just one is empty, return nothing */
-		else if (CollectionUtils.isEmpty(datasetIds, compoundIds))
-		{
-			return new ServerResult<>(sqlDebug, null);
-		}
+		if (CollectionUtils.isEmpty(groupIds))
+			stmt.setNull(Types.VARCHAR);
 		else
-		{
-			String groups = Util.joinCollection(groupIds, ", ", true);
-			String phenotypes = Util.joinCollection(compoundIds, ", ", true);
+			stmt.setString(Util.joinCollection(groupIds, ", ", true));
 
-			String formatted = String.format(QUERY_COMPOUND_NAMES, StringUtils.generateSqlPlaceholderString(compoundIds.size()));
+		if (CollectionUtils.isEmpty(markedAccessionIds))
+			stmt.setNull(Types.VARCHAR);
+		else
+			stmt.setString(Util.joinCollection(markedAccessionIds, ", ", true));
 
-			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
-					.setLongs(compoundIds)
-					.run(PhenotypeService.NAME)
-					.getStrings();
+		if (CollectionUtils.isEmpty(datasetIds))
+			stmt.setNull(Types.VARCHAR);
+		else
+			stmt.setString(Util.joinCollection(datasetIds, ", ", true));
 
-			sqlDebug.addAll(temp.getDebugInfo());
-			names.addAll(temp.getServerResult());
-
-			formatted = String.format(QUERY_CHECK_NUMBER, datasets, phenotypes);
-
-			stmt = new DefaultQuery(formatted, userAuth);
-
-			DatabaseResult rs = stmt.getResult();
-
-			sqlDebug.add(stmt.getStringRepresentation());
-
-			if (rs.next())
-			{
-				Integer number = rs.getInt(AbstractManager.COUNT);
-
-				if (number != null && number > 0)
-				{
-					stmt = new DefaultQuery(QUERY_DATA, userAuth);
-
-					int i = 1;
-					if (!CollectionUtils.isEmpty(groupIds))
-						stmt.setString(groups);
-					else
-						stmt.setNull(Types.VARCHAR);
-					stmt.setString(datasets);
-					stmt.setString(phenotypes);
-				}
-			}
-		}
+		if (CollectionUtils.isEmpty(compoundIds))
+			stmt.setNull(Types.VARCHAR);
+		else
+			stmt.setString(Util.joinCollection(compoundIds, ", ", true));
 
 		DefaultStreamer result;
 
 		try
 		{
 			result = stmt.getStreamer();
+
+			if (!result.hasData())
+				return new ServerResult<>(sqlDebug, null);
 		}
 		catch (DatabaseException e)
 		{
@@ -235,13 +179,13 @@ public class CompoundServiceImpl extends BaseRemoteServiceServlet implements Com
 
 		String filePath;
 
-		/* Export the data to a temporary file */
+		// Export the data to a temporary file
 		File file = createTemporaryFile("compound", datasetIds, FileType.txt.name());
 		filePath = file.getName();
 
 		try
 		{
-			PhenotypeServiceImpl.exportDataToFile("#input=COMPOUND", names, result, file);
+			PhenotypeServiceImpl.exportDataToFile("#input=COMPOUND", result.getColumnNames(), result, file);
 		}
 		catch (java.io.IOException e)
 		{

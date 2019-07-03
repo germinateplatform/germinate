@@ -130,16 +130,21 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 		return new Button[]{deleteButton, badgeButton};
 	}
 
-	private void getData(ExperimentType experimentType, List<Long> datasetIds, List<Long> groupIds, List<Long> objectIds, AsyncCallback<ServerResult<String>> callback)
+	public static void getData(ExperimentType experimentType, List<Long> datasetIds, List<Long> groupIds, List<Long> objectIds, AsyncCallback<ServerResult<String>> callback)
 	{
+		Set<String> markedIds = new HashSet<>();
+
+		if (groupIds.contains(Group.ID_MARKED_ITEMS))
+			markedIds.addAll(MarkedItemList.get(MarkedItemList.ItemType.ACCESSION));
+
 		switch (experimentType)
 		{
 			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
+				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, markedIds, objectIds, callback);
 				break;
 
 			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, true, callback);
+				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, markedIds, objectIds, callback);
 				break;
 		}
 	}

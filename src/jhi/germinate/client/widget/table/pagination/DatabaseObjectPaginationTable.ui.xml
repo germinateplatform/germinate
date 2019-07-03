@@ -96,6 +96,10 @@
 
 		<b:Heading size="H3" text="{msg.notificationNoDataFound}" addStyleNames="{LAYOUT_CLEAR_BOTH}" visible="false" ui:field="noDataHeading"/>
 
+		<g:HTMLPanel visible="false" ui:field="message">
+			<p><span class="{MDI} {FA_LG} {MDI_ARROW_UP_BOLD}"/> <ui:text from='{msg.tableMultiSelect}'/></p>
+		</g:HTMLPanel>
+
 		<g8:ClearDiv/>
 	</g:HTMLPanel>
 </ui:UiBinder>

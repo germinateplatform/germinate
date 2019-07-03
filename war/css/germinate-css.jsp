@@ -73,6 +73,10 @@ td span.mdi:nth-child(2) {
 	margin-bottom: 10px;
 }
 
+.<%= Style.SELECT_GROUP_SEPARATOR %> option:nth-child(2) {
+	border-bottom: 1px solid;
+}
+
 #<%= Id.STRUCTURE_LOGIN_BACKGROUND_SVG %> {
 	position: fixed;
 	top: 0;

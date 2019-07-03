@@ -206,7 +206,7 @@ public class PedigreeDefinition extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, PedigreeDefinition object) throws DatabaseException
+		public void write(Database database, PedigreeDefinition object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `pedigreedefinitions` (" + GERMINATEBASE_ID + ", " + PEDIGREENOTATION_ID + ", " + DEFINITION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setLong(object.getAccession().getId())

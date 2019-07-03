@@ -137,5 +137,5 @@ public interface AlleleFrequencyService extends RemoteService
 	 * @throws IOException              Thrown if an I/O operation fails
 	 * @throws FlapjackException        Thrown if Flapjack crashes
 	 */
-	ServerResult<FlapjackAllelefreqBinningResult> createHistogram(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datastId, boolean missingOn, Long mapId, int nrOfBins) throws InvalidSessionException, DatabaseException, InvalidArgumentException, IOException, FlapjackException;
+	ServerResult<FlapjackAllelefreqBinningResult> createHistogram(RequestProperties properties, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datastId, boolean missingOn, Long mapId, int nrOfBins) throws InvalidSessionException, DatabaseException, InvalidArgumentException, IOException, FlapjackException;
 }

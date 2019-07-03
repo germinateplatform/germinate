@@ -20,6 +20,7 @@ package jhi.germinate.shared.datastructure;
 import com.google.gwt.core.shared.*;
 
 import java.io.*;
+import java.util.*;
 
 import javax.servlet.http.*;
 
@@ -34,12 +35,13 @@ public class UserAuth implements Serializable
 {
 	private static final long serialVersionUID = -4829970355425355192L;
 
-	private Long    id = -1000L;
-	private String  username;
-	private boolean isAdmin;
-	private String  sessionId;
-	private String  path;
-	private int     cookieLifespanMinutes;
+	private Long      id                 = -1000L;
+	private String    username;
+	private boolean   isAdmin;
+	private String    sessionId;
+	private String    path;
+	private int       cookieLifespanMinutes;
+	private Set<Long> acceptedLicenseIds = new HashSet<>();
 
 	public UserAuth()
 	{
@@ -120,22 +122,7 @@ public class UserAuth implements Serializable
 	{
 		UserAuth userAuth = (UserAuth) session.getAttribute(Session.USER);
 
-		if (userAuth == null)
-		{
-			userAuth = new UserAuth();
-		}
-		else if (userAuth.getId() == null)
-		{
-			try
-			{
-				userAuth.setId(properties.getUserId());
-			}
-			catch (NullPointerException | NumberFormatException e)
-			{
-			}
-		}
-
-		return userAuth;
+		return getFromSession(userAuth, properties);
 	}
 
 	@GwtIncompatible
@@ -143,9 +130,15 @@ public class UserAuth implements Serializable
 	{
 		UserAuth userAuth = (UserAuth) servlet.getRequest().getSession().getAttribute(Session.USER);
 
+		return getFromSession(userAuth, properties);
+	}
+
+	@GwtIncompatible
+	private static UserAuth getFromSession(UserAuth userAuth, RequestProperties properties)
+	{
 		if (userAuth == null)
 		{
-			userAuth = new UserAuth();
+			return new UserAuth();
 		}
 		else if (userAuth.getId() == null)
 		{
@@ -161,16 +154,28 @@ public class UserAuth implements Serializable
 		return userAuth;
 	}
 
+	public void addAcceptedLicenseId(Long id)
+	{
+		if (id != null)
+			acceptedLicenseIds.add(id);
+	}
+
+	public boolean isLicenseIdAccepted(Long id)
+	{
+		return acceptedLicenseIds.contains(id);
+	}
+
 	@Override
 	public String toString()
 	{
 		return "UserAuth{" +
-				"id='" + id + '\'' +
+				"id=" + id +
 				", username='" + username + '\'' +
 				", isAdmin=" + isAdmin +
 				", sessionId='" + sessionId + '\'' +
 				", path='" + path + '\'' +
 				", cookieLifespanMinutes=" + cookieLifespanMinutes +
+				", acceptedLicenseIds=" + acceptedLicenseIds +
 				'}';
 	}
 }

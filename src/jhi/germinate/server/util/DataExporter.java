@@ -20,8 +20,6 @@ package jhi.germinate.server.util;
 import java.io.*;
 import java.util.*;
 
-import jhi.germinate.shared.*;
-
 /**
  * {@link DataExporter} is a class taking lines and markers and extracting these subsets from a file on the filesystem.
  *
@@ -40,9 +38,9 @@ public class DataExporter
 		public String delimiter;
 
 		/** The row names to extract */
-		public List<String> rowNames;
+		public Set<String> rowNames;
 		/** The column names to extract */
-		public List<String> colNames;
+		public Set<String> colNames;
 
 		/** The source of the data */
 		public File inputFile;
@@ -61,8 +59,6 @@ public class DataExporter
 		}
 	}
 
-	private static final boolean SORT_FILES = true;
-
 	private Hdf5ToFJTabbedConverter converter;
 
 	/**
@@ -72,9 +68,6 @@ public class DataExporter
 	 */
 	public DataExporter(DataExporter.DataExporterParameters parameters, String outputFile)
 	{
-		if (SORT_FILES && !CollectionUtils.isEmpty(parameters.rowNames))
-			Collections.sort(parameters.rowNames);
-
 		LinkedHashSet<String> lines = null;
 		LinkedHashSet<String> markers = null;
 		if (parameters.rowNames != null)

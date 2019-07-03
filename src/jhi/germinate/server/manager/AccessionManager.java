@@ -38,7 +38,7 @@ public class AccessionManager extends AbstractManager<Accession>
 
 	private static final String COMMON_TABLES   = "`germinatebase` LEFT JOIN `entitytypes` ON `germinatebase`.`entitytype_id` = `entitytypes`.`id` LEFT JOIN `taxonomies` ON `germinatebase`.`taxonomy_id` = `taxonomies`.`id` LEFT JOIN `locations` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `countries` ON `locations`.`country_id` = `countries`.`id` LEFT JOIN `biologicalstatus` ON `biologicalstatus`.`id` = `germinatebase`.`biologicalstatus_id` LEFT JOIN `institutions` ON `institutions`.`id` = `germinatebase`.`institution_id` LEFT JOIN `collectingsources` ON `collectingsources`.`id` = `germinatebase`.`collsrc_id`";
 	private static final String COMMOM_SYNONYMS = "LEFT JOIN `synonyms` ON (`synonyms`.`foreign_id` = `germinatebase`.`id` AND `synonyms`.`synonymtype_id` = " + SynonymType.germinatebase.getId() + ")";
-	private static final String SELECT_SYNONYMS = "`germinatebase`.*, `entitytypes`.*, `taxonomies`.*, `locations`.*, `countries`.*, `biologicalstatus`.*, `institutions`.*, `collectingsources`.*, `synonyms`.*, (SELECT COUNT(1) FROM `images` LEFT JOIN `imagetypes` ON `imagetypes`.`id` = `images`.`imagetype_id` WHERE `images`.`foreign_id` = `germinatebase`.`id`) AS imageCount";
+	private static final String SELECT_SYNONYMS = "`germinatebase`.*, `entitytypes`.*, `taxonomies`.*, `locations`.*, `countries`.*, `biologicalstatus`.*, `institutions`.*, `collectingsources`.*, `synonyms`.*, (SELECT COUNT(1) FROM `images` LEFT JOIN `imagetypes` ON `imagetypes`.`id` = `images`.`imagetype_id` WHERE `imagetypes`.`reference_table` = 'germinatebase' AND `images`.`foreign_id` = `germinatebase`.`id`) AS imageCount, (SELECT `images`.`path` FROM `images` LEFT JOIN `imagetypes` ON `imagetypes`.`id` = `images`.`imagetype_id` WHERE `imagetypes`.`reference_table` = 'germinatebase' AND `images`.`foreign_id` = `germinatebase`.`id` LIMIT 1) AS firstImagePath";
 
 	private static final String SELECT_BY_UNKNOWN_IDENTIFIER = "SELECT * FROM `germinatebase` WHERE `name` LIKE ? OR `id` LIKE ? OR `number` LIKE ? OR `general_identifier` LIKE ?";
 
@@ -57,6 +57,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_ALL_FOR_MEGA_ENV_UNK   = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " WHERE `location_id` IS NOT NULL AND NOT EXISTS (SELECT 1 FROM `megaenvironmentdata` WHERE `megaenvironmentdata`.`location_id` = `locations`.`id`) %s LIMIT ?, ?";
 	private static final String SELECT_FOR_GROUP              = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN `groupmembers` ON `germinatebase`.`id` = `groupmembers`.`foreign_id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` WHERE `groups`.`id` = ? %s LIMIT ?, ?";
 	private static final String SELECT_NAMES_FOR_GROUPS       = "SELECT DISTINCT `name` FROM `germinatebase` LEFT JOIN `groupmembers` ON `groupmembers`.`foreign_id` = `germinatebase`.`id` WHERE `groupmembers`.`group_id` IN (%s)";
+	private static final String SELECT_NAMES_FOR_IDS          = "SELECT DISTINCT `name` FROM `germinatebase` WHERE `germinatebase`.`id` IN (%s)";
 	private static final String SELECT_ALL_SORTED_BY_DISTANCE = "SELECT " + SELECT_SYNONYMS + " , CAST(REPLACE(FORMAT(6378.7 * ACOS(SIN(RADIANS(`latitude`)) * SIN(RADIANS(?)) + COS(RADIANS(`latitude`)) * COS(RADIANS(?)) * COS(RADIANS(?) - RADIANS(`longitude`))),   2), ',','') AS DECIMAL(10,4)) AS distance FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = 'collectingsites' AND `locations`.`latitude` IS NOT NULL AND `locations`.`longitude` IS NOT NULL %s LIMIT ?, ?";
 	private static final String SELECT_IDS_IN_POLYGON         = "SELECT DISTINCT(`germinatebase`.`id`) FROM " + COMMON_TABLES + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_GeomFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')')))";
 	private static final String SELECT_ALL_IN_POLYGON         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " LEFT JOIN `locationtypes` ON `locations`.`locationtype_id` = `locationtypes`.`id` WHERE `locationtypes`.`name` = ? AND !ISNULL(`locations`.`latitude`) AND !ISNULL(`locations`.`longitude`) AND ST_CONTAINS (ST_GeomFromText(?), ST_GeomFromText (CONCAT( 'POINT(', `locations`.`longitude`, ' ', `locations`.`latitude`, ')'))) %s LIMIT ?, ?";
@@ -251,6 +252,19 @@ public class AccessionManager extends AbstractManager<Accession>
 
 		return new ValueQuery(formatted, userAuth)
 				.setLongs(groupIds)
+				.run(Accession.NAME)
+				.getStrings();
+	}
+
+	public static ServerResult<List<String>> getNamesForIds(UserAuth userAuth, Set<String> markedIds) throws DatabaseException
+	{
+		if (CollectionUtils.isEmpty(markedIds))
+			return null;
+
+		String formatted = String.format(SELECT_NAMES_FOR_IDS, StringUtils.generateSqlPlaceholderString(markedIds.size()));
+
+		return new ValueQuery(formatted, userAuth)
+				.setStrings(markedIds)
 				.run(Accession.NAME)
 				.getStrings();
 	}

@@ -183,6 +183,8 @@
 
 	<!-- Compile the code with gwtc -->
 	<target name="gwtc" depends="build-project, prepare_gwt_xml, prepare_web_xml" description="GWT compile to JavaScript">
+		<taskdef name="getCores" classname="jhi.germinate.util.GetCoresCount" classpath="${build.dir}/WEB-INF/classes" />
+		<getCores outputProperty="cores.count"/>
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
 				<pathelement location="${src.dir}"/>
@@ -192,7 +194,7 @@
 			<arg line="-logLevel INFO"/>
 			<jvmarg value="-Xmx1024M"/>
 			<arg value="jhi.germinate.Germinate"/>
-			<arg line="-localWorkers 2" />
+			<arg line="-localWorkers ${cores.count}" />
 		</java>
 	</target>
 

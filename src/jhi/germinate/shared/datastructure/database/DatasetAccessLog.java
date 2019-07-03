@@ -224,7 +224,7 @@ public class DatasetAccessLog extends DatabaseObject
 	public static class Writer implements DatabaseObjectWriter<DatasetAccessLog>
 	{
 		@Override
-		public void write(Database database, DatasetAccessLog object) throws DatabaseException
+		public void write(Database database, DatasetAccessLog object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `datasetaccesslogs` (" + USER_ID + ", " + USER_NAME + ", " + USER_EMAIL + ", " + USER_INSTITUTION + ", " + DATASET_ID + ", " + REASON + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 

@@ -47,11 +47,8 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 {
 	private static final long serialVersionUID = -4657496352502981361L;
 
-	private static final String QUERY_CHECK_NUMBER             = "SELECT COUNT(1) as count FROM `phenotypedata` JOIN `phenotypes` ON `phenotypes`.`id` = `phenotypedata`.`phenotype_id` JOIN `germinatebase` ON `germinatebase`.`id` = `phenotypedata`.`germinatebase_id` WHERE `phenotypedata`.`dataset_id` IN (%s) AND `phenotype_id` IN (%s);";
-	private static final String QUERY_PHENOTYPE_NAMES          = "SELECT CONCAT(`name`, IF(ISNULL(`phenotypes`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `phenotypes` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` WHERE `phenotypes`.`id` IN (%s)";
-	private static final String QUERY_PHENOTYPE_NAMES_COMPLETE = "SELECT CONCAT(`name`, IF(ISNULL(`phenotypes`.`unit_id`), '', CONCAT(' [', `units`.`unit_abbreviation`, ']'))) AS name FROM `phenotypes` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` WHERE EXISTS ( SELECT 1 FROM `phenotypedata` LEFT JOIN `datasets` ON `datasets`.`id` = `phenotypedata`.`dataset_id` WHERE `phenotypedata`.`phenotype_id` = `phenotypes`.`id` AND `datasets`.`id` IN (%s))";
-	private static final String QUERY_DATA                     = "call " + StoredProcedureInitializer.PHENOTYPE_DATA + "(?, ?, ?)";
-	private static final String QUERY_PHENOTYPE_STATS          = "SELECT `phenotypes`.`id`, `phenotypes`.`name`, `phenotypes`.`description`, (`phenotypes`.`datatype` != 'char') AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN(cast(`phenotype_value` AS DECIMAL(30,2))) as min, MAX(cast(`phenotype_value` AS DECIMAL(30,2))) as max, AVG(cast(`phenotype_value` AS DECIMAL(30,2))) as avg, STD(cast(`phenotype_value` AS DECIMAL(30,2))) as std, `datasets`.`name` AS datasets_name, `datasets`.`description` as datasets_description FROM `datasets` LEFT JOIN `phenotypedata` ON `datasets`.`id` = `phenotypedata`.`dataset_id` LEFT JOIN `phenotypes` ON `phenotypes`.`id` = `phenotypedata`.`phenotype_id` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `datasets`.`id` IN (%s) GROUP BY `phenotypes`.`id`, `datasets`.`id`";
+	private static final String QUERY_DATA            = "call " + StoredProcedureInitializer.PHENOTYPE_DATA + "(?, ?, ?, ?)";
+	private static final String QUERY_PHENOTYPE_STATS = "SELECT `phenotypes`.`id`, `phenotypes`.`name`, `phenotypes`.`description`, (`phenotypes`.`datatype` != 'char') AS isNumeric, `units`.*, COUNT( 1 ) AS count, MIN(cast(`phenotype_value` AS DECIMAL(30,2))) as min, MAX(cast(`phenotype_value` AS DECIMAL(30,2))) as max, AVG(cast(`phenotype_value` AS DECIMAL(30,2))) as avg, STD(cast(`phenotype_value` AS DECIMAL(30,2))) as std, `datasets`.`name` AS datasets_name, `datasets`.`description` as datasets_description FROM `datasets` LEFT JOIN `phenotypedata` ON `datasets`.`id` = `phenotypedata`.`dataset_id` LEFT JOIN `phenotypes` ON `phenotypes`.`id` = `phenotypedata`.`phenotype_id` LEFT JOIN `units` ON `units`.`id` = `phenotypes`.`unit_id` LEFT JOIN `experiments` ON `experiments`.`id` = `datasets`.`experiment_id` LEFT JOIN `experimenttypes` ON `experimenttypes`.`id` = `experiments`.`experiment_type_id` WHERE `datasets`.`id` IN (%s) GROUP BY `phenotypes`.`id`, `datasets`.`id`";
 
 	@Override
 	public ServerResult<Phenotype> getById(RequestProperties properties, Long id) throws InvalidSessionException, DatabaseException
@@ -95,7 +92,7 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 				.getObjects(DataStats.Parser.Inst.get(), true);
 	}
 
-	public static void exportDataToFile(String header, List<String> phenotypes, DefaultStreamer result, File file) throws java.io.IOException, DatabaseException
+	public static void exportDataToFile(String header, String[] phenotypes, DefaultStreamer result, File file) throws java.io.IOException, DatabaseException
 	{
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
 			 DefaultStreamer streamer = result)
@@ -105,11 +102,11 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 				bw.write(header);
 				bw.newLine();
 			}
-			bw.write(phenotypes.get(0));
+			bw.write(phenotypes[0]);
 
-			for (int i = 1; i < phenotypes.size(); i++)
+			for (int i = 1; i < phenotypes.length; i++)
 			{
-				bw.write("\t" + phenotypes.get(i));
+				bw.write("\t" + phenotypes[i]);
 			}
 
 			bw.newLine();
@@ -117,13 +114,13 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 			DatabaseResult rs;
 			while ((rs = streamer.next()) != null)
 			{
-				String zero = rs.getString(phenotypes.get(0));
+				String zero = rs.getString(phenotypes[0]);
 				String value;
 				bw.write(zero == null ? "" : zero);
 
-				for (int i = 1; i < phenotypes.size(); i++)
+				for (int i = 1; i < phenotypes.length; i++)
 				{
-					String ii = rs.getString(phenotypes.get(i));
+					String ii = rs.getString(phenotypes[i]);
 					value = ii == null ? "" : ii;
 					bw.write("\t" + value);
 				}
@@ -197,106 +194,53 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 	}
 
 	@Override
-	public ServerResult<String> export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> phenotypeIds, boolean includeId) throws InvalidSessionException, DatabaseException
+	public ServerResult<String> export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, Set<String> markedAccessionIds, List<Long> phenotypeIds) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
 		DatasetManager.restrictToAvailableDatasets(userAuth, datasetIds);
 
-		/* Check if debugging is activated */
+		if (CollectionUtils.isEmpty(datasetIds))
+			return new ServerResult<>();
+
+		// Check if debugging is activated
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-
-		String datasets = Util.joinCollection(datasetIds, ", ", true);
-
-		List<String> names = new ArrayList<>();
-		names.add(PhenotypeService.NAME);
-		if (includeId)
-			names.add("dbId");
-		names.add(DATASET_NAME);
-		names.add(DATASET_DESCRIPTION);
-		names.add(DATASET_VERSION);
-		names.add(LICENSE_NAME);
-		names.add(LOCATION_NAME);
-		names.add(TREATMENT_DESCRIPTION);
-		names.add(YEAR);
 
 		// If the all items group is selected, export everything
 		if (containsAllItemsGroup(groupIds))
 			groupIds = null;
 
-		DefaultQuery stmt;
+		DefaultQuery stmt = new DefaultQuery(QUERY_DATA, userAuth);
 
-		/* If both are empty, return everything */
-		if (CollectionUtils.isEmpty(groupIds) && CollectionUtils.isEmpty(phenotypeIds))
-		{
-			String formatted = String.format(QUERY_PHENOTYPE_NAMES_COMPLETE, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
-
-			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
-					.setLongs(datasetIds)
-					.run(NAME)
-					.getStrings();
-
-			sqlDebug.addAll(temp.getDebugInfo());
-			if (!CollectionUtils.isEmpty(temp.getServerResult()))
-				names.addAll(temp.getServerResult());
-
-			stmt = new DefaultQuery(QUERY_DATA, userAuth)
-					.setNull(Types.VARCHAR)
-					.setString(datasets)
-					.setNull(Types.VARCHAR);
-		}
-		/* If just one is empty, return nothing */
-		else if (CollectionUtils.isEmpty(datasetIds, phenotypeIds))
-		{
-			return new ServerResult<>(sqlDebug, null);
-		}
+		if (CollectionUtils.isEmpty(groupIds))
+			stmt.setNull(Types.VARCHAR);
 		else
-		{
-			String groups = Util.joinCollection(groupIds, ", ", true);
-			String phenotypes = Util.joinCollection(phenotypeIds, ", ", true);
+			stmt.setString(Util.joinCollection(groupIds, ", ", true));
 
-			String formatted = String.format(QUERY_PHENOTYPE_NAMES, StringUtils.generateSqlPlaceholderString(phenotypeIds.size()));
+		if (CollectionUtils.isEmpty(markedAccessionIds))
+			stmt.setNull(Types.VARCHAR);
+		else
+			stmt.setString(Util.joinCollection(markedAccessionIds, ", ", true));
 
-			ServerResult<List<String>> temp = new ValueQuery(formatted, userAuth)
-					.setLongs(phenotypeIds)
-					.run(NAME)
-					.getStrings();
+		if (CollectionUtils.isEmpty(datasetIds))
+			stmt.setNull(Types.VARCHAR);
+		else
+			stmt.setString(Util.joinCollection(datasetIds, ", ", true));
 
-			sqlDebug.addAll(temp.getDebugInfo());
-			names.addAll(temp.getServerResult());
-
-			formatted = String.format(QUERY_CHECK_NUMBER, datasets, phenotypes);
-
-			stmt = new DefaultQuery(formatted, userAuth);
-
-			DatabaseResult rs = stmt.getResult();
-
-			sqlDebug.add(stmt.getStringRepresentation());
-
-			if (rs.next())
-			{
-				Integer number = rs.getInt(AbstractManager.COUNT);
-
-				if (number != null && number > 0)
-				{
-					stmt = new DefaultQuery(QUERY_DATA, userAuth);
-
-					if (!CollectionUtils.isEmpty(groupIds))
-						stmt.setString(groups);
-					else
-						stmt.setNull(Types.NULL);
-					stmt.setString(datasets);
-					stmt.setString(phenotypes);
-				}
-			}
-		}
+		if (CollectionUtils.isEmpty(phenotypeIds))
+			stmt.setNull(Types.VARCHAR);
+		else
+			stmt.setString(Util.joinCollection(phenotypeIds, ", ", true));
 
 		DefaultStreamer result;
 
 		try
 		{
 			result = stmt.getStreamer();
+
+			if (!result.hasData())
+				return new ServerResult<>(sqlDebug, null);
 		}
 		catch (DatabaseException e)
 		{
@@ -307,13 +251,13 @@ public class PhenotypeServiceImpl extends BaseRemoteServiceServlet implements Ph
 
 		String filePath;
 
-		/* Export the data to a temporary file */
+		// Export the data to a temporary file
 		File file = createTemporaryFile("phenotype", datasetIds, FileType.txt.name());
 		filePath = file.getName();
 
 		try
 		{
-			exportDataToFile("#input=PHENOTYPE", names, result, file);
+			exportDataToFile("#input=PHENOTYPE", result.getColumnNames(), result, file);
 		}
 		catch (java.io.IOException e)
 		{

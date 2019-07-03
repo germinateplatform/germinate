@@ -158,7 +158,7 @@ public class PedigreeImporter extends DataImporter<List<Pedigree>>
 			{
 				cached = entry.getPedigreeDescription();
 
-				PedigreeDescription.Writer.Inst.get().write(databaseConnection, cached);
+				PedigreeDescription.Writer.Inst.get().write(databaseConnection, cached, false);
 				createdPedigreeDescriptionIds.add(cached.getId());
 			}
 		}
@@ -187,7 +187,7 @@ public class PedigreeImporter extends DataImporter<List<Pedigree>>
 
 		if (!rs.next())
 		{
-			Pedigree.Writer.Inst.get().write(databaseConnection, entry);
+			Pedigree.Writer.Inst.get().write(databaseConnection, entry, false);
 			createdPedigreeIds.add(entry.getId());
 		}
 	}

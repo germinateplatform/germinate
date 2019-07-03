@@ -145,7 +145,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 	}
 
 	@Override
-	public ServerResult<FlapjackAllelefreqBinningResult> createHistogram(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, boolean missingOn, Long mapId, int nrOfBins) throws InvalidSessionException, DatabaseException, InvalidArgumentException, IOException, FlapjackException
+	public ServerResult<FlapjackAllelefreqBinningResult> createHistogram(RequestProperties properties, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, boolean missingOn, Long mapId, int nrOfBins) throws InvalidSessionException, DatabaseException, InvalidArgumentException, IOException, FlapjackException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -153,10 +153,10 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 		FlapjackAllelefreqBinningResult result = new FlapjackAllelefreqBinningResult();
 
 		DebugInfo sqlDebug = DebugInfo.create(userAuth);
-		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.allelefreq, accessionGroups, markerGroups, datasetId, mapId, false, missingOn);
+		DataExporter.DataExporterParameters settings = getDataExporterParameters(sqlDebug, userAuth, ExperimentType.allelefreq, accessionGroups, markedAccessionIds, markerGroups, markedMarkerIds, datasetId, mapId, false, missingOn);
 		CommonServiceImpl.ExportResult exportResult = getExportResult(datasetId, ExperimentType.allelefreq, this);
 
-		/* Kick off the extraction process, because we need the exported data before we can start with the histogram */
+		// Kick off the extraction process, because we need the exported data before we can start with the histogram
 		try
 		{
 			AlleleFrequencyDataExporter exporter = new AlleleFrequencyDataExporter(settings);

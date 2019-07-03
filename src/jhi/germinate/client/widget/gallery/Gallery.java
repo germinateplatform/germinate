@@ -193,7 +193,7 @@ public abstract class Gallery extends GerminateComposite
 		for (Image image : storedResult)
 		{
 			GalleryItem item = new GalleryItem(image, showButton);
-			item.setSize(ColumnSize.XS_12, ColumnSize.SM_4, ColumnSize.MD_3, ColumnSize.LG_2);
+			item.setSize(ColumnSize.XS_12, ColumnSize.SM_4, ColumnSize.MD_3);
 			row.add(item);
 
 			counter++;

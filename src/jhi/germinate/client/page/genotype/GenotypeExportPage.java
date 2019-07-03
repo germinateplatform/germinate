@@ -62,20 +62,20 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 		panel.add(new DataExportWizard(DataExportWizard.ExportType.genotype)
 		{
 			@Override
-			protected void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, List<Long> markerGroups, List<Long> maps, boolean missingOn, boolean heterozygousOn)
+			protected void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, List<Long> maps, boolean missingOn, boolean heterozygousOn)
 			{
-				GenotypeExportPage.this.onContinuePressed(datasets, accessionGroups, markerGroups, maps, missingOn, heterozygousOn);
+				GenotypeExportPage.this.onContinuePressed(datasets, accessionGroups, markedAccessionIds, markerGroups, markedMarkerIds, maps, missingOn, heterozygousOn);
 			}
 		});
 
 		panel.add(resultPanel);
 	}
 
-	private void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, List<Long> markerGroups, List<Long> maps, boolean missingOn, boolean heterozygousOn)
+	private void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, List<Long> maps, boolean missingOn, boolean heterozygousOn)
 	{
 		Long mapToUse = maps.size() > 0 ? maps.get(0) : null;
 
-		GenotypeService.Inst.get().computeExportDataset(Cookie.getRequestProperties(), accessionGroups, markerGroups, datasets.get(0), heterozygousOn, missingOn, mapToUse,
+		GenotypeService.Inst.get().computeExportDataset(Cookie.getRequestProperties(), accessionGroups, markedAccessionIds, markerGroups, markedMarkerIds, datasets.get(0), heterozygousOn, missingOn, mapToUse,
 				new DefaultAsyncCallback<ServerResult<List<CreatedFile>>>(true)
 				{
 					@Override

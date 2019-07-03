@@ -114,8 +114,8 @@ public class GroupListBox extends GerminateValueListBox<Group>
 	{
 		super.onLoad();
 
-		/* If the type is set, the interface is set and the shopping cart contains elements for this type */
-		if (groupCreationInterface != null && type != null && !CollectionUtils.isEmpty(MarkedItemList.get(type)) && ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
+		// If the type is set, the interface is set and the shopping cart contains elements for this type
+		if (groupCreationInterface != null && type != null && MarkedItemList.getSize(type) > 0 && ModuleCore.getUseAuthentication() && !GerminateSettingsHolder.get().isReadOnlyMode.getValue())
 		{
 			// Create a new button that users can use to create a new group from this page
 			Button createGroup = new Button(Text.LANG.buttonCreateGroupFromCart() + " (" + MarkedItemList.get(type).size() + ")");
@@ -151,7 +151,7 @@ public class GroupListBox extends GerminateValueListBox<Group>
 	@Override
 	public void setAcceptableValues(Collection<Group> newValues)
 	{
-		Group allItems = new Group(-1L);
+		Group allItems = new Group(Group.ID_ALL_ITEM_GROUP);
 		switch (type)
 		{
 			case MARKER:
@@ -167,6 +167,15 @@ public class GroupListBox extends GerminateValueListBox<Group>
 
 		List<Group> all = new ArrayList<>();
 		all.add(allItems);
+
+		int markedItemCount = MarkedItemList.getSize(type);
+		if (markedItemCount > 0)
+		{
+			Group markedItems = new Group(Group.ID_MARKED_ITEMS);
+			markedItems.setName(Text.LANG.groupMarkedItems() + " (" + markedItemCount + ")");
+			all.add(markedItems);
+			addStyleName(Style.SELECT_GROUP_SEPARATOR);
+		}
 
 		if (!CollectionUtils.isEmpty(newValues))
 			all.addAll(newValues);

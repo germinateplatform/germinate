@@ -191,7 +191,7 @@ public class StorageData extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, StorageData object) throws DatabaseException
+		public void write(Database database, StorageData object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `storagedata` (" + GERMINATEBASE_ID + ", " + STORAGE_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?)")
 					.setLong(object.getAccession().getId())

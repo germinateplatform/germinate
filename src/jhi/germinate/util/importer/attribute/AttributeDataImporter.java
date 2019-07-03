@@ -99,7 +99,7 @@ public class AttributeDataImporter extends DataImporter<AttributeData>
 
 		if (!rs.next())
 		{
-			AttributeData.Writer.Inst.get().write(databaseConnection, entry);
+			AttributeData.Writer.Inst.get().write(databaseConnection, entry, false);
 			createdAttributeDataIds.add(entry.getId());
 		}
 	}
@@ -167,7 +167,7 @@ public class AttributeDataImporter extends DataImporter<AttributeData>
 			else
 			{
 				cached = entry.getAttribute();
-				Attribute.Writer.Inst.get().write(databaseConnection, entry.getAttribute());
+				Attribute.Writer.Inst.get().write(databaseConnection, entry.getAttribute(), false);
 				createdAttributeIds.add(entry.getAttribute().getId());
 			}
 		}

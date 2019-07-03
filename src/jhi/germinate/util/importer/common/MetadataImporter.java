@@ -169,7 +169,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 		}
 		else
 		{
-			Location.Writer.Inst.get().write(databaseConnection, location);
+			Location.Writer.Inst.get().write(databaseConnection, location, false);
 			createdLocationIds.add(location.getId());
 		}
 	}
@@ -197,7 +197,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 		}
 		else
 		{
-			Experiment.Writer.Inst.get().write(databaseConnection, dataset.getExperiment());
+			Experiment.Writer.Inst.get().write(databaseConnection, dataset.getExperiment(), false);
 			createdExperimentIds.add(dataset.getExperiment().getId());
 		}
 	}
@@ -232,7 +232,7 @@ public class MetadataImporter extends DataImporter<Dataset>
 		}
 		else
 		{
-			Dataset.Writer.Inst.get().write(databaseConnection, dataset);
+			Dataset.Writer.Inst.get().write(databaseConnection, dataset, false);
 			createdDatasetIds.add(dataset.getId());
 		}
 	}

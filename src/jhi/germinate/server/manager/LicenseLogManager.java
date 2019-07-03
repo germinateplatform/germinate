@@ -21,8 +21,10 @@ import java.util.*;
 
 import jhi.germinate.server.database.query.*;
 import jhi.germinate.server.database.query.parser.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
 /**
@@ -60,16 +62,24 @@ public class LicenseLogManager extends AbstractManager<LicenseLog>
 
 		for (LicenseLog log : logs)
 		{
-			if (log.getUser() != null && log.getUser() > 0)
+			// If authentication is disabled, cache the accepted licenses in the session
+			if (!PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
 			{
-				ServerResult<List<Long>> ids = new ValueQuery(INSERT, userAuth)
-						.setLong(log.getUser())
-						.setLong(log.getLicense())
-						.setTimestamp(new Date(log.getAcceptedOn()))
-						.execute();
+				userAuth.addAcceptedLicenseId(log.getLicense());
+			}
+			else
+			{
+				if (log.getUser() != null && log.getUser() > 0)
+				{
+					ServerResult<List<Long>> ids = new ValueQuery(INSERT, userAuth)
+							.setLong(log.getUser())
+							.setLong(log.getLicense())
+							.setTimestamp(new Date(log.getAcceptedOn()))
+							.execute();
 
-				result.getDebugInfo().addAll(ids.getDebugInfo());
-				result.setServerResult(result.getServerResult() || ids.getServerResult().size() > 0);
+					result.getDebugInfo().addAll(ids.getDebugInfo());
+					result.setServerResult(result.getServerResult() || ids.getServerResult().size() > 0);
+				}
 			}
 		}
 		return result;

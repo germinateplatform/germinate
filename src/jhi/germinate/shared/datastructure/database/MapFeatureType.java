@@ -164,7 +164,7 @@ public class MapFeatureType extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, MapFeatureType object) throws DatabaseException
+		public void write(Database database, MapFeatureType object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `mapfeaturetypes` (" + DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?)")
 					.setString(object.getDescription());

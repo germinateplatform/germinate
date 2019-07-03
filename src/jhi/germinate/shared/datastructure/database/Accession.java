@@ -74,8 +74,9 @@ public class Accession extends DatabaseObject
 	public static final String CREATED_ON          = "germinatebase.created_on";
 	public static final String UPDATED_ON          = "germinatebase.updated_on";
 
-	public static final String SYNONYMS    = "synonyms";
-	public static final String IMAGE_COUNT = "imageCount";
+	public static final String SYNONYMS         = "synonyms";
+	public static final String IMAGE_COUNT      = "imageCount";
+	public static final String FIRST_IMAGE_PATH = "firstImagePath";
 
 	private String           generalIdentifier;
 	private String           number;
@@ -594,7 +595,13 @@ public class Accession extends DatabaseObject
 					}
 					catch (Exception e)
 					{
-
+					}
+					try
+					{
+						accession.setExtra(FIRST_IMAGE_PATH, row.getString(FIRST_IMAGE_PATH));
+					}
+					catch (Exception e)
+					{
 					}
 
 					return accession;
@@ -841,7 +848,7 @@ public class Accession extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, Accession object) throws DatabaseException
+		public void write(Database database, Accession object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `germinatebase` (" + GENERAL_IDENTIFIER + ", " + NUMBER + ", " + NAME + ", " + BANK_NUMBER + ", " + BREEDERS_CODE + ", " + BREEDERS_NAME + ", " + TAXONOMY_ID + ", " + INSTITUTION_ID + ", " + PLANT_PASSPORT + ", " + DONOR_CODE + ", " + DONOR_NAME + ", " + DONOR_NUMBER + ", " + ACQDATE + ", " + COLLNUMB + ", " + COLLDATE + ", " + COLLCODE + ", " + COLLNAME + ", " + COLLMISSID + ", " + OTHERNUMB + ", " + DUPLSITE + ", " + DUPLINSTNAME + ", " + MLSSTATUS + ", " + PUID + ", " + BIOLOGICALSTATUS_ID + ", " + COLLSRC_ID + ", " + LOCATION_ID + ", " + ENTITYTYPE_ID + ", " + ENTITYPARENT_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getGeneralIdentifier())

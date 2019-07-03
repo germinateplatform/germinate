@@ -197,7 +197,7 @@ public class Attribute extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, Attribute object) throws DatabaseException
+		public void write(Database database, Attribute object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `attributes` (" + NAME + ", " + DESCRIPTION + ", " + DATA_TYPE + ", " + TARGET_TABLE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?)")
 					.setString(object.getName())

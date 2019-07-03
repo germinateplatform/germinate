@@ -99,7 +99,7 @@ public class ExcelMapImporter extends DataImporter<Map>
 		{
 			map = entry;
 
-			Map.Writer.Inst.get().write(databaseConnection, map);
+			Map.Writer.Inst.get().write(databaseConnection, map, false);
 			createdMapIds.add(map.getId());
 		}
 	}

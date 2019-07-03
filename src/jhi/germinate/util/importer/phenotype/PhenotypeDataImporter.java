@@ -228,7 +228,7 @@ public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 					Treatment t = new Treatment()
 							.setName(treatment)
 							.setDescription(treatment);
-					Treatment.Writer.Inst.get().write(databaseConnection, t);
+					Treatment.Writer.Inst.get().write(databaseConnection, t, false);
 					createdTreatmentIds.add(t.getId());
 					entry.setTreatment(t);
 					treatments.put(t.getName(), t.getId());

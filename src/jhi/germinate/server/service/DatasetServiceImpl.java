@@ -256,8 +256,12 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
+		ServerResult<Boolean> result = LicenseLogManager.update(userAuth, logs);
 
-		return LicenseLogManager.update(userAuth, logs);
+		// We need to put it back into the session.
+		storeInSession(Session.USER, userAuth);
+
+		return result;
 	}
 
 	@Override
@@ -385,7 +389,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		try
 		{
-			PhenotypeServiceImpl.exportDataToFile(null, names, result, file);
+			PhenotypeServiceImpl.exportDataToFile(null, names.toArray(new String[0]), result, file);
 		}
 		catch (java.io.IOException e)
 		{

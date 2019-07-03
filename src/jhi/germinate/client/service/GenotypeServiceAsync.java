@@ -44,7 +44,7 @@ public interface GenotypeServiceAsync
 	 * @param mapToUse           The {@link jhi.germinate.shared.datastructure.database.Map} file to use
 	 * @param callback           The {@link AsyncCallback}
 	 */
-	void computeExportDataset(RequestProperties properties, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapToUse, AsyncCallback<ServerResult<List<CreatedFile>>> callback);
+	void computeExportDataset(RequestProperties properties, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapToUse, AsyncCallback<ServerResult<List<CreatedFile>>> callback);
 
 	/**
 	 * Exports the Hdf5 file of the specified {@link jhi.germinate.shared.datastructure.database.Dataset} id to a flat file and returns the result

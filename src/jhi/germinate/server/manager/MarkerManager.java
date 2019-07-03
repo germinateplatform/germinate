@@ -45,6 +45,7 @@ public class MarkerManager extends AbstractManager<Marker>
 	private static final String SELECT_FOR_FILTER           = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} %s LIMIT ?, ?";
 	private static final String SELECT_IDS_FOR_FILTER_MAP   = "SELECT DISTINCT(`markers`.`id`) FROM " + COMMON_TABLES + " {{FILTER}} AND (`maps`.`user_id` = ? OR `maps`.`visibility` = 1)";
 	private static final String SELECT_NAMES_FOR_FILTER_MAP = "SELECT DISTINCT(`markers`.`marker_name`) FROM " + COMMON_TABLES + " LEFT JOIN `groupmembers` ON `groupmembers`.`foreign_id` = `markers`.`id` LEFT JOIN `groups` ON `groups`.`id` = `groupmembers`.`group_id` {{FILTER}} AND (`maps`.`user_id` = ? OR `maps`.`visibility` = 1)";
+	private static final String SELECT_NAMES_FOR_IDS        = "SELECT DISTINCT `markers`.`marker_name` FROM `markers` WHERE `markers`.`id` IN (%s)";
 	private static final String SELECT_NAMES_FOR_MAP        = "SELECT DISTINCT `markers`.`marker_name` FROM `markers` WHERE EXISTS (SELECT 1 FROM `mapdefinitions` LEFT JOIN `maps` ON `maps`.`id` = `mapdefinitions`.`map_id` WHERE `mapdefinitions`.`marker_id` = `markers`.`id` AND `maps`.`id` = ? AND (`maps`.`user_id` = ? OR `maps`.`visibility` = 1))";
 	private static final String SELECT_COUNT                = "SELECT COUNT(1) AS count FROM `markers`";
 
@@ -84,6 +85,16 @@ public class MarkerManager extends AbstractManager<Marker>
 	{
 		return getFilteredValueQuery(filter, userAuth, SELECT_NAMES_FOR_FILTER_MAP, MarkerService.COLUMNS_MAPDEFINITION_TABLE)
 				.setLong(userAuth.getId())
+				.run(Marker.MARKER_NAME)
+				.getStrings();
+	}
+
+	public static ServerResult<List<String>> getNamesForIds(UserAuth userAuth, Set<String> ids) throws DatabaseException
+	{
+		String formatted = String.format(SELECT_NAMES_FOR_IDS, StringUtils.generateSqlPlaceholderString(ids.size()));
+
+		return new ValueQuery(formatted, userAuth)
+				.setStrings(ids)
 				.run(Marker.MARKER_NAME)
 				.getStrings();
 	}

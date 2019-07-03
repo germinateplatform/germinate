@@ -320,7 +320,7 @@ public class PhenotypeData extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, PhenotypeData object) throws DatabaseException
+		public void write(Database database, PhenotypeData object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `phenotypedata` (" + PHENOTYPE_ID + ", " + GERMINATEBASE_ID + ", " + DATASET_ID + ", " + TREATMENT_ID + ", " + LOCATION_ID + ", " + TRIALSERIES_ID + ", " + PHENOTYPE_VALUE + ", " + RECORDING_DATE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getPhenotype().getId())

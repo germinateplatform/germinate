@@ -273,7 +273,7 @@ public class CompoundData extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, CompoundData object) throws DatabaseException
+		public void write(Database database, CompoundData object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `compounddata` (" + COMPOUND_ID + ", " + GERMINATEBASE_ID + ", " + DATASET_ID + ", " + COMPOUND_VALUE + ", " + RECORDING_DATE + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getCompound().getId())

@@ -137,7 +137,7 @@ public interface CompoundService extends RemoteService
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
-	ServerResult<String> getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> compoundIds, boolean includeId) throws InvalidSessionException, DatabaseException;
+	ServerResult<String> getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, Set<String> markedAccessionIds, List<Long> compoundIds) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Exports all the data associated with {@link CompoundData} objects mathing the given {@link PartialSearchQuery}.

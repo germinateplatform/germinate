@@ -100,7 +100,7 @@ public class CollaboratorImporter extends DataImporter<Collaborator>
 		}
 		else
 		{
-			Collaborator.Writer.Inst.get().write(databaseConnection, entry);
+			Collaborator.Writer.Inst.get().write(databaseConnection, entry, false);
 			createdCollaboratorIds.add(entry.getId());
 		}
 
@@ -133,7 +133,7 @@ public class CollaboratorImporter extends DataImporter<Collaborator>
 		}
 		else
 		{
-			Institution.Writer.Inst.get().write(databaseConnection, entry.getInstitution());
+			Institution.Writer.Inst.get().write(databaseConnection, entry.getInstitution(), false);
 			createdInstitutionIds.add(entry.getInstitution().getId());
 		}
 	}

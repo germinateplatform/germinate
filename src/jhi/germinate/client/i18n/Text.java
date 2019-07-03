@@ -745,6 +745,18 @@ public interface Text extends Messages
 	@Key("column.accessions.number")
 	String accessionsColumnNumber();
 
+	@Key("column.accession.puid")
+	@DefaultMessage("PUID")
+	String accessionsColumnPuid();
+
+	@Key("column.accession.biological.status")
+	@DefaultMessage("Biological status")
+	String accessionColumnBiologicalStatus();
+
+	@Key("column.help.accession.puid")
+	@DefaultMessage("Permanent Unique Identifier")
+	String accessionColumnHelpPuid();
+
 	@Key("column.accessions.entity.type")
 	@DefaultMessage("Entity type")
 	String accessionsColumnEntityType();
@@ -1943,6 +1955,14 @@ public interface Text extends Messages
 	@DefaultMessage("This pie chart visualizes the percentage of accessions for each taxonomy. Each slice represents a taxonomy. Hovering over a slice will show the actual number of accessions. Clicking on a slice will take you to the accession overview page which will then just show the accessions with this taxonomy.")
 	String dataStatisticsTaxonomyText();
 
+	@Key("page.data.statistics.biological.status.title")
+	@DefaultMessage("Accessions grouped by biological status")
+	String dataStatisticsBiologicalStatusTitle();
+
+	@Key("page.data.statistics.biological.status.text")
+	@DefaultMessage("Below you can see the percentage of accessions for each biological status (SAMPSTAT) defined in the Multi-Crop Passport Descriptors (MCPD v2.1). Hovering over a slice will show the actual number of accessions. Clicking on a slice will take you to the accession overview page which will then just show the accessions with this biological status.")
+	String dataStatisticsBiologicalStatusText();
+
 	@Key("page.data.statistics.accessions.per.country.title")
 	@DefaultMessage("Accessions per country")
 	String dataStatisticsAccessionsPerCountryTitle();
@@ -2455,6 +2475,10 @@ public interface Text extends Messages
 	@DefaultMessage("All markers")
 	String groupsAllMarkers();
 
+	@Key("widget.list.group.marked.items")
+	@DefaultMessage("Marked items")
+	String groupMarkedItems();
+
 	@Key("widget.list.groups.all.accessions")
 	@DefaultMessage("All accessions")
 	String groupsAllAccessions();
@@ -2768,5 +2792,7 @@ public interface Text extends Messages
 	@DefaultMessage("<p>Genotypic data is exported for either the whole dataset or a subselection of accessions or markers. This page allows you to select which accession and marker groups should be included in the output and which genetic/physical map they should be exported against. To export the data for all accessions/markers, simply select the first item in the lists.</p><p>If you have items in your marked item list, a button below the selection box can be used to create a group from the list and then use that new group for the export.</p>")
 	SafeHtml genotypicExportHelp();
 
-
+	@Key("widget.table.multi.select.text")
+	@DefaultMessage("Use the checkboxes to select one or more rows.")
+	String tableMultiSelect();
 }

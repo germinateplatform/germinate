@@ -32,9 +32,9 @@ import jhi.germinate.shared.search.*;
  */
 public class CompoundDataManager extends AbstractManager<CompoundData>
 {
-	private static final String[] COLUMNS_DATA_SORTABLE = {CompoundData.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, Compound.NAME, Dataset.NAME, Dataset.DESCRIPTION, AnalysisMethod.NAME, Unit.NAME, CompoundData.COMPOUND_VALUE, Compound.COUNT};
+	private static final String[] COLUMNS_DATA_SORTABLE = {CompoundData.ID, Accession.GENERAL_IDENTIFIER, Accession.NAME, EntityType.NAME, Compound.NAME, Dataset.NAME, Dataset.DESCRIPTION, AnalysisMethod.NAME, Unit.NAME, CompoundData.COMPOUND_VALUE, Compound.COUNT};
 
-	private static final String COMMON_TABLES = " `compounddata` LEFT JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` LEFT JOIN `germinatebase` ON `germinatebase`.`id` = `compounddata`.`germinatebase_id` LEFT JOIN `datasets` ON `datasets`.`id` = `compounddata`.`dataset_id` LEFT JOIN `analysismethods` ON `analysismethods`.`id` = `compounddata`.`analysismethod_id` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` ";
+	private static final String COMMON_TABLES = " `compounddata` LEFT JOIN `compounds` ON `compounds`.`id` = `compounddata`.`compound_id` LEFT JOIN `germinatebase` ON `germinatebase`.`id` = `compounddata`.`germinatebase_id` LEFT JOIN `entitytypes` ON `entitytypes`.`id` = `germinatebase`.`entitytype_id` LEFT JOIN `datasets` ON `datasets`.`id` = `compounddata`.`dataset_id` LEFT JOIN `analysismethods` ON `analysismethods`.`id` = `compounddata`.`analysismethod_id` LEFT JOIN `units` ON `units`.`id` = `compounds`.`unit_id` ";
 
 	private static final String SELECT_IDS_FOR_FILTER        = "SELECT DISTINCT(`germinatebase`.`id`) FROM " + COMMON_TABLES + " {{FILTER}} AND `datasets`.`id` IN (%s)";
 	private static final String SELECT_ALL_FOR_FILTER        = "SELECT * FROM " + COMMON_TABLES + " {{FILTER}} AND `datasets`.`id` IN (%s) %s LIMIT ?, ?";

@@ -25,8 +25,10 @@ import java.util.Map;
 import jhi.germinate.server.database.*;
 import jhi.germinate.server.database.query.parser.*;
 import jhi.germinate.server.manager.*;
+import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
 /**
@@ -220,7 +222,19 @@ public class License extends DatabaseObject
 
 				try
 				{
-					license.setLicenseLog(LicenseLogManager.getForUserAndLicense(license.getId(), user).getServerResult());
+					if (!PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
+					{
+						if (user.isLicenseIdAccepted(license.getId()))
+						{
+							license.setLicenseLog(new LicenseLog(1L)
+									.setLicense(license.getId())
+									.setUser(-1L));
+						}
+					}
+					else if (user.getId() != null)
+					{
+						license.setLicenseLog(LicenseLogManager.getForUserAndLicense(license.getId(), user).getServerResult());
+					}
 				}
 				catch (Exception e)
 				{

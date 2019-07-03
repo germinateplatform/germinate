@@ -46,6 +46,7 @@
 
 		.overflow {
 			overflow-x: hidden;
+			text-overflow: ellipsis;
 		}
 
 		.button {
@@ -54,8 +55,8 @@
 			border-top-right-radius: 0;
 			border: 0;
 			text-transform: capitalize;
-			max-lines: 1;
 			white-space: nowrap;
+			overflow-x: hidden;
 			text-overflow: ellipsis;
 		}
 

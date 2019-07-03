@@ -231,7 +231,7 @@ public class Map extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, Map object) throws DatabaseException
+		public void write(Database database, Map object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `maps` (" + NAME + ", " + DESCRIPTION + ", " + VISIBILITY + ", " + USER_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?)")
 					.setString(object.getName())

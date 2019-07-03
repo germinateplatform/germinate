@@ -112,7 +112,7 @@ public class PedigreeStringImporter extends DataImporter<PedigreeDefinition>
 			else
 			{
 				cached = entry.getNotation();
-				PedigreeNotation.Writer.Inst.get().write(databaseConnection, entry.getNotation());
+				PedigreeNotation.Writer.Inst.get().write(databaseConnection, entry.getNotation(), false);
 				createdPedigreeNotationIds.add(entry.getNotation().getId());
 			}
 		}
@@ -169,7 +169,7 @@ public class PedigreeStringImporter extends DataImporter<PedigreeDefinition>
 
 		if (!rs.next())
 		{
-			PedigreeDefinition.Writer.Inst.get().write(databaseConnection, entry);
+			PedigreeDefinition.Writer.Inst.get().write(databaseConnection, entry, false);
 			createdPedigreeDefinitionIds.add(entry.getId());
 		}
 	}

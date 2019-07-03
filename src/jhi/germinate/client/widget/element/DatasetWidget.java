@@ -78,7 +78,6 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 	private DatasetDownloadCallback downloadCallback = null;
 
 	private DatasetTable.SelectionMode selectionMode                 = null;
-	private boolean                    alreadyAskedUserAboutLicenses = false;
 
 	/**
 	 * Creates a new dataset table. This table will either show the internal or external datasets based on the selection ({@link
@@ -380,7 +379,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 				Set<Dataset> selectedItems = table.getSelection();
 
 				Set<License> licensesToAgreeTo = selectedItems.stream()
-															  .filter(d -> d.getLicense() != null && (!ModuleCore.getUseAuthentication() || !d.hasLicenseBeenAccepted(ModuleCore.getUserAuth())))
+															  .filter(d -> d.getLicense() != null && (!d.hasLicenseBeenAccepted(ModuleCore.getUserAuth())))
 															  .map(d -> {
 																  License license = d.getLicense();
 																  license.setExtra(Dataset.ID, d.getId());
@@ -388,7 +387,7 @@ public class DatasetWidget extends GerminateComposite implements HasHelp, Parall
 															  })
 															  .collect(Collectors.toCollection(HashSet::new));
 
-				if (!CollectionUtils.isEmpty(licensesToAgreeTo) && !alreadyAskedUserAboutLicenses)
+				if (!CollectionUtils.isEmpty(licensesToAgreeTo))
 				{
 					showLicenseAcceptWizard(table, licensesToAgreeTo, new DefaultAsyncCallback<List<Dataset>>()
 					{

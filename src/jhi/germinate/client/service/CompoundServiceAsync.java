@@ -96,7 +96,7 @@ public interface CompoundServiceAsync
 	 * @param compoundIds The list of compounds to export
 	 * @param callback    The {@link AsyncCallback}
 	 */
-	void getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> compoundIds, boolean includeId, AsyncCallback<ServerResult<String>> callback);
+	void getExportFile(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, Set<String> markedAccessionIds, List<Long> compoundIds, AsyncCallback<ServerResult<String>> callback);
 
 	/**
 	 * Exports all the data associated with {@link CompoundData} objects mathing the given {@link PartialSearchQuery}.

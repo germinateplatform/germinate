@@ -27,6 +27,7 @@ import javax.servlet.http.*;
 
 import jhi.germinate.server.watcher.*;
 import jhi.germinate.shared.*;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.exception.*;
 
@@ -240,6 +241,6 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 		if (CollectionUtils.isEmpty(ids))
 			return false;
 		else
-			return ids.stream().filter(id -> id < 1).count() > 0;
+			return ids.stream().anyMatch(id -> id == Group.ID_ALL_ITEM_GROUP);
 	}
 }

@@ -460,7 +460,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 								{
 									LicenseLog log = new LicenseLog(-1L)
 											.setLicense(object.getLicense().getId())
-											.setUser(ModuleCore.getUserAuth().getId())
+											.setUser(ModuleCore.getUseAuthentication() ? ModuleCore.getUserAuth().getId() : -1L)
 											.setAcceptedOn(System.currentTimeMillis());
 
 									DatasetService.Inst.get().updateLicenseLogs(Cookie.getRequestProperties(), Collections.singletonList(log), new AsyncCallback<ServerResult<Boolean>>()
@@ -813,11 +813,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 
 	private boolean canAccess(Dataset dataset)
 	{
-		if ((ModuleCore.getUseAuthentication() && !dataset.hasLicenseBeenAccepted(ModuleCore.getUserAuth()))
-				|| (!ModuleCore.getUseAuthentication() && dataset.getLicense() != null))
-			return false;
-		else
-			return true;
+		return dataset.hasLicenseBeenAccepted(ModuleCore.getUserAuth());
 	}
 
 	/**

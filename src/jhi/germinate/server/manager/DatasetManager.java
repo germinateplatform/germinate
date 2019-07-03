@@ -559,7 +559,7 @@ public class DatasetManager extends AbstractManager<Dataset>
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date());
 
-		DatasetAccessLog.Writer.Inst.get().write(database, log);
+		DatasetAccessLog.Writer.Inst.get().write(database, log, false);
 
 		return log.getId() != null;
 	}

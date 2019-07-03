@@ -183,7 +183,7 @@ public class Synonym extends DatabaseObject
 	public static class Writer implements DatabaseObjectWriter<Synonym>
 	{
 		@Override
-		public void write(Database database, Synonym object) throws DatabaseException
+		public void write(Database database, Synonym object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `synonyms` (" + FOREIGN_ID + ", " + SYNONYMTYPE_ID + ", " + SYNONYM + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setLong(object.getForeignId())

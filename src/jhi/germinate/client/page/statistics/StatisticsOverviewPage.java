@@ -73,7 +73,14 @@ public class StatisticsOverviewPage extends GerminateComposite implements Parall
 		panel.add(header);
 
 		// Add the taxonomy pie chart
-		panel.add(new TaxonomyPieChart());
+		Row row = new Row();
+		Column taxonomy = new Column(ColumnSize.XS_12, ColumnSize.LG_6);
+		Column biostat = new Column(ColumnSize.XS_12, ColumnSize.LG_6);
+		taxonomy.add(new TaxonomyPieChart());
+		biostat.add(new BiologicalStatusPieChart());
+		row.add(taxonomy);
+		row.add(biostat);
+		panel.add(row);
 
 		// Add the PDCI chart (if enabled)
 		if (GerminateSettingsHolder.get().pdciEnabled.getValue())

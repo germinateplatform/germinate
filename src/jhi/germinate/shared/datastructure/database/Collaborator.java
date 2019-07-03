@@ -248,7 +248,7 @@ public class Collaborator extends DatabaseObject
 	public static class Writer implements DatabaseObjectWriter<Collaborator>
 	{
 		@Override
-		public void write(Database database, Collaborator object) throws DatabaseException
+		public void write(Database database, Collaborator object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `collaborators` (" + FIRST_NAME + ", " + LAST_NAME + ", " + EMAIL + ", " + PHONE + ", " + INSTITUTION_ID + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?)")
 					.setString(object.getFirstName())

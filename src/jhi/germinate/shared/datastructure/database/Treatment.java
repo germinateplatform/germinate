@@ -164,7 +164,7 @@ public class Treatment extends DatabaseObject
 	public static class Writer implements DatabaseObjectWriter<Treatment>
 	{
 		@Override
-		public void write(Database database, Treatment object) throws DatabaseException
+		public void write(Database database, Treatment object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `treatments` (" + NAME + ", " + DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?)")
 					.setString(object.getName())

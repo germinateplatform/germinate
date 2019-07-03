@@ -73,7 +73,7 @@ public class AccessionDataDownloadWidget extends Composite
 		if (CollectionUtils.isEmpty(groups))
 			groups = new ArrayList<>();
 
-		Group dummy = new Group(-2L).setName(Text.LANG.accessionsDownloadSelectedAccessions());
+		Group dummy = new Group(Group.ID_MARKED_ITEMS).setName(Text.LANG.accessionsDownloadSelectedAccessions());
 		groups.add(0, dummy);
 
 		groupBox.setValue(dummy, false);
@@ -93,7 +93,7 @@ public class AccessionDataDownloadWidget extends Composite
 
 		FileDownloadCallback callback = new FileDownloadCallback(true);
 
-		if (groupId == -2L)
+		if (groupId == Group.ID_MARKED_ITEMS)
 		{
 			Set<String> markedIds = MarkedItemList.get(MarkedItemList.ItemType.ACCESSION);
 
@@ -120,7 +120,7 @@ public class AccessionDataDownloadWidget extends Composite
 
 		FileDownloadCallback callback = new FileDownloadCallback(true);
 
-		if (groupId == -2L)
+		if (groupId == Group.ID_MARKED_ITEMS)
 		{
 			Set<Long> markedIds = MarkedItemList.getAsLong(MarkedItemList.ItemType.ACCESSION);
 

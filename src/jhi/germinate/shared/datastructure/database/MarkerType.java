@@ -163,7 +163,7 @@ public class MarkerType extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, MarkerType object) throws DatabaseException
+		public void write(Database database, MarkerType object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `markertypes` (" + DESCRIPTION + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?)")
 					.setString(object.getDescription());

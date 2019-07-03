@@ -71,7 +71,7 @@ public interface PhenotypeServiceAsync
 	 * @param phenotypeIds The list of phenotypes to export
 	 * @param callback     The {@link AsyncCallback}
 	 */
-	void export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, List<Long> phenotypeIds, boolean includeId, AsyncCallback<ServerResult<String>> callback);
+	void export(RequestProperties properties, List<Long> datasetIds, List<Long> groupIds, Set<String> markedAccessionIds, List<Long> phenotypeIds, AsyncCallback<ServerResult<String>> callback);
 
 	/**
 	 * Returns a list of {@link DataStats} for the given {@link Dataset} ids.

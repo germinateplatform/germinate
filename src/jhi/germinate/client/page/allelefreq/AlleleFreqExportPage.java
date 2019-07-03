@@ -47,17 +47,17 @@ public class AlleleFreqExportPage extends GerminateComposite implements HasHyper
 	/**
 	 * Runs the actual extraction on the server and receives the relative path to the generated temporary files
 	 */
-	private void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, List<Long> markerGroups, List<Long> maps, boolean missingOn)
+	private void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, List<Long> maps, boolean missingOn)
 	{
 		Long mapToUse = maps.size() > 0 ? maps.get(0) : null;
 
-		AlleleFrequencyService.Inst.get().createHistogram(Cookie.getRequestProperties(), accessionGroups, markerGroups, datasets.get(0), missingOn, mapToUse, NR_OF_BINS,
+		AlleleFrequencyService.Inst.get().createHistogram(Cookie.getRequestProperties(), accessionGroups, markedAccessionIds, markerGroups, markedMarkerIds, datasets.get(0), missingOn, mapToUse, NR_OF_BINS,
 				new DefaultAsyncCallback<ServerResult<FlapjackAllelefreqBinningResult>>(true)
 				{
 					@Override
 					public void onFailureImpl(Throwable caught)
 					{
-						if (caught instanceof InvalidArgumentException)
+						if (caught instanceof InvalidArgumentException || caught instanceof FlapjackException)
 							Notification.notify(Type.ERROR, Text.LANG.notificationNoDataFound());
 						else
 							super.onFailureImpl(caught);
@@ -89,9 +89,9 @@ public class AlleleFreqExportPage extends GerminateComposite implements HasHyper
 		panel.add(new DataExportWizard(DataExportWizard.ExportType.allelefreq)
 		{
 			@Override
-			protected void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, List<Long> markerGroups, List<Long> maps, boolean missingOn, boolean heterozygousOn)
+			protected void onContinuePressed(List<Long> datasets, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, List<Long> maps, boolean missingOn, boolean heterozygousOn)
 			{
-				AlleleFreqExportPage.this.onContinuePressed(datasets, accessionGroups, markerGroups, maps, missingOn);
+				AlleleFreqExportPage.this.onContinuePressed(datasets, accessionGroups, markedAccessionIds, markerGroups, markedMarkerIds, maps, missingOn);
 			}
 		});
 	}

@@ -28,9 +28,9 @@ import org.gwtbootstrap3.client.ui.*;
 import java.util.*;
 
 import jhi.germinate.client.i18n.*;
-import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
+import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.listbox.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
@@ -122,7 +122,7 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 			return;
 		}
 
-		getData(datasetIds, groupIds, objectIds, new DefaultAsyncCallback<ServerResult<String>>(true)
+		MatrixChart.getData(type, datasetIds, groupIds, objectIds, new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override
 			public void onSuccessImpl(ServerResult<String> result)
@@ -139,18 +139,5 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 				}
 			}
 		});
-	}
-
-	private void getData(List<Long> datasetIds, List<Long> groupIds, List<Long> objectIds, DefaultAsyncCallback<ServerResult<String>> callback)
-	{
-		switch (type)
-		{
-			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, false, callback);
-				break;
-			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, objectIds, false, callback);
-				break;
-		}
 	}
 }

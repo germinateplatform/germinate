@@ -35,6 +35,9 @@ public class Group extends DatabaseObject
 {
 	private static final long serialVersionUID = 344654284944184140L;
 
+	public static final Long ID_ALL_ITEM_GROUP = -1L;
+	public static final Long ID_MARKED_ITEMS   = -2L;
+
 	public static final String ID            = "groups.id";
 	public static final String NAME          = "groups.name";
 	public static final String DESCRIPTION   = "groups.description";

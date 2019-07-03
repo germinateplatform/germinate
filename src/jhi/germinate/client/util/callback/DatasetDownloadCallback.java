@@ -147,7 +147,7 @@ public class DatasetDownloadCallback extends SimpleCallback<Dataset>
 		ids.add(dataset.getId());
 
 		/* Start the export process */
-		CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
+		CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), ids, null, null, null, new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override
 			protected void onSuccessImpl(ServerResult<String> result)
@@ -164,7 +164,7 @@ public class DatasetDownloadCallback extends SimpleCallback<Dataset>
 		ids.add(dataset.getId());
 
 		/* Start the export process */
-		PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, false, new DefaultAsyncCallback<ServerResult<String>>(true)
+		PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), ids, null, null, null, new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override
 			protected void onSuccessImpl(ServerResult<String> result)

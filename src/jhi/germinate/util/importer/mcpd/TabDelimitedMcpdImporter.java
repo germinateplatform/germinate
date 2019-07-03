@@ -36,7 +36,7 @@ import jhi.germinate.util.importer.reader.*;
  *
  * @author Sebastian Raubach
  */
-public class TabDelimitedMcpdImporter extends DataImporter<Accession>
+public class TabDelimitedMcpdImporter extends DataImporter<Accession> implements IDataUpdater<Accession>
 {
 	private Set<Long> createdAccessionIds          = new HashSet<>();
 	private Set<Long> createdTaxonomyIds           = new HashSet<>();
@@ -49,6 +49,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 	private Set<Long> createdPedigreeNotationIds   = new HashSet<>();
 	private Set<Long> createdSynonymIds            = new HashSet<>();
 
+	private boolean               isUpdate = false;
 	private AttributeDataImporter attributeDataImporter;
 
 	public static void main(String[] args)
@@ -102,6 +103,14 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 	}
 
 	@Override
+	public void update(Accession entry)
+			throws DatabaseException
+	{
+		this.isUpdate = true;
+		write(entry);
+	}
+
+	@Override
 	protected void write(Accession entry) throws DatabaseException
 	{
 		// Write or get the referenced database objects
@@ -112,8 +121,15 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		getMlsStatus(entry);
 		createOrGetLocation(entry);
 
-		// Write or get the accession itself
-		entry = createOrGetAccession(entry);
+		if (isUpdate)
+		{
+			entry = getAndUpdateAccession(entry);
+		}
+		else
+		{
+			// Write or get the accession itself
+			entry = createOrGetAccession(entry);
+		}
 
 		createSynonyms(entry);
 
@@ -131,7 +147,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 
 			if (attributeData.getValue() != null)
 			{
-				AttributeData.Writer.Inst.get().write(databaseConnection, attributeData);
+				AttributeData.Writer.Inst.get().write(databaseConnection, attributeData, false);
 				createdAttributeDataIds.add(attributeData.getId());
 			}
 		}
@@ -146,7 +162,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 					.setDefinition(entry.getExtra(McpdField.ANCEST.name()))
 					.setAccession(entry);
 
-			PedigreeDefinition.Writer.Inst.get().write(databaseConnection, pedigreeDefinition);
+			PedigreeDefinition.Writer.Inst.get().write(databaseConnection, pedigreeDefinition, false);
 			createdPedigreeDefinitionIds.add(pedigreeDefinition.getId());
 		}
 	}
@@ -265,6 +281,35 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		}
 	}
 
+	private Accession getAndUpdateAccession(Accession entry)
+			throws DatabaseException
+	{
+		if (StringUtils.isEmpty(entry.getGeneralIdentifier()))
+			throw new DatabaseException("ACCENUMB cannot be empty!");
+
+		DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT * FROM germinatebase WHERE general_identifier <=> ?");
+		int i = 1;
+		stmt.setString(i++, entry.getGeneralIdentifier());
+
+		DatabaseResult rs = stmt.query();
+
+		if (rs.next())
+		{
+			Accession result = Accession.ImportParser.Inst.get().parse(rs, null, true);
+
+			if (result != null)
+				Accession.Writer.Inst.get().write(databaseConnection, entry, true);
+			else
+				throw new DatabaseException("Accession with given ACCENUMB not found: " + entry.getGeneralIdentifier());
+		}
+		else
+		{
+			throw new DatabaseException("Accession with given ACCENUMB not found: " + entry.getGeneralIdentifier());
+		}
+
+		return entry;
+	}
+
 	/**
 	 * Gets or creates the {@link Accession} based on the given MCPD information. It'll check for duplicates, but won't updated existing entries based
 	 * on a subset of the fields.
@@ -314,7 +359,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		}
 		else
 		{
-			Accession.Writer.Inst.get().write(databaseConnection, result);
+			Accession.Writer.Inst.get().write(databaseConnection, result, false);
 			createdAccessionIds.add(result.getId());
 		}
 
@@ -353,7 +398,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		}
 		else
 		{
-			Location.Writer.Inst.get().write(databaseConnection, entry.getLocation());
+			Location.Writer.Inst.get().write(databaseConnection, entry.getLocation(), false);
 			createdLocationIds.add(entry.getLocation().getId());
 		}
 	}
@@ -385,7 +430,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 			PedigreeNotation notation = new PedigreeNotation()
 					.setName(name);
 
-			PedigreeNotation.Writer.Inst.get().write(databaseConnection, notation);
+			PedigreeNotation.Writer.Inst.get().write(databaseConnection, notation, false);
 			createdPedigreeNotationIds.add(notation.getId());
 
 			return notation;
@@ -417,7 +462,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		}
 		else
 		{
-			Institution.Writer.Inst.get().write(databaseConnection, entry.getInstitution());
+			Institution.Writer.Inst.get().write(databaseConnection, entry.getInstitution(), false);
 			createdInstitutionIds.add(entry.getInstitution().getId());
 		}
 	}
@@ -448,7 +493,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 		}
 		else
 		{
-			Taxonomy.Writer.Inst.get().write(databaseConnection, entry.getTaxonomy());
+			Taxonomy.Writer.Inst.get().write(databaseConnection, entry.getTaxonomy(), false);
 			createdTaxonomyIds.add(entry.getTaxonomy().getId());
 		}
 	}
@@ -489,7 +534,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 										   .setSynonyms(json)
 										   .setCreatedOn(new Date());
 
-			Synonym.Writer.Inst.get().write(databaseConnection, synonym);
+			Synonym.Writer.Inst.get().write(databaseConnection, synonym, false);
 			createdSynonymIds.add(synonym.getId());
 		}
 	}
@@ -526,7 +571,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 					.setTargetTable(GerminateDatabaseTable.germinatebase.name())
 					.setDataType("char");
 
-			Attribute.Writer.Inst.get().write(databaseConnection, result);
+			Attribute.Writer.Inst.get().write(databaseConnection, result, false);
 			createdAttributeIds.add(result.getId());
 		}
 
@@ -566,7 +611,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession>
 					.setAccession(entry)
 					.setStorage(s);
 
-			StorageData.Writer.Inst.get().write(databaseConnection, data);
+			StorageData.Writer.Inst.get().write(databaseConnection, data, false);
 			createdStorageDataIds.add(data.getId());
 		}
 	}

@@ -96,7 +96,7 @@ public class ExcelMarkerTypeImporter extends DataImporter<MarkerType>
 		{
 			markerType = entry;
 
-			MarkerType.Writer.Inst.get().write(databaseConnection, markerType);
+			MarkerType.Writer.Inst.get().write(databaseConnection, markerType, false);
 			createdMarkertypeIds.add(markerType.getId());
 		}
 	}
@@ -122,7 +122,7 @@ public class ExcelMarkerTypeImporter extends DataImporter<MarkerType>
 			mapFeatureType = new MapFeatureType()
 					.setDescription(entry.getDescription());
 
-			MapFeatureType.Writer.Inst.get().write(databaseConnection, mapFeatureType);
+			MapFeatureType.Writer.Inst.get().write(databaseConnection, mapFeatureType, false);
 			createdMarkertypeIds.add(mapFeatureType.getId());
 		}
 	}

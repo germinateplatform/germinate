@@ -21,7 +21,6 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
@@ -33,7 +32,6 @@ import java.util.*;
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.page.accession.*;
-import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
@@ -154,20 +152,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 				break;
 
-		}
-
-	}
-
-	private void getData(ExperimentType experimentType, List<Long> datasetIds, List<Long> groupIds, Long firstId, Long secondId, AsyncCallback<ServerResult<String>> callback)
-	{
-		switch (experimentType)
-		{
-			case trials:
-				PhenotypeService.Inst.get().export(Cookie.getRequestProperties(), datasetIds, groupIds, Arrays.asList(firstId, secondId), true, callback);
-				break;
-			case compound:
-				CompoundService.Inst.get().getExportFile(Cookie.getRequestProperties(), datasetIds, groupIds, Arrays.asList(firstId, secondId), true, callback);
-				break;
 		}
 
 	}
@@ -372,7 +356,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 		setNames(experimentType, first, second);
 
-		getData(experimentType, selectedDatasetIds, groupIds, firstId, secondId, new DefaultAsyncCallback<ServerResult<String>>(true)
+		MatrixChart.getData(experimentType, selectedDatasetIds, groupIds, Arrays.asList(firstId, secondId), new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override
 			protected void onSuccessImpl(ServerResult<String> result)

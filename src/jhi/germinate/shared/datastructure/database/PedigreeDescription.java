@@ -190,7 +190,7 @@ public class PedigreeDescription extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, PedigreeDescription object) throws DatabaseException
+		public void write(Database database, PedigreeDescription object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `pedigreedescriptions` (" + NAME + ", " + DESCRIPTION + ", " + AUTHOR + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?)")
 					.setString(object.getName())

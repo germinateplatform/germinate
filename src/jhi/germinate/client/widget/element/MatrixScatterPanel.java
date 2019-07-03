@@ -120,7 +120,7 @@ public class MatrixScatterPanel<T extends DatabaseObject> extends Composite
 			return;
 		}
 
-		parameterSelection = new MatrixChartSelection<>(experimentType, objects, groups);
+		parameterSelection = new MatrixChartSelection<>(experimentType, selectedDatasets, objects, groups);
 
 		panel.add(parameterSelection);
 		panel.add(plot);

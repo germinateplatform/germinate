@@ -54,10 +54,9 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	 * @return The marker names
 	 * @throws DatabaseException Thrown if the database interaction fails
 	 */
-	private static List<String> getColumnNames(DebugInfo sqlDebug, List<Long> markerGroups, Long mapToUse, UserAuth userAuth) throws DatabaseException
+	private static Set<String> getColumnNames(DebugInfo sqlDebug, List<Long> markerGroups, Set<String> markedMarkerIds, Long mapToUse, UserAuth userAuth) throws DatabaseException
 	{
-		// If no groups are selected
-		if (CollectionUtils.isEmpty(markerGroups))
+		if ((CollectionUtils.isEmpty(markerGroups) && CollectionUtils.isEmpty(markedMarkerIds)))
 		{
 			return null;
 		}
@@ -68,7 +67,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 			{
 				ServerResult<List<String>> result = MarkerManager.getNamesForMap(userAuth, mapToUse);
 				sqlDebug.addAll(result.getDebugInfo());
-				return result.getServerResult();
+				return new LinkedHashSet<>(result.getServerResult());
 			}
 			catch (Exception e)
 			{
@@ -79,21 +78,49 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 
 		try
 		{
+			Set<String> result = null;
 			List<String> groupIds = markerGroups.stream()
 												.map(g -> Long.toString(g))
 												.collect(Collectors.toList());
 
-			if (CollectionUtils.isEmpty(groupIds))
-				return null;
+			if (!CollectionUtils.isEmpty(groupIds))
+			{
+				PartialSearchQuery q = new PartialSearchQuery();
+				q.add(new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class));
+				q.addLogicalOperator(new And());
+				q.add(new SearchCondition(Group.ID, new InSet(), groupIds, Long.class));
 
-			PartialSearchQuery q = new PartialSearchQuery();
-			q.add(new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class));
-			q.addLogicalOperator(new And());
-			q.add(new SearchCondition(Group.ID, new InSet(), groupIds, Long.class));
+				ServerResult<List<String>> groupData = MarkerManager.getNamesForFilter(userAuth, q);
+				if (groupData != null)
+				{
+					sqlDebug.addAll(groupData.getDebugInfo());
+					result = new LinkedHashSet<>();
+					if (groupData.hasData())
+						result = new LinkedHashSet<>(groupData.getServerResult());
+				}
+			}
+			if (!CollectionUtils.isEmpty(markedMarkerIds))
+			{
+				PartialSearchQuery q = new PartialSearchQuery();
+				q.add(new SearchCondition(Map.ID, new Equal(), Long.toString(mapToUse), Long.class));
+				q.addLogicalOperator(new And());
+				q.add(new SearchCondition(Group.ID, new InSet(), groupIds, Long.class));
 
-			ServerResult<List<String>> result = MarkerManager.getNamesForFilter(userAuth, q);
-			sqlDebug.addAll(result.getDebugInfo());
-			return result.getServerResult();
+				ServerResult<List<String>> markedData = MarkerManager.getNamesForIds(userAuth, markedMarkerIds);
+
+				if (markedData != null)
+				{
+					if (result == null)
+						result = new LinkedHashSet<>();
+					sqlDebug.addAll(markedData.getDebugInfo());
+
+					if (markedData.hasData())
+						result.addAll(markedData.getServerResult());
+				}
+			}
+
+			return result;
+
 		}
 		catch (Exception e)
 		{
@@ -111,17 +138,33 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	 * @return The line names (name, afp_number)
 	 * @throws DatabaseException Thrown if the database interaction fails
 	 */
-	private static List<String> getRowNames(UserAuth userAuth, DebugInfo sqlDebug, List<Long> accessionGroups) throws DatabaseException
+	private static Set<String> getRowNames(UserAuth userAuth, DebugInfo sqlDebug, List<Long> accessionGroups, Set<String> markedAccessionIds) throws DatabaseException
 	{
 		// If no groups are selected or if it contains the "All items group"
-		if (CollectionUtils.isEmpty(accessionGroups) || containsAllItemsGroup(accessionGroups))
+		if (containsAllItemsGroup(accessionGroups) || (CollectionUtils.isEmpty(accessionGroups) && CollectionUtils.isEmpty(markedAccessionIds)))
 			return null;
 
-		ServerResult<List<String>> names = AccessionManager.getNamesForGroups(userAuth, accessionGroups);
+		// Return null by default
+		Set<String> result = null;
+		ServerResult<List<String>> groupData = AccessionManager.getNamesForGroups(userAuth, accessionGroups);
+		ServerResult<List<String>> markedData = AccessionManager.getNamesForIds(userAuth, markedAccessionIds);
 
-		sqlDebug.addAll(names.getDebugInfo());
+		if (groupData != null)
+		{
+			sqlDebug.addAll(groupData.getDebugInfo());
+			if (groupData.hasData())
+				result = new LinkedHashSet<>(groupData.getServerResult());
+		}
+		if (markedData != null)
+		{
+			if (result == null)
+				result = new LinkedHashSet<>();
+			sqlDebug.addAll(markedData.getDebugInfo());
+			if (markedData.hasData())
+				result.addAll(markedData.getServerResult());
+		}
 
-		return names.getServerResult();
+		return result;
 	}
 
 	public CommonServiceImpl.ExportResult getExportResult(Long datasetId, ExperimentType type, BaseRemoteServiceServlet servlet)
@@ -156,15 +199,15 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		return exportResult;
 	}
 
-	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, ExperimentType type, List<Long> accessionGroups, List<Long> markerGroups, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException, InvalidArgumentException
+	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, ExperimentType type, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException, InvalidArgumentException
 	{
 		/* Get the datasets the user is allowed to use */
 		Boolean isAllowedToUse = DatasetManager.userHasAccessToDataset(userAuth, datasetId).getServerResult();
 
 		/* Get the line names to extract */
-		List<String> rowNames = isAllowedToUse ? getRowNames(userAuth, sqlDebug, accessionGroups) : new ArrayList<>();
+		Set<String> rowNames = isAllowedToUse ? getRowNames(userAuth, sqlDebug, accessionGroups, markedAccessionIds) : new LinkedHashSet<>();
 		/* Get the marker names to extract */
-		List<String> colNames = getColumnNames(sqlDebug, markerGroups, mapId, userAuth);
+		Set<String> colNames = getColumnNames(sqlDebug, markerGroups, markedMarkerIds, mapId, userAuth);
 
 		/* Set the filter values */
 		int qualityHetero = heterozygousFilter ? QUALITY_HETERO : 100;

@@ -468,7 +468,7 @@ public class Location extends DatabaseObject
 		}
 
 		@Override
-		public void write(Database database, Location object) throws DatabaseException
+		public void write(Database database, Location object, boolean isUpdate) throws DatabaseException
 		{
 			ValueQuery query = new ValueQuery(database, "INSERT INTO `locations` (" + LOCATIONTYPE_ID + ", " + COUNTRY_ID + ", " + STATE + ", " + REGION + ", " + SITE_NAME + ", " + SITE_NAME_SHORT + ", " + ELEVATION + ", " + LATITUDE + ", " + LONGITUDE + ", " + COORDINATE_UNCERTAINTY + ", " + COORDINATE_DATUM + ", " + GEOREFERENCING_METHOD + ", " + CREATED_ON + ", " + UPDATED_ON + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 					.setLong(object.getType().getId())
