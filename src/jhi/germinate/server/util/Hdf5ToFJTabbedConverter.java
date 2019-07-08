@@ -18,6 +18,7 @@
 package jhi.germinate.server.util;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -36,26 +37,21 @@ public class Hdf5ToFJTabbedConverter
 	private static final String STATE_TABLE = "StateTable";
 
 	private File                  hdf5File;
-	private LinkedHashSet<String> lines              = null;
-	private LinkedHashSet<String> markers            = null;
-	private boolean               missingDataFilter  = false;
-	private boolean               heterozygousFilter = false;
+	private LinkedHashSet<String> lines;
+	private LinkedHashSet<String> markers;
 
 	private boolean transposed = false;
 
-	//	private Map<String, String> linesReplaced;
-
 	private HashMap<String, Integer> lineInds;
 	private HashMap<String, Integer> markerInds;
-
-	private IHDF5Reader reader;
-
 	private LinkedHashSet<String> hdf5Lines;
 	private LinkedHashSet<String> hdf5Markers;
 
+	private IHDF5Reader reader;
+
 	private String outputFilePath;
 
-	public Hdf5ToFJTabbedConverter(File hdf5File, LinkedHashSet<String> lines, LinkedHashSet<String> markers, String outputFilePath, boolean transposed, boolean missingDataFilter, boolean heterozygousFilter)
+	public Hdf5ToFJTabbedConverter(File hdf5File, LinkedHashSet<String> lines, LinkedHashSet<String> markers, String outputFilePath, boolean transposed)
 	{
 		// Setup input and output files
 		this.hdf5File = hdf5File;
@@ -63,10 +59,6 @@ public class Hdf5ToFJTabbedConverter
 		this.markers = markers;
 		this.outputFilePath = outputFilePath;
 		this.transposed = transposed;
-
-		// TODO: work out how we can implement these filters in a time efficient way
-		this.missingDataFilter = missingDataFilter;
-		this.heterozygousFilter = heterozygousFilter;
 	}
 
 	public void readInput()
@@ -81,7 +73,7 @@ public class Hdf5ToFJTabbedConverter
 		s = System.currentTimeMillis();
 		// Load lines from HDF5 and find the indices of our loaded lines
 		String[] hdf5LinesArray = reader.readStringArray(LINES);
-		hdf5Lines = new LinkedHashSet<String>(Arrays.asList(hdf5LinesArray));
+		hdf5Lines = new LinkedHashSet<>(Arrays.asList(hdf5LinesArray));
 
 		if (lines == null)
 			lines = hdf5Lines;
@@ -98,7 +90,7 @@ public class Hdf5ToFJTabbedConverter
 		s = System.currentTimeMillis();
 		// Load markers from HDF5 and find the indices of our loaded markers
 		String[] hdf5MarkersArray = reader.readStringArray(MARKERS);
-		hdf5Markers = new LinkedHashSet<String>(Arrays.asList(hdf5MarkersArray));
+		hdf5Markers = new LinkedHashSet<>(Arrays.asList(hdf5MarkersArray));
 
 		if (markers == null)
 			markers = hdf5Markers;
@@ -130,7 +122,7 @@ public class Hdf5ToFJTabbedConverter
 		System.out.println("Read statetable: " + (System.currentTimeMillis() - s) + " (ms)");
 
 		// Write our output file line by line
-		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFilePath), "UTF8"))))
+		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFilePath), StandardCharsets.UTF_8))))
 		{
 			// Write header for drag and drop
 			writer.println("# fjFile = GENOTYPE");

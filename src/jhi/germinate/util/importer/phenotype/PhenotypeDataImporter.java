@@ -38,14 +38,14 @@ import jhi.germinate.util.importer.reader.*;
 public class PhenotypeDataImporter extends DataImporter<PhenotypeData>
 {
 	protected List<PhenotypeData>    cache      = new ArrayList<>();
-	private   Map<String, Accession> accessions = new HashMap<>();
-	private   Map<String, Long>      treatments = new HashMap<>();
-	private   Map<String, Long>      phenotypes = new HashMap<>();
+	private   Map<String, Accession> accessions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+	private   Map<String, Long>      treatments = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+	private   Map<String, Long>      phenotypes = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
 	private Set<Long>         createdPhenotypeDataIds = new HashSet<>();
 	private Set<Long>         createdTreatmentIds     = new HashSet<>();
 	private Set<Long>         createdAccessionIds     = new HashSet<>();
-	private Map<String, Long> phenotypeDatas          = new HashMap<>();
+	private Map<String, Long> phenotypeDatas          = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
 	private Dataset dataset;
 

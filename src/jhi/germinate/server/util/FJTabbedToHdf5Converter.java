@@ -18,6 +18,7 @@
 package jhi.germinate.server.util;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -28,11 +29,9 @@ import ch.systemsx.cisd.hdf5.*;
  */
 public class FJTabbedToHdf5Converter
 {
-	private static final String LINES   = "Lines";
-	private static final String MARKERS = "Markers";
-
-	private static final String DATA = "DataMatrix";
-
+	private static final String LINES       = "Lines";
+	private static final String MARKERS     = "Markers";
+	private static final String DATA        = "DataMatrix";
 	private static final String STATE_TABLE = "StateTable";
 
 	private File genotypeFile;
@@ -61,9 +60,9 @@ public class FJTabbedToHdf5Converter
 		checkFileExists(genotypeFile);
 
 		long s = System.currentTimeMillis();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(genotypeFile), "UTF-8"));
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(genotypeFile), StandardCharsets.UTF_8));
 			 // The second reader is just to get the number of rows
-			 LineNumberReader lineNumberReader = new LineNumberReader(new InputStreamReader(new FileInputStream(genotypeFile), "UTF-8")))
+			 LineNumberReader lineNumberReader = new LineNumberReader(new InputStreamReader(new FileInputStream(genotypeFile), StandardCharsets.UTF_8)))
 		{
 			// Delete old files with this name, because otherwise the new data will get appended to the old data
 			if (hdf5File.exists() && hdf5File.isFile())
@@ -130,7 +129,7 @@ public class FJTabbedToHdf5Converter
 				String[] snpCalls = Arrays.copyOfRange(columns, 1, columns.length);
 				Stream.of(snpCalls).forEach(token -> stateTable.putIfAbsent(token, (byte) stateTable.size()));
 
-				Byte[] bytes = Stream.of(snpCalls).map(token -> stateTable.get(token)).toArray(Byte[]::new);
+				Byte[] bytes = Stream.of(snpCalls).map(stateTable::get).toArray(Byte[]::new);
 				byte[] outBytes = convertBytesToPrimitive(bytes);
 
 				if (outBytes.length != markers.length)
@@ -147,10 +146,10 @@ public class FJTabbedToHdf5Converter
 
 			// Write the marker and line names as arrays
 			writer.string().writeArray(MARKERS, markers, HDF5GenericStorageFeatures.GENERIC_DEFLATE);
-			writer.string().writeArray(LINES, lines.toArray(new String[lines.size()]), HDF5GenericStorageFeatures.GENERIC_DEFLATE);
+			writer.string().writeArray(LINES, lines.toArray(new String[0]), HDF5GenericStorageFeatures.GENERIC_DEFLATE);
 
 			// Write the state table
-			writer.string().writeArray(STATE_TABLE, stateTable.keySet().toArray(new String[stateTable.keySet().size()]), HDF5GenericStorageFeatures.GENERIC_DEFLATE);
+			writer.string().writeArray(STATE_TABLE, stateTable.keySet().toArray(new String[0]), HDF5GenericStorageFeatures.GENERIC_DEFLATE);
 			writer.close();
 		}
 		catch (IOException e)

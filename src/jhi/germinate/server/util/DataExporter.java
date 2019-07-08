@@ -75,7 +75,7 @@ public class DataExporter
 		if (parameters.colNames != null)
 			markers = new LinkedHashSet<>(parameters.colNames);
 
-		converter = new Hdf5ToFJTabbedConverter(parameters.inputFile, lines, markers, outputFile, false, parameters.qualityMissingValue != 100, parameters.qualityHeteroValue != 100);
+		converter = new Hdf5ToFJTabbedConverter(parameters.inputFile, lines, markers, outputFile, false);
 	}
 
 	/**
