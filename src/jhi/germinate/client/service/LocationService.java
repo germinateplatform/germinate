@@ -149,7 +149,7 @@ public interface LocationService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 * @throws IOException             Thrown if the file interaction fails
 	 */
-	ServerResult<List<Country>> getInstitutionsByCountry(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException;
+	ServerResult<String> getInstitutionsByCountry(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException;
 
 	/**
 	 * Returns the {@link Location}s with the given ids.

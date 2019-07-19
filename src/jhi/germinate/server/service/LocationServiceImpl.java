@@ -115,11 +115,27 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 	}
 
 	@Override
-	public ServerResult<List<Country>> getInstitutionsByCountry(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
+	public ServerResult<String> getInstitutionsByCountry(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
-		return InstitutionManager.getGroupedByCountry(userAuth);
+
+		DefaultStreamer table = new DefaultQuery("SELECT `countries`.`country_name` AS `country`, `countries`.`country_code3` AS `code`, COUNT(1) AS `count` FROM `institutions` LEFT JOIN `countries` ON `countries`.`id` = `institutions`.`country_id` GROUP BY `countries`.`id`", userAuth)
+				.getStreamer();
+
+		File file = BaseHttpServlet.createTemporaryFile(getRequest(), "stats", FileType.txt.name());
+
+		try
+		{
+			Util.writeDefaultToFile(Util.getOperatingSystem(getRequest()), null, table, file);
+		}
+		catch (java.io.IOException e)
+		{
+			e.printStackTrace();
+			throw new IOException(e);
+		}
+
+		return new ServerResult<>(table.getDebugInfo(), file.getName());
 	}
 
 	@Override

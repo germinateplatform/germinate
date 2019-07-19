@@ -45,16 +45,21 @@ body {
 	font-size: 4em;
 }
 
+.text-center .plotly .svg-container {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:active {
 	-webkit-box-shadow: 0 0 0 1000px white inset;
 }
 
-html, body, .<%= Style.NO_POINTER_EVENTS %>{
+.<%= Style.NO_POINTER_EVENTS %>{
 	pointer-events: none;
 }
 
-body * {
-	pointer-events: all;
+.<%= Style.NO_POINTER_EVENTS %> .container {
+	pointer-events: auto;
 }
 
 td p {

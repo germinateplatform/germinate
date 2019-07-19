@@ -194,6 +194,10 @@ public class JavaScript
 		$wnd.$(selector).addClass(clazz);
 	}-*/;
 
+	public static native Element[] find(Element parent, String selector) /*-{
+		return $wnd.$(parent).find(selector).toArray();
+	}-*/;
+
 	/**
 	 * {@link D3} is a utility class containing constants and utility methods for D3
 	 *

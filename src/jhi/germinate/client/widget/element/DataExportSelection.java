@@ -122,7 +122,7 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 			return;
 		}
 
-		MatrixChart.getData(type, datasetIds, groupIds, objectIds, new DefaultAsyncCallback<ServerResult<String>>(true)
+		PlotlyMatrixChart.getData(type, datasetIds, groupIds, objectIds, new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override
 			public void onSuccessImpl(ServerResult<String> result)

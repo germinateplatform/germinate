@@ -1925,6 +1925,10 @@ public interface Text extends Messages
 	@DefaultMessage("Contact us")
 	String contact();
 
+	@Key("widget.chart.options")
+	@DefaultMessage("Options")
+	String widgetChartOptions();
+
 
 	@Key("widget.table.filter.title")
 	@DefaultMessage("Toggle filtering")

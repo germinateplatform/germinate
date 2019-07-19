@@ -100,7 +100,7 @@ public interface LocationServiceAsync
 	 * @param properties The {@link RequestProperties}
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void getInstitutionsByCountry(RequestProperties properties, AsyncCallback<ServerResult<List<Country>>> callback);
+	void getInstitutionsByCountry(RequestProperties properties, AsyncCallback<ServerResult<String>> callback);
 
 	/**
 	 * Returns the {@link Location}s with the given ids.

@@ -15,239 +15,293 @@
  *  limitations under the License.
  */
 
-(function() {
-  var out$ = typeof exports != 'undefined' && exports || this;
+(function () {
+	var out$ = typeof exports != 'undefined' && exports || this;
 
-  var doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+	var doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
 
-  function inlineImages(callback) {
-    var images = document.querySelectorAll('svg image');
-    var left = images.length;
-    if (left == 0) {
-      callback();
-    }
-    for (var i = 0; i < images.length; i++) {
-      (function(image) {
-        if (image.getAttribute('xlink:href')) {
-          var href = image.getAttribute('xlink:href').value;
-          if (/^http/.test(href) && !(new RegExp('^' + window.location.host).test(href))) {
-            throw new Error("Cannot render embedded images linking to external hosts.");
-          }
-        }
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
-        var img = new Image();
-        img.src = image.getAttribute('xlink:href');
-        img.onload = function() {
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-          image.setAttribute('xlink:href', canvas.toDataURL('image/png'));
-          left--;
-          if (left == 0) {
-            callback();
-          }
-        }
-      })(images[i]);
-    }
-  }
+	function inlineImages(callback) {
+		var images = document.querySelectorAll('svg image');
+		var left = images.length;
+		if (left == 0) {
+			callback();
+		}
+		for (var i = 0; i < images.length; i++) {
+			(function (image) {
+				if (image.getAttribute('xlink:href')) {
+					var href = image.getAttribute('xlink:href').value;
+					if (/^http/.test(href) && !(new RegExp('^' + window.location.host).test(href))) {
+						throw new Error("Cannot render embedded images linking to external hosts.");
+					}
+				}
+				var canvas = document.createElement('canvas');
+				var ctx = canvas.getContext('2d');
+				var img = new Image();
+				img.src = image.getAttribute('xlink:href');
+				img.onload = function () {
+					canvas.width = img.width;
+					canvas.height = img.height;
+					ctx.drawImage(img, 0, 0);
+					image.setAttribute('xlink:href', canvas.toDataURL('image/png'));
+					left--;
+					if (left == 0) {
+						callback();
+					}
+				}
+			})(images[i]);
+		}
+	}
 
-  function styles(dom) {
-    var css = "";
-    var sheets = document.styleSheets;
-    for (var i = 0; i < sheets.length; i++) {
-      try {
-        if(sheets[i].cssRules)
-        {
-          var rules = sheets[i].cssRules;
-          for (var j = 0; j < rules.length; j++) {
-            var rule = rules[j];
-            if (typeof(rule.style) != "undefined") {
-              css += rule.selectorText + " { " + rule.style.cssText + " }\n";
-            }
-          }
-        }
-      }
-      catch (e) {
-        if(e.name !== 'SecurityError')
-          throw e;
-      }
-    }
+	function styles(dom) {
+		var css = "";
+		var sheets = document.styleSheets;
+		for (var i = 0; i < sheets.length; i++) {
+			try {
+				if (sheets[i].cssRules) {
+					var rules = sheets[i].cssRules;
+					for (var j = 0; j < rules.length; j++) {
+						var rule = rules[j];
+						if (typeof(rule.style) != "undefined") {
+							css += rule.selectorText + " { " + rule.style.cssText + " }\n";
+						}
+					}
+				}
+			}
+			catch (e) {
+				if (e.name !== 'SecurityError')
+					throw e;
+			}
+		}
 
-    var s = document.createElement('style');
-    s.setAttribute('type', 'text/css');
-    s.innerHTML = "<![CDATA[\n" + css + "\n]]>";
+		var s = document.createElement('style');
+		s.setAttribute('type', 'text/css');
+		s.innerHTML = "<![CDATA[\n" + css + "\n]]>";
 
-    var defs = document.createElement('defs');
-    defs.appendChild(s);
-    return defs;
-  }
+		var defs = document.createElement('defs');
+		defs.appendChild(s);
+		return defs;
+	}
 
-  function styles2(dom) {
-    var css = "";
-    var sheets = document.styleSheets;
-    for (var i = 0; i < sheets.length; i++) {
-      try {
-        if(sheets[i].cssRules)
-        {
-          var rules = sheets[i].cssRules;
-          for (var j = 0; j < rules.length; j++) {
-            var rule = rules[j];
-            if (typeof(rule.style) != "undefined") {
-              css += rule.selectorText + " { " + rule.style.cssText + " }\n";
-            }
-          }
-        }
-      }
-      catch (e) {
-        if(e.name !== 'SecurityError')
-          throw e;
-      }
-    }
+	function styles2(dom) {
+		var css = "";
+		var sheets = document.styleSheets;
+		for (var i = 0; i < sheets.length; i++) {
+			try {
+				if (sheets[i].cssRules) {
+					var rules = sheets[i].cssRules;
+					for (var j = 0; j < rules.length; j++) {
+						var rule = rules[j];
+						if (typeof(rule.style) != "undefined") {
+							css += rule.selectorText + " { " + rule.style.cssText + " }\n";
+						}
+					}
+				}
+			}
+			catch (e) {
+				if (e.name !== 'SecurityError')
+					throw e;
+			}
+		}
 
-    var s = document.createElement('style');
-    s.setAttribute('type', 'text/css');
-    s.innerHTML = css;
+		var s = document.createElement('style');
+		s.setAttribute('type', 'text/css');
+		s.innerHTML = css;
 
-    var defs = document.createElement('defs');
-    defs.appendChild(s);
-    return defs;
-  }
+		var defs = document.createElement('defs');
+		defs.appendChild(s);
+		return defs;
+	}
 
-  out$.svgAsBlob = function(el, scaleFactor, cb) {
-    scaleFactor = scaleFactor || 1;
+	out$.svgsAsBlob = function (els, scaleFactor, cb) {
+		scaleFactor = scaleFactor || 1;
 
-    inlineImages(function() {
-      var outer = document.createElement("div");
-      var clone = el.cloneNode(true);
-      var width = parseInt(
-          clone.getAttribute('width')
-          || clone.style.width
-          || out$.getComputedStyle(el).getPropertyValue('width')
-      );
-      var height = parseInt(
-          clone.getAttribute('height')
-          || clone.style.height
-          || out$.getComputedStyle(el).getPropertyValue('height')
-      );
+		var width = 0;
+		var height = 0;
 
-      var xmlns = "http://www.w3.org/2000/xmlns/";
+		els.forEach(function (e) {
+			var localWidth = parseInt(
+				e.getAttribute('width')
+				|| e.style.width
+				|| out$.getComputedStyle(e).getPropertyValue('width'));
+			var localHeight = parseInt(
+				e.getAttribute('height')
+				|| e.style.height
+				|| out$.getComputedStyle(e).getPropertyValue('height'));
+			if (localWidth > width)
+				width = localWidth;
+			if (localHeight > height)
+				height = localHeight;
+		});
 
-      clone.setAttribute("version", "1.1");
-      clone.setAttributeNS(xmlns, "xmlns", "http://www.w3.org/2000/svg");
-      clone.setAttributeNS(xmlns, "xmlns:xlink", "http://www.w3.org/1999/xlink");
-      clone.setAttribute("width", width * scaleFactor);
-      clone.setAttribute("height", height * scaleFactor);
-      clone.setAttribute("viewBox", "0 0 " + width + " " + height);
-      outer.appendChild(clone);
+		inlineImages(function () {
+			var svg = document.createElement("svg");
+			var xmlns = "http://www.w3.org/2000/xmlns/";
 
-      clone.insertBefore(styles2(clone), clone.firstChild);
+			svg.setAttribute("version", "1.1");
+			// svg.setAttributeNS(xmlns, "xmlns", "http://www.w3.org/2000/svg");
+			svg.setAttributeNS(xmlns, "xmlns:xlink", "http://www.w3.org/1999/xlink");
+			svg.setAttribute("width", width * scaleFactor);
+			svg.setAttribute("height", height * scaleFactor);
+			svg.setAttribute("viewBox", "0 0 " + width + " " + height);
 
-      // Create a blob from the SVG data
-      var svgData = new XMLSerializer().serializeToString(clone);
-      var blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+			els.forEach(function (e) {
+				var c = e.cloneNode(true);
+				c.setAttribute("x", 0);
+				c.setAttribute("y", 0);
+				c.removeAttribute("class");
+				c.removeAttribute("xmlns");
+				c.removeAttribute("xmlns:xlink");
+				svg.appendChild(c);
+			});
 
-      // Get the blob's URL
-      var blobUrl = (self.URL || self.webkitURL || self).createObjectURL(blob);
+			// Create a blob from the SVG data
+			var svgData = new XMLSerializer().serializeToString(svg);
+			svgData = svgData.replace("xmlns=\"http://www.w3.org/1999/xhtml\"", "xmlns=\"http://www.w3.org/2000/svg\"");
+			var blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
 
-      if (cb) {
-        cb(blobUrl);
-      }
-    });
-  };
+			// Get the blob's URL
+			var blobUrl = (self.URL || self.webkitURL || self).createObjectURL(blob);
 
-  out$.svgAsDataUri = function(el, scaleFactor, cb) {
-    scaleFactor = scaleFactor || 1;
+			if (cb) {
+				cb(blobUrl);
+			}
+		});
+	};
 
-    inlineImages(function() {
-      var outer = document.createElement("div");
-      var clone = el.cloneNode(true);
-      var width = parseInt(
-        clone.getAttribute('width')
-          || clone.style.width
-          || out$.getComputedStyle(el).getPropertyValue('width')
-      );
-      var height = parseInt(
-        clone.getAttribute('height')
-          || clone.style.height
-          || out$.getComputedStyle(el).getPropertyValue('height')
-      );
+	out$.svgAsBlob = function (el, scaleFactor, cb) {
+		scaleFactor = scaleFactor || 1;
 
-      var xmlns = "http://www.w3.org/2000/xmlns/";
+		inlineImages(function () {
+			var outer = document.createElement("div");
+			var clone = el.cloneNode(true);
+			var width = parseInt(
+				clone.getAttribute('width')
+				|| clone.style.width
+				|| out$.getComputedStyle(el).getPropertyValue('width')
+			);
+			var height = parseInt(
+				clone.getAttribute('height')
+				|| clone.style.height
+				|| out$.getComputedStyle(el).getPropertyValue('height')
+			);
 
-      clone.setAttribute("version", "1.1");
-      clone.setAttributeNS(xmlns, "xmlns", "http://www.w3.org/2000/svg");
-      clone.setAttributeNS(xmlns, "xmlns:xlink", "http://www.w3.org/1999/xlink");
-      clone.setAttribute("width", width * scaleFactor);
-      clone.setAttribute("height", height * scaleFactor);
-      clone.setAttribute("viewBox", "0 0 " + width + " " + height);
-      outer.appendChild(clone);
+			var xmlns = "http://www.w3.org/2000/xmlns/";
 
-      clone.insertBefore(styles(clone), clone.firstChild);
+			clone.setAttribute("version", "1.1");
+			clone.setAttributeNS(xmlns, "xmlns", "http://www.w3.org/2000/svg");
+			clone.setAttributeNS(xmlns, "xmlns:xlink", "http://www.w3.org/1999/xlink");
+			clone.setAttribute("width", width * scaleFactor);
+			clone.setAttribute("height", height * scaleFactor);
+			clone.setAttribute("viewBox", "0 0 " + width + " " + height);
+			outer.appendChild(clone);
 
-      var svg = doctype + outer.innerHTML;
-      var uri = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(svg)));
-      if (cb) {
-        cb(uri);
-      }
-    });
-  };
+			clone.insertBefore(styles2(clone), clone.firstChild);
 
-  out$.saveSvgAsPng = function(el, name, scaleFactor) {
-    out$.svgAsDataUri(el, scaleFactor, function(uri) {
-      var image = new Image();
-      image.src = uri;
-      image.onload = function() {
-        var canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
-        var context = canvas.getContext('2d');
-        context.drawImage(image, 0, 0);
+			// Create a blob from the SVG data
+			var svgData = new XMLSerializer().serializeToString(clone);
+			var blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
 
-        var a = document.createElement('a');
-        a.download = name;
-        a.href = canvas.toDataURL('image/png');
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
-    });
-  }
+			// Get the blob's URL
+			var blobUrl = (self.URL || self.webkitURL || self).createObjectURL(blob);
 
-  out$.saveLegendAsPng = function(e1, name) {
-    var data = {
-      overflowY: e1.style.overflowY,
-	  overflowX: e1.style.overflowX,
-	  width:     e1.style.width,
-	  maxWidth:  e1.style.maxWidth,
-	  height:    e1.style.height,
-	  maxHeight: e1.style.maxHeight
-    };
+			if (cb) {
+				cb(blobUrl);
+			}
+		});
+	};
 
-    e1.style.overflowY = "visible";
-    e1.style.overflowX = "visible";
-    e1.style.width = e1.scrollWidth + "px";
-    e1.style.maxWidth = e1.scrollWidth + "px";
-    e1.style.height = e1.scrollHeight + "px";
-    e1.style.maxHeight = e1.scrollHeight + "px";
+	out$.svgAsDataUri = function (el, scaleFactor, cb) {
+		scaleFactor = scaleFactor || 1;
 
-    html2canvas(e1, {
-      "onrendered": function (canvas) {
-        var a = document.createElement('a');
-        a.download = name;
-        a.href = canvas.toDataURL('image/png');
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+		inlineImages(function () {
+			var outer = document.createElement("div");
+			var clone = el.cloneNode(true);
+			var width = parseInt(
+				clone.getAttribute('width')
+				|| clone.style.width
+				|| out$.getComputedStyle(el).getPropertyValue('width')
+			);
+			var height = parseInt(
+				clone.getAttribute('height')
+				|| clone.style.height
+				|| out$.getComputedStyle(el).getPropertyValue('height')
+			);
 
-        e1.style.overflowY = data.overflowY;
-        e1.style.overflowX = data.overflowX;
-        e1.style.width = data.width;
-        e1.style.maxWidth = data.maxWidth;
-        e1.style.height = data.height;
-        e1.style.maxHeight = data.maxHeight;
-      }
-    });
-  }
+			var xmlns = "http://www.w3.org/2000/xmlns/";
+
+			clone.setAttribute("version", "1.1");
+			clone.setAttributeNS(xmlns, "xmlns", "http://www.w3.org/2000/svg");
+			clone.setAttributeNS(xmlns, "xmlns:xlink", "http://www.w3.org/1999/xlink");
+			clone.setAttribute("width", width * scaleFactor);
+			clone.setAttribute("height", height * scaleFactor);
+			clone.setAttribute("viewBox", "0 0 " + width + " " + height);
+			outer.appendChild(clone);
+
+			clone.insertBefore(styles(clone), clone.firstChild);
+
+			var svg = doctype + outer.innerHTML;
+			var uri = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(svg)));
+			if (cb) {
+				cb(uri);
+			}
+		});
+	};
+
+	out$.saveSvgAsPng = function (el, name, scaleFactor) {
+		out$.svgAsDataUri(el, scaleFactor, function (uri) {
+			var image = new Image();
+			image.src = uri;
+			image.onload = function () {
+				var canvas = document.createElement('canvas');
+				canvas.width = image.width;
+				canvas.height = image.height;
+				var context = canvas.getContext('2d');
+				context.drawImage(image, 0, 0);
+
+				var a = document.createElement('a');
+				a.download = name;
+				a.href = canvas.toDataURL('image/png');
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			}
+		});
+	}
+
+	out$.saveLegendAsPng = function (e1, name) {
+		var data = {
+			overflowY: e1.style.overflowY,
+			overflowX: e1.style.overflowX,
+			width: e1.style.width,
+			maxWidth: e1.style.maxWidth,
+			height: e1.style.height,
+			maxHeight: e1.style.maxHeight
+		};
+
+		e1.style.overflowY = "visible";
+		e1.style.overflowX = "visible";
+		e1.style.width = e1.scrollWidth + "px";
+		e1.style.maxWidth = e1.scrollWidth + "px";
+		e1.style.height = e1.scrollHeight + "px";
+		e1.style.maxHeight = e1.scrollHeight + "px";
+
+		html2canvas(e1, {
+			"onrendered": function (canvas) {
+				var a = document.createElement('a');
+				a.download = name;
+				a.href = canvas.toDataURL('image/png');
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+
+				e1.style.overflowY = data.overflowY;
+				e1.style.overflowX = data.overflowX;
+				e1.style.width = data.width;
+				e1.style.maxWidth = data.maxWidth;
+				e1.style.height = data.height;
+				e1.style.maxHeight = data.maxHeight;
+			}
+		});
+	}
 
 })();

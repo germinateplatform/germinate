@@ -136,6 +136,7 @@ public class Style
 	public static final String MDI_LOCK_OPEN                       = "mdi-lock-open";
 	public static final String MDI_LOCK                            = "mdi-lock";
 	public static final String MDI_DOWNLOAD                        = "mdi-download";
+	public static final String MDI_DOTS_VERTICAL                   = "mdi-dots-vertical";
 	public static final String MDI_CHECKBOX_BLANK_OUTLINE          = "mdi-checkbox-blank-outline";
 	public static final String MDI_CHECKBOX_MULTIPLE_BLANK_OUTLINE = "mdi-checkbox-multiple-blank-outline";
 	public static final String MDI_CHECKBOX_MARKED                 = "mdi-checkbox-marked";
@@ -195,7 +196,7 @@ public class Style
 	public static final String MDI_PENCIL_BOX_OUTLINE              = "mdi-pencil-box-outline";
 	public static final String MDI_ARROW_LEFT_BOLD                 = "mdi-arrow-left-bold";
 	public static final String MDI_ARROW_RIGHT_BOLD                = "mdi-arrow-right-bold";
-	public static final String MDI_ARROW_UP_BOLD                = "mdi-arrow-up-bold";
+	public static final String MDI_ARROW_UP_BOLD                   = "mdi-arrow-up-bold";
 	public static final String MDI_VIEW_COLUMN                     = "mdi-view-column";
 	public static final String MDI_CONTENT_SAVE                    = "mdi-content-save";
 	public static final String MDI_CONTENT_PASTE                   = "mdi-content-paste";

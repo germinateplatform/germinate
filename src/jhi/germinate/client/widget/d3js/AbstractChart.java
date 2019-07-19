@@ -108,6 +108,11 @@ public abstract class AbstractChart extends GerminateComposite
 	 */
 	protected abstract MenuItem[] getAdditionalMenuItems();
 
+	protected boolean canDownloadSvg()
+	{
+		return true;
+	}
+
 	/**
 	 * Removes d3 from the current page.
 	 */
@@ -166,6 +171,7 @@ public abstract class AbstractChart extends GerminateComposite
 		{
 			/* If the chart needs to update, then notify it */
 			removeD3(panelId);
+			clear();
 			if (chartPanel != null)
 				updateChart(chartPanel.getOffsetWidth());
 
@@ -260,21 +266,6 @@ public abstract class AbstractChart extends GerminateComposite
 						{
 							// Track the download
 							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "png", result);
-							Element chart = chartPanel.getElement();
-							Element svg = null;
-							Element legend = null;
-							for (int i = 0; i < chart.getChildCount(); i++)
-							{
-								Element el = DOM.getChild(chart, i);
-								if (el.getTagName().equals("svg"))
-								{
-									svg = el;
-								}
-								else if (el.hasClassName(Id.CHART_D3_LEGEND))
-								{
-									legend = el;
-								}
-							}
 
 							int index = result.indexOf(".png");
 
@@ -285,73 +276,37 @@ public abstract class AbstractChart extends GerminateComposite
 							else
 								name = result;
 
-							// Download the png
-							downloadImage(svg, name + ".png");
-
-							if (legend != null)
+							if (AbstractChart.this instanceof PlotlyChart)
 							{
-								final Element el = legend;
-								Scheduler.get().scheduleDeferred(() -> downloadLegend(el, name + "-legend.png"));
+								int[] size = ((PlotlyChart)AbstractChart.this).getDownloadSize();
+								downloadJsni(panelId, name + ".png", size[0], size[1]);
 							}
-
-							popup.hide();
-						}
-					});
-				});
-				menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
-				menuBar.addItem(menuItem);
-
-				/* Add the svg download item */
-				menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_FILE_XML, downloadSvg.asString()), (Command) () ->
-				{
-					// Get the initial filename
-					String finalFilename = DateUtils.getFilenameForDate(System.currentTimeMillis()) + "-" + filename + ".svg";
-					// Then ask the user for a preference
-					getFilename(finalFilename, new Callback<String, Exception>()
-					{
-						@Override
-						public void onFailure(Exception reason)
-						{
-						}
-
-						@Override
-						public void onSuccess(String result)
-						{
-							// Track the download
-							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "svg", result);
-							Element chart = chartPanel.getElement();
-							Element svg = null;
-							Element legend = null;
-							for (int i = 0; i < chart.getChildCount(); i++)
-							{
-								Element el = DOM.getChild(chart, i);
-								if (el.getTagName().equals("svg"))
-								{
-									svg = el;
-								}
-								else if (el.hasClassName(Id.CHART_D3_LEGEND))
-								{
-									legend = el;
-								}
-							}
-
-							int index = result.indexOf(".svg");
-
-							final String name;
-
-							if (index != -1)
-								name = result.substring(0, index);
 							else
-								name = result;
-
-
-							// Download the svg
-							downloadSvg(svg, name + ".svg");
-
-							if (legend != null)
 							{
-								final Element el = legend;
-								Scheduler.get().scheduleDeferred(() -> downloadLegend(el, name + "-legend.png"));
+								Element chart = chartPanel.getElement();
+								Element svg = null;
+								Element legend = null;
+								for (int i = 0; i < chart.getChildCount(); i++)
+								{
+									Element el = DOM.getChild(chart, i);
+									if (el.getTagName().equals("svg"))
+									{
+										svg = el;
+									}
+									else if (el.hasClassName(Id.CHART_D3_LEGEND))
+									{
+										legend = el;
+									}
+								}
+
+								// Download the png
+								downloadImage(svg, name + ".png");
+
+								if (legend != null)
+								{
+									final Element el = legend;
+									Scheduler.get().scheduleDeferred(() -> downloadLegend(el, name + "-legend.png"));
+								}
 							}
 
 							popup.hide();
@@ -360,6 +315,77 @@ public abstract class AbstractChart extends GerminateComposite
 				});
 				menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
 				menuBar.addItem(menuItem);
+
+				if (canDownloadSvg())
+				{
+					/* Add the svg download item */
+					menuItem = new MenuItem(SimpleHtmlTemplate.INSTANCE.contextMenuItemMaterialIcon(Style.MDI_FILE_XML, downloadSvg.asString()), (Command) () ->
+					{
+						// Get the initial filename
+						String finalFilename = DateUtils.getFilenameForDate(System.currentTimeMillis()) + "-" + filename + ".svg";
+						// Then ask the user for a preference
+						getFilename(finalFilename, new Callback<String, Exception>()
+						{
+							@Override
+							public void onFailure(Exception reason)
+							{
+							}
+
+							@Override
+							public void onSuccess(String result)
+							{
+								// Track the download
+								GoogleAnalytics.trackEvent(GoogleAnalytics.Category.DOWNLOAD, "svg", result);
+
+								final String name;
+
+								int index = result.indexOf(".svg");
+								if (index != -1)
+									name = result.substring(0, index);
+								else
+									name = result;
+
+								if (AbstractChart.this instanceof PlotlyChart)
+								{
+									Element[] svgs = JavaScript.find(chartPanel.getElement(), "svg:not(.icon):not(:last-child)");
+
+									downloadSvgs(svgs, name + ".svg");
+								}
+								else
+								{
+									Element chart = chartPanel.getElement();
+									Element svg = null;
+									Element legend = null;
+									for (int i = 0; i < chart.getChildCount(); i++)
+									{
+										Element el = DOM.getChild(chart, i);
+										if (el.getTagName().equals("svg"))
+										{
+											svg = el;
+										}
+										else if (el.hasClassName(Id.CHART_D3_LEGEND))
+										{
+											legend = el;
+										}
+									}
+
+									// Download the svg
+									downloadSvg(svg, name + ".svg");
+
+									if (legend != null)
+									{
+										final Element el = legend;
+										Scheduler.get().scheduleDeferred(() -> downloadLegend(el, name + "-legend.png"));
+									}
+								}
+
+								popup.hide();
+							}
+						});
+					});
+					menuItem.setStyleName(Style.combine(TooltipPanelResource.INSTANCE.css().link(), Emphasis.PRIMARY.getCssName()));
+					menuBar.addItem(menuItem);
+				}
 			}
 
 			/* Add the file download item */
@@ -405,14 +431,16 @@ public abstract class AbstractChart extends GerminateComposite
 			{
 				// Create the button that opens the menu
 				button = new Button("", event -> handleEvent(event, button, popup));
-				button.addStyleName(Style.mdiLg(Style.MDI_DOWNLOAD));
-				button.setTitle(Text.LANG.generalSaveAs());
+				button.addStyleName(Style.mdiLg(Style.MDI_DOTS_VERTICAL));
+				button.setTitle(Text.LANG.widgetChartOptions());
 
+				SimplePanel buttonGroupContainer = new SimplePanel();
+				buttonGroupContainer.addStyleName(Alignment.RIGHT.getCssName());
 				buttonGroup = new ButtonGroup();
-				buttonGroup.setPull(Pull.RIGHT);
 				buttonGroup.getElement().getStyle().setZIndex(10);
-				panel.insert(buttonGroup, panel.getWidgetIndex(chartPanel));
+				panel.insert(buttonGroupContainer, panel.getWidgetIndex(chartPanel));
 				buttonGroup.add(button);
+				buttonGroupContainer.add(buttonGroup);
 
 				Button[] additionalButtons = getAdditionalButtons();
 
@@ -422,11 +450,12 @@ public abstract class AbstractChart extends GerminateComposite
 						  .forEach(b -> buttonGroup.add(b));
 				}
 			}
-
-			/* Listen for context menu events */
-			handlers.put(chartPanel, chartPanel.addDomHandler(event -> handleEvent(event, null, popup), ContextMenuEvent.getType()));
 		}
 	}
+
+	private native void downloadJsni(String id, String name, int width, int height) /*-{
+		$wnd.Plotly.downloadImage(id, {format: 'png', width: width, height: height, filename: name});
+	}-*/;
 
 	/**
 	 * Asks the user for a file name preference
@@ -512,6 +541,23 @@ public abstract class AbstractChart extends GerminateComposite
 		}
 	}-*/;
 
+	/**
+	 * Starts the download of the svg
+	 *
+	 * @param svgs The svg elements
+	 */
+	private native void downloadSvgs(Element[] svgs, String filename)/*-{
+		var that = this;
+		if ($wnd.svgsAsBlob) {
+			$wnd.svgsAsBlob(svgs, 1, function (uri) {
+				that.@jhi.germinate.client.widget.d3js.AbstractChart::onDownloadSvg(*)(uri, filename);
+			});
+		}
+		else {
+			console.error("Load D3_DOWNLOAD library to download d3 charts");
+		}
+	}-*/;
+
 	private void handleEvent(DomEvent event, Widget relativeTo, PopupPanel popup)
 	{
 		event.preventDefault();
@@ -563,7 +609,7 @@ public abstract class AbstractChart extends GerminateComposite
 		{
 			Map.Entry<Widget, PopupPanel> item = it.next();
 
-			if (Objects.equals(panelId, item.getKey().getElement().getId()))
+			if (panelId.equals(item.getKey().getElement().getId()))
 			{
 				item.getValue().removeFromParent();
 				it.remove();
@@ -574,7 +620,7 @@ public abstract class AbstractChart extends GerminateComposite
 		{
 			Map.Entry<Widget, HandlerRegistration> item = it.next();
 
-			if (Objects.equals(panelId, item.getKey().getElement().getId()))
+			if (panelId.equals(item.getKey().getElement().getId()))
 			{
 				item.getValue().removeHandler();
 				it.remove();

@@ -146,7 +146,7 @@ public interface CommonService extends RemoteService
 	 * @throws InvalidSessionException Thrown if the session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
-	ServerResult<List<Country>> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException;
+	ServerResult<String> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException;
 
 	final class Inst
 	{

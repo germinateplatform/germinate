@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2019 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,6 @@
 package jhi.germinate.client.widget.d3js;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -29,17 +28,15 @@ import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
 
-import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.page.accession.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
-import jhi.germinate.client.widget.d3js.resource.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -51,18 +48,19 @@ import jhi.germinate.shared.exception.*;
  *
  * @author Sebastian Raubach
  */
-public class ScatterChart<T extends DatabaseObject> extends AbstractChart
+public class PlotlyScatterChart<T extends DatabaseObject> extends AbstractChart implements PlotlyChart
 {
 	private String         xAxisTitle = "";
 	private String         yAxisTitle = "";
 	private JsArrayInteger size       = null;
 	private String         coloringValue;
 
-	private FlowPanel chartPanel;
-	private Button    deleteButton;
-	private Button    badgeButton;
+	private FlowPanel   chartPanel;
+	private Button      deleteButton;
+	private Button      badgeButton;
+	private Set<String> selectedIds = new HashSet<>();
 
-	public ScatterChart()
+	public PlotlyScatterChart()
 	{
 	}
 
@@ -72,6 +70,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 		panel.add(chartPanel);
 
 		this.chartPanel = chartPanel;
+		chartPanel.addStyleName(Alignment.CENTER.getCssName());
 	}
 
 	@Override
@@ -79,6 +78,29 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	{
 		computeChartSize(width);
 		create(coloringValue.equals(Text.LANG.trialsPByPColorByTreatment()), coloringValue.equals(Text.LANG.trialsPByPColorByDataset()), coloringValue.equals(Text.LANG.trialsPByPColorByYear()), GerminateSettingsHolder.getCategoricalColor(0));
+	}
+
+	@Override
+	public void clear()
+	{
+		jsniClear(panelId);
+		super.clear();
+	}
+
+	@Override
+	public int[] getDownloadSize()
+	{
+		return new int[] {1280, 1280};
+	}
+
+	private native void jsniClear(String id) /*-{
+		$wnd.Plotly.purge($wnd.document.getElementById(id));
+	}-*/;
+
+	@Override
+	protected boolean canDownloadSvg()
+	{
+		return false;
 	}
 
 	protected Button[] getAdditionalButtons()
@@ -108,19 +130,6 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 		}
 
 		return new Button[]{deleteButton, badgeButton};
-	}
-
-	private void initPlotButton()
-	{
-		Button plot = new Button(Text.LANG.trialsPlot(), e ->
-		{
-
-		});
-		plot.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
-		plot.setType(ButtonType.PRIMARY);
-
-		panel.add(plot);
-		panel.add(chartPanel);
 	}
 
 	private void setNames(ExperimentType experimentType, T f, T s)
@@ -163,7 +172,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	 */
 	private void computeChartSize(int pageWidth)
 	{
-		pageWidth = Math.min(Math.round(pageWidth * 0.8f), Math.round(Window.getClientHeight() * 0.8f));
+		pageWidth = Math.min(Math.round(pageWidth), Math.round(Window.getClientHeight()));
 
 		size = JsArrayInteger.createArray().cast();
 		size.push(pageWidth);
@@ -187,101 +196,66 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	}
 
 	private native void create(boolean colorByTreatment, boolean colorByDataset, boolean colorByYear, String highlightColor)/*-{
+		var that = this;
+		var xAxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyScatterChart::xAxisTitle;
+		var yAxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyScatterChart::yAxisTitle;
 
-		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
-		var legendItemStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_LEGEND_ITEM;
-		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
-
-		var possibleStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.LassoBundle::STYLE_POSSIBLE;
-		var notPossibleStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.LassoBundle::STYLE_NOT_POSSIBLE;
-		var selectedStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.LassoBundle::STYLE_SELECTED;
-
-		var dotStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterChartBundle::STYLE_DOT;
-
-		var xAxisTitle = this.@jhi.germinate.client.widget.d3js.ScatterChart::xAxisTitle;
-		var yAxisTitle = this.@jhi.germinate.client.widget.d3js.ScatterChart::yAxisTitle;
-
-		var size = this.@jhi.germinate.client.widget.d3js.ScatterChart::size;
+		var size = this.@jhi.germinate.client.widget.d3js.PlotlyScatterChart::size;
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
 
-		var legendWidth = 100;
+		var colors = @jhi.germinate.client.util.JavaScript.D3::getColorPalette()();
 
-		var margin = @jhi.germinate.client.util.JavaScript.D3::getMargin()();
-		margin[1] = margin[2] = margin[3] = margin[0];
+		var colorBy;
+
+		if (colorByTreatment)
+			colorBy = 'treatments_description';
+		else if (colorByDataset)
+			colorBy = 'dataset_name';
+		else if (colorByYear)
+			colorBy = 'year';
+		else
+			colorBy = '';
+
 		var width = size[0];
-		var height = size[1] - legendWidth;
+		var height = size[1];
 
-		margin.bottom += 5;
-		margin.right += 5;
+		if (colorBy.length > 0)
+			height += 50;
 
-		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
-
-		$wnd.d3.xhr(filePath).get(function (err, response) {
+		$wnd.Plotly.d3.xhr(filePath).get(function (err, response) {
 			var dirtyTsv = response.responseText;
 			var firstEOL = dirtyTsv.indexOf('\n');
-			var parsedTsv = $wnd.d3.tsv.parse(dirtyTsv.substring(firstEOL + 1)); // Remove the first row (Helium header)
+			var parsedTsv = $wnd.d3.tsv.parse(dirtyTsv.substring(firstEOL + 1)); // Remove the first row
 
-			$wnd.d3.select("#" + panelId)
+			$wnd.Plotly.d3.select("#" + panelId)
 				.datum(parsedTsv)
-				.call($wnd.scatterPlot()
-					.margin(margin)
+				.call($wnd.plotlyScatterPlot()
+					.colors(colors)
+					.colorBy(colorBy)
 					.width(width)
 					.height(height)
-					.x(function (d) {
-						return parseFloat(d[xAxisTitle]);
+					.xCategory(xAxisTitle)
+					.yCategory(yAxisTitle)
+					.onPointClicked(function (point) {
+						@jhi.germinate.client.widget.d3js.PlotlyScatterChart::onDataPointClicked(Ljava/lang/String;)(point.id.split("-")[0]);
 					})
-					.y(function (d) {
-						return parseFloat(d[yAxisTitle]);
-					})
-					.colorKey(function (d) {
-						if (colorByTreatment)
-							return d.treatments_description;
-						else if (colorByDataset)
-							return d.dataset_name;
-						else if (colorByYear)
-							return d.year;
-						else
-							return null;
-					})
-					.id(function (d) {
-						return d.dbId;
-					})
-					.itemName(function (d) {
-						return d.name;
-					})
-					.highlightColor(highlightColor)
-					.tooltip(function (d) {
-						if (colorByTreatment && d.treatments_description)
-							return d.name + "<br/>" + d.treatments_description + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
-						else if (colorByDataset && d.dataset_name)
-							return d.name + "<br/>" + d.dataset_name + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
-						else if (colorByYear && d.year)
-							return d.name + "<br/>" + d.year + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
-						else
-							return d.name + "<br/>(" + d[xAxisTitle] + ", " + d[yAxisTitle] + ")";
-					})
-					.onClick(function (d) {
-						@jhi.germinate.client.widget.d3js.ScatterChart::onDataPointClicked(Ljava/lang/String;)(d.dbId);
-					})
-					.color(color)
-					.tooltipStyle(tooltipStyle)
-					.legendItemStyle(legendItemStyle)
-					.showLegend(true)
-					.legendWidth(legendWidth)
-					.axisStyle(axisStyle)
-					.dotStyle(dotStyle)
-					.showDistribution(true)
-					.lassoConfig({
-						"possibleStyle": possibleStyle,
-						"notPossibleStyle": notPossibleStyle,
-						"selectedStyle": selectedStyle
-					})
-					.xLabel(xAxisTitle)
-					.yLabel(yAxisTitle));
+					.onPointsSelected(function (points) {
+						that.@jhi.germinate.client.widget.d3js.PlotlyScatterChart::onDataPointsSelected(*)(points);
+					}));
 		});
-
 	}-*/;
+
+	public void onDataPointsSelected(JsArrayString ids)
+	{
+		selectedIds.clear();
+
+		if (ids != null)
+		{
+			for (int i = 0; i < ids.length(); i++)
+				selectedIds.add(ids.get(i));
+		}
+	}
 
 	/**
 	 * Handles selection of data points. Will redirect to {@link Page#PASSPORT}
@@ -320,28 +294,13 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 	 */
 	private Set<String> getSelectedDataPoints()
 	{
-		Set<String> result = new HashSet<>();
-
-		JsArrayString idList = getIds(chartPanel.getElement(), "." + Bundles.LassoBundle.STYLE_SELECTED);
-
-		for (int i = 0; i < idList.length(); i++)
-			result.add(idList.get(i));
-
-		return result;
+		return selectedIds;
 	}
-
-	private native JsArrayString getIds(Element element, String selector) /*-{
-		return $wnd.$(element)
-			.find(selector)
-			.map(function () {
-				return $wnd.$(this).attr("id").replace("item-", "");
-			});
-	}-*/;
 
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LASSO, Library.D3_LEGEND, Library.D3_SCATTER_PLOT, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_PLOT};
 	}
 
 	public void update(ExperimentType experimentType, List<Long> selectedDatasetIds, List<T> objects, List<Long> groupIds, String color)
@@ -356,7 +315,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 
 		setNames(experimentType, first, second);
 
-		MatrixChart.getData(experimentType, selectedDatasetIds, groupIds, Arrays.asList(firstId, secondId), new DefaultAsyncCallback<ServerResult<String>>(true)
+		PlotlyMatrixChart.getData(experimentType, selectedDatasetIds, groupIds, Arrays.asList(firstId, secondId), new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override
 			protected void onSuccessImpl(ServerResult<String> result)
@@ -373,7 +332,7 @@ public class ScatterChart<T extends DatabaseObject> extends AbstractChart
 							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
 
-					ScatterChart.this.onResize(true);
+					PlotlyScatterChart.this.onResize(true);
 				}
 				else
 				{

@@ -108,7 +108,7 @@ public interface CommonServiceAsync
 	 * @param properties The {@link RequestProperties}
 	 * @param callback   The {@link AsyncCallback}
 	 */
-	void getCountryStats(RequestProperties properties, AsyncCallback<ServerResult<List<Country>>> callback);
+	void getCountryStats(RequestProperties properties, AsyncCallback<ServerResult<String>> callback);
 
 	/**
 	 * Returns statistics (counts) for the main data types within Germinate. {@link Accession}s, {@link Marker}s, {@link Group}s and {@link Location}s.

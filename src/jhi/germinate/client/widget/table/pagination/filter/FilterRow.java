@@ -149,7 +149,7 @@ public class FilterRow extends Composite
 		{
 			Class<?> type = column.getSelection().getDataType();
 
-			if (Objects.equals(type, EntityType.class))
+			if (Objects.equals(type, EntityType.class) || Objects.equals(type, LocationType.class))
 			{
 				operator.setData(Arrays.asList(new Like(), new Equal()), true);
 			}

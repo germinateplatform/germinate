@@ -132,7 +132,8 @@ public class StringUtils
 			if (parts[i] == null)
 				return false;
 
-			if (!Objects.equals(parts[i], parts[i + 1]))
+			//			if (!Objects.equals(parts[i], parts[i + 1]))
+			if (!parts[i].equals(parts[i + 1]))
 				return false;
 		}
 

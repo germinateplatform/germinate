@@ -19,6 +19,7 @@ package jhi.germinate.client.page.geography;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.http.client.*;
+import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
@@ -29,8 +30,9 @@ import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
-import jhi.germinate.client.widget.map.*;
+import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.table.pagination.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -53,8 +55,8 @@ public class InstitutionsPage extends Composite
 	@UiField
 	SimplePanel map;
 
-	private GeoChart         chart;
-	private InstitutionTable institutionsTable;
+	private PlotlyChoroplethChart chart;
+	private InstitutionTable      institutionsTable;
 
 	public InstitutionsPage()
 	{
@@ -91,32 +93,39 @@ public class InstitutionsPage extends Composite
 		final PartialSearchQuery m = query;
 		Scheduler.get().scheduleDeferred(() -> institutionsTable.forceFilter(m, true));
 
-		LocationService.Inst.get().getInstitutionsByCountry(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<List<Country>>>()
+		LocationService.Inst.get().getInstitutionsByCountry(Cookie.getRequestProperties(), new DefaultAsyncCallback<ServerResult<String>>()
 		{
 			@Override
-			protected void onSuccessImpl(ServerResult<List<Country>> result)
+			protected void onSuccessImpl(ServerResult<String> result)
 			{
-				/* When a country is selected by the user, force filter the table with the country name */
-				/* If something is de-selected in the chart, clear the table filtering (if available) */
-				chart = new GeoChart(result.getServerResult(), new GeoChart.CountrySelectionHandler()
+				String filePath = new ServletConstants.Builder()
+						.setUrl(GWT.getModuleBaseURL())
+						.setPath(ServletConstants.SERVLET_FILES)
+						.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+						.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+						.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult())
+						.build();
+				chart = new PlotlyChoroplethChart(filePath, new Callback<Country, Throwable>()
 				{
 					@Override
-					public void onCountySelected(Country country)
+					public void onFailure(Throwable reason)
 					{
-						/* When a country is selected by the user, force filter the table with the country name */
-						PartialSearchQuery query = new PartialSearchQuery();
-						query.add(new SearchCondition(Country.COUNTRY_NAME, new Equal(), country.getName(), String.class));
-						institutionsTable.forceFilter(query, true);
 					}
 
 					@Override
-					public void onSelectionCleared()
+					public void onSuccess(Country country)
 					{
+						PartialSearchQuery query = new PartialSearchQuery();
+						query.add(new SearchCondition(Country.COUNTRY_NAME, new Equal(), country.getName(), String.class));
+						institutionsTable.forceFilter(query, true);
+
+						// TODO: Clear
 						/* If something is de-selected in the chart, clear the table filtering (if available) */
-						if (institutionsTable.isFiltered())
-							institutionsTable.clearFilter();
+						//						if (institutionsTable.isFiltered())
+						//							institutionsTable.clearFilter();
 					}
 				});
+
 				map.add(chart);
 			}
 		});

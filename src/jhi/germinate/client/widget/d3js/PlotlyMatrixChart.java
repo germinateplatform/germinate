@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 Information and Computational Sciences,
+ *  Copyright 2019 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,7 +48,7 @@ import jhi.germinate.shared.exception.*;
 /**
  * @author Sebastian Raubach
  */
-public class MatrixChart<T extends DatabaseObject> extends AbstractChart
+public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart implements PlotlyChart
 {
 	private String coloringValue;
 
@@ -56,7 +56,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 	private Button    deleteButton;
 	private Button    badgeButton;
 
-	public MatrixChart()
+	public PlotlyMatrixChart()
 	{
 	}
 
@@ -67,6 +67,29 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 
 		this.chartPanel = chartPanel;
 	}
+
+	@Override
+	protected boolean canDownloadSvg()
+	{
+		return false;
+	}
+
+	@Override
+	public void clear()
+	{
+		jsniClear(panelId);
+		super.clear();
+	}
+
+	@Override
+	public int[] getDownloadSize()
+	{
+		return new int[] {1280, 1280};
+	}
+
+	private native void jsniClear(String id) /*-{
+		$wnd.Plotly.purge($wnd.document.getElementById(id));
+	}-*/;
 
 	public void update(ExperimentType experimentType, List<Long> datasetIds, List<Long> objectIds, List<Long> groupIds, String color)
 	{
@@ -85,7 +108,7 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
 
-					MatrixChart.this.onResize(true);
+					PlotlyMatrixChart.this.onResize(true);
 				}
 				else
 				{
@@ -218,79 +241,49 @@ public class MatrixChart<T extends DatabaseObject> extends AbstractChart
 
 	private native void create(boolean colorByTreatment, boolean colorByDataset, boolean colorByYear, int widthHint)/*-{
 
-		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
-		var dotStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_DOT;
-		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_AXIS;
-		var frameStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_FRAME;
-		var hiddenStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ScatterMatrixChartBundle::STYLE_HIDDEN;
-
-		var legendItemStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_LEGEND_ITEM;
-
+		var that = this;
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
 
-		var legendWidth = 100;
+		var colors = @jhi.germinate.client.util.JavaScript.D3::getColorPalette()();
 
-		var margin = @jhi.germinate.client.util.JavaScript.D3::getMargin()();
-		var width = widthHint;
+		var colorBy;
 
-		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
+		if (colorByTreatment)
+			colorBy = 'treatments_description';
+		else if (colorByDataset)
+			colorBy = 'dataset_name';
+		else if (colorByYear)
+			colorBy = 'year';
+		else
+			colorBy = '';
 
-		$wnd.d3.xhr(filePath).get(function (err, response) {
+		$wnd.Plotly.d3.xhr(filePath).get(function (err, response) {
 			var dirtyTsv = response.responseText;
 			var firstEOL = dirtyTsv.indexOf('\n');
-			var parsedTsv = $wnd.d3.tsv.parse(dirtyTsv.substring(firstEOL + 1)); // Remove the first row (Helium header)
+			var parsedTsv = $wnd.d3.tsv.parse(dirtyTsv.substring(firstEOL + 1)); // Remove the first row
 
-			$wnd.d3.select("#" + panelId)
+			$wnd.Plotly.d3.select("#" + panelId)
 				.datum(parsedTsv)
-				.call($wnd.scatterMatrix()
-					.margin(margin)
-					.width(width)
-					.padding(15)
-					.colorKey(function (d) {
-						if (colorByTreatment)
-							return d.treatments_description;
-						else if (colorByDataset)
-							return d.dataset_name;
-						else if (colorByYear)
-							return d.year;
-						else
-							return null;
+				.call($wnd.plotlyScatterMatrix()
+					.colors(colors)
+					.colorBy(colorBy)
+					.width(widthHint)
+					.height(widthHint)
+					.onPointClicked(function (point) {
+						console.log(point);
+//						@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointClicked(Ljava/lang/String;)(point.id.split("-")[0]);
 					})
-					.tooltip(function (d) {
-						if (colorByTreatment && d.treatments_description)
-							return d.name + "<br/>" + d.treatments_description + "<br/>(" + d.xValue + ", " + d.yValue + ")";
-						else if (colorByDataset && d.dataset_name)
-							return d.name + "<br/>" + d.dataset_name + "<br/>(" + d.xValue + ", " + d.yValue + ")";
-						else if (colorByYear && d.year)
-							return d.name + "<br/>" + d.year + "<br/>(" + d.xValue + ", " + d.yValue + ")";
-						else
-							return d.name + "<br/>(" + d.xValue + ", " + d.yValue + ")";
-					})
-					.onClick(function (d) {
-						@jhi.germinate.client.widget.d3js.MatrixChart::onDataPointClicked(Ljava/lang/String;)(d.dbId);
-					})
-					.dotStyle(dotStyle)
-					.radius(2)
-					.axisStyle(axisStyle)
-					.hiddenStyle(hiddenStyle)
-					.frameStyle(frameStyle)
-					.tooltipStyle(tooltipStyle)
-					.legendItemStyle(legendItemStyle)
-					.xTickFormat($wnd.d3.format(".2s"))
-					.yTickFormat($wnd.d3.format(".2s"))
-					.showLegend(true)
-					.legendWidth(legendWidth)
-					.idColumn("dbId")
-					.ignoreColumns(["general_identifier", "dataset_name", "dataset_description", "dataset_version", "license_name", "treatments_description", "name", "location_name", "year"])
-					.color(color));
+					.onPointsSelected(function (points) {
+						console.log(points);
+//						that.@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointsSelected(*)(points);
+					}));
 		});
-
 	}-*/;
 
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_SCATTER_MATRIX, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_MATRIX};
 	}
 }

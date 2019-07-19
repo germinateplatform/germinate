@@ -55,7 +55,7 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 	private static final long serialVersionUID = -2599538621272643710L;
 
 	private static final String QUERY_COLUMNS       = "SELECT * FROM %s LIMIT 1";
-	private static final String QUERY_COUNTRY_STATS = "SELECT `countries`.*, count(1) AS count FROM `germinatebase` LEFT JOIN `locations` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` GROUP BY `countries`.`id` ORDER BY count(1) DESC";
+	private static final String QUERY_COUNTRY_STATS = "SELECT `countries`.`country_name` AS `country`, `countries`.`country_code3` AS `code`, count(1) AS `count` FROM `germinatebase` LEFT JOIN `locations` ON `germinatebase`.`location_id` = `locations`.`id` LEFT JOIN `countries` ON `countries`.`id` = `locations`.`country_id` GROUP BY `countries`.`id` ORDER BY count(1) DESC";
 
 	@Override
 	public ServerResult<List<Synonym>> getSynonyms(RequestProperties properties, GerminateDatabaseTable table, Long id) throws InvalidSessionException, DatabaseException
@@ -308,14 +308,27 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 	}
 
 	@Override
-	public ServerResult<List<Country>> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException
+	public ServerResult<String> getCountryStats(RequestProperties properties) throws InvalidSessionException, DatabaseException, IOException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		return new DatabaseObjectQuery<Country>(QUERY_COUNTRY_STATS, userAuth)
-				.run()
-				.getObjects(Country.CountParser.Inst.get());
+		DefaultStreamer table = new DefaultQuery(QUERY_COUNTRY_STATS, userAuth)
+				.getStreamer();
+
+		File file = BaseHttpServlet.createTemporaryFile(getRequest(), "stats", FileType.txt.name());
+
+		try
+		{
+			Util.writeDefaultToFile(Util.getOperatingSystem(getRequest()), null, table, file);
+		}
+		catch (java.io.IOException e)
+		{
+			e.printStackTrace();
+			throw new IOException(e);
+		}
+
+		return new ServerResult<>(table.getDebugInfo(), file.getName());
 	}
 
 	@Override

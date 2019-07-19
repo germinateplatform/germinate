@@ -46,8 +46,8 @@ public class MatrixScatterPanel<T extends DatabaseObject> extends Composite
 	private List<Group>    groups;
 
 	private MatrixChartSelection<T> parameterSelection;
-	private ScatterChart<T>         scatterChart;
-	private MatrixChart<T>          matrixChart;
+	private PlotlyScatterChart<T>   scatterChart;
+	private PlotlyMatrixChart<T>    matrixChart;
 	private List<Dataset>           selectedDatasets;
 
 	public MatrixScatterPanel()
@@ -88,6 +88,10 @@ public class MatrixScatterPanel<T extends DatabaseObject> extends Composite
 				return;
 			}
 
+			if (scatterChart != null)
+				scatterChart.clear();
+			if (matrixChart != null)
+				matrixChart.clear();
 			chartPanel.clear();
 
 			List<T> items = new ArrayList<>(parameterSelection.getObjects());
@@ -99,13 +103,13 @@ public class MatrixScatterPanel<T extends DatabaseObject> extends Composite
 
 			if (objectIds.size() == 2)
 			{
-				scatterChart = new ScatterChart<>();
+				scatterChart = new PlotlyScatterChart<>();
 				chartPanel.add(scatterChart);
 				scatterChart.update(experimentType, selectedDatasetIds, items, groupIds, parameterSelection.getColor());
 			}
 			else
 			{
-				matrixChart = new MatrixChart<>();
+				matrixChart = new PlotlyMatrixChart<>();
 				chartPanel.add(matrixChart);
 				matrixChart.update(experimentType, selectedDatasetIds, objectIds, groupIds, parameterSelection.getColor());
 			}

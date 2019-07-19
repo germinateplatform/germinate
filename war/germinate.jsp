@@ -102,8 +102,6 @@
 	<!-- The base template -->
 	<link href="css/template-css.jsp" rel="stylesheet">
 
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
 	<% if (useGoogleAnalytics) { %>
 		<!-- Google Analytics -->
 		<script>
