@@ -50,13 +50,6 @@ public class PlotlyChoroplethChart extends AbstractChart implements PlotlyChart
 	}
 
 	@Override
-	public void clear()
-	{
-		jsniClear(panelId);
-		super.clear();
-	}
-
-	@Override
 	public int[] getDownloadSize()
 	{
 		return new int[]{1280, 600};
@@ -71,10 +64,6 @@ public class PlotlyChoroplethChart extends AbstractChart implements PlotlyChart
 			super.onResize(containerResize);
 		}
 	}
-
-	private native void jsniClear(String id) /*-{
-		$wnd.Plotly.purge($wnd.document.getElementById(id));
-	}-*/;
 
 	@Override
 	protected void updateChart(int width)

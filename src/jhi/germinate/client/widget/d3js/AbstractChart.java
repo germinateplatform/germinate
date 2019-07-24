@@ -185,7 +185,14 @@ public abstract class AbstractChart extends GerminateComposite
 		removeD3(panelId);
 		chartPanel.getElement().removeAllChildren();
 		chartPanel.clear();
+
+		if (this instanceof PlotlyChart)
+			jsniClear(panelId);
 	}
+
+	private native void jsniClear(String id) /*-{
+		$wnd.Plotly.purge($wnd.document.getElementById(id));
+	}-*/;
 
 	@Override
 	protected void onUnload()

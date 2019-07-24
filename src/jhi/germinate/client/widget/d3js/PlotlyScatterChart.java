@@ -81,21 +81,10 @@ public class PlotlyScatterChart<T extends DatabaseObject> extends AbstractChart 
 	}
 
 	@Override
-	public void clear()
-	{
-		jsniClear(panelId);
-		super.clear();
-	}
-
-	@Override
 	public int[] getDownloadSize()
 	{
 		return new int[] {1280, 1280};
 	}
-
-	private native void jsniClear(String id) /*-{
-		$wnd.Plotly.purge($wnd.document.getElementById(id));
-	}-*/;
 
 	@Override
 	protected boolean canDownloadSvg()

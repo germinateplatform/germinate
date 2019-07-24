@@ -75,21 +75,10 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 	}
 
 	@Override
-	public void clear()
-	{
-		jsniClear(panelId);
-		super.clear();
-	}
-
-	@Override
 	public int[] getDownloadSize()
 	{
 		return new int[] {1280, 1280};
 	}
-
-	private native void jsniClear(String id) /*-{
-		$wnd.Plotly.purge($wnd.document.getElementById(id));
-	}-*/;
 
 	public void update(ExperimentType experimentType, List<Long> datasetIds, List<Long> objectIds, List<Long> groupIds, String color)
 	{

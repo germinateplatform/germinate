@@ -39,9 +39,11 @@ import jhi.germinate.shared.enums.*;
  *
  * @author Sebastian Raubach
  */
-public class ClimateChart extends AbstractChart
+public class ClimateChart extends AbstractChart implements PlotlyChart
 {
-	private FlowPanel chartPanel;
+	private boolean needsRedraw = true;
+
+	private FlowPanel chartPanel = null;
 	private String    yAxisTitle;
 
 	private Climate climate;
@@ -49,13 +51,36 @@ public class ClimateChart extends AbstractChart
 
 	private List<Dataset> selectedDatasets;
 
+	public ClimateChart(Climate climate, Group group)
+	{
+		super();
+		update(climate, group);
+	}
+
 	public void update(Climate climate, Group group)
 	{
 		this.climate = climate;
 		this.group = group;
+		this.needsRedraw = true;
 
 		if (chartPanel != null)
 			getData();
+	}
+
+	@Override
+	public int[] getDownloadSize()
+	{
+		return new int[]{1280, 640};
+	}
+
+	@Override
+	public void onResize(boolean containerResize)
+	{
+		if (needsRedraw)
+		{
+			needsRedraw = false;
+			super.onResize(containerResize);
+		}
 	}
 
 	private void getData()
@@ -82,7 +107,7 @@ public class ClimateChart extends AbstractChart
 						yAxisTitle = climate.getName() + " [" + climate.getUnit().getName() + "]";
 					else
 						yAxisTitle = climate.getName();
-					onResize(true);
+					ClimateChart.this.onResize(true);
 				}
 				else
 				{
@@ -135,64 +160,106 @@ public class ClimateChart extends AbstractChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_MULTI_LINE_CHART, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_LINE_CHART, Library.D3_DOWNLOAD};
 	}
 
-	private native void create(int widthHint)/*-{
-		var barChartFile = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
-		var barChartYAxisTitle = this.@jhi.germinate.client.widget.d3js.ClimateChart::yAxisTitle;
-
-		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
-		var legendItemStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_LEGEND_ITEM;
-		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
-
-		var lineStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ClimateLineChartBundle::STYLE_LINE;
+	private native void create(int widthHint) /*-{
+		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
+		var yaxisTitle = this.@jhi.germinate.client.widget.d3js.ClimateChart::yAxisTitle;
 
 		var monthNamesI18n = @jhi.germinate.client.util.DateUtils::MONTHS_ABBR;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
 
-		var margin = @jhi.germinate.client.util.JavaScript.D3::getMargin()();
-		var width = widthHint;
 		var height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
 
-		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
+		var colors = @jhi.germinate.client.util.JavaScript.D3::getColorPalette()();
 
-		$wnd.d3.tsv(barChartFile,
-			function (data) {
-				$wnd.d3.select("#" + panelId)
-					.datum(data)
-					.call($wnd.multiLineChart()
-						.margin(margin)
-						.width(width)
-						.height(height)
-						.x(function (d) {
-							return parseInt(d.recording_date);
-						})
-						.y(function (d) {
-							return parseFloat(d);
-						})
-						.tooltip(function (d) {
-							if (d.key === "MAX")
-								return d.key + ": " + d.data[d.key] + "<br/>" + d.data.MaxCollsite;
-							else if (d.key === "MIN")
-								return d.key + ": " + d.data[d.key] + "<br/>" + d.data.MinCollsite;
-							else
-								return d.key + ": " + d.data[d.key];
-						})
-						.color(color)
-						.tooltipStyle(tooltipStyle)
-						.axisStyle(axisStyle)
-						.lineStyle(lineStyle)
-						.xLabel("")
-						.yLabel(barChartYAxisTitle)
-						.xAxisStart(20)
-						.legendItemStyle(legendItemStyle)
-						.showLegend(true)
-						.legendWidth(60)
-						.ignoreIndices([0, 1, 2, 6])
-						.interpolate("cardinal").xTickFormat(function (d, i) {
-							return monthNamesI18n[i];
-						}));
+		function unpack(rows, key) {
+			return rows.map(function (row) {
+				return row[key];
 			});
+		}
+
+		$wnd.Plotly.d3.tsv(filePath, function (error, rows) {
+			$wnd.Plotly.d3.select("#" + panelId)
+				.datum(rows)
+				.call($wnd.plotlyLineChart()
+					.height(height)
+					.colors(colors)
+					.x('recording_date')
+					.yaxisTitle(yaxisTitle)
+					.yaxisRangeMode('tozero')
+					.getText(function (rows, dim) {
+						if (dim === 'MIN') {
+							return unpack(rows, 'MinCollsite');
+						} else if (dim === 'MAX') {
+							return unpack(rows, 'MaxCollsite');
+						} else {
+							return ['', '', '', '', '', '', '', '', '', '', '', ''];
+						}
+					})
+					.columnsToIgnore(['MinCollsite', 'MaxCollsite', 'recording_date', 'unit_abbreviation'])
+					.xaxisTickVals([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+					.xaxisTickText(monthNamesI18n)
+				);
+		});
 	}-*/;
+
+	//	private native void create(int widthHint)/*-{
+	//		var barChartFile = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
+	//		var barChartYAxisTitle = this.@jhi.germinate.client.widget.d3js.ClimateChart::yAxisTitle;
+	//
+	//		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
+	//		var legendItemStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_LEGEND_ITEM;
+	//		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
+	//
+	//		var lineStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ClimateLineChartBundle::STYLE_LINE;
+	//
+	//		var monthNamesI18n = @jhi.germinate.client.util.DateUtils::MONTHS_ABBR;
+	//		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
+	//
+	//		var margin = @jhi.germinate.client.util.JavaScript.D3::getMargin()();
+	//		var width = widthHint;
+	//		var height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
+	//
+	//		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
+	//
+	//		$wnd.d3.tsv(barChartFile,
+	//			function (data) {
+	//				$wnd.d3.select("#" + panelId)
+	//					.datum(data)
+	//					.call($wnd.multiLineChart()
+	//						.margin(margin)
+	//						.width(width)
+	//						.height(height)
+	//						.x(function (d) {
+	//							return parseInt(d.recording_date);
+	//						})
+	//						.y(function (d) {
+	//							return parseFloat(d);
+	//						})
+	//						.tooltip(function (d) {
+	//							if (d.key === "MAX")
+	//								return d.key + ": " + d.data[d.key] + "<br/>" + d.data.MaxCollsite;
+	//							else if (d.key === "MIN")
+	//								return d.key + ": " + d.data[d.key] + "<br/>" + d.data.MinCollsite;
+	//							else
+	//								return d.key + ": " + d.data[d.key];
+	//						})
+	//						.color(color)
+	//						.tooltipStyle(tooltipStyle)
+	//						.axisStyle(axisStyle)
+	//						.lineStyle(lineStyle)
+	//						.xLabel("")
+	//						.yLabel(barChartYAxisTitle)
+	//						.xAxisStart(20)
+	//						.legendItemStyle(legendItemStyle)
+	//						.showLegend(true)
+	//						.legendWidth(60)
+	//						.ignoreIndices([0, 1, 2, 6])
+	//						.interpolate("cardinal").xTickFormat(function (d, i) {
+	//							return monthNamesI18n[i];
+	//						}));
+	//			});
+	//	}-*/;
 }

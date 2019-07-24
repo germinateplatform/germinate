@@ -20,7 +20,7 @@
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:g8='urn:import:jhi.germinate.client.widget.element'
 			 xmlns:lb="urn:import:jhi.germinate.client.widget.listbox"
-			 xmlns:c="urn:import:jhi.germinate.client.widget.d3js">
+>
 
 	<ui:import field="jhi.germinate.shared.Style.*"/>
 	<ui:import field="org.gwtbootstrap3.client.ui.constants.Styles.*"/>
@@ -49,9 +49,7 @@
 
 			<g:FlowPanel ui:field="resultPanel" visible="false">
 
-				<g:SimplePanel ui:field="chartPanel">
-					<c:ClimateChart ui:field="climateChart"/>
-				</g:SimplePanel>
+				<g:SimplePanel ui:field="chartPanel" />
 
 				<g:FlowPanel ui:field="mapWrapper">
 					<b:Heading size="H3" text="{msg.climateHeadingMapCollsites}"/>

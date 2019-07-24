@@ -53,6 +53,7 @@ public enum Library
 	PLOTLY_BAR("./js/d3/plotly-bar-chart.js"),
 	PLOTLY_SCATTER_PLOT("./js/d3/plotly-scatter-plot.js"),
 	PLOTLY_SCATTER_MATRIX("./js/d3/plotly-scatter-matrix.js"),
+	PLOTLY_LINE_CHART("./js/d3/plotly-line-chart.js"),
 	D3_V3("./js/d3/d3.v3.min.js"),
 	D3_TOPOJSON("./js/d3/d3-topojson.js"),
 	D3_SAVE_AS("./js/d3/d3-save-as-png.js"),

@@ -71,17 +71,16 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 	GroupListBox   groupBox;
 
 	@UiField
-	FlowPanel    resultPanel;
+	FlowPanel   resultPanel;
 	@UiField
-	SimplePanel  chartPanel;
-	@UiField
+	SimplePanel chartPanel;
 	ClimateChart climateChart;
 	@UiField
-	FlowPanel    mapWrapper;
+	FlowPanel   mapWrapper;
 	@UiField
-	SimplePanel  mapPanel;
+	SimplePanel mapPanel;
 	@UiField
-	SimplePanel  tablePanel;
+	SimplePanel tablePanel;
 
 	private LeafletUtils.ImageOverlayWrapper climateOverlays = new LeafletUtils.ImageOverlayWrapper();
 
@@ -241,14 +240,20 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 		if (climate == null || climate.getId() == -1)
 		{
 			resultPanel.setVisible(false);
-			//			climateChart.clear();
-			//			map.updateData(null);
 			return;
 		}
 
 		resultPanel.setVisible(true);
 
-		climateChart.update(climate, group);
+		if (climateChart == null)
+		{
+			climateChart = new ClimateChart(climate, group);
+			chartPanel.add(climateChart);
+		}
+		else
+		{
+			climateChart.update(climate, group);
+		}
 
 		updateMap(climate, group);
 
