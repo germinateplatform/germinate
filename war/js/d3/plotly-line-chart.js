@@ -38,7 +38,7 @@ function plotlyLineChart() {
 		selection.each(function (rows) {
 			var dims = Object.keys(rows[0]);
 			dims = dims.filter(function (d) {
-				return !columnsToIgnore.includes(d)
+				return columnsToIgnore.indexOf(d) < 0;
 			});
 
 			var data = [];

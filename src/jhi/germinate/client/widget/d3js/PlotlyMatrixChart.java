@@ -18,18 +18,17 @@
 package jhi.germinate.client.widget.d3js;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
-import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.*;
 
 import java.util.*;
 
-import jhi.germinate.client.i18n.Text;
+import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.client.page.accession.*;
 import jhi.germinate.client.service.*;
@@ -39,7 +38,6 @@ import jhi.germinate.client.util.event.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.Style;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -55,6 +53,8 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 	private FlowPanel chartPanel;
 	private Button    deleteButton;
 	private Button    badgeButton;
+
+	private Set<String> selectedIds = new HashSet<>();
 
 	public PlotlyMatrixChart()
 	{
@@ -207,26 +207,26 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 		}
 	}
 
-	private Set<String> getSelectedDataPoints()
+	public void onDataPointsSelected(JsArrayString ids)
 	{
-		JsArrayString idList = getIds(chartPanel.getElement());
-		HashSet<String> result = new HashSet<>();
+		selectedIds.clear();
 
-		for (int i = 0; i < idList.length(); i++)
-			result.add(idList.get(i));
-
-		return result;
+		if (ids != null)
+		{
+			for (int i = 0; i < ids.length(); i++)
+				selectedIds.add(ids.get(i));
+		}
 	}
 
-	private native JsArrayString getIds(Element element) /*-{
-		return $wnd.$(element)
-			.find(".cell")
-			.eq(1)
-			.find(".selected")
-			.map(function () {
-				return $wnd.$(this).attr("id").replace("item-", "");
-			});
-	}-*/;
+	/**
+	 * Returns the ids of the selected data points (by lasso selection)
+	 *
+	 * @return The ids of the selected data points (by lasso selection)
+	 */
+	private Set<String> getSelectedDataPoints()
+	{
+		return selectedIds;
+	}
 
 	private native void create(boolean colorByTreatment, boolean colorByDataset, boolean colorByYear, int widthHint)/*-{
 
@@ -260,12 +260,12 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 					.width(widthHint)
 					.height(widthHint)
 					.onPointClicked(function (point) {
-						console.log(point);
-//						@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointClicked(Ljava/lang/String;)(point.id.split("-")[0]);
+						console.log('jsni', point);
+						@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointClicked(Ljava/lang/String;)(point.id.split("-")[0]);
 					})
 					.onPointsSelected(function (points) {
-						console.log(points);
-//						that.@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointsSelected(*)(points);
+						console.log('jsni', points);
+						that.@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointsSelected(*)(points);
 					}));
 		});
 	}-*/;

@@ -35,7 +35,7 @@ function plotlyScatterMatrix() {
 			var toIgnore = ["name", "dbId", "general_identifier", "dataset_name", "dataset_description", "dataset_version", "license_name", "location_name", "treatments_description", "year"];
 			var dims = Object.keys(rows[0]);
 			dims = dims.filter(function (d) {
-				return !toIgnore.includes(d)
+				return toIgnore.indexOf(d) < 0;
 			});
 
 			var data = [];
@@ -60,7 +60,7 @@ function plotlyScatterMatrix() {
 					dimensions: dims.map(function (k) {
 						return {
 							label: k,
-							values: cats[i] ? unpackConditional(rows, k, colorBy, cats[i]) : unpack(rows, k)
+							values: unpackConditional(rows, k, colorBy, cats[i])
 						}
 					}),
 					name: cats[i],
