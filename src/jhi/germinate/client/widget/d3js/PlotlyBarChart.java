@@ -21,6 +21,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.util.*;
 import jhi.germinate.shared.*;
 
 /**
@@ -28,9 +29,11 @@ import jhi.germinate.shared.*;
  */
 public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 {
-	private String xAxisTitle;
-	private String yAxisTitle;
-	private String x;
+	private String        xAxisTitle;
+	private String        yAxisTitle;
+	private String        x;
+	private String        mode;
+	private JsArrayString colors;
 
 	private boolean needsRedraw = true;
 
@@ -45,15 +48,23 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
-		this.xAxisTitle = config != null ? config.xAxisTitle : "";
-		this.yAxisTitle = config != null ? config.yAxisTitle : "";
-		this.x = config != null ? config.x : "";
-		this.filePath = config != null ? config.filePath : null;
+		readConfig();
 
 		panel.add(chartPanel);
 
 		if (!StringUtils.isEmpty(filePath))
 			onResize(true);
+	}
+
+	private void readConfig()
+	{
+		this.xAxisTitle = config != null ? config.xAxisTitle : "";
+		this.yAxisTitle = config != null ? config.yAxisTitle : "";
+		this.x = config != null ? config.x : "";
+		if (this.filePath == null)
+			this.filePath = config != null ? config.filePath : null;
+		this.mode = config.mode;
+		this.colors = config.colors;
 	}
 
 	@Override
@@ -76,7 +87,7 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 	@Override
 	public void onResize(boolean containerResize)
 	{
-		if (needsRedraw)
+		if (needsRedraw && !StringUtils.isEmpty(filePath))
 		{
 			needsRedraw = false;
 			super.onResize(containerResize);
@@ -87,6 +98,13 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 	{
 		if (config != null && config.clickCallback != null)
 			config.clickCallback.onSuccess(text);
+	}
+
+	@Override
+	public void forceRedraw()
+	{
+		this.needsRedraw = true;
+		super.forceRedraw();
 	}
 
 	@Override
@@ -120,7 +138,8 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 		var yAxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyBarChart::yAxisTitle;
 		var x = this.@jhi.germinate.client.widget.d3js.PlotlyBarChart::x;
 		var height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
-		var colors = @jhi.germinate.client.util.JavaScript.D3::getColorPalette()();
+		var mode = this.@jhi.germinate.client.widget.d3js.PlotlyBarChart::mode;
+		var colors = this.@jhi.germinate.client.widget.d3js.PlotlyBarChart::colors;
 
 		var that = this;
 
@@ -133,33 +152,46 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 					.x(x)
 					.xCategory(xAxisTitle)
 					.yCategory(yAxisTitle)
+					.mode(mode)
 					.onPointClicked(function (data) {
 						that.@jhi.germinate.client.widget.d3js.PlotlyBarChart::onBarClicked(*)(data);
 					}));
 		});
 	}-*/;
 
+	public void setConfig(Config config)
+	{
+		this.config = config;
+		readConfig();
+	}
+
 	public static class Config
 	{
-		private String xAxisTitle       = null;
-		private String yAxisTitle       = null;
-		private String downloadFilename = null;
-		private String x                = null;
-		private String filePath         = null;
+		private String        xAxisTitle       = null;
+		private String        yAxisTitle       = null;
+		private String        downloadFilename = null;
+		private String        x                = null;
+		private String        filePath         = null;
+		private String        mode             = null;
+		private JsArrayString colors           = null;
 
 		private Callback<String, Throwable> clickCallback;
 
 		public Config()
 		{
+			this.mode = "traces";
+			this.colors = JavaScript.D3.getColorPalette();
 		}
 
-		public Config(String xAxisTitle, String yAxisTitle, String downloadFilename, String x, String filePath, Callback<String, Throwable> clickCallback)
+		public Config(String xAxisTitle, String yAxisTitle, String downloadFilename, String x, String filePath, String mode, JsArrayString colors, Callback<String, Throwable> clickCallback)
 		{
 			this.xAxisTitle = xAxisTitle;
 			this.yAxisTitle = yAxisTitle;
 			this.downloadFilename = downloadFilename;
 			this.x = x;
 			this.filePath = filePath;
+			this.mode = StringUtils.isEmpty(mode) ? "traces" : mode;
+			this.colors = colors == null ? JavaScript.D3.getColorPalette() : colors;
 			this.clickCallback = clickCallback;
 		}
 
@@ -184,6 +216,18 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 		public Config setDownloadFilename(String downloadFilename)
 		{
 			this.downloadFilename = downloadFilename;
+			return this;
+		}
+
+		public Config setMode(String mode)
+		{
+			this.mode = mode;
+			return this;
+		}
+
+		public Config setColors(JsArrayString colors)
+		{
+			this.colors = colors;
 			return this;
 		}
 

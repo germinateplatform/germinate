@@ -22,8 +22,8 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
@@ -50,8 +50,8 @@ import jhi.germinate.shared.exception.*;
  */
 public class AlleleFreqResultsPage extends Composite implements HasLibraries
 {
-
 	private final FlapjackAllelefreqBinningResult exportResult;
+	private final PlotlyAllelefreqChart           chart;
 
 	interface AlleleFreqResultsPageUiBinder extends UiBinder<HTMLPanel, AlleleFreqResultsPage>
 	{
@@ -67,13 +67,13 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	HTML      warning;
 
 	@UiField
-	FlowPanel            flapjackWrapper;
+	FlowPanel   flapjackWrapper;
 	@UiField
-	HTML                 flapjackText;
+	HTML        flapjackText;
 	@UiField
-	Well                 flapjackOutput;
+	Well        flapjackOutput;
 	@UiField
-	AlleleFrequencyChart alleleFreqChart;
+	SimplePanel alleleFreqChart;
 
 	@UiField
 	TabListItem equalWidthTab;
@@ -109,6 +109,43 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
+		Callback<JsArrayNumber, Throwable> callback = new Callback<JsArrayNumber, Throwable>()
+		{
+			@Override
+			public void onFailure(Throwable reason)
+			{
+			}
+
+			@Override
+			public void onSuccess(JsArrayNumber result)
+			{
+				Color[] gradient = Gradient.createGradient(Color.fromHex("#ff7878"), Color.fromHex("#78fd78"), result.length());
+				JsArrayString colors = JsArrayString.createArray().cast();
+
+				int index = 0;
+				double sum = 0;
+				for (int i = 0; i < AlleleFreqExportPage.NR_OF_BINS; i++)
+				{
+					if (i * 100 / (1.0f * AlleleFreqExportPage.NR_OF_BINS) >= sum)
+						sum += result.get(index++);
+
+					colors.push(gradient[index - 1].toHexValue());
+				}
+
+				if (chart != null && chart.isAttached())
+				{
+					chart.update(result, colors);
+					chart.forceRedraw();
+				}
+			}
+		};
+		equalWidthBinningWidget.setCallback(callback);
+		splitPointBinningWidget.setCallback(callback);
+		automaticBinningWidget.setCallback(callback);
+
+		chart = new PlotlyAllelefreqChart();
+		alleleFreqChart.add(chart);
+
 		flapjackText.setHTML(Text.LANG.allelefreqResultFlapjack());
 
 		exportResult = FlapjackAllelefreqBinningResultParameterStore.Inst.get().get(Parameter.flapjackExportResult);
@@ -134,30 +171,13 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	{
 		super.onLoad();
 
-		alleleFreqChart.setParent(this);
-		alleleFreqChart.setFilePath(new ServletConstants.Builder().setUrl(GWT.getModuleBaseURL())
-																  .setPath(ServletConstants.SERVLET_FILES)
-																  .setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
-																  .setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
-																  .setParam(ServletConstants.PARAM_FILE_PATH, exportResult.getHistogramFile())
-																  .build());
-	}
-
-	/**
-	 * Called from d3. Will pass in the position and width of the actual chart area containing the bars. These are then used to request the binning
-	 * images from flapjack
-	 *
-	 * @param left  The absolute left of the first bar
-	 * @param width The width of the actual chart area
-	 */
-	public void notifyChartPositionAndWidth(int left, double width)
-	{
-		int leftInt = left - panel.getAbsoluteLeft();
-		int widthInt = (int) Math.round(width);
-
-		equalWidthBinningWidget.updatePosition(leftInt, widthInt);
-		splitPointBinningWidget.updatePosition(leftInt, widthInt);
-		automaticBinningWidget.updatePosition(leftInt, widthInt);
+		String filePath = new ServletConstants.Builder().setUrl(GWT.getModuleBaseURL())
+														.setPath(ServletConstants.SERVLET_FILES)
+														.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+														.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+														.setParam(ServletConstants.PARAM_FILE_PATH, exportResult.getHistogramFile())
+														.build();
+		chart.setFilePath(filePath);
 	}
 
 	/**
@@ -169,6 +189,12 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	public void notifyChartBarClicked(double position)
 	{
 		splitPointBinningWidget.updateSplitPosition(position);
+	}
+
+	@UiHandler("equalWidthTab")
+	void onEqualWidthTabClicked(ClickEvent event)
+	{
+		//		equalWidthBinningWidget.
 	}
 
 	@UiHandler("splitPointTab")
@@ -263,6 +289,6 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_FLAPJACK_BINNING};
+		return null;
 	}
 }

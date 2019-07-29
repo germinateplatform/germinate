@@ -26,8 +26,8 @@ import java.util.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Tuple.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
+import jhi.germinate.shared.exception.*;
 
 /**
  * {@link AlleleFrequencyService} is a {@link RemoteService} providing methods to retrieve accession data.

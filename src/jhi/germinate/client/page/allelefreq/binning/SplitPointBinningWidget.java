@@ -18,13 +18,11 @@
 package jhi.germinate.client.page.allelefreq.binning;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.service.*;
-import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
@@ -46,18 +44,23 @@ public class SplitPointBinningWidget extends Composite
 	RangedNumberTextBox    splitPoint;
 	@UiField
 	RangedIntegerTextBox   nrOfBinsRight;
-	@UiField
-	AlleleFreqBinningChart chart;
 
 	private Color low  = Color.fromHex("#ff7878");
 	private Color high = Color.fromHex("#78fd78");
 
-	private JsArrayString colors;
 	private JsArrayNumber widths;
+
+	private Callback<JsArrayNumber, Throwable> callback = null;
 
 	public SplitPointBinningWidget()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
+	}
+
+	public SplitPointBinningWidget setCallback(Callback<JsArrayNumber, Throwable> callback)
+	{
+		this.callback = callback;
+		return this;
 	}
 
 	@Override
@@ -71,20 +74,6 @@ public class SplitPointBinningWidget extends Composite
 	public void refresh()
 	{
 		onRefreshButtonClicked(null);
-	}
-
-	/**
-	 * Updates the position of the visualization widget. This is required as it has to align with the allele frequency histogram chart.
-	 *
-	 * @param left  The left edge of the histograms x-axis
-	 * @param width The width of the histograms x-axis
-	 */
-	public void updatePosition(int left, int width)
-	{
-		chart.getElement().getStyle().setWidth(width, Style.Unit.PX);
-		chart.getElement().getStyle().setMarginLeft(left, Style.Unit.PX);
-
-		chart.update(colors, widths, splitPoint.getDoubleValue());
 	}
 
 	public void updateSplitPosition(double splitPoint)
@@ -122,23 +111,16 @@ public class SplitPointBinningWidget extends Composite
 			int binsRight = nrOfBinsRight.getIntegerValue();
 			double split = splitPoint.getDoubleValue();
 			int bins = binsLeft + binsRight;
-			Color[] gradient = Gradient.createGradient(low, high, bins);
 
 			widths = JsArrayNumber.createArray().cast();
-			colors = JsArrayString.createArray().cast();
 
 			for (int i = 0; i < binsLeft; i++)
-			{
 				widths.push(split / binsLeft * 100);
-				colors.push(gradient[i].toHexValue());
-			}
 			for (int i = binsLeft; i < bins; i++)
-			{
 				widths.push((1 - split) / binsRight * 100);
-				colors.push(gradient[i].toHexValue());
-			}
 
-			chart.update(colors, widths, splitPoint.getDoubleValue());
+			if (callback != null)
+				callback.onSuccess(widths);
 		}
 	}
 }

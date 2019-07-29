@@ -50,6 +50,7 @@ public enum Library
 	HTML_2_CANVAS("./js/html2canvas.js"),
 	ZXCVBN("./js/zxcvbn.js"),
 	PLOTLY("./js/plotly-latest.min.js"),
+	PLOTLY_ALLELE_FREQ_CHART("./js/d3/plotly-allelefreq-chart.js"),
 	PLOTLY_BAR("./js/d3/plotly-bar-chart.js"),
 	PLOTLY_SCATTER_PLOT("./js/d3/plotly-scatter-plot.js"),
 	PLOTLY_SCATTER_MATRIX("./js/d3/plotly-scatter-matrix.js"),

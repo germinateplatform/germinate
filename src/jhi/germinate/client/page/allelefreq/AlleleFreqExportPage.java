@@ -42,7 +42,7 @@ import jhi.germinate.shared.exception.*;
  */
 public class AlleleFreqExportPage extends GerminateComposite implements HasHyperlinkButton
 {
-	private static final int NR_OF_BINS = 500;
+	public static final int NR_OF_BINS = 200;
 
 	/**
 	 * Runs the actual extraction on the server and receives the relative path to the generated temporary files

@@ -23,12 +23,12 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
@@ -39,8 +39,8 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.resource.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
+import jhi.germinate.shared.*;
 
 /**
  * AbstractChart is a basic composite containing a d3.js chart. It handles a lot of auxiliary bits and bobs that are important when handling charts.
@@ -186,12 +186,16 @@ public abstract class AbstractChart extends GerminateComposite
 		chartPanel.getElement().removeAllChildren();
 		chartPanel.clear();
 
-		if (this instanceof PlotlyChart)
+		if (this instanceof PlotlyChart && chartPanel != null && chartPanel.isAttached())
 			jsniClear(panelId);
 	}
 
 	private native void jsniClear(String id) /*-{
-		$wnd.Plotly.purge($wnd.document.getElementById(id));
+		var chart = $wnd.document.getElementById(id);
+
+		if ($wnd.Plotly && chart) {
+			$wnd.Plotly.purge(chart);
+		}
 	}-*/;
 
 	@Override
@@ -205,8 +209,17 @@ public abstract class AbstractChart extends GerminateComposite
 	{
 		this.filePath = filePath;
 
-		if (filePath != null)
+		if (chartPanel != null && chartPanel.isAttached() && filePath != null)
 			onResize(true);
+	}
+
+	public void forceRedraw()
+	{
+		if (chartPanel != null && chartPanel.isAttached())
+		{
+			clear();
+			onResize(true);
+		}
 	}
 
 	protected Button[] getAdditionalButtons()

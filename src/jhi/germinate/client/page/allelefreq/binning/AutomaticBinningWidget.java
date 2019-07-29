@@ -18,7 +18,6 @@
 package jhi.germinate.client.page.allelefreq.binning;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -26,7 +25,6 @@ import com.google.gwt.user.client.ui.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
-import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
@@ -44,15 +42,20 @@ public class AutomaticBinningWidget extends Composite
 
 	@UiField
 	RangedIntegerTextBox   nrOfBins;
-	@UiField
-	AlleleFreqBinningChart chart;
 
-	private JsArrayString colors;
 	private JsArrayNumber widths;
+
+	private Callback<JsArrayNumber, Throwable> callback = null;
 
 	public AutomaticBinningWidget()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
+	}
+
+	public AutomaticBinningWidget setCallback(Callback<JsArrayNumber, Throwable> callback)
+	{
+		this.callback = callback;
+		return this;
 	}
 
 	@Override
@@ -61,20 +64,6 @@ public class AutomaticBinningWidget extends Composite
 		super.onLoad();
 
 		onRefreshButtonClicked(null);
-	}
-
-	/**
-	 * Updates the position of the visualization widget. This is required as it has to align with the allele frequency histogram chart.
-	 *
-	 * @param left  The left edge of the histograms x-axis
-	 * @param width The width of the histograms x-axis
-	 */
-	public void updatePosition(int left, int width)
-	{
-		chart.getElement().getStyle().setWidth(width, Style.Unit.PX);
-		chart.getElement().getStyle().setMarginLeft(left, Style.Unit.PX);
-
-		chart.update(colors, widths);
 	}
 
 	@UiHandler("nrOfBins")
@@ -105,10 +94,11 @@ public class AutomaticBinningWidget extends Composite
 				@Override
 				protected void onSuccessImpl(Tuple.Pair<String, AlleleFrequencyService.HistogramImageData> result)
 				{
-					/* Let the children handle the data and draw the visualization */
-					colors = JavaScript.toJsStringArray(result.getSecond().colors);
+					// Let the children handle the data and draw the visualization
 					widths = JavaScript.toJsNumbersArray(result.getSecond().widths);
-					chart.update(colors, widths);
+
+					if (callback != null)
+						callback.onSuccess(widths);
 				}
 			});
 		}
