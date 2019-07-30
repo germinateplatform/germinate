@@ -39,7 +39,7 @@
 			<g:SimplePanel ui:field="alleleFreqChart"/>
 			<g8:ParagraphPanel text="{msg.allelefreqTextFlapjackColors}"/>
 
-			<b:NavTabs>
+			<b:NavTabs ui:field="tabs">
 				<g8:MdiTabListItem active="true" dataTarget="#equalWidth" mdi="{MDI_FORMAT_ALIGN_JUSTIFY} {MDI_ROTATE_90} {MDI_LG}"
 								   text="{msg.allelefreqHeadingEqualWidth}" ui:field="equalWidthTab"/>
 				<g8:MdiTabListItem dataTarget="#splitPoint" mdi="{MDI_FORMAT_INDENT_INCREASE} {MDI_ROTATE_270} {MDI_LG}"

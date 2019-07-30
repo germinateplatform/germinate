@@ -76,6 +76,8 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	SimplePanel alleleFreqChart;
 
 	@UiField
+	NavTabs tabs;
+	@UiField
 	TabListItem equalWidthTab;
 	@UiField
 	TabListItem splitPointTab;
@@ -105,11 +107,13 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	@UiField
 	FlowPanel markerPanel;
 
+	private int index = 0;
+
 	public AlleleFreqResultsPage()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 
-		Callback<JsArrayNumber, Throwable> callback = new Callback<JsArrayNumber, Throwable>()
+		Callback<BinningResult, Throwable> callback = new Callback<BinningResult, Throwable>()
 		{
 			@Override
 			public void onFailure(Throwable reason)
@@ -117,31 +121,35 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 			}
 
 			@Override
-			public void onSuccess(JsArrayNumber result)
+			public void onSuccess(BinningResult result)
 			{
-				Color[] gradient = Gradient.createGradient(Color.fromHex("#ff7878"), Color.fromHex("#78fd78"), result.length());
-				JsArrayString colors = JsArrayString.createArray().cast();
-
-				int index = 0;
-				double sum = 0;
-				for (int i = 0; i < AlleleFreqExportPage.NR_OF_BINS; i++)
+				if (index == result.index)
 				{
-					if (i * 100 / (1.0f * AlleleFreqExportPage.NR_OF_BINS) >= sum)
-						sum += result.get(index++);
+					JsArrayNumber widths = result.widths;
+					Color[] gradient = Gradient.createGradient(Color.fromHex("#ff7878"), Color.fromHex("#78fd78"), widths.length());
+					JsArrayString colors = JsArrayString.createArray().cast();
 
-					colors.push(gradient[index - 1].toHexValue());
-				}
+					int index = 0;
+					double sum = 0;
+					for (int i = 0; i < AlleleFreqExportPage.NR_OF_BINS; i++)
+					{
+						if (i * 100 / (1.0f * AlleleFreqExportPage.NR_OF_BINS) >= sum)
+							sum += widths.get(index++);
 
-				if (chart != null && chart.isAttached())
-				{
-					chart.update(result, colors);
-					chart.forceRedraw();
+						colors.push(gradient[index - 1].toHexValue());
+					}
+
+					if (chart != null && chart.isAttached())
+					{
+						chart.update(widths, colors);
+						chart.forceRedraw();
+					}
 				}
 			}
 		};
-		equalWidthBinningWidget.setCallback(callback);
-		splitPointBinningWidget.setCallback(callback);
-		automaticBinningWidget.setCallback(callback);
+		equalWidthBinningWidget.setCallback(0, callback);
+		splitPointBinningWidget.setCallback(1, callback);
+		automaticBinningWidget.setCallback(2, callback);
 
 		chart = new PlotlyAllelefreqChart();
 		alleleFreqChart.add(chart);
@@ -194,13 +202,22 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	@UiHandler("equalWidthTab")
 	void onEqualWidthTabClicked(ClickEvent event)
 	{
-		//		equalWidthBinningWidget.
+		this.index = 0;
+		equalWidthBinningWidget.refresh();
 	}
 
 	@UiHandler("splitPointTab")
 	void onSplitPointTabClicked(ClickEvent event)
 	{
+		this.index = 1;
 		splitPointBinningWidget.refresh();
+	}
+
+	@UiHandler("automaticTab")
+	void onAutomaticTabClicked(ClickEvent event)
+	{
+		this.index = 2;
+		automaticBinningWidget.refresh();
 	}
 
 	private AlleleFrequencyService.HistogramParams getHistogramParams()
@@ -290,5 +307,17 @@ public class AlleleFreqResultsPage extends Composite implements HasLibraries
 	public Library[] getLibraries()
 	{
 		return null;
+	}
+
+	public static class BinningResult
+	{
+		public int index;
+		public JsArrayNumber widths;
+
+		public BinningResult(int index, JsArrayNumber widths)
+		{
+			this.index = index;
+			this.widths = widths;
+		}
 	}
 }

@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import jhi.germinate.client.page.allelefreq.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.shared.datastructure.*;
@@ -50,15 +51,17 @@ public class SplitPointBinningWidget extends Composite
 
 	private JsArrayNumber widths;
 
-	private Callback<JsArrayNumber, Throwable> callback = null;
+	private int                                                      index    = -1;
+	private Callback<AlleleFreqResultsPage.BinningResult, Throwable> callback = null;
 
 	public SplitPointBinningWidget()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 	}
 
-	public SplitPointBinningWidget setCallback(Callback<JsArrayNumber, Throwable> callback)
+	public SplitPointBinningWidget setCallback(int index, Callback<AlleleFreqResultsPage.BinningResult, Throwable> callback)
 	{
+		this.index = index;
 		this.callback = callback;
 		return this;
 	}
@@ -120,7 +123,7 @@ public class SplitPointBinningWidget extends Composite
 				widths.push((1 - split) / binsRight * 100);
 
 			if (callback != null)
-				callback.onSuccess(widths);
+				callback.onSuccess(new AlleleFreqResultsPage.BinningResult(index, widths));
 		}
 	}
 }

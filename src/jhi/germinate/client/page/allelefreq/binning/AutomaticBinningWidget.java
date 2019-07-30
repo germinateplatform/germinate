@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 
+import jhi.germinate.client.page.allelefreq.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -45,17 +46,24 @@ public class AutomaticBinningWidget extends Composite
 
 	private JsArrayNumber widths;
 
-	private Callback<JsArrayNumber, Throwable> callback = null;
+	private int index = -1;
+	private Callback<AlleleFreqResultsPage.BinningResult, Throwable> callback = null;
 
 	public AutomaticBinningWidget()
 	{
 		initWidget(ourUiBinder.createAndBindUi(this));
 	}
 
-	public AutomaticBinningWidget setCallback(Callback<JsArrayNumber, Throwable> callback)
+	public AutomaticBinningWidget setCallback(int index, Callback<AlleleFreqResultsPage.BinningResult, Throwable> callback)
 	{
+		this.index = index;
 		this.callback = callback;
 		return this;
+	}
+
+	public void refresh()
+	{
+		onRefreshButtonClicked(null);
 	}
 
 	@Override
@@ -98,7 +106,7 @@ public class AutomaticBinningWidget extends Composite
 					widths = JavaScript.toJsNumbersArray(result.getSecond().widths);
 
 					if (callback != null)
-						callback.onSuccess(widths);
+						callback.onSuccess(new AlleleFreqResultsPage.BinningResult(index, widths));
 				}
 			});
 		}
