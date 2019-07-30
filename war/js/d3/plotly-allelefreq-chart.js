@@ -30,14 +30,14 @@ j
 			for (var i = 0; i < widths.length; i++) {
 				sum += widths[i];
 				ys.push(widths[i]/100);
-				barColors.push(sum/100);
+				barColors.push((sum/100).toFixed(4));
 				heights.push(-(max / 40));
 				barWidths.push(max / 20);
 
 				if (i > 0) {
 					text.push(barColors[i-1] + ' - ' + barColors[i]);
 				} else {
-					text.push('0 - ' + ys[i]);
+					text.push('0 - ' + ys[i].toFixed(4));
 				}
 			}
 

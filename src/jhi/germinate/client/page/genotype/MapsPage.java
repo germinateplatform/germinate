@@ -35,8 +35,8 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -181,15 +181,8 @@ public class MapsPage extends Composite implements HasHyperlinkButton, HasHelp
 		}
 
 		chartPanel.clear();
-		if (map.getSize() < 100000)
-		{
-			mapHeatmapPanel.setVisible(true);
-			chartPanel.add(new MapChartCanvas(map.getId()));
-		}
-		else
-		{
-			mapHeatmapPanel.setVisible(false);
-		}
+		mapHeatmapPanel.setVisible(true);
+		chartPanel.add(new PlotlyMapChart(map.getId()));
 	}
 
 	@Override
