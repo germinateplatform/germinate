@@ -151,7 +151,7 @@ public class ModuleCore implements EntryPoint
 				@Override
 				public void run()
 				{
-					ResizeRegister.triggerResize();
+					ResizeRegister.triggerResize(false);
 				}
 			};
 

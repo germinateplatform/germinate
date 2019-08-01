@@ -20,8 +20,8 @@ package jhi.germinate.client.widget.d3js;
 import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
@@ -42,8 +42,20 @@ import jhi.germinate.shared.search.operators.*;
 /**
  * @author Sebastian Raubach
  */
-public class TaxonomyPieChart extends AbstractChart
+public class TaxonomyPieChart extends AbstractChart implements PlotlyChart
 {
+	private boolean needsRedraw = true;
+
+	@Override
+	public void onResize(boolean containerResize, boolean force)
+	{
+		if (force || (needsRedraw && !StringUtils.isEmpty(filePath)))
+		{
+			needsRedraw = false;
+			super.onResize(containerResize, force);
+		}
+	}
+
 	@Override
 	protected void createContent(FlowPanel chartPanel)
 	{
@@ -65,7 +77,7 @@ public class TaxonomyPieChart extends AbstractChart
 							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
 
-					TaxonomyPieChart.this.onResize(true);
+					TaxonomyPieChart.this.onResize(true, false);
 				}
 				else
 				{
@@ -73,6 +85,12 @@ public class TaxonomyPieChart extends AbstractChart
 				}
 			}
 		});
+	}
+
+	@Override
+	public int[] getDownloadSize()
+	{
+		return new int[]{1280, 800};
 	}
 
 	@Override
@@ -96,7 +114,7 @@ public class TaxonomyPieChart extends AbstractChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_PIE, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_PIE_CHART, Library.D3_DOWNLOAD};
 	}
 
 	private void onClickSegment(String genus, String species, String subtaxa)
@@ -122,66 +140,46 @@ public class TaxonomyPieChart extends AbstractChart
 	private native void create(int widthHint)/*-{
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
-		var width = widthHint, height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
+		var height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
 		var colors = @jhi.germinate.client.util.JavaScript.D3::getColorPalette()();
 
 		var that = this;
 
-		$wnd.d3.tsv(filePath, function (error, data) {
-			if (error) throw error;
-
-			var newData = [];
-
-			data.forEach(function (d) {
-				var label = d.genus;
-
-				if (d.species) {
-					label += " " + d.species;
+		function unpackAndJoin(rows, keys) {
+			return rows.map(function (row) {
+				var result = row[keys[0]];
+				for(var i = 1; i < keys.length; i++) {
+					result += ' ' + row[keys[i]];
 				}
-				if (d.subtaxa) {
-					label += " " + d.subtaxa;
-				}
-
-				newData.push({
-					datum: d,
-					label: label,
-					value: parseFloat(d.count)
-				});
+				return result;
 			});
+		}
 
-			new $wnd.d3pie(panelId, {
-				size: {
-					pieOuterRadius: "90%",
-					canvasHeight: height,
-					canvasWidth: width
-				},
-				data: {
-					content: newData
-				},
-				labels: {
-					outer: {
-						hideWhenLessThanPercentage: 2
-					},
-					inner: {
-						hideWhenLessThanPercentage: 5
-					}
-				},
-				tooltips: {
-					enabled: true,
-					type: "placeholder",
-					string: "{label}: {value}"
-				},
-				misc: {
-					colors: {
-						segments: colors
-					}
-				},
-				callbacks: {
-					onClickSegment: function (a) {
-						that.@jhi.germinate.client.widget.d3js.TaxonomyPieChart::onClickSegment(*)(a.data.datum.genus, a.data.datum.species, a.data.datum.subtaxa);
-					}
-				}
-			});
+		$wnd.Plotly.d3.tsv(filePath, function (error, rows) {
+			$wnd.Plotly.d3.select("#" + panelId)
+				.datum(rows)
+				.call($wnd.plotlyPieChart()
+					.labels(function (rows) {
+						return unpackAndJoin(rows, ["genus", "species", "subtaxa"]);
+					})
+					.custom(function (rows) {
+						return rows.map(function (r) {
+							return {
+								genus: r.genus,
+								species: r.species,
+								subtaxa: r.subtaxa
+							};
+						})
+					})
+					.onSliceClicked(function (selection) {
+						var index = selection.points[0].i;
+						var custom = selection.points[0].data.custom[index];
+
+						that.@jhi.germinate.client.widget.d3js.TaxonomyPieChart::onClickSegment(*)(custom.genus, custom.species, custom.subtaxa);
+					})
+					.height(height)
+					.colors(colors)
+				);
 		});
 	}-*/;
 }

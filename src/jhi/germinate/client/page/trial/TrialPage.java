@@ -40,8 +40,8 @@ import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.basic.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
@@ -313,7 +313,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LASSO, Library.D3_LEGEND, Library.D3_MULTI_LINE_CHART, Library.D3_SCATTER_MATRIX, Library.D3_SCATTER_PLOT, Library.D3_DOWNLOAD};
+		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_DOWNLOAD};
 	}
 
 	@Override

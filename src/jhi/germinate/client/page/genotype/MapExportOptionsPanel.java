@@ -24,15 +24,15 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.*;
 
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
 import org.gwtbootstrap3.client.ui.Panel;
-import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
 
 import java.util.*;
@@ -44,8 +44,8 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.input.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.Map;
 import jhi.germinate.shared.enums.*;
@@ -82,6 +82,8 @@ public class MapExportOptionsPanel extends Composite
 	HTML              panelHtml;
 	@UiField
 	Button            closeOptions;
+	@UiField
+	NavTabs           tabs;
 	@UiField
 	TabListItem       chromosomeTab;
 	@UiField
@@ -440,6 +442,12 @@ public class MapExportOptionsPanel extends Composite
 		collapse(collapsePanel.getElement());
 	}
 
+	public void open()
+	{
+		if (!collapsePanel.isIn())
+			collapsePanel.setIn(true);
+	}
+
 	@UiHandler("deleteRegion")
 	void onDeleteRegionClicked(ClickEvent event)
 	{
@@ -455,6 +463,27 @@ public class MapExportOptionsPanel extends Composite
 	{
 		dataProvider.getList().add(new MappingEntry(chromosomes.get(0), null, null));
 		table.redraw();
+	}
+
+	public void addTableSelection(MappingEntry selection)
+	{
+		// Remove the dummy entry if it's there
+		if (dataProvider.getList().size() == 1) {
+			MappingEntry entry = dataProvider.getList().get(0);
+			if (entry.start == null || entry.end == null)
+				dataProvider.getList().clear();
+		}
+
+		// Add the new item, then redraw
+		dataProvider.getList().add(selection);
+		table.redraw();
+
+		// Open the export options panel if it isn't already
+		open();
+
+		// Activate the regions tab if it isn't already
+		if(!regionTab.isActive())
+			regionTab.showTab(false);
 	}
 
 	private native void collapse(Element e)/*-{
@@ -478,13 +507,13 @@ public class MapExportOptionsPanel extends Composite
 	{
 	}
 
-	private class MappingEntry
+	public static class MappingEntry
 	{
 		private String chromosome;
 		private Long   start = null;
 		private Long   end   = null;
 
-		MappingEntry(String chromosome, Long start, Long end)
+		public MappingEntry(String chromosome, Long start, Long end)
 		{
 			this.chromosome = chromosome;
 			this.start = start;

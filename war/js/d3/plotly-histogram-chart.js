@@ -15,70 +15,43 @@
  *  limitations under the License.
  */
 
-function plotlyMapChart() {
+function plotlyHistogramChart() {
 	var onPointsSelected = null,
-		distinctChromosomes = [],
+		height = 600,
+		xAxisTitle = '',
+		yAxisTitle = '',
 		colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
 
 	function chart(selection) {
 		selection.each(function (rows) {
-			var unique = {};
-			rows.forEach(function (row) {
-				if( typeof(unique[row.chromosome]) == "undefined"){
-					distinctChromosomes.push(row.chromosome);
-				}
-				unique[row.chromosome] = 0;
-			});
-
 			var data = [];
 			var layout = {
-				height: distinctChromosomes.length * 100,
+				height: height,
 				margin: {autoexpand: true},
 				selectdirection: 'h',
 				dragmode: 'select',
-				grid: {
-					rows: distinctChromosomes.length,
-					columns: 1,
-					pattern: 'independent',
-					subplots: []
-				},
 				legend: {
 					orientation: 'h'
+				},
+				xaxis: {
+					title: xAxisTitle
+				},
+				yaxis: {
+					title: yAxisTitle
 				}
 			};
 
-			distinctChromosomes.forEach(function (c, i) {
-				var x = unpackConditional(rows, "position", "chromosome", c);
-				var min = Number.MAX_SAFE_INTEGER;
-				var max = -Number.MAX_SAFE_INTEGER;
+			var dims = Object.keys(rows[0]);
 
-				x.forEach(function (value) {
-					if (value < min) {
-						min = value;
-					}
-					if (value > max) {
-						max = value
-					}
-				});
-
-				var datum = {
-					x: x,
+			dims.forEach(function (c, i) {
+				data.push({
+					x: unpack(rows, c),
 					type: 'histogram',
-					name: 'Chr' + c,
+					name: c,
 					marker: {
 						color: colors[i % colors.length]
-					},
-					xaxis: 'x',
-					xbins: {
-						size: Math.max(1, Math.round((max-min)/500))
 					}
-				};
-
-				var axisIndex = (i > 0) ? (i+1) : '';
-				datum.yaxis = 'y' + axisIndex;
-				data.push(datum);
-
-				layout.grid.subplots.push(['xy' + axisIndex]);
+				});
 			});
 
 			var config = {
@@ -96,26 +69,40 @@ function plotlyMapChart() {
 				if (!eventData || (eventData.points.length < 1)) {
 					Plotly.restyle(that, {selectedpoints: null});
 				} else {
-					var chromosome = eventData.points[0].curveNumber;
-
 					if (onPointsSelected)
-						onPointsSelected(distinctChromosomes[chromosome], eventData.range.x[0], eventData.range.x[1]);
+						onPointsSelected(eventData.points);
 				}
 			});
 		});
 	}
 
-	function unpackConditional(rows, key, referenceColumn, referenceValue) {
-		return rows.filter(function (row) {
-			return row[referenceColumn] === referenceValue
-		}).map(function (row) {
-			return +row[key]
-		})
+	function unpack(rows, key) {
+		return rows.map(function (row) {
+			return row[key];
+		});
 	}
+
+	chart.height = function (_) {
+		if (!arguments.length) return height;
+		height = _;
+		return chart;
+	};
 
 	chart.colors = function (_) {
 		if (!arguments.length) return colors;
 		colors = _;
+		return chart;
+	};
+
+	chart.xAxisTitle = function (_) {
+		if (!arguments.length) return xAxisTitle;
+		xAxisTitle = _;
+		return chart;
+	};
+
+	chart.yAxisTitle = function (_) {
+		if (!arguments.length) return yAxisTitle;
+		yAxisTitle = _;
 		return chart;
 	};
 

@@ -97,7 +97,7 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
 
-					PlotlyMatrixChart.this.onResize(true);
+					PlotlyMatrixChart.this.onResize(true, false);
 				}
 				else
 				{
@@ -260,11 +260,9 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 					.width(widthHint)
 					.height(widthHint)
 					.onPointClicked(function (point) {
-						console.log('jsni', point);
 						@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointClicked(Ljava/lang/String;)(point.id.split("-")[0]);
 					})
 					.onPointsSelected(function (points) {
-						console.log('jsni', points);
 						that.@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointsSelected(*)(points);
 					}));
 		});

@@ -53,7 +53,7 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 		panel.add(chartPanel);
 
 		if (!StringUtils.isEmpty(filePath))
-			onResize(true);
+			onResize(true, false);
 	}
 
 	private void readConfig()
@@ -85,12 +85,12 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 	}
 
 	@Override
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
-		if (needsRedraw && !StringUtils.isEmpty(filePath))
+		if (force || (needsRedraw && !StringUtils.isEmpty(filePath)))
 		{
 			needsRedraw = false;
-			super.onResize(containerResize);
+			super.onResize(containerResize, force);
 		}
 	}
 

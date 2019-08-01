@@ -21,6 +21,7 @@ import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.http.client.*;
+import com.google.gwt.i18n.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.cellview.client.Column;
@@ -40,12 +41,12 @@ import jhi.germinate.client.widget.d3js.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.gallery.*;
 import jhi.germinate.client.widget.table.pagination.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
-import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.Pagination;
-import jhi.germinate.shared.datastructure.database.*;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.Image;
+import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
 import jhi.germinate.shared.search.operators.*;
@@ -174,13 +175,13 @@ public class CompoundDetailsPage extends Composite
 					@Override
 					public String getCellStyleNames(Cell.Context context, Dataset row)
 					{
-						return jhi.germinate.shared.Style.combine(jhi.germinate.shared.Style.TEXT_CENTER_ALIGN, jhi.germinate.shared.Style.CURSOR_DEFAULT);
+						return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
 					}
 
 					@Override
 					public SafeHtml getValue(Dataset row)
 					{
-						return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(jhi.germinate.shared.Style.MDI_CHART_BAR, Text.LANG.datasetHistogramTitle(), UriUtils.fromString(""), "");
+						return SimpleHtmlTemplate.INSTANCE.materialIconAnchor(Style.MDI_CHART_BAR, Text.LANG.datasetHistogramTitle(), UriUtils.fromString(""), "");
 					}
 
 					@Override
@@ -190,28 +191,52 @@ public class CompoundDetailsPage extends Composite
 						{
 							event.preventDefault();
 
-							String file = object.getExtra("CHART_FILE");
-							SimplePanel panel = new SimplePanel();
-							HistogramChart chart;
-							if (StringUtils.isEmpty(file))
-								chart = new HistogramChart(compound.getId(), object.getId(), ExperimentType.compound);
-							else
-								chart = new HistogramChart(file);
+							String oldPath = object.getExtra("CHART_FILE");
 
-							new AlertDialog(Text.LANG.datasetHistogramTitle(), panel)
-									.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
-									.setSize(ModalSize.LARGE)
-									.addShownHandler(modalShownEvent -> panel.add(chart))
-									.addHideHandler(modalHideEvent -> {
-										String path = chart.getFilePath();
-										object.setExtra("CHART_FILE", path);
-									})
-									.open();
+							if (StringUtils.isEmpty(oldPath))
+							{
+								CompoundService.Inst.get().getHistogramData(Cookie.getRequestProperties(), compound.getId(), object.getId(), new DefaultAsyncCallback<ServerResult<String>>()
+								{
+									@Override
+									protected void onSuccessImpl(ServerResult<String> result)
+									{
+										String filePath = new ServletConstants.Builder()
+												.setUrl(GWT.getModuleBaseURL())
+												.setPath(ServletConstants.SERVLET_FILES)
+												.setParam(ServletConstants.PARAM_SID, Cookie.getSessionId())
+												.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
+												.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
+
+										object.setExtra("CHART_FILE", filePath);
+										showChart(filePath);
+									}
+								});
+							}
+							else
+							{
+								showChart(oldPath);
+							}
 						}
 						else
 						{
 							super.onBrowserEvent(context, elem, object, event);
 						}
+					}
+
+					private void showChart(String filePath)
+					{
+						SimplePanel panel = new SimplePanel();
+
+						PlotlyHistogramChart chart = new PlotlyHistogramChart()
+								.setxAxisTitle(compound.getName())
+								.setyAxisTitle(Text.LANG.generalCount());
+						panel.add(chart);
+
+						new AlertDialog(Text.LANG.datasetHistogramTitle(), panel)
+								.setPositiveButtonConfig(new AlertDialog.ButtonConfig(Text.LANG.generalClose(), Style.MDI_CANCEL, null))
+								.setSize(ModalSize.LARGE)
+								.addShownHandler(modalShownEvent -> chart.setFilePath(filePath))
+								.open();
 					}
 				}, "", false);
 			}

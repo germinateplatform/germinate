@@ -53,7 +53,7 @@
 
 					<g:HTML ui:field="panelHtml"/>
 
-					<b:NavTabs>
+					<b:NavTabs ui:field="tabs">
 						<b:TabListItem active="true" dataTarget="#chromosome" text="{msg.markersExportOptionsTabChromosomes}"
 									   ui:field="chromosomeTab"/>
 						<b:TabListItem dataTarget="#region" text="{msg.markersExportOptionsTabRegion}" ui:field="regionTab"/>

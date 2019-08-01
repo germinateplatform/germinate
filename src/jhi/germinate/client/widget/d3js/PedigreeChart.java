@@ -79,7 +79,7 @@ public class PedigreeChart extends AbstractChart
 							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
 
-					PedigreeChart.this.onResize(true);
+					PedigreeChart.this.onResize(true, false);
 				}
 				else
 				{

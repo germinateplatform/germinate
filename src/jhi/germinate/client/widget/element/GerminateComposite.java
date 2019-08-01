@@ -57,7 +57,7 @@ public abstract class GerminateComposite extends Composite
 		panel.insert(widget, beforeIndex);
 	}
 
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
 	}
 

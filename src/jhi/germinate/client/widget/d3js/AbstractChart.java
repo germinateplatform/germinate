@@ -124,11 +124,9 @@ public abstract class AbstractChart extends GerminateComposite
 		removeD3JS();
 
 		popupPanels.values().forEach(Widget::removeFromParent);
-
 		popupPanels.clear();
 
 		handlers.values().forEach(HandlerRegistration::removeHandler);
-
 		handlers.clear();
 	}
 
@@ -165,9 +163,9 @@ public abstract class AbstractChart extends GerminateComposite
 	}
 
 	@Override
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
-		if (containerResize)
+		if (containerResize || force)
 		{
 			/* If the chart needs to update, then notify it */
 			removeD3(panelId);
@@ -210,7 +208,7 @@ public abstract class AbstractChart extends GerminateComposite
 		this.filePath = filePath;
 
 		if (chartPanel != null && chartPanel.isAttached() && filePath != null)
-			onResize(true);
+			onResize(true, false);
 	}
 
 	public void forceRedraw()
@@ -218,7 +216,7 @@ public abstract class AbstractChart extends GerminateComposite
 		if (chartPanel != null && chartPanel.isAttached())
 		{
 			clear();
-			onResize(true);
+			onResize(true, false);
 		}
 	}
 

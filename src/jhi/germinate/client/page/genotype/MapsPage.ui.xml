@@ -47,7 +47,7 @@
 			<b:html.ClearFix/>
 
 			<g:FlowPanel visible="false" ui:field="mapHeatmapPanel">
-				<b:Heading size="H3" text="{msg.mapsHeatmapTitle}"/>
+				<b:Heading size="H3" text="{msg.mapsHistogramTitle}"/>
 				<g:HTML ui:field="mapHeatmapParagraph"/>
 			</g:FlowPanel>
 

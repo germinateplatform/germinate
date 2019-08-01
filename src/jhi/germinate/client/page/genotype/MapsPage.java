@@ -85,7 +85,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		text.setHTML(Text.LANG.mapsParagraph());
 		mapDetailsParagraph.setHTML(Text.LANG.mapsMarkersParagraph());
-		mapHeatmapParagraph.setHTML(Text.LANG.mapsHeatmapText());
+		mapHeatmapParagraph.setHTML(Text.LANG.mapsHistogramText());
 
 		mapPanel.add(new MapTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
@@ -182,7 +182,9 @@ public class MapsPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		chartPanel.clear();
 		mapHeatmapPanel.setVisible(true);
-		chartPanel.add(new PlotlyMapChart(map.getId()));
+		chartPanel.add(new PlotlyMapChart(map.getId(), selection -> {
+			exportOptionsPanel.addTableSelection(selection);
+		}));
 	}
 
 	@Override

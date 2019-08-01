@@ -17,24 +17,19 @@
 
 package jhi.germinate.client.widget.d3js;
 
-import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.ui.*;
 
-import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
 import jhi.germinate.shared.*;
 
 /**
  * @author Sebastian Raubach
  */
-public class PlotlyAllelefreqChart extends AbstractChart implements PlotlyChart
+public class PlotlyHistogramChart extends AbstractChart implements PlotlyChart
 {
-	private String        xAxisTitle = Text.LANG.allelefreqFrequency();
-	private String        yAxisTitle = Text.LANG.generalCount();
-	private JsArrayNumber widths;
-	private JsArrayString colors;
-
 	private boolean needsRedraw = true;
+	private String xAxisTitle = "";
+	private String yAxisTitle = "";
 
 	@Override
 	protected void createContent(FlowPanel chartPanel)
@@ -48,7 +43,7 @@ public class PlotlyAllelefreqChart extends AbstractChart implements PlotlyChart
 	@Override
 	public int[] getDownloadSize()
 	{
-		return new int[]{1280, 500};
+		return new int[]{1280, 600};
 	}
 
 	@Override
@@ -62,13 +57,6 @@ public class PlotlyAllelefreqChart extends AbstractChart implements PlotlyChart
 	}
 
 	@Override
-	public void forceRedraw()
-	{
-		this.needsRedraw = true;
-		super.forceRedraw();
-	}
-
-	@Override
 	protected void updateChart(int width)
 	{
 		create(width);
@@ -77,7 +65,7 @@ public class PlotlyAllelefreqChart extends AbstractChart implements PlotlyChart
 	@Override
 	protected String getPhotoExportFilename()
 	{
-		return "allele-freq";
+		return "histogram";
 	}
 
 	@Override
@@ -89,41 +77,47 @@ public class PlotlyAllelefreqChart extends AbstractChart implements PlotlyChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.PLOTLY, Library.PLOTLY_ALLELE_FREQ_CHART, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_HISTOGRAM_CHART, Library.D3_DOWNLOAD};
 	}
 
-	private native void create(int widthHint) /*-{
+	public String getxAxisTitle()
+	{
+		return xAxisTitle;
+	}
+
+	public PlotlyHistogramChart setxAxisTitle(String xAxisTitle)
+	{
+		this.xAxisTitle = xAxisTitle;
+		return this;
+	}
+
+	public String getyAxisTitle()
+	{
+		return yAxisTitle;
+	}
+
+	public PlotlyHistogramChart setyAxisTitle(String yAxisTitle)
+	{
+		this.yAxisTitle = yAxisTitle;
+		return this;
+	}
+
+	private native void create(int widthHint)/*-{
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
-		var xAxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyAllelefreqChart::xAxisTitle;
-		var yAxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyAllelefreqChart::yAxisTitle;
-		var height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
-		var widths = this.@jhi.germinate.client.widget.d3js.PlotlyAllelefreqChart::widths;
-		var colors = this.@jhi.germinate.client.widget.d3js.PlotlyAllelefreqChart::colors;
+		var height = Math.round(@jhi.germinate.client.util.JavaScript.D3::HEIGHT * 0.8);
+		var colors = @jhi.germinate.client.util.JavaScript.D3::getColorPalette()();
+		var xAxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyHistogramChart::xAxisTitle;
+		var yAxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyHistogramChart::yAxisTitle;
 
-		var that = this;
-
-		$wnd.Plotly.d3.tsv(filePath, function (error, rows) {
-			$wnd.Plotly.d3.select('#' + panelId)
-				.datum(rows)
-				.call($wnd.plotlyAlleleFreqChart()
+		$wnd.d3.tsv(filePath, function (data) {
+			$wnd.d3.select("#" + panelId)
+				.datum(data)
+				.call($wnd.plotlyHistogramChart()
+					.xAxisTitle(xAxisTitle)
+					.yAxisTitle(yAxisTitle)
 					.height(height)
-					.widths(widths)
-					.colors(colors)
-					.x('position')
-					.y('count')
-					.xCategory(xAxisTitle)
-					.yCategory(yAxisTitle)
-					.onPointClicked(function (data) {
-						// TODO
-//						that.@jhi.germinate.client.widget.d3js.PlotlyAllelefreqChart::onBarClicked(*)(data);
-					}));
+					.colors(colors));
 		});
 	}-*/;
-
-	public void update(JsArrayNumber widths, JsArrayString colors)
-	{
-		this.widths = widths;
-		this.colors = colors;
-	}
 }

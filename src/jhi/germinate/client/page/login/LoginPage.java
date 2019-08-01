@@ -122,7 +122,7 @@ public class LoginPage extends GerminateComposite implements HasHelp
 	}
 
 	@Override
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
 		jsniOnLoginShown(Window.getClientWidth(), Window.getClientHeight());
 	}

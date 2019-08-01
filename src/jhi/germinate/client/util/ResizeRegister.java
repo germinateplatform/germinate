@@ -28,7 +28,7 @@ import jhi.germinate.client.widget.element.*;
 /**
  * {@link ResizeRegister} is a central place to register a {@link GerminateComposite} for {@link ResizeEvent}s. As a consequence of the register
  * process, the given {@link GerminateComposite} will get notified once the {@link jhi.germinate.client.management.ContentHolder} fires a {@link
- * ResizeEvent} by calling its {@link GerminateComposite#onResize(boolean)} method.
+ * ResizeEvent} by calling its {@link GerminateComposite#onResize(boolean, boolean)} method.
  *
  * @author Sebastian Raubach
  */
@@ -59,9 +59,9 @@ public class ResizeRegister
 	}
 
 	/**
-	 * Triggers a {@link ResizeEvent} no all contained {@link ResizeHandler}s by calling their {@link GerminateComposite#onResize(boolean)} method.
+	 * Triggers a {@link ResizeEvent} no all contained {@link ResizeHandler}s by calling their {@link GerminateComposite#onResize(boolean, boolean)} method.
 	 */
-	public static void triggerResize()
+	public static void triggerResize(boolean force)
 	{
 		Iterator<GerminateComposite> it = toResize.iterator();
 
@@ -88,7 +88,7 @@ public class ResizeRegister
 				}
 
 				// Wait for the browser loop to return before issuing the resize to the child
-				Scheduler.get().scheduleDeferred(() -> comp.onResize(containerResize));
+				Scheduler.get().scheduleDeferred(() -> comp.onResize(containerResize, force));
 			}
 		}
 	}

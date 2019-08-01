@@ -74,9 +74,9 @@ public class GeoChart extends GerminateComposite
 	}
 
 	@Override
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
-		if (containerResize)
+		if (containerResize || force)
 		{
 			update(chartData);
 		}

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.*;
 
 import jhi.germinate.client.i18n.*;
 import jhi.germinate.client.page.*;
+import jhi.germinate.client.page.genotype.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
@@ -37,11 +38,13 @@ public class PlotlyMapChart extends AbstractChart implements PlotlyChart
 {
 	private boolean needsRedraw = true;
 
-	private Long mapId = null;
+	private OnSelectionCallback selectionCallback;
+	private Long                mapId;
 
-	public PlotlyMapChart(Long mapId)
+	public PlotlyMapChart(Long mapId, OnSelectionCallback callback)
 	{
 		this.mapId = mapId;
+		this.selectionCallback = callback;
 	}
 
 	@Override
@@ -51,8 +54,10 @@ public class PlotlyMapChart extends AbstractChart implements PlotlyChart
 
 		if (!StringUtils.isEmpty(filePath))
 		{
-			onResize(true);
-		} else {
+			onResize(true, false);
+		}
+		else
+		{
 			MapService.Inst.get().getInFormat(Cookie.getRequestProperties(), mapId, MapFormat.flapjack, null, new DefaultAsyncCallback<ServerResult<String>>()
 			{
 				@Override
@@ -73,7 +78,7 @@ public class PlotlyMapChart extends AbstractChart implements PlotlyChart
 								.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 								.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
 
-						PlotlyMapChart.this.onResize(true);
+						PlotlyMapChart.this.onResize(true, false);
 					}
 					else
 					{
@@ -102,12 +107,12 @@ public class PlotlyMapChart extends AbstractChart implements PlotlyChart
 	}
 
 	@Override
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
-		if (needsRedraw && !StringUtils.isEmpty(filePath))
+		if ((needsRedraw && !StringUtils.isEmpty(filePath)) || force)
 		{
 			needsRedraw = false;
-			super.onResize(containerResize);
+			super.onResize(containerResize, force);
 		}
 	}
 
@@ -142,6 +147,12 @@ public class PlotlyMapChart extends AbstractChart implements PlotlyChart
 		return new Library[]{Library.PLOTLY, Library.PLOTLY_MAP_CHART, Library.D3_DOWNLOAD};
 	}
 
+	private void onPointsSelected(int chromosome, double start, double end)
+	{
+		if (selectionCallback != null)
+			selectionCallback.onSelection(new MapExportOptionsPanel.MappingEntry(Integer.toString(chromosome), (long) Math.floor(start), (long) Math.ceil(end)));
+	}
+
 	private native void create(int widthHint) /*-{
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
@@ -158,7 +169,15 @@ public class PlotlyMapChart extends AbstractChart implements PlotlyChart
 			$wnd.Plotly.d3.select("#" + panelId)
 				.datum(data)
 				.call($wnd.plotlyMapChart()
-					.colors(colors));
+					.colors(colors)
+					.onPointsSelected(function (chromosome, start, end) {
+						that.@jhi.germinate.client.widget.d3js.PlotlyMapChart::onPointsSelected(*)(chromosome, start, end);
+					}));
 		});
 	}-*/;
+
+	public interface OnSelectionCallback
+	{
+		void onSelection(MapExportOptionsPanel.MappingEntry selection);
+	}
 }

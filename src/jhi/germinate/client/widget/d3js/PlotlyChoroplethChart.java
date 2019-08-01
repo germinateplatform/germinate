@@ -46,7 +46,7 @@ public class PlotlyChoroplethChart extends AbstractChart implements PlotlyChart
 		panel.add(chartPanel);
 
 		if (!StringUtils.isEmpty(filePath))
-			onResize(true);
+			onResize(true, false);
 	}
 
 	@Override
@@ -56,12 +56,12 @@ public class PlotlyChoroplethChart extends AbstractChart implements PlotlyChart
 	}
 
 	@Override
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
-		if (needsRedraw)
+		if (force || needsRedraw)
 		{
 			needsRedraw = false;
-			super.onResize(containerResize);
+			super.onResize(containerResize, force);
 		}
 	}
 

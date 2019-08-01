@@ -35,11 +35,11 @@ import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 
 /**
- * {@link ClimateChart} visualizes the climate data in a line graph.
+ * {@link PlotlyClimateChart} visualizes the climate data in a line graph.
  *
  * @author Sebastian Raubach
  */
-public class ClimateChart extends AbstractChart implements PlotlyChart
+public class PlotlyClimateChart extends AbstractChart implements PlotlyChart
 {
 	private boolean needsRedraw = true;
 
@@ -51,7 +51,7 @@ public class ClimateChart extends AbstractChart implements PlotlyChart
 
 	private List<Dataset> selectedDatasets;
 
-	public ClimateChart(Climate climate, Group group)
+	public PlotlyClimateChart(Climate climate, Group group)
 	{
 		super();
 		update(climate, group);
@@ -74,12 +74,12 @@ public class ClimateChart extends AbstractChart implements PlotlyChart
 	}
 
 	@Override
-	public void onResize(boolean containerResize)
+	public void onResize(boolean containerResize, boolean force)
 	{
-		if (needsRedraw)
+		if (needsRedraw || force)
 		{
 			needsRedraw = false;
-			super.onResize(containerResize);
+			super.onResize(containerResize, force);
 		}
 	}
 
@@ -107,7 +107,7 @@ public class ClimateChart extends AbstractChart implements PlotlyChart
 						yAxisTitle = climate.getName() + " [" + climate.getUnit().getName() + "]";
 					else
 						yAxisTitle = climate.getName();
-					ClimateChart.this.onResize(true);
+					PlotlyClimateChart.this.onResize(true, false);
 				}
 				else
 				{
@@ -136,7 +136,7 @@ public class ClimateChart extends AbstractChart implements PlotlyChart
 		if (climate != null)
 			getData();
 		else
-			onResize(true);
+			onResize(true, false);
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class ClimateChart extends AbstractChart implements PlotlyChart
 
 	private native void create(int widthHint) /*-{
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
-		var yaxisTitle = this.@jhi.germinate.client.widget.d3js.ClimateChart::yAxisTitle;
+		var yaxisTitle = this.@jhi.germinate.client.widget.d3js.PlotlyClimateChart::yAxisTitle;
 
 		var monthNamesI18n = @jhi.germinate.client.util.DateUtils::MONTHS_ABBR;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
@@ -204,62 +204,4 @@ public class ClimateChart extends AbstractChart implements PlotlyChart
 				);
 		});
 	}-*/;
-
-	//	private native void create(int widthHint)/*-{
-	//		var barChartFile = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
-	//		var barChartYAxisTitle = this.@jhi.germinate.client.widget.d3js.ClimateChart::yAxisTitle;
-	//
-	//		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
-	//		var legendItemStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_LEGEND_ITEM;
-	//		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
-	//
-	//		var lineStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ClimateLineChartBundle::STYLE_LINE;
-	//
-	//		var monthNamesI18n = @jhi.germinate.client.util.DateUtils::MONTHS_ABBR;
-	//		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
-	//
-	//		var margin = @jhi.germinate.client.util.JavaScript.D3::getMargin()();
-	//		var width = widthHint;
-	//		var height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
-	//
-	//		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
-	//
-	//		$wnd.d3.tsv(barChartFile,
-	//			function (data) {
-	//				$wnd.d3.select("#" + panelId)
-	//					.datum(data)
-	//					.call($wnd.multiLineChart()
-	//						.margin(margin)
-	//						.width(width)
-	//						.height(height)
-	//						.x(function (d) {
-	//							return parseInt(d.recording_date);
-	//						})
-	//						.y(function (d) {
-	//							return parseFloat(d);
-	//						})
-	//						.tooltip(function (d) {
-	//							if (d.key === "MAX")
-	//								return d.key + ": " + d.data[d.key] + "<br/>" + d.data.MaxCollsite;
-	//							else if (d.key === "MIN")
-	//								return d.key + ": " + d.data[d.key] + "<br/>" + d.data.MinCollsite;
-	//							else
-	//								return d.key + ": " + d.data[d.key];
-	//						})
-	//						.color(color)
-	//						.tooltipStyle(tooltipStyle)
-	//						.axisStyle(axisStyle)
-	//						.lineStyle(lineStyle)
-	//						.xLabel("")
-	//						.yLabel(barChartYAxisTitle)
-	//						.xAxisStart(20)
-	//						.legendItemStyle(legendItemStyle)
-	//						.showLegend(true)
-	//						.legendWidth(60)
-	//						.ignoreIndices([0, 1, 2, 6])
-	//						.interpolate("cardinal").xTickFormat(function (d, i) {
-	//							return monthNamesI18n[i];
-	//						}));
-	//			});
-	//	}-*/;
 }

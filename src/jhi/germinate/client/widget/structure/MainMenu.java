@@ -18,8 +18,8 @@
 package jhi.germinate.client.widget.structure;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -29,8 +29,8 @@ import java.util.*;
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
 import jhi.germinate.client.util.callback.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 
 /**
@@ -193,7 +193,7 @@ public final class MainMenu
 				// Toggle the class name on the main page div
 				JavaScript.toggleClass("#" + Id.STRUCTURE_PAGE, Style.LAYOUT_SIDEBAR_TOGGLED);
 
-				ResizeRegister.triggerResize();
+				ResizeRegister.triggerResize(true);
 
 				// Supress the event propagation if the window is big
 				if (Window.getClientWidth() >= 992)

@@ -21,6 +21,10 @@ function plotlyLineChart() {
 		xaxisTickVals = null,
 		columnsToIgnore= [],
 		yaxisTitle = '',
+		xaxisTitle = '',
+		hovermode = 'x',
+		legendOrientation = 'h',
+		hovertemplate = '%{y} - %{text}',
 		yaxisRangeMode = 'normal',
 		getText = function (rows, dim) {
 			return '';
@@ -50,7 +54,7 @@ function plotlyLineChart() {
 					name: dims[i],
 					mode: 'lines',
 					text: getText(rows, dims[i]),
-					hovertemplate: '%{y} - %{text}',
+					hovertemplate: hovertemplate,
 					line: {
 						shape: 'spline',
 						color: colors[i % colors.length]
@@ -61,12 +65,14 @@ function plotlyLineChart() {
 
 			var layout = {
 				autosize: true,
+				margin: {autoexpand: true},
 				height: height,
-				hovermode: 'x',
+				hovermode: hovermode,
 				legend: {
-					orientation: 'h'
+					orientation: legendOrientation
 				},
 				xaxis: {
+					title: xaxisTitle,
 					ticktext: xaxisTickText,
 					tickvals: xaxisTickVals
 				},
@@ -83,13 +89,9 @@ function plotlyLineChart() {
 				displaylogo: false
 			};
 
-			Plotly.plot(this, data, layout, config);
-		});
-	}
+			console.log(data);
 
-	function unpack(rows, key) {
-		return rows.map(function (row) {
-			return row[key];
+			Plotly.plot(this, data, layout, config);
 		});
 	}
 
@@ -123,6 +125,18 @@ function plotlyLineChart() {
 		return chart;
 	};
 
+	chart.hovertemplate = function (_) {
+		if (!arguments.length) return hovertemplate;
+		hovertemplate = _;
+		return chart;
+	};
+
+	chart.xaxisTitle = function (_) {
+		if (!arguments.length) return xaxisTitle;
+		xaxisTitle = _;
+		return chart;
+	};
+
 	chart.yaxisTitle = function (_) {
 		if (!arguments.length) return yaxisTitle;
 		yaxisTitle = _;
@@ -135,9 +149,21 @@ function plotlyLineChart() {
 		return chart;
 	};
 
+	chart.hovermode = function (_) {
+		if (!arguments.length) return hovermode;
+		hovermode = _;
+		return chart;
+	};
+
 	chart.getText = function (_) {
 		if (!arguments.length) return getText;
 		getText = _;
+		return chart;
+	};
+
+	chart.legendOrientation = function (_) {
+		if (!arguments.length) return legendOrientation;
+		legendOrientation = _;
 		return chart;
 	};
 

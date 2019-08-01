@@ -22,8 +22,8 @@ import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.*;
 
-import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
@@ -321,7 +321,7 @@ public class PlotlyScatterChart<T extends DatabaseObject> extends AbstractChart 
 							.setParam(ServletConstants.PARAM_FILE_LOCALE, LocaleInfo.getCurrentLocale().getLocaleName())
 							.setParam(ServletConstants.PARAM_FILE_PATH, result.getServerResult()).build();
 
-					PlotlyScatterChart.this.onResize(true);
+					PlotlyScatterChart.this.onResize(true, false);
 				}
 				else
 				{

@@ -120,7 +120,6 @@ function plotlyScatterMatrix() {
 			var that = this;
 
 			this.on('plotly_selected', function (eventData) {
-				console.log('selected', eventData);
 				if (!eventData || (eventData.points.length < 1)) {
 					Plotly.restyle(that, {selectedpoints: null});
 
@@ -139,7 +138,6 @@ function plotlyScatterMatrix() {
 
 			if (onPointClicked) {
 				this.on('plotly_click', function (data) {
-					console.log('click', data);
 					if (data.points.length > 0) {
 						onPointClicked(data.points[0]);
 					}

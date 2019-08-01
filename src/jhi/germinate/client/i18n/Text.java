@@ -1237,13 +1237,13 @@ public interface Text extends Messages
 	@Key("column.markers.position.end")
 	String markersRegionEndPosition();
 
-	@Key("page.maps.heatmap.title")
-	@DefaultMessage("Heatmap")
-	String mapsHeatmapTitle();
+	@Key("page.maps.histogram.title")
+	@DefaultMessage("Histogram")
+	String mapsHistogramTitle();
 
-	@Key("page.maps.heatmap.text")
-	@DefaultMessage("<p>The diagram below shows the density of markers on each chromosome. Hovering over the diagram will show the closest marker to the mouse position.</p>")
-	SafeHtml mapsHeatmapText();
+	@Key("page.maps.histogram.text")
+	@DefaultMessage("<p>The diagram below shows the density of markers on each chromosome. Selecting in the diagram by dragging will add the selection to the export options.</p>")
+	SafeHtml mapsHistogramText();
 
 	@Key("page.maps.export.options.title")
 	String markersExportOptionsTitle();
@@ -1964,7 +1964,7 @@ public interface Text extends Messages
 	String dataStatisticsBiologicalStatusTitle();
 
 	@Key("page.data.statistics.biological.status.text")
-	@DefaultMessage("Below you can see the percentage of accessions for each biological status (SAMPSTAT) defined in the Multi-Crop Passport Descriptors (MCPD v2.1). Hovering over a slice will show the actual number of accessions. Clicking on a slice will take you to the accession overview page which will then just show the accessions with this biological status.")
+	@DefaultMessage("Below you can see the percentage of accessions for each biological status (SAMPSTAT) defined in the Multi-Crop Passport Descriptors (MCPD v2.1). Hovering over a bar will show the actual number of accessions. Clicking on a bar will take you to the accession overview page which will then just show the accessions with this biological status.")
 	String dataStatisticsBiologicalStatusText();
 
 	@Key("page.data.statistics.accessions.per.country.title")

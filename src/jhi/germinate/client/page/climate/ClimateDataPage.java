@@ -42,8 +42,8 @@ import jhi.germinate.client.widget.map.*;
 import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
@@ -74,7 +74,7 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 	FlowPanel   resultPanel;
 	@UiField
 	SimplePanel chartPanel;
-	ClimateChart climateChart;
+	PlotlyClimateChart climateChart;
 	@UiField
 	FlowPanel   mapWrapper;
 	@UiField
@@ -247,7 +247,7 @@ public class ClimateDataPage extends Composite implements ParallaxBannerPage, Ha
 
 		if (climateChart == null)
 		{
-			climateChart = new ClimateChart(climate, group);
+			climateChart = new PlotlyClimateChart(climate, group);
 			chartPanel.add(climateChart);
 		}
 		else

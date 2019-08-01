@@ -25,10 +25,12 @@ import jhi.germinate.client.page.*;
 /**
  * @author Sebastian Raubach
  */
-public class TrialsOverviewChart extends AbstractChart
+public class TrialsOverviewChart extends AbstractChart implements PlotlyChart
 {
 	private String xAxisTitleLine = Text.LANG.generalYear();
 	private String yAxisTitleLine;
+
+	private boolean needsRedraw = true;
 
 	public TrialsOverviewChart(String filePath, String yAxisTitleLine)
 	{
@@ -41,7 +43,17 @@ public class TrialsOverviewChart extends AbstractChart
 	{
 		panel.add(chartPanel);
 
-		onResize(true);
+		onResize(true, false);
+	}
+
+	@Override
+	public void onResize(boolean containerResize, boolean force)
+	{
+		if (needsRedraw || force)
+		{
+			needsRedraw = false;
+			super.onResize(containerResize, force);
+		}
 	}
 
 	@Override
@@ -65,7 +77,7 @@ public class TrialsOverviewChart extends AbstractChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_MULTI_LINE_CHART, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_LINE_CHART, Library.D3_DOWNLOAD};
 	}
 
 
@@ -73,52 +85,41 @@ public class TrialsOverviewChart extends AbstractChart
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
 
-		var axisStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_AXIS;
-		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
-		var legendStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_LEGEND_ITEM;
-		var lineStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.ClimateLineChartBundle::STYLE_LINE;
-
 		var xAxisTitle = this.@jhi.germinate.client.widget.d3js.TrialsOverviewChart::xAxisTitleLine;
 		var yAxisTitle = this.@jhi.germinate.client.widget.d3js.TrialsOverviewChart::yAxisTitleLine;
 
-		var margin = @jhi.germinate.client.util.JavaScript.D3::getMargin()();
-		var width = widthHint;
-		var height = @jhi.germinate.client.util.JavaScript.D3::HEIGHT;
+		var height = Math.round(@jhi.germinate.client.util.JavaScript.D3::HEIGHT * 1.5);
 
-		var color = $wnd.d3.scale.ordinal().range(@jhi.germinate.client.util.JavaScript.D3::getColorPalette()());
+		var colors = @jhi.germinate.client.util.JavaScript.D3::getColorPalette()();
 
-		var formatDate = $wnd.d3.time.format("%Y");
+		function unpack(rows, key) {
+			return rows.map(function (row) {
+				return row[key];
+			});
+		}
 
 		$wnd.d3.tsv(filePath, function (data) {
 			$wnd.d3.select("#" + panelId)
 				.datum(data)
-				.call($wnd.multiLineChart()
-					.margin(margin)
-					.width(width)
+				.call($wnd.plotlyLineChart()
+					.x("date")
+					.legendOrientation("v")
+					.hovermode("closest")
+					.hovertemplate('%{y}')
+					.columnsToIgnore(["date"])
+					.getText(function (rows, dim) {
+						return unpack(rows, dim);
+					})
 					.height(height)
-					.xScale($wnd.d3.time.scale.utc())
-					.xTickFormat(formatDate)
-					.xTicks($wnd.d3.time.years)
-					.xTicksValue(1)
-					.minimum(0).x(function (d) {
-						return formatDate.parse(d.date);
-					})
-					.y(function (d) {
-						return parseFloat(d);
-					})
-					.tooltip(function (d) {
-						return d.key + "<br/>" + d.data[d.key].toFixed(2);
-					})
-					.color(color)
-					.tooltipStyle(tooltipStyle)
-					.legendItemStyle(legendStyle)
-					.axisStyle(axisStyle)
-					.lineStyle(lineStyle)
-					.xLabel(xAxisTitle)
-					.yLabel(yAxisTitle)
-					.showLegend(true)
-					.legendWidth(150)
-					.interpolate("cardinal"));
+					.colors(colors)
+					.xaxisTitle(xAxisTitle)
+					.yaxisTitle(yAxisTitle));
 		});
 	}-*/;
+
+	@Override
+	public int[] getDownloadSize()
+	{
+		return new int[]{1280, 800};
+	}
 }
