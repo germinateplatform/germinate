@@ -49,7 +49,7 @@ function plotlyPieChart() {
 
 			var config = {
 				modeBarButtonsToRemove: ['toImage'],
-				displayModeBar: true,
+				displayModeBar: false,
 				responsive: true,
 				displaylogo: false
 			};

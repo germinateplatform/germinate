@@ -66,7 +66,6 @@ public enum Library
 	D3_PEDIGREE_CHART("./js/d3/d3-pedigree-chart.js"),
 	D3_TOOLTIP("./js/d3/d3-tip.js"),
 	D3_LEGEND("./js/d3/d3-legend.js"),
-	D3_PIE("./js/d3/d3-pie.js"),
 	D3_TREEMAP("./js/d3/d3-treemap.js");
 
 	private String  jsPath;
