@@ -63,8 +63,8 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 		this.x = config != null ? config.x : "";
 		if (this.filePath == null)
 			this.filePath = config != null ? config.filePath : null;
-		this.mode = config.mode;
-		this.colors = config.colors;
+		this.mode = config != null ? config.mode : "traces";
+		this.colors = config != null ? config.colors : null;
 	}
 
 	@Override
@@ -172,8 +172,8 @@ public class PlotlyBarChart extends AbstractChart implements PlotlyChart
 		private String        downloadFilename = null;
 		private String        x                = null;
 		private String        filePath         = null;
-		private String        mode             = null;
-		private JsArrayString colors           = null;
+		private String        mode;
+		private JsArrayString colors;
 
 		private Callback<String, Throwable> clickCallback;
 

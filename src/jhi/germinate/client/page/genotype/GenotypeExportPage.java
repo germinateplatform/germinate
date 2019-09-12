@@ -128,7 +128,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 										{
 											exportToFlapjack(mapFile.getName(), genotypeFile.getName(), callback);
 										}
-										else if (config.getPath().equals(galaxyUrl))
+										else if (config.getPath().getName().equals(galaxyUrl))
 										{
 											event.preventDefault();
 
@@ -155,7 +155,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 											formPanel.add(new Hidden("genotypeData", data));
 											resultPanel.add(form);
 
-											CommonService.Inst.get().makeFilesAvailablePublically(Cookie.getRequestProperties(), ExperimentType.genotype, new AsyncCallback<Void>()
+											CommonService.Inst.get().makeFilesAvailablePublically(Cookie.getRequestProperties(), ExperimentType.genotype, new AsyncCallback<Boolean>()
 											{
 												@Override
 												public void onFailure(Throwable caught)
@@ -164,7 +164,7 @@ public class GenotypeExportPage extends GerminateComposite implements HasHyperli
 												}
 
 												@Override
-												public void onSuccess(Void result)
+												public void onSuccess(Boolean result)
 												{
 													form.submit();
 												}

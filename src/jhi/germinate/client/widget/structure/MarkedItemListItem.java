@@ -40,11 +40,6 @@ import jhi.germinate.shared.enums.*;
 public class MarkedItemListItem
 {
 	private LIElement     root         = Document.get().createLIElement();
-	private AnchorElement anchor       = Document.get().createAnchorElement();
-	private SpanElement   icon         = Document.get().createSpanElement();
-	private SpanElement   name         = Document.get().createSpanElement();
-	private SpanElement   countWrapper = Document.get().createSpanElement();
-	private SpanElement   trash        = Document.get().createSpanElement();
 	private SpanElement   count        = Document.get().createSpanElement();
 
 	private MarkedItemList.ItemType type;
@@ -53,13 +48,17 @@ public class MarkedItemListItem
 	{
 		this.type = type;
 
+		SpanElement icon = Document.get().createSpanElement();
 		icon.addClassName(Style.combine(type.getIcon(), Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
+		SpanElement trash = Document.get().createSpanElement();
 		trash.addClassName(Style.combine(Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_LG, Style.MDI_DELETE));
 
 		String display = type.getDisplayName();
 
+		SpanElement name = Document.get().createSpanElement();
 		name.setInnerText(display);
 
+		AnchorElement anchor = Document.get().createAnchorElement();
 		anchor.setTitle(display);
 		anchor.setHref("#");
 		JavaScript.click(anchor, new ClickCallback()
@@ -81,6 +80,7 @@ public class MarkedItemListItem
 			}
 		});
 
+		SpanElement countWrapper = Document.get().createSpanElement();
 		countWrapper.getStyle().setMarginLeft(10, com.google.gwt.dom.client.Style.Unit.PX);
 		countWrapper.getStyle().setLineHeight(28, com.google.gwt.dom.client.Style.Unit.PX);
 		count.addClassName(Styles.BADGE);

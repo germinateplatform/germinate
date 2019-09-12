@@ -109,11 +109,6 @@ public class Gradient implements Serializable
 		Color[] gradient = new Color[numSteps];
 		Color[] temp;
 
-		if (numSections < 1)
-		{
-			throw new IllegalArgumentException("You must pass in at least 2 colors in the array!");
-		}
-
 		for (int section = 0; section < numSections; section++)
 		{
 			/* we divide the gradient into (n - 1) sections, and do a regular

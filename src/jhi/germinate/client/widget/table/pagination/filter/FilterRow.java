@@ -319,7 +319,7 @@ public class FilterRow extends Composite
 							   secondInput.setValue(values.get(1));
 							   break;
 						   case MANY:
-							   firstInput.setValue(values.stream().collect(Collectors.joining(", ")));
+							   firstInput.setValue(String.join(", ", values));
 							   break;
 						   case ONE:
 						   default:
@@ -427,6 +427,8 @@ public class FilterRow extends Composite
 		String inputDual();
 
 		String input();
+
+		String entity();
 
 		String group();
 

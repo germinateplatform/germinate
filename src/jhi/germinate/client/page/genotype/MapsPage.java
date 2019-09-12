@@ -182,9 +182,7 @@ public class MapsPage extends Composite implements HasHyperlinkButton, HasHelp
 
 		chartPanel.clear();
 		mapHeatmapPanel.setVisible(true);
-		chartPanel.add(new PlotlyMapChart(map.getId(), selection -> {
-			exportOptionsPanel.addTableSelection(selection);
-		}));
+		chartPanel.add(new PlotlyMapChart(map.getId(), selection -> exportOptionsPanel.addTableSelection(selection)));
 	}
 
 	@Override

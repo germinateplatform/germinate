@@ -259,6 +259,7 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 					.colorBy(colorBy)
 					.width(widthHint)
 					.height(widthHint)
+					.columnsToIgnore(["name", "dbId", "general_identifier", "dataset_name", "dataset_description", "dataset_version", "license_name", "location_name", "treatments_description", "year"])
 					.onPointClicked(function (point) {
 						@jhi.germinate.client.widget.d3js.PlotlyMatrixChart::onDataPointClicked(Ljava/lang/String;)(point.id.split("-")[0]);
 					})
@@ -271,6 +272,6 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_MATRIX};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_MATRIX, Library.D3_DOWNLOAD};
 	}
 }

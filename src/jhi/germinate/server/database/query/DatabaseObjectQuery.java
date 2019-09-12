@@ -77,7 +77,7 @@ public class DatabaseObjectQuery<T extends DatabaseObject> extends GerminateQuer
 		private final Database          database;
 		private final DatabaseStatement stmt;
 		private final DatabaseResult    rs;
-		private       Integer           previousCount = null;
+		private       Integer           previousCount;
 
 		public ExecutedDatabaseObjectQuery(Database database, DatabaseStatement stmt, Integer previousCount) throws DatabaseException
 		{

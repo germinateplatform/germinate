@@ -62,7 +62,7 @@ public abstract class IterativeParentCallback implements ParentCallback
 
 	public IterativeParentCallback(List<ParallelCallback<?, ?>> callbacks)
 	{
-		this(callbacks.toArray(new ParallelCallback<?, ?>[callbacks.size()]));
+		this(callbacks.toArray(new ParallelCallback<?, ?>[0]));
 	}
 
 	protected synchronized void callNext()

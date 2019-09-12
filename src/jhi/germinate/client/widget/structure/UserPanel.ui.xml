@@ -27,8 +27,7 @@
 
 		.userdetails {
 			min-width: 200px;
-			padding: 10px;
-			padding-bottom: 0px;
+			padding: 10px 10px 0;
 		}
 
 		.username {
@@ -51,7 +50,7 @@
 				<div class="{ROW}">
 					<div class="col-lg-4">
 						<p class="text-center">
-							<span class="{MDI} {MDI_ACCOUNT} {MDI_48PX}"></span>
+							<span class="{MDI} {MDI_ACCOUNT} {MDI_48PX}"/>
 						</p>
 					</div>
 					<div class="col-lg-8">
@@ -64,7 +63,7 @@
 				</div>
 			</div>
 		</li>
-		<li class="{DIVIDER}"></li>
+		<li class="{DIVIDER}"/>
 		<li ui:field="adminContainer">
 			<div class="{style.userdetails}">
 				<div class="{ROW}">

@@ -120,14 +120,13 @@ public class PedigreeChart extends AbstractChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_DAGRE, Library.D3_PEDIGREE_CHART, Library.D3_DOWNLOAD, Library.D3_TOOLTIP};
+		return new Library[]{Library.D3_V3, Library.D3_DAGRE, Library.D3_PEDIGREE_CHART, Library.D3_DOWNLOAD};
 	}
 
 	private native void create(int widthHint) /*-{
 		var filePath = this.@jhi.germinate.client.widget.d3js.AbstractChart::filePath;
 		var panelId = this.@jhi.germinate.client.widget.d3js.AbstractChart::panelId;
 
-		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
 		var nodeStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.PedigreeChartBundle::STYLE_NODE;
 		var edgeStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.PedigreeChartBundle::STYLE_EDGE_PATH;
 		var maleStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.PedigreeChartBundle::STYLE_MALE;
@@ -188,12 +187,8 @@ public class PedigreeChart extends AbstractChart
 					.height(height)
 					.nodeStyle(nodeStyle)
 					.edgeStyle(edgeStyle)
-					.tooltipStyle(tooltipStyle)
 					.connections(connections)
 					.nodeShape("circle")
-					.tooltip(function (d) {
-						return d.object.label;
-					})
 					.onClick(function (d) {
 						that.@jhi.germinate.client.widget.d3js.PedigreeChart::onNodeClicked(*)(d);
 					})

@@ -134,7 +134,7 @@ public class ExcelMetadataReader extends ExcelBatchReader<Dataset>
 		locationSheet = wb.getSheet("LOCATION");
 	}
 
-	private class JsonBuilder
+	private static class JsonBuilder
 	{
 		private JsonObject json = Json.object();
 

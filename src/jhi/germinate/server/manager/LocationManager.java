@@ -135,7 +135,7 @@ public class LocationManager extends AbstractManager<Location>
 
 	public static ServerResult<List<String>> getIdsForFilter(UserAuth userAuth, PartialSearchQuery filter) throws InvalidArgumentException, InvalidSearchQueryException, InvalidColumnException, DatabaseException
 	{
-		return AbstractManager.<Location>getFilteredValueQuery(filter, userAuth, SELECT_IDS_FOR_FILTER, LocationService.COLUMNS_LOCATION_SORTABLE)
+		return AbstractManager.getFilteredValueQuery(filter, userAuth, SELECT_IDS_FOR_FILTER, LocationService.COLUMNS_LOCATION_SORTABLE)
 				.run(Location.ID)
 				.getStrings();
 	}

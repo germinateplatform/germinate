@@ -60,7 +60,7 @@ public class TemplateWatcher
 
 			try
 			{
-				FileFilter filter = pathname -> filesToWatch.keySet().contains(pathname.getName());
+				FileFilter filter = pathname -> filesToWatch.containsKey(pathname.getName());
 
 				FileAlterationObserver observer = new FileAlterationObserver(path.toFile(), filter);
 				monitor = new FileAlterationMonitor(1000L);

@@ -52,9 +52,8 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 	 * @param markerGroups The marker groups
 	 * @param mapToUse     The map id to use
 	 * @return The marker names
-	 * @throws DatabaseException Thrown if the database interaction fails
 	 */
-	private static Set<String> getColumnNames(DebugInfo sqlDebug, List<Long> markerGroups, Set<String> markedMarkerIds, Long mapToUse, UserAuth userAuth) throws DatabaseException
+	private static Set<String> getColumnNames(DebugInfo sqlDebug, List<Long> markerGroups, Set<String> markedMarkerIds, Long mapToUse, UserAuth userAuth)
 	{
 		if ((CollectionUtils.isEmpty(markerGroups) && CollectionUtils.isEmpty(markedMarkerIds)))
 		{
@@ -199,7 +198,7 @@ public class DataExportServlet extends BaseRemoteServiceServlet
 		return exportResult;
 	}
 
-	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, ExperimentType type, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException, InvalidArgumentException
+	public DataExporter.DataExporterParameters getDataExporterParameters(DebugInfo sqlDebug, UserAuth userAuth, ExperimentType type, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, Long mapId, boolean heterozygousFilter, boolean missingDataFilter) throws DatabaseException
 	{
 		/* Get the datasets the user is allowed to use */
 		Boolean isAllowedToUse = DatasetManager.userHasAccessToDataset(userAuth, datasetId).getServerResult();

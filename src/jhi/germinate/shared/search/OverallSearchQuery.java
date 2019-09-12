@@ -200,7 +200,7 @@ public class OverallSearchQuery<T extends HasToSqlString> implements Serializabl
 		{
 			return conditions.get(0).getValues();
 		}
-		else if (conditions.size() > 1)
+		else
 		{
 			List<String> values = new ArrayList<>();
 
@@ -211,8 +211,6 @@ public class OverallSearchQuery<T extends HasToSqlString> implements Serializabl
 
 			return values;
 		}
-
-		return null;
 	}
 
 	@Override

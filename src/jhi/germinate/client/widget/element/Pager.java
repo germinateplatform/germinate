@@ -43,8 +43,8 @@ public class Pager extends Composite
 	private PagerClickHandler handler = null;
 
 	private int position  = 0;
-	private int pageSize  = 0;
-	private int nrOfItems = 0;
+	private int pageSize;
+	private int nrOfItems;
 
 	@UiField
 	Button firstPage;

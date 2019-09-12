@@ -60,7 +60,7 @@ public abstract class DataImporter<T>
 	{
 	}
 
-	protected void run(String[] args) throws Exception
+	protected void run(String[] args)
 	{
 		ReaderOptions options = new ReaderOptions()
 				.withInputFile(true)

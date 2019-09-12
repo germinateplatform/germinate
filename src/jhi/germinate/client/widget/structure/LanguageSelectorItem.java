@@ -34,19 +34,19 @@ import jhi.germinate.shared.Style;
 public class LanguageSelectorItem
 {
 	private LIElement     root    = Document.get().createLIElement();
-	private AnchorElement anchor  = Document.get().createAnchorElement();
-	private SpanElement   flag    = Document.get().createSpanElement();
-	private SpanElement   country = Document.get().createSpanElement();
 
 	public LanguageSelectorItem(String locale)
 	{
+		SpanElement flag = Document.get().createSpanElement();
 		flag.addClassName(Style.combine(locale, Style.COUNTRY_FLAG, Style.LAYOUT_V_ALIGN_MIDDLE));
 
 		String display = LocaleInfo.getLocaleNativeDisplayName(locale);
 
+		SpanElement country = Document.get().createSpanElement();
 		country.setInnerText(display);
 		country.addClassName(Style.LAYOUT_V_ALIGN_MIDDLE);
 
+		AnchorElement anchor = Document.get().createAnchorElement();
 		anchor.setHref("#");
 		anchor.setTitle(display);
 

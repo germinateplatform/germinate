@@ -93,7 +93,7 @@ public class CompoundDataManager extends AbstractManager<CompoundData>
 
 		String formatted = String.format(SELECT_IDS_FOR_FILTER, StringUtils.generateSqlPlaceholderString(datasetIds.size()));
 
-		return AbstractManager.<CompoundData>getFilteredValueQuery(filter, userAuth, formatted, COLUMNS_DATA_SORTABLE)
+		return AbstractManager.getFilteredValueQuery(filter, userAuth, formatted, COLUMNS_DATA_SORTABLE)
 				.setLongs(datasetIds)
 				.run(Accession.ID)
 				.getStrings();

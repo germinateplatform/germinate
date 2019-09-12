@@ -20,7 +20,6 @@ package jhi.germinate.client.widget.element;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 
@@ -35,12 +34,9 @@ import jhi.germinate.shared.*;
 public abstract class ModalWizard
 {
 	private Modal       modal        = new Modal();
-	private ModalBody   body         = new ModalBody();
-	private Progress    progress     = new Progress();
 	private ProgressBar progressBar  = new ProgressBar();
 	private Alert       errorMessage = new Alert("", AlertType.DANGER);
 	private FlowPanel   content      = new FlowPanel();
-	private ModalFooter footer       = new ModalFooter();
 	private Button      nextButton   = new Button(Text.LANG.generalNext(), event -> updateContent(true));
 	private Button      backButton   = new Button(Text.LANG.generalBack(), event -> updateContent(false));
 
@@ -51,8 +47,11 @@ public abstract class ModalWizard
 	{
 		backButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_LEFT_BOLD));
 		nextButton.addStyleName(Style.mdiLg(Style.MDI_ARROW_RIGHT_BOLD));
+		ModalBody body = new ModalBody();
 		modal.add(body);
+		ModalFooter footer = new ModalFooter();
 		modal.add(footer);
+		Progress progress = new Progress();
 		body.add(progress);
 		progress.add(progressBar);
 		body.add(errorMessage);
@@ -182,7 +181,7 @@ public abstract class ModalWizard
 
 	protected abstract boolean onFinished();
 
-	protected class NavigationStatus
+	protected static class NavigationStatus
 	{
 		private boolean canGoForward;
 		private boolean canGoBackward;

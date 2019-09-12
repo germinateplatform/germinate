@@ -96,8 +96,10 @@ public abstract class DatabaseObject implements Serializable
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (!(obj instanceof DatabaseObject) || obj == null)
+		if (!(obj instanceof DatabaseObject))
+		{
 			return false;
+		}
 		else
 		{
 			DatabaseObject o = (DatabaseObject) obj;

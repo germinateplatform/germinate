@@ -32,7 +32,6 @@ public interface IBatchReader<T> extends IDataReader
 	 * Reads from the given {@link InputStream} and returns a {@link List} of objects.
 	 *
 	 * @return A {@link List} of objects
-	 * @throws IOException Thrown if the file interaction fails
 	 */
-	List<T> readAll() throws IOException;
+	List<T> readAll();
 }

@@ -43,19 +43,19 @@ public class TabDelimitedMarkerReader implements IStreamableReader<MapDefinition
 	private String[]       markerNames;
 
 	@Override
-	public boolean hasNext() throws IOException
+	public boolean hasNext()
 	{
 		return ++currentCol <= colCount;
 	}
 
 	@Override
-	public MapDefinition next() throws IOException
+	public MapDefinition next()
 	{
 		return parse();
 	}
 
 	@Override
-	public void init(File input) throws IOException, InvalidFormatException
+	public void init(File input) throws IOException
 	{
 		br = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
 

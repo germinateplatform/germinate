@@ -119,7 +119,7 @@ public class LocationTreemapChart extends AbstractChart
 		var childStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.TreemapBundle::STYLE_CHILD;
 		var rectStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.TreemapBundle::STYLE_RECT;
 		var textStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.TreemapBundle::STYLE_TEXT;
-		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.BaseBundle::STYLE_D3_TIP_TOP;
+		var tooltipStyle = @jhi.germinate.client.widget.d3js.resource.Bundles.TreemapBundle::STYLE_D3_TIP_TOP;
 
 		var collsiteString = this.@jhi.germinate.client.widget.d3js.LocationTreemapChart::locations;
 
@@ -156,6 +156,6 @@ public class LocationTreemapChart extends AbstractChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_TREEMAP, Library.D3_DOWNLOAD};
+		return new Library[]{Library.D3_V3, Library.D3_TREEMAP, Library.D3_TOOLTIP, Library.D3_DOWNLOAD};
 	}
 }

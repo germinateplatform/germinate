@@ -40,7 +40,7 @@ public class Hdf5ToFJTabbedConverter
 	private LinkedHashSet<String> lines;
 	private LinkedHashSet<String> markers;
 
-	private boolean transposed = false;
+	private boolean transposed;
 
 	private HashMap<String, Integer> lineInds;
 	private HashMap<String, Integer> markerInds;

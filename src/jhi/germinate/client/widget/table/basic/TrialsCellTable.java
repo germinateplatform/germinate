@@ -218,7 +218,7 @@ public class TrialsCellTable extends GerminateComposite
 
 	/**
 	 * Defines the javascript function <code>markerLinkFunction(id, collsite)</code>, calling this function from javascript will invoke the method
-	 * {@link jhi.germinate.client.widget.map.LeafletUtils.OnMarkerClickHandler#onMarkerClicked(String, String)}.
+	 * {@link jhi.germinate.client.widget.map.LeafletUtils.OnMarkerClickHandler#onMarkerClicked(String, String, String)}.
 	 *
 	 * @param handler The {@link AccessionClickHandler} to call
 	 */

@@ -1,0 +1,3 @@
+# If you use Germinate, please cite:
+
+[Shaw, P. D., S. Raubach, S. J. Hearne, K. Dreher, G. Bryan, G. McKenzie, I. Milne, G. Stephen, and D. F. Marshall. 2017. Germinate 3: Development of a Common Platform to Support the Distribution of Experimental Data on Crop Wild Relatives. Crop Sci. 57:1259-1273. doi:10.2135/cropsci2016.09.0814](https://dl.sciencesocieties.org/publications/cs/abstracts/57/3/1259)

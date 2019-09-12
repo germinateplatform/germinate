@@ -49,8 +49,6 @@ public class SplitPointBinningWidget extends Composite
 	private Color low  = Color.fromHex("#ff7878");
 	private Color high = Color.fromHex("#78fd78");
 
-	private JsArrayNumber widths;
-
 	private int                                                      index    = -1;
 	private Callback<AlleleFreqResultsPage.BinningResult, Throwable> callback = null;
 
@@ -115,7 +113,7 @@ public class SplitPointBinningWidget extends Composite
 			double split = splitPoint.getDoubleValue();
 			int bins = binsLeft + binsRight;
 
-			widths = JsArrayNumber.createArray().cast();
+			JsArrayNumber widths = JsArrayNumber.createArray().cast();
 
 			for (int i = 0; i < binsLeft; i++)
 				widths.push(split / binsLeft * 100);

@@ -19,22 +19,22 @@ package jhi.germinate.client.widget.table.pagination;
 
 import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.cellview.client.Header;
+import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.*;
 
 import org.gwtbootstrap3.client.ui.Button;
@@ -42,8 +42,8 @@ import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
 
-import java.util.*;
 import java.util.Map;
+import java.util.*;
 
 import jhi.germinate.client.i18n.Text;
 import jhi.germinate.client.util.*;
@@ -55,10 +55,10 @@ import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.column.*;
 import jhi.germinate.client.widget.table.pagination.cell.*;
 import jhi.germinate.client.widget.table.pagination.filter.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
-import jhi.germinate.shared.datastructure.*;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.Pagination;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
@@ -116,8 +116,8 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	HTMLPanel message;
 
 	// CONFIGURATION
-	private SelectionMode selectionMode = SelectionMode.NONE;
-	boolean sortingEnabled = true;
+	private SelectionMode selectionMode;
+	boolean sortingEnabled;
 	private   boolean hideEmptyTable         = true;
 	protected boolean preventInitialDataLoad = false;
 	private   int     nrOfItemsPerPage       = IntegerParameterStore.Inst.get().get(Parameter.paginationPageSize, DEFAULT_NR_OF_ITEMS_PER_PAGE);
@@ -154,7 +154,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		this.selectionMode = selectionMode;
 		this.sortingEnabled = sortingEnabled;
 
-		table = new CellTable<T>(nrOfItemsPerPage);
+		table = new CellTable<>(nrOfItemsPerPage);
 
 		initWidget(ourUiBinder.createAndBindUi(this));
 	}
@@ -227,7 +227,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	{
 		super.onLoad();
 
-		String id = "table-" + String.valueOf(Math.abs(RandomUtils.RANDOM.nextLong()));
+		String id = "table-" + Math.abs(RandomUtils.RANDOM.nextLong());
 		table.getElement().setId(id);
 
 		table.setLoadingIndicator(new LoadingSpinner());
@@ -1070,7 +1070,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	 */
 	protected abstract void onItemSelected(NativeEvent event, T object, int column);
 
-	protected class ClickableTableCell extends SafeHtmlCell
+	protected static class ClickableTableCell extends SafeHtmlCell
 	{
 		/**
 		 * Tell the cell which events to handle
@@ -1085,7 +1085,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 		}
 	}
 
-	protected class ClickableTextCell extends TextCell
+	protected static class ClickableTextCell extends TextCell
 	{
 		@Override
 		public Set<String> getConsumedEvents()
@@ -1251,7 +1251,7 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 	/**
 	 * {@link HeaderConfig} is a utility class holding the text to display in a column header and some optional help text.
 	 */
-	public class HeaderConfig
+	public static class HeaderConfig
 	{
 		private String text;
 		private String help;

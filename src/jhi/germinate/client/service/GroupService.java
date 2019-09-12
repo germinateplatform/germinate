@@ -229,7 +229,7 @@ public interface GroupService extends RemoteService
 	 * @throws DatabaseException                Thrown if the query fails on the server
 	 * @throws InsufficientPermissionsException Thrown if the user does not have permissions to view the group
 	 */
-	ServerResult<List<String>> getLocationItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException;
+	ServerResult<List<String>> getLocationItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException;
 
 	/**
 	 * Returns a paginated list of {@link MapDefinition}s for the given {@link Group} id.
@@ -255,7 +255,7 @@ public interface GroupService extends RemoteService
 	 * @throws DatabaseException                Thrown if the query fails on the server
 	 * @throws InsufficientPermissionsException Thrown if the user does not have permissions to view the group
 	 */
-	ServerResult<List<String>> getMarkerItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException;
+	ServerResult<List<String>> getMarkerItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException;
 
 	/**
 	 * Returns a paginated list of {@link Group}s that match the given {@link PartialSearchQuery}.

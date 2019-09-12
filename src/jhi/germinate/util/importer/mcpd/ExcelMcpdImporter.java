@@ -29,8 +29,6 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class ExcelMcpdImporter extends TabDelimitedMcpdImporter
 {
-	private ExcelEntityParentDataImporter entityParentDataImporter;
-
 	@Override
 	protected IDataReader getReader()
 	{
@@ -42,7 +40,7 @@ public class ExcelMcpdImporter extends TabDelimitedMcpdImporter
 	{
 		super.run(input, server, database, username, password, port);
 
-		entityParentDataImporter = new ExcelEntityParentDataImporter();
+		ExcelEntityParentDataImporter entityParentDataImporter = new ExcelEntityParentDataImporter();
 		entityParentDataImporter.run(input, server, database, username, password, port);
 	}
 }

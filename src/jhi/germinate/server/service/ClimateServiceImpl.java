@@ -121,11 +121,9 @@ public class ClimateServiceImpl extends BaseRemoteServiceServlet implements Clim
 
 		File file = createTemporaryFile("climate", datasetIds, FileType.txt.name());
 
-		Integer stats;
-
 		try
 		{
-			stats = Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), COLUMNS_MIN_AVG_MAX_COLLSITE, tempResult, file);
+			Util.writeDefaultToFile(Util.getOperatingSystem(getThreadLocalRequest()), COLUMNS_MIN_AVG_MAX_COLLSITE, tempResult, file);
 		}
 		catch (java.io.IOException e)
 		{

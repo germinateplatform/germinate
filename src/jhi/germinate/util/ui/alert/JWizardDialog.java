@@ -40,13 +40,10 @@ public abstract class JWizardDialog extends JDialog
 	private int    currentPage = 0;
 	private JPanel content     = new JPanel();
 	private JPanel header      = new JPanel();
-	private String title;
 
 	public JWizardDialog(Frame owner, String title, boolean modal)
 	{
 		super(owner, title, modal);
-
-		this.title = title;
 
 		setLayout(new BorderLayout());
 

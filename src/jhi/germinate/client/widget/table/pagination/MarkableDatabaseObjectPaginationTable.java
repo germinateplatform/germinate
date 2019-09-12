@@ -515,6 +515,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			@Override
 			public Boolean getValue()
 			{
+				// TODO: This is wrong! It's only checking the visible items, but would have to check all items, which isn't really possible...
 				for (T item : getVisibleItems())
 				{
 					if (!MarkedItemList.contains(itemType, Long.toString(DatabaseObject.getGroupSpecificId(item))))

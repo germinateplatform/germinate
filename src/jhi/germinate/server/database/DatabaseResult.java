@@ -478,7 +478,7 @@ public final class DatabaseResult
 
 			columnNames.removeAll(Arrays.asList(columnsToIgnore));
 
-			return columnNames.toArray(new String[columnNames.size()]);
+			return columnNames.toArray(new String[0]);
 		}
 		else
 		{

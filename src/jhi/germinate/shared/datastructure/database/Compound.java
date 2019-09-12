@@ -193,7 +193,7 @@ public class Compound extends DatabaseObject
 				int end = matcher.end();
 				output.append(matcher.group(1))
 					  .append("<sub>")
-					  .append(molecularFormula.substring(start + 1, end))
+					  .append(molecularFormula, start + 1, end)
 					  .append("</sub>");
 				atLeastOne = true;
 			}

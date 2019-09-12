@@ -48,7 +48,7 @@ public class Link extends DatabaseObject
 	private Long     foreignId;
 	private String   hyperlink;
 	private String   description;
-	private boolean  isVisible;
+	private Boolean  isVisible;
 	private Long     createdOn;
 	private Long     updatedOn;
 
@@ -105,12 +105,12 @@ public class Link extends DatabaseObject
 		return this;
 	}
 
-	public boolean isVisible()
+	public Boolean isVisible()
 	{
 		return isVisible;
 	}
 
-	public Link setVisible(boolean isVisible)
+	public Link setVisible(Boolean isVisible)
 	{
 		this.isVisible = isVisible;
 		return this;

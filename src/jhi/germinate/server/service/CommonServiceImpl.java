@@ -364,34 +364,31 @@ public class CommonServiceImpl extends BaseRemoteServiceServlet implements Commo
 	}
 
 	@Override
-	public Void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType) throws InvalidSessionException
+	public Boolean makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType)
 	{
-		switch (experimentType)
+		if (experimentType == ExperimentType.genotype)
 		{
-			case genotype:
-				synchronized (FileServlet.PUBLICLY_AVAILABLE_FILES)
-				{
-					HttpSession session = getRequest().getSession();
+			synchronized (FileServlet.PUBLICLY_AVAILABLE_FILES)
+			{
+				HttpSession session = getRequest().getSession();
 
-					String map = (String) session.getAttribute(Session.GENOTYPE_MAP);
+				String map = (String) session.getAttribute(Session.GENOTYPE_MAP);
 
-					if (!StringUtils.isEmpty(map))
-						FileServlet.PUBLICLY_AVAILABLE_FILES.put(map, System.currentTimeMillis());
+				if (!StringUtils.isEmpty(map))
+					FileServlet.PUBLICLY_AVAILABLE_FILES.put(map, System.currentTimeMillis());
 
-					String data = (String) session.getAttribute(Session.GENOTYPE_DATA);
+				String data = (String) session.getAttribute(Session.GENOTYPE_DATA);
 
-					if (!StringUtils.isEmpty(data))
-						FileServlet.PUBLICLY_AVAILABLE_FILES.put(data, System.currentTimeMillis());
+				if (!StringUtils.isEmpty(data))
+					FileServlet.PUBLICLY_AVAILABLE_FILES.put(data, System.currentTimeMillis());
 
-					session.removeAttribute(Session.GENOTYPE_MAP);
-					session.removeAttribute(Session.GENOTYPE_DATA);
-				}
-				break;
-			default:
-				break;
+				session.removeAttribute(Session.GENOTYPE_MAP);
+				session.removeAttribute(Session.GENOTYPE_DATA);
+				return true;
+			}
 		}
 
-		return null;
+		return false;
 	}
 
 	private boolean checkDatabaseVersion()

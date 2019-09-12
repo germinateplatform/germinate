@@ -20,7 +20,6 @@ package jhi.germinate.client.widget.table.basic;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.view.client.*;
 
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
@@ -40,8 +39,6 @@ public class AdvancedTable<T> extends Composite
 	/** Sort handler for the data */
 	private ColumnSortEvent.ListHandler<T> columnSortHandler;
 
-	private String id = String.valueOf(RandomUtils.RANDOM.nextLong());
-
 	public AdvancedTable(List<T> data)
 	{
 		if (data == null)
@@ -55,6 +52,7 @@ public class AdvancedTable<T> extends Composite
 
 		table.setAutoFooterRefreshDisabled(false);
 		table.setAutoHeaderRefreshDisabled(false);
+		String id = String.valueOf(RandomUtils.RANDOM.nextLong());
 		table.getElement().setId(id);
 
 		FlowPanel scrollPanel = new FlowPanel();

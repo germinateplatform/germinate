@@ -66,7 +66,7 @@ public class Between implements ComparisonOperator, PotentialNumeric
 		String condition;
 
 		/* If either the collection is null or contains less than 2 items or either of the two items is empty of null, throw an exception */
-		if (CollectionUtils.isEmpty(values) || values.size() < 2 || StringUtils.isEmpty(values.toArray(new String[values.size()])))
+		if (CollectionUtils.isEmpty(values) || values.size() < 2 || StringUtils.isEmpty(values.toArray(new String[0])))
 			throw new InvalidArgumentException("Between requires two arguments to be provided.");
 
 		condition = " " + columnName + " BETWEEN ? AND ? ";
@@ -107,8 +107,8 @@ public class Between implements ComparisonOperator, PotentialNumeric
 			long a = Long.parseLong(values.get(0));
 			long b = Long.parseLong(values.get(1));
 
-			long max = a >= b ? a : b;
-			long min = a >= b ? b : a;
+			long max = Math.max(a, b);
+			long min = Math.min(a, b);
 
 			return Arrays.asList(Long.toString(min), Long.toString(max));
 		}
@@ -119,8 +119,8 @@ public class Between implements ComparisonOperator, PotentialNumeric
 				double a = Double.parseDouble(values.get(0));
 				double b = Double.parseDouble(values.get(1));
 
-				double max = a >= b ? a : b;
-				double min = a >= b ? b : a;
+				double max = Math.max(a, b);
+				double min = Math.min(a, b);
 
 				return Arrays.asList(Double.toString(min), Double.toString(max));
 			}

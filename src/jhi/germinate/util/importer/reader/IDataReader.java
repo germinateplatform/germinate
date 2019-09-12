@@ -26,7 +26,7 @@ import java.util.*;
 import jhi.germinate.shared.*;
 
 /**
- * {@link IDataReader} extends {@link AutoCloseable} and defines the {@link #init(InputStream)} method that should always be called first.
+ * {@link IDataReader} extends {@link AutoCloseable} and defines the {@link #init(File)} method that should always be called first.
  *
  * @author Sebastian Raubach
  */
@@ -46,7 +46,7 @@ public interface IDataReader extends AutoCloseable
 	 */
 	void init(File is) throws IOException, InvalidFormatException;
 
-	public static Date getDate(String value)
+	static Date getDate(String value)
 	{
 		Date date = null;
 		if (!StringUtils.isEmpty(value))

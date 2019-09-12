@@ -138,9 +138,8 @@ public interface AccessionService extends RemoteService
 	 * @throws InvalidSessionException          Thrown if the current session is invalid
 	 * @throws DatabaseException                Thrown if the query fails on the server
 	 * @throws IOException                      Thrown if the file interaction fails
-	 * @throws InsufficientPermissionsException Thrown if the user does not have permissions to view the group
 	 */
-	ServerResult<String> export(RequestProperties properties, String idColumn, Set<String> accessionIds, boolean includeAttributes) throws InvalidSessionException, DatabaseException, IOException, InsufficientPermissionsException;
+	ServerResult<String> export(RequestProperties properties, String idColumn, Set<String> accessionIds, boolean includeAttributes) throws InvalidSessionException, DatabaseException, IOException;
 
 	/**
 	 * Exports all the data associated with {@link Accession}s mathing the given {@link PartialSearchQuery}.
@@ -178,9 +177,8 @@ public interface AccessionService extends RemoteService
 	 * @return The ids of the {@link Accession}s that are part of the {@link MegaEnvironment} with the given id.
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
-	 * @throws InvalidColumnException  Thrown if the requested sort column is invalid
 	 */
-	ServerResult<List<String>> getIdsForMegaEnv(RequestProperties properties, Long megaEnvId) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+	ServerResult<List<String>> getIdsForMegaEnv(RequestProperties properties, Long megaEnvId) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Returns a paginated list of {@link Accession}s for the group preview (groups created from external tools).
@@ -192,9 +190,8 @@ public interface AccessionService extends RemoteService
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 * @throws IOException             Thrown if an I/O operation fails
-	 * @throws InvalidColumnException  Thrown if an invalid sort column is specified
 	 */
-	PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException, InvalidColumnException;
+	PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException;
 
 	/**
 	 * Removes {@link Accession}s based on their id from the group preview.
@@ -202,18 +199,16 @@ public interface AccessionService extends RemoteService
 	 * @param properties The {@link RequestProperties}
 	 * @param ids        The ids of the {@link Accession}s to remove
 	 * @param filename   The name of the file containing the indentifiers of the {@link Accession}s.
-	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 */
-	void removeFromGroupPreview(RequestProperties properties, List<Long> ids, String filename) throws InvalidSessionException;
+	void removeFromGroupPreview(RequestProperties properties, List<Long> ids, String filename);
 
 	/**
 	 * Removes all {@link Accession}s from the group preview.
 	 *
 	 * @param properties The {@link RequestProperties}
 	 * @param filename   The name of the uploaded file
-	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 */
-	void clearGroupPreview(RequestProperties properties, String filename) throws InvalidSessionException;
+	void clearGroupPreview(RequestProperties properties, String filename);
 
 	/**
 	 * Returns a paginated list of {@link Accession}s based on their distance to the given location.
@@ -250,9 +245,8 @@ public interface AccessionService extends RemoteService
 	 * @return the ids of the {@link Accession}s that are located in the provided polygon.
 	 * @throws InvalidSessionException Thrown if the current session is invalid
 	 * @throws DatabaseException       Thrown if the query fails on the server
-	 * @throws InvalidColumnException  Thrown if an invalid sort column is specified
 	 */
-	ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException;
+	ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException;
 
 	/**
 	 * Returns the {@link Mcpd} object for the {@link Accession} with the given id.

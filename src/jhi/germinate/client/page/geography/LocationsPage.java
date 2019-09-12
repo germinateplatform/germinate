@@ -157,9 +157,6 @@ public class LocationsPage extends Composite implements HasLibraries, ParallaxBa
 		html.setHTML(Text.LANG.collsiteTreemapText());
 
 		chartPanel.add(chart);
-
-		List<LocationType> list = new ArrayList<>(Arrays.asList(LocationType.values()));
-		list.remove(LocationType.all);
 	}
 
 	private void getClimates()

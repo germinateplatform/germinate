@@ -113,8 +113,11 @@ public class ApplicationListener implements ServletContextListener
 		{
 			File[] files = file.listFiles((dir, name) -> name.matches(context + "-log-.*\\.txt.*"));
 
-			for (File f : files)
-				f.delete();
+			if (files != null)
+			{
+				for (File f : files)
+					f.delete();
+			}
 		}
 
 		// Now deregister JDBC drivers in this context's ClassLoader: Get the webapp's ClassLoader

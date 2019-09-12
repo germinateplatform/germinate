@@ -68,9 +68,8 @@ public interface UserService extends RemoteService
 	 *
 	 * @param properties The {@link RequestProperties}
 	 * @throws InvalidSessionException    Thrown if the current session is invalid
-	 * @throws LoginRegistrationException Thrown if the logout failed. Check {@link LoginRegistrationException#getReason()} for the reason.
 	 */
-	void logout(RequestProperties properties) throws InvalidSessionException, LoginRegistrationException;
+	void logout(RequestProperties properties) throws InvalidSessionException;
 
 	/**
 	 * Attempts to register the new {@link UnapprovedUser}.

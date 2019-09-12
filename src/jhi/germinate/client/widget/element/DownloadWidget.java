@@ -40,8 +40,6 @@ import jhi.germinate.shared.enums.*;
  */
 public class DownloadWidget extends GerminateComposite
 {
-	private ULPanel ulPanel;
-
 	private String           heading;
 	private List<FileConfig> files = new ArrayList<>();
 
@@ -82,7 +80,7 @@ public class DownloadWidget extends GerminateComposite
 	protected void setUpContent()
 	{
 		// Create an unordered list
-		ulPanel = new ULPanel();
+		ULPanel ulPanel = new ULPanel();
 		// Style the list
 		ulPanel.setStyleName(Style.WIDGET_UL_ICON_LIST);
 
@@ -169,7 +167,7 @@ public class DownloadWidget extends GerminateComposite
 		/**
 		 * To be used for long running jobs where only the name is available
 		 *
-		 * @param name
+		 * @param name The name of the file
 		 */
 		public FileConfig(String name)
 		{

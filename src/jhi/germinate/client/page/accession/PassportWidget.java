@@ -568,9 +568,9 @@ public class PassportWidget extends Composite
 				{
 					topWrapper.setVisible(true);
 					new DescriptionWidget(mcpdPanel, Text.LANG.passportColumnGID(), accession.getGeneralIdentifier());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAccename(), accession.getNumber());
+					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAccename(), accession.getName());
 					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdPuid(), accession.getPuid());
-					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAccenumb(), accession.getName());
+					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdAccenumb(), accession.getNumber());
 					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollnumb(), accession.getCollNumb());
 					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollcode(), accession.getCollCode());
 					new DescriptionWidget(mcpdPanel, Text.LANG.mcpdCollname(), accession.getCollName());

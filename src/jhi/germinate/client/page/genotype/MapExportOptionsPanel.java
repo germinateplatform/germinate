@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.*;
 
@@ -141,15 +140,13 @@ public class MapExportOptionsPanel extends Composite
 
 					switch (config.getType())
 					{
-						case flapjack:
-							format = MapFormat.flapjack;
-							break;
 						case mct:
 							format = MapFormat.mapchart;
 							break;
 						case strudel:
 							format = MapFormat.strudel;
 							break;
+						case flapjack:
 						default:
 							format = MapFormat.flapjack;
 					}
@@ -355,7 +352,7 @@ public class MapExportOptionsPanel extends Composite
 	{
 		List<String> result = ListBoxUtils.getItemTexts(chromosomeBox);
 
-		if (result == null || result.size() < 1)
+		if (result.size() < 1)
 			throw new InvalidOptionsException(Text.LANG.notificationMarkersExportOptionsFillInOrClose());
 
 		return result;
@@ -510,8 +507,8 @@ public class MapExportOptionsPanel extends Composite
 	public static class MappingEntry
 	{
 		private String chromosome;
-		private Long   start = null;
-		private Long   end   = null;
+		private Long   start;
+		private Long   end;
 
 		public MappingEntry(String chromosome, Long start, Long end)
 		{

@@ -152,7 +152,6 @@ public class ImageServlet extends BaseHttpServlet
 
 			out.flush();
 			out.close();
-			in.close();
 		}
 	}
 }

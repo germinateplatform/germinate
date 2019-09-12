@@ -87,7 +87,7 @@ public interface DublinCore
 
 	void setRights(List<String> rights);
 
-	public interface DublinCoreFactory extends AutoBeanFactory
+	interface DublinCoreFactory extends AutoBeanFactory
 	{
 		AutoBean<DublinCore> dublinCore();
 

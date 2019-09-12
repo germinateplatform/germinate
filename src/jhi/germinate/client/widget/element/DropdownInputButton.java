@@ -61,21 +61,21 @@ public abstract class DropdownInputButton<T> extends Composite
 			menu.remove(i);
 
 		// Then add new ones
-		for (int i = 0; i < data.size(); i++)
+		for (int i = 0; i < this.data.size(); i++)
 		{
 			final int index = i;
-			AnchorListItem anchor = new AnchorListItem(getLabel(data.get(index)));
+			AnchorListItem anchor = new AnchorListItem(getLabel(this.data.get(index)));
 			anchor.addClickHandler(e ->
 			{
-				selection = data.get(index);
+				selection = this.data.get(index);
 				onValueChange(selection);
 				button.setText(((Anchor) e.getSource()).getText());
 			});
 			menu.add(anchor);
 		}
 
-		if (selectFirst && data.size() > 0)
-			setSelection(data.get(0), true);
+		if (selectFirst && this.data.size() > 0)
+			setSelection(this.data.get(0), true);
 	}
 
 	public void setSelection(T selection)

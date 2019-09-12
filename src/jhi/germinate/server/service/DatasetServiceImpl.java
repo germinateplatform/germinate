@@ -122,8 +122,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		GatekeeperUserWithPassword details = null;
 
-		if (userAuth != null)
-			details = GatekeeperUserManager.getByIdWithPasswordForSystem(null, userAuth.getId());
+		details = GatekeeperUserManager.getByIdWithPasswordForSystem(null, userAuth.getId());
 
 		/*
 		 * If login is required, but the given user id is either invalid or
@@ -208,7 +207,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 		{
 			/* Header row */
 			bw.write("ExperimentType\t");
-			bw.write(years.stream().collect(Collectors.joining("\t")));
+			bw.write(String.join("\t", years));
 			bw.newLine();
 
 			/* Data rows: For each experimenttype, print the number of data points per year */
@@ -242,7 +241,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 	}
 
 	@Override
-	public PaginatedServerResult<List<Dataset>> getForMarker(RequestProperties properties, Pagination pagination, Long markerId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidArgumentException
+	public PaginatedServerResult<List<Dataset>> getForMarker(RequestProperties properties, Pagination pagination, Long markerId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -293,7 +292,7 @@ public class DatasetServiceImpl extends BaseRemoteServiceServlet implements Data
 
 		if (PropertyWatcher.getBoolean(ServerProperty.GERMINATE_DOWNLOAD_TRACKING_ENABLED) && !PropertyWatcher.getBoolean(ServerProperty.GERMINATE_IS_UNDER_MAINTENANCE))
 		{
-			boolean worked = true;
+			boolean worked = false;
 			for (Long dataset : datasetIds)
 				worked |= DatasetManager.addTracking(userAuth, dataset, user);
 

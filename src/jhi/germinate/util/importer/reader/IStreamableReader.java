@@ -20,7 +20,7 @@ package jhi.germinate.util.importer.reader;
 import java.io.*;
 
 /**
- * {@link IStreamableReader} extends {@link IDataReader} and should be used in cases where you can parse and stream {@link McpdObject} objects one by
+ * {@link IStreamableReader} extends {@link IDataReader} and should be used in cases where you can parse and stream objects one by
  * one.
  *
  * @author Sebastian Raubach
@@ -39,7 +39,6 @@ public interface IStreamableReader<T> extends IDataReader
 	 * Returns the next objects.
 	 *
 	 * @return The next objects.
-	 * @throws IOException Thrown if the I/O fails.
 	 */
-	T next() throws IOException;
+	T next();
 }

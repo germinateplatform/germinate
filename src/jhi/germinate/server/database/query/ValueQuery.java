@@ -57,7 +57,6 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 	 *
 	 * @param query    The sql query
 	 * @param userAuth The {@link UserAuth} object containing the user information
-	 * @throws DatabaseException Thrown if the communication with the database fails
 	 */
 	public ValueQuery(String query, UserAuth userAuth)
 	{
@@ -398,7 +397,7 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 			checkResultSet();
 			if (rs.next())
 			{
-				boolean value = rs.getBoolean(column);
+				Boolean value = rs.getBoolean(column);
 				if (closeConnection) database.close();
 				return new ServerResult<>(sqlDebug, value);
 			}
@@ -438,10 +437,10 @@ public class ValueQuery extends GerminateQuery<ValueQuery>
 		 * @return The {@link DebugInfo} and the boolean result
 		 * @throws DatabaseException Thrown if {@link ValueQuery#run(String)} wasn't called before calling this method
 		 */
-		public ServerResult<Boolean> getBoolean(boolean fallback) throws DatabaseException
+		public ServerResult<Boolean> getBoolean(Boolean fallback) throws DatabaseException
 		{
 			checkResultSet();
-			boolean result = rs.next() ? rs.getBoolean(column) : fallback;
+			Boolean result = rs.next() ? rs.getBoolean(column) : fallback;
 			if (closeConnection) database.close();
 			return new ServerResult<>(sqlDebug, result);
 		}

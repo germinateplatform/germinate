@@ -124,14 +124,14 @@ public class DatabasePage extends JWizardPage
 	@Override
 	boolean canContinue()
 	{
-		boolean goOn = true;
+		boolean goOn;
 
-		goOn &= !StringUtils.isEmpty(server.getText());
+		goOn = !StringUtils.isEmpty(server.getText());
 		goOn &= !StringUtils.isEmpty(database.getText());
 		goOn &= !StringUtils.isEmpty(username.getText());
 
 		if (goOn)
-			goOn &= canConnect();
+			goOn = canConnect();
 
 		if (goOn)
 		{

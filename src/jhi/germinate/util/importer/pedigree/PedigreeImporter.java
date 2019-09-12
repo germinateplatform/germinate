@@ -119,9 +119,14 @@ public class PedigreeImporter extends DataImporter<List<Pedigree>>
 			DatabaseResult rs = stmt.query();
 
 			if (rs.next())
+			{
 				cached = Accession.Parser.Inst.get().parse(rs, null, true);
+				accessionCache.put(name, cached);
+			}
 			else
+			{
 				throw new DatabaseException("Invalid accession ACCENUMB");
+			}
 		}
 
 		return cached;

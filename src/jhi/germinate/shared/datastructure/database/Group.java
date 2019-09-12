@@ -50,7 +50,7 @@ public class Group extends DatabaseObject
 	private GroupType type;
 	private String    name;
 	private String    description;
-	private boolean   visibility;
+	private Boolean   visibility;
 	private Long      createdBy;
 	private String    user = GatekeeperUser.UNKNOWN.getFullName();
 	private Long      createdOn;
@@ -99,12 +99,12 @@ public class Group extends DatabaseObject
 		return this;
 	}
 
-	public boolean getVisibility()
+	public Boolean getVisibility()
 	{
 		return visibility;
 	}
 
-	public Group setVisibility(boolean visibility)
+	public Group setVisibility(Boolean visibility)
 	{
 		this.visibility = visibility;
 		return this;

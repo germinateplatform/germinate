@@ -78,13 +78,10 @@ public class AttributeServiceImpl extends BaseRemoteServiceServlet implements At
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
 
-		switch (target)
-		{
-			case germinatebase:
-				return AttributeDataManager.getIdsForAccessionFilter(userAuth, filter);
-			default:
-				return new PaginatedServerResult<>(null, null, 0);
-		}
+		if (target == GerminateDatabaseTable.germinatebase)
+			return AttributeDataManager.getIdsForAccessionFilter(userAuth, filter);
+		else
+			return new PaginatedServerResult<>(null, null, 0);
 	}
 
 	@Override

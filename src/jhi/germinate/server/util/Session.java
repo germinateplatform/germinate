@@ -103,7 +103,6 @@ public class Session
 	 *
 	 * @param requestProperties The {@link RequestProperties}
 	 * @param request           The http request containing the cookies
-	 * @param response          The http response
 	 */
 	public static void checkSession(RequestProperties requestProperties, HttpServletRequest request) throws InvalidSessionException
 	{

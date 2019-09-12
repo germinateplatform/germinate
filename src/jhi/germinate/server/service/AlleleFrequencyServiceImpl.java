@@ -173,7 +173,7 @@ public class AlleleFrequencyServiceImpl extends DataExportServlet implements All
 			/* Get the map */
 			DefaultStreamer mapData = GenotypeServiceImpl.getMap(userAuth, sqlDebug, mapId);
 
-			if (mapData == null || !mapData.hasData())
+			if (!mapData.hasData())
 				throw new InvalidArgumentException("There is no data to export for the current selection.");
 
 			try

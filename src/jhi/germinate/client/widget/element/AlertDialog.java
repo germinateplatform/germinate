@@ -255,9 +255,7 @@ public class AlertDialog
 			print.setText(Text.LANG.generalPrint());
 			print.setMdi(Style.MDI_PRINTER);
 
-			print.addClickHandler(event -> {
-				JavaScript.printObject(printableId);
-			});
+			print.addClickHandler(event -> JavaScript.printObject(printableId));
 
 			MdiAnchorListItem html = new MdiAnchorListItem();
 			html.setText(Text.LANG.downloadFileAsHtml());

@@ -62,9 +62,8 @@ public interface GenotypeService extends RemoteService
 	 * @throws InvalidSessionException  Thrown if the current session is invalid
 	 * @throws DatabaseException        Thrown if the query fails on the server
 	 * @throws IOException              Thrown if the file I/O fails
-	 * @throws MissingPropertyException Thrown if a required flapjack property is missing from the properties file
 	 */
-	ServerResult<List<CreatedFile>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapToUse) throws InvalidSessionException, DatabaseException, IOException, FlapjackException, MissingPropertyException, InvalidArgumentException;
+	ServerResult<List<CreatedFile>> computeExportDataset(RequestProperties properties, List<Long> accessionGroups, Set<String> markedAccessionIds, List<Long> markerGroups, Set<String> markedMarkerIds, Long datasetId, boolean heterozygousFilter, boolean misingDataFilter, Long mapToUse) throws InvalidSessionException, DatabaseException, IOException, InvalidArgumentException;
 
 	/**
 	 * Exports the Hdf5 file of the specified {@link jhi.germinate.shared.datastructure.database.Dataset} id to a flat file and returns the result
@@ -76,10 +75,8 @@ public interface GenotypeService extends RemoteService
 	 * @throws InvalidSessionException  Thrown if the current session is invalid
 	 * @throws DatabaseException        Thrown if the query fails on the server
 	 * @throws InvalidArgumentException Thrown if no data is available for the given selection
-	 * @throws IOException              Thrown if the file I/O fails
-	 * @throws FlapjackException        Thrown if Flapjack crashes
 	 */
-	ServerResult<String> convertHdf5ToText(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, InvalidArgumentException, IOException, FlapjackException;
+	ServerResult<String> convertHdf5ToText(RequestProperties properties, Long datasetId) throws InvalidSessionException, DatabaseException, InvalidArgumentException;
 
 	/**
 	 * Converts the given genotype and map file into a Flapjack project file.

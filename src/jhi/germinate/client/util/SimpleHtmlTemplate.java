@@ -47,7 +47,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * Creates an anchor with the given url and text (opens in new tab)
 	 *
 	 * @param href The link url
-	 * @param name The link text
+	 * @param text The link text
 	 * @return An anchor with the given url and text (opens in new tab)
 	 */
 	@Template("<a href='{0}' target='_blank' style='word-break: break-word;' title='{1}'>{2}</a>")
@@ -67,7 +67,7 @@ public interface SimpleHtmlTemplate extends SafeHtmlTemplates
 	 * Creates an anchor with the given url and text
 	 *
 	 * @param href The link url
-	 * @param name The link text
+	 * @param text The link text
 	 * @return An anchor with the given url and text
 	 */
 	@Template("<a href='{0}' title='{1}' style='word-break: break-word;'>{2}</a>")

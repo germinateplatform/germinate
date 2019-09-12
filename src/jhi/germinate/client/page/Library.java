@@ -65,7 +65,6 @@ public enum Library
 	D3_DAGRE("./js/d3/dagre-d3.min.js"),
 	D3_PEDIGREE_CHART("./js/d3/d3-pedigree-chart.js"),
 	D3_TOOLTIP("./js/d3/d3-tip.js"),
-	D3_LEGEND("./js/d3/d3-legend.js"),
 	D3_TREEMAP("./js/d3/d3-treemap.js");
 
 	private String  jsPath;
@@ -407,7 +406,11 @@ public enum Library
 			ParallelCallback<?, ?>[] result = new ParallelCallback<?, ?>[QUEUE.size()];
 
 			for (int i = 0; i < result.length; i++)
-				result[i] = QUEUE.poll().getCallback();
+			{
+				Library next = QUEUE.poll();
+				if (next != null)
+					result[i] = next.getCallback();
+			}
 
 			return result;
 		}

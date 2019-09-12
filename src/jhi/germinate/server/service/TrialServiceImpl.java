@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.*;
 import java.util.Map;
 
@@ -162,7 +163,7 @@ public class TrialServiceImpl extends BaseRemoteServiceServlet implements TrialS
 	{
 		File file = createTemporaryFile("trials-" + attr.name(), datasetIds, FileType.txt.name());
 
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")))
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))
 		{
 			bw.write("date");
 			for (TrialsRow row : table)

@@ -170,7 +170,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 	}
 
 	@Override
-	public ServerResult<List<String>> getLocationItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException
+	public ServerResult<List<String>> getLocationItemIds(RequestProperties properties, Long groupId) throws InvalidSessionException, DatabaseException, InsufficientPermissionsException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -308,7 +308,7 @@ public class GroupServiceImpl extends BaseRemoteServiceServlet implements GroupS
 			while ((line = reader.readLine()) != null)
 				lines.add(line);
 
-			return addItems(properties, lines.toArray(new String[lines.size()]), referenceTable, column, groupId);
+			return addItems(properties, lines.toArray(new String[0]), referenceTable, column, groupId);
 		}
 		catch (java.io.IOException e)
 		{

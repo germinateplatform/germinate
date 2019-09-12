@@ -20,6 +20,7 @@ function plotlyScatterMatrix() {
 		colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"],
 		height = 700,
 		width = 700,
+		columnsToIgnore = [],
 		onPointClicked = null,
 		onPointsSelected = null;
 
@@ -32,10 +33,9 @@ function plotlyScatterMatrix() {
 				categories.add(unpacked[i])
 			}
 
-			var toIgnore = ["name", "dbId", "general_identifier", "dataset_name", "dataset_description", "dataset_version", "license_name", "location_name", "treatments_description", "year"];
 			var dims = Object.keys(rows[0]);
 			dims = dims.filter(function (d) {
-				return toIgnore.indexOf(d) < 0;
+				return columnsToIgnore.indexOf(d) < 0;
 			});
 
 			var data = [];
@@ -200,6 +200,12 @@ function plotlyScatterMatrix() {
 	chart.onPointsSelected = function (_) {
 		if (!arguments.length) return onPointsSelected;
 		onPointsSelected = _;
+		return chart;
+	};
+
+	chart.columnsToIgnore = function (_) {
+		if (!arguments.length) return columnsToIgnore;
+		columnsToIgnore = _;
 		return chart;
 	};
 

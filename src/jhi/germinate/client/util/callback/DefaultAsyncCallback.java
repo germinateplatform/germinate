@@ -152,7 +152,7 @@ public class DefaultAsyncCallback<T> implements AsyncCallback<T>
 		else if (object instanceof Map)
 		{
 			Map map = (Map) object;
-			if (map != null && map.size() > 0)
+			if (map.size() > 0)
 			{
 				Map.Entry<?, ?> entry = (Map.Entry) map.entrySet().iterator().next();
 				return "Map<" + getName(entry.getKey()) + ", " + getName(entry.getValue()) + ">: " + map.size();

@@ -43,20 +43,20 @@ import jhi.germinate.shared.exception.*;
 public class ShareWidgetItem
 {
 	private LIElement     root   = Document.get().createLIElement();
-	private AnchorElement anchor = Document.get().createAnchorElement();
-	private SpanElement   icon   = Document.get().createSpanElement();
-	private SpanElement   name   = Document.get().createSpanElement();
 
 	private HasHyperlinkButton.HyperlinkPopupOptions hyperlinkPopupOptions;
 
 	public ShareWidgetItem(ShareUtils.ShareType type)
 	{
+		SpanElement icon = Document.get().createSpanElement();
 		icon.addClassName(Style.combine(type.getIcon(), Style.MDI, Style.FA_FIXED_WIDTH, Style.MDI_LG, Style.LAYOUT_V_ALIGN_MIDDLE));
 
 		String display = type.getTitle();
 
+		SpanElement name = Document.get().createSpanElement();
 		name.setInnerText(display);
 
+		AnchorElement anchor = Document.get().createAnchorElement();
 		anchor.setTitle(display);
 		anchor.setHref("#");
 		JavaScript.click(anchor, new ClickCallback()

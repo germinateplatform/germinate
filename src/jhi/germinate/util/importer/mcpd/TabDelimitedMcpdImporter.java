@@ -593,10 +593,10 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession> implements
 		if (!StringUtils.isEmpty(storageIds))
 		{
 			String[] parts = storageIds.split(";");
-			for (int i = 0; i < parts.length; i++)
+			for (String part : parts)
 			{
 				DatabaseStatement stmt = databaseConnection.prepareStatement("SELECT id FROM storage WHERE id = ?");
-				stmt.setString(1, parts[i]);
+				stmt.setString(1, part);
 
 				DatabaseResult rs = stmt.query();
 

@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.util.*;
 
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.util.importer.reader.*;
 
@@ -62,22 +63,15 @@ public class ExcelPedigreeReader extends ExcelStreamableReader<List<Pedigree>>
 	{
 		List<Pedigree> result = new ArrayList<>();
 
-		result.add(new Pedigree()
-				.setAccession(new Accession().setGeneralIdentifier(utils.getCellValue(row, 0)))
-				.setParent(new Accession().setGeneralIdentifier(utils.getCellValue(row, 1)))
-				.setRelationShipDescription(utils.getCellValue(row, 3))
-				.setRelationshipType("OTHER") // TODO: Add to templates
-				.setPedigreeDescription(new PedigreeDescription().setName(utils.getCellValue(row, 4)).setDescription(utils.getCellValue(row, 4)).setAuthor(utils.getCellValue(row, 5))
-																 .setCreatedOn(new Date())
-																 .setUpdatedOn(new Date())
-				)
-				.setCreatedOn(new Date())
-				.setUpdatedOn(new Date())
-		);
+		String accession = utils.getCellValue(row, 0);
+		String parentOne = utils.getCellValue(row, 1);
+		String parentTwo = utils.getCellValue(row, 2);
 
+		if (!StringUtils.isEmpty(accession) && !StringUtils.isEmpty(parentOne))
+		{
 		result.add(new Pedigree()
-				.setAccession(new Accession().setGeneralIdentifier(utils.getCellValue(row, 0)))
-				.setParent(new Accession().setGeneralIdentifier(utils.getCellValue(row, 2)))
+				.setAccession(new Accession().setGeneralIdentifier(accession))
+				.setParent(new Accession().setGeneralIdentifier(parentOne))
 				.setRelationShipDescription(utils.getCellValue(row, 3))
 				.setRelationshipType("OTHER") // TODO: Add to templates
 				.setPedigreeDescription(new PedigreeDescription().setName(utils.getCellValue(row, 4)).setDescription(utils.getCellValue(row, 4)).setAuthor(utils.getCellValue(row, 5))
@@ -87,6 +81,23 @@ public class ExcelPedigreeReader extends ExcelStreamableReader<List<Pedigree>>
 				.setCreatedOn(new Date())
 				.setUpdatedOn(new Date())
 		);
+		}
+
+		if (!StringUtils.isEmpty(accession) && !StringUtils.isEmpty(parentTwo))
+		{
+			result.add(new Pedigree()
+					.setAccession(new Accession().setGeneralIdentifier(accession))
+					.setParent(new Accession().setGeneralIdentifier(parentTwo))
+					.setRelationShipDescription(utils.getCellValue(row, 3))
+					.setRelationshipType("OTHER") // TODO: Add to templates
+					.setPedigreeDescription(new PedigreeDescription().setName(utils.getCellValue(row, 4)).setDescription(utils.getCellValue(row, 4)).setAuthor(utils.getCellValue(row, 5))
+																	 .setCreatedOn(new Date())
+																	 .setUpdatedOn(new Date())
+					)
+					.setCreatedOn(new Date())
+					.setUpdatedOn(new Date())
+			);
+		}
 
 		return result;
 	}

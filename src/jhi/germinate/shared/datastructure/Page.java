@@ -166,13 +166,12 @@ public class Page implements Serializable
 	 */
 	public static Page[] values()
 	{
-		return pages.values().toArray(new Page[pages.size()]);
+		return pages.values().toArray(new Page[0]);
 	}
 
 	public Page addLegacyNames(String... names)
 	{
-		for (String name : names)
-			legacyNames.add(name);
+		legacyNames.addAll(Arrays.asList(names));
 		return this;
 	}
 

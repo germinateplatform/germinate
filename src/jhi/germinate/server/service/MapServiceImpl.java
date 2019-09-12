@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.*;
 
 import javax.servlet.annotation.*;
@@ -388,7 +389,7 @@ public class MapServiceImpl extends BaseRemoteServiceServlet implements MapServi
 
 		File filename = createTemporaryFile("map", format.getFileType().name());
 
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF8")))
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8)))
 		{
 			switch (format)
 			{

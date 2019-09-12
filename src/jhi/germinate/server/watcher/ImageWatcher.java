@@ -106,6 +106,11 @@ public class ImageWatcher
 		File[] fullSizeImages = fullsize.listFiles(filter);
 		File[] thumbnailImages = thumbnails.listFiles(filter);
 
+		if (fullSizeImages == null)
+			fullSizeImages = new File[0];
+		if (thumbnailImages == null)
+			thumbnailImages = new File[0];
+
 		/* Get just the names of the existing thumbnails */
 		List<String> thumbnailNames = Arrays.stream(thumbnailImages)
 											.map(File::getName)

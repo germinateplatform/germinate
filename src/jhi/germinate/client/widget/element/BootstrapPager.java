@@ -111,7 +111,7 @@ public class BootstrapPager extends AbstractPager implements HasWidgets
 			AnchorListItem item = new AnchorListItem(Integer.toString(i));
 			item.addClickHandler(e ->
 			{
-				Integer value = Integer.parseInt(item.getText());
+				int value = Integer.parseInt(item.getText());
 				toggle.setText(item.getText());
 
 				IntegerParameterStore.Inst.get().put(Parameter.paginationPageSize, value);

@@ -124,8 +124,7 @@ public class PedigreeStringImporter extends DataImporter<PedigreeDefinition>
 	/**
 	 * Returns the {@link Accession} with the given {@link Accession#GENERAL_IDENTIFIER}.
 	 *
-	 * @param name The {@link Accession#GENERAL_IDENTIFIER} of the {@link Accession} to get.
-	 * @return The {@link Accession} with the given {@link Accession#GENERAL_IDENTIFIER}.
+	 * @param entry The {@link PedigreeDefinition} of the {@link Accession} to get.
 	 * @throws DatabaseException Thrown if the interaction with the database fails.
 	 */
 	private void getAccession(PedigreeDefinition entry) throws DatabaseException

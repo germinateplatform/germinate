@@ -146,8 +146,6 @@ public interface DatasetServiceAsync
 	 * @param properties The {@link RequestProperties}
 	 * @param datasetId  The {@link Dataset} id
 	 * @param async      The {@link AsyncCallback}
-	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	void getDublinCoreJson(RequestProperties properties, Long datasetId, AsyncCallback<ServerResult<String>> async);
 }

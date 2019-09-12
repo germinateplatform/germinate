@@ -53,7 +53,7 @@
 
 			<g:SimplePanel ui:field="chartPanel"/>
 
-			<g8:MapExportOptionsPanel ui:field="exportOptionsPanel"></g8:MapExportOptionsPanel>
+			<g8:MapExportOptionsPanel ui:field="exportOptionsPanel"/>
 		</g:FlowPanel>
 	</g:HTMLPanel>
 </ui:UiBinder>

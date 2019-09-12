@@ -48,7 +48,7 @@ public class UploadServlet extends BaseHttpServlet
 {
 	private static final long serialVersionUID = -8773479730190882601L;
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		String workloadSessionId = request.getParameter(ServletConstants.PARAM_SID);
 

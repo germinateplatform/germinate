@@ -313,7 +313,7 @@ public class TrialPage extends Composite implements HasHyperlinkButton, HasLibra
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_DOWNLOAD};
+		return null;
 	}
 
 	@Override

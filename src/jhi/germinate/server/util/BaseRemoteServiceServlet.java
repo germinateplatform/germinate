@@ -241,6 +241,6 @@ public class BaseRemoteServiceServlet extends RemoteServiceServlet
 		if (CollectionUtils.isEmpty(ids))
 			return false;
 		else
-			return ids.stream().anyMatch(id -> id == Group.ID_ALL_ITEM_GROUP);
+			return ids.stream().anyMatch(id -> Objects.equals(id, Group.ID_ALL_ITEM_GROUP));
 	}
 }

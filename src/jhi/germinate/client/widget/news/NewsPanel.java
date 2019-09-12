@@ -19,7 +19,6 @@ package jhi.germinate.client.widget.news;
 
 import com.google.gwt.core.client.*;
 import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.*;
 
 import org.gwtbootstrap3.client.ui.Panel;

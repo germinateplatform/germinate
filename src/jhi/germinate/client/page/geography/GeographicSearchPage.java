@@ -282,10 +282,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				@Override
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Location>>> callback)
 				{
-					if (latitude != null && longitude != null)
-						return LocationService.Inst.get().getByDistance(Cookie.getRequestProperties(), latitude, longitude, pagination, new SearchCallback<>(locationSection, callback));
-					else
-						return null;
+					return LocationService.Inst.get().getByDistance(Cookie.getRequestProperties(), latitude, longitude, pagination, new SearchCallback<>(locationSection, callback));
 				}
 			};
 
@@ -382,10 +379,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				@Override
 				protected Request getData(Pagination pagination, PartialSearchQuery filter, final AsyncCallback<PaginatedServerResult<List<Accession>>> callback)
 				{
-					if (latitude != null && longitude != null)
-						return AccessionService.Inst.get().getByDistance(Cookie.getRequestProperties(), latitude, longitude, pagination, new SearchCallback<>(accessionSection, callback));
-					else
-						return null;
+					return AccessionService.Inst.get().getByDistance(Cookie.getRequestProperties(), latitude, longitude, pagination, new SearchCallback<>(accessionSection, callback));
 				}
 			};
 

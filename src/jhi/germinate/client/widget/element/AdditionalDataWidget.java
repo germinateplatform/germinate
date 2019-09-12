@@ -35,7 +35,6 @@ import jhi.germinate.client.util.callback.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
-import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.search.*;
 

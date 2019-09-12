@@ -64,5 +64,5 @@ public enum McpdField
 	DUPLINSTNAME,
 	STORAGE,
 	MLSSTAT,
-	REMARKS;
+	REMARKS
 }

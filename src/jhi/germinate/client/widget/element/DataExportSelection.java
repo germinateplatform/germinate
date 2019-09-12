@@ -116,12 +116,6 @@ public class DataExportSelection<T extends DatabaseObject> extends Composite
 		final List<Long> groupIds = DatabaseObject.getIds(groupBox.getSelections());
 		final List<Long> objectIds = DatabaseObject.getIds(objectBox.getSelections());
 
-		if (groupIds == null || objectIds == null)
-		{
-			Notification.notify(Notification.Type.WARNING, Text.LANG.notificationGenotypeExportSelectAtLeastOne());
-			return;
-		}
-
 		PlotlyMatrixChart.getData(type, datasetIds, groupIds, objectIds, new DefaultAsyncCallback<ServerResult<String>>(true)
 		{
 			@Override

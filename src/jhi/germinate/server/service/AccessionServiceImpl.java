@@ -125,7 +125,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public ServerResult<String> export(RequestProperties properties, String idColumn, Set<String> accessionIds, boolean includeAttributes) throws InvalidSessionException, DatabaseException, IOException, InsufficientPermissionsException
+	public ServerResult<String> export(RequestProperties properties, String idColumn, Set<String> accessionIds, boolean includeAttributes) throws InvalidSessionException, DatabaseException, IOException
 	{
 		/* Check if the column contains any malicious sql */
 		if (!SearchCondition.checkSqlString(idColumn, false))
@@ -196,7 +196,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		File file = createTemporaryFile("germinatebase", FileType.txt.name());
 
 		try (DefaultStreamer streamer = query.getStreamer();
-			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8")))
+			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))
 		{
 			String[] columnNames = streamer.getColumnNames();
 
@@ -318,7 +318,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException, InvalidColumnException
+	public PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -338,7 +338,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public void removeFromGroupPreview(RequestProperties properties, List<Long> ids, String filename) throws InvalidSessionException
+	public void removeFromGroupPreview(RequestProperties properties, List<Long> ids, String filename)
 	{
 		String oldFileName = (String) getThreadLocalRequest().getSession().getAttribute(GROUP_PREVIEW_FILENAME);
 
@@ -366,7 +366,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public void clearGroupPreview(RequestProperties properties, String filename) throws InvalidSessionException
+	public void clearGroupPreview(RequestProperties properties, String filename)
 	{
 		String oldFileName = (String) getThreadLocalRequest().getSession().getAttribute(GROUP_PREVIEW_FILENAME);
 
@@ -403,7 +403,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException, InvalidColumnException
+	public ServerResult<List<String>> getIdsInPolygon(RequestProperties properties, List<List<LatLngPoint>> polygon) throws InvalidSessionException, DatabaseException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);

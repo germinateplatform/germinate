@@ -204,9 +204,6 @@ public class GatekeeperUserManager extends AbstractManager<GatekeeperUser>
 		String server = PropertyWatcher.get(ServerProperty.DATABASE_SERVER);
 
 		if (id == null || !PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION) || StringUtils.isEmpty(database, server))
-			return null;
-
-		if (id == null || !PropertyWatcher.getBoolean(ServerProperty.GERMINATE_USE_AUTHENTICATION))
 			return new ServerResult<>(null, null);
 
 

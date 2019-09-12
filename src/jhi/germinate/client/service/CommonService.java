@@ -37,9 +37,8 @@ public interface CommonService extends RemoteService
 	 * @param properties     The {@link RequestProperties}
 	 * @param experimentType The {@link ExperimentType} of the files that should be made publically available.
 	 * @return Nothing
-	 * @throws InvalidSessionException
 	 */
-	Void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType) throws InvalidSessionException;
+	Boolean makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType);
 
 	/**
 	 * Returns statistics (counts) for the main data types within Germinate. {@link Accession}s, {@link Marker}s, {@link Group}s and {@link Location}s.

@@ -126,11 +126,9 @@ public interface DatasetService extends RemoteService
 	 * @throws InvalidSessionException          Thrown if the current session is invalid
 	 * @throws DatabaseException                Thrown if the query fails on the server
 	 * @throws InvalidColumnException           Thrown if the filtering is trying to access a column that isn't available for filtering
-	 * @throws InvalidSearchQueryException      Thrown if the search query is invalid
-	 * @throws InvalidArgumentException         Thrown if one of the provided arguments for the filtering is invalid
 	 * @throws InsufficientPermissionsException Thrown if the user doesn't have sufficient permissions to complete the request
 	 */
-	PaginatedServerResult<List<Dataset>> getForMarker(RequestProperties properties, Pagination pagination, Long markerId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException, InvalidSearchQueryException, InvalidArgumentException;
+	PaginatedServerResult<List<Dataset>> getForMarker(RequestProperties properties, Pagination pagination, Long markerId) throws InvalidSessionException, DatabaseException, InvalidColumnException, InsufficientPermissionsException;
 
 	/**
 	 * Updates the {@link LicenseLog}s within the database. This represents a user accepting a number of {@link License}s.
@@ -139,7 +137,7 @@ public interface DatasetService extends RemoteService
 	 * @param logs       The {@link LicenseLog}s to update
 	 * @return <code>true</code> if at least one entry was successfully updated
 	 * @throws InvalidSessionException Thrown if the current session is invalid
-	 * @throws DatabaseException
+	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	ServerResult<Boolean> updateLicenseLogs(RequestProperties properties, List<LicenseLog> logs) throws InvalidSessionException, DatabaseException;
 

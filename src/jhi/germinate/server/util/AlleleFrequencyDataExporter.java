@@ -18,6 +18,7 @@
 package jhi.germinate.server.util;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.*;
 
 import jhi.germinate.shared.*;
@@ -39,8 +40,8 @@ public class AlleleFrequencyDataExporter
 	private int linesToExport = 0;
 
 	private DataExporter.DataExporterParameters parameters;
-	private boolean                             allLines   = false;
-	private boolean                             allMarkers = false;
+	private boolean                             allLines;
+	private boolean                             allMarkers;
 
 	/**
 	 * Creates a new instance of the AlleleFrequencyDataExporter
@@ -62,7 +63,7 @@ public class AlleleFrequencyDataExporter
 	 */
 	public void readInput() throws IOException
 	{
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(parameters.inputFile), "UTF8")))
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(parameters.inputFile), StandardCharsets.UTF_8)))
 		{
 			String headerRow = br.readLine();
 
@@ -103,8 +104,8 @@ public class AlleleFrequencyDataExporter
 		double localMissingValue = parameters.qualityMissingValue * (linesToExport / 100.0);
 
 		String line;
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(parameters.inputFile), "UTF8"));
-			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "UTF8")))
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(parameters.inputFile), StandardCharsets.UTF_8));
+			 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8)))
 		{
 			if (!StringUtils.isEmpty(prefix))
 			{

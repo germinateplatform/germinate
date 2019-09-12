@@ -576,7 +576,7 @@ public abstract class DatasetTable extends DatabaseObjectPaginationTable<Dataset
 				else
 				{
 					if (object.getExperiment().getType() == ExperimentType.genotype || object.getExperiment().getType() == ExperimentType.allelefreq)
-						return "≤" + Long.toString(count);
+						return "≤" + count;
 					else
 						return Long.toString(count);
 				}

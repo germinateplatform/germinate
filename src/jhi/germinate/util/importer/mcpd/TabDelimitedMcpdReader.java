@@ -77,7 +77,7 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 	}
 
 	@Override
-	public Accession next() throws IOException
+	public Accession next()
 	{
 		parts = currentLine.split("\t", -1);
 
@@ -155,8 +155,12 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 
 	private Taxonomy parseTaxonomy()
 	{
+		String genus = getPart(McpdField.GENUS);
+		if (genus == null)
+			genus = "";
+
 		return new Taxonomy()
-				.setGenus(getPart(McpdField.GENUS))
+				.setGenus(genus)
 				.setSpecies(getPart(McpdField.SPECIES))
 				.setSubtaxa(getPart(McpdField.SUBTAXA))
 				.setTaxonomyAuthor(getPart(McpdField.SPAUTHOR))
@@ -305,11 +309,11 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 			{
 				boolean lat = degreeMinuteSecond.length() == 7;
 
-				Double value = null;
+				Double value;
 
-				Integer degree = 0;
-				Integer minute = 0;
-				Integer second = 0;
+				int degree;
+				int minute = 0;
+				int second = 0;
 
 				try
 				{
@@ -345,7 +349,7 @@ public class TabDelimitedMcpdReader implements IStreamableReader<Accession>
 
 				value = degree + minute / 60d + second / 3600d;
 
-				if (value != null && (degreeMinuteSecond.endsWith("S") || degreeMinuteSecond.endsWith("W")))
+				if (degreeMinuteSecond.endsWith("S") || degreeMinuteSecond.endsWith("W"))
 					value = -value;
 
 				return value;

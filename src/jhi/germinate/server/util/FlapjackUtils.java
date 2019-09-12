@@ -19,6 +19,7 @@ package jhi.germinate.server.util;
 
 import java.io.*;
 import java.io.IOException;
+import java.nio.charset.*;
 import java.util.*;
 import java.util.Map;
 import java.util.stream.*;
@@ -112,7 +113,7 @@ public class FlapjackUtils
 	 */
 	public static File writeTemporaryMapFile(File filename, DefaultStreamer mapData, Collection<String> keptMarkers, Collection<String> deletedMarkers) throws IOException, DatabaseException
 	{
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")))
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8)))
 		{
 			bw.write("# fjFile = MAP");
 			bw.newLine();

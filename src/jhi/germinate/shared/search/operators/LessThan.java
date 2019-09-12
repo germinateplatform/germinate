@@ -81,7 +81,7 @@ public class LessThan implements ComparisonOperator, PotentialNumeric
 	}
 
 	@Override
-	public List<String> getValues(List<String> values) throws InvalidArgumentException
+	public List<String> getValues(List<String> values)
 	{
 		return values;
 	}

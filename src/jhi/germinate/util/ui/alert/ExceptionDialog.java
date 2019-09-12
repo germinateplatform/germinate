@@ -27,8 +27,6 @@ import javax.swing.*;
  */
 public class ExceptionDialog extends JDialog
 {
-	private final JButton ok;
-
 	public ExceptionDialog(Frame owner, String message, Exception e)
 	{
 		super(owner, "Error", true);
@@ -52,7 +50,7 @@ public class ExceptionDialog extends JDialog
 		area.setCaretPosition(0);
 		area.setEditable(false);
 
-		ok = new JButton("OK");
+		JButton ok = new JButton("OK");
 		ok.addActionListener(event -> ExceptionDialog.this.dispose());
 
 		add(header, BorderLayout.PAGE_START);

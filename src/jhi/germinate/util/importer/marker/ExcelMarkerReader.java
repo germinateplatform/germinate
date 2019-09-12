@@ -32,7 +32,6 @@ public class ExcelMarkerReader extends ExcelStreamableReader<MapDefinition>
 {
 	private static final String CHROMOSOME_UNKNOWN = "UNK";
 
-	private Sheet dataSheet;
 	private Row   chromosomes;
 	private Row   positions;
 	private Row   markerNames;
@@ -55,7 +54,7 @@ public class ExcelMarkerReader extends ExcelStreamableReader<MapDefinition>
 	@Override
 	public void init(Workbook wb)
 	{
-		dataSheet = wb.getSheet("DATA");
+		Sheet dataSheet = wb.getSheet("DATA");
 
 		chromosomes = dataSheet.getRow(0);
 		positions = dataSheet.getRow(1);

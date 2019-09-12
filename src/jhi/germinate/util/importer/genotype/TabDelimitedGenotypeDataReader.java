@@ -30,7 +30,6 @@ import jhi.germinate.util.importer.reader.*;
  */
 public class TabDelimitedGenotypeDataReader implements IStreamableReader<String[]>
 {
-	private String[] parts;
 
 	private BufferedReader br;
 
@@ -76,7 +75,7 @@ public class TabDelimitedGenotypeDataReader implements IStreamableReader<String[
 	@Override
 	public String[] next()
 	{
-		parts = currentLine.split("\t", -1);
+		String[] parts = currentLine.split("\t", -1);
 
 		StringUtils.trim(parts);
 

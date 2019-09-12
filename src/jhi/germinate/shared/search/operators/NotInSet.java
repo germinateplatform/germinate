@@ -78,7 +78,7 @@ public class NotInSet implements ComparisonOperator
 	}
 
 	@Override
-	public List<String> getValues(List<String> values) throws InvalidArgumentException
+	public List<String> getValues(List<String> values)
 	{
 		return values;
 	}

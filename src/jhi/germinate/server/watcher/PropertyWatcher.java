@@ -58,41 +58,45 @@ public class PropertyWatcher
 		try
 		{
 			// We have to load the internal one initially to figure out where the external data directory is...
-			config = new File(PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE).toURI());
-			loadProperties();
-
-			// Then check if there's another version in the external data directory
-			File folder = FileUtils.getFromExternalDataDirectory(null, null, null, null);
-			if (folder != null && folder.exists() && folder.isDirectory())
+			URL resource = PropertyWatcher.class.getClassLoader().getResource(PROPERTIES_FILE);
+			if (resource != null)
 			{
-				File potential = new File(folder, PROPERTIES_FILE);
+				config = new File(resource.toURI());
+				loadProperties();
 
-				if (potential.exists())
+				// Then check if there's another version in the external data directory
+				File folder = FileUtils.getFromExternalDataDirectory(null, null, null, null);
+				if (folder != null && folder.exists() && folder.isDirectory())
 				{
-					// Use it
-					config = potential;
-					// Load the external properties
-					loadProperties();
-				}
-			}
+					File potential = new File(folder, PROPERTIES_FILE);
 
-			// Then watch whichever file exists for changes
-			FileAlterationObserver observer = new FileAlterationObserver(config.getParentFile());
-			monitor = new FileAlterationMonitor(1000L);
-			observer.addListener(new FileAlterationListenerAdaptor()
-			{
-				@Override
-				public void onFileChange(File file)
-				{
-					if (file.equals(config))
+					if (potential.exists())
 					{
+						// Use it
+						config = potential;
+						// Load the external properties
 						loadProperties();
-						UserServiceImpl.invalidateSessionAttributes();
 					}
 				}
-			});
-			monitor.addObserver(observer);
-			monitor.start();
+
+				// Then watch whichever file exists for changes
+				FileAlterationObserver observer = new FileAlterationObserver(config.getParentFile());
+				monitor = new FileAlterationMonitor(1000L);
+				observer.addListener(new FileAlterationListenerAdaptor()
+				{
+					@Override
+					public void onFileChange(File file)
+					{
+						if (file.equals(config))
+						{
+							loadProperties();
+							UserServiceImpl.invalidateSessionAttributes();
+						}
+					}
+				});
+				monitor.addObserver(observer);
+				monitor.start();
+			}
 		}
 		catch (Exception e)
 		{

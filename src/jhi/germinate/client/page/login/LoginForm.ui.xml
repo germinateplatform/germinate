@@ -79,7 +79,7 @@
 							<li class="dropdown" ui:field="languageSelector">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 									<i class="{MDI} {FA_FIXED_WIDTH} {FA_LG} {MDI_TRANSLATE}"/>
-									<i class="mdi mdi-chevron-down"></i>
+									<i class="mdi mdi-chevron-down"/>
 								</a>
 							</li>
 							<li ui:field="emailAnchorParent">

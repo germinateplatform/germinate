@@ -21,7 +21,7 @@ import jhi.germinate.shared.*;
 
 /**
  * This {@link Enum} represents the file types that are used within Germinate. {@link #getContentType()} can be used to get the associated content
- * type and {@link #getIconStyle()} can be used to get the associated icon style (the mime icon).
+ * type and {@link #getStyle()} can be used to get the associated icon style (the mime icon).
  *
  * @author Sebastian Raubach
  */
@@ -69,7 +69,7 @@ public enum FileType
 		}
 	}
 
-	public static enum IconStyle
+	public enum IconStyle
 	{
 		MDI,
 		IMAGE

@@ -28,7 +28,12 @@ public class GetCoresCount extends Task
 
 	public void execute()
 	{
-		getProject().setNewProperty(outputProperty, Integer.toString(Runtime.getRuntime().availableProcessors()));
+		int availableProcessors = Runtime.getRuntime().availableProcessors();
+		if (availableProcessors > 1)
+		{
+			availableProcessors = (int) Math.floor(availableProcessors / 2);
+		}
+		getProject().setNewProperty(outputProperty, Integer.toString(availableProcessors));
 	}
 
 	public void setOutputProperty(String prop)

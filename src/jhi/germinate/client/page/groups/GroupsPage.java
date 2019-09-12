@@ -90,8 +90,6 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 	private final GroupTable                       groupTable;
 	private       Button                           addGroup;
-	private       Button                           uploadGroupMember;
-	private       Button                           deleteGroupMember;
 	private       DatabaseObjectPaginationTable<?> table;
 	private       AlertDialog                      uploadAlertDialog;
 
@@ -369,9 +367,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 			{
 				if (event.isAttached())
 				{
-					Scheduler.get().scheduleDeferred(() -> {
-						JavaScript.smoothScrollTo(groupMembersWrapper.getElement());
-					});
+					Scheduler.get().scheduleDeferred(() -> JavaScript.smoothScrollTo(groupMembersWrapper.getElement()));
 				}
 			});
 		}
@@ -380,7 +376,8 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 		if (canEdit)
 		{
 			ButtonGroup buttonGroup = new ButtonGroup();
-			deleteGroupMember = new Button(Text.LANG.groupsButtonDeleteMembers(), e ->
+			/* If the user doesn't have the permissions to delete the group */
+			Button deleteGroupMember = new Button(Text.LANG.groupsButtonDeleteMembers(), e ->
 			{
 				Set<? extends DatabaseObject> selectedItems = table.getSelection();
 
@@ -426,7 +423,7 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 			updateNewGroupMembersPanel();
 
-			uploadGroupMember = new Button(Text.LANG.groupsButtonUploadMembers(), e ->
+			Button uploadGroupMember = new Button(Text.LANG.groupsButtonUploadMembers(), e ->
 			{
 				if (uploadAlertDialog == null)
 				{
@@ -526,36 +523,39 @@ public class GroupsPage extends Composite implements ParallaxBannerPage, HasHype
 
 		final DatabaseObjectPaginationTable<? extends DatabaseObject> t = result;
 
-		ButtonGroup buttonGroup = new ButtonGroup();
-		Button addGroupMember = new Button(Text.LANG.generalAdd(), e ->
+		if (result != null)
 		{
-			Set<? extends DatabaseObject> selectedItems = t.getSelection();
-
-			if (selectedItems.size() < 1)
+			ButtonGroup buttonGroup = new ButtonGroup();
+			Button addGroupMember = new Button(Text.LANG.generalAdd(), e ->
 			{
-				Notification.notify(Notification.Type.INFO, Text.LANG.notificationGroupsSelectAtLeastOne());
-				return;
-			}
+				Set<? extends DatabaseObject> selectedItems = t.getSelection();
 
-			List<Long> ids = DatabaseObject.getGroupSpecificIds(selectedItems);
-
-			GroupService.Inst.get().addItems(Cookie.getRequestProperties(), group.getId(), ids, new DefaultAsyncCallback<ServerResult<Set<Long>>>(true)
-			{
-				@Override
-				protected void onSuccessImpl(ServerResult<Set<Long>> result)
+				if (selectedItems.size() < 1)
 				{
-					GerminateEventBus.BUS.fireEvent(new GroupMemberChangeEvent());
-
-					GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(group.getId()), result.getServerResult().size());
+					Notification.notify(Notification.Type.INFO, Text.LANG.notificationGroupsSelectAtLeastOne());
+					return;
 				}
+
+				List<Long> ids = DatabaseObject.getGroupSpecificIds(selectedItems);
+
+				GroupService.Inst.get().addItems(Cookie.getRequestProperties(), group.getId(), ids, new DefaultAsyncCallback<ServerResult<Set<Long>>>(true)
+				{
+					@Override
+					protected void onSuccessImpl(ServerResult<Set<Long>> result)
+					{
+						GerminateEventBus.BUS.fireEvent(new GroupMemberChangeEvent());
+
+						GoogleAnalytics.trackEvent(GoogleAnalytics.Category.GROUPS, "addItems", Long.toString(group.getId()), result.getServerResult().size());
+					}
+				});
 			});
-		});
-		addGroupMember.addStyleName(Style.mdiLg(Style.MDI_PLUS_BOX));
+			addGroupMember.addStyleName(Style.mdiLg(Style.MDI_PLUS_BOX));
 
-		buttonGroup.add(addGroupMember);
-		result.addExtraContent(buttonGroup);
+			buttonGroup.add(addGroupMember);
+			result.addExtraContent(buttonGroup);
 
-		newGroupMembersTable.add(result);
+			newGroupMembersTable.add(result);
+		}
 	}
 
 	@Override

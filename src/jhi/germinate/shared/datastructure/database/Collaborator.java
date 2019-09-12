@@ -203,7 +203,7 @@ public class Collaborator extends DatabaseObject
 				}
 				else
 				{
-					Collaborator collaborator = new Collaborator(id)
+					return new Collaborator(id)
 							.setFirstName(row.getString(FIRST_NAME))
 							.setLastName(row.getString(LAST_NAME))
 							.setEmail(row.getString(EMAIL))
@@ -211,8 +211,6 @@ public class Collaborator extends DatabaseObject
 							.setInstitution(INSTITUTION_CACHE.get(user, row.getLong(INSTITUTION_ID), row, foreignsFromResultSet))
 							.setCreatedOn(row.getTimestamp(CREATED_ON))
 							.setUpdatedOn(row.getTimestamp(UPDATED_ON));
-
-					return collaborator;
 				}
 			}
 			catch (InsufficientPermissionsException e)
@@ -228,15 +226,6 @@ public class Collaborator extends DatabaseObject
 				return Parser.Inst.InstanceHolder.INSTANCE;
 			}
 
-			/**
-			 * {@link Comment.Parser.Inst.InstanceHolder} is loaded on the first execution of {@link Comment.Parser.Inst#get()} or the first access to
-			 * {@link Comment.Parser.Inst.InstanceHolder#INSTANCE}, not before.
-			 * <p/>
-			 * This solution (<a href= "http://en.wikipedia.org/wiki/Initialization_on_demand_holder_idiom" >Initialization-on-demand holder
-			 * idiom</a>) is thread-safe without requiring special language constructs (i.e. <code>volatile</code> or <code>synchronized</code>).
-			 *
-			 * @author Sebastian Raubach
-			 */
 			private static final class InstanceHolder
 			{
 				private static final Parser INSTANCE = new Parser();

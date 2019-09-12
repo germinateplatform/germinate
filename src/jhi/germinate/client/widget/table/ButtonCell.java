@@ -103,26 +103,18 @@ public class ButtonCell extends com.google.gwt.cell.client.ButtonCell implements
 	@Override
 	public void render(com.google.gwt.cell.client.Cell.Context context, SafeHtml data, SafeHtmlBuilder sb)
 	{
-		String cssClasses = new StringBuilder("btn")
-				.append(" ")
-				.append(type.getCssName())
-				.append(" ")
-				.append(size.getCssName())
-				.toString();
+		String cssClasses = "btn " + type.getCssName() + " " + size.getCssName();
 
 		String disabled = "";
 		if (!enabled)
 		{
-			disabled = " disabled=\"disabled\"";
+			disabled = " disabled='disabled'";
 		}
 
-		sb.appendHtmlConstant("<button type=\"button\" class=\"" + cssClasses + "\" tabindex=\"-1\"" + disabled + ">");
+		sb.appendHtmlConstant("<button type='button' class='" + cssClasses + "' tabindex='-1'" + disabled + ">");
 		if (!StringUtils.isEmpty(icon))
 		{
-			String iconHtml = new StringBuilder("<i class=\"")
-					.append(Style.mdiLg(icon))
-					.append("\"></i> ")
-					.toString();
+			String iconHtml = "<i class='" + Style.mdiLg(icon) + "'></i> ";
 			sb.appendHtmlConstant(iconHtml);
 		}
 		if (data != null)

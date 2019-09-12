@@ -52,7 +52,7 @@ public class GwtXmlWriter
 		String compileOptString = args[i++];
 
 		List<String> supportedLocales = getSupportedLocales(config);
-		String supportedLocalesString = "";
+		StringBuilder supportedLocalesString = new StringBuilder();
 		String template = "\n\t<extend-property name='locale' values='%s' />";
 
 		try
@@ -62,7 +62,7 @@ public class GwtXmlWriter
 			for (String locale : supportedLocales)
 			{
 				Files.copy(new File(source, "Text_" + locale + ".properties").toPath(), new File(target, "Text_" + locale + ".properties").toPath(), StandardCopyOption.REPLACE_EXISTING);
-				supportedLocalesString += String.format(template, locale);
+				supportedLocalesString.append(String.format(template, locale));
 			}
 		}
 		catch (IOException e)
@@ -81,7 +81,7 @@ public class GwtXmlWriter
 			compileOptString = "";
 
 		String content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-		content = content.replace("@supported_locales@", supportedLocalesString)
+		content = content.replace("@supported_locales@", supportedLocalesString.toString())
 						 .replace("@browser_opt@", browserOptString)
 						 .replace("@compile_opt@", compileOptString);
 		Files.write(finalXml, content.getBytes(StandardCharsets.UTF_8));

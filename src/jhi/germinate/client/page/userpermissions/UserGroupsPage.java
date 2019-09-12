@@ -57,7 +57,6 @@ import jhi.germinate.shared.search.*;
 public class UserGroupsPage extends Composite
 {
 	private static GroupsPageUiBinder ourUiBinder = GWT.create(GroupsPageUiBinder.class);
-	private final  UserGroupTable     groupTable;
 	@UiField
 	HTML        userGroupsHtml;
 	@UiField
@@ -80,7 +79,9 @@ public class UserGroupsPage extends Composite
 
 		userGroupsHtml.setHTML(Text.LANG.userGroupsText());
 
-		groupTable = new UserGroupTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
+		/* Add the delete column */
+		//										groupTable.refreshTable();
+		UserGroupTable groupTable = new UserGroupTable(DatabaseObjectPaginationTable.SelectionMode.NONE, true)
 		{
 			@Override
 			protected Request getData(Pagination pagination, PartialSearchQuery filter, AsyncCallback<PaginatedServerResult<List<UserGroup>>> callback)

@@ -108,13 +108,10 @@ public class Pacman
 		Event.addNativePreviewHandler(event ->
 		{
 			final int eventType = event.getTypeInt();
-			switch (eventType)
+			if (eventType == Event.ONMOUSEMOVE)
 			{
-				case Event.ONMOUSEMOVE:
-					mouseX = event.getNativeEvent().getClientX();
-					mouseY = event.getNativeEvent().getClientY();
-					break;
-				default:
+				mouseX = event.getNativeEvent().getClientX();
+				mouseY = event.getNativeEvent().getClientY();
 			}
 		});
 
@@ -198,7 +195,6 @@ public class Pacman
 		TOP_LEFT(225);
 
 		private int     degree;
-		private String  style;
 		private boolean injected = false;
 
 		Rotation(int degree)
@@ -216,7 +212,7 @@ public class Pacman
 		{
 			if (!injected)
 			{
-				style = Css.INST.style(degree);
+				String style = Css.INST.style(degree);
 				StyleInjector.injectAtStart(style, true);
 				injected = true;
 			}
@@ -250,14 +246,12 @@ public class Pacman
 			}
 			else if (xDelta > 0 && yDelta > 0)
 				return BOTTOM_RIGHT;
-			else if (xDelta > 0 && yDelta < 0)
+			else if (xDelta > 0)
 				return TOP_RIGHT;
-			else if (xDelta < 0 && yDelta > 0)
+			else if (yDelta > 0)
 				return BOTTOM_LEFT;
-			else if (xDelta < 0 && yDelta < 0)
+			else
 				return TOP_LEFT;
-
-			return RIGHT;
 		}
 	}
 }

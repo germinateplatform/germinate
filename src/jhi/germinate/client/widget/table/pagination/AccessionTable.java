@@ -642,7 +642,7 @@ public abstract class AccessionTable extends MarkableDatabaseObjectPaginationTab
 		});
 	}
 
-	private class MarkingCallback extends DefaultAsyncCallback<ServerResult<List<String>>>
+	private static class MarkingCallback extends DefaultAsyncCallback<ServerResult<List<String>>>
 	{
 		private boolean                add;
 		private PopupPanel             popupPanel;

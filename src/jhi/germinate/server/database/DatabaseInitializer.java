@@ -61,9 +61,6 @@ public abstract class DatabaseInitializer
 		}
 		catch (DatabaseException e)
 		{
-			if (database != null)
-				database.close();
-
 			e.printStackTrace();
 		}
 	}

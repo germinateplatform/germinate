@@ -281,7 +281,7 @@ public class CompoundDataPage extends Composite implements HasLibraries, HasHype
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.D3_V3, Library.D3_TOOLTIP, Library.D3_LEGEND, Library.D3_DOWNLOAD};
+		return null;
 	}
 
 	@Override

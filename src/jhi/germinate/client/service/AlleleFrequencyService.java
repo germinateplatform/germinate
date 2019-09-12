@@ -104,9 +104,8 @@ public interface AlleleFrequencyService extends RemoteService
 	 * @throws InvalidSessionException  Thrown if the current session is invalid
 	 * @throws IOException              Thrown if flapjack fails to write the image or readAll the input data
 	 * @throws FlapjackException        Thrown if Flapjack crashes
-	 * @throws MissingPropertyException Thrown if a required flapjack property is missing from the properties file
 	 */
-	Pair<String, HistogramImageData> getHistogramImageData(RequestProperties properties, HistogramParams params) throws InvalidSessionException, IOException, FlapjackException, MissingPropertyException;
+	Pair<String, HistogramImageData> getHistogramImageData(RequestProperties properties, HistogramParams params) throws InvalidSessionException, IOException, FlapjackException;
 
 	/**
 	 * Creates the Flapjack project file and returns the {@link FlapjackProjectCreationResult} with all the necessary information.

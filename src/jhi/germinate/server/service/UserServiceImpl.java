@@ -80,7 +80,7 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 	private static final int SESSION_LIFETIME_MIN = PropertyWatcher.getInteger(ServerProperty.GERMINATE_COOKIE_LIFESPAN_MINUTES);
 
 	@Override
-	public void logout(RequestProperties properties) throws InvalidSessionException, LoginRegistrationException
+	public void logout(RequestProperties properties) throws InvalidSessionException
 	{
 		Session.checkSession(properties, this);
 
@@ -106,9 +106,9 @@ public class UserServiceImpl extends BaseRemoteServiceServlet implements UserSer
 		UserAuth auth = UserAuth.getFromSession(this, properties);
 
 		String providedUsername = credentials.getUsername();
-		String sessionUsername = auth == null ? null : auth.getUsername();
+		String sessionUsername = auth.getUsername();
 
-		if (auth == null || (!Objects.equals(providedUsername, "") && !Objects.equals(providedUsername, sessionUsername)))
+		if (!Objects.equals(providedUsername, "") && !Objects.equals(providedUsername, sessionUsername))
 		{
 			GatekeeperUserWithPassword user = GatekeeperUserManager.getForUsernameAndSystem(credentials.getUsername());
 

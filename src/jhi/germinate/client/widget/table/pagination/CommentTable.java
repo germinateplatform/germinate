@@ -205,33 +205,31 @@ public abstract class CommentTable extends DatabaseObjectPaginationTable<Comment
 			addColumn(deleteColumn, Text.LANG.generalDelete());
 
 			deleteColumn.setFieldUpdater((index, object, value) ->
-			{
-				AlertDialog.createYesNoDialog(Text.LANG.generalConfirm(), Text.LANG.annotationsDeleteConfirm(1), false, e -> {
-					CommentService.Inst.get().disable(Cookie.getRequestProperties(), object, new DefaultAsyncCallback<Void>()
-					{
-						@Override
-						protected void onFailureImpl(Throwable caught)
+					AlertDialog.createYesNoDialog(Text.LANG.generalConfirm(), Text.LANG.annotationsDeleteConfirm(1), false, e -> {
+						CommentService.Inst.get().disable(Cookie.getRequestProperties(), object, new DefaultAsyncCallback<Void>()
 						{
-							if (caught instanceof InsufficientPermissionsException)
+							@Override
+							protected void onFailureImpl(Throwable caught)
 							{
-								Notification.notify(Notification.Type.ERROR, Text.LANG.notificationActionInsufficientPermissions());
+								if (caught instanceof InsufficientPermissionsException)
+								{
+									Notification.notify(Notification.Type.ERROR, Text.LANG.notificationActionInsufficientPermissions());
+								}
+								else
+								{
+									super.onFailureImpl(caught);
+								}
 							}
-							else
+
+							@Override
+							public void onSuccessImpl(Void result)
 							{
-								super.onFailureImpl(caught);
+								GoogleAnalytics.trackEvent(GoogleAnalytics.Category.ANNOTATIONS, "delete", Long.toString(object.getId()));
+
+								refreshTable();
 							}
-						}
-
-						@Override
-						public void onSuccessImpl(Void result)
-						{
-							GoogleAnalytics.trackEvent(GoogleAnalytics.Category.ANNOTATIONS, "delete", Long.toString(object.getId()));
-
-							refreshTable();
-						}
-					});
-				}, null);
-			});
+						});
+					}, null));
 
 			fixItemAlignment();
 		}

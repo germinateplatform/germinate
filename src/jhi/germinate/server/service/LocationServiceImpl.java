@@ -18,6 +18,7 @@
 package jhi.germinate.server.service;
 
 import java.io.*;
+import java.nio.charset.*;
 import java.util.*;
 
 import javax.servlet.annotation.*;
@@ -243,7 +244,7 @@ public class LocationServiceImpl extends BaseRemoteServiceServlet implements Loc
 
 		File file = createTemporaryFile("json", "json");
 
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8")))
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)))
 		{
 			DatabaseResult rs = streamer.next();
 

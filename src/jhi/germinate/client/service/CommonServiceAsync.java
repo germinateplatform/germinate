@@ -115,8 +115,6 @@ public interface CommonServiceAsync
 	 *
 	 * @param properties The {@link RequestProperties}
 	 * @param callback   The {@link AsyncCallback}
-	 * @throws InvalidSessionException Thrown if the session is invalid
-	 * @throws DatabaseException       Thrown if the query fails on the server
 	 */
 	void getOverviewStats(RequestProperties properties, AsyncCallback<ServerResult<Map<String, Long>>> callback);
 
@@ -126,7 +124,6 @@ public interface CommonServiceAsync
 	 * @param properties     The {@link RequestProperties}
 	 * @param experimentType The {@link ExperimentType} of the files that should be made publically available.
 	 * @param callback       The {@link AsyncCallback}
-	 * @throws InvalidSessionException
 	 */
-	void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType, AsyncCallback<Void> callback);
+	void makeFilesAvailablePublically(RequestProperties properties, ExperimentType experimentType, AsyncCallback<Boolean> callback);
 }

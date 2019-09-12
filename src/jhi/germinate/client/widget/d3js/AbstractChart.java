@@ -39,7 +39,6 @@ import jhi.germinate.client.util.*;
 import jhi.germinate.client.widget.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.resource.*;
-import jhi.germinate.shared.Style;
 import jhi.germinate.shared.*;
 
 /**
@@ -133,7 +132,7 @@ public abstract class AbstractChart extends GerminateComposite
 	@Override
 	protected void setUpContent()
 	{
-		panelId = "chart" + Long.toString(RandomUtils.RANDOM.nextLong());
+		panelId = "chart" + RandomUtils.RANDOM.nextLong();
 
 		if (!StringUtils.isEmpty(title))
 		{

@@ -75,7 +75,7 @@ public class PedigreeWriter
 		}
 	}
 
-	private class Edge
+	private static class Edge
 	{
 		PedigreeServiceImpl.PedigreePair source;
 		PedigreeServiceImpl.PedigreePair target;
