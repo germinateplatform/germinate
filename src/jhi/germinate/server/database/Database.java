@@ -226,8 +226,8 @@ public final class Database
 	 */
 	public enum DatabaseType
 	{
-		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true"),
-		MYSQL_DATA_IMPORT("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8");
+		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"),
+		MYSQL_DATA_IMPORT("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=UTC");
 		//		MYSQL_BATCH_ENABLED("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
 
 		private final String classForName;

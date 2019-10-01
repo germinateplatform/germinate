@@ -349,7 +349,7 @@ public class Dataset extends DatabaseObject
 	public boolean hasLicenseBeenAccepted(UserAuth user)
 	{
 		if (!ModuleCore.getUseAuthentication() && (user == null || user.getId() == null))
-			return license == null || license.getLicenseLog() != null && license.getLicenseLog().getUser() ==  -1;
+			return license == null || license.getLicenseLog() != null && license.getLicenseLog().getUser() == -1;
 		else
 			return license == null || license.getLicenseLog() != null && Objects.equals(license.getLicenseLog().getUser(), user.getId());
 	}
