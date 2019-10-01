@@ -289,7 +289,7 @@ public class PlotlyScatterChart<T extends DatabaseObject> extends AbstractChart 
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_PLOT};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_PLOT, Library.D3_V3, Library.D3_DOWNLOAD};
 	}
 
 	public void update(ExperimentType experimentType, List<Long> selectedDatasetIds, List<T> objects, List<Long> groupIds, String color)

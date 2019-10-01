@@ -144,7 +144,7 @@ public class PlotlyMapChart extends AbstractChart implements PlotlyChart
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.PLOTLY, Library.PLOTLY_MAP_CHART, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_MAP_CHART, Library.D3_V3, Library.D3_DOWNLOAD};
 	}
 
 	private void onPointsSelected(int chromosome, double start, double end)

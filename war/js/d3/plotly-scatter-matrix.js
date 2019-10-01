@@ -35,7 +35,7 @@ function plotlyScatterMatrix() {
 
 			var dims = Object.keys(rows[0]);
 			dims = dims.filter(function (d) {
-				return columnsToIgnore.indexOf(d) < 0;
+				return columnsToIgnore.indexOf(d) < 0 && hasData(rows, d);
 			});
 
 			var data = [];
@@ -144,6 +144,16 @@ function plotlyScatterMatrix() {
 				});
 			}
 		});
+	}
+
+	function hasData(rows, key) {
+		var values = rows.map(function (row) {
+			return row[key];
+		}).filter(function (v) {
+			return v !== undefined && v !== null && v !== '';
+		});
+
+		return values.length > 0
 	}
 
 	function unpack(rows, key) {

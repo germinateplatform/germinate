@@ -272,6 +272,6 @@ public class PlotlyMatrixChart<T extends DatabaseObject> extends AbstractChart i
 	@Override
 	public Library[] getLibraries()
 	{
-		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_MATRIX, Library.D3_DOWNLOAD};
+		return new Library[]{Library.PLOTLY, Library.PLOTLY_SCATTER_MATRIX, Library.D3_V3, Library.D3_DOWNLOAD};
 	}
 }
