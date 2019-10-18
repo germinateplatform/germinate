@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.*;
 import jhi.germinate.client.page.allelefreq.*;
 import jhi.germinate.client.service.*;
 import jhi.germinate.client.widget.input.*;
-import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.enums.*;
 
 /**
@@ -41,9 +40,6 @@ public class EqualWidthBinningWidget extends Composite
 
 	@UiField
 	RangedIntegerTextBox   nrOfBins;
-
-	private Color low  = Color.fromHex("#ff7878");
-	private Color high = Color.fromHex("#78fd78");
 
 	private int                                                      index    = -1;
 	private Callback<AlleleFreqResultsPage.BinningResult, Throwable> callback = null;

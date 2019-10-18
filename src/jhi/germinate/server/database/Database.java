@@ -18,6 +18,7 @@
 package jhi.germinate.server.database;
 
 import java.sql.*;
+import java.util.*;
 
 import jhi.germinate.server.util.*;
 import jhi.germinate.server.watcher.*;
@@ -40,6 +41,8 @@ public final class Database
 	private static String       username;
 	private static String       password;
 	private        Connection   connection;
+
+	private static String utc = TimeZone.getDefault().getID();
 
 	/* Initialize the stored procedures and views */
 	public static void initialize()
@@ -226,8 +229,8 @@ public final class Database
 	 */
 	public enum DatabaseType
 	{
-		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"),
-		MYSQL_DATA_IMPORT("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=UTC");
+		MYSQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=" + utc),
+		MYSQL_DATA_IMPORT("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=" + utc);
 		//		MYSQL_BATCH_ENABLED("com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "?rewriteBatchedStatements=true");
 
 		private final String classForName;

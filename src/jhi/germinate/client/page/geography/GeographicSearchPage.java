@@ -45,8 +45,8 @@ import jhi.germinate.client.widget.structure.resource.*;
 import jhi.germinate.client.widget.table.*;
 import jhi.germinate.client.widget.table.pagination.*;
 import jhi.germinate.shared.*;
-import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.Pagination;
+import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
 import jhi.germinate.shared.search.*;
@@ -246,7 +246,7 @@ public class GeographicSearchPage extends Composite implements HasHyperlinkButto
 				{
 					super.createColumns();
 
-					/* Add the elevation column */
+					/* Add the distance column */
 					TextColumn column = new TextColumn()
 					{
 						@Override

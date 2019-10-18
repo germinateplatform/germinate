@@ -14,7 +14,7 @@ function plotlyAlleleFreqChart() {
 			var freqs = unpack(rows, y);
 
 			var max = 0;
-j
+
 			for (var j = 0; j < freqs.length; j++) {
 				max = Math.max(max, freqs[j]);
 			}
