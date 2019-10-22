@@ -55,7 +55,7 @@
 	</ui:style>
 
 	<g:HTMLPanel ui:field="panel">
-		<g:FlowPanel addStyleNames="{style.filter}" ui:field="filterDisplay"/>
+		<g:FlowPanel addStyleNames="{style.filter} {CLEARFIX}" ui:field="filterDisplay"/>
 
 		<g:FlowPanel ui:field="topPanel">
 			<g:FlowPanel addStyleNames="{PULL_LEFT}">
