@@ -19,8 +19,8 @@ package jhi.germinate.client.widget.table.pagination;
 
 import com.google.gwt.cell.client.*;
 import com.google.gwt.core.client.*;
-import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.shared.*;
 import com.google.gwt.safehtml.shared.*;
 import com.google.gwt.user.cellview.client.Column;
@@ -29,8 +29,8 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 
-import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 
 import java.util.*;
@@ -45,8 +45,8 @@ import jhi.germinate.client.util.parameterstore.*;
 import jhi.germinate.client.widget.element.*;
 import jhi.germinate.client.widget.table.pagination.cell.*;
 import jhi.germinate.client.widget.table.pagination.resource.*;
-import jhi.germinate.shared.*;
 import jhi.germinate.shared.Style;
+import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
@@ -294,7 +294,7 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 		// If there are other items to add
 		if (!ArrayUtils.isEmpty(additionalItems))
 		{
-			if(itemCount > 0)
+			if (itemCount > 0)
 			{
 				// Add a separator
 				menuBar.addSeparator();
@@ -428,123 +428,130 @@ public abstract class MarkableDatabaseObjectPaginationTable<T extends DatabaseOb
 			}
 		};
 
-		/* Adds a column header for the new checkbox column that will toggle the checkbox state of the rows */
-		Header<Boolean> header = new Header<Boolean>(new FACheckboxCell<T>(false, true, handler)
+		if (!preventAllItemMarking())
 		{
-			@Override
-			public Set<String> getConsumedEvents()
+			/* Adds a column header for the new checkbox column that will toggle the checkbox state of the rows */
+			Header<Boolean> header = new Header<Boolean>(new FACheckboxCell<T>(false, true, handler)
 			{
-				HashSet<String> events = new HashSet<>();
-				events.add(BrowserEvents.CLICK);
-				events.add(BrowserEvents.CONTEXTMENU);
-				return events;
-			}
-		})
-		{
-			@Override
-			public void onBrowserEvent(Cell.Context context, Element elem, NativeEvent event)
-			{
-				/* On click events */
-				if (BrowserEvents.CLICK.equals(event.getType()))
+				@Override
+				public Set<String> getConsumedEvents()
 				{
-					showPopupMenu(event.getClientX(), event.getClientY(), null, new MarkedItemListCallback()
+					HashSet<String> events = new HashSet<>();
+					events.add(BrowserEvents.CLICK);
+					events.add(BrowserEvents.CONTEXTMENU);
+					return events;
+				}
+			})
+			{
+				@Override
+				public void onBrowserEvent(Cell.Context context, Element elem, NativeEvent event)
+				{
+					/* On click events */
+					if (BrowserEvents.CLICK.equals(event.getType()))
 					{
-						private Long getId(DatabaseObject object)
+						showPopupMenu(event.getClientX(), event.getClientY(), null, new MarkedItemListCallback()
 						{
-							if (object == null)
+							private Long getId(DatabaseObject object)
+							{
+								if (object == null)
+									return null;
+
+								return DatabaseObject.getGroupSpecificId(object);
+							}
+
+							@Override
+							public List<String> getIds(boolean toBeMarked)
+							{
+								List<String> result = new ArrayList<>();
+
+								for (T row : getVisibleItems())
+								{
+									Long id = getId(row);
+									if (id != null)
+										result.add(Long.toString(id));
+								}
+
+								return result;
+							}
+
+							@Override
+							public String getId(boolean toBeMarked)
+							{
 								return null;
-
-							return DatabaseObject.getGroupSpecificId(object);
-						}
-
-						@Override
-						public List<String> getIds(boolean toBeMarked)
-						{
-							List<String> result = new ArrayList<>();
-
-							for (T row : getVisibleItems())
-							{
-								Long id = getId(row);
-								if (id != null)
-									result.add(Long.toString(id));
 							}
 
-							return result;
-						}
-
-						@Override
-						public String getId(boolean toBeMarked)
-						{
-							return null;
-						}
-
-						@Override
-						public void updateTable(Collection<String> ids)
-						{
-							if (CollectionUtils.isEmpty(ids))
-								return;
-
-							List<T> rows = getVisibleItems();
-							for (int i = 0; i < rows.size(); i++)
+							@Override
+							public void updateTable(Collection<String> ids)
 							{
-								Long id = getId(rows.get(i));
-								if (id != null && ids.contains(Long.toString(id)))
-									redrawRow(i);
-							}
-						}
+								if (CollectionUtils.isEmpty(ids))
+									return;
 
-						@Override
-						public void updateTable(String newId)
-						{
-							List<T> rows = getVisibleItems();
-							for (int i = 0; i < rows.size(); i++)
+								List<T> rows = getVisibleItems();
+								for (int i = 0; i < rows.size(); i++)
+								{
+									Long id = getId(rows.get(i));
+									if (id != null && ids.contains(Long.toString(id)))
+										redrawRow(i);
+								}
+							}
+
+							@Override
+							public void updateTable(String newId)
 							{
-								Long id = getId(rows.get(i));
-								if (id != null && newId.equals(Long.toString(id)))
-									redrawRow(i);
+								List<T> rows = getVisibleItems();
+								for (int i = 0; i < rows.size(); i++)
+								{
+									Long id = getId(rows.get(i));
+									if (id != null && newId.equals(Long.toString(id)))
+										redrawRow(i);
+								}
 							}
-						}
-					});
-				}
-				else
-				{
-					super.onBrowserEvent(context, elem, event);
-				}
-			}
-
-			@Override
-			public Boolean getValue()
-			{
-				// TODO: This is wrong! It's only checking the visible items, but would have to check all items, which isn't really possible...
-				for (T item : getVisibleItems())
-				{
-					if (!MarkedItemList.contains(itemType, Long.toString(DatabaseObject.getGroupSpecificId(item))))
+						});
+					}
+					else
 					{
-						return false;
+						super.onBrowserEvent(context, elem, event);
 					}
 				}
-				return getVisibleItems().size() > 0;
-			}
 
-			@Override
-			public String getHeaderStyleNames()
+				@Override
+				public Boolean getValue()
+				{
+					// TODO: This is wrong! It's only checking the visible items, but would have to check all items, which isn't really possible...
+					for (T item : getVisibleItems())
+					{
+						if (!MarkedItemList.contains(itemType, Long.toString(DatabaseObject.getGroupSpecificId(item))))
+						{
+							return false;
+						}
+					}
+					return getVisibleItems().size() > 0;
+				}
+
+				@Override
+				public String getHeaderStyleNames()
+				{
+					return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
+				}
+			};
+			header.setUpdater(value ->
 			{
-				return Style.combine(Style.TEXT_CENTER_ALIGN, Style.CURSOR_DEFAULT);
-			}
-		};
-		header.setUpdater(value ->
+				List<T> rows = getVisibleItems();
+				for (int i = 0; i < rows.size(); i++)
+				{
+					String id = Long.toString(DatabaseObject.getGroupSpecificId(rows.get(i)));
+
+					MarkedItemList.toggle(itemType, id);
+					redrawRow(i);
+				}
+			});
+
+			addColumn(column, header);
+		}
+		else
 		{
-			List<T> rows = getVisibleItems();
-			for (int i = 0; i < rows.size(); i++)
-			{
-				String id = Long.toString(DatabaseObject.getGroupSpecificId(rows.get(i)));
-
-				MarkedItemList.toggle(itemType, id);
-				redrawRow(i);
-			}
-		});
-
-		addColumn(column, header);
+			addColumn(column, "");
+		}
 	}
 
 	@Override

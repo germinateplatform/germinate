@@ -47,6 +47,7 @@
 
 		.filter {
 			margin-bottom: 15px;
+			word-break: break-word;
 		}
 
 		.filter span.label-default {

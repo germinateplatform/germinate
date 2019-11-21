@@ -42,7 +42,7 @@ public class AccessionManager extends AbstractManager<Accession>
 
 	private static final String SELECT_BY_UNKNOWN_IDENTIFIER = "SELECT * FROM `germinatebase` WHERE `name` LIKE ? OR `id` LIKE ? OR `number` LIKE ? OR `general_identifier` LIKE ?";
 
-	private static final String SELECT_IDS_FOR_FILTER = "SELECT DISTINCT `germinatebase`.`id` FROM " + COMMON_TABLES + " {{FILTER}}";
+	private static final String SELECT_IDS_FOR_FILTER = "SELECT DISTINCT `germinatebase`.`id` FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}}";
 
 	private static final String SELECT_ALL_FOR_FILTER_EXPORT  = "SELECT `germinatebase`.`id` AS germinatebase_id, `germinatebase`.`general_identifier` AS germinatebase_gid, `germinatebase`.`name` AS germinatebase_name, `germinatebase`.`number` AS germinatebase_number, `germinatebase`.`collnumb` AS germinatebase_collnumb, `taxonomies`.`genus` AS taxonomies_genus, `taxonomies`.`species` AS taxomonies_species, `locations`.`latitude` AS locations_latitude, `locations`.`longitude` AS locations_longitude, `locations`.`elevation` AS locations_elevation, `countries`.`country_name` AS countries_country_name, `germinatebase`.`colldate` AS germinatebase_colldate, `synonyms`.`synonyms` AS synonyms_synonym, `germinatebase`.`pdci` AS pdci FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} %s LIMIT ?, ?";
 	private static final String SELECT_ALL_FOR_FILTER         = "SELECT " + SELECT_SYNONYMS + " FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}} %s LIMIT ?, ?";
