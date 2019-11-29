@@ -49,8 +49,8 @@ public class MarkedItemPageHeader extends Composite implements HasText, HasSubTe
 		header.addStyleName(Style.LAYOUT_DISPLAY_INLINE_BLOCK);
 
 		FlowPanel panel = new FlowPanel();
-		panel.add(checkbox);
 		panel.add(header);
+		panel.add(checkbox);
 
 		initWidget(panel);
 	}

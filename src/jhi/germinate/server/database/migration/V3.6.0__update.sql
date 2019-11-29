@@ -74,17 +74,34 @@ CREATE TABLE `temp_taxonomies`
   ROW_FORMAT = Dynamic;
 
 INSERT INTO `temp_taxonomies` (genus, species, subtaxa, species_author, subtaxa_author, cropname, ploidy, created_on, updated_on)
-SELECT taxonomies.genus,
-       taxonomies.species,
-       subtaxa.taxonomic_identifier,
-       taxonomies.species_author,
-       subtaxa.subtaxa_author,
-       taxonomies.cropname,
-       taxonomies.ploidy,
-       taxonomies.created_on,
-       taxonomies.updated_on
-FROM subtaxa
-         LEFT JOIN taxonomies ON taxonomies.id = subtaxa.taxonomy_id;
+SELECT
+	taxonomies.genus,
+	taxonomies.species,
+	subtaxa.taxonomic_identifier,
+	taxonomies.species_author,
+	subtaxa.subtaxa_author,
+	taxonomies.cropname,
+	taxonomies.ploidy,
+	taxonomies.created_on,
+	taxonomies.updated_on
+FROM
+	taxonomies
+	LEFT JOIN subtaxa ON taxonomies.id = subtaxa.taxonomy_id
+UNION
+SELECT
+	taxonomies.genus,
+	taxonomies.species,
+	NULL,
+	taxonomies.species_author,
+	NULL,
+	taxonomies.cropname,
+	taxonomies.ploidy,
+	taxonomies.created_on,
+	taxonomies.updated_on
+FROM
+	taxonomies
+WHERE
+	EXISTS (SELECT 1 FROM subtaxa WHERE	subtaxa.taxonomy_id = taxonomies.id);
 
 /* Update some foreign keys. This forces the columns to be set to NULL when referenced items are deleted. */
 call drop_all_indexes();
@@ -121,6 +138,8 @@ ALTER TABLE `germinatebase`
 
 DROP PROCEDURE IF EXISTS drop_all_indexes;
 
+ALTER TABLE `germinatebase`
+    DROP COLUMN `subtaxa_id`;
 
 ALTER TABLE `synonyms`
     ADD INDEX (`foreign_id`) USING BTREE;
