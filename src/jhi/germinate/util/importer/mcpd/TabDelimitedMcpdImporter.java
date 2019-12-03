@@ -106,7 +106,7 @@ public class TabDelimitedMcpdImporter extends DataImporter<Accession> implements
 	public void update(Accession entry)
 			throws DatabaseException
 	{
-		this.isUpdate = true;
+//		this.isUpdate = true;
 		write(entry);
 	}
 

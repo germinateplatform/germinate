@@ -73,8 +73,10 @@ public class ExcelEntityParentDataImporter extends DataImporter<Accession>
 		String parentAccenumb = entry.getExtra(ExcelEntityParentDataReader.ENTITY_PARENT);
 		EntityType entityType = entry.getEntityType();
 
-		if (StringUtils.isEmpty(parentAccenumb) || StringUtils.isEmpty(childAccenumb))
+		if (StringUtils.isEmpty(childAccenumb))
 			throw new DatabaseException("ACCENUMB cannot be empty!");
+		if (StringUtils.isEmpty(parentAccenumb))
+			return;
 
 		DatabaseStatement stmtParent = databaseConnection.prepareStatement("SELECT * FROM germinatebase WHERE general_identifier <=> ?");
 		stmtParent.setString(1, parentAccenumb);
