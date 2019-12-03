@@ -33,7 +33,7 @@
 	String contact = PropertyWatcher.get(ServerProperty.GERMINATE_TEMPLATE_EMAIL_ADDRESS);
 
 
-	String version = "v3.19.4RC";
+	String version = "v3.6.0";
 %>
 
 <!DOCTYPE html>

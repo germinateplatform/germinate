@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018 Information and Computational Sciences,
+ *  Copyright 2019 Information and Computational Sciences,
  *  The James Hutton Institute.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -622,6 +622,7 @@ CREATE TABLE `datasetmembers`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `dataset_id`(`dataset_id`) USING BTREE,
   INDEX `datasetmembertype_id`(`datasetmembertype_id`) USING BTREE,
+  INDEX `dataset_id_2`(`dataset_id`, `datasetmembertype_id`) USING BTREE,
   CONSTRAINT `datasetmembers_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `datasetmembers_ibfk_2` FOREIGN KEY (`datasetmembertype_id`) REFERENCES `datasetmembertypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
@@ -651,8 +652,8 @@ DROP TABLE IF EXISTS `datasetmeta`;
 CREATE TABLE `datasetmeta`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary id for this table. This uniquely identifies the row.',
   `dataset_id` int(11) NOT NULL COMMENT 'Foreign key to [datasets] ([datasets].id).',
-  `nr_of_data_objects` int(11) NOT NULL COMMENT 'The number of data objects contained in this dataset.',
-  `nr_of_data_points` int(11) NOT NULL COMMENT 'The number of individual data points contained in this dataset.',
+  `nr_of_data_objects` bigint(20) UNSIGNED NOT NULL COMMENT 'The number of data objects contained in this dataset.',
+  `nr_of_data_points` bigint(20) UNSIGNED NOT NULL COMMENT 'The number of individual data points contained in this dataset.',
   `created_on` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT 'When the record was created.',
   `updated_on` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT 'When the record was updated. This may be different from the created on date if subsequent changes have been made to the underlying record.',
   PRIMARY KEY (`id`) USING BTREE,
@@ -1123,6 +1124,7 @@ CREATE TABLE `mapdefinitions`  (
   INDEX `mapfeaturetype_id`(`mapfeaturetype_id`) USING BTREE,
   INDEX `marker_id`(`marker_id`) USING BTREE,
   INDEX `map_id`(`map_id`) USING BTREE,
+  INDEX `marker_id_2`(`marker_id`, `map_id`) USING BTREE,
   CONSTRAINT `mapdefinitions_ibfk_1` FOREIGN KEY (`mapfeaturetype_id`) REFERENCES `mapfeaturetypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mapdefinitions_ibfk_2` FOREIGN KEY (`marker_id`) REFERENCES `markers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mapdefinitions_ibfk_3` FOREIGN KEY (`map_id`) REFERENCES `maps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -1391,6 +1393,7 @@ CREATE TABLE `phenotypedata`  (
   INDEX `phenotypes_ibfk_trialseries`(`trialseries_id`) USING BTREE,
   INDEX `trials_query_index`(`phenotype_id`, `germinatebase_id`, `location_id`, `trialseries_id`, `recording_date`, `treatment_id`, `dataset_id`, `phenotype_value`) USING BTREE,
   INDEX `phenotypedata_recording_date`(`recording_date`) USING BTREE,
+  INDEX `dataset_id_2`(`dataset_id`, `germinatebase_id`) USING BTREE,
   CONSTRAINT `phenotypedata_ibfk_1` FOREIGN KEY (`dataset_id`) REFERENCES `datasets` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `phenotypedata_ibfk_2` FOREIGN KEY (`phenotype_id`) REFERENCES `phenotypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `phenotypedata_ibfk_3` FOREIGN KEY (`germinatebase_id`) REFERENCES `germinatebase` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -1446,6 +1449,7 @@ INSERT INTO `schema_version` VALUES (4, '3.3.2.2', 'update', 'SQL', 'V3.3.2.2__u
 INSERT INTO `schema_version` VALUES (5, '3.4.0', 'update', 'SQL', 'V3.4.0__update.sql', 1635546146, 'germinate3', '2017-01-10 14:23:11', 198, 1);
 INSERT INTO `schema_version` VALUES (6, '3.4.0.1', 'update', 'SQL', 'V3.4.0.1__update.sql', -1497522993, 'germinate3', '2017-09-28 15:58:00', 161, 1);
 INSERT INTO `schema_version` VALUES (7, '3.5.0', 'update', 'SQL', 'V3.5.0__update.sql', -1130493621, 'germinate3', '2018-03-27 14:29:38', 132, 1);
+INSERT INTO `schema_version` VALUES (8, '3.6.0', 'update', 'SQL', 'V3.6.0__update.sql', -848461383, 'germinate3', '2019-12-03 11:10:04', 245, 1);
 
 -- ----------------------------
 -- Table structure for storage
