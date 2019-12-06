@@ -49,7 +49,7 @@ public class TemplateImporterTest extends DatabaseTest
 		ServerResult<Long> count = new ValueQuery("SELECT COUNT(1) AS count FROM `germinatebase`")
 				.run("count")
 				.getLong(0L);
-		assert count.getServerResult() == 2000L;
+		assert count.getServerResult() == 2010L;
 
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `locations`")
 				.run("count")
@@ -65,6 +65,11 @@ public class TemplateImporterTest extends DatabaseTest
 				.run("count")
 				.getLong(0L);
 		assert count.getServerResult() == 32L;
+
+		count = new ValueQuery("SELECT COUNT(1) AS count FROM germinatebase WHERE NOT ISNULL(entityparent_id)")
+				.run("count")
+				.getLong(0L);
+		assert count.getServerResult() == 10L;
 	}
 
 	@RepeatedTest(2)
@@ -176,7 +181,7 @@ public class TemplateImporterTest extends DatabaseTest
 		count = new ValueQuery("SELECT COUNT(1) AS count FROM `germinatebase` WHERE `entitytype_id` > 1")
 				.run("count")
 				.getLong(0L);
-		assert count.getServerResult() == 826L;
+		assert count.getServerResult() == 836L;
 	}
 
 	@RepeatedTest(2)
