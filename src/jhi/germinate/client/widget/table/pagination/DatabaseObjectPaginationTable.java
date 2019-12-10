@@ -61,6 +61,7 @@ import jhi.germinate.shared.datastructure.Pagination;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
+import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -512,6 +513,15 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 				getData(new Pagination(0, Integer.MAX_VALUE, sortColumnName, ascending), filterObject, new DefaultAsyncCallback<PaginatedServerResult<List<T>>>(true)
 				{
 					@Override
+					public void onFailureImpl(Throwable caught)
+					{
+						if (caught instanceof InvalidArgumentException)
+							Notification.notify(Notification.Type.ERROR, Text.LANG.notificationCheckEditTextValue());
+						else
+							super.onFailureImpl(caught);
+					}
+
+					@Override
 					protected void onSuccessImpl(PaginatedServerResult<List<T>> result)
 					{
 						selectPageHeader.setValue(result.getResultSize());
@@ -652,7 +662,10 @@ public abstract class DatabaseObjectPaginationTable<T extends DatabaseObject> ex
 						{
 							updateRowData(0, new ArrayList<>());
 
-							super.onFailureImpl(caught);
+							if (caught instanceof InvalidArgumentException)
+								Notification.notify(Notification.Type.ERROR, Text.LANG.notificationCheckEditTextValue());
+							else
+								super.onFailureImpl(caught);
 						}
 
 						@Override
