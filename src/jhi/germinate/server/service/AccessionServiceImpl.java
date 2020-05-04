@@ -35,8 +35,8 @@ import jhi.germinate.shared.*;
 import jhi.germinate.shared.datastructure.*;
 import jhi.germinate.shared.datastructure.database.*;
 import jhi.germinate.shared.enums.*;
-import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.exception.IOException;
+import jhi.germinate.shared.exception.*;
 import jhi.germinate.shared.search.*;
 
 /**
@@ -290,17 +290,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 				{
 					/* If not, readAll the new file */
 					List<String> accessions = Files.readAllLines(getFile(FileLocation.temporary, filename).toPath(), StandardCharsets.UTF_8);
-					List<Accession> foundAccessions = new ArrayList<>();
-
-					/* Loop over each row */
-					for (String accession : accessions)
-					{
-						/* Get matching accessions */
-						List<Accession> matchingItems = AccessionManager.getByUnknownIdentifier(null, accession).getServerResult();
-
-						if (matchingItems != null)
-							foundAccessions.addAll(matchingItems);
-					}
+					List<String> foundAccessions = AccessionManager.getByUnknownIdentifier(null, accessions).getServerResult();
 
 					/* Stash the list of ids in the session object */
 					getThreadLocalRequest().getSession().setAttribute(GROUP_PREVIEW_LIST, foundAccessions);
@@ -318,7 +308,7 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 	}
 
 	@Override
-	public PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException
+	public PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException, InvalidColumnException
 	{
 		Session.checkSession(properties, this);
 		UserAuth userAuth = UserAuth.getFromSession(this, properties);
@@ -326,15 +316,13 @@ public class AccessionServiceImpl extends BaseRemoteServiceServlet implements Ac
 		/* Get the list of accessions from the session */
 		ServerResult<Integer> nrOfItems = getGroupPreviewSize(userAuth, filename, pagination);
 		@SuppressWarnings("unchecked")
-		List<Accession> foundAccessions = (List<Accession>) getThreadLocalRequest().getSession().getAttribute(GROUP_PREVIEW_LIST);
+		List<String> foundAccessions = (List<String>) getThreadLocalRequest().getSession().getAttribute(GROUP_PREVIEW_LIST);
 
 		if (foundAccessions == null)
 			return new PaginatedServerResult<>(null, null, nrOfItems);
 
 		/* Subset the list based on the pagination information */
-		List<Accession> finalAccessions = new ArrayList<>(foundAccessions.subList(pagination.getStart(), Math.min(pagination.getStart() + pagination.getLength(), foundAccessions.size())));
-
-		return new PaginatedServerResult<>(null, finalAccessions, nrOfItems);
+		return AccessionManager.getByIdsPaginated(userAuth, foundAccessions, pagination);
 	}
 
 	@Override

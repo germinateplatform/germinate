@@ -191,7 +191,7 @@ public interface AccessionService extends RemoteService
 	 * @throws DatabaseException       Thrown if the query fails on the server
 	 * @throws IOException             Thrown if an I/O operation fails
 	 */
-	PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException;
+	PaginatedServerResult<List<Accession>> getForGroupPreview(RequestProperties properties, Pagination pagination, String filename) throws InvalidSessionException, DatabaseException, IOException, InvalidColumnException;
 
 	/**
 	 * Removes {@link Accession}s based on their id from the group preview.

@@ -40,7 +40,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String COMMOM_SYNONYMS = "LEFT JOIN `synonyms` ON (`synonyms`.`foreign_id` = `germinatebase`.`id` AND `synonyms`.`synonymtype_id` = " + SynonymType.germinatebase.getId() + ")";
 	private static final String SELECT_SYNONYMS = "`germinatebase`.*, `entitytypes`.*, `taxonomies`.*, `locations`.*, `countries`.*, `biologicalstatus`.*, `institutions`.*, `collectingsources`.*, `synonyms`.*, (SELECT COUNT(1) FROM `images` LEFT JOIN `imagetypes` ON `imagetypes`.`id` = `images`.`imagetype_id` WHERE `imagetypes`.`reference_table` = 'germinatebase' AND `images`.`foreign_id` = `germinatebase`.`id`) AS imageCount, (SELECT `images`.`path` FROM `images` LEFT JOIN `imagetypes` ON `imagetypes`.`id` = `images`.`imagetype_id` WHERE `imagetypes`.`reference_table` = 'germinatebase' AND `images`.`foreign_id` = `germinatebase`.`id` LIMIT 1) AS firstImagePath";
 
-	private static final String SELECT_BY_UNKNOWN_IDENTIFIER = "SELECT * FROM `germinatebase` WHERE `name` LIKE ? OR `id` LIKE ? OR `number` LIKE ? OR `general_identifier` LIKE ?";
+	private static final String SELECT_BY_UNKNOWN_IDENTIFIER = "SELECT DISTINCT `id` FROM `germinatebase` WHERE `name` IN (%s)";
 
 	private static final String SELECT_IDS_FOR_FILTER = "SELECT DISTINCT `germinatebase`.`id` FROM " + COMMON_TABLES + " " + COMMOM_SYNONYMS + " {{FILTER}}";
 
@@ -65,7 +65,7 @@ public class AccessionManager extends AbstractManager<Accession>
 	private static final String SELECT_ENTITY_PAIRS           = "SELECT child.id, parent.id FROM `germinatebase` child LEFT JOIN `germinatebase` parent ON child.entityparent_id = parent.id WHERE ( child.id = ? OR parent.id = ? ) AND child.entitytype_id > 1 %s LIMIT ?, ?";
 
 	private static final String SELECT_ENTITY_PARENT_IDS = "SELECT DISTINCT `entityparent_id` FROM `germinatebase` WHERE `id` IN (%s) AND NOT ISNULL(`entityparent_id`)";
-	private static final String SELECT_ENTITY_CHILD_IDS = "SELECT DISTINCT `germinatebase`.`id` FROM `germinatebase` WHERE `entityparent_id` IN (%s)";
+	private static final String SELECT_ENTITY_CHILD_IDS  = "SELECT DISTINCT `germinatebase`.`id` FROM `germinatebase` WHERE `entityparent_id` IN (%s)";
 
 	private static final String UPDATE_PDCI = "UPDATE `germinatebase` SET `pdci` = ? WHERE `id` = ?";
 
@@ -110,6 +110,30 @@ public class AccessionManager extends AbstractManager<Accession>
 				.getObjects(Accession.Parser.Inst.get(), true);
 	}
 
+	/**
+	 * Returns the {@link Accession}s with the given ids
+	 *
+	 * @param user       The current user
+	 * @param ids        The id of the accession
+	 * @param pagination The {@link Pagination} object defining the current chunk of data
+	 * @return The {@link Accession}s with the given ids
+	 * @throws DatabaseException      Thrown if the interaction with the database failed
+	 * @throws InvalidColumnException Thrown if the sort column is invalid
+	 */
+	public static PaginatedServerResult<List<Accession>> getByIdsPaginated(UserAuth user, List<String> ids, Pagination pagination) throws DatabaseException, InvalidColumnException
+	{
+		pagination.updateSortColumn(AccessionService.COLUMNS_SORTABLE, null);
+
+		String formatted = String.format(SELECT_BY_IDS, StringUtils.generateSqlPlaceholderString(ids.size()), pagination.getSortQuery());
+		return new DatabaseObjectQuery<Accession>(formatted, user)
+				.setFetchesCount(pagination.getResultSize())
+				.setStrings(ids)
+				.setInt(pagination.getStart())
+				.setInt(pagination.getLength())
+				.run()
+				.getObjectsPaginated(Accession.Parser.Inst.get(), true);
+	}
+
 	public static ServerResult<Long> getCount(UserAuth user) throws DatabaseException
 	{
 		return new ValueQuery(SELECT_COUNT, user)
@@ -120,23 +144,22 @@ public class AccessionManager extends AbstractManager<Accession>
 	/**
 	 * Returns the {@link Accession} with the given {@link Accession#GENERAL_IDENTIFIER}
 	 *
-	 * @param userAuth The user requesting the data
-	 * @param name     The name of the accession
+	 * @param userAuth    The user requesting the data
+	 * @param identifiers The list of possible identifiers
 	 * @return The {@link Accession} with the given {@link Accession#GENERAL_IDENTIFIER}
 	 * @throws DatabaseException Thrown if the interaction with the database failed
 	 */
-	public static ServerResult<List<Accession>> getByUnknownIdentifier(UserAuth userAuth, String name) throws DatabaseException
+	public static ServerResult<List<String>> getByUnknownIdentifier(UserAuth userAuth, List<String> identifiers) throws DatabaseException
 	{
-		if (StringUtils.isEmpty(name))
+		if (CollectionUtils.isEmpty(identifiers))
 			return new ServerResult<>(null, null);
 
-		return new DatabaseObjectQuery<Accession>(SELECT_BY_UNKNOWN_IDENTIFIER, userAuth)
-				.setString(name)
-				.setString(name)
-				.setString(name)
-				.setString(name)
-				.run()
-				.getObjects(Accession.Parser.Inst.get());
+		String formatted = String.format(SELECT_BY_UNKNOWN_IDENTIFIER, StringUtils.generateSqlPlaceholderString(identifiers.size()));
+
+		return new ValueQuery(formatted, userAuth)
+				.setStrings(identifiers)
+				.run(Accession.ID)
+				.getStrings();
 	}
 
 	/**
