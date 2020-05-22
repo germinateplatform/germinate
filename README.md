@@ -1,3 +1,5 @@
+# This version of Germinate is no longer maintained. Please use the [new Germinate](https://ics.hutton.ac.uk/get-germinate) instead
+
 # Germinate
 
 ![](https://ics.hutton.ac.uk/get-germinate/assets/img/germinate.svg "Germinate")
